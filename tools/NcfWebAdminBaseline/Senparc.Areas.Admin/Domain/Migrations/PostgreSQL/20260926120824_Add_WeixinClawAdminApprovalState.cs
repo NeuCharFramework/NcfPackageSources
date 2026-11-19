@@ -1,0 +1,78 @@
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: 20260926120824_Add_WeixinClawAdminApprovalState.cs
+    File description: 20260926120824_Add_WeixinClawAdminApprovalState.cs implementation and project behavior.
+
+    Created by: Senparc - 20260926
+
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
+{
+    /// <inheritdoc />
+    public partial class Add_WeixinClawAdminApprovalState : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<string>(
+                name: "PendingApprovalArgumentsJson",
+                table: "ADMIN_WeixinClawAdminBinding",
+                type: "text",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "PendingApprovalRequestId",
+                table: "ADMIN_WeixinClawAdminBinding",
+                type: "character varying(300)",
+                maxLength: 300,
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "PendingApprovalToolCallId",
+                table: "ADMIN_WeixinClawAdminBinding",
+                type: "character varying(300)",
+                maxLength: 300,
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "PendingApprovalToolName",
+                table: "ADMIN_WeixinClawAdminBinding",
+                type: "character varying(300)",
+                maxLength: 300,
+                nullable: true);
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "PendingApprovalArgumentsJson",
+                table: "ADMIN_WeixinClawAdminBinding");
+
+            migrationBuilder.DropColumn(
+                name: "PendingApprovalRequestId",
+                table: "ADMIN_WeixinClawAdminBinding");
+
+            migrationBuilder.DropColumn(
+                name: "PendingApprovalToolCallId",
+                table: "ADMIN_WeixinClawAdminBinding");
+
+            migrationBuilder.DropColumn(
+                name: "PendingApprovalToolName",
+                table: "ADMIN_WeixinClawAdminBinding");
+        }
+    }
+}

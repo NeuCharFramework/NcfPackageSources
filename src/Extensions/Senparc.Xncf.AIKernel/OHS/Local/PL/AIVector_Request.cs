@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AIVector_Request.cs
-    文件功能描述：AIVector_Request 相关实现
-    
-    
-    创建标识：Senparc - 20250402
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: AIVector_Request.cs
+    File description: AIVector_Request related implementation
+
+    Created by: Senparc - 20250402
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -29,22 +32,22 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class AIVector_GetListRequest : PagedRequest
     {
         /// <summary>
-        /// 代号
+        /// code
         /// </summary>
         public string Alias { get; set; }
 
         /// <summary>
-        /// 名称
+        /// name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 向量数据库类型
+        ///Legacy comment translated to English.
         /// </summary>
         public VectorDBType VectorDBType { get; set; }
 
         /// <summary>
-        /// 是否显示
+        /// whetherdisplay
         /// </summary>
         public bool? Show { get; set; }
     }
@@ -52,49 +55,49 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class AIVector_CreateOrEditRequest
     {
         /// <summary>
-        /// 主键 ID
+        /// primary key ID
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// 代号
+        /// code
         /// </summary>
         public string Alias { get; set; }
 
 
         /// <summary>
-        /// 模型名称（必须）
+        /// model name (required)
         /// </summary>
         public string VectorId { get; set; }
 
         /// <summary>
-        /// 名称
+        /// name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 连接字符串
+        ///Legacy comment translated to English.
         /// </summary>
         public string ConnectionString { get; set; }
 
         /// <summary>
-        /// 向量数据库的类型（必须）, 例如：Memory, HardDisk, Redis, Mulivs, Chroma, PostgreSQL, Sqlite, SqlServer, Default
+        ///Legacy comment translated to English.
         /// </summary>
         public VectorDBType VectorDBType { get; set; }
 
         /// <summary>
-        /// Note（可选）
+        /// Note (optional)
         /// </summary>
         public string Note { get; set; }
 
         /// <summary>
-        /// 是否共享
+        /// whether shared
         /// </summary>
         public bool IsShared { get; set; }
 
 
         /// <summary>
-        /// 是否展示
+        /// whether displayed
         /// </summary>
         public bool Show { get; set; }
     }
@@ -102,22 +105,22 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class AIVector_EditRequest
     {
         /// <summary>
-        /// 主键 ID
+        /// primary key ID
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// 代号
+        /// code
         /// </summary>
         public string Alias { get; set; }
 
         /// <summary>
-        /// 是否显示
+        /// whetherdisplay
         /// </summary>
         public bool Show { get; set; }
 
         /// <summary>
-        /// 是否共享
+        /// whether shared
         /// </summary>
         public bool IsShared { get; set; }
     }

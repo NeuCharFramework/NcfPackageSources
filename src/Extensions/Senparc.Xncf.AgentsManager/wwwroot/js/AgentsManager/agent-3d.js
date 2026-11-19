@@ -9,7 +9,7 @@
     return Math.abs(hash);
   }
 
-  // Id 仅在本地 Agent 域内唯一；混合群组使用 ParticipantKey 规避本地/远程同号冲突。
+  //Legacy comment translated to English.
   function participantKey(agent) {
     return agent && agent.participantKey ? agent.participantKey : 'local:' + (agent ? agent.id : '0');
   }

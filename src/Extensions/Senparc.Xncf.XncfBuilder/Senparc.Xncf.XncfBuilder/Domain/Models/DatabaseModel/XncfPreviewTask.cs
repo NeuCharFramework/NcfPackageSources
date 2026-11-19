@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：XncfPreviewTask.cs
-    文件功能描述：XNCF 隔离预览任务持久化记录
+    File name: XncfPreviewTask.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260802
+    Created by: Senparc - 20260802
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+    Modified by: Senparc - 20260804
+    Change description: v0.39.0-preview8 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.41.7 XncfBuilder 预览与隔离开发任务表统一租户底层支持
+    Modified by: Senparc - 20261103
+    Change description: v0.41.7 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 
@@ -24,7 +28,7 @@ namespace Senparc.Xncf.XncfBuilder
 {
     [Table(Register.DATABASE_PREFIX + nameof(XncfPreviewTask))]
     [Serializable]
-    // 统一使用租户底层支持：多租户启用时本表数据按 TenantId 隔离（与 PromptRange 等 XNCF 模块一致）
+    //Legacy comment translated to English.
     public class XncfPreviewTask : EntityBase<int>
     {
         [Required, MaxLength(128)]

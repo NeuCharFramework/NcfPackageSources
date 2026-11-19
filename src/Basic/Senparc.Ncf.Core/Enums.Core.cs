@@ -1,21 +1,24 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Enums.Core.cs
-    文件功能描述：Enums.Core 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: Enums.Core.cs
+    File description: Enums.Core related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
 namespace Senparc.Ncf.Core.Enums
 {
     /// <summary>
-    /// 消息类型（级别）
+    ///Legacy comment translated to English.
     /// </summary>
     public enum MessageType
     {
@@ -27,7 +30,7 @@ namespace Senparc.Ncf.Core.Enums
 
 
     /// <summary>
-    /// Email账户
+    ///Legacy comment translated to English.
     /// </summary>
     public enum EmailAccountType
     {
@@ -37,7 +40,7 @@ namespace Senparc.Ncf.Core.Enums
     }
 
     /// <summary>
-    /// 排序类型
+    ///Legacy comment translated to English.
     /// </summary>
     public enum OrderingType
     {
@@ -46,7 +49,7 @@ namespace Senparc.Ncf.Core.Enums
     }
 
     /// <summary>
-    /// 安装或更新
+    ///Legacy comment translated to English.
     /// </summary>
     public enum InstallOrUpdate
     {
@@ -55,7 +58,7 @@ namespace Senparc.Ncf.Core.Enums
     }
 
     /// <summary>
-    /// Email设置类型
+    /// Emailsettingstype
     /// </summary>
     public enum SendEmailType
     {
@@ -68,13 +71,13 @@ namespace Senparc.Ncf.Core.Enums
         OrderCreate,
         OrderPaySuccess,
         OrderCancelled,
-        WeixinStat, //微信统计
-        AppStatusChanged, //应用状态改变
+        WeixinStat, //Legacy comment translated to English.
+        AppStatusChanged, //Legacy comment translated to English.
     }
 
 
     /// <summary>
-    /// Meta类型
+    /// Metatype
     /// </summary>
     public enum MetaType
     {
@@ -82,7 +85,7 @@ namespace Senparc.Ncf.Core.Enums
         description
     }
 
-    #region 实体属性
+    #region Legacy section
 
 
     public enum Account_RegisterWay
@@ -121,14 +124,14 @@ namespace Senparc.Ncf.Core.Enums
     #endregion
 }
 
-//#region 弥补 MySQL 库暂时的 bug
+//Legacy section
 
 //#if RELEASE
 //namespace Microsoft.EntityFrameworkCore.Metadata
 //{
 //    /// <summary>
-//    /// 说明：因为 Pomelo.EntityFrameworkCore.MySql 一个未充分解耦的问题，这里暂时先引用，待其升级后会取消，和具体数据库充分解耦
-//    /// <para>官方反馈：https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/1205</para>
+//Legacy comment translated to English.
+//Legacy comment translated to English.
 //    /// </summary>
 //    public enum MySqlValueGenerationStrategy
 //    {

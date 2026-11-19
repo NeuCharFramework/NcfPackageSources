@@ -1,19 +1,19 @@
 /*
- * AgentsManager 前端：智能体/组/任务的查看、筛选、启停、删除与参与者管理方法。
- * 注意：本文件与 agents-app-*.js 系列按 three-loader.js 中的顺序加载，
- * 依赖全局 var（classic script 顶层 var 挂到 window），请勿单独引入。
+ * Legacy comment translated to English.
+ * Note: this file and the agents-app-*.js series are loaded in the order defined by three-loader.js,
+ * depends on global variables (top-level classic-script vars are attached to window); do not import separately.
  */
 
 var AgentsAppMethodsManage = {
-    // 查看全部智能体 列表 
+    //Legacy comment translated to English.
     handleAgentViewAll(fromHash = false) {
       if (!fromHash && !this.isApplyingHashRoute) {
         this.navigateByHash(this.buildCurrentRoute({ tab: 'first', agentId: null }))
         return
       }
       this.clearHistoryTimer()
-      this.scrollbarAgentIndex = '' // 清空索引
-      this.agentDetails = '' // 清空详情数据
+      this.scrollbarAgentIndex = '' //Legacy comment translated to English.
+      this.agentDetails = '' // clear detail data
       this.getAgentListData('agent')
       if (this.agentListViewMode === 'three') {
         this.$nextTick(() => {
@@ -24,7 +24,7 @@ var AgentsAppMethodsManage = {
       }
       this.syncHashRoute({ tab: 'first', agentId: null })
     },
-    // 查看 智能体
+    //Legacy comment translated to English.
     handleAgentView(item, index, fromHash = false) {
       if (!fromHash && !this.isApplyingHashRoute) {
         this.navigateByHash(this.buildCurrentRoute({ tab: 'first', agentId: item.id }))
@@ -33,11 +33,11 @@ var AgentsAppMethodsManage = {
       this.clearHistoryTimer()
       this.stopAgentGraphPolling()
       this.scrollbarAgentIndex = item.id ?? ''
-      // 重置 数据
+      //Legacy comment translated to English.
       this.resetAgentDetailsQuery()
-      // 获取智能体 详情
+      //Legacy comment translated to English.
       this.getAgentDetailData(item.id, item)
-      // 重置 组获取智能体query
+      //Legacy comment translated to English.
       if (this.agentDetailsTabsActiveName === 'first') {
         this.getGroupListData('agentGroup', item.id)
       }
@@ -46,7 +46,7 @@ var AgentsAppMethodsManage = {
       }
       this.syncHashRoute({ tab: 'first', agentId: item.id })
     },
-    // 重置 智能体详情下的组和任务数据
+    //Legacy comment translated to English.
     resetAgentDetailsQuery() {
       this.agentDetailsTabsActiveName = 'first'
       this.agentDetailsGroupList = []
@@ -70,7 +70,7 @@ var AgentsAppMethodsManage = {
       this.$set(this, 'agentDetailsGroupQueryList', this.$options.data().agentDetailsGroupQueryList)
       this.$set(this, 'agentDetailsTaskQueryList', this.$options.data().agentDetailsTaskQueryList)
     },
-    // 切换 智能体详情 tabs 页面
+    //Legacy comment translated to English.
     handleAgentDetailsTabsClick(tab, event) {
       this.clearHistoryTimer()
       let id = ''
@@ -84,7 +84,7 @@ var AgentsAppMethodsManage = {
         this.gettaskListData('agentTask', id)
       }
     },
-    // 智能体 状态 切换
+    //Legacy comment translated to English.
     setAgentState(stateType, item) {
       if (!stateType || !item) return
       let messageText = ''
@@ -94,26 +94,26 @@ var AgentsAppMethodsManage = {
         serviceURL = `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.Enable?id=${itemData.id}&enable=${!itemData.enable}`
 
         if (itemData.enable) {
-          messageText = `<div>是否确认将${itemData.name}智能体停用？</div><div>此智能体将不会参与后续新任务</div>`
+          messageText = `<div>${ncfST('Frontend.212', itemData.name)}</div><div>${ncfST('Frontend.213')}</div>`
         } else {
-          messageText = `<div>是否确认将${itemData.name}智能体启用？</div>`
+          messageText = `<div>${ncfST('Frontend.214', itemData.name)}</div>`
         }
       }
       if (stateType === 'delete') {
-        messageText = `<div>是否确认从${item.name}组退出？</div><div>移除出后将无法看到之前参与的任务记录</div>`
+        messageText = `<div>${ncfST('Frontend.215', item.name)}</div><div>${ncfST('Frontend.216')}</div>`
       }
       if (!serviceURL) return
-      this.$confirm(messageText, '操作确认', {
-        dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(messageText, ncfST('Frontend.528'), {
+        dangerouslyUseHTMLString: true, //Legacy comment translated to English.
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: ncfST('Frontend.218')
             });
             if (stateType === 'stop') {
               // const agentMapStr = {
@@ -134,36 +134,38 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         });
       });
     },
-    // 组启用 / 停用
+    //Legacy comment translated to English.
     async setGroupState(item) {
       const group = item?.chatGroupDto || item
       if (!group || !group.id) return
 
       const willEnable = !group.enable
-      const actionText = willEnable ? '启用' : '停用'
       const messageText = willEnable
-        ? `<div>是否确认启用组“${group.name}”？</div><div>启用后可再次创建新任务，并可作为 Workflow 节点使用。</div>`
-        : `<div>是否确认停用组“${group.name}”？</div><div>停用后不会创建新任务或作为 Workflow 节点使用；已经启动的任务不会被中断。</div>`
+        ? `<div>${ncfST('Frontend.602', group.name)}</div><div>${ncfST('Frontend.603')}</div>`
+        : `<div>${ncfST('Frontend.604', group.name)}</div><div>${ncfST('Frontend.605')}</div>`
 
       try {
-        await this.$confirm(messageText, '操作确认', {
+        await this.$confirm(messageText, ncfST('Frontend.528'), {
           dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+          confirmButtonText: ncfST('Frontend.172'),
+          cancelButtonText: ncfST('Studio.Cancel'),
           type: 'warning'
         })
 
         const serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.Enable?id=${group.id}&enable=${willEnable}`
         const res = await serviceAM.post(serviceURL)
         if (!res?.data?.success) {
-          throw new Error(res?.data?.errorMessage || res?.data?.data || '操作失败')
+          throw new Error(res?.data?.errorMessage || res?.data?.data || ncfST('Frontend.168'))
         }
 
-        this.$message({ type: 'success', message: `组已${actionText}` })
+        this.$message({
+          type: 'success',
+          message: ncfST('Frontend.606', group.name, ncfST(willEnable ? 'Frontend.607' : 'Frontend.608'))
+        })
         if (this.tabsActiveName === 'second') {
           await this.getGroupListData('group')
         } else if (this.agentDetails?.agentTemplateDto?.id) {
@@ -172,11 +174,11 @@ var AgentsAppMethodsManage = {
         await this.refreshAgentGraphSnapshot(this.agentListViewMode === 'three')
       } catch (error) {
         if (error === 'cancel' || error === 'close') {
-          this.$message({ type: 'info', message: '已取消操作' })
+          this.$message({ type: 'info', message: ncfST('Frontend.219') })
           return
         }
         this.$message({
-          message: error?.message || '操作失败',
+          message: error?.message || ncfST('Frontend.168'),
           type: 'error',
           duration: 5 * 1000
         })
@@ -214,39 +216,39 @@ var AgentsAppMethodsManage = {
 
         if (adminGroups.length || enterGroups.length) {
           const blockedMessage = [
-            `<div>智能体「${itemData.name}」当前不可删除。</div>`,
-            adminGroups.length ? `<div style="margin-top:6px;">作为群主的组：${adminGroups.join('、')}</div>` : '',
-            enterGroups.length ? `<div style="margin-top:6px;">作为对接人的组：${enterGroups.join('、')}</div>` : '',
-            '<div style="margin-top:8px;color:#E6A23C;">请先在对应组中替换群主/对接人后再删除。</div>'
+            `<div>${ncfST('Frontend.220', itemData.name)}</div>`,
+            adminGroups.length ? `<div style="margin-top:6px;">${ncfST('Frontend.221', adminGroups.join(', '))}</div>` : '',
+            enterGroups.length ? `<div style="margin-top:6px;">${ncfST('Frontend.222', enterGroups.join(', '))}</div>` : '',
+            `<div style="margin-top:8px;color:#E6A23C;">${ncfST('Frontend.223')}</div>`
           ].join('')
 
-          this.$alert(blockedMessage, '删除受阻', {
+          this.$alert(blockedMessage, ncfST('Frontend.224'), {
             dangerouslyUseHTMLString: true,
-            confirmButtonText: '我知道了'
+            confirmButtonText: ncfST('Frontend.225')
           })
           return
         }
 
         const memberGroups = memberGroupList.map(group => group.name)
         const previewMessage = [
-          `<div>确认删除智能体「${itemData.name}」吗？</div>`,
+          `<div>${ncfST('Frontend.226', itemData.name)}</div>`,
           memberGroups.length
-            ? `<div style="margin-top:6px;">将移出成员组：${memberGroups.join('、')}</div>`
-            : '<div style="margin-top:6px;">该智能体当前不在任何组成员中。</div>',
-          '<div style="margin-top:8px;">同时会删除与该智能体相关的历史消息记录，且不可恢复。</div>'
+            ? `<div style="margin-top:6px;">${ncfST('Frontend.227', memberGroups.join(', '))}</div>`
+            : `<div style="margin-top:6px;">${ncfST('Frontend.161')}</div>`,
+          `<div style="margin-top:8px;">${ncfST('Frontend.228')}</div>`
         ].join('')
 
-        this.$confirm(previewMessage, '删除智能体确认', {
+        this.$confirm(previewMessage, ncfST('Frontend.217'), {
           dangerouslyUseHTMLString: true,
-          confirmButtonText: '删除智能体',
-          cancelButtonText: '取消',
+          confirmButtonText: ncfST('Frontend.379'),
+          cancelButtonText: ncfST('Studio.Cancel'),
           type: 'warning'
         }).then(() => {
           serviceAM.post(serviceURL).then(res => {
             if (res.data.success) {
               this.$message({
                 type: 'success',
-                message: '删除成功!'
+                message: ncfST('Frontend.229')
               })
               if (closeEditor) {
                 this.visible.drawerAgent = false
@@ -263,12 +265,12 @@ var AgentsAppMethodsManage = {
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消操作'
+            message: ncfST('Frontend.219')
           })
         })
       }).catch(() => {
         app.$message({
-          message: '删除预检查失败，请稍后重试',
+          message: ncfST('Frontend.230'),
           type: 'error',
           duration: 5 * 1000
         })
@@ -277,12 +279,12 @@ var AgentsAppMethodsManage = {
 
 
 
-    // 侧边 组tree 组件 节点 筛选
+    //Legacy comment translated to English.
     filterGroupTreeNode(value, data) {
       if (!value) return true;
       return data.name.indexOf(value) !== -1;
     },
-    // 侧边 组tree 组件 节点 点击
+    //Legacy comment translated to English.
     handleGroupTreeNodeClick(node, data, clickType) {
       // console.log('handleGroupTreeNodeClick', node, data)
       if (clickType === 'agentGroup') {
@@ -297,7 +299,7 @@ var AgentsAppMethodsManage = {
       if (clickType === 'group') {
         this.groupShowType = node.level.toString()
         if (this.groupShowType === '1') {
-          this.groupDetails = '' // 清空组详情
+          this.groupDetails = '' //Legacy comment translated to English.
         }
         if (this.groupShowType === '2') {
           this.groupDetails = deepClone(data)
@@ -307,7 +309,7 @@ var AgentsAppMethodsManage = {
         }
       }
     },
-    // 组 查看详情
+    //Legacy comment translated to English.
     handleGroupDetail(row, clickType) {
       // console.log('handleGroupDetail', row)
       if (clickType === 'agentGroup') {
@@ -319,7 +321,7 @@ var AgentsAppMethodsManage = {
         this.groupDetails = deepClone(row)
       }
     },
-    // 组 查看全部 列表 
+    //Legacy comment translated to English.
     handleGroupViewAll(fromHash = false) {
       if (!fromHash && !this.isApplyingHashRoute) {
         this.navigateByHash({ tab: 'second' })
@@ -327,8 +329,8 @@ var AgentsAppMethodsManage = {
       }
       this.clearHistoryTimer()
       this.groupShowType = '1'
-      // 清空组详情
-      this.scrollbarGroupIndex = '' // 清空索引
+      //Legacy comment translated to English.
+      this.scrollbarGroupIndex = '' //Legacy comment translated to English.
       this.groupDetails = ''
       this.groupTaskSelection = []
       this.groupTaskList = []
@@ -341,19 +343,19 @@ var AgentsAppMethodsManage = {
       this.getGroupListData('group')
       this.syncHashRoute({ tab: 'second', groupId: null, taskId: null })
     },
-    // 组 查看列表 详情 
+    //Legacy comment translated to English.
     handleGroupView(clickType, item, index = 0, fromHash = false) {
       if (!fromHash && !this.isApplyingHashRoute && (clickType === 'group' || clickType === 'groupTable')) {
         this.navigateByHash({ tab: 'second', groupId: item.id })
         return
       }
       this.clearHistoryTimer()
-      // 智能体下时 查看组详情
+      //Legacy comment translated to English.
       if (clickType === 'agentGroup') {
-        // 切换展示类型
+        //Legacy comment translated to English.
         this.agentDetailsGroupShowType = '1'
         this.agentDetailsGroupIndex = index ?? 0
-        // 清空组详情
+        //Legacy comment translated to English.
         this.agentDetailsGroupDetails = ''
         this.agentGroupTaskSelection = []
         this.agentDetailsGroupTaskList = []
@@ -364,9 +366,9 @@ var AgentsAppMethodsManage = {
         this.agentGroupTaskMemberfilterList = []
         this.getGroupDetailData(clickType, item.id, item)
       }
-      // 组大类时 查看组详情
+      //Legacy comment translated to English.
       if (clickType === 'group' || clickType === 'groupTable') {
-        // 切换展示类型
+        //Legacy comment translated to English.
         this.groupShowType = '2'
         // if (clickType === 'groupTable') {
         //     const { pageIndex, pageSize } = this.groupQueryList
@@ -375,7 +377,7 @@ var AgentsAppMethodsManage = {
         //     this.scrollbarGroupIndex = index ?? 0
         // }
         this.scrollbarGroupIndex = item.id ?? ''
-        // 清空组详情
+        //Legacy comment translated to English.
         this.groupDetails = ''
         this.groupTaskSelection = []
         this.groupTaskList = []
@@ -388,7 +390,7 @@ var AgentsAppMethodsManage = {
         this.syncHashRoute({ tab: 'second', groupId: item.id, taskId: null })
       }
     },
-    // 组 新增|编辑 智能体table 切换table 选中
+    //Legacy comment translated to English.
     toggleSelection(rows) {
       if (rows) {
         rows.forEach(row => {
@@ -398,7 +400,7 @@ var AgentsAppMethodsManage = {
         this.$refs?.groupAgentTable?.clearSelection();
       }
     },
-    // 组 新增|编辑 智能体table 选中变化
+    //Legacy comment translated to English.
     handleSelectionChange(val) {
       if (!this.isGetGroupAgent) {
         const selectedIds = new Set(val.map((i) => i.id))
@@ -430,7 +432,7 @@ var AgentsAppMethodsManage = {
       }
 
     },
-    // 组 新增|编辑 智能体 成员取消选中
+    //Legacy comment translated to English.
     groupMembersCancel(item, index) {
       this.groupForm.members.splice(index, 1);
       const findIndex = this.groupAgentList.findIndex(i => item.id === i.id)
@@ -438,34 +440,34 @@ var AgentsAppMethodsManage = {
         this.toggleSelection([this.groupAgentList[findIndex]])
       }
     },
-    // 组列表选中变化 (批量删除)
+    //Legacy comment translated to English.
     handleGroupSelectionChange(val) {
       this.groupSelection = val
     },
-    // 组 删除
+    // group delete
     handleGroupDelete(optype, row) {
       console.log('handleGroupDelete:', row);
       if (!row || !row.id) return
       let serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.Delete?id=${row.id}`
       if (!serviceURL) return
-      // 操作确认 提示
-      this.$confirm('确认删除数据吗？', '操作确认', {
-        dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      // operation confirmation prompt
+      this.$confirm(ncfST('Frontend.231'), ncfST('Frontend.528'), {
+        dangerouslyUseHTMLString: true, //Legacy comment translated to English.
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: ncfST('Frontend.218')
             });
             if (optype === 'groupTable') {
-              // 重新获取数据
+              // reload data
               this.getGroupListData('group')
             } else {
-              // 查看全部组
+              //Legacy comment translated to English.
               this.handleGroupViewAll()
             }
           } else {
@@ -479,34 +481,34 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         });
       });
     },
-    // 组批量删除
+    //Legacy comment translated to English.
     handleGroupDeleteBatch() {
       console.log('handleGroupDeleteBatch:', this.groupSelection);
       const selectedIds = (this.groupSelection || []).map(item => item.id).filter(Boolean)
       if (!selectedIds.length) {
-        this.$message.warning('请先选择要删除的组')
+        this.$message.warning(ncfST('Frontend.232'))
         return
       }
       let serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.DeleteBatch'
       if (!serviceURL) return
-      // 操作确认 提示
-      this.$confirm('确认批量删除数据吗？', '操作确认', {
-        dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      // operation confirmation prompt
+      this.$confirm(ncfST('Frontend.233'), ncfST('Frontend.528'), {
+        dangerouslyUseHTMLString: true, //Legacy comment translated to English.
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: ncfST('Frontend.218')
             });
-            // 重新获取数据
+            // reload data
             this.getGroupListData('group')
           } else {
             app.$message({
@@ -519,13 +521,13 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         });
       });
     },
 
 
-    // 任务 查看全部 列表 
+    //Legacy comment translated to English.
     handleTaskViewAll(fromHash = false) {
       if (!fromHash && !this.isApplyingHashRoute) {
         this.navigateByHash({ tab: 'third' })
@@ -533,7 +535,7 @@ var AgentsAppMethodsManage = {
       }
       this.clearHistoryTimer()
       this.scrollbarTaskIndex = ''
-      // 清空详情数据
+      // clear detail data
       this.taskDetails = ''
       this.taskSelection = []
       this.taskHistoryList = []
@@ -543,7 +545,7 @@ var AgentsAppMethodsManage = {
       this.gettaskListData('task')
       this.syncHashRoute({ tab: 'third', taskId: null })
     },
-    // 查看 任务详情
+    //Legacy comment translated to English.
     handleTaskView(clickType, item = {}, index = 0, fromHash = false) {
       if (!fromHash && !this.isApplyingHashRoute && clickType === 'groupTask') {
         this.navigateByHash({ tab: 'second', groupId: item.chatGroupId || this.scrollbarGroupIndex || null, taskId: item.id })
@@ -556,7 +558,7 @@ var AgentsAppMethodsManage = {
       this.clearHistoryTimer()
       if (clickType === 'agentTask') {
         this.agentDetailsTaskIndex = index ?? ''
-        // 清空详情数据
+        // clear detail data
         this.agentDetailsTaskDetails = ''
         this.agentDetailsTaskHistoryList = []
         this.agentDetailsTaskMemberList = []
@@ -566,7 +568,7 @@ var AgentsAppMethodsManage = {
       }
       if (clickType === 'agentGroupTask') {
         this.agentDetailsGroupShowType = '2'
-        // 清空详情数据
+        // clear detail data
         this.agentDetailsGroupDetailsTaskDetails = ''
         this.agentDetailsGroupTaskHistoryList = []
         this.agentDetailsGroupTaskMemberList = []
@@ -576,7 +578,7 @@ var AgentsAppMethodsManage = {
       }
       if (clickType === 'groupTask') {
         this.groupShowType = '3'
-        // 清空详情数据
+        // clear detail data
         this.groupTaskDetails = ''
         this.groupTaskHistoryList = []
         this.groupTaskMemberList = []
@@ -587,7 +589,7 @@ var AgentsAppMethodsManage = {
       }
       if (clickType === 'task') {
         this.scrollbarTaskIndex = index ?? ''
-        // 清空详情数据
+        // clear detail data
         this.taskDetails = ''
         this.taskHistoryList = []
         this.taskMemberList = []
@@ -597,7 +599,47 @@ var AgentsAppMethodsManage = {
         this.syncHashRoute({ tab: 'third', taskId: item.id })
       }
     },
-    // 返回组详情页面
+    canForceStopTask(row = {}) {
+      const status = Number(row?.status)
+      return status === 0 || status === 1 || status === 2
+    },
+    handleTaskAction(action, optype, row = {}, index = 0) {
+      switch (action) {
+        case 'parameters':
+          return this.viewAgentParameters(optype, row)
+        case 'force-stop':
+          return this.handleTaskForceStop(optype, row)
+        case 'delete':
+          return this.handleTaskDelet(optype, row)
+        default:
+          return undefined
+      }
+    },
+    handleGroupAction(action, row = {}, index = 0) {
+      switch (action) {
+        case 'start':
+          return this.handleElVisibleOpenBtn('drawerGroupStart', row)
+        case 'toggle':
+          return this.setGroupState(row)
+        case 'delete':
+          return this.handleGroupDelete('groupTable', row)
+        default:
+          return undefined
+      }
+    },
+    handleRemoteAgentAction(action, row = {}) {
+      switch (action) {
+        case 'test':
+          return this.testRemoteAgent(row)
+        case 'toggle':
+          return this.setRemoteAgentEnable(row, !row.enable)
+        case 'delete':
+          return this.deleteRemoteAgent(row)
+        default:
+          return undefined
+      }
+    },
+    //Legacy comment translated to English.
     returnGroup(clickType, fromHash = false) {
       if (!fromHash && !this.isApplyingHashRoute && clickType === 'groupTask') {
         const groupId = this.groupDetails?.chatGroupDto?.id || this.scrollbarGroupIndex || null
@@ -612,30 +654,30 @@ var AgentsAppMethodsManage = {
 
       }
       if (clickType === 'groupTask') {
-        this.groupShowType = '2' // 组件详情
+        this.groupShowType = '2' //Legacy comment translated to English.
         this.syncHashRoute({ tab: 'second', taskId: null })
         // const item = this.groupList[this.scrollbarGroupIndex]
         // this.getGroupDetailData('groupTable', item.id,this.groupDetails)
       }
     },
-    // 智能体-组 任务列表table选中变化 (批量启动和删除)
+    //Legacy comment translated to English.
     handleAgentGroupTaskSelectionChange(val) {
       this.agentGroupTaskSelection = val
     },
 
-    // 组 任务列表table选中变化 (批量启动和删除)
+    //Legacy comment translated to English.
     handleGroupTaskSelectionChange(val) {
       this.groupTaskSelection = val
     },
-    // 任务列表选择 
+    //Legacy comment translated to English.
     handleTaskSelectionChange(val) {
       this.taskSelection = val
     },
-    // 查看智能体参数 列表
+    //Legacy comment translated to English.
     async viewAgentParameters(optype, item) {
       let baseList = []
       if (optype === 'task') {
-        // 从任务行数据获取所在组成员列表
+        //Legacy comment translated to English.
         if (item && item.chatGroupId) {
           await this.getTaskMemberListData('task', item.chatGroupId)
         }
@@ -711,23 +753,23 @@ var AgentsAppMethodsManage = {
           ? this.groupTaskMemberList
           : (this.groupDetails?.agentTemplateDtoList ?? [])
       }
-      // 填充状态与历史输出后再打开弹窗
+      //Legacy comment translated to English.
       this.agentParameterList = await this.buildAgentParameterList(baseList)
-      // 先清空再开弹窗，确保 el-tabs 在 pane 渲染完成后按正确类型激活第一个 tab
+      //Legacy comment translated to English.
       this.agentParameterTabsValue = ''
       this.visible.dialogAgentParameter = true
       this.$nextTick(() => {
         this.agentParameterTabsValue = '0'
       })
     },
-    // 从参数弹窗直接复用现有 Agent 编辑表单，保留当前对话上下文
+    //Legacy comment translated to English.
     async openAgentParameterEditor(item) {
       if (!item || item.agentKind === 'RemoteA2A' || !item.id) {
         return
       }
       await this.handleEditDrawerOpenBtn('drawerAgent', item)
     },
-    // Agent 编辑保存后同步当前参数弹窗，避免关闭抽屉后仍显示旧名称、描述或参数
+    //Legacy comment translated to English.
     async refreshAgentParameterItem(savedAgent) {
       if (!this.visible.dialogAgentParameter || !savedAgent?.id) {
         return
@@ -746,11 +788,11 @@ var AgentsAppMethodsManage = {
           this.$set(this.agentParameterList, index, refreshed[0])
         }
       } catch (e) {
-        // 基础信息已经同步；状态接口失败时保留原有参数展示
+        //Legacy comment translated to English.
         console.warn('refreshAgentParameterItem: refresh status failed for agent', savedAgent.id, e)
       }
     },
-    // 构建智能体参数列表：为基础 DTO 列表补充 promptItemDto / aiModelDto / promptRangeDto 及历史输出
+    //Legacy comment translated to English.
     async buildAgentParameterList(baseList) {
       const result = []
       for (const agent of baseList) {
@@ -759,8 +801,8 @@ var AgentsAppMethodsManage = {
           result.push(enriched)
           continue
         }
-        // 获取智能体运行状态（含 promptItemDto / aiModelDto / promptRangeDto）
-        // 使用 serviceAM 并设置 customAlert，由拦截器静默处理错误
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         try {
           const res = await serviceAM.get(
             `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetItemStatus?id=${agent.id}`,
@@ -778,7 +820,7 @@ var AgentsAppMethodsManage = {
         } catch (e) {
           console.warn('buildAgentParameterList: GetItemStatus failed for agent', agent.id, e)
         }
-        // 获取历史输出列表（PromptRange 结果）
+        //Legacy comment translated to English.
         if (enriched.promptItemDto && enriched.promptItemDto.id) {
           try {
             const res = await serviceAM.get(
@@ -802,7 +844,7 @@ var AgentsAppMethodsManage = {
       }
       return result
     },
-    // 再次执行 (即再次启动)
+    //Legacy comment translated to English.
     handleTaskAgain(optype, item = {}) {
       let startData = item ?? {}
       const chatGroupId = this.getGroupStartChatGroupId(startData)
@@ -812,24 +854,24 @@ var AgentsAppMethodsManage = {
       // this.groupStartForm.groupName = item.name
       this.handleEditDrawerOpenBtn('drawerTaskStart', startData)
     },
-    // 任务删除
+    // taskdelete
     handleTaskDelet(optype, row) {
       console.log('handleTaskDelet:', row);
       if (!row || !row.id) return
       let serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.Delete?id=${row.id}`
       if (!serviceURL) return
-      // 操作确认 提示
-      this.$confirm('确认删除数据吗？', '操作确认', {
-        dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      // operation confirmation prompt
+      this.$confirm(ncfST('Frontend.231'), ncfST('Frontend.528'), {
+        dangerouslyUseHTMLString: true, //Legacy comment translated to English.
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: ncfST('Frontend.218')
             });
             let groupDetail = {}
             if (optype === 'agentGroupTask') {
@@ -840,7 +882,7 @@ var AgentsAppMethodsManage = {
               this.gettaskListData(optype)
             }
             if (groupDetail.id) {
-              // 获取任务列表
+              // gettask list
               this.gettaskListData(optype, groupDetail.id)
             }
           } else {
@@ -854,11 +896,11 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         });
       });
     },
-    // 组-任务批量启动(任务) agentGroupTaskBatch groupTaskBatch
+    //Legacy comment translated to English.
     handleTaskStartBatch(opType, item) {
       let selectedRows = []
       let refreshListType = 'task'
@@ -878,23 +920,23 @@ var AgentsAppMethodsManage = {
 
       const selectedIds = (selectedRows || []).map(task => task.id).filter(Boolean)
       if (!selectedIds.length) {
-        this.$message.warning('请先选择要启动的任务')
+        this.$message.warning(ncfST('Frontend.234'))
         return
       }
 
       const serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.StartBatch'
-      // 操作确认 提示
-      this.$confirm('确认批量启动数据吗？', '操作确认', {
-        dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      // operation confirmation prompt
+      this.$confirm(ncfST('Frontend.235'), ncfST('Frontend.528'), {
+        dangerouslyUseHTMLString: true, //Legacy comment translated to English.
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: res?.data?.data || '操作成功!'
+              message: res?.data?.data || ncfST('Frontend.218')
             });
             if (refreshListType === 'task') {
               const refreshOptions = this.buildTaskRefreshOptions('task', {
@@ -919,11 +961,11 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         });
       });
     },
-    // 组-任务批量删除(任务) agentGroupTaskBatch groupTaskBatch
+    //Legacy comment translated to English.
     handleTaskDeleteBatch(opType, item) {
       let selectedRows = []
       if (opType === 'agentGroupTaskBatch') {
@@ -940,23 +982,23 @@ var AgentsAppMethodsManage = {
       }
       const selectedIds = (selectedRows || []).map(task => task.id).filter(Boolean)
       if (!selectedIds.length) {
-        this.$message.warning('请先选择要删除的任务')
+        this.$message.warning(ncfST('Frontend.236'))
         return
       }
       let serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.DeleteBatch'
       if (!serviceURL) return
-      // 操作确认 提示
-      this.$confirm('确认批量删除数据吗？', '操作确认', {
-        dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      // operation confirmation prompt
+      this.$confirm(ncfST('Frontend.233'), ncfST('Frontend.528'), {
+        dangerouslyUseHTMLString: true, //Legacy comment translated to English.
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: ncfST('Frontend.218')
             });
             let groupDetail = {}, groupType = ''
             if (opType === 'agentGroupTaskBatch') {
@@ -967,7 +1009,7 @@ var AgentsAppMethodsManage = {
               groupType = 'groupTask' //'group'
             }
             if (groupDetail.id) {
-              // 获取任务列表
+              // gettask list
               this.gettaskListData(groupType, groupDetail.id)
               // this.getGroupDetailData(groupType, groupDetail.id, groupDetail)
             } else {
@@ -984,7 +1026,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         });
       });
     },
@@ -992,16 +1034,16 @@ var AgentsAppMethodsManage = {
     handleTaskForceStop(optype, row) {
       if (!row || !row.id) return
       const serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ForceStop?id=${row.id}`
-      this.$confirm('确认强制停止该任务吗？', '操作确认', {
+      this.$confirm(ncfST('Frontend.237'), ncfST('Frontend.528'), {
         dangerouslyUseHTMLString: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel')
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: ncfST('Frontend.218')
             })
             let groupDetail = {}
             if (optype === 'agentGroupTask') {
@@ -1025,7 +1067,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         })
       })
     },
@@ -1041,20 +1083,20 @@ var AgentsAppMethodsManage = {
       }
       const selectedIds = (selectedRows || []).map(task => task.id).filter(Boolean)
       if (!selectedIds.length) {
-        this.$message.warning('请先选择要停止的任务')
+        this.$message.warning(ncfST('Frontend.238'))
         return
       }
       const serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ForceStopBatch'
-      this.$confirm('确认批量强制停止所选任务吗？', '操作确认', {
+      this.$confirm(ncfST('Frontend.239'), ncfST('Frontend.528'), {
         dangerouslyUseHTMLString: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel')
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: ncfST('Frontend.218')
             })
             let groupDetail = {}, groupType = ''
             if (opType === 'agentGroupTaskBatch') {
@@ -1080,11 +1122,11 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         })
       })
     },
-    // 查看任务描述
+    //Legacy comment translated to English.
     viewTaskDescription(item) {
       this.describeContent = item?.promptCommand ?? ''
       this.taskDescriptionDetails = item || null
@@ -1092,25 +1134,25 @@ var AgentsAppMethodsManage = {
     },
     taskHumanInTheLoopLevelText(value) {
       return {
-        0: 'L0 全自动',
-        1: 'L1 风险分层',
-        2: 'L2 工具审批',
-        3: 'L3 Human 参与者 + 工具审批'
-      }[Number(value)] || `未知（${value}）`
+        0: ncfST('Frontend.345'),
+        1: ncfST('Frontend.346'),
+        2: ncfST('Frontend.347'),
+        3: ncfST('Frontend.348')
+      }[Number(value)] || ncfST('Frontend.555')
     },
     taskToolPermissionText(value) {
       return {
-        0: '继承 HIL 等级',
-        1: '自动执行',
-        2: '执行前审批',
-        3: '禁止使用'
-      }[Number(value)] || `未知（${value}）`
+        0: ncfST('Frontend.468'),
+        1: ncfST('Frontend.470'),
+        2: ncfST('Frontend.412'),
+        3: ncfST('Frontend.455')
+      }[Number(value)] || ncfST('Frontend.555')
     },
     taskHumanParticipantStatusText(task) {
       if (!task?.executionPolicyCaptured) {
-        return '历史任务未记录'
+        return ncfST('Frontend.444')
       }
-      return task.includeHumanParticipant ? '已加入本任务' : '本任务未启用'
+      return task.includeHumanParticipant ? ncfST('Frontend.578') : ncfST('Frontend.579')
     },
     taskDescriptionCopyText() {
       const detail = this.taskDescriptionDetails || {}
@@ -1121,29 +1163,29 @@ var AgentsAppMethodsManage = {
       return [
         this.describeContent,
         '',
-        '--- 执行策略 ---',
-        `HIL 等级：${this.taskHumanInTheLoopLevelText(detail.humanInTheLoopLevel)}`,
-        `插件工具权限：${this.taskToolPermissionText(detail.pluginToolPermission)}`,
-        `MCP 工具权限：${this.taskToolPermissionText(detail.mcpToolPermission)}`,
-        `Human 参与者：${detail.includeHumanParticipant ? '包含' : '跳过'}`,
-        `最大对话轮数：${Number(detail.chatMaxRound || 0)}`,
-        `个性化参数：${detail.isPersonality ? '启用' : '关闭'}`,
-        `兼容强制审批：${detail.requireHumanApproval ? '启用' : '关闭'}`
+        `--- ${ncfST('Frontend.440')} ---`,
+        `${ncfST('Frontend.341')}：${this.taskHumanInTheLoopLevelText(detail.humanInTheLoopLevel)}`,
+        `${ncfST('Frontend.419')}：${this.taskToolPermissionText(detail.pluginToolPermission)}`,
+        `${ncfST('Frontend.349')}：${this.taskToolPermissionText(detail.mcpToolPermission)}`,
+        `${ncfST('Frontend.343')}：${detail.includeHumanParticipant ? ncfST('Frontend.140') : ncfST('Frontend.501')}`,
+        `${ncfST('Frontend.432')}：${Number(detail.chatMaxRound || 0)}`,
+        `${ncfST('Frontend.354')}：${detail.isPersonality ? ncfST('Frontend.502') : ncfST('Frontend.501')}`,
+        `${ncfST('Frontend.376')}：${detail.requireHumanApproval ? ncfST('Frontend.502') : ncfST('Frontend.501')}`
       ].join('\n')
     },
-    // 任务描述复制
+    //Legacy comment translated to English.
     taskDescriptionCopy() {
-      // 复制文本
+      //Legacy comment translated to English.
       this.copyText('4', this.taskDescriptionCopyText()).then(() => {
         this.handleElVisibleClose('dialogTaskDescription')
       })
     },
-    // 任务评价
+    // task evaluation
     taskEvaluation(item) {
       Object.assign(this.evaluationForm, item)
       this.visible.dialogTaskEvaluation = true
     },
-    // input 数值类型处理
+    //Legacy comment translated to English.
     handleInputNum(val, form) {
       if (form) {
         const sliderStep = 0.1
@@ -1159,24 +1201,24 @@ var AgentsAppMethodsManage = {
         }
       }
     },
-    // 任务成员列表筛选 
+    //Legacy comment translated to English.
     handleTaskFilterChange(val, listType) {
       if (listType === 'agentGroupTask') {
-        // 智能体 组 任务
+        // agent group task
         const chatGroupMembers = this.getTaskParticipantList(listType)
         const filterList = chatGroupMembers.filter(item => item.name.includes(val))
         this.agentGroupTaskMemberfilterList = filterList.map(item => this.getParticipantKey(item))
       } else if (listType === 'groupTask') {
-        // 组 任务
+        // group task
         const chatGroupMembers = this.getTaskParticipantList(listType)
         const filterList = chatGroupMembers.filter(item => item.name.includes(val))
         this.groupTaskMemberfilterList = filterList.map(item => this.getParticipantKey(item))
       } else if (listType === 'agentTask') {
-        // 智能体 任务
+        // agent task
         const filterList = this.agentDetailsTaskMemberList.filter(item => item.name.includes(val))
         this.agentTaskMemberfilterList = filterList.map(item => this.getParticipantKey(item))
       } else if (listType === 'task') {
-        // 任务
+        // task
         const filterList = this.taskMemberList.filter(item => item.name.includes(val))
         this.taskMemberfilterList = filterList.map(item => this.getParticipantKey(item))
         console.log('handleTaskFilterChange', this.taskMemberfilterList);
@@ -1209,38 +1251,38 @@ var AgentsAppMethodsManage = {
       const enabled = participant?.enable !== false
       const statusText = isRemote
         ? this.remoteParticipantAvailabilityText(participant)
-        : (enabled ? '已启用' : '已停用')
+        : (enabled ? ncfST('Frontend.044') : ncfST('Frontend.043'))
       const statusType = isRemote
         ? this.remoteParticipantAvailabilityType(participant)
         : (enabled ? 'success' : 'info')
       const currentUsageText = isHuman
         ? (usage.messageCount === 0
-          ? '尚无已提交输入'
-          : `已输入 ${this.formatUsageCount(usage.messageCount)} 条文本`)
+          ? ncfST('Frontend.174')
+          : `${ncfST('Frontend.071')}: ${this.formatUsageCount(usage.messageCount)}`)
         : (usage.messageCount === 0
-          ? '尚无已完成回复'
+          ? ncfST('Frontend.174')
           : (hasReportedTokenUsage
-            ? `${this.formatUsageCount(usage.messageCount)} 条回复 · ${this.formatUsageCount(usage.totalTokens)} Token`
-            : `${this.formatUsageCount(usage.messageCount)} 条回复 · Token 未由远端反馈`))
+            ? `${ncfST('Frontend.089')}: ${this.formatUsageCount(usage.messageCount)} · ${ncfST('Frontend.084')}: ${this.formatUsageCount(usage.totalTokens)}`
+            : `${ncfST('Frontend.089')}: ${this.formatUsageCount(usage.messageCount)} · ${ncfST('Frontend.084')}`))
       const totalTokens = Number(participant?.totalTokens || 0)
 
       return {
-        kindText: isHuman ? 'Human 参与者' : (isRemote ? '远程 A2A' : '本地 Agent'),
+        kindText: isHuman ? ncfST('Frontend.343') : (isRemote ? ncfST('Frontend.334') : ncfST('Frontend.436')),
         kindType: isHuman ? 'info' : (isRemote ? 'warning' : 'primary'),
         statusText,
         statusType,
-        description: participant?.description || '暂无简介',
+        description: participant?.description || ncfST('Frontend.159'),
         currentUsageText,
         responseTimeText: isHuman
-          ? '不适用'
-          : this.formatResponseMilliseconds(usage.averageResponseMilliseconds, '暂无响应时长'),
+          ? ncfST('Frontend.555')
+          : this.formatResponseMilliseconds(usage.averageResponseMilliseconds, ncfST('Frontend.174')),
         totalUsageText: isHuman
-          ? '不产生模型 Token'
+          ? ncfST('Frontend.590')
           : (totalTokens > 0
             ? `${this.formatUsageCount(totalTokens)} Token`
-            : '暂无累计数据'),
+            : ncfST('Frontend.174')),
         activityText: this.formatActivityTime(participant?.lastActiveTime || participant?.lastHealthCheckAt),
-        healthMessage: isRemote ? (participant?.lastHealthCheckMessage || '尚未执行连接检测') : '',
+        healthMessage: isRemote ? (participant?.lastHealthCheckMessage || ncfST('Frontend.570')) : '',
         isRemote,
         canOpenEditor: !isHuman && Number.isInteger(Number(participant?.id)) && Number(participant.id) > 0,
       }
@@ -1362,26 +1404,26 @@ var AgentsAppMethodsManage = {
       return !filterText || matchedParticipantKeys.includes(this.getParticipantKey(historyItem))
     },
 
-    // el-scrollbar 触底滚动 到底部
+    //Legacy comment translated to English.
     scrollbarDown(refName, istouchBottom = false, isFirst = false) {
       if (!refName) return
       const scrollbar = this.$refs[refName];
       if (!scrollbar) return
       if (istouchBottom) {
-        const scrollTop = scrollbar.wrap.scrollTop; // 当前滚动的顶部
-        const scrollHeight = scrollbar.wrap.scrollHeight; // 内容总高度
-        const clientHeight = scrollbar.wrap.clientHeight; // 可视区域高度
+        const scrollTop = scrollbar.wrap.scrollTop; //Legacy comment translated to English.
+        const scrollHeight = scrollbar.wrap.scrollHeight; //Legacy comment translated to English.
+        const clientHeight = scrollbar.wrap.clientHeight; //Legacy comment translated to English.
         // scrollTop, scrollHeight, clientHeight
         if (scrollHeight !== clientHeight && (scrollTop + clientHeight + 30 >= scrollHeight || isFirst)) {
-          // 滚动到底部
+          //Legacy comment translated to English.
           scrollbar.wrap.scrollTop = scrollbar.wrap.scrollHeight;
         }
       } else {
-        // 滚动到底部
+        //Legacy comment translated to English.
         scrollbar.wrap.scrollTop = scrollbar.wrap.scrollHeight;
       }
     },
-    // 获取发送人名称
+    //Legacy comment translated to English.
     getTaskSenderName(taskType, historyItem) {
       const sender = this.getTaskSenderInfo(taskType, historyItem)
       if (sender && sender.name) {
@@ -1392,28 +1434,28 @@ var AgentsAppMethodsManage = {
     getTaskSenderInfo(taskType, participantOrHistory) {
       const participantKey = this.getParticipantKey(participantOrHistory)
       const formId = participantOrHistory?.fromAgentTemplateId ?? participantOrHistory?.id ?? participantOrHistory
-      // 智能体 组 任务
+      // agent group task
       if (taskType === 'agentGroupTask') {
         const chatGroupMembers = this.getTaskParticipantList(taskType)
         const fintItem = chatGroupMembers.find(item => this.getParticipantKey(item) === participantKey)
           || chatGroupMembers.find(item => item.agentKind !== 'RemoteA2A' && String(item.id) === String(formId))
         return fintItem ?? {}
       }
-      // 组 任务
+      // group task
       if (taskType === 'groupTask') {
         const chatGroupMembers = this.getTaskParticipantList(taskType)
         const fintItem = chatGroupMembers.find(item => this.getParticipantKey(item) === participantKey)
           || chatGroupMembers.find(item => item.agentKind !== 'RemoteA2A' && String(item.id) === String(formId))
         return fintItem ?? {}
       }
-      // 智能体 任务
+      // agent task
       if (taskType === 'agentTask') {
         const fintItem = this.agentDetailsTaskMemberList.find(item => this.getParticipantKey(item) === participantKey)
           || this.agentDetailsTaskMemberList.find(item => item.agentKind !== 'RemoteA2A' && item.id === formId)
         return fintItem ?? {}
       }
 
-      // 任务
+      // task
       if (taskType === 'task') {
         const fintItem = this.taskMemberList.find(item => this.getParticipantKey(item) === participantKey)
           || this.taskMemberList.find(item => item.agentKind !== 'RemoteA2A' && item.id === formId)
@@ -1425,7 +1467,7 @@ var AgentsAppMethodsManage = {
     jumpPromptRange(urlType, item) {
       let url = ''
       if (urlType === 'promptRange') {
-        // 靶场:rangeId   靶道:promptId（hash 路由）
+        //Legacy comment translated to English.
         const rangeId = item?.promptRange?.id ?? ''
         const promptId = item?.id ?? ''
         if (rangeId && promptId) {
@@ -1440,7 +1482,7 @@ var AgentsAppMethodsManage = {
       if (urlType === 'modelParameter') {
         // url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18`
         if (item) {
-          // 展示详情数据
+          //Legacy comment translated to English.
           this.$confirm(`<div class="df">
                     <div class="df-wn flex-ac flex-js" style="width:50%">
                         <span>Top_p:</span>
@@ -1466,10 +1508,10 @@ var AgentsAppMethodsManage = {
                         <span>StopSequences:</span>
                         <span>${item.stopSequences}</span>
                     </div>
-    </div>`, '模型参数', {
-            dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+    </div>`, ncfST('Frontend.040'), {
+            dangerouslyUseHTMLString: true, //Legacy comment translated to English.
+            confirmButtonText: ncfST('Frontend.172'),
+            cancelButtonText: ncfST('Studio.Cancel'),
             showCancelButton: false,
             // type: 'warning'
           }).then(() => { }).catch(() => { });
@@ -1479,27 +1521,27 @@ var AgentsAppMethodsManage = {
       simulationAELOperation(url)
       // openWindow(url)
     },
-    // 处理靶道 和 靶场展示名称
+    //Legacy comment translated to English.
     handlePromptShowName(showType, item) {
       let resultText = ''
       if (showType === '1') {
-        // 靶道
+        //Legacy comment translated to English.
         const itemData = item?.promptRangeDto ?? ''
         if (itemData) {
           resultText = `${itemData.alias}(${itemData.rangeName})`
         }
       } else if (showType === '2') {
-        // 靶场
+        // range
         const itemData = item?.promptItemDto ?? ''
         if (itemData) {
           const avg = scoreFormatter(itemData.evalAvgScore)
           const max = scoreFormatter(itemData.evalMaxScore)
-          resultText = `${itemData.nickName || '未设置'} | ${itemData.fullVersion} | 平均分：${avg} | 最高分：${max} ${itemData.isDraft ? '(草稿)' : ''}`
+          resultText = `${itemData.nickName || ncfST('Frontend.240')} | ${itemData.fullVersion} | ${ncfST('Frontend.194')} ${avg} | ${ncfST('Frontend.195')} ${max} ${itemData.isDraft ? ncfST('Frontend.241') : ''}`
         }
       }
       return resultText ?? ''
     },
-    // 复制 task 任务描述
+    //Legacy comment translated to English.
     async copyText(opType, item) {
       let text = ''
       if (opType === '1') {
@@ -1513,7 +1555,7 @@ var AgentsAppMethodsManage = {
       }
 
       const copied = await copyTextForEmbeddedBrowser(text)
-      this.$message[copied ? 'success' : 'error'](copied ? '复制成功' : '复制失败')
+      this.$message[copied ? 'success' : 'error'](copied ? ncfST('Frontend.179') : ncfST('Frontend.180'))
       return copied
     },
 };

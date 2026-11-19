@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopBridgeTokenValidator.cs
-    文件功能描述：DesktopBridge 本机会话令牌校验
+    File name: DesktopBridgeTokenValidator.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260725
+    Created by: Senparc - 20260725
 
-    修改标识：Senparc - 20260726
-    修改描述：v0.1.0-preview2 同步模块功能与兼容性改进
+    Modified by: Senparc - 20260726
+    Change description: v0.1.0-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.8 implement connection manager and workspace file system provider
+    Modified by: Senparc - 20261103
+    Change description: v0.4.8 implement connection manager and workspace file system provider
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
 
 ----------------------------------------------------------------*/
 

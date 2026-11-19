@@ -79,268 +79,268 @@
     <value>Возвести результат выше в куб</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>+ Добавить свойство||+ Добавить свойство</value>
+    <value>+ Добавить свойство</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>+ Добавить тег||+ Добавить тег</value>
+    <value>+ Добавить тег</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Загрузить файл||Загрузить файл</value>
+    <value>Загрузить файл</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Время загрузки||Время загрузки</value>
+    <value>Время загрузки</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>извлечённых фрагментов||извлечённых фрагментов</value>
+    <value>извлечённых фрагментов</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Подробнее о методах извлечения.||Подробнее о методах извлечения.</value>
+    <value>Подробнее о методах извлечения.</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Сохранить||Сохранить</value>
+    <value>Сохранить</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Обратный индекс||Обратный индекс</value>
+    <value>Обратный индекс</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>Инвертированный индекс — структура для эффективного поиска. Он организован по терминам, и каждый термин указывает на документы или веб-страницы, где он встречается.||Инвертированный индекс — структура для эффективного поиска. Он организован по терминам, и каждый термин указывает на документы или веб-страницы, где он встречается.</value>
+    <value>Инвертированный индекс — структура для эффективного поиска. Он организован по терминам, и каждый термин указывает на документы или веб-страницы, где он встречается.</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>Ключевые слова||Ключевые слова</value>
+    <value>Ключевые слова</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>Закрыть||Закрыть</value>
+    <value>Закрыть</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>Содержимое||Содержимое</value>
+    <value>Содержимое</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>Тип содержимого||Тип содержимого</value>
+    <value>Тип содержимого</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>Удалить||Удалить</value>
+    <value>Удалить</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>Отмена||Отмена</value>
+    <value>Отмена</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Тест поиска||Тест поиска</value>
+    <value>Тест поиска</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Полнота||Полнота</value>
+    <value>Полнота</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>Имя||Имя</value>
+    <value>Имя</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>Векторизовать||Векторизовать</value>
+    <value>Векторизовать</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Результат векторизации||Результат векторизации</value>
+    <value>Результат векторизации</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Ход векторизации||Ход векторизации</value>
+    <value>Ход векторизации</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>символы||символы</value>
+    <value>символы</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>Имя свойства||Имя свойства</value>
+    <value>Имя свойства</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Управление свойствами||Управление свойствами</value>
+    <value>Управление свойствами</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Выбрано:||Выбрано:</value>
+    <value>Выбрано:</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Выбрано строк: {0}||Выбрано строк: {0}</value>
+    <value>Выбрано строк: {0}</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>Открыть||Открыть</value>
+    <value>Открыть</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>Модули расширения||Модули расширения</value>
+    <value>Модули расширения</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>Удалить выбранные||Удалить выбранные</value>
+    <value>Удалить выбранные</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>Поиск||Поиск</value>
+    <value>Поиск</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Действия||Действия</value>
+    <value>Действия</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Источник данных||Источник данных</value>
+    <value>Источник данных</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>Список файлов||Список файлов</value>
+    <value>Список файлов</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>Имя файла||Имя файла</value>
+    <value>Имя файла</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>Имя файла||Имя файла</value>
+    <value>Имя файла</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>Размер файла||Размер файла</value>
+    <value>Размер файла</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Добавить||Добавить</value>
+    <value>Добавить</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Новый файл||Новый файл</value>
+    <value>Новый файл</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Время ↓||Время ↓</value>
+    <value>Время ↓</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>Результатов извлечения пока нет. Выберите базу знаний, введите исходный текст и нажмите «Тест».||Результатов извлечения пока нет. Выберите базу знаний, введите исходный текст и нажмите «Тест».</value>
+    <value>Результатов извлечения пока нет. Выберите базу знаний, введите исходный текст и нажмите «Тест».</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Поиск||Поиск</value>
+    <value>Поиск</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Содержимое запроса||Содержимое запроса</value>
+    <value>Содержимое запроса</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Имя тега||Имя тега</value>
+    <value>Имя тега</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Управление тегами||Управление тегами</value>
+    <value>Управление тегами</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>Проверьте полноту извлечения знаний по заданному тексту запроса.||Проверьте полноту извлечения знаний по заданному тексту запроса.</value>
+    <value>Проверьте полноту извлечения знаний по заданному тексту запроса.</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Метод извлечения||Метод извлечения</value>
+    <value>Метод извлечения</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Настройки извлечения||Настройки извлечения</value>
+    <value>Настройки извлечения</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>Сведения о фрагменте||Сведения о фрагменте</value>
+    <value>Сведения о фрагменте</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Тест||Тест</value>
+    <value>Тест</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Время добавления||Время добавления</value>
+    <value>Время добавления</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>Исходный текст||Исходный текст</value>
+    <value>Исходный текст</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>База знаний||База знаний</value>
+    <value>База знаний</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>Управление базами знаний||Управление базами знаний</value>
+    <value>Управление базами знаний</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Список баз знаний||Список баз знаний</value>
+    <value>Список баз знаний</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>Управление базами знаний||Управление базами знаний</value>
+    <value>Управление базами знаний</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Подтвердить||Подтвердить</value>
+    <value>Подтвердить</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Подтвердить||Подтвердить</value>
+    <value>Подтвердить</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Удалить эту базу знаний?||Удалить эту базу знаний?</value>
+    <value>Удалить эту базу знаний?</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Фильтр столбцов||Фильтр столбцов</value>
+    <value>Фильтр столбцов</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Изменить||Изменить</value>
+    <value>Изменить</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>записи||записи</value>
+    <value>записи</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Заполните||Заполните</value>
+    <value>Заполните</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>Введите ключевое слово||Введите ключевое слово</value>
+    <value>Введите ключевое слово</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>Введите текст||Введите текст</value>
+    <value>Введите текст</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>Введите имя||Введите имя</value>
+    <value>Введите имя</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>Введите текст запроса||Введите текст запроса</value>
+    <value>Введите текст запроса</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>Выберите тип содержимого||Выберите тип содержимого</value>
+    <value>Выберите тип содержимого</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>Введите ключевые слова, чтобы найти и выбрать базу знаний||Введите ключевые слова, чтобы найти и выбрать базу знаний</value>
+    <value>Введите ключевые слова, чтобы найти и выбрать базу знаний</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>Выбрать модель Embedding||Выбрать модель Embedding</value>
+    <value>Выбрать модель Embedding</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>Выбрать векторную базу данных||Выбрать векторную базу данных</value>
+    <value>Выбрать векторную базу данных</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>Выбрать модель чата||Выбрать модель чата</value>
+    <value>Выбрать модель чата</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>Выбрать файл||Выбрать файл</value>
+    <value>Выбрать файл</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>После выбора файлы загружаются в управление файлами. Отметьте их в списке ниже, чтобы связать с текущей базой знаний.||После выбора файлы загружаются в управление файлами. Отметьте их в списке ниже, чтобы связать с текущей базой знаний.</value>
+    <value>После выбора файлы загружаются в управление файлами. Отметьте их в списке ниже, чтобы связать с текущей базой знаний.</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>Настроить||Настроить</value>
+    <value>Настроить</value>
   </data>
   <data name="Frontend.075" xml:space="preserve">
-    <value>Сбросить||Сбросить</value>
+    <value>Сбросить</value>
   </data>
   <data name="Frontend.076" xml:space="preserve">
-    <value>Не удалось загрузить список||Не удалось загрузить список</value>
+    <value>Не удалось загрузить список</value>
   </data>
   <data name="Frontend.077" xml:space="preserve">
-    <value>Модули успешно добавлены||Модули успешно добавлены</value>
+    <value>Модули успешно добавлены</value>
   </data>
   <data name="Frontend.078" xml:space="preserve">
-    <value>Ошибка добавления||Ошибка добавления</value>
+    <value>Ошибка добавления</value>
   </data>
   <data name="Frontend.079" xml:space="preserve">
-    <value>Успешно обновлено||Успешно обновлено</value>
+    <value>Успешно обновлено</value>
   </data>
   <data name="Frontend.080" xml:space="preserve">
-    <value>Ошибка изменения||Ошибка изменения</value>
+    <value>Ошибка изменения</value>
   </data>
   <data name="Frontend.081" xml:space="preserve">
-    <value>Удалено успешно||Удалено успешно</value>
+    <value>Удалено успешно</value>
   </data>
   <data name="Frontend.082" xml:space="preserve">
-    <value>Ошибка удаления||Ошибка удаления</value>
+    <value>Ошибка удаления</value>
   </data>
   <data name="Frontend.083" xml:space="preserve">
-    <value>Загружено||Загружено</value>
+    <value>Загружено</value>
   </data>
   <data name="Frontend.084" xml:space="preserve">
-    <value>Ошибка загрузки||Ошибка загрузки</value>
+    <value>Ошибка загрузки</value>
   </data>
   <data name="Frontend.085" xml:space="preserve">
-    <value>Ошибка векторизации||Ошибка векторизации</value>
+    <value>Ошибка векторизации</value>
   </data>
   <data name="Frontend.086" xml:space="preserve">
-    <value>Ошибка загрузки||Ошибка загрузки</value>
+    <value>Ошибка загрузки</value>
   </data>
   <data name="Frontend.087" xml:space="preserve">
-    <value>Нет данных||Нет данных</value>
+    <value>Нет данных</value>
   </data>
   <data name="Frontend.088" xml:space="preserve">
-    <value>Уведомление||Уведомление</value>
+    <value>Уведомление</value>
   </data>
   <data name="Page.EditKnowledgeBase" xml:space="preserve">
     <value>Изменить базу знаний</value>
@@ -349,262 +349,262 @@
     <value>Создать базу знаний</value>
   </data>
   <data name="Frontend.089" xml:space="preserve">
-    <value>Тип||Тип</value>
+    <value>Тип</value>
   </data>
   <data name="Frontend.090" xml:space="preserve">
-    <value>Источник||Источник</value>
+    <value>Источник</value>
   </data>
   <data name="Frontend.091" xml:space="preserve">
-    <value>Важно||Важно</value>
+    <value>Важно</value>
   </data>
   <data name="Frontend.092" xml:space="preserve">
-    <value>Ожидает проверки||Ожидает проверки</value>
+    <value>Ожидает проверки</value>
   </data>
   <data name="Frontend.093" xml:space="preserve">
-    <value>Демо||Демо</value>
+    <value>Демо</value>
   </data>
   <data name="Frontend.094" xml:space="preserve">
-    <value>Сегмент-{0}||Сегмент-{0}</value>
+    <value>Сегмент-{0}</value>
   </data>
   <data name="Frontend.095" xml:space="preserve">
-    <value>База знаний-{0}||База знаний-{0}</value>
+    <value>База знаний-{0}</value>
   </data>
   <data name="Frontend.096" xml:space="preserve">
-    <value>Настройки извлечения сохранены||Настройки извлечения сохранены</value>
+    <value>Настройки извлечения сохранены</value>
   </data>
   <data name="Frontend.097" xml:space="preserve">
-    <value>Введите имя атрибута||Введите имя атрибута</value>
+    <value>Введите имя атрибута</value>
   </data>
   <data name="Frontend.098" xml:space="preserve">
-    <value>Сохранено||Сохранено</value>
+    <value>Сохранено</value>
   </data>
   <data name="Frontend.099" xml:space="preserve">
-    <value>Удалить это свойство?||Удалить это свойство?</value>
+    <value>Удалить это свойство?</value>
   </data>
   <data name="Frontend.100" xml:space="preserve">
-    <value>Удалено||Удалено</value>
+    <value>Удалено</value>
   </data>
   <data name="Frontend.101" xml:space="preserve">
-    <value>Введите имя тега||Введите имя тега</value>
+    <value>Введите имя тега</value>
   </data>
   <data name="Frontend.102" xml:space="preserve">
-    <value>Удалить этот тег?||Удалить этот тег?</value>
+    <value>Удалить этот тег?</value>
   </data>
   <data name="Frontend.103" xml:space="preserve">
-    <value>Сначала выберите базу знаний||Сначала выберите базу знаний</value>
+    <value>Сначала выберите базу знаний</value>
   </data>
   <data name="Frontend.104" xml:space="preserve">
-    <value>[Пример извлечения 1]||[Пример извлечения 1]</value>
+    <value>[Пример извлечения 1]</value>
   </data>
   <data name="Frontend.105" xml:space="preserve">
-    <value>Извлечение офлайн-оценки завершено||Извлечение офлайн-оценки завершено</value>
+    <value>Извлечение офлайн-оценки завершено</value>
   </data>
   <data name="Frontend.106" xml:space="preserve">
-    <value>Извлечение онлайн-оценки завершено||Извлечение онлайн-оценки завершено</value>
+    <value>Извлечение онлайн-оценки завершено</value>
   </data>
   <data name="Frontend.107" xml:space="preserve">
-    <value>Ошибка||Ошибка</value>
+    <value>Ошибка</value>
   </data>
   <data name="Frontend.108" xml:space="preserve">
-    <value>Ошибка векторизации. Проверьте конфигурацию.||Ошибка векторизации. Проверьте конфигурацию.</value>
+    <value>Ошибка векторизации. Проверьте конфигурацию.</value>
   </data>
   <data name="Frontend.109" xml:space="preserve">
-    <value>Главная||Главная</value>
+    <value>Главная</value>
   </data>
   <data name="Frontend.110" xml:space="preserve">
-    <value>Страница списка баз знаний||Страница списка баз знаний</value>
+    <value>Страница списка баз знаний</value>
   </data>
   <data name="Frontend.111" xml:space="preserve">
-    <value>Id модели Embedding||Id модели Embedding</value>
+    <value>Id модели Embedding</value>
   </data>
   <data name="Frontend.112" xml:space="preserve">
-    <value>Id векторной базы данных||Id векторной базы данных</value>
+    <value>Id векторной базы данных</value>
   </data>
   <data name="Frontend.113" xml:space="preserve">
-    <value>Id модели чата||Id модели чата</value>
+    <value>Id модели чата</value>
   </data>
   <data name="Frontend.114" xml:space="preserve">
-    <value>Введите Id модели Embedding||Введите Id модели Embedding</value>
+    <value>Введите Id модели Embedding</value>
   </data>
   <data name="Frontend.115" xml:space="preserve">
-    <value>Введите Id векторной базы данных||Введите Id векторной базы данных</value>
+    <value>Введите Id векторной базы данных</value>
   </data>
   <data name="Frontend.116" xml:space="preserve">
-    <value>Введите Id модели чата||Введите Id модели чата</value>
+    <value>Введите Id модели чата</value>
   </data>
   <data name="Frontend.117" xml:space="preserve">
-    <value>Изменить связь базы знаний||Изменить связь базы знаний</value>
+    <value>Изменить связь базы знаний</value>
   </data>
   <data name="Frontend.118" xml:space="preserve">
-    <value>Добавить связь базы знаний||Добавить связь базы знаний</value>
+    <value>Добавить связь базы знаний</value>
   </data>
   <data name="Frontend.119" xml:space="preserve">
-    <value>Выбрано строк: {0}||Выбрано строк: {0}</value>
+    <value>Выбрано строк: {0}</value>
   </data>
   <data name="Frontend.120" xml:space="preserve">
-    <value>Открыть||Открыть</value>
+    <value>Открыть</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
-    <value>Число извлечённых фрагментов||Число извлечённых фрагментов</value>
+    <value>Число извлечённых фрагментов</value>
   </data>
   <data name="Frontend.122" xml:space="preserve">
-    <value>Id базы знаний||Id базы знаний</value>
+    <value>Id базы знаний</value>
   </data>
   <data name="Frontend.123" xml:space="preserve">
-    <value>Ввод||Ввод</value>
+    <value>Ввод</value>
   </data>
   <data name="Frontend.124" xml:space="preserve">
-    <value>Файл||Файл</value>
+    <value>Файл</value>
   </data>
   <data name="Frontend.125" xml:space="preserve">
-    <value>Собрать внешние данные||Собрать внешние данные</value>
+    <value>Собрать внешние данные</value>
   </data>
   <data name="Frontend.126" xml:space="preserve">
-    <value>Добавить сведения о базе знаний||Добавить сведения о базе знаний</value>
+    <value>Добавить сведения о базе знаний</value>
   </data>
   <data name="Frontend.127" xml:space="preserve">
-    <value>Название сведений управления базой знаний обязательно||Название сведений управления базой знаний обязательно</value>
+    <value>Название сведений управления базой знаний обязательно</value>
   </data>
   <data name="Frontend.128" xml:space="preserve">
-    <value>Карточка сведений о базе знаний||Карточка сведений о базе знаний</value>
+    <value>Карточка сведений о базе знаний</value>
   </data>
   <data name="Frontend.129" xml:space="preserve">
-    <value>Успешно||Успешно</value>
+    <value>Успешно</value>
   </data>
   <data name="Frontend.130" xml:space="preserve">
-    <value>Поздравляем, загрузка выполнена||Поздравляем, загрузка выполнена</value>
+    <value>Поздравляем, загрузка выполнена</value>
   </data>
   <data name="Frontend.131" xml:space="preserve">
-    <value>Ошибка||Ошибка</value>
+    <value>Ошибка</value>
   </data>
   <data name="Frontend.132" xml:space="preserve">
-    <value>Не удалось загрузить, загрузите снова||Не удалось загрузить, загрузите снова</value>
+    <value>Не удалось загрузить, загрузите снова</value>
   </data>
   <data name="Frontend.133" xml:space="preserve">
-    <value>Изменить сведения о базе знаний||Изменить сведения о базе знаний</value>
+    <value>Изменить сведения о базе знаний</value>
   </data>
   <data name="Frontend.134" xml:space="preserve">
-    <value>Подготовка...||Подготовка...</value>
+    <value>Подготовка...</value>
   </data>
   <data name="Frontend.135" xml:space="preserve">
-    <value>Добавить базу знаний||Добавить базу знаний</value>
+    <value>Добавить базу знаний</value>
   </data>
   <data name="Frontend.136" xml:space="preserve">
-    <value>Имя базы знаний обязательно||Имя базы знаний обязательно</value>
+    <value>Имя базы знаний обязательно</value>
   </data>
   <data name="Frontend.137" xml:space="preserve">
-    <value>Сведения о базе знаний||Сведения о базе знаний</value>
+    <value>Сведения о базе знаний</value>
   </data>
   <data name="Frontend.138" xml:space="preserve">
-    <value>Выберите||Выберите</value>
+    <value>Выберите</value>
   </data>
   <data name="Frontend.139" xml:space="preserve">
-    <value>Файл загружен в управление файлами||Файл загружен в управление файлами</value>
+    <value>Файл загружен в управление файлами</value>
   </data>
   <data name="Frontend.140" xml:space="preserve">
-    <value>Не удалось загрузить, повторите попытку||Не удалось загрузить, повторите попытку</value>
+    <value>Не удалось загрузить, повторите попытку</value>
   </data>
   <data name="Frontend.141" xml:space="preserve">
-    <value>Изменить базу знаний||Изменить базу знаний</value>
+    <value>Изменить базу знаний</value>
   </data>
   <data name="Frontend.142" xml:space="preserve">
-    <value>Выберите хотя бы один файл перед сохранением||Выберите хотя бы один файл перед сохранением</value>
+    <value>Выберите хотя бы один файл перед сохранением</value>
   </data>
   <data name="Frontend.143" xml:space="preserve">
-    <value>Файл связан с базой знаний, и запись добавлена||Файл связан с базой знаний, и запись добавлена</value>
+    <value>Файл связан с базой знаний, и запись добавлена</value>
   </data>
   <data name="Frontend.144" xml:space="preserve">
-    <value>Ошибка импорта файла||Ошибка импорта файла</value>
+    <value>Ошибка импорта файла</value>
   </data>
   <data name="Frontend.145" xml:space="preserve">
-    <value>Ошибка импорта файла:||Ошибка импорта файла:</value>
+    <value>Ошибка импорта файла:</value>
   </data>
   <data name="Frontend.146" xml:space="preserve">
-    <value>Сохранено||Сохранено</value>
+    <value>Сохранено</value>
   </data>
   <data name="Frontend.147" xml:space="preserve">
-    <value>База знаний сохранена||База знаний сохранена</value>
+    <value>База знаний сохранена</value>
   </data>
   <data name="Frontend.148" xml:space="preserve">
-    <value>Не удалось сохранить, проверьте данные||Не удалось сохранить, проверьте данные</value>
+    <value>Не удалось сохранить, проверьте данные</value>
   </data>
   <data name="Frontend.149" xml:space="preserve">
-    <value>Ошибка при сохранении:||Ошибка при сохранении:</value>
+    <value>Ошибка при сохранении:</value>
   </data>
   <data name="Frontend.150" xml:space="preserve">
-    <value>Удалить файл «{0}»? Запись в базе и физический файл будут удалены.||Удалить файл «{0}»? Запись в базе и физический файл будут удалены.</value>
+    <value>Удалить файл «{0}»? Запись в базе и физический файл будут удалены.</value>
   </data>
   <data name="Frontend.151" xml:space="preserve">
-    <value>Подтверждение удаления||Подтверждение удаления</value>
+    <value>Подтверждение удаления</value>
   </data>
   <data name="Frontend.152" xml:space="preserve">
-    <value>Сначала отметьте файлы для удаления||Сначала отметьте файлы для удаления</value>
+    <value>Сначала отметьте файлы для удаления</value>
   </data>
   <data name="Frontend.153" xml:space="preserve">
-    <value>Удалить выбранные файлы ({0})? Записи в базе и физические файлы будут удалены.||Удалить выбранные файлы ({0})? Записи в базе и физические файлы будут удалены.</value>
+    <value>Удалить выбранные файлы ({0})? Записи в базе и физические файлы будут удалены.</value>
   </data>
   <data name="Frontend.154" xml:space="preserve">
-    <value>Подтвердить массовое удаление||Подтвердить массовое удаление</value>
+    <value>Подтвердить массовое удаление</value>
   </data>
   <data name="Frontend.155" xml:space="preserve">
-    <value>Частично завершено||Частично завершено</value>
+    <value>Частично завершено</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
-    <value>Удалено файлов: {0}/{1}||Удалено файлов: {0}/{1}</value>
+    <value>Удалено файлов: {0}/{1}</value>
   </data>
   <data name="Frontend.157" xml:space="preserve">
-    <value>Файл удалён||Файл удалён</value>
+    <value>Файл удалён</value>
   </data>
   <data name="Frontend.158" xml:space="preserve">
-    <value>Ошибка удаления:||Ошибка удаления:</value>
+    <value>Ошибка удаления:</value>
   </data>
   <data name="Frontend.159" xml:space="preserve">
-    <value>Подтвердить векторизацию||Подтвердить векторизацию</value>
+    <value>Подтвердить векторизацию</value>
   </data>
   <data name="Frontend.160" xml:space="preserve">
-    <value>Векторизация...||Векторизация...</value>
+    <value>Векторизация...</value>
   </data>
   <data name="Frontend.161" xml:space="preserve">
-    <value>Векторизация завершена||Векторизация завершена</value>
+    <value>Векторизация завершена</value>
   </data>
   <data name="Frontend.162" xml:space="preserve">
-    <value>Векторизация базы знаний «{0}» завершена.||Векторизация базы знаний «{0}» завершена.</value>
+    <value>Векторизация базы знаний «{0}» завершена.</value>
   </data>
   <data name="Frontend.163" xml:space="preserve">
-    <value>Ошибка обработки:||Ошибка обработки:</value>
+    <value>Ошибка обработки:</value>
   </data>
   <data name="Frontend.164" xml:space="preserve">
-    <value>Закрыть сейчас?||Закрыть сейчас?</value>
+    <value>Закрыть сейчас?</value>
   </data>
   <data name="Frontend.165" xml:space="preserve">
-    <value>Тест выброса исключения, передаваемые параметры: {0} {1}||Тест выброса исключения, передаваемые параметры: {0} {1}</value>
+    <value>Тест выброса исключения, передаваемые параметры: {0} {1}</value>
   </data>
   <data name="Frontend.166" xml:space="preserve">
-    <value>Делитель не может быть равен 0!||Делитель не может быть равен 0!</value>
+    <value>Делитель не может быть равен 0!</value>
   </data>
   <data name="Frontend.167" xml:space="preserve">
-    <value>Неизвестный оператор: {0}||Неизвестный оператор: {0}</value>
+    <value>Неизвестный оператор: {0}</value>
   </data>
   <data name="Frontend.168" xml:space="preserve">
-    <value>Для базы знаний '{0}' не настроена модель Embedding. Сначала выберите модель в разделе 'Конфигурация'.||Для базы знаний '{0}' не настроена модель Embedding. Сначала выберите модель в разделе 'Конфигурация'.</value>
+    <value>Для базы знаний '{0}' не настроена модель Embedding. Сначала выберите модель в разделе 'Конфигурация'.</value>
   </data>
   <data name="Frontend.169" xml:space="preserve">
-    <value>ID модели Embedding {0} не существует.||ID модели Embedding {0} не существует.</value>
+    <value>ID модели Embedding {0} не существует.</value>
   </data>
   <data name="Frontend.170" xml:space="preserve">
-    <value>ID векторного хранилища Embedding {0} не существует.||ID векторного хранилища Embedding {0} не существует.</value>
+    <value>ID векторного хранилища Embedding {0} не существует.</value>
   </data>
   <data name="Frontend.171" xml:space="preserve">
-    <value>Модель Embedding модели AIKernel не найдена: {0}.||Модель Embedding модели AIKernel не найдена: {0}.</value>
+    <value>Модель Embedding модели AIKernel не найдена: {0}.</value>
   </data>
   <data name="Frontend.172" xml:space="preserve">
-    <value>Векторизация базы знаний '{0}' завершена!||Векторизация базы знаний '{0}' завершена!</value>
+    <value>Векторизация базы знаний '{0}' завершена!</value>
   </data>
   <data name="Frontend.173" xml:space="preserve">
-    <value>Нет данных||Нет данных</value>
+    <value>Нет данных</value>
   </data>
   <data name="Frontend.174" xml:space="preserve">
-    <value>Сохранено||Сохранено</value>
+    <value>Сохранено</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>Пример функции</value>
@@ -613,4 +613,132 @@
     <value>Демонстрирует параметры и возвращаемые значения FunctionRender</value>
   </data>
 
+
+  <data name="Frontend.175" xml:space="preserve"><value>* Изменения стратегии разбиения, размера и перекрытия применяются после сохранения содержимого или материалов и повторной векторизации; изменения переранжирования применяются сразу и не изменяют созданные векторы.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.176" xml:space="preserve"><value>* Векторные хранилища поддерживают только Redis / Qdrant; Memory не сохраняет данные между запросами. После сохранения свяжите материалы в разделе «Конфигурация» и векторизуйте их.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.177" xml:space="preserve"><value>Модель эмбеддингов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.178" xml:space="preserve"><value>Переранжирование LLM</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.179" xml:space="preserve"><value>Переранжирование LLM (с использованием чат-модели)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.180" xml:space="preserve"><value>Загрузить материалы базы знаний</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.181" xml:space="preserve"><value>кандидатов (сначала получить кандидатов, затем выполнить переранжирование до Top K)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>Поддерживаются только безопасно извлекаемый текст и файлы Office. Загруженные файлы выбираются автоматически; выберите «Подтвердить» в текущей панели, чтобы связать их с базой знаний.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.183" xml:space="preserve"><value>Руководство пользователя</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.184" xml:space="preserve"><value>Шаги: выберите векторизованную базу знаний → введите реалистичный вопрос пользователя → проверьте источники и сходство → вернитесь в «Конфигурацию», чтобы изменить материалы и при необходимости повторить векторизацию.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.185" xml:space="preserve"><value>Пример: как создать новую базу знаний?</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>После сохранения связей материалов созданные векторы становятся недействительными; вернитесь к списку, выберите «Векторизовать», затем запустите тест поиска.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.187" xml:space="preserve"><value>Начните с 5. Увеличьте значение, если результатов слишком мало, или уменьшите его, если результаты слишком широкие; это влияет только на последующие тесты на этой странице.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.188" xml:space="preserve"><value>Отключено (по умолчанию)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.189" xml:space="preserve"><value>Откройте слева «Тест поиска», выберите эту базу знаний и введите реалистичный вопрос, чтобы проверить источники и сходство.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.190" xml:space="preserve"><value>Размер фрагмента / перекрытие</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.191" xml:space="preserve"><value>Стратегия разбиения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.192" xml:space="preserve"><value>Обновить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.193" xml:space="preserve"><value>Запустить тест</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.194" xml:space="preserve"><value>Очистить выбор</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.195" xml:space="preserve"><value>Сведения о найденном фрагменте</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.196" xml:space="preserve"><value>Доступные материалы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.197" xml:space="preserve"><value>Состояние векторизации</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.198" xml:space="preserve"><value>Векторная база данных</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.199" xml:space="preserve"><value>Фиксированная длина (по умолчанию)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.200" xml:space="preserve"><value>Выберите «Конфигурация» в списке, чтобы связать текст или загрузить/выбрать файлы материалов, затем подтвердите связь.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.201" xml:space="preserve"><value>Символы · перекрытие</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.202" xml:space="preserve"><value>Готово</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Чат-модель</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.204" xml:space="preserve"><value>Введите полный вопрос, который мог бы задать реальный пользователь, а не одно ключевое слово.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.205" xml:space="preserve"><value>Векторизовано</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.206" xml:space="preserve"><value>Выбранные материалы:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.207" xml:space="preserve"><value>Начать тест</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.208" xml:space="preserve"><value>Нет доступного постоянного векторного хранилища. Сначала настройте Redis или Qdrant в AIKernel; Memory нельзя использовать для баз знаний.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.209" xml:space="preserve"><value>Открытый исходный код</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.210" xml:space="preserve"><value>Поиск по имени файла</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.211" xml:space="preserve"><value>По абзацам</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.212" xml:space="preserve"><value>Совет: изменение связей материалов делает созданные векторы недействительными; обязательно выполните векторизацию снова.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.213" xml:space="preserve"><value>Найти и выбрать векторизованную базу знаний</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.214" xml:space="preserve"><value>Поиск имени базы знаний</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.215" xml:space="preserve"><value>Новая база знаний</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.216" xml:space="preserve"><value>Начало работы: создайте базу знаний и настройте Embedding и векторное хранилище → свяжите материалы в «Конфигурации» → выберите «Векторизовать» → проверьте результаты в «Тесте поиска».</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.217" xml:space="preserve"><value>Баз знаний пока нет</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.218" xml:space="preserve"><value>Ещё</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.219" xml:space="preserve"><value>Наибольшее сходство</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Не векторизовано</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.221" xml:space="preserve"><value>Тестовые записи на этой странице</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.222" xml:space="preserve"><value>Показать полный текст</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.223" xml:space="preserve"><value>Поиск и разбиение на фрагменты</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Метод поиска</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.225" xml:space="preserve"><value>Время теста</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Результат теста</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.227" xml:space="preserve"><value>Вопрос теста</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Очистить выбор</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Выберите «Векторизовать» и дождитесь завершения; при успехе состояние изменится на «Векторизовано».</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Выберите «Новая база знаний», введите имя и выберите модель Embedding, векторную базу данных и чат-модель.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.231" xml:space="preserve"><value>Используйте реалистичный вопрос для просмотра возвращённых фрагментов материалов. Оценки сходства помогают ранжировать результаты и не являются процентами полноты поиска.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.232" xml:space="preserve"><value>Оставьте пустым, чтобы использовать чат-модель этой базы знаний</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.233" xml:space="preserve"><value>Руководство по базе знаний</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.234" xml:space="preserve"><value>Базы знаний</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.235" xml:space="preserve"><value>Управление материалами базы знаний</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.236" xml:space="preserve"><value>Система векторизует вопросы и фрагменты материалов, затем ранжирует их по семантическому сходству. Диапазоны оценок зависят от модели и хранилища, поэтому не являются фиксированными процентами или показателями полноты поиска.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.237" xml:space="preserve"><value>Если результаты неудовлетворительны, вернитесь в «Конфигурацию», измените материалы, повторите векторизацию и запустите тест снова.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.238" xml:space="preserve"><value>Лексический вес</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.239" xml:space="preserve"><value>Лексический гибрид</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.240" xml:space="preserve"><value>Лексический гибрид (без дополнительного вызова модели)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.241" xml:space="preserve"><value>Семантический векторный поиск</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.242" xml:space="preserve"><value>Введите содержимое (необязательно)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.243" xml:space="preserve"><value>Введите имя базы знаний</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.244" xml:space="preserve"><value>Выберите модель Embedding</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.245" xml:space="preserve"><value>Выберите векторное хранилище Redis или Qdrant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.246" xml:space="preserve"><value>Выберите стратегию разбиения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.247" xml:space="preserve"><value>Выберите чат-модель</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.248" xml:space="preserve"><value>Выберите режим переранжирования</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.249" xml:space="preserve"><value>Следовать настройкам базы знаний</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.250" xml:space="preserve"><value>Возвращённые фрагменты</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.251" xml:space="preserve"><value>Количество возвращённых фрагментов (Top K)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.252" xml:space="preserve"><value>Результатов теста пока нет</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.253" xml:space="preserve"><value>Результаты появятся здесь после выбора базы знаний и ввода вопроса.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.254" xml:space="preserve"><value>Выберите материалы базы знаний</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.255" xml:space="preserve"><value>Выберите файлы материалов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.256" xml:space="preserve"><value>Рекурсивная структура (рекомендуется для длинных документов)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.257" xml:space="preserve"><value>Количество кандидатов для переранжирования</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.258" xml:space="preserve"><value>Модель переранжирования</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.259" xml:space="preserve"><value>Переранжирование</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.260" xml:space="preserve"><value>Переранжирование (этот тест)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.261" xml:space="preserve"><value>Вернуть до {0} сегментов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.262" xml:space="preserve"><value>{0} сегментов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.263" xml:space="preserve"><value>Длительность: {0} мс</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.264" xml:space="preserve"><value>Элемент {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.265" xml:space="preserve"><value>Оценка переранжирования</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.266" xml:space="preserve"><value>Исходный ранг #{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.267" xml:space="preserve"><value>Источник:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.268" xml:space="preserve"><value>Доля лексической оценки в объединённой оценке</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.269" xml:space="preserve"><value>Выбрано материалов: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.270" xml:space="preserve"><value>Обработано: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.271" xml:space="preserve"><value>Ошибок: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.272" xml:space="preserve"><value>Обрабатывается: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.273" xml:space="preserve"><value>Ваш запрос для [{1}] запущен в {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.274" xml:space="preserve"><value>Обработано: {0}; успешно: {1}; ошибок: {2}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.275" xml:space="preserve"><value>Текущая конфигурация базы знаний:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.276" xml:space="preserve"><value>Элемент {0} · Сходство</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.277" xml:space="preserve"><value>· Исходная позиция переранжирования {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Запрос не выполнен. Проверьте базу знаний и настройки модели.</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>Не удалось загрузить список баз знаний: {0}</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>Эта база знаний ещё не векторизована. Вернитесь на страницу управления и сначала выполните векторизацию.</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>Введите вопрос для проверки</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>Сервис не вернул допустимые результаты поиска.</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>Тест поиска завершён. Проверьте источники и содержимое.</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>Тест завершён, но совпадающие фрагменты не возвращены.</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>Поиск не завершён</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>Материалы не выбраны</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>Будет отменена только несохранённая связь текущей базы; файлы не удаляются. Продолжить?</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>Очистить выбор</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>Закрыть без сохранения?</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>Для внешнего сбора требуется отдельная настройка обхода, разрешений и очистки; эта версия не будет имитировать успешное сохранение.</value></data>
+  <data name="Frontend.291" xml:space="preserve"><value>Вариант</value></data>
+  <data name="Frontend.292" xml:space="preserve"><value>База знаний не найдена. Возможно, она удалена или у текущей учётной записи нет доступа.</value></data>
+  <data name="Frontend.293" xml:space="preserve"><value>Не удалось загрузить список материалов. Повторите попытку позже.</value></data>
+  <data name="Frontend.294" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Frontend.295" xml:space="preserve"><value>База знаний успешно сохранена</value></data>
+  <data name="Frontend.296" xml:space="preserve"><value>Не удалось сохранить. Проверьте данные.</value></data>
+  <data name="Frontend.297" xml:space="preserve"><value>Ошибка сохранения</value></data>
+  <data name="Frontend.298" xml:space="preserve"><value>Не удалось сохранить. Повторите попытку позже.</value></data>
+  <data name="Frontend.299" xml:space="preserve"><value>Успешно</value></data>
+  <data name="Frontend.300" xml:space="preserve"><value>Успешно удалено</value></data>
+  <data name="Frontend.301" xml:space="preserve"><value>Векторизовать базу знаний «{0}»?</value></data>
 </root>

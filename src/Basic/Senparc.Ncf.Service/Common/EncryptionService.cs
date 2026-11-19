@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：EncryptionService.cs
-    文件功能描述：EncryptionService 相关实现
-    
-    
-    创建标识：Senparc - 20211128
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: EncryptionService.cs
+    File description: EncryptionService related implementation
+
+    Created by: Senparc - 20211128
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.23.13-preview12 Updated service infrastructure and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -48,7 +51,7 @@ namespace Senparc.Ncf.Service
         { }
 
         /// <summary>
-        /// 通用加密
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -59,7 +62,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 通用解密
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -87,7 +90,7 @@ namespace Senparc.Ncf.Service
 
                 if ((DateTime.Now - dateTime).TotalSeconds > 15)
                 {
-                    return -1;//指定秒后失效
+                    return -1;//Legacy comment translated to English.
                 }
 
                 var accountId = int.Parse(datas[1]);

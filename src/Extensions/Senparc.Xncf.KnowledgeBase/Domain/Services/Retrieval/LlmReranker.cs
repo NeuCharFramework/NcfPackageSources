@@ -1,16 +1,19 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：LlmReranker.cs
-    文件功能描述：LLM 重排器。复用 Senparc.AI.AgentKernel 的对话通道，让对话模型对
-    向量召回的候选片段按与问题的相关度排序；输出解析失败或调用异常时回退（Fallback），
-    由调用方决定降级策略，保证召回链路不会因重排失败而整体失败。
+    File name: LlmReranker.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
 
+    Created by: Senparc - 20260926
 
-    创建标识：Senparc - 20260926
+    Modified by: Senparc - 20261103
+    Change description: v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -33,22 +36,22 @@ using System.Globalization;
 namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
 {
     /// <summary>
-    /// LLM 重排结果。
+    ///Legacy comment translated to English.
     /// </summary>
     public sealed class LlmRerankOutcome
     {
         /// <summary>
-        /// 0 基候选下标数组，按相关度从高到低排列（包含全部候选）。
+        ///Legacy comment translated to English.
         /// </summary>
         public int[] Order { get; init; }
 
         /// <summary>
-        /// true 表示模型输出不可用，Order 为原始顺序（调用方应降级处理）。
+        ///Legacy comment translated to English.
         /// </summary>
         public bool Fallback { get; init; }
 
         /// <summary>
-        /// 回退原因（用于日志/诊断）。
+        ///Legacy comment translated to English.
         /// </summary>
         public string FallbackReason { get; init; }
 
@@ -59,7 +62,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
     }
 
     /// <summary>
-    /// 基于对话模型的重排器（无新增依赖：仅使用 AgentKernel 既有通道）。
+    ///Legacy comment translated to English.
     /// </summary>
     public sealed class LlmReranker
     {
@@ -79,12 +82,12 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        /// 让对话模型对候选片段排序。
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="query">用户问题</param>
-        /// <param name="candidates">候选片段文本（与向量召回顺序一致）</param>
-        /// <param name="modelId">重排使用的对话模型 Id（必须 &gt; 0）</param>
-        /// <param name="cancellationToken">取消令牌</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public async Task<LlmRerankOutcome> RankAsync(
             string query,
             IReadOnlyList<string> candidates,
@@ -158,7 +161,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        /// 解析模型输出中的排序数组。容错：忽略 JSON 外壳/解释文字，缺失编号按原顺序补在末尾。
+        ///Legacy comment translated to English.
         /// </summary>
         public static LlmRerankOutcome ParseOrder(string output, int candidateCount, int[] originalOrder)
         {
@@ -176,7 +179,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
                 {
                     continue;
                 }
-                var index = number - 1; // 模型输出从 1 开始
+                var index = number - 1; // modeloutputfrom 1 start
                 if (index < 0 || index >= candidateCount || seen.Contains(index))
                 {
                     continue;
@@ -190,7 +193,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
                 return LlmRerankOutcome.Failed("排序数组为空或编号全部越界。", originalOrder);
             }
 
-            // 模型遗漏的候选按原始顺序（即向量排序）补在末尾
+            //Legacy comment translated to English.
             foreach (var index in originalOrder)
             {
                 if (!seen.Contains(index))

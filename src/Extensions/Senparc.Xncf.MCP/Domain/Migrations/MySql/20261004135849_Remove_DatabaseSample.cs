@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：20261004135849_Remove_DatabaseSample.cs
-    文件功能描述：20261004135849_Remove_DatabaseSample 相关定义与实现
+    File name: 20261004135849_Remove_DatabaseSample.cs
+    File description: 20261004135849_Remove_DatabaseSample related definitions and implementation
 
+    Created by: Senparc - 20211211
 
-    创建标识：Senparc - 20211211
-
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.10 支持 Remove_DatabaseSample 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.5.10 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

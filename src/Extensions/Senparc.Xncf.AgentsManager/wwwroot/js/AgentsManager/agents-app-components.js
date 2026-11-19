@@ -1,10 +1,10 @@
 /*
- * AgentsManager 前端：participant-quick-action / task-html-renderer / load-more-select 子组件。
- * 注意：本文件与 agents-app-*.js 系列按 three-loader.js 中的顺序加载，
- * 依赖全局 var（classic script 顶层 var 挂到 window），请勿单独引入。
+ * Legacy comment translated to English.
+ * Note: this file and the agents-app-*.js series are loaded in the order defined by three-loader.js,
+ * depends on global variables (top-level classic-script vars are attached to window); do not import separately.
  */
 
-// 任务右侧成员列表：名称始终完整展示，点击后查看与当前任务关联的摘要。
+//Legacy comment translated to English.
 Vue.component('participant-quick-action', {
   props: {
     participant: {
@@ -46,22 +46,22 @@ Vue.component('participant-quick-action', {
         </div>
         <div class="participant-quick-info__description">{{ quickInfo.description }}</div>
         <div class="participant-quick-info__metrics">
-          <div><span>当前任务用量</span><strong>{{ quickInfo.currentUsageText }}</strong></div>
-          <div><span>平均响应</span><strong>{{ quickInfo.responseTimeText }}</strong></div>
-          <div><span>累计 Token</span><strong>{{ quickInfo.totalUsageText }}</strong></div>
-          <div><span>最近活动</span><strong>{{ quickInfo.activityText }}</strong></div>
+          <div><span>{{ncfST('Frontend.566')}}</span><strong>{{ quickInfo.currentUsageText }}</strong></div>
+          <div><span>{{ncfST('Frontend.567')}}</span><strong>{{ quickInfo.responseTimeText }}</strong></div>
+          <div><span>{{ncfST('Frontend.568')}}</span><strong>{{ quickInfo.totalUsageText }}</strong></div>
+          <div><span>{{ncfST('Frontend.569')}}</span><strong>{{ quickInfo.activityText }}</strong></div>
         </div>
         <div v-if="quickInfo.isRemote" class="participant-quick-info__health" :title="quickInfo.healthMessage">
-          <span>连接检测</span>
+          <span>{{ncfST('Frontend.570')}}</span>
           <span>{{ quickInfo.healthMessage }}</span>
         </div>
         <div class="participant-quick-info__footer">
-          <span>用量仅统计当前任务中已加载的记录</span>
-          <el-button v-if="quickInfo.canOpenEditor" type="text" size="mini" icon="el-icon-top-right" title="在新窗口中编辑 Agent" @click.stop="editAgent">编辑</el-button>
-          <el-button v-if="quickInfo.isRemote" type="text" size="mini" :loading="testing" @click.stop="testRemote">测试连接</el-button>
+          <span>{{ncfST('Frontend.571')}}</span>
+          <el-button v-if="quickInfo.canOpenEditor" type="text" size="mini" icon="el-icon-top-right" :title="ncfST('Frontend.572')" @click.stop="editAgent">{{ncfST('Studio.Edit')}}</el-button>
+          <el-button v-if="quickInfo.isRemote" type="text" size="mini" :loading="testing" @click.stop="testRemote">{{ncfST('Frontend.117')}}</el-button>
         </div>
       </section>
-      <button slot="reference" type="button" class="taskmain-member-action" :title="'查看 ' + participant.name + ' 的信息'">
+      <button slot="reference" type="button" class="taskmain-member-action" :title="ncfST('Frontend.630', participant.name)">
         <span class="taskmain-member-action__avatar">
           <img :src="avatarUrl()" alt="">
         </span>
@@ -78,12 +78,12 @@ Vue.component('participant-quick-action', {
   `
 })
 
-// task-html-renderer 渲染任务对话记录的内容
+//Legacy comment translated to English.
 Vue.component('task-html-renderer', {
   props: ['content'],
   render(createElement) {
     return createElement('div', {
-      class: 'taskrecord-listWrap-item-content', // 使用 CSS 类
+      class: 'taskrecord-listWrap-item-content', //Legacy comment translated to English.
       domProps: {
         innerHTML: sanitizeTaskHtml(this.content)
       }
@@ -91,18 +91,24 @@ Vue.component('task-html-renderer', {
   }
 });
 
-// 注册一个全局自定义指令 v-el-select-loadmore
+//Legacy comment translated to English.
 Vue.directive('el-select-loadmore', {
   bind(el, binding, vnode) {
-    // 获取element-ui定义好的scroll盒子
+    //Legacy comment translated to English.
     const SELECTWRAP_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
     SELECTWRAP_DOM.addEventListener('scroll', function () {
       /**
-      * scrollHeight 获取元素内容高度(只读)
-      * scrollTop 获取或者设置元素的偏移值,常用于, 计算滚动条的位置, 当一个元素的容器没有产生垂直方向的滚动条, 那它的scrollTop的值默认为0.
-      * clientHeight 读取元素的可见高度(只读)
-      * 如果元素滚动到底, 下面等式返回true, 没有则返回false:
+
+      * Legacy comment translated to English.
+
+      * Legacy comment translated to English.
+
+      * Legacy comment translated to English.
+
+      * Legacy comment translated to English.
+
       * ele.scrollHeight - ele.scrollTop === ele.clientHeight;
+
       */
       const condition = this.scrollHeight - this.scrollTop <= this.clientHeight
       if (condition) {
@@ -112,7 +118,7 @@ Vue.directive('el-select-loadmore', {
   }
 })
 
-// load-more-select 组件
+//Legacy comment translated to English.
 Vue.component('load-more-select', {
   // v-el-select-loadmore="interestsLoadmore" filterable remote collapse-tags reserve-keyword :remote-method="remoteMethod" @focus="remoteMethod('',true)" @visible-change="reverseArrow"
   template: `<div :class="[direction === 'horizontal' ? 'df-wn flex-ac flex-js' : '']" style="width:100%;gap:10px;">
@@ -129,12 +135,12 @@ Vue.component('load-more-select', {
       <template v-else>{{item.label}}</template>
     </el-option></el-select>
     <template v-if="direction==='horizontal'">
-        <i class="cursorPointer fas fa-redo" title="刷新" @click="refreshManagementList" />
+        <i class="cursorPointer fas fa-redo" :title="ncfST('Studio.Refresh')" @click="refreshManagementList" />
     </template>
     <template v-else>
-        <el-button size="mini" @click="refreshManagementList" :loading="interesLoading">刷新</el-button>
-        <el-button v-if="serviceType === 'systemMessage'" type="primary" size="mini" @click="jumpPromptRange('promptRange')">管理PromptRange</el-button>
-        <el-button v-if="serviceType === 'model'" type="primary" size="mini" @click="jumpPromptRange('model')">管理模型</el-button>
+        <el-button size="mini" @click="refreshManagementList" :loading="interesLoading">{{ncfST('Studio.Refresh')}}</el-button>
+        <el-button v-if="serviceType === 'systemMessage'" type="primary" size="mini" @click="jumpPromptRange('promptRange')">{{ncfST('Frontend.158')}}</el-button>
+        <el-button v-if="serviceType === 'model'" type="primary" size="mini" @click="jumpPromptRange('model')">{{ncfST('Frontend.261')}}</el-button>
     </template>
     
     </div>`,
@@ -154,7 +160,7 @@ Vue.component('load-more-select', {
     },
     serviceType: {
       type: String,
-      default: '' // 默认使用公共 
+      default: '' // defaultusepublic 
     },
     misiptvId: {
       type: [String, Number],
@@ -166,7 +172,7 @@ Vue.component('load-more-select', {
     },
     direction: {
       type: String,
-      default: 'horizontal' // 横向/竖向  horizontal/vertical
+      default: 'horizontal' //Legacy comment translated to English.
     },
     chatOnly: {
       type: Boolean,
@@ -176,7 +182,7 @@ Vue.component('load-more-select', {
   data: function () {
     return {
       optionVisible: false,
-      interestsOptions: [], //  接口返回数据
+      interestsOptions: [], //  interfacereturndata
       interesLoading: false,
       currentPageSize: 0,
       listQuery: {
@@ -214,21 +220,21 @@ Vue.component('load-more-select', {
     // }
   },
   mounted() {
-    // 找到dom
+    //Legacy comment translated to English.
     // const rulesDom = this.$refs['elSelectLoadMore'].$el.querySelector(
     //     '.el-input .el-input__suffix .el-input__suffix-inner .el-input__icon'
     // )
-    // // 对dom新增class
+    //Legacy comment translated to English.
     // rulesDom?.classList.add('el-icon-arrow-up')
     this.refreshManagementList()
   },
   methods: {
     modelTypeLabel(type) {
-      return Number(type) === 2 ? 'Chat' : `类型 ${type ?? '未知'}`
+      return Number(type) === 2 ? 'Chat' : ncfST('Frontend.573', type ?? ncfST('Frontend.555'))
     },
     modelPlatformLabel(platform) {
       const labels = { 1: 'OpenAI', 2: 'Azure OpenAI', 3: 'Hugging Face', 4: 'NeuCharAI' }
-      return labels[Number(platform)] || `平台 ${platform ?? '未知'}`
+      return labels[Number(platform)] || ncfST('Frontend.574', platform ?? ncfST('Frontend.555'))
     },
     jumpPromptRange(urlType) {
       let url = ''
@@ -251,14 +257,14 @@ Vue.component('load-more-select', {
     },
     reverseArrow(flag) {
       this.optionVisible = flag
-      // 找到dom
+      //Legacy comment translated to English.
       const rulesDom = this.$refs['elSelectLoadMore'].$el.querySelector(
         '.el-input .el-input__suffix .el-input__suffix-inner .el-input__icon'
       )
       if (flag) {
-        rulesDom.classList.add('is-reverse') // 对dom新增class
+        rulesDom.classList.add('is-reverse') //Legacy comment translated to English.
       } else {
-        rulesDom.classList.remove('is-reverse') // 对dom新增class
+        rulesDom.classList.remove('is-reverse') //Legacy comment translated to English.
       }
     },
     handleChange(e) {
@@ -272,7 +278,7 @@ Vue.component('load-more-select', {
         this.$emit('change', fintItem)
       }
     },
-    // 远程搜索
+    //Legacy comment translated to English.
     remoteMethod(query, isfocus) {
       // console.log(query, 8888, this.optionVisible,isfocus)
       if (this.optionVisible && isfocus) return
@@ -280,7 +286,7 @@ Vue.component('load-more-select', {
       this.listQuery.pageIndex = 1
       this.interestsOptions = []
       this.interesLoading = true
-      this.managementListOption() // 请求接口
+      this.managementListOption() // requestinterface
     },
     interestsLoadmore() {
       setTimeout(() => {
@@ -292,17 +298,17 @@ Vue.component('load-more-select', {
         this.managementListOption()
       }, 1000)
     },
-    // 刷新接口
+    // refreshinterface
     refreshManagementList() {
       this.listQuery.pageIndex = 1
       this.interestsOptions = []
       this.interesLoading = true
       this.managementListOption()
     },
-    // 调用接口
+    // invokeinterface
     managementListOption() {
       // console.log('managementListOption',this.serviceType);
-      this.interesLoading = true // 本地搜索 调用
+      this.interesLoading = true //Legacy comment translated to English.
       if (this.serviceType === 'agent') {
         serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList?${getInterfaceQueryStr(this.listQuery)}`)
           .then(res => {

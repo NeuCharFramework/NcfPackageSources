@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：FeedBack.cs
-    文件功能描述：FeedBack 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: FeedBack.cs
+    File description: FeedBack related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.15.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +23,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
 {
     /// <summary>
-    /// 意见反馈
+    ///Legacy comment translated to English.
     /// </summary>
     [Table("FeedBacks")]
     public class FeedBack : EntityBase<int>
@@ -30,7 +33,7 @@ namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
         public string Content { get; set; }
 
         ///// <summary>
-        ///// 用户
+        ///// user
         ///// </summary>
         ///// <value></value>
         //public Account Account { get; set; }

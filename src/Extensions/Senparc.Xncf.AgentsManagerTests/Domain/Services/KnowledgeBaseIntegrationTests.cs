@@ -1,10 +1,11 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：KnowledgeBaseIntegrationTests.cs
-    文件功能描述：文件文本提取与 Agent 知识库绑定的回归测试
+    File name: KnowledgeBaseIntegrationTests.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 
 ----------------------------------------------------------------*/
 

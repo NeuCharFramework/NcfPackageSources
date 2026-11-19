@@ -13,15 +13,15 @@
 ## 📂 涉及文件
 
 ### 修改文件
-1. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml`
-2. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml.cs`
-3. `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js`
+1. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml`
+2. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml.cs`
+3. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js`
 
 ## 🔧 实现步骤
 
 ### 1. 修改 Index.cshtml - 添加 AI 对话入口
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml`
 
 **修改位置**: 在 `</el-container>` （第 356 行）和 `<!-- 功能模块 -->` （第 358 行）之间插入
 
@@ -287,7 +287,7 @@
 
 ### 2. 修改 Index.js - 添加交互逻辑
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js`
 
 **修改位置 1**: 在 `data()` 中添加新字段（第 4-15 行之间）
 
@@ -503,7 +503,7 @@ initializeModuleDrag() {
 
 ### 3. 修改 Index.cshtml.cs - 添加后端支持（可选）
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml.cs`
 
 **说明**: 由于对话功能主要通过 API 接口实现，Index.cshtml.cs 暂不需要修改。如果需要在页面加载时获取用户信息，可以添加相应的属性。
 

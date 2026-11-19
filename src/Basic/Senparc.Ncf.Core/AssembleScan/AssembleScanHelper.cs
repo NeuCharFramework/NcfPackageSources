@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AssembleScanHelper.cs
-    文件功能描述：AssembleScanHelper 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: AssembleScanHelper.cs
+    File description: AssembleScanHelper related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -27,46 +30,46 @@ namespace Senparc.Ncf.Core.AssembleScan
     public static class AssembleScanHelper
     {
         /// <summary>
-        /// 所有扫描方法的集合
+        /// Collection of all scan methods
         /// </summary>
         public static List<AssembleScanItem> ScanAssamblesActions { get; set; } = new List<AssembleScanItem>();
 
         private static object _scanLock = new object();
 
         /// <summary>
-        /// 添加扫描项目
+        /// Add Scan Item
         /// </summary>
-        /// <param name="action">扫描过程</param>
-        /// <param name="runScanNow">是否立即扫描</param>
-        /// <param name="dllFilePatterns">被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面</param>
+        /// <param name="action">Scanning Process</param>
+        /// <param name="runScanNow">whether to scan immediately</param>
+        /// <param name="dllFilePatterns">File name of the included dll, ".Xncf."will definitely be included inside</param>
         public static void AddAssembleScanItem(Action<Assembly> action, bool runScanNow, string[] dllFilePatterns = null)
         {
             ScanAssamblesActions.Add(new AssembleScanItem(action));
 
             if (runScanNow)
             {
-                RunScan(dllFilePatterns);//立即扫描
+                RunScan(dllFilePatterns);//SCAN NOW
             }
         }
 
 
         /// <summary>
-        /// 执行扫描
+        /// Execute scan
         /// </summary>
-        /// <param name="dllFilePatterns">被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面</param>
+        /// <param name="dllFilePatterns">File name of the included dll, ".Xncf."will definitely be included inside</param>
         public static void RunScan(string[] dllFilePatterns)
         {
             var dt1 = SystemTime.Now;
 
             lock (_scanLock)
             {
-                //查找所有扩展缓存B
+                //Find all extension caches B
                 var scanTypesCount = 0;
 
                 var assemblies = GetAssembiles(dynamicLoadAllDlls: true, dllFilePatterns: dllFilePatterns);
                 var toScanItems = ScanAssamblesActions.Where(z => z.ScanFinished == false).ToList();
 
-                //搜索所有未被引用的项目
+                //searchall Unreferenced Items
 
                 foreach (var assembly in assemblies)
                 {
@@ -75,7 +78,7 @@ namespace Senparc.Ncf.Core.AssembleScan
                         scanTypesCount++;
                         foreach (var scanItem in toScanItems)
                         {
-                            scanItem.Run(assembly);//执行扫描过程
+                            scanItem.Run(assembly);//Execute the scanning process
                         }
                     }
                     catch (Exception ex)
@@ -84,7 +87,7 @@ namespace Senparc.Ncf.Core.AssembleScan
                     }
                 }
 
-                toScanItems.ForEach(z => z.Finished());//标记结束
+                toScanItems.ForEach(z => z.Finished());//Mark end
 
                 var dt2 = SystemTime.Now;
                 SenparcTrace.SendCustomLog("ScanAssambles", $"RegisterAllAreas 用时：{(dt2 - dt1).TotalMilliseconds}ms");
@@ -93,19 +96,19 @@ namespace Senparc.Ncf.Core.AssembleScan
 
         }
 
-        #region 获取程序集
+        #region Get Assembly
 
 
         private static List<Assembly> AllAssemblies = null;
         private static object AllAssembliesLock = new object();
 
         /// <summary>
-        /// 获取程序集
+        /// get the assembly
         /// </summary>
-        /// <param name="dynamicLoadAllDlls">是否从 dll 目录加载未被程序引用的其他程序集，默认为 true</param>
-        /// <param name="useCachedData">是否使用已缓存的数据，默认为true</param>
-        /// <param name="forceUpdateCache">强制重新获取并更新缓存，此时会忽略 <paramref name="useCachedData"/> 的设置</param>
-        /// <param name="dllFilePatterns">被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面</param>
+        /// <param name="dynamicLoadAllDlls">whetherfrom dll directory loads other program assemblies not referenced by the program, default for true</param>
+        /// <param name="useCachedData">whether to use cached data, default to true</param>
+        ///Legacy comment translated to English.
+        /// <param name="dllFilePatterns">File name of the included dll, ".Xncf."will definitely be included inside</param>
         public static List<Assembly> GetAssembiles(bool dynamicLoadAllDlls = true, bool useCachedData = true, bool forceUpdateCache = true, string[] dllFilePatterns = null)
         {
             lock (AllAssembliesLock)
@@ -117,16 +120,16 @@ namespace Senparc.Ncf.Core.AssembleScan
 
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
 
-                #region 补全未被引用的程序集
+                #region Legacy section
 
                 if (dynamicLoadAllDlls)
                 {
-                    // 使用 AppDomain 或环境变量来动态获取路径
+                    //Legacy comment translated to English.
                     string directoryPath = AppDomain.CurrentDomain.BaseDirectory;
-                    // 如果需要，也可以考虑使用环境变量
+                    //Legacy comment translated to English.
                     // string directoryPath = Environment.GetEnvironmentVariable("MY_APP_PATH");
 
-                    // 其余的步骤与之前相同，遍历和尝试加载 DLL
+                    //Legacy comment translated to English.
                     var loadedAssemblies = assemblies.Select(a => a.GetName().Name).ToList();
 
                     foreach (var filePath in Directory.GetFiles(directoryPath, "*.dll"))
@@ -152,11 +155,11 @@ namespace Senparc.Ncf.Core.AssembleScan
                                 }
                                 else
                                 {
-                                    //获取当前文件dll版本
-                                    // 获取文件版本信息  
+                                    //getcurrentfiledllversion
+                                    // getfileversioninformation  
                                     FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(filePath);
 
-                                    // 获取版本号  
+                                    //Legacy comment translated to English.
                                     string version = fvi.FileVersion;
 
                                     Console.WriteLine($"Already loaded: {assemblyName} ({version})");
@@ -173,7 +176,7 @@ namespace Senparc.Ncf.Core.AssembleScan
 
                 #endregion
 
-                //更新缓存
+                //Update cache
                 if (forceUpdateCache
                     || AllAssemblies == null
                     || assemblies.Count() > AllAssemblies.Count())

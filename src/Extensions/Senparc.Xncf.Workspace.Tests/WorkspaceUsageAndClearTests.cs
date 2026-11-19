@@ -1,11 +1,11 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceUsageAndClearTests.cs
-    文件功能描述：工作区用量统计、内容清空与管理员隔离测试
+    File name: WorkspaceUsageAndClearTests.cs
+    File description: Related implementation.
 
-
-    创建标识：Senparc - 20261109
+    Created by: Senparc - 20261109
 
 ----------------------------------------------------------------*/
 

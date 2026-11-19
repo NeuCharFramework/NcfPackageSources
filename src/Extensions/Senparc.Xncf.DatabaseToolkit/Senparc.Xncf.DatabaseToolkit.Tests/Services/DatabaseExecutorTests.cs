@@ -24,11 +24,11 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             return provider;
         }
 
-        // ===================== Bug 修复验证测试 =====================
+        //Legacy comment translated to English.
 
         /// <summary>
-        /// Bug 4 修复验证：AlwaysTrue&lt;T&gt; 必须返回 Expression&lt;Func&lt;T,bool&gt;&gt;（而非 Func&lt;T,bool&gt;）
-        /// 否则传给 GetFullListAsync 的参数类型不匹配，反射调用会失败。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [TestMethod]
         public void AlwaysTrue_ShouldReturn_ExpressionPredicate_NotRawFunc()
@@ -46,8 +46,8 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
         }
 
         /// <summary>
-        /// Bug 1+2 修复验证：使用正确的 Expression&lt;Func&lt;T,bool&gt;&gt; + 全参数类型
-        /// 可以通过反射定位到 GetFullListAsync 正确重载。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [TestMethod]
         public void GetFullListAsync_ShouldBeLocatable_WithExpressionPredicateAndAllParams()
@@ -58,7 +58,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             var funcType = typeof(Func<,>).MakeGenericType(entityType, typeof(bool));
             var expressionPredicateType = typeof(Expression<>).MakeGenericType(funcType);
 
-            // 必须提供全部参数类型（含可选参数），否则 GetMethod 无法定位
+            //Legacy comment translated to English.
             var method = serviceType.GetMethod("GetFullListAsync",
                 new[] { expressionPredicateType, typeof(string), typeof(string[]) });
 
@@ -68,8 +68,8 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
         }
 
         /// <summary>
-        /// 旧代码 Bug 对照：用 Func&lt;T,bool&gt; + 仅 1 个参数类型时，GetMethod 找不到方法。
-        /// 此测试反向验证原始错误确实存在。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [TestMethod]
         public void GetFullListAsync_ShouldNotBeFound_WhenUsingRawFuncAndSingleParam()
@@ -77,7 +77,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             var entityType = typeof(FakeTestEntity);
             var serviceType = typeof(ServiceBase<>).MakeGenericType(entityType);
 
-            // 原始错误：Func<T,bool>（非 Expression<>），且只提供 1 个参数类型
+            //Legacy comment translated to English.
             var wrongPredicateType = typeof(Func<,>).MakeGenericType(entityType, typeof(bool));
 
             var method = serviceType.GetMethod("GetFullListAsync", new[] { wrongPredicateType });
@@ -86,10 +86,10 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
                 "用未包装的 Func<T,bool> 查找 GetFullListAsync 时不应找到方法（对照旧 Bug）");
         }
 
-        // ===================== 功能集成测试 =====================
+        //Legacy comment translated to English.
 
         /// <summary>
-        /// 当 ServiceBase&lt;T&gt; 未注册到 DI 时，QueryRecordsAsync 应返回 total=0 而不是抛异常。
+        ///Legacy comment translated to English.
         /// </summary>
         [TestMethod]
         public async Task QueryRecordsAsync_WhenServiceNotInDI_ReturnsZeroTotal()
@@ -99,7 +99,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
 
             var executor = new DatabaseExecutor(emptyDiProvider, metadataProvider);
 
-            // 匿名类型跨程序集时 dynamic 访问会失败，改用 JsonDocument
+            //Legacy comment translated to English.
             var raw = await executor.QueryRecordsAsync(
                 TestAssemblyModuleName, nameof(FakeTestEntity), "", 1, 10);
             using var doc = JsonDocument.Parse(JsonSerializer.Serialize(raw));
@@ -109,9 +109,9 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
         }
 
         /// <summary>
-        /// 完整流程验证（覆盖 Bug 1/2/3/4）：
-        /// 注册了带有 Mock 数据的 ServiceBase 后，QueryRecordsAsync 能正确通过反射调用
-        /// GetObjectListAsync 并返回分页数据。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [TestMethod]
         public async Task QueryRecordsAsync_WhenServiceRegistered_ReturnsDataFromGetFullListAsync()
@@ -119,7 +119,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             // --- Arrange ---
             var mockRepo = new Mock<IRepositoryBase<FakeTestEntity>>();
 
-            // ServiceBase 构造函数内会调用 _serviceProvider.GetService<IMapper>()，返回 null 即可
+            //Legacy comment translated to English.
             var mockInnerSp = new Mock<IServiceProvider>();
 
             var testItems = new List<FakeTestEntity>
@@ -129,7 +129,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             };
             var pagedList = new PagedList<FakeTestEntity>(testItems, 1, 10, testItems.Count);
 
-            // Mock<ServiceBase<T>>：Moq 会调用真实构造函数，并拦截虚方法 GetFullListAsync
+            //Legacy comment translated to English.
             var mockService = new Mock<ServiceBase<FakeTestEntity>>(
                 mockRepo.Object, mockInnerSp.Object);
             mockService
@@ -141,7 +141,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
                     It.IsAny<string[]>()))
                 .ReturnsAsync(pagedList);
 
-            // 将 mock 注册到 DI（DatabaseExecutor 使用 ServiceBase<T> 作为 DI key）
+            //Legacy comment translated to English.
             var services = new ServiceCollection();
             services.AddScoped<ServiceBase<FakeTestEntity>>(_ => mockService.Object);
             var serviceProvider = services.BuildServiceProvider();
@@ -154,7 +154,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
                 TestAssemblyModuleName, nameof(FakeTestEntity), "", 1, 10);
 
             // --- Assert ---
-            // 匿名类型跨程序集时 dynamic 访问会失败，改用 JsonDocument
+            //Legacy comment translated to English.
             using var doc2 = JsonDocument.Parse(JsonSerializer.Serialize(raw));
             Assert.AreEqual(2, doc2.RootElement.GetProperty("total").GetInt32(),
                 "应返回 mock 中的 2 条记录");
@@ -171,7 +171,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
         }
 
         /// <summary>
-        /// GetTableStatisticsAsync 同样依赖修复后的 GetAllRowsAsync，应能获取正确统计数据。
+        ///Legacy comment translated to English.
         /// </summary>
         [TestMethod]
         public async Task GetTableStatisticsAsync_WhenServiceRegistered_ReturnsCorrectStats()

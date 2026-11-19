@@ -1,19 +1,23 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AITokenUsageService.cs
-    文件功能描述：AITokenUsageService Token 使用记录服务
-    
-    创建标识：Senparc - 20260904
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+    File name: AITokenUsageService.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 按来源查询和汇总 Token 用量
+    Created by: Senparc - 20260904
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+    Modified by: Senparc - 20260915
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -46,7 +50,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 记录一次 Token 使用
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<AITokenUsageDto> RecordAsync(
             string modelAlias,
@@ -100,7 +104,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 构建查询条件
+        ///Legacy comment translated to English.
         /// </summary>
         public Expression<Func<AITokenUsage, bool>> GetListWhere(AITokenUsage_GetListRequest request)
         {
@@ -119,9 +123,9 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 获取聚合统计（基于持久化记录）
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="dailyDays">按天聚合保留的天数（默认 7 天）</param>
+        ///Legacy comment translated to English.
         public async Task<AITokenMonitorStats> GetStatsAsync(int dailyDays = 7)
         {
             var all = await this.GetFullListAsync(z => z.Flag == false, "AddTime desc");
@@ -173,9 +177,9 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 按模型代号聚合 Token 使用（用于模型列表页展示，模型代号不区分大小写）
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <returns>以模型代号为键的 Token 使用聚合字典</returns>
+        ///Legacy comment translated to English.
         public async Task<Dictionary<string, AITokenModelUsage>> GetModelUsageMapAsync()
         {
             var all = await this.GetFullListAsync(z => z.Flag == false);

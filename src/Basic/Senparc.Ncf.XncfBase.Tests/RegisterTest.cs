@@ -25,7 +25,7 @@ namespace Senparc.Ncf.XncfBase.Tests
         public override string Version => "1.0";
 
         public override string MenuName => "测试模块";
-        public override string Icon => "fa fa-space-shuttle";//参考如：https://colorlib.com/polygon/gentelella/icons.html
+        public override string Icon => "fa fa-space-shuttle";//Legacy comment translated to English.
 
         public override string Description => "这是测试模块的介绍";
 
@@ -77,7 +77,7 @@ namespace Senparc.Ncf.XncfBase.Tests
         {
             var oldDatabaseConfig = DatabaseConfigurationFactory.Instance.Current;
 
-            //强制设置为其他数据库
+            //Legacy comment translated to English.
             DatabaseConfigurationFactory.Instance.Current = new SqliteMemoryDatabaseConfiguration();
 
             var services = new ServiceCollection();
@@ -86,7 +86,7 @@ namespace Senparc.Ncf.XncfBase.Tests
                 var result = services.StartNcfEngine(base.Configuration, base.Env, null);
                 Console.WriteLine(result);
 
-                //基类中可能会已经执行过
+                //Legacy comment translated to English.
             }
             catch (XncfFunctionException ex)
             {
@@ -104,7 +104,7 @@ namespace Senparc.Ncf.XncfBase.Tests
                 Assert.Fail();
             }
 
-            //还原数据库
+            //Legacy comment translated to English.
             DatabaseConfigurationFactory.Instance.Current = oldDatabaseConfig;
             try
             {

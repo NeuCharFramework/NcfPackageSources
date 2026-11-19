@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AdminPageModelBase.cs
-    文件功能描述：AdminPageModelBase 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.22.0-preview3 统一 AdminOnly 授权策略命名并提供宿主注册扩展
+    Copyright (C) 2026 Senparc
+
+    File name: AdminPageModelBase.cs
+    File description: AdminPageModelBase related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260729
+    Change description: v0.22.0-preview3 Unify AdminOnly authorization policy naming and provide host registration extension
+
+    Modified by: Senparc - 20261119
+    Change description: v0.23.12 Improved administration page and authorization support
 
 ----------------------------------------------------------------*/
 
@@ -39,13 +42,13 @@ namespace Senparc.Ncf.AreaBase.Admin//  Senparc.Areas.Admin
         IActionResult RenderError(string message);
     }
 
-    //暂时取消权限验证
+    //Temporarily revoke permission validation
     //[ServiceFilter(typeof(AuthenticationAsyncPageFilterAttribute))]
     [AdminAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class AdminPageModelBase : PageModelBase, IAdminPageModelBase
     {
         /// <summary>
-        /// 存储相关用户信息
+        /// Store related user information
         /// </summary>
         public virtual AdminWorkContext AdminWorkContext { get; set; }
 
@@ -53,18 +56,18 @@ namespace Senparc.Ncf.AreaBase.Admin//  Senparc.Areas.Admin
         public string Uid { get; set; }
 
         /// <summary>
-        /// 所有 XncfRegister 列表（包括还未注册的）
+        /// All XncfRegister list tables (including those not yet registered)
         /// </summary>
         public virtual List<IXncfRegister> XncfRegisterList => Senparc.Ncf.XncfBase.XncfRegisterManager.RegisterList;
 
 
         public virtual IActionResult RenderError(string message)
         {
-            //保留原有的controller和action信息
+            //preserve the original controller and action information
             //ViewData["FakeControllerName"] = RouteData.Values["controller"] as string;
             //ViewData["FakeActionName"] = RouteData.Values["action"] as string;
 
-            return Page();//TODO：设定一个特定的错误页面
+            return Page();//TODO: Set a specific error page
 
             //return View("Error", new Error_ExceptionVD
             //{

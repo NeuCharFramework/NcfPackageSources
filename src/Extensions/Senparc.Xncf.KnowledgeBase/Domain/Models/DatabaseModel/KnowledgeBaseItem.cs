@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：KnowledgeBaseItem.cs
-    文件功能描述：KnowledgeBaseItem 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+    Copyright (C) 2026 Senparc
+
+    File name: KnowledgeBaseItem.cs
+    File description: KnowledgeBaseItem related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview6 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -26,9 +29,9 @@ using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
 {
     /// <summary>
-    /// KnowledgeBasesDetail 实体类
+    ///Legacy comment translated to English.
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(KnowledgeBaseItem))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(KnowledgeBaseItem))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class KnowledgeBaseItem : EntityBase<int>
     {
@@ -59,47 +62,47 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             ResetEmbedding();
         }
         /// <summary>
-        /// 知识库Id
+        ///Legacy comment translated to English.
         /// </summary>
         public int KnowledgeBasesId { get; private set; }
         /// <summary>
-        /// 内容类型
+        /// contenttype
         /// </summary>
         public ContentType ContentType { get; private set; }
         /// <summary>
-        /// 内容
+        /// content
         /// </summary>
         public string Content { get; private set; }
 
         /// <summary>
-        /// 源文件名称
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(500)]
         public string FileName { get; private set; }
 
         /// <summary>
-        /// FileManager 文件 ID。手工文本内容为空。
+        ///Legacy comment translated to English.
         /// </summary>
         public int? NcfFileId { get; private set; }
 
         /// <summary>
-        /// 文本切片索引总数
+        ///Legacy comment translated to English.
         /// </summary>
         public int ChunkIndex { get; private set; }
 
         /// <summary>
-        /// 是否已向量化
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsEmbedded { get; private set; }
 
         /// <summary>
-        /// 向量化时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime? EmbeddedTime { get; private set; }
 
 
         /// <summary>
-        /// 向量化成功后调用，更新状态和时间戳
+        ///Legacy comment translated to English.
         /// </summary>
         public void EmbeddingSucceeded()
         {

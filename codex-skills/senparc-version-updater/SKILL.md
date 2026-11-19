@@ -1,6 +1,6 @@
 ---
 name: senparc-version-updater
-description: Update version metadata for Senparc-prefixed .NET projects. Use when Codex needs to update package versions in .csproj files (preferring .net10+ variants), propagate changed shared .props imports to all importing projects, summarize project changes since the merge-base against master/main, add standardized Chinese changelog headers to changed .cs files, append PackageReleaseNotes entries, and recursively bump versions for referencing projects.
+description: Update version metadata for Senparc-prefixed .NET projects. Use when Codex needs to update package versions in .csproj files (preferring .net10+ variants), propagate changed shared .props imports to all importing projects, summarize project changes since the merge-base against master/main, add standardized English changelog headers to changed .cs files, append PackageReleaseNotes entries, and recursively bump versions for referencing projects.
 ---
 
 # Senparc Version Updater
@@ -31,6 +31,8 @@ Use the output JSON as the source of truth for:
 6. Direct update roots (`dependency_roots`) and recursive dependent `.csproj` files that need passive version bumps.
 7. Comparison baseline metadata (`master/main` branch ref and merge-base commit).
 8. Test projects excluded from version updates (`skipped_test_csprojs`). File and `.props` mappings may still include them for impact reporting.
+
+All changelog headers, `PackageReleaseNotes` summaries and details, dependency notes, and other text inserted by this skill must be written in English.
 
 Test projects are not released. Never add, update, or remove their `<Version>`, whether directly changed or reached through a dependency, and do not require new package release notes for them. If existing release notes are out of order, reorder their complete entries without changing their content. This includes `*.Tests.csproj`, `*Tests.csproj`, and projects under `Tests`, `*.Tests`, or `*Tests` directories. Continue traversing their references when discovering non-test dependents.
 
@@ -97,12 +99,12 @@ For every file in `changed_cs_files`:
 
 1. Ensure a top-of-file changelog block exists.
 2. Use the exact format in [header-template.md](references/header-template.md).
-3. Replace `文件名` with actual filename.
-4. Set `文件功能描述` once and keep it stable afterward.
-5. Set `创建标识` date to file creation date (`creation_date_yyyymmdd` from scanner, fallback to today).
+3. Replace `File name` with the actual filename.
+4. Set `File description` once and keep it stable afterward.
+5. Set the `Created by` date to the file creation date (`creation_date_yyyymmdd` from the scanner, falling back to today).
 6. Append one new pair for current change:
-   - `修改标识：<author> - YYYYMMDD`
-   - `修改描述：v<new-version> <summary>`
+   - `Modified by: <author> - YYYYMMDD`
+   - `Change description: v<new-version> <summary>`
 7. Keep exactly one blank line between modification groups (no extra blank lines).
 8. Skip files matched by the special skip rules above (`*.Generated.cs`, unit test project files, `MultipleDatabase/` directory files, and auto-generated files under `Domain/Migrations/<DatabaseName>/`).
 
@@ -138,22 +140,23 @@ In every `.csproj` in `changed_csprojs` (the selected primary must also satisfy 
 3. Do not insert blank lines inside `<PackageReleaseNotes>` (including between entries and detail lines).
 4. Use this structure:
    - `[YYYY-MM-DD] vX.Y.Z <one-line summary>`
-   - `1、<detail>`
-   - `2、<detail>`
+   - `1. <detail>`
+   - `2. <detail>`
 5. Include all key updates found in Step 2.
 6. Within the same unmerged `comparison_base..HEAD` window, do not create another version bump entry; merge new details into the same `vX.Y.Z` release-note block.
 7. `summary/detail` must describe project functional changes (feature, behavior, compatibility, bug fix, UI/UX, dependency adaptation).
 8. Do not write process-tracking text in release notes, including but not limited to: `Repository baseline sync`, `sync window`, `comparison_base..HEAD`, or similar window/baseline markers.
-9. `<PackageReleaseNotes>` must be located after `<Version>` in the `.csproj` file.
-10. `<PackageReleaseNotes>` does not need to be immediately adjacent to `<Version>`. If it is already after `<Version>`, keep its current position (manual placement may exist).
-11. If `<PackageReleaseNotes>` appears before `<Version>`, move `<PackageReleaseNotes>` to any valid location after `<Version>` while preserving indentation/content.
-12. `<Version>` must be located after `<TargetFramework>` or `<TargetFrameworks>` in the `.csproj` file.
-13. `<Version>` does not need to be immediately adjacent to `<TargetFramework>`/`<TargetFrameworks>`. If it is already after framework tags, keep its current position.
-14. If `<Version>` appears before `<TargetFramework>`/`<TargetFrameworks>`, move `<Version>` to any valid location after framework tags while preserving indentation/content.
-15. Inspect the existing entries and reorder dated entries from oldest to newest, so newer entries appear below older entries. Move each entry together with all of its detail lines.
-16. Preserve the relative order of entries with the same date unless their actual sequence is known. Add a new same-date entry after existing entries for that date.
-17. Preserve undated legacy entries and their relative order; do not attach them to unrelated dated entries or invent dates. If their chronological position cannot be established reliably, report them for manual review.
-18. When merging changes into an existing current-version block, use the date of the most recent included change and move the whole block to its chronological position.
+9. Write every new summary and detail in English, including passive dependency notes.
+10. `<PackageReleaseNotes>` must be located after `<Version>` in the `.csproj` file.
+11. `<PackageReleaseNotes>` does not need to be immediately adjacent to `<Version>`. If it is already after `<Version>`, keep its current position (manual placement may exist).
+12. If `<PackageReleaseNotes>` appears before `<Version>`, move `<PackageReleaseNotes>` to any valid location after `<Version>` while preserving indentation/content.
+13. `<Version>` must be located after `<TargetFramework>` or `<TargetFrameworks>` in the `.csproj` file.
+14. `<Version>` does not need to be immediately adjacent to `<TargetFramework>`/`<TargetFrameworks>`. If it is already after framework tags, keep its current position.
+15. If `<Version>` appears before `<TargetFramework>`/`<TargetFrameworks>`, move `<Version>` to any valid location after framework tags while preserving indentation/content.
+16. Inspect the existing entries and reorder dated entries from oldest to newest, so newer entries appear below older entries. Move each entry together with all of its detail lines.
+17. Preserve the relative order of entries with the same date unless their actual sequence is known. Add a new same-date entry after existing entries for that date.
+18. Preserve undated legacy entries and their relative order; do not attach them to unrelated dated entries or invent dates. If their chronological position cannot be established reliably, report them for manual review.
+19. When merging changes into an existing current-version block, use the date of the most recent included change and move the whole block to its chronological position.
 
 If `<PackageReleaseNotes>` does not exist, create it under the first `<PropertyGroup>` and match surrounding indentation.
 

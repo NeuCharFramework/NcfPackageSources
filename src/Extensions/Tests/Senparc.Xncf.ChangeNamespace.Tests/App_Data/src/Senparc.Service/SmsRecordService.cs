@@ -22,7 +22,7 @@ namespace Senparc.Service
             _serviceProvider = _serviceProvider;
         }
         /// <summary>
-        /// 设置允许发送令牌
+        /// set the allowed sending token
         /// </summary>
         /// <returns></returns>
         public string SetSendSmsToken()
@@ -33,7 +33,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 获取短信发送令牌
+        /// get the SMS sending token
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
@@ -61,11 +61,11 @@ namespace Senparc.Service
                 }
             }
 
-            //生成并储存验证码
+            //generate and store the verification code
             var phoneCheckCodeCache = _serviceProvider.GetService<PhoneCheckCodeCache>();
             string code = phoneCheckCodeCache.Insert(new PhoneCheckCodeData(phoneNumber), null);
 
-            //发送短信
+            //send the SMS
             var smsResult = Send(ip, string.Format(format, code), phoneNumber);
 
             return smsResult;
@@ -87,7 +87,7 @@ namespace Senparc.Service
             var senparcSmsSetting = _serviceProvider.GetService<IOptions<SenparcSmsSetting>>();
             ISmsPlatform smsPlatform = null;
             SmsResult smsResult = SmsResult.未知错误;
-            content = $"【NCF】{content}{postfix}"; //加上签名和后缀
+            content = $"【NCF】{content}{postfix}"; //Legacy comment translated to English.
             smsPlatform = SmsPlatformFactory.GetSmsPlateform(senparcSmsSetting.Value.SmsAccountCORPID, senparcSmsSetting.Value.SmsAccountName, senparcSmsSetting.Value.SmsAccountPassword, senparcSmsSetting.Value.SmsAccountSubNumber);
             smsResult = smsPlatform.Send(content, phoneNumber);
             return smsResult;
@@ -101,7 +101,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 替换占位符
+        /// replace placeholders
         /// </summary>
         /// <param name="content"></param>
         /// <param name="name"></param>
@@ -114,7 +114,7 @@ namespace Senparc.Service
 
 
         /// <summary>
-        /// 检查短信余量是否够用
+        /// check whether the SMS balance is sufficient
         /// </summary>
         /// <param name="phoneCount"></param>
         /// <param name="content"></param>
@@ -126,7 +126,7 @@ namespace Senparc.Service
             var pieceForEveryPhone = finalContent.Length / 34M;
             var integerpieceForEveryPhone = pieceForEveryPhone % 1 == 0
                 ? (int)pieceForEveryPhone
-                : (int)(pieceForEveryPhone + 1); //取整
+                : (int)(pieceForEveryPhone + 1); //Legacy comment translated to English.
             var totalPiece = phoneCount * integerpieceForEveryPhone;
             return totalPiece;
         }

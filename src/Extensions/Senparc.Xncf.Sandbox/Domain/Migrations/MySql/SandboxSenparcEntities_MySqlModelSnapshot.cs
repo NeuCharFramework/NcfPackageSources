@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxSenparcEntities_MySqlModelSnapshot.cs
-    文件功能描述：SandboxSenparcEntities_MySqlModelSnapshot.cs implementation and project behavior.
+    File name: SandboxSenparcEntities_MySqlModelSnapshot.cs
+    File description: SandboxSenparcEntities_MySqlModelSnapshot.cs implementation and project behavior.
 
+    Created by: Senparc - 20260808
 
-    创建标识：Senparc - 20260808
+    Modified by: Senparc - 20261005
+    Change description: v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
-
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.0 更新数据库迁移模型快照
+    Modified by: Senparc - 20261103
+    Change description: v0.4.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

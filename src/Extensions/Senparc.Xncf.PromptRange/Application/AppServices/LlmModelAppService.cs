@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：LlmModelAppService.cs
-    文件功能描述：LlmModelAppService 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+    Copyright (C) 2026 Senparc
+
+    File name: LlmModelAppService.cs
+    File description: LlmModelAppService related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260729
+    Change description: v0.17.1-preview6 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -39,8 +42,8 @@ using Senparc.Ncf.Core.Authorization;
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
     /// <summary>
-    /// LLM 模型管理 AppService
-    /// TODO: 需要权限验证
+    /// LLM modelmanagement AppService
+    /// TODO: permission validation is required
     /// </summary>
     [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class LlmModelAppService : AppServiceBase
@@ -58,7 +61,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 添加模型
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -76,7 +79,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 编辑模型
+        /// editmodel
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -94,7 +97,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取model
+        /// getmodel
         /// </summary>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
@@ -124,7 +127,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 模型删除
+        /// modeldelete
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>

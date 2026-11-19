@@ -13,7 +13,7 @@ using System.Text;
 namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
 {
     /// <summary>
-    /// 用于生成 Oracle 数据库 Migration 信息的类，请勿修改
+    ///Legacy comment translated to English.
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.Oracle, typeof(Register))]
     public class XncfBuilderSenparcEntities_Oracle : XncfBuilderSenparcEntities, IMultipleMigrationDbContext
@@ -26,22 +26,22 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
         {
             base.OnModelCreating(modelBuilder);
 
-            // 预览输出最多保存 64 KiB，Oracle 默认的 NVARCHAR2(2000) 不足以承载。
+            //Legacy comment translated to English.
             modelBuilder.Entity<XncfPreviewTask>().Property(task => task.ErrorMessage).HasColumnType("NCLOB");
             modelBuilder.Entity<XncfPreviewTask>().Property(task => task.RecentOutput).HasColumnType("NCLOB");
         }
     }
 
     /// <summary>
-    /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
-    /// <para>1、切换至 Debug 模式</para>
-    /// <para>2、运行：PM> add-migration [更新名称] -C XncfBuilderSenparcEntities_Oracle -o Domain/Migrations/Migrations.Oracle </para>
+    /// design-time DbContext creation (used only to create Code-First database migrations during development; not executed in production)
+    /// <para>1、switch to Debug mode</para>
+    /// <para>2、run：PM> add-migration [updatename] -C XncfBuilderSenparcEntities_Oracle -o Domain/Migrations/Migrations.Oracle </para>
     /// </summary>
     public class SenparcDbContextFactory_Oracle : SenparcDesignTimeDbContextFactoryBase<XncfBuilderSenparcEntities_Oracle, Register>
     {
         protected override Action<IApplicationBuilder> AppAction => app =>
         {
-            //指定其他数据库
+            //specify another database
             app.UseNcfDatabase("Senparc.Ncf.Database.Oracle", "Senparc.Ncf.Database.Oracle", "OracleDatabaseConfiguration");
         };
 

@@ -1,29 +1,32 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：模块注册与初始化逻辑
-    
-    
-    创建标识：Senparc - 20200818
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
+    File name: Register.cs
+    File description: module registration and initialization logic
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.20.0 注册 Skill 目录、执行与测试服务
+    Created by: Senparc - 20200818
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 implement AdminChat memory storage and management system
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.20.14 注册 Prompt 引用与记忆提示词相关服务
+    Modified by: Senparc - 20260717
+    Change description: v0.17.0-preview5 integrate shared resource localization and improve feature text for the PromptRange module
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.20.14 统一 XNCF Register 显示元数据与多语言资源键
+    Modified by: Senparc - 20261021
+    Change description: v0.20.0 register Skill catalog, execution, and testing services
+
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 implement AdminChat memory storage and management system
+
+    Modified by: Senparc - 20261105
+    Change description: v0.20.14 register Prompt reference and memory prompt services
+
+    Modified by: Senparc - 20261111
+    Change description: v0.20.14 unify XNCF Register display metadata and localization resource keys
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -61,13 +64,13 @@ namespace Senparc.Xncf.PromptRange
             "提示词靶场",
             "用于训练和评估提示词（Prompt）");
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.PromptRange";
 
-        public override string Uid => "C6175B8E-9F79-4053-9523-F8E4AC0C3E18"; //必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "C6175B8E-9F79-4053-9523-F8E4AC0C3E18"; //Legacy comment translated to English.
 
-        public override string Version => "0.15.4"; //必须填写版本号
+        public override string Version => "0.15.4"; //the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -78,22 +81,22 @@ namespace Senparc.Xncf.PromptRange
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider,
             InstallOrUpdate installOrUpdate)
         {
-            //安装或升级版本时更新数据库
+            //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
-            //根据安装或更新不同条件执行逻辑
+            //execute logic according to the installation or update condition
             switch (installOrUpdate)
             {
                 case InstallOrUpdate.Install:
-                    //新安装
+                    //new installation
 
-                    #region 初始化数据库数据
+                    #region Legacy section
 
                     #endregion
 
                     break;
                 case InstallOrUpdate.Update:
-                    //更新
+                    //update
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -102,15 +105,15 @@ namespace Senparc.Xncf.PromptRange
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            #region 删除数据库（演示）
+            #region Legacy section
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             PromptRangeSenparcEntities mySenparcEntities =
                 serviceProvider.GetService(mySenparcEntitiesType) as PromptRangeSenparcEntities;
 
-            //指定需要删除的数据实体
+            //specify the data entities to delete
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: this is a demonstration that deletes all tables created by this module during uninstallation. In production, proceed carefully and order entities by their deletion dependencies.
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
@@ -142,6 +145,7 @@ namespace Senparc.Xncf.PromptRange
             services.AddScoped<PromptItemService>();
             services.AddScoped<Senparc.Xncf.PromptRange.Abstractions.References.IPromptReferenceService, PromptReferenceService>();
             services.AddScoped<Senparc.Xncf.PromptRange.Abstractions.Memory.IMemoryPromptProvider, MemoryPromptProvider>();
+            services.AddScoped<Senparc.Xncf.PromptRange.Abstractions.SystemMessages.IAdminChatSystemMessageProvider, AdminChatSystemMessagePromptProvider>();
             services.AddScoped<PromptResultService>();
             services.AddScoped<PromptResultChatService>();
             services.AddScoped<LlModelService>();

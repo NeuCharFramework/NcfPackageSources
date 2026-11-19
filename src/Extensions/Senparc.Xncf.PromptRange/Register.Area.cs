@@ -1,23 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Register.Area.cs
-    文件功能描述：Register.Area 相关实现
-    
-    
-    创建标识：Senparc - 20231001
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
+    File name: Register.Area.cs
+    File description: Register.Area related implementation
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.20.0 注册 Skill 管理页面
+    Created by: Senparc - 20231001
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 enhance Sandbox functionality with language validation and request handling improvements
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.17.0-preview5 integrate shared resource localization and improve feature text for the PromptRange module
+
+    Modified by: Senparc - 20261021
+    Change description: v0.20.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 enhance Sandbox functionality with language validation and request handling improvements
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -34,26 +37,26 @@ using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.PromptRange
 {
-    public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
-                                    IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
+    public partial class Register : IAreaRegister, //register the XNCF page interface (optional)
+                                    IXncfRazorRuntimeCompilation  //enable RazorPage runtime compilation
     {
-        #region IAreaRegister 接口
+        #region Legacy section
 
         public string HomeUrl => "/Admin/PromptRange/";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
                          new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Index"), PromptRangeResource.Get("Area.Home", "首页"),"fa fa-laptop"),
-                          //new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Model"),"模型","fa fa-laptop"),
+                          //new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Model"),"model","fa fa-laptop"),
                            new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Prompt"),"PromptRange","fa fa-laptop"),
                            new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Skill"),"Skill 管理","fa fa-puzzle-piece"),
-                          //new AreaPageMenuItem(GetAreaUrl($"/Admin/PromptRange/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
+                          //Legacy comment translated to English.
                      };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //configure page permissions here
             });
 
             SenparcTrace.SendCustomLog("PromptRange 启动", "完成 Area:Senparc.Xncf.PromptRange 注册");
@@ -63,7 +66,7 @@ namespace Senparc.Xncf.PromptRange
 
         #endregion
 
-        #region IXncfRazorRuntimeCompilation 接口
+        #region Legacy section
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.PromptRange"));
         #endregion
     }

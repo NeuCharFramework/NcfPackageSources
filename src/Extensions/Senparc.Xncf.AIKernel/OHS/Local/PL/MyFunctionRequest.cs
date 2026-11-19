@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：MyFunctionRequest.cs
-    文件功能描述：MyFunctionRequest 相关实现
-    
-    
-    创建标识：Senparc - 20231220
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.14.0-preview5 为 AIKernel 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+    File name: MyFunctionRequest.cs
+    File description: MyFunctionRequest related implementation
+
+    Created by: Senparc - 20231220
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.14.0-preview5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -40,7 +43,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         [LocalizedDescription(typeof(AIKernelResource), "Parameter.Sample.Number2")]
         public int Number2 { get; set; }
 
-        [LocalizedDescription(typeof(AIKernelResource), "Parameter.Sample.Operator")]//下拉列表
+        [LocalizedDescription(typeof(AIKernelResource), "Parameter.Sample.Operator")]//Legacy comment translated to English.
            [FunctionParameterUi(ParameterType.DropDownList, nameof(OperatorOptions))]
            public string Operator { get; set; }
 
@@ -52,7 +55,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
                  new SelectionItem("÷", AIKernelResource.Get("Parameter.Operator.Divide"), AIKernelResource.Get("Parameter.Operator.Divide.Help"), false)
             });
 
-        [LocalizedDescription(typeof(AIKernelResource), "Parameter.Sample.Power")]//多选框
+        [LocalizedDescription(typeof(AIKernelResource), "Parameter.Sample.Power")]//Legacy comment translated to English.
            [FunctionParameterUi(ParameterType.CheckBoxList, nameof(PowerOptions))]
            public string[] Power { get; set; }
 

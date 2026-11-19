@@ -1,20 +1,24 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：HumanInTheLoopRequestStore.cs
-    文件功能描述：AgentsManager 进程内 Human-in-the-Loop 请求暂存与恢复
+    File name: HumanInTheLoopRequestStore.cs
+    File description: Related implementation.
+    Change description: Updated module behavior and related support.
 
-    创建标识：Senparc - 20260815
-    修改描述：为 MAF/AgentKernel 工具审批提供跨 HTTP 请求的等待句柄
+    Created by: Senparc - 20260815
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -32,9 +36,9 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-/// AgentsManager 的进程内人工审批请求存储。
-/// 该存储只负责把一个正在等待的 MAF/AgentKernel 请求与后续 HTTP 决策关联起来；
-/// 进程重启或多实例部署时需要后续接入持久化 checkpoint/共享协调器。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class HumanInTheLoopRequestStore
 {

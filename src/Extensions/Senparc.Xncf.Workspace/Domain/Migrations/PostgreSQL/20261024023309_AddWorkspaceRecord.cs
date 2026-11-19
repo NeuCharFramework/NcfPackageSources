@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：20261024023309_AddWorkspaceRecord.cs
-    文件功能描述：20261024023309_AddWorkspaceRecord 相关定义与实现
+    File name: 20261024023309_AddWorkspaceRecord.cs
+    File description: 20261024023309_AddWorkspaceRecord related definitions and implementation
 
+    Created by: Senparc - 20211114
 
-    创建标识：Senparc - 20211114
-
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.2 支持 AddWorkspaceRecord 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.2.2 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

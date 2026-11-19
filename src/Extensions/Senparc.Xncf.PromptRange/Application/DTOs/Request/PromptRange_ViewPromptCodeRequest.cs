@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：PromptRange_ViewPromptCodeRequest.cs
-    文件功能描述：PromptRange_ViewPromptCodeRequest 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+    File name: PromptRange_ViewPromptCodeRequest.cs
+    File description: PromptRange_ViewPromptCodeRequest related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.17.0-preview5 integrate shared resource localization and improve feature text for the PromptRange module
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -21,7 +24,7 @@ using System.ComponentModel;
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 
 /// <summary>
-/// 查看 PromptCode 列表的请求（用于 FunctionRender）
+///Legacy comment translated to English.
 /// </summary>
 public class PromptRange_ViewPromptCodeRequest : FunctionAppRequestBase
 {

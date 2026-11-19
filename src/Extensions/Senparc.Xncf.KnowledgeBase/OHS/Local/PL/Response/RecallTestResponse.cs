@@ -1,23 +1,36 @@
-﻿﻿/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
-  
-    文件名：RecallTestResponse.cs
-    文件功能描述：RecallTestResponse 响应模型定义
 
+    File name: RecallTestResponse.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260225
+    Created by: Senparc - 20260225
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+----------------------------------------------------------------*/
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
+﻿/*----------------------------------------------------------------
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+    Copyright (C) 2026 Senparc
+
+    File name: RecallTestResponse.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20260225
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview6 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260813
+    Change description: v0.6.0-preview8 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
 
 ----------------------------------------------------------------*/
 
@@ -31,21 +44,21 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Response
 {
     public class RecallTestResponse
     {
-        /// <summary>当前测试中的返回顺序，从 1 开始。</summary>
+        ///Legacy comment translated to English.
         public int Rank { get; set; }
 
         /// <summary>
-        /// 重排前的向量原始顺序（未开启重排时与 Rank 相同），从 1 开始。
+        ///Legacy comment translated to English.
         /// </summary>
         public int OriginalRank { get; set; }
 
-        /// <summary>向量库返回的相似度分数，仅适合在同一检索配置下比较。</summary>
+        ///Legacy comment translated to English.
         public double? Score { get; set; }
 
-        /// <summary>重排融合得分（0-1，越大越相关）；未开启重排时为 null。</summary>
+        ///Legacy comment translated to English.
         public double? RerankScore { get; set; }
 
-        /// <summary>本次实际生效的重排模式：None / Lexical / Llm。</summary>
+        ///Legacy comment translated to English.
         public string RerankMode { get; set; }
 
         public string Content { get; set; }

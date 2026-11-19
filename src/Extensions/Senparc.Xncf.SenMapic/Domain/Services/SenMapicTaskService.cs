@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SenMapicTaskService.cs
-    文件功能描述：SenMapicTaskService 相关实现
-    
-    
-    创建标识：Senparc - 20250114
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SenMapicTaskService.cs
+    File description: SenMapicTaskService related implementation
+
+    Created by: Senparc - 20250114
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -69,7 +72,7 @@ namespace Senparc.Xncf.SenMapic.Domain.Services
         {
             await SaveTaskStateAsync(task, t => t.Start());
 
-            // 创建爬虫引擎
+            //Legacy comment translated to English.
             var engine = new SenMapicEngine(
                 serviceProvider: _serviceProvider,
                 urls: new[] { task.StartUrl },
@@ -79,7 +82,7 @@ namespace Senparc.Xncf.SenMapic.Domain.Services
                 maxPageCount: task.MaxPageCount
             );
 
-            // 异步执行爬虫任务
+            //Legacy comment translated to English.
             _ = Task.Run(async () =>
             {
                 try

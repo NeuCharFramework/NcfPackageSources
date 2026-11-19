@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：BackendTemplateExtension.cs
-    文件功能描述：BackendTemplateExtension 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: BackendTemplateExtension.cs
+    File description: BackendTemplateExtension related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.22.9-preview13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 

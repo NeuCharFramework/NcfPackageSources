@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.1.5-preview6</Version>
+    <Version>0.1.6-preview7</Version>
     <AssemblyName>Senparc.Xncf.XncfBuilder.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-    <Description>Senparc.Xncf.XncfBuilder 集成事件与跨模块契约抽象</Description>
+    <Description>Module description.</Description>
     <Copyright>NeuCharFramework</Copyright>
     <PackageTags>NeuCharFramework,NCF,XNCF</PackageTags>
     <Authors>NeuCharFramework</Authors>
@@ -18,15 +18,17 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      v0.1.0 创世
-      [2026-07-26] v0.1.1-preview2 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.3.0-preview2
-      1、Dependency update from Senparc.Ncf.Shared.Abstractions to 0.3.0-preview2
-      [2026-08-04] v0.1.2-preview3 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.4.0-preview3
-      [2026-08-08] v0.1.3-preview4 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.5.0-preview4
-      [2026-08-13] v0.1.4-preview5 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.6.0-preview5
-      [2026-11-03] v0.1.5-preview6 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.7.0-preview1
-</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.1.0 initial release
+        [2026-07-26] v0.1.1-preview2 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.3.0-preview2
+        1. Dependency update from Senparc.Ncf.Shared.Abstractions to 0.3.0-preview2
+        [2026-08-04] v0.1.2-preview3 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.4.0-preview3
+        [2026-08-08] v0.1.3-preview4 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.5.0-preview4
+        [2026-08-13] v0.1.4-preview5 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.6.0-preview5
+        [2026-11-03] v0.1.5-preview6 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.7.0-preview1
+        [2026-11-19] v0.1.6-preview7 Localized XNCF Builder tools and template surfaces
+        1. Updated affected project files while preserving existing public integration behavior.
+        2. Standardized related English source comments and package metadata for the current release.
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

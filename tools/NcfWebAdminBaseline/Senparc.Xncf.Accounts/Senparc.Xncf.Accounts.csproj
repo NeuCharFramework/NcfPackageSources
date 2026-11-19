@@ -1,0 +1,131 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Version>0.3.14</Version>
+		<AssemblyName>Senparc.Xncf.Accounts</AssemblyName>
+		<RootNamespace>Senparc.Xncf.Accounts</RootNamespace>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild Condition="'$(Configuration)'=='ModifyPublish'">true</GeneratePackageOnBuild>
+		<Description>Registered User Management</Description>
+		<Copyright>Senparc</Copyright>
+		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Accounts</PackageTags>
+		<Authors>Senparc</Authors>
+		<Owners>Senparc</Owners>
+		 <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
+		<Title>User Management</Title>
+		<!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+    <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>-->
+		<PackageReleaseNotes>v0.1 initial release
+		    [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+		    [2026-07-02] v0.2.1 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-07-17] v0.3.0 Updated module behavior and related support.
+		    1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    5. Updated module behavior and related support.
+		    [2026-07-29] v0.3.1 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.3-preview3
+		    [2026-07-31] v0.3.2 Dependency update from Senparc.Xncf.AreasBase to 0.13.2-preview4
+		    [2026-08-04] v0.3.3 Dependency updates from upstream projects
+		    1. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.5-preview5
+		    2. Dependency update from Senparc.Xncf.AreasBase to 0.13.3-preview5
+		    3. Dependency update from Senparc.Xncf.SystemCore to 0.14.3-preview5
+		    [2026-08-08] v0.3.4 Dependency updates from upstream projects
+		    1. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+		    2. Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+		    3. Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
+		    [2026-08-13] v0.3.5 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.7-preview7; [5955]Senparc.Xncf.AreasBase to 0.13.5-preview7; [5980]Senparc.Xncf.SystemCore to 0.14.5-preview7
+		    [2026-08-15] v0.3.6 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.8-preview8
+		    [2026-08-22] v0.3.7 synchronize Senparc.Xncf.Accounts dependency version
+		    1. Updated module behavior and related support.
+		    [2026-08-29] v0.3.8 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10
+		    1. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
+		    [2026-09-16] v0.3.9 Dependency updates from Senparc.Aspire.AppHost to 0.0.15; Senparc.Web to 0.39.1
+		    [2026-09-17] v0.3.10 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-10-05] v0.3.11 Enhanced Senparc.Xncf.Accounts functionality and compatibility
+		    1. Updated Senparc.Xncf.Accounts project behavior and integration for the latest feature and reliability improvements.
+		    [2026-11-03] v0.3.12 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
+		    3. Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+		    4. Dependency update from Senparc.Xncf.SystemCore to 0.14.12
+		    [2026-11-11] v0.3.12 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    [2026-11-12] v0.3.13 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-11-19] v0.3.14 Updated module behavior, localization metadata, and English source comments
+		    1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+		    2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
+		</PackageReleaseNotes>
+		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
+		<UserSecretsId>09f08471-c710-42f1-9f6b-936794838320</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<OutputPath>..\..\..\BuildOutPut</OutputPath>
+		<!--<DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.Accounts.XML</DocumentationFile>
+		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+		<Optimize>true</Optimize>
+		<DebugType>pdbonly</DebugType>
+		<ErrorReport>prompt</ErrorReport>
+		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>-->
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='ModifyPublish'">
+	  <OutputPath>..\..\..\BuildOutPut</OutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Dapr.AspNetCore" Version="1.17.0-rc01" />
+		<PackageReference Include="Senparc.CO2NET.AspNet" Version="2.1.4" />
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="App_Data\SenparcTraceLog\*" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="appsettings.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="appsettings.json">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </None>
+	  <None Include="App_Data\Database\SenparcConfig.config">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
+	  <ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+	  <ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
+	  <ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="App_Data\ApiDocXml\DynamicFiles\" />
+	</ItemGroup>
+</Project>

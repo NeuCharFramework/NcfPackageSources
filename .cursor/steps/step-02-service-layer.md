@@ -13,16 +13,16 @@
 ## 📂 涉及文件
 
 ### 新建文件
-1. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatSessionService.cs`
-2. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatMessageService.cs`
-3. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatSessionModuleService.cs`
-4. `tools/NcfSimulatedSite/Senparc.Areas.Admin/OHS/Local/AppService/AdminChatAppService.cs`
+1. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Services/AdminChatSessionService.cs`
+2. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Services/AdminChatMessageService.cs`
+3. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Services/AdminChatSessionModuleService.cs`
+4. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/OHS/Local/AppService/AdminChatAppService.cs`
 
 ## 🔧 实现步骤
 
 ### 1. 创建 AdminChatSessionService
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatSessionService.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Services/AdminChatSessionService.cs`
 
 **完整代码示例**:
 
@@ -225,7 +225,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 
 ### 2. 创建 AdminChatMessageService
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatMessageService.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Services/AdminChatMessageService.cs`
 
 **完整代码示例**:
 
@@ -402,7 +402,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 
 ### 3. 创建 AdminChatSessionModuleService
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatSessionModuleService.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Services/AdminChatSessionModuleService.cs`
 
 **完整代码示例**:
 
@@ -532,7 +532,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 
 ### 4. 创建 AdminChatAppService（API 接口层）
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/OHS/Local/AppService/AdminChatAppService.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/OHS/Local/AppService/AdminChatAppService.cs`
 
 **完整代码示例**:
 

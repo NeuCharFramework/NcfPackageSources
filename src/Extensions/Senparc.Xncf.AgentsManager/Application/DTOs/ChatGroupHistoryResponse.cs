@@ -1,20 +1,23 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ChatGroupHistoryResponse.cs
-    文件功能描述：ChatGroupHistoryResponse 数据传输对象定义
-    
-    
-    创建标识：Senparc - 20241017
-    
-    修改标识：Senparc - 20260701
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    File name: ChatGroupHistoryResponse.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 update AgentsManager with new features and improvements
+    Created by: Senparc - 20241017
+
+    Modified by: Senparc - 20260701
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 update AgentsManager with new features and improvements
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 

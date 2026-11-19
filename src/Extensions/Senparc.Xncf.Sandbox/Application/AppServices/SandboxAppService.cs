@@ -1,36 +1,41 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxAppService.cs
-    文件功能描述：沙箱 Function / OHS 入口
+    File name: SandboxAppService.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260808
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持创建与更新沙箱会话 TTL/永久保持
+    Created by: Senparc - 20260808
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.3.0 支持从全局 NeuCharPivot 受控调用 Sandbox Function
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
 
-    修改标识：Senparc - 20260829
-    修改描述：补充 Lab 文件列举的树状 Data 和执行日志
+    Modified by: Senparc - 20260829
+    Change description: v0.3.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 增加 Notebook 创建、别名修改与交互式标准输入 Function
+    Modified by: Senparc - 20260829
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261018
-    修改描述：避免 Notebook 语言缺失时静默生成 Python Notebook
+    Modified by: Senparc - 20261005
+    Change description: v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.3.5 缺少模板或语言时拒绝静默回退到 Python
+    Modified by: Senparc - 20261018
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.0 add bulk file upload functionality to Sandbox Lab
+    Modified by: Senparc - 20261021
+    Change description: v0.3.5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.4.0 add bulk file upload functionality to Sandbox Lab
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -44,6 +49,7 @@ using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Application.DTOs.Request;
 using Senparc.Xncf.Sandbox.Domain.Services;
 using Senparc.Xncf.Sandbox.Domain.Services.Runtime;
+using Senparc.Xncf.Sandbox;
 
 namespace Senparc.Xncf.Sandbox.Application.AppServices;
 
@@ -63,11 +69,8 @@ public class SandboxAppService : AppServiceBase
         _fileStore = fileStore;
     }
 
-    [FunctionRender(
-        "创建沙箱",
-        "按模板创建独立沙箱会话（Docker / Wasm Stub）",
-        typeof(Register),
-        AllowGlobalPivot = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Create.Name", "Function.Sandbox.Create.Description",
+        typeof(Register), "Create sandbox", "Create an isolated sandbox session from a template.", AllowGlobalPivot = true)]
     public async Task<StringAppResponse> Create(Sandbox_CreateRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -108,7 +111,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("沙箱列表", "查看最近沙箱会话", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.List.Name", "Function.Sandbox.List.Description",
+        typeof(Register), "List sandboxes", "View recent sandbox sessions.")]
     public async Task<StringAppResponse> List(Sandbox_ListRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -126,7 +130,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("沙箱状态", "按 SessionId 查询", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Status.Name", "Function.Sandbox.Status.Description",
+        typeof(Register), "Sandbox status", "Query a sandbox session by SessionId.")]
     public async Task<StringAppResponse> Status(Sandbox_SessionIdRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -144,11 +149,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender(
-        "执行代码",
-        "在 Exec 模板会话中运行代码片段",
-        typeof(Register),
-        AllowGlobalPivot = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Exec.Name", "Function.Sandbox.Exec.Description",
+        typeof(Register), "Execute code", "Run a code snippet in an Exec template session.", AllowGlobalPivot = true)]
     public async Task<StringAppResponse> Exec(Sandbox_ExecRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -161,7 +163,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("执行 Lab 命令", "在运行中的持久化 JupyterLab 容器工作区内执行受限时长的 Shell 命令", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabExec.Name", "Function.Sandbox.LabExec.Description",
+        typeof(Register), "Execute Lab command", "Run a limited-duration Shell command in a running persistent JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabExec(Sandbox_LabCommandRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -185,7 +188,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("上传 Lab 文件", "把 Base64 文件内容写入运行中的持久化 JupyterLab 工作区", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabUploadFile.Name", "Function.Sandbox.LabUploadFile.Description",
+        typeof(Register), "Upload Lab file", "Write Base64 file content into a running persistent JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabUploadFile(Sandbox_LabUploadFileRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -220,7 +224,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("批量上传 Lab 文件", "把多个已上传文件以流方式写入运行中的持久化 JupyterLab 工作区", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabUploadFiles.Name", "Function.Sandbox.LabUploadFiles.Description",
+        typeof(Register), "Upload Lab files", "Write multiple uploaded files into a running persistent JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabUploadFiles(Sandbox_LabUploadFilesRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -264,7 +269,7 @@ public class SandboxAppService : AppServiceBase
                 if (!names.Add(fileName))
                 {
                     response.Success = false;
-                    response.ErrorMessage = $"批量上传中存在重复文件名：{fileName}";
+                    response.ErrorMessage = $"批量上传中存在重复File name: {fileName}";
                     return null;
                 }
 
@@ -299,7 +304,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("下载 Lab 文件", "读取运行中的持久化 JupyterLab 工作区文件并返回 Base64 内容", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabDownloadFile.Name", "Function.Sandbox.LabDownloadFile.Description",
+        typeof(Register), "Download Lab file", "Read a file from a running persistent JupyterLab workspace and return Base64 content.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabDownloadFile(Sandbox_LabFileRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -325,7 +331,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("列举 Lab 文件", "列举运行中的持久化 JupyterLab 工作区文件", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabListFiles.Name", "Function.Sandbox.LabListFiles.Description",
+        typeof(Register), "List Lab files", "List files in a running persistent JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabListFiles(Sandbox_LabListFilesRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -358,11 +365,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender(
-        "创建 Notebook",
-        "在运行中的 JupyterLab 工作区创建 Python 或 C# .ipynb 文件",
-        typeof(Register),
-        AllowAiInvocation = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.CreateNotebook.Name", "Function.Sandbox.CreateNotebook.Description",
+        typeof(Register), "Create Notebook", "Create a Python or C# .ipynb file in a running JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabCreateNotebook(Sandbox_LabCreateNotebookRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -425,7 +429,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("修改别名", "为沙箱会话设置或清除别名（留空清除）", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.UpdateAlias.Name", "Function.Sandbox.UpdateAlias.Description",
+        typeof(Register), "Update alias", "Set or clear the alias for a sandbox session.")]
     public async Task<StringAppResponse> UpdateAlias(Sandbox_UpdateAliasRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -440,11 +445,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender(
-        "销毁沙箱",
-        "停止并清理指定会话",
-        typeof(Register),
-        AllowGlobalPivot = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Destroy.Name", "Function.Sandbox.Destroy.Description",
+        typeof(Register), "Destroy sandbox", "Stop and clean up the specified session.", AllowGlobalPivot = true)]
     public async Task<StringAppResponse> Destroy(Sandbox_SessionIdRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -456,7 +458,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("删除沙箱记录", "永久删除已停止、已过期或已清理完成的会话记录", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.DeleteRecord.Name", "Function.Sandbox.DeleteRecord.Description",
+        typeof(Register), "Delete sandbox record", "Permanently delete a stopped, expired, or fully cleaned session record.")]
     public async Task<StringAppResponse> DeleteRecord(Sandbox_SessionIdRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -468,7 +471,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("修改 TTL", "延长、缩短或设为永久保持", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.UpdateTtl.Name", "Function.Sandbox.UpdateTtl.Description",
+        typeof(Register), "Update TTL", "Extend, shorten, or make the sandbox retention permanent.")]
     public async Task<StringAppResponse> UpdateTtl(Sandbox_UpdateTtlRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>

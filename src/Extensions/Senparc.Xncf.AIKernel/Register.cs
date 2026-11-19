@@ -1,41 +1,44 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：模块注册与初始化逻辑
-    
-    
-    创建标识：Senparc - 20200818
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.14.0-preview5 为 AIKernel 模块接入统一资源本地化并优化功能文案
+    File name: Register.cs
+    File description: module registration and initialization logic
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+    Created by: Senparc - 20200818
 
-    修改标识：Senparc - 20261002
-    修改描述：v0.16.3 接入独立本地模型微调 Worker 与实时管理界面
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20261003
-    修改描述：v0.16.4 支持数据库管理多 Worker 微调路由并将密钥留在基础设施配置
+    Modified by: Senparc - 20260717
+    Change description: v0.14.0-preview5 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 注册 Token 用量记录与微调控制面服务
+    Modified by: Senparc - 20261002
+    Change description: v0.16.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 add PromptRange selector service, UI components, and tests
+    Modified by: Senparc - 20261003
+    Change description: v0.16.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261106
-    修改描述：注册微调密钥文件、运行时开关和本机 Worker 进程管理
+    Modified by: Senparc - 20261009
+    Change description: v0.16.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.17.2 统一 XNCF Register 显示元数据与多语言资源键
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 add PromptRange selector service, UI components, and tests
+
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
+
+    Modified by: Senparc - 20261111
+    Change description: v0.17.2 unify XNCF Register display metadata and localization resource keys
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -81,13 +84,13 @@ namespace Senparc.Xncf.AIKernel
             "AI 核心模块",
             "基于 Senparc.AI，为所有 AI 项目提供基础能力");
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.AIKernel";
 
-        public override string Uid => "796D12D8-580B-40F3-A6E8-A5D9D2EABB69";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "796D12D8-580B-40F3-A6E8-A5D9D2EABB69";//Legacy comment translated to English.
 
-        public override string Version => "5.0.5";//必须填写版本号
+        public override string Version => "5.0.5";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -97,23 +100,23 @@ namespace Senparc.Xncf.AIKernel
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级版本时更新数据库
+            //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
-            //根据安装或更新不同条件执行逻辑
+            //execute logic according to the installation or update condition
             switch (installOrUpdate)
             {
                 case InstallOrUpdate.Install:
-                    //新安装
-                    #region 初始化数据库数据
+                    //new installation
+                    #region Legacy section
                     //var colorService = serviceProvider.GetService<ColorAppService>();
                     //var colorResult = await colorService.GetOrInitColorAsync();
 
-                    //TODO: 自动拉取 NeuChar 免费用量进行配置和载入 Seed 数据
+                    //Legacy comment translated to English.
                     #endregion
                     break;
                 case InstallOrUpdate.Update:
-                    //更新
+                    //update
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -122,14 +125,14 @@ namespace Senparc.Xncf.AIKernel
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            #region 删除数据库（演示）
+            #region Legacy section
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             AIKernelSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as AIKernelSenparcEntities;
 
-            //指定需要删除的数据实体
+            //specify the data entities to delete
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: this is a demonstration that deletes all tables created by this module during uninstallation. In production, proceed carefully and order entities by their deletion dependencies.
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
@@ -146,7 +149,7 @@ namespace Senparc.Xncf.AIKernel
             //Console.WriteLine("======================services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();================");
             services.AddScoped<AgentAiHandler>();
 
-            // Token 监控服务（进程内单例，用于实时聚合与异步进度）
+            //Legacy comment translated to English.
             services.AddSingleton<Senparc.Xncf.AIKernel.Domain.Services.AITokenMonitorService>();
             services.AddScoped<Senparc.Xncf.AIKernel.Domain.Services.AITokenUsageService>();
             services.AddSingleton<Senparc.Xncf.AIKernel.Domain.Services.AITokenUsageRecorder>();

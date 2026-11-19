@@ -1,0 +1,99 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.0.28</Version>
+    <PackageReleaseNotes>
+[2026-07-07] v0.0.1 Dependency updates from upstream modules
+1. Dependency update from Senparc.Areas.Admin to 0.0.5
+[2026-07-17] v0.0.2 synchronize upstream project versions and adopt shared localization capabilities
+1. Dependency update from Senparc.Areas.Admin to 0.1.0
+[2026-07-29] v0.0.3 Dependency update from Senparc.Areas.Admin to 0.2.0
+[2026-07-31] v0.0.4 Dependency update from Senparc.Areas.Admin to 0.2.1
+[2026-08-04] v0.0.5 Updated module behavior and related support.
+1. Updated module behavior and related support.
+2. Updated module behavior and related support.
+3. Updated module behavior and related support.
+[2026-08-08] v0.0.6 Updated module behavior and related support.
+1. Updated module behavior and related support.
+2. Updated module behavior and related support.
+[2026-08-13] v0.0.7 Updated module behavior and related support.
+1. Updated module behavior and related support.
+2. Updated module behavior and related support.
+[2026-08-15] v0.0.8 addworkflowmodelbehaviorregression tests
+1. Updated module behavior and related support.
+2. Updated module behavior and related support.
+[2026-08-22] v0.0.9 Updated module behavior and related support.
+1. Updated module behavior and related support.
+[2026-08-29] v0.0.10 Updated module behavior and related support.
+1. Updated module behavior and related support.
+2. Updated module behavior and related support.
+[2026-09-15] v0.0.11 Updated module behavior and related support.
+1. Updated module behavior and related support.
+2. Updated module behavior and related support.
+[2026-09-16] v0.0.12 Updated module behavior and related support.
+1. Updated module behavior and related support.
+2. Updated module behavior and related support.
+[2026-09-17] v0.0.13 Updated module behavior and related support.
+1. Updated module behavior and related support.
+2. Updated module behavior and related support.
+[2026-10-01] add Repository . delete. . cancelupdateregression tests
+[2026-10-01] v0.0.14 Updated module behavior and related support.
+1. Updated module behavior and related support.
+[2026-10-02] cover. . accounttaskcancel
+[2026-10-03] cover MCP  API . list. connectionhandle
+[2026-10-04] cover MCP publish. databasemigration
+[2026-10-09] v0.0.19 Updated module behavior and related support.
+1. Updated module behavior and related support.
+[2026-10-21] v0.0.20 Updated module behavior and related support.
+1. Updated module behavior and related support.
+[2026-11-02] Verify relational Memory migration, scope isolation, tokenizer budgets, prompt field constraints and three-mode controls.
+[2026-11-02] Cover private Memory persistence, bounded tier loading, optimistic concurrency and client settings behavior.
+[2026-11-02] Cover merged Host monitoring, historical sampling precedence, time ranges, zoom, live following and localization.
+[2026-11-02] Verify selector score formatting, default sort and sorting request parameters.
+[2026-11-02] Cover reusable PromptRange selector lifecycle, cursor insertion, stale requests and AdminChat integration.
+[2026-11-02] v0.0.21 Updated module behavior and related support.
+[2026-11-03] Cover timestamp preference database persistence, subsequent retrieval, accurate save reports, skipped extraction and safe default-prompt upgrades.
+[2026-11-03] Verify sidebar layout persistence, browser drag/keyboard ordering, reduced motion, SQLite session order persistence and user/tenant/Workspace boundaries.
+[2026-11-04] Cover PromptCode range tracking, clean-message persistence, owned-turn scoring, optional providers and browser interactions.
+[2026-11-05] Verify rating slider drag previews, fixed save targets, cancellation, stale detail requests and responsive score charts.
+</PackageReleaseNotes>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <Configurations>Debug;Release;NcfDebugForPromptRange</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0-preview-23577-04" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.6.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.1" />
+    <PackageReference Include="coverlet.collector" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Basic\Senparc.Ncf.UnitTestExtension\Senparc.Ncf.UnitTestExtension.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Extensions\Senparc.Xncf.NeuCharWorkflow\Senparc.Xncf.NeuCharWorkflow.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Extensions\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
+  </ItemGroup>
+
+</Project>

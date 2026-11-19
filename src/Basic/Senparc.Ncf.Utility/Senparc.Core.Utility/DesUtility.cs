@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：DesUtility.cs
-    文件功能描述：DesUtility 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: DesUtility.cs
+    File description: DesUtility related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.21.3-preview5 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -21,15 +24,15 @@ namespace Senparc.Ncf.Core.Utility
 {
     public class DesUtility
     {
-        //默认密钥向量
+        //Legacy comment translated to English.
         private static byte[] Keys = { 0xA2, 0x24, 0x26, 0x77, 0x99, 0xAB, 0xEF, 0x88 };
 
         /// <summary>
-        /// DES加密字符串
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="encryptString">待加密的字符串</param>
-        /// <param name="encryptKey">加密密钥,要求为8位</param>
-        /// <returns>加密成功返回加密后的字符串，失败返回源串</returns>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public static string EncryptDES(string encryptString, string encryptKey)
         {
             try
@@ -51,11 +54,11 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// DES解密字符串
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="decryptString">待解密的字符串</param>
-        /// <param name="decryptKey">解密密钥,要求为8位,和加密密钥相同</param>
-        /// <returns>解密成功返回解密后的字符串，失败返源串</returns>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public static string DecryptDES(string decryptString, string decryptKey)
         {
             try

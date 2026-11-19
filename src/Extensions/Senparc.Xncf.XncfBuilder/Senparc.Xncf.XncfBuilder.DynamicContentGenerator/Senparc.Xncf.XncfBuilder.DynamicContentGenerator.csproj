@@ -2,20 +2,22 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<Version>0.0.2</Version>
-		<PackageReleaseNotes>
-		    [2026-07-05] v0.0.1 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
-		    1、重构系统配置初始化与更新流程并统一模型处理
-		    2、补充配置与工程实现细节
-		    [2026-07-05] v0.0.2 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
-		    1、重构系统配置初始化与更新流程并统一模型处理
-		    2、补充配置与工程实现细节
-</PackageReleaseNotes>
+		<Version>0.0.3</Version>
+		<PackageReleaseNotes>[2026-07-05] v0.0.1 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-07-05] v0.0.2 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-11-19] v0.0.3 Localized XNCF Builder tools and template surfaces
+		    1. Updated affected project files while preserving existing public integration behavior.
+		    2. Standardized related English source comments and package metadata for the current release.
+		</PackageReleaseNotes>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
 
-		<!-- Source Generator 特定属性 -->
+		<!-- Source Generator property -->
 		<IncludeBuildOutput>false</IncludeBuildOutput>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IncludeSymbols>false</IncludeSymbols>
@@ -25,7 +27,7 @@
 		<SkipCompilerGeneratedMSBuildEditorConfig>true</SkipCompilerGeneratedMSBuildEditorConfig>
 
 
-		<!-- 允许生成的 DLL 在被加载时依然可以被覆盖 -->
+		<!-- generate DLL cover -->
 		<ExcludeFromSourceGeneratorCheck>true</ExcludeFromSourceGeneratorCheck>
 	</PropertyGroup>
 

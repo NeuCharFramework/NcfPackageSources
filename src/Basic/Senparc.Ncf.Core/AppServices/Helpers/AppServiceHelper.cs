@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AppServiceHelper.cs
-    文件功能描述：AppServiceHelper 相关实现
-    
-    
-    创建标识：Senparc - 20211012
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: AppServiceHelper.cs
+    File description: AppServiceHelper related implementation
+
+    Created by: Senparc - 20211012
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -22,21 +25,21 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Core.AppServices
 {
     /// <summary>
-    /// AppService 帮助类
+    /// AppService Helper Class
     /// </summary>
     public static class AppServiceHelper
     {
 
         /// <summary>
-        /// AppService 的自动处理过程
+        /// Automatic handling process for AppService
         /// </summary>
-        /// <typeparam name="TData">从 Service 返回的主体消息类型（必须为 DTO 或 值类型，不能是 Entity）</typeparam>
+        /// <typeparam name="TData">Main message type returned from Service (must be DTO or value type, cannot be Entity)</typeparam>
         /// <param name="appService">AppService</param>
         /// <param name="func"></param>
         /// <param name="exceptionHandler"></param>
         /// <param name="afterFunc"></param>
-        /// <param name="saveLogAfterFinished">执行完成后是否保存日志</param>
-        /// <param name="saveLogName">保存日志的名称，可选，如果留空，则返回当前 AppService 的名称</param>
+        /// <param name="saveLogAfterFinished">Whether to save log after executecomplete</param>
+        /// <param name="saveLogName">Save the name of the log. Optional. If left empty, then return the name of the current AppService.</param>
         /// <returns></returns>
         public static Task<AppResponseBase<TData>> GetResponseAsync<TData>(this IAppService appService, Func<AppResponseBase<TData>, AppServiceLogger, Task<TData>> func, Action<Exception, AppResponseBase<TData>, AppServiceLogger> exceptionHandler = null, Action<AppResponseBase<TData>, AppServiceLogger> afterFunc = null, bool saveLogAfterFinished = false, string saveLogName = null)
             //where TData : class
@@ -45,14 +48,14 @@ namespace Senparc.Ncf.Core.AppServices
         }
 
         ///// <summary>
-        ///// AppService 的自动处理过程（返回 string 数据）
+        ///// AppService's automatic handling process (return string data)
         ///// </summary>
         ///// <param name="appService">AppService</param>
         ///// <param name="func"></param>
         ///// <param name="exceptionHandler"></param>
         ///// <param name="afterFunc"></param>
-        ///// <param name="saveLogAfterFinished">执行完成后是否保存日志</param>
-        ///// <param name="saveLogName">保存日志的名称，可选，如果留空，则返回当前 AppService 的名称</param>
+        ///// Whether to <param name="saveLogAfterFinished">save the log after executecomplete</param>
+        /////<param name="saveLogName">Save the name of the log. Optional. If left empty, then return the name of the current AppService.</param>
         ///// <returns></returns>
         //public static Task<AppResponseBase<string>> GetStringResponseAsync(this IAppService appService, Func<AppResponseBase<string>, AppServiceLogger, Task<string>> func, Action<Exception, AppResponseBase<string>, AppServiceLogger> exceptionHandler = null, Action<AppResponseBase<string>, AppServiceLogger> afterFunc = null, bool saveLogAfterFinished = false, string saveLogName = null)
         //{
@@ -60,14 +63,14 @@ namespace Senparc.Ncf.Core.AppServices
         //}
 
         /// <summary>
-        /// AppService 的自动处理过程（返回 string 数据）
+        /// Automatic handling process of AppService (return string data)
         /// </summary>
         /// <param name="appService">AppService</param>
         /// <param name="func"></param>
         /// <param name="exceptionHandler"></param>
         /// <param name="afterFunc"></param>
-        /// <param name="saveLogAfterFinished">执行完成后是否保存日志</param>
-        /// <param name="saveLogName">保存日志的名称，可选，如果留空，则返回当前 AppService 的名称</param>
+        /// <param name="saveLogAfterFinished">Whether to save log after executecomplete</param>
+        /// <param name="saveLogName">Save the name of the log. Optional. If left empty, then return the name of the current AppService.</param>
         /// <returns></returns>
         public static Task<StringAppResponse> GetStringResponseAsync(this IAppService appService, Func<StringAppResponse, AppServiceLogger, Task<string>> func, Action<Exception, StringAppResponse, AppServiceLogger> exceptionHandler = null, Action<StringAppResponse, AppServiceLogger> afterFunc = null, bool saveLogAfterFinished = false, string saveLogName = null)
            //where IStringAppResponse : StringAppResponse
@@ -91,16 +94,16 @@ namespace Senparc.Ncf.Core.AppServices
         }
 
         /// <summary>
-        /// AppService 的自动处理过程
+        /// Automatic handling process for AppService
         /// </summary>
-        /// <typeparam name="TData">从 Service 返回的主体消息类型（必须为 DTO 或 值类型，不能是 Entity）</typeparam>
+        /// <typeparam name="TData">Main message type returned from Service (must be DTO or value type, cannot be Entity)</typeparam>
         /// <typeparam name="TResponse"></typeparam>
         /// <param name="appService">AppService</param>
         /// <param name="func"></param>
         /// <param name="exceptionHandler"></param>
         /// <param name="afterFunc"></param>
-        /// <param name="saveLogAfterFinished">执行完成后是否保存日志</param>
-        /// <param name="saveLogName">保存日志的名称，可选，如果留空，则返回当前 AppService 的名称</param>
+        /// <param name="saveLogAfterFinished">Whether to save log after executecomplete</param>
+        /// <param name="saveLogName">Save the name of the log. Optional. If left empty, then return the name of the current AppService.</param>
         /// <returns></returns>
         public static async Task<TResponse> GetResponseAsync<TResponse, TData>(this IAppService appService, Func<TResponse, AppServiceLogger, Task<TData>> func, Action<Exception, TResponse, AppServiceLogger> exceptionHandler = null, Action<TResponse, AppServiceLogger> afterFunc = null, bool saveLogAfterFinished = false, string saveLogName = null)
             where TResponse : AppResponseBase<TData>, new()
@@ -128,7 +131,7 @@ namespace Senparc.Ncf.Core.AppServices
                     response.Success = true;
                 }
 
-                ////判断文件类型
+                ////checkfiletype
                 //if (result is INcfFile)
                 //{
 
@@ -172,7 +175,7 @@ namespace Senparc.Ncf.Core.AppServices
                     {
                         var tempId = response.RequestTempId;
                         var cache = appService.ServiceProvider.GetObjectCacheStrategyInstance();
-                        //为了加快响应速度，不等待
+                        //To speed up the response, do not wait.
                         _ = cache.SetAsync(tempId, logger.GetLogs(), TimeSpan.FromMinutes(SiteConfig.SenparcCoreSetting.RequestTempLogCacheMinutes));
                     }
                 }

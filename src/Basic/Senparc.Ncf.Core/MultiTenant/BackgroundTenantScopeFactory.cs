@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：BackgroundTenantScopeFactory.cs
-    文件功能描述：BackgroundTenantScopeFactory 相关定义与实现
+    File name: BackgroundTenantScopeFactory.cs
+    File description: BackgroundTenantScopeFactory related definitions and implementation
 
+    Created by: Senparc - 20261002
 
-    创建标识：Senparc - 20261002
+    Modified by: Senparc - 20261103
+    Change description: v0.30.3-preview9 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.30.3-preview9 提供请求租户快照与后台租户作用域，支持隔离作用域恢复租户上下文
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 

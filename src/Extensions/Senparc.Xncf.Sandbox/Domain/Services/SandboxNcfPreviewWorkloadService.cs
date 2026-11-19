@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxNcfPreviewWorkloadService.cs
-    文件功能描述：固定函数 NCF/XNCF Sandbox 预览工作负载
+    File name: SandboxNcfPreviewWorkloadService.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260814
+    Created by: Senparc - 20260814
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 增加 NCF 预览沙箱工作负载
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 add the NCF preview sandbox workload
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
 ----------------------------------------------------------------*/
 

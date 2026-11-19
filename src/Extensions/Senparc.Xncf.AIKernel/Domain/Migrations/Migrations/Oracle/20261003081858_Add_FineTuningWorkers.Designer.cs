@@ -1,17 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：20261003081858_Add_FineTuningWorkers.Designer.cs
-    文件功能描述：AIKernel 数据库微调 Worker 迁移模型
+    File name: 20261003081858_Add_FineTuningWorkers.Designer.cs
+    File description: AIKernel database fine-tuning Worker migration model
 
+    Created by: Senparc - 20200724
 
-    创建标识：Senparc - 20200724
+    Modified by: Senparc - 20261009
+    Change description: v0.16.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
-
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 支持 Add_FineTuningWorkers 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

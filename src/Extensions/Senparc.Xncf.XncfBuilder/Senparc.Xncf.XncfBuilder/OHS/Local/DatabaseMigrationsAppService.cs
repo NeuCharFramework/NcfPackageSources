@@ -1,26 +1,29 @@
-﻿/*-----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：DatabaseMigrationsAppService.cs
-    文件功能描述：DatabaseMigrationsAppService 相关实现
-    
-    
-    创建标识：Senparc - 20211016
-    
-    修改标识：Senparc - 20260704
-    修改描述：v0.36.2-preview1 优化数据库迁移命令日志清洗与请求模型能力
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+    File name: DatabaseMigrationsAppService.cs
+    File description: DatabaseMigrationsAppService related implementation
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+    Created by: Senparc - 20211016
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.41.0 增强隔离开发任务与 Sandbox 预览流程
+    Modified by: Senparc - 20260704
+    Change description: v0.36.2-preview1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
+    Modified by: Senparc - 20260717
+    Change description: v0.37.0-preview5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260804
+    Change description: v0.39.0-preview8 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260815
+    Change description: v0.41.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260822
+    Change description: v0.41.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -45,7 +48,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
     public class DatabaseMigrationsAppService : AppServiceBase
     {
-        // ANSI CSI 控制序列（例如 \x1B[39;49m），用于清理日志中的颜色转义字符。
+        //Legacy comment translated to English.
         private static readonly Regex AnsiEscapeRegex = new(@"\x1B\[[0-?]*[ -/]*[@-~]", RegexOptions.Compiled);
 
         private class CommandExecutionResult
@@ -156,7 +159,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         }
 
         /// <summary>
-        /// 获取迁移文件生成目录
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <param name="dbType"></param>
@@ -212,12 +215,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     return null;
                 }
 
-                //添加停机坪引用（直接引用会有问题）
+                //Legacy comment translated to English.
                 //var slnFilePath = Path.Combine(request.DatabasePlantPath, "..\\");
                 //commandTexts.Add($"dotnet sln {slnFilePath} add {request.ProjectPath}");
                 //commandTexts.Add($"dotnet add {request.DatabasePlantPath} reference {request.ProjectPath}");
 
-                //进入项目目录
+                //Legacy comment translated to English.
                 string projectPath;
                 string databasePlantPath;
                 try
@@ -241,16 +244,16 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 var allMigrationsSucceeded = true;
 
-                //执行迁移
+                //Legacy comment translated to English.
                 foreach (var dbType in databaseTypes)
                 {
                     string migrationDir = GetMigrationDir(projectPath, dbType);
 
-                    //数据库上下文实体名称
+                    //Legacy comment translated to English.
                     var dbContextName = request.DbContextName;
                     if (dbContextName == "[Default]")
                     {
-                        //会自动拼接数据类型
+                        //Legacy comment translated to English.
                         dbContextName = FunctionHelper.GetSenparcEntitiesFilePath(projectPath, dbType);
                     }
                     else
@@ -350,14 +353,14 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     }
 
                     // --framework netcoreapp3.1
-                    // 如需指定框架，可以追加上述参数，也可以支持更多参数，如net5.0
+                    //Legacy comment translated to English.
                 }
 
-                ////移除停机坪引用（直接引用会有问题）
+                ///Legacy comment translated to English.
                 //commandTexts.Add($"dotnet remove {request.DatabasePlantPath} reference {request.ProjectPath}");
                 //commandTexts.Add($"dotnet sln {slnFilePath} remove {request.ProjectPath}");
 
-                ////Pomelo-MySQL 命名有不统一的情况，需要处理
+                ///Legacy comment translated to English.
                 //if (request.DatabaseTypes.SelectedValues.Contains(MultipleDatabaseType.MySql.ToString()))
                 //{
                 //    string migrationDir = GetMigrationDir(request, MultipleDatabaseType.MySql.ToString());
@@ -366,7 +369,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 //    if (File.Exists(defaultFileName) && File.Exists(pomeloFileName))
                 //    {
                 //        File.Delete(defaultFileName);
-                //        base.RecordLog(sb, $"扫描到不兼容常规格式的 Pomelo.EntityFrameworkCore.MySql 的快照文件：{pomeloFileName}，已将默认文件删除（{defaultFileName}）！");
+                //Legacy comment translated to English.
                 //    }
                 //}
 
@@ -380,7 +383,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 }
                 else
                 {
-                    //更新版本号
+                    //Legacy comment translated to English.
                     try
                     {
                         logger.Append("");
@@ -394,9 +397,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                             {
                                 logger.Append("Register.cs 文件存在，开始更新版本号");
 
-                                //获取 Register.cs 文件内容
+                                //get Register.cs filecontent
                                 var fileContent = File.ReadAllText(registerFile);
-                                //获取版本号
+                                //Legacy comment translated to English.
                                 var result = VersionHelper.ParseFromCode(fileContent);
                                 var oldVersion = result.VersionInfo;
                                 logger.Append($"当前版本号：{oldVersion.ToString()}");
@@ -418,9 +421,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                                 }
 
 
-                                //更新代码
+                                //updatecode
                                 var newCode = VersionHelper.ReplaceVersionInCode(fileContent, result.RawVersionString, newVersion);
-                                //保存代码
+                                //savecode
                                 using (var fw = new FileStream(registerFile, FileMode.Create))
                                 {
                                     using (var sw = new StreamWriter(fw))

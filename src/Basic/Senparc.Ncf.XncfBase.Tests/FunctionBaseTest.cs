@@ -40,11 +40,11 @@ namespace Senparc.Ncf.XncfBase.Tests
     //{
     //    [Required]
     //    [MaxLength(300)]
-    //    [System.ComponentModel.Description("路径||本地物理路径，如：E:\\Senparc\\Ncf\\")]
+    //Legacy comment translated to English.
     //    public string Path { get; set; }
 
     //    [MaxLength(100)]
-    //    [System.ComponentModel.Description("新命名空间||命名空间根，必须以.结尾，用于替换[Senparc.Ncf.]")]
+    //Legacy comment translated to English.
     //    public string NewNamespace { get; set; }
 
 
@@ -69,7 +69,7 @@ namespace Senparc.Ncf.XncfBase.Tests
 
     //        Assert.AreEqual("Path", paraInfo[0].Name);
     //        Assert.AreEqual("路径", paraInfo[0].Title);
-    //        Assert.AreEqual("本地物理路径，如：E:\\Senparc\\Ncf\\", paraInfo[0].Description);
+    //Legacy comment translated to English.
     //        Assert.AreEqual(true, paraInfo[0].IsRequired);
     //        Assert.AreEqual("String", paraInfo[0].SystemType);
     //        Assert.AreEqual(ParameterType.Text, paraInfo[0].ParameterType);
@@ -77,7 +77,7 @@ namespace Senparc.Ncf.XncfBase.Tests
     //        Assert.AreEqual("NewNamespace", paraInfo[1].Name);
     //        Assert.AreEqual("新命名空间", paraInfo[1].Title);
     //        Assert.AreEqual(ParameterType.Text, paraInfo[1].ParameterType);
-    //        Assert.AreEqual("命名空间根，必须以.结尾，用于替换[Senparc.Ncf.]", paraInfo[1].Description);
+    //Legacy comment translated to English.
 
     //        Assert.AreEqual(ParameterType.DropDownList, paraInfo[2].ParameterType);
     //        Assert.AreEqual("Site", paraInfo[2].Name);

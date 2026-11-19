@@ -295,7 +295,7 @@ async function responseError(response: Response): Promise<HttpError> {
     title = body.title;
     message = body.detail ?? body.message ?? title ?? message;
   } catch {
-    // 非 JSON 错误正文不应显示，避免意外泄露服务端页面内容。
+    // Suppress non-JSON error bodies to avoid exposing server-page content.
   }
   return new HttpError(response.status, message, title);
 }

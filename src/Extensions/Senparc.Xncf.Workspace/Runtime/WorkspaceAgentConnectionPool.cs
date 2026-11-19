@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceAgentConnectionPool.cs
-    文件功能描述：按 Workspace 复用 Agent 长连接
+    File name: WorkspaceAgentConnectionPool.cs
+    File description: reuse long-lived Agent connections by Workspace
 
-    创建标识：Senparc - 20261024
+    Created by: Senparc - 20261024
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.2 implement connection manager and workspace file system provider
+    Modified by: Senparc - 20261103
+    Change description: v0.2.2 implement connection manager and workspace file system provider
+
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
 
 ----------------------------------------------------------------*/
 

@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：SenMapicEngineExtensionForWeb.cs
-    文件功能描述：SenMapicEngineExtensionForWeb 相关实现
-    
-    
-    创建标识：Senparc - 20250113
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.3.1-preview3 限制站点地图抓取目标并安全处理重定向
+    Copyright (C) 2026 Senparc
+
+    File name: SenMapicEngineExtensionForWeb.cs
+    File description: SenMapicEngineExtensionForWeb related implementation
+
+    Created by: Senparc - 20250113
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260729
+    Change description: v0.3.1-preview3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -60,7 +63,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             var publicAddresses = addresses.Where(IsPublicAddress).ToArray();
             if (publicAddresses.Length == 0)
             {
-                throw new HttpRequestException("目标主机解析为非公网地址，已拒绝连接。");
+        throw new HttpRequestException("The target host resolved to a non-public address; the connection was rejected.");
             }
 
             Exception lastException = null;
@@ -79,11 +82,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 }
             }
 
-            throw new HttpRequestException("无法连接到已通过公网地址校验的目标主机。", lastException);
+            throw new HttpRequestException("Unable to connect to the target host after public-address validation.", lastException);
         }
 
         /// <summary>
-        /// 请求网页，获取webResponse
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="url"></param>
         /// <param name="requestStartTime"></param>
@@ -93,10 +96,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         {
             if (!IsAvailableUrl(url))
             {
-                throw new InvalidOperationException("目标 URL 不允许访问。");
+            throw new InvalidOperationException("The target URL is not allowed.");
             }
 
-            var requestStartTime = DateTime.Now;//开始请求
+            var requestStartTime = DateTime.Now;//startrequest
             var currentUri = new Uri(url);
             HttpResponseMessage webResponse = null;
 
@@ -104,7 +107,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             {
                 if (!IsAvailableUrl(currentUri.AbsoluteUri))
                 {
-                    throw new InvalidOperationException("重定向目标 URL 不允许访问。");
+            throw new InvalidOperationException("The redirect target URL is not allowed.");
                 }
 
                 var request = new HttpRequestMessage(HttpMethod.Get, currentUri);
@@ -132,7 +135,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 currentUri = redirectUri;
             }
 
-            var requestEndTime = DateTime.Now;//结束请求
+            var requestEndTime = DateTime.Now;//endrequest
             return (webResponse,requestStartTime,requestEndTime);
         }
     }

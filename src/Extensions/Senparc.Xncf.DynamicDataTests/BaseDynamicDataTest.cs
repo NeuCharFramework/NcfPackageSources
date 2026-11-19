@@ -53,18 +53,24 @@ namespace Senparc.Xncf.DynamicDataTests
             var tableDataService = serviceProvider.GetRequiredService<TableDataService>();
             var columnMetadataService = serviceProvider.GetRequiredService<ColumnMetadataService>();
 
-            // User 表
+            // User table
             var userTableColumns = await columnMetadataService.GetColumnDtos(1);
             var tableDataDtos = new List<TableDataDto>();
 
-            //添加一些数据
+            //Legacy comment translated to English.
 
-            /* User 表
+            /* User table
+
              * | Column   | Value  |
+
              * |----------|--------|
+
              * | Guid     |        |
+
              * | UserName | UserX  |
+
              * | Balance  |   X    |
+
              */
 
             var userData = new[] {

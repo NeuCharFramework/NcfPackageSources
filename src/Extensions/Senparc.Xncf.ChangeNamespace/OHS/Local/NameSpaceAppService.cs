@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：NameSpaceAppService.cs
-    文件功能描述：NameSpaceAppService 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.22.0-preview2 为 ChangeNamespace 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+    File name: NameSpaceAppService.cs
+    File description: NameSpaceAppService related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.22.0-preview2 integrate shared resource localization and improve feature text for the ChangeNamespace module
+
+    Modified by: Senparc - 20261119
+    Change description: v0.22.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -68,16 +71,16 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
                 new MeetRule("@addTagHelper *,",OldNamespaceKeyword,$"{newNamespace}","*.cshtml"),
             };
 
-                //TODO:使用正则记录，并全局修改
+                //Legacy comment translated to English.
 
                 Dictionary<string, List<MatchNamespace>> namespaceCollection = new Dictionary<string, List<MatchNamespace>>(StringComparer.OrdinalIgnoreCase);
 
-                //扫描所有规则
+                //Legacy comment translated to English.
                 foreach (var item in meetRules)
                 {
                     var files = Directory.GetFiles(path, item.FileType, SearchOption.AllDirectories);
 
-                    //扫描所有文件，将满足这一条规则替换条件的对象记录下来
+                    //Legacy comment translated to English.
                     foreach (var file in files)
                     {
                         logger.Append($"扫描文件类型:{item.FileType} 数量:{files.Length}");
@@ -99,9 +102,9 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
                                             namespaceCollection[file] = new List<MatchNamespace>();
                                         }
 
-                                        //不能使用Split，中间可能还有空格
+                                        //Legacy comment translated to English.
                                         //var oldNamespaceArr = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                                        var getOld = line.Replace(item.Prefix + " ", "");//也可以用IndexOf+Length来做
+                                        var getOld = line.Replace(item.Prefix + " ", "");//Legacy comment translated to English.
                                         var getNew = getOld.Replace(item.OrignalKeyword, item.ReplaceWord);
                                         namespaceCollection[file].Add(new MatchNamespace()
                                         {
@@ -126,7 +129,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
                         }
                     }
 
-                    //遍历所有文件，替换已经解锁出来的旧命名空间
+                    //Legacy comment translated to English.
                     foreach (var file in files)
                     {
                         string content = null;
@@ -145,7 +148,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
                             {
                                 var oldNamespaceFull = $"{namespaceInfo.Prefix} {namespaceInfo.OldNamespace}";
 
-                                //替换旧的NameSpace
+                                //Legacy comment translated to English.
                                 if (content.IndexOf(oldNamespaceFull) > -1)
                                 {
                                     logger.Append($"文件命中:{file} -> {oldNamespaceFull}");

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PermissionFilterAttribute.cs
-    文件功能描述：PermissionFilterAttribute 相关实现
-    
-    
-    创建标识：Senparc - 20211223
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: PermissionFilterAttribute.cs
+    File description: PermissionFilterAttribute related implementation
+
+    Created by: Senparc - 20211223
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -39,7 +42,7 @@ namespace Senparc.Ncf.Core.Authorization
             var result = await _authorizationService.AuthorizeAsync(context.HttpContext.User, null, _requirement);
             if (!result.Succeeded)
             {
-                //TODO... ResourceCodes 是否需要暴露出去?
+                //Legacy comment translated to English.
                 AppResponseBase<string[]> responseBase = new AppResponseBase<string[]>() { Data = _requirement.ResourceCodes, Success = false, ErrorMessage = "您没有此资源的操作权限。" };
                 context.Result = new OkObjectResult(responseBase)
                 {

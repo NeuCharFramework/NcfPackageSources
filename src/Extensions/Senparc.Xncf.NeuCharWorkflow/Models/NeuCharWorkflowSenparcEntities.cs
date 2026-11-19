@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：NeuCharWorkflowSenparcEntities.cs
-    文件功能描述：数据模型、DTO 与映射定义
 
+    File name: NeuCharWorkflowSenparcEntities.cs
+    File description: data model, DTO, and mapping definitions
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 enhance workflow orchestration, replay, Webhook, and parallel execution
 
-    修改标识：Senparc - 20260913
-    修改描述：v0.4.0 新增 Chat 消息持久化数据库上下文注册
+    Modified by: Senparc - 20260913
+    Change description: v0.4.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Modified by: Senparc - 20260915
+    Change description: v0.4.0 enhance Chat trigger message persistence and recovery
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
 ----------------------------------------------------------------*/
 

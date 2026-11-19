@@ -55,220 +55,220 @@
     <value>Envoyer</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>Modules d’extension||Modules d’extension</value>
+    <value>Modules d’extension</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>Gestion des modules||Gestion des modules</value>
+    <value>Gestion des modules</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Gestion Weixin||Gestion Weixin</value>
+    <value>Gestion Weixin</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Centre de contrôle du compte officiel||Centre de contrôle du compte officiel</value>
+    <value>Centre de contrôle du compte officiel</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Nombre de comptes officiels||Nombre de comptes officiels</value>
+    <value>Nombre de comptes officiels</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Comptes officiels déjà enregistrés dans le système||Comptes officiels déjà enregistrés dans le système</value>
+    <value>Comptes officiels déjà enregistrés dans le système</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Nombre de comptes en cours||Nombre de comptes en cours</value>
+    <value>Nombre de comptes en cours</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Nombre de comptes actifs et connectés au serveur WeChat||Nombre de comptes actifs et connectés au serveur WeChat</value>
+    <value>Nombre de comptes actifs et connectés au serveur WeChat</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>Nombre total d'utilisateurs WeChat||Nombre total d'utilisateurs WeChat</value>
+    <value>Nombre total d'utilisateurs WeChat</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>Nombre d'utilisateurs ayant interagi sur cette plateforme ou récupérés automatiquement comme abonnés||Nombre d'utilisateurs ayant interagi sur cette plateforme ou récupérés automatiquement comme abonnés</value>
+    <value>Nombre d'utilisateurs ayant interagi sur cette plateforme ou récupérés automatiquement comme abonnés</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>Nouveaux utilisateurs aujourd'hui||Nouveaux utilisateurs aujourd'hui</value>
+    <value>Nouveaux utilisateurs aujourd'hui</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>Nombre d'utilisateurs synchronisés ou ajoutés à la plateforme aujourd'hui||Nombre d'utilisateurs synchronisés ou ajoutés à la plateforme aujourd'hui</value>
+    <value>Nombre d'utilisateurs synchronisés ou ajoutés à la plateforme aujourd'hui</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>Voir les utilisateurs||Voir les utilisateurs</value>
+    <value>Voir les utilisateurs</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>Voir les groupes||Voir les groupes</value>
+    <value>Voir les groupes</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>Voir les étiquettes||Voir les étiquettes</value>
+    <value>Voir les étiquettes</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Conversation||Conversation</value>
+    <value>Conversation</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Modifier||Modifier</value>
+    <value>Modifier</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>Durée de validité des identifiants AccessToken||Durée de validité des identifiants AccessToken</value>
+    <value>Durée de validité des identifiants AccessToken</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>État des identifiants AccessToken||État des identifiants AccessToken</value>
+    <value>État des identifiants AccessToken</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Gestion des comptes officiels||Gestion des comptes officiels</value>
+    <value>Gestion des comptes officiels</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Ajouter||Ajouter</value>
+    <value>Ajouter</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>Supprimer||Supprimer</value>
+    <value>Supprimer</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>Nom||Nom</value>
+    <value>Nom</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Notes||Notes</value>
+    <value>Notes</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Description||Description</value>
+    <value>Description</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Date d’ajout||Date d’ajout</value>
+    <value>Date d’ajout</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>URL du message||URL du message</value>
+    <value>URL du message</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>Ouvrir||Ouvrir</value>
+    <value>Ouvrir</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>Actions||Actions</value>
+    <value>Actions</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>Gestion des utilisateurs||Gestion des utilisateurs</value>
+    <value>Gestion des utilisateurs</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Nom du compte officiel||Nom du compte officiel</value>
+    <value>Nom du compte officiel</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Adresse du serveur (URL) configurée dans la console d'administration WeChat||Adresse du serveur (URL) configurée dans la console d'administration WeChat</value>
+    <value>Adresse du serveur (URL) configurée dans la console d'administration WeChat</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>[Votre domaine]||[Votre domaine]</value>
+    <value>[Votre domaine]</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>[Votre domaine]||[Votre domaine]</value>
+    <value>[Votre domaine]</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>Attention : le « nom du compte officiel » doit correspondre au name de [MpMessageHandler(name)] sur le MessageHandler concerné||Attention : le « nom du compte officiel » doit correspondre au name de [MpMessageHandler(name)] sur le MessageHandler concerné</value>
+    <value>Attention : le « nom du compte officiel » doit correspondre au name de [MpMessageHandler(name)] sur le MessageHandler concerné</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>Annuler||Annuler</value>
+    <value>Annuler</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Confirmer||Confirmer</value>
+    <value>Confirmer</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Saisissez le nom du compte officiel||Saisissez le nom du compte officiel</value>
+    <value>Saisissez le nom du compte officiel</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Saisissez AppId||Saisissez AppId</value>
+    <value>Saisissez AppId</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>Saisissez AppSecret||Saisissez AppSecret</value>
+    <value>Saisissez AppSecret</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Saisissez Token||Saisissez Token</value>
+    <value>Saisissez Token</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>La longueur doit être comprise entre 1 et 100||La longueur doit être comprise entre 1 et 100</value>
+    <value>La longueur doit être comprise entre 1 et 100</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>La longueur doit être comprise entre 1 et 500||La longueur doit être comprise entre 1 et 500</value>
+    <value>La longueur doit être comprise entre 1 et 500</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Ajouter un compte officiel||Ajouter un compte officiel</value>
+    <value>Ajouter un compte officiel</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>Modifier le compte officiel||Modifier le compte officiel</value>
+    <value>Modifier le compte officiel</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Compte officiel ajouté||Compte officiel ajouté</value>
+    <value>Compte officiel ajouté</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Compte officiel mis à jour||Compte officiel mis à jour</value>
+    <value>Compte officiel mis à jour</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>Réussi||Réussi</value>
+    <value>Réussi</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Avertissement||Avertissement</value>
+    <value>Avertissement</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Sélectionnez au moins un compte officiel||Sélectionnez au moins un compte officiel</value>
+    <value>Sélectionnez au moins un compte officiel</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>Supprimer tous les éléments sélectionnés ?||Supprimer tous les éléments sélectionnés ?</value>
+    <value>Supprimer tous les éléments sélectionnés ?</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>{0} éléments supprimés||{0} éléments supprimés</value>
+    <value>{0} éléments supprimés</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>Ajouter les nouveaux abonnés||Ajouter les nouveaux abonnés</value>
+    <value>Ajouter les nouveaux abonnés</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Synchroniser tous les abonnés||Synchroniser tous les abonnés</value>
+    <value>Synchroniser tous les abonnés</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>Attention : s'il y a beaucoup d'utilisateurs, cela peut prendre très longtemps !||Attention : s'il y a beaucoup d'utilisateurs, cela peut prendre très longtemps !</value>
+    <value>Attention : s'il y a beaucoup d'utilisateurs, cela peut prendre très longtemps !</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Pseudo||Pseudo</value>
+    <value>Pseudo</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Avatar||Avatar</value>
+    <value>Avatar</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Genre||Genre</value>
+    <value>Genre</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Homme||Homme</value>
+    <value>Homme</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Femme||Femme</value>
+    <value>Femme</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>Inconnu||Inconnu</value>
+    <value>Inconnu</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Région||Région</value>
+    <value>Région</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>Groupe||Groupe</value>
+    <value>Groupe</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>Date du suivi||Date du suivi</value>
+    <value>Date du suivi</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>Statut du suivi||Statut du suivi</value>
+    <value>Statut du suivi</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>Abonné||Abonné</value>
+    <value>Abonné</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>Non suivi||Non suivi</value>
+    <value>Non suivi</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>Source du suivi||Source du suivi</value>
+    <value>Source du suivi</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>Étiquettes||Étiquettes</value>
+    <value>Étiquettes</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>Aucun||Aucun</value>
+    <value>Aucun</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>Tous les utilisateurs||Tous les utilisateurs</value>
+    <value>Tous les utilisateurs</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>Utilisateurs de {0}||Utilisateurs de {0}</value>
+    <value>Utilisateurs de {0}</value>
   </data>
   <data name="User.AccountUsers" xml:space="preserve">
     <value>Utilisateurs de {0}</value>
@@ -277,10 +277,10 @@
     <value>Tous les utilisateurs</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>[Votre domaine]/WeixinMp/{0}||[Votre domaine]/WeixinMp/{0}</value>
+    <value>[Votre domaine]/WeixinMp/{0}</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>[Votre domaine]/WeixinMp/{0}||[Votre domaine]/WeixinMp/{0}</value>
+    <value>[Votre domaine]/WeixinMp/{0}</value>
   </data>
   <data name="Public.ToggleNavigation" xml:space="preserve">
     <value>Afficher ou masquer la navigation</value>
@@ -313,4 +313,126 @@
     <value>{0} doit fournir un constructeur avec les paramètres dans l’ordre suivant : (MpAccountDto mpAccountDto, Stream inputStream, PostModel postModel, int maxRecordCount, IServiceProvider serviceProvider)</value>
   </data>
 
+
+  <data name="Frontend.075" xml:space="preserve"><value>Bot WeChat personnel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Code d'association /bind</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.077" xml:space="preserve"><value>AIModelId (facultatif)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.078" xml:space="preserve"><value>WorkflowId (facultatif)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Compte iLink</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Le token est protégé par Data Protection sur le serveur et ne sera plus jamais affiché.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.081" xml:space="preserve"><value>· Envoi</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.082" xml:space="preserve"><value>· Échec</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.083" xml:space="preserve"><value>· Envoyé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Bot WeChat personnel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Par exemple : superadministrateur</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Par exemple : mon WeChat personnel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Enregistrer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.088" xml:space="preserve"><value>Enregistrer les paramètres de liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Autoriser NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Autoriser Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.091" xml:space="preserve"><value>Tous les messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.092" xml:space="preserve"><value>Fermer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.093" xml:space="preserve"><value>Actualiser</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.094" xml:space="preserve"><value>Actualiser l'état</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.095" xml:space="preserve"><value>Fonctionnalités</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.096" xml:space="preserve"><value>Envoyer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.097" xml:space="preserve"><value>Annuler</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.098" xml:space="preserve"><value>Activer la liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.099" xml:space="preserve"><value>Activer l'interrogation longue</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.100" xml:space="preserve"><value>Image</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.101" xml:space="preserve"><value>Le fichier multimédia n'est pas encore prêt.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.102" xml:space="preserve"><value>WeChat personnel n'est pas encore connecté.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.103" xml:space="preserve"><value>Tous les enregistrements envoyés et reçus pour ce compte</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.104" xml:space="preserve"><value>Aucun code de liaison n'est configuré pour ce compte.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.105" xml:space="preserve"><value>Code QR de connexion WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.106" xml:space="preserve"><value>Ouvrir le lien</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.107" xml:space="preserve"><value>Scannez le code QR pour connecter WeChat personnel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.108" xml:space="preserve"><value>Se connecter par scan</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.109" xml:space="preserve"><value>Fichier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.110" xml:space="preserve"><value>Nouvelle configuration de liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.111" xml:space="preserve"><value>Messages récents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.112" xml:space="preserve"><value>Connexions récentes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.113" xml:space="preserve"><value>État</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.114" xml:space="preserve"><value>État :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.115" xml:space="preserve"><value>Utilisé par le gestionnaire amont ; peut être vide</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.116" xml:space="preserve"><value>Laisser vide pour conserver le token existant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.117" xml:space="preserve"><value>Code de liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.118" xml:space="preserve"><value>Configuration de liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.119" xml:space="preserve"><value>Fichier audio (SILK / MP3)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.120" xml:space="preserve"><value>Scannez le code QR avec WeChat et confirmez la connexion sur votre téléphone.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.121" xml:space="preserve"><value>Saisissez le code de vérification demandé par WeChat, puis actualisez l'état</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.122" xml:space="preserve"><value>Saisissez un message à envoyer à la conversation WeChat actuelle</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.123" xml:space="preserve"><value>Nom de la configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.124" xml:space="preserve"><value>Code de vérification</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>Présence WeCom</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>Récupérer les relevés de présence WeCom</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>Obtenir les relevés de présence</value></data>
+  <data name="Frontend.128" xml:space="preserve"><value>Récupère les relevés de présence WeCom par compte membre et plage horaire, jusqu'à 30 jours par requête.</value></data>
+  <data name="Frontend.129" xml:space="preserve"><value>Les identifiants WeCom sont valides et peuvent récupérer les relevés de présence.</value></data>
+  <data name="Frontend.130" xml:space="preserve"><value>Le connecteur de présence WeCom ne permet actuellement que la récupération des relevés.</value></data>
+  <data name="Connector.WeCom.Name" xml:space="preserve"><value>Présence WeCom</value></data>
+  <data name="Connector.WeCom.Description" xml:space="preserve"><value>Utilise le CorpId et le Secret d'une application WeCom pour récupérer les relevés de présence. Après configuration, le connecteur peut être sélectionné dans Chat, Workflow et les modèles Agent.</value></data>
+  <data name="Connector.WeCom.CorpId.Label" xml:space="preserve"><value>ID d'entreprise</value></data>
+  <data name="Connector.WeCom.CorpId.Description" xml:space="preserve"><value>Le CorpId de la console d'administration WeCom.</value></data>
+  <data name="Connector.WeCom.CorpSecret.Label" xml:space="preserve"><value>Secret de l'application</value></data>
+  <data name="Connector.WeCom.CorpSecret.Description" xml:space="preserve"><value>Le Secret d'une application interne disposant de l'autorisation d'accès aux données de présence. Laissez le champ vide lors de la modification pour conserver le secret enregistré.</value></data>
+  <data name="Connector.WeCom.CorpSecret.Placeholder" xml:space="preserve"><value>Secret de l'application</value></data>
+  <data name="Connector.WeCom.DefaultType.Label" xml:space="preserve"><value>Type de présence par défaut</value></data>
+  <data name="Connector.WeCom.DefaultType.Description" xml:space="preserve"><value>Utilisé lorsqu'un autre type n'est pas indiqué dans l'appel.</value></data>
+  <data name="Connector.WeCom.Type.All" xml:space="preserve"><value>Toutes les présences</value></data>
+  <data name="Connector.WeCom.Type.Work" xml:space="preserve"><value>Présence au travail</value></data>
+  <data name="Connector.WeCom.Type.Outside" xml:space="preserve"><value>Présence hors site</value></data>
+  <data name="Connector.WeCom.Action.GetRecords.Name" xml:space="preserve"><value>Obtenir les relevés de présence</value></data>
+  <data name="Connector.WeCom.Action.GetRecords.Description" xml:space="preserve"><value>Récupère les relevés de présence WeCom par compte membre et plage horaire, jusqu'à 30 jours par requête.</value></data>
+  <data name="Connector.WeCom.Parameter.UserIds.Label" xml:space="preserve"><value>Comptes des membres</value></data>
+  <data name="Connector.WeCom.Parameter.UserIds.Description" xml:space="preserve"><value>Userid WeCom séparés par des virgules ou des espaces.</value></data>
+  <data name="Connector.WeCom.Parameter.StartTime.Label" xml:space="preserve"><value>Heure de début</value></data>
+  <data name="Connector.WeCom.Parameter.StartTime.Description" xml:space="preserve"><value>Par exemple, 2026-11-01 ou 2026-11-01 09:00. Laissez vide pour commencer à minuit aujourd'hui.</value></data>
+  <data name="Connector.WeCom.Parameter.EndTime.Label" xml:space="preserve"><value>Heure de fin</value></data>
+  <data name="Connector.WeCom.Parameter.EndTime.Description" xml:space="preserve"><value>Laissez vide pour utiliser l'heure actuelle.</value></data>
+  <data name="Connector.WeCom.Parameter.Type.Label" xml:space="preserve"><value>Type de présence</value></data>
+  <data name="Connector.WeCom.Parameter.Type.Description" xml:space="preserve"><value>1 travail, 2 hors site, 3 tous.</value></data>
+  <data name="Connector.WeCom.Error.MissingCredentials" xml:space="preserve"><value>Renseignez d'abord l'ID d'entreprise et le Secret de l'application.</value></data>
+  <data name="Connector.WeCom.Test.Valid" xml:space="preserve"><value>Les identifiants WeCom sont valides et peuvent récupérer les relevés de présence.</value></data>
+  <data name="Connector.WeCom.Test.Rejected" xml:space="preserve"><value>WeCom a refusé les identifiants : {0}</value></data>
+  <data name="Connector.WeCom.Test.Unreachable" xml:space="preserve"><value>Impossible de se connecter à WeCom. Vérifiez le CorpId, le Secret et le réseau du serveur.</value></data>
+  <data name="Connector.WeCom.Error.UnsupportedAction" xml:space="preserve"><value>Le connecteur de présence WeCom ne permet actuellement que la récupération des relevés.</value></data>
+  <data name="Connector.WeCom.Error.Token" xml:space="preserve"><value>Impossible d'obtenir les identifiants d'accès WeCom : {0}</value></data>
+  <data name="Connector.WeCom.Error.Api" xml:space="preserve"><value>WeCom a renvoyé une erreur : {0}</value></data>
+  <data name="Connector.WeCom.Error.Invocation" xml:space="preserve"><value>Impossible de récupérer les relevés de présence. Vérifiez que l'application dispose de l'autorisation de présence et que les comptes membres sont corrects. Détails : {0}</value></data>
+  <data name="Connector.WeCom.Error.UserRequired" xml:space="preserve"><value>Indiquez au moins un userid de membre WeCom.</value></data>
+  <data name="Connector.WeCom.Error.UserLimit" xml:space="preserve"><value>Une requête peut consulter au maximum 100 membres.</value></data>
+  <data name="Connector.WeCom.Error.InvalidTime" xml:space="preserve"><value>Le format de l'heure n'est pas reconnu. Utilisez 2026-11-01 ou 2026-11-01 09:00.</value></data>
+  <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>L'heure de fin doit être postérieure à l'heure de début.</value></data>
+  <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>WeCom autorise au maximum 30 jours de relevés de présence par requête.</value></data>
+  <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>Le type de présence doit être 1 (travail), 2 (hors site) ou 3 (tous).</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>Aucun historique de conversation. Envoyez un texte à WeChat ClawBot depuis votre téléphone.</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>Ajouter un compte WeChat personnel</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>Modifier le compte WeChat personnel</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>Message WeChat reçu</value></data>
+  <data name="Frontend.135" xml:space="preserve"><value>{0} a reçu un nouveau message du téléphone</value></data>
+  <data name="Frontend.136" xml:space="preserve"><value>Impossible d’actualiser l’état de connexion WeChat</value></data>
+  <data name="Frontend.137" xml:space="preserve"><value>Impossible de démarrer la connexion WeChat personnelle</value></data>
+  <data name="Frontend.138" xml:space="preserve"><value>Impossible de consulter l’état de connexion. Cliquez sur Actualiser l’état pour réessayer.</value></data>
+  <data name="Frontend.139" xml:space="preserve"><value>Envoyez d’abord un texte à WeChat ClawBot depuis le téléphone afin d’enregistrer le contexte nécessaire aux réponses.</value></data>
+  <data name="Frontend.140" xml:space="preserve"><value>Configuration de liaison enregistrée.</value></data>
+  <data name="Frontend.141" xml:space="preserve"><value>Impossible d’enregistrer la configuration de liaison</value></data>
+  <data name="Frontend.142" xml:space="preserve"><value>Impossible de supprimer la configuration de liaison</value></data>
+  <data name="Frontend.143" xml:space="preserve"><value>Le média ne peut pas être lu. Téléchargez le fichier original ; consultez les journaux du service pour les erreurs de conversion audio et utilisez un codec vidéo pris en charge par le navigateur.</value></data>
+  <data name="Frontend.144" xml:space="preserve"><value>Message multimédia envoyé.</value></data>
+  <data name="Frontend.145" xml:space="preserve"><value>Impossible d’envoyer le média</value></data>
+  <data name="Frontend.146" xml:space="preserve"><value>Message envoyé avec le contexte de la dernière conversation WeChat.</value></data>
+  <data name="Frontend.147" xml:space="preserve"><value>Message envoyé à WeChat Claw.</value></data>
+  <data name="Frontend.148" xml:space="preserve"><value>Impossible d’envoyer le message WeChat personnel</value></data>
+  <data name="Frontend.149" xml:space="preserve"><value>Téléphone</value></data>
+  <data name="Frontend.150" xml:space="preserve"><value>Système</value></data>
+  <data name="Frontend.151" xml:space="preserve"><value>{0} nouveaux messages</value></data>
+  <data name="Frontend.152" xml:space="preserve"><value>Erreur</value></data>
+  <data name="Frontend.153" xml:space="preserve"><value>Désactivé</value></data>
+  <data name="Frontend.154" xml:space="preserve"><value>Non connecté</value></data>
+  <data name="Frontend.155" xml:space="preserve"><value>Activé</value></data>
+  <data name="Frontend.156" xml:space="preserve"><value>Désactivé</value></data>
+  <data name="Frontend.157" xml:space="preserve"><value>Dernier expéditeur : {0}</value></data>
+  <data name="Frontend.158" xml:space="preserve"><value>Conversation actuelle</value></data>
+  <data name="Frontend.159" xml:space="preserve"><value>{0} messages</value></data>
 </root>

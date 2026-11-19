@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：InternalEventBusRoundTripRequestHandler.cs
-    文件功能描述：模板内部 EventBus 回环请求处理器
+    File name: InternalEventBusRoundTripRequestHandler.cs
+    File description: template internal EventBus round-trip request handler
 
+    Created by: Senparc - 20260725
 
-    创建标识：Senparc - 20260725
+    Modified by: Senparc - 20260726
+    Change description: v1.1.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260726
-    修改描述：v1.1.0 补充示例模板 EventBus 请求-响应回环与多语言能力
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 

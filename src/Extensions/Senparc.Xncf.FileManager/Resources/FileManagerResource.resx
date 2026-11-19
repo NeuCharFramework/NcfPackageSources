@@ -97,193 +97,193 @@
     <value>随机</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>上传到：||Upload to:</value>
+    <value>上传到：</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>上传文件||Upload files</value>
+    <value>上传文件</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>上传时间||Upload time</value>
+    <value>上传时间</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>下载||Download</value>
+    <value>下载</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>代码||Code</value>
+    <value>代码</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>其他||Other</value>
+    <value>其他</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>删除||Delete</value>
+    <value>删除</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>刷新文件夹||Refresh folders</value>
+    <value>刷新文件夹</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>取 消||Cancel</value>
+    <value>取 消</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>可以选择多个文件同时上传||Multiple files can be uploaded at once</value>
+    <value>可以选择多个文件同时上传</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>名称||Name</value>
+    <value>名称</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>备注||Notes</value>
+    <value>备注</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>备注（可选）||Notes (optional)</value>
+    <value>备注（可选）</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>大小||Size</value>
+    <value>大小</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>扩展模块||Extension modules</value>
+    <value>扩展模块</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>操作||Actions</value>
+    <value>操作</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>文件名||File name</value>
+    <value>文件名</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>文件夹||Folder</value>
+    <value>文件夹</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>文件管理||File management</value>
+    <value>文件管理</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>文本||Text</value>
+    <value>文本</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>新建||New</value>
+    <value>新建</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>新建文件夹||New folder</value>
+    <value>新建文件夹</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>根目录||Root</value>
+    <value>根目录</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>确 定||Confirm</value>
+    <value>确 定</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>类型||Type</value>
+    <value>类型</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>表Id||Table ID</value>
+    <value>表Id</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>请输入文件夹名称||Enter a folder name</value>
+    <value>请输入文件夹名称</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>选择文件||Select files</value>
+    <value>选择文件</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>首页||Home</value>
+    <value>首页</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>获取列表失败||Failed to load the list</value>
+    <value>获取列表失败</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>上传成功||Uploaded successfully</value>
+    <value>上传成功</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>上传失败||Upload failed</value>
+    <value>上传失败</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>修改成功||Updated successfully</value>
+    <value>修改成功</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>修改失败||Update failed</value>
+    <value>修改失败</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>确认删除该文件吗?||Delete this file?</value>
+    <value>确认删除该文件吗?</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>提示||Prompt</value>
+    <value>提示</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>确定||Confirm</value>
+    <value>确定</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>取消||Cancel</value>
+    <value>取消</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>删除成功||Deleted successfully</value>
+    <value>删除成功</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>删除失败||Delete failed</value>
+    <value>删除失败</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>创建成功||Created successfully</value>
+    <value>创建成功</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>创建失败||Creation failed</value>
+    <value>创建失败</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>上传失败：{0}||Upload failed: {0}</value>
+    <value>上传失败：{0}</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>请输入{0}的备注||Enter notes for {0}</value>
+    <value>请输入{0}的备注</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>FileManager 首页||FileManager Home</value>
+    <value>FileManager 首页</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>文件夹 #{0}||Folder #{0}</value>
+    <value>文件夹 #{0}</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>请输入{0}的备注||Enter a note for {0}</value>
+    <value>请输入{0}的备注</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>更新成功||Updated successfully</value>
+    <value>更新成功</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>更新失败||Update failed</value>
+    <value>更新失败</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>确认删除该文件?||Delete this file?</value>
+    <value>确认删除该文件?</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>请选择要上传的文件||Select a file to upload</value>
+    <value>请选择要上传的文件</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>上传失败：||Upload failed:</value>
+    <value>上传失败：</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>抛出异常测试，传输参数：{0} {1}||Exception test. Parameters: {0} {1}</value>
+    <value>抛出异常测试，传输参数：{0} {1}</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>被除数不能为0！||The divisor cannot be 0.</value>
+    <value>被除数不能为0！</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>未知的运算符：{0}||Unknown operator: {0}</value>
+    <value>未知的运算符：{0}</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>一次最多上传 {0} 个文件。||A maximum of {0} files can be uploaded at once.</value>
+    <value>一次最多上传 {0} 个文件。</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>单次上传总大小不能超过 {0} MB。||The total upload size cannot exceed {0} MB.</value>
+    <value>单次上传总大小不能超过 {0} MB。</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>上传文件不能为空。||The uploaded file cannot be empty.</value>
+    <value>上传文件不能为空。</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>单个文件不能超过 {0} MB。||A single file cannot exceed {0} MB.</value>
+    <value>单个文件不能超过 {0} MB。</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>不允许上传该文件类型。仅支持常见文档、图片、文本和压缩包格式。||This file type is not allowed. Only common document, image, text, and archive formats are supported.</value>
+    <value>不允许上传该文件类型。仅支持常见文档、图片、文本和压缩包格式。</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>文件不存在！||The file does not exist.</value>
+    <value>文件不存在！</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>文件物理路径信息无效。||The physical file path is invalid.</value>
+    <value>文件物理路径信息无效。</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>文件物理路径越界。||The physical file path is outside the allowed directory.</value>
+    <value>文件物理路径越界。</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>示例函数</value>
@@ -292,4 +292,229 @@
     <value>演示 FunctionRender 参数与返回值</value>
   </data>
 
+  <data name="Frontend.064" xml:space="preserve"><value>一键清空</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>上传后到“知识库管理 → 配置”关联资料，保存后点击“向量化”。</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>上传文件夹</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>上传设置</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>上传默认私有；确认无误后点“公开”，再复制生成的 URL 到站点内容中。</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>为文件设置标签</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>仅统计企业文档：展示文件数量与总大小随时间变化</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>从快速访问移除</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>企业文档</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>企业文档容量统计</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>保存</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>保存设置</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>停用</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>允许上传的文件类型</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>先选用途：</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>全部</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>再放位置：</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>分类</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>分类名称</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>分类描述</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>分类管理员</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>列设置</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>删除时间</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>刷新</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>单文件上传大小上限（MB）</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>双击预览</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>取消收藏</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value>可将常用的文件和文件夹添加至「快速访问」，方便查找和使用。点击列表“更多”即可手动添加或移除快速访问</value></data>
+  <data name="Frontend.092" xml:space="preserve"><value>可选</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>可选备注</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>可选标签来自「标签管理」中已维护的数据；选择后将写入当前文件的标识字段。</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>启用</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>回收站</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>在中间目录树选择或新建文件夹；刷新页面后，当前用途和文件夹会保留在地址栏中。</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>在线预览</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>复制 URL</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>导入</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>导出</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>展示企业文档库当前已使用空间</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>左侧「企业文档」用于管理知识库资料；站点静态资源可通过地址栏 scope 参数切换。</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>已用空间</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>开始日期</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>微调产物</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>快速访问</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>恢复默认</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>我知道了</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>所属分类</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>按文件类型统计占用容量占比</value></data>
+  <data name="Frontend.112" xml:space="preserve"><value>按文件类型统计文件数量占比</value></data>
+  <data name="Frontend.113" xml:space="preserve"><value>排序</value></data>
+  <data name="Frontend.114" xml:space="preserve"><value>搜索</value></data>
+  <data name="Frontend.115" xml:space="preserve"><value>搜索文件/文件夹</value></data>
+  <data name="Frontend.116" xml:space="preserve"><value>搜索标签名称</value></data>
+  <data name="Frontend.117" xml:space="preserve"><value>搜索目录</value></data>
+  <data name="Frontend.118" xml:space="preserve"><value>支持每行一个扩展名，也可使用逗号分隔。建议带点号（如 .docx）。留空表示不限制允许列表（仍受下方过滤类型约束）。</value></data>
+  <data name="Frontend.119" xml:space="preserve"><value>收藏</value></data>
+  <data name="Frontend.120" xml:space="preserve"><value>数据面板</value></data>
+  <data name="Frontend.121" xml:space="preserve"><value>文件个数统计</value></data>
+  <data name="Frontend.122" xml:space="preserve"><value>文件名称</value></data>
+  <data name="Frontend.123" xml:space="preserve"><value>文件大小统计</value></data>
+  <data name="Frontend.124" xml:space="preserve"><value>文件库容量统计</value></data>
+  <data name="Frontend.125" xml:space="preserve"><value>文件清空后将彻底删除，无法恢复？</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>文件资源管理</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>文件资源管理使用说明</value></data>
+  <data name="Frontend.128" xml:space="preserve"><value>新增分类</value></data>
+  <data name="Frontend.129" xml:space="preserve"><value>新增标签</value></data>
+  <data name="Frontend.130" xml:space="preserve"><value>暂无可用标签，请先在左侧「标签管理」中新增标签</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>暂无可预览内容</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>暂无数据</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>暂无文档</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>更多</value></data>
+  <data name="Frontend.135" xml:space="preserve"><value>更新时间</value></data>
+  <data name="Frontend.136" xml:space="preserve"><value>更新者</value></data>
+  <data name="Frontend.137" xml:space="preserve"><value>最后更新人</value></data>
+  <data name="Frontend.138" xml:space="preserve"><value>最后更新时间</value></data>
+  <data name="Frontend.139" xml:space="preserve"><value>最近访问</value></data>
+  <data name="Frontend.140" xml:space="preserve"><value>标签名称</value></data>
+  <data name="Frontend.141" xml:space="preserve"><value>标签描述</value></data>
+  <data name="Frontend.142" xml:space="preserve"><value>标签数量</value></data>
+  <data name="Frontend.143" xml:space="preserve"><value>标签管理</value></data>
+  <data name="Frontend.144" xml:space="preserve"><value>每行一个扩展名，例如：.docx&#10;.xlsx&#10;.pdf</value></data>
+  <data name="Frontend.145" xml:space="preserve"><value>每行一个扩展名，例如：.exe&#10;.bat&#10;.js</value></data>
+  <data name="Frontend.146" xml:space="preserve"><value>清空列表</value></data>
+  <data name="Frontend.147" xml:space="preserve"><value>灵活使用快速访问，畅享高效工作!</value></data>
+  <data name="Frontend.148" xml:space="preserve"><value>状态</value></data>
+  <data name="Frontend.149" xml:space="preserve"><value>知识库资料：</value></data>
+  <data name="Frontend.150" xml:space="preserve"><value>确定继续吗？</value></data>
+  <data name="Frontend.151" xml:space="preserve"><value>租户/组织名称</value></data>
+  <data name="Frontend.152" xml:space="preserve"><value>站点资源：</value></data>
+  <data name="Frontend.153" xml:space="preserve"><value>管理员</value></data>
+  <data name="Frontend.154" xml:space="preserve"><value>结束日期</value></data>
+  <data name="Frontend.155" xml:space="preserve"><value>编辑</value></data>
+  <data name="Frontend.156" xml:space="preserve"><value>编辑备注</value></data>
+  <data name="Frontend.157" xml:space="preserve"><value>设置</value></data>
+  <data name="Frontend.158" xml:space="preserve"><value>访问时间</value></data>
+  <data name="Frontend.159" xml:space="preserve"><value>请从上方选择标签</value></data>
+  <data name="Frontend.160" xml:space="preserve"><value>请将需要上传的文件/文件夹拖到此处</value></data>
+  <data name="Frontend.161" xml:space="preserve"><value>请输入分类名称，最多50个字符</value></data>
+  <data name="Frontend.162" xml:space="preserve"><value>请输入文件备注</value></data>
+  <data name="Frontend.163" xml:space="preserve"><value>请输入标签名称，最多30个字符</value></data>
+  <data name="Frontend.164" xml:space="preserve"><value>请输入标签描述</value></data>
+  <data name="Frontend.165" xml:space="preserve"><value>请选择标签（来自标签管理）</value></data>
+  <data name="Frontend.166" xml:space="preserve"><value>请选择管理员</value></data>
+  <data name="Frontend.167" xml:space="preserve"><value>过去7天</value></data>
+  <data name="Frontend.168" xml:space="preserve"><value>过去一个月</value></data>
+  <data name="Frontend.169" xml:space="preserve"><value>过去一年</value></data>
+  <data name="Frontend.170" xml:space="preserve"><value>返回上一级</value></data>
+  <data name="Frontend.171" xml:space="preserve"><value>选择分类</value></data>
+  <data name="Frontend.172" xml:space="preserve"><value>配置文件上传的允许类型、大小上限以及需要拦截的扩展名。保存后立即对后续上传生效（本机浏览器记忆）。</value></data>
+  <data name="Frontend.173" xml:space="preserve"><value>重置</value></data>
+  <data name="Frontend.174" xml:space="preserve"><value>需要过滤的文件类型</value></data>
+  <data name="Frontend.175" xml:space="preserve"><value>黑名单扩展名，命中后禁止上传（优先级高于允许列表）。</value></data>
+  <data name="Frontend.176" xml:space="preserve"><value>默认 50 MB；超过此大小的文件将在上传前被拦截。</value></data>
+  <data name="Frontend.177" xml:space="preserve"><value>取消收藏</value></data>
+  <data name="Frontend.178" xml:space="preserve"><value>统计截止时间</value></data>
+  <data name="Frontend.179" xml:space="preserve"><value>企业文档已使用：</value></data>
+  <data name="Frontend.180" xml:space="preserve"><value>每行一个扩展名，例如：.docx .xlsx .pdf</value></data>
+  <data name="Frontend.181" xml:space="preserve"><value>每行一个扩展名，例如：.exe .bat .js</value></data>
+  <data name="Frontend.182" xml:space="preserve"><value>开始上传</value></data>
+  <data name="Frontend.183" xml:space="preserve"><value>幻灯片</value></data>
+  <data name="Frontend.184" xml:space="preserve"><value>编辑文件夹</value></data>
+  <data name="Frontend.185" xml:space="preserve"><value>新建文件夹</value></data>
+  <data name="Frontend.186" xml:space="preserve"><value>编辑分类</value></data>
+  <data name="Frontend.187" xml:space="preserve"><value>新增分类</value></data>
+  <data name="Frontend.188" xml:space="preserve"><value>编辑标签</value></data>
+  <data name="Frontend.189" xml:space="preserve"><value>新增标签</value></data>
+  <data name="Frontend.190" xml:space="preserve"><value>文件预览</value></data>
+  <data name="Script.RequestRejected" xml:space="preserve"><value>服务器拒绝了请求，请刷新页面后重试。</value></data>
+  <data name="Script.RequestFailed" xml:space="preserve"><value>请求失败。</value></data>
+  <data name="Script.CsrfMissing" xml:space="preserve"><value>页面缺少防伪令牌，请刷新页面后重试。</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>收起</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>展开</value></data>
+  <data name="Frontend.196" xml:space="preserve"><value>支持 {0}。</value></data>
+  <data name="Frontend.197" xml:space="preserve"><value>支持 JSONL、JSON、ZIP 及训练运行时生成的其他私有产物格式。</value></data>
+  <data name="Frontend.198" xml:space="preserve"><value>支持 JPG、PNG、GIF、WebP、AVIF、ICO、音视频和字体格式。</value></data>
+  <data name="Frontend.199" xml:space="preserve"><value>支持文本、JSON/XML/YAML、代码、DOCX、XLSX、PPTX。</value></data>
+  <data name="Frontend.200" xml:space="preserve"><value>旧版 Office 格式（.doc/.xls/.ppt）不支持在线预览，请下载后查看。</value></data>
+  <data name="Frontend.201" xml:space="preserve"><value>该文件类型不支持在线预览，请尝试下载后查看。</value></data>
+  <data name="Frontend.202" xml:space="preserve"><value>文档为空。</value></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Excel 文件中没有可预览的工作表。</value></data>
+  <data name="Frontend.204" xml:space="preserve"><value>暂不支持该文件类型的在线预览。</value></data>
+  <data name="Frontend.205" xml:space="preserve"><value>预览失败：{0}</value></data>
+  <data name="Frontend.193" xml:space="preserve"><value>微调产物始终保持私有，仅供训练任务、管理员和授权的下载接口使用，不会生成公开 URL。</value></data>
+  <data name="Frontend.194" xml:space="preserve"><value>站点静态资源默认私有；公开后会生成带 SHA-256 指纹的 /assets/ URL。为防止同源脚本注入，不接受 HTML、SVG、JavaScript 或压缩包。</value></data>
+  <data name="Frontend.195" xml:space="preserve"><value>知识库源文件只能是可安全提取的文本和 Office Open XML 文件。它们不会生成公开 URL，也不能在此处发布。</value></data>
+  <data name="Frontend.206" xml:space="preserve"><value>文档</value></data>
+  <data name="Frontend.207" xml:space="preserve"><value>图片</value></data>
+  <data name="Frontend.208" xml:space="preserve"><value>视频</value></data>
+  <data name="Frontend.209" xml:space="preserve"><value>音频</value></data>
+  <data name="Frontend.210" xml:space="preserve"><value>其他</value></data>
+  <data name="Frontend.211" xml:space="preserve"><value>请选择要上传的文件。</value></data>
+  <data name="Frontend.212" xml:space="preserve"><value>文件夹上传完成，已保留原始目录结构。</value></data>
+  <data name="Frontend.213" xml:space="preserve"><value>上传成功；站点静态资源仍需显式公开后才可被站点引用。</value></data>
+  <data name="Frontend.214" xml:space="preserve"><value>上传失败：{0}</value></data>
+  <data name="Frontend.215" xml:space="preserve"><value>目标文件夹不可用，已回到根目录。</value></data>
+  <data name="Frontend.216" xml:space="preserve"><value>文件“{0}”类型 {1} 已被过滤，无法上传。</value></data>
+  <data name="Frontend.217" xml:space="preserve"><value>文件“{0}”类型不在允许上传列表中。</value></data>
+  <data name="Frontend.218" xml:space="preserve"><value>文件“{0}”超过 {1} MB，无法上传。</value></data>
+  <data name="Frontend.219" xml:space="preserve"><value>已选择文件夹“{0}”，共 {1} 个文件；上传后会在左侧文件树中还原原始目录结构。</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>未分类</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>「{0}」功能即将开放</value></data>
+  <data name="Frontend.222" xml:space="preserve"><value>二级分类</value></data>
+  <data name="Frontend.223" xml:space="preserve"><value>一级分类</value></data>
+  <data name="Frontend.224" xml:space="preserve"><value>标签</value></data>
+  <data name="Frontend.225" xml:space="preserve"><value>已停用</value></data>
+  <data name="Frontend.226" xml:space="preserve"><value>当前用户</value></data>
+  <data name="Frontend.227" xml:space="preserve"><value>文件标签已更新</value></data>
+  <data name="Frontend.228" xml:space="preserve"><value>已清空文件标签</value></data>
+  <data name="Frontend.229" xml:space="preserve"><value>一键清空成功</value></data>
+  <data name="Frontend.230" xml:space="preserve"><value>已删除 {0} 个，失败 {1} 个：{2}</value></data>
+  <data name="Frontend.231" xml:space="preserve"><value>部分文件删除失败，仍有 {0} 个留在回收站</value></data>
+  <data name="Frontend.232" xml:space="preserve"><value>一键清空失败，文件未能彻底删除</value></data>
+  <data name="Frontend.233" xml:space="preserve"><value>一键清空失败：{0}</value></data>
+  <data name="Frontend.234" xml:space="preserve"><value>上传文件到 【/{0}】 --支持断点续传</value></data>
+  <data name="Frontend.235" xml:space="preserve"><value>未命名文件</value></data>
+  <data name="Frontend.236" xml:space="preserve"><value>此操作将文件放至回收站，是否继续？</value></data>
+  <data name="Frontend.237" xml:space="preserve"><value>是否删除: {0}</value></data>
+  <data name="Frontend.238" xml:space="preserve"><value>已移至回收站</value></data>
+  <data name="Frontend.239" xml:space="preserve"><value>删除失败：{0}</value></data>
+  <data name="Frontend.240" xml:space="preserve"><value>资源已公开</value></data>
+  <data name="Frontend.241" xml:space="preserve"><value>资源已设为私有</value></data>
+  <data name="Frontend.242" xml:space="preserve"><value>更新发布状态失败：{0}</value></data>
+  <data name="Frontend.243" xml:space="preserve"><value>公开 URL 已复制</value></data>
+  <data name="Frontend.244" xml:space="preserve"><value>请复制以下公开 URL</value></data>
+  <data name="Frontend.245" xml:space="preserve"><value>公开 URL</value></data>
+  <data name="Frontend.246" xml:space="preserve"><value>当前浏览器不支持选择文件夹，请使用最新版 Chrome、Edge 或 Safari。</value></data>
+  <data name="Frontend.247" xml:space="preserve"><value>浏览器未提供完整的文件夹相对路径，请重新选择一个文件夹。</value></data>
+  <data name="Frontend.248" xml:space="preserve"><value>存在无法读取的文件，请重新选择。</value></data>
+  <data name="Frontend.249" xml:space="preserve"><value>请输入文件夹名称</value></data>
+  <data name="Frontend.250" xml:space="preserve"><value>文件夹已更新</value></data>
+  <data name="Frontend.251" xml:space="preserve"><value>文件夹已创建</value></data>
+  <data name="Frontend.252" xml:space="preserve"><value>保存文件夹失败：{0}</value></data>
+  <data name="Frontend.253" xml:space="preserve"><value>仅空文件夹可以删除。确认删除“{0}”吗？</value></data>
+  <data name="Frontend.254" xml:space="preserve"><value>确认删除</value></data>
+  <data name="Frontend.255" xml:space="preserve"><value>文件夹已删除</value></data>
+  <data name="Frontend.256" xml:space="preserve"><value>删除文件夹失败：{0}</value></data>
+  <data name="Frontend.257" xml:space="preserve"><value>确定删除标签「{0}」吗？</value></data>
+  <data name="Frontend.258" xml:space="preserve"><value>确定删除分类「{0}」及其下属标签吗？</value></data>
+  <data name="Frontend.259" xml:space="preserve"><value>提示</value></data>
+  <data name="Frontend.260" xml:space="preserve"><value>所属分类不能选择自己</value></data>
+  <data name="Frontend.261" xml:space="preserve"><value>分类不存在</value></data>
+  <data name="Frontend.262" xml:space="preserve"><value>所属分类不存在，请重新选择</value></data>
+  <data name="Frontend.263" xml:space="preserve"><value>标签不存在</value></data>
+  <data name="Frontend.269" xml:space="preserve"><value>请先新增分类后再创建标签</value></data>
+  <data name="Frontend.270" xml:space="preserve"><value>上传设置已保存</value></data>
+  <data name="Frontend.271" xml:space="preserve"><value>保存失败，请检查浏览器本地存储是否可用</value></data>
+  <data name="Frontend.272" xml:space="preserve"><value>已恢复默认上传设置</value></data>
+  <data name="Frontend.273" xml:space="preserve"><value>恢复默认失败</value></data>
+  <data name="Frontend.274" xml:space="preserve"><value>分类名称已存在</value></data>
+  <data name="Frontend.275" xml:space="preserve"><value>分类已更新</value></data>
+  <data name="Frontend.276" xml:space="preserve"><value>分类已创建</value></data>
+  <data name="Frontend.277" xml:space="preserve"><value>该分类下已存在同名标签</value></data>
+  <data name="Frontend.278" xml:space="preserve"><value>标签已更新</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>标签已创建</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>请求失败</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>分类名称最多50个字符</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>标签名称最多30个字符</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>请先选择数据</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>文件数</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>总大小</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>数量</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>大小</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>个</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>企业文档</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>已完成 {0} 个文件</value></data>
 </root>

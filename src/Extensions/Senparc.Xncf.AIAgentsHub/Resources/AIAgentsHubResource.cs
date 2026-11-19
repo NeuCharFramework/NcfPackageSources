@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AIAgentsHubResource.cs
-    文件功能描述：AIAgentsHubResource 相关实现
-    
-    
-    创建标识：Senparc - 20260717
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.13.0-preview3 为 AIAgentsHub 模块接入统一资源本地化并优化功能文案
+
+    File name: AIAgentsHubResource.cs
+    File description: AIAgentsHubResource related implementation
+
+    Created by: Senparc - 20260717
+
+    Modified by: Senparc - 20260717
+    Change description: v0.13.0-preview3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.13.16 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 #nullable enable

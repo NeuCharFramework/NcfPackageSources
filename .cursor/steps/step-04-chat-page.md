@@ -15,16 +15,16 @@
 ## 📂 涉及文件
 
 ### 新建文件
-1. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml`
-2. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml.cs`
-3. `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/AdminChat/Chat.js`
-4. `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/css/Admin/Pages/AdminChat/Chat.css`
+1. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml`
+2. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml.cs`
+3. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/AdminChat/Chat.js`
+4. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/wwwroot/css/Admin/Pages/AdminChat/Chat.css`
 
 ## 🔧 实现步骤
 
 ### 1. 创建 Chat.cshtml 页面
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml`
 
 **完整代码示例**:
 
@@ -235,7 +235,7 @@
 
 ### 2. 创建 Chat.cshtml.cs 后端页面模型
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml.cs`
 
 **完整代码示例**:
 
@@ -310,7 +310,7 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
 
 ### 3. 创建 Chat.js 前端交互逻辑
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/AdminChat/Chat.js`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/AdminChat/Chat.js`
 
 **完整代码示例**:
 
@@ -736,7 +736,7 @@ var chatApp = new Vue({
 
 ### 4. 创建 Chat.css 样式文件
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/css/Admin/Pages/AdminChat/Chat.css`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/wwwroot/css/Admin/Pages/AdminChat/Chat.css`
 
 **完整代码示例**:
 

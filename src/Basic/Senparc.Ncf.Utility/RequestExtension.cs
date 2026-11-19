@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：RequestExtension.cs
-    文件功能描述：RequestExtension 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: RequestExtension.cs
+    File description: RequestExtension related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.21.3-preview5 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -63,7 +66,7 @@ namespace Senparc.Ncf.Utility
         //}
 
         ///// <summary>
-        ///// 通常是以/开头的完整路径
+        ///Legacy comment translated to English.
         ///// </summary>
         ///// <param name="request"></param>
         ///// <returns></returns>
@@ -76,7 +79,7 @@ namespace Senparc.Ncf.Utility
         //}
 
         ///// <summary>
-        ///// 获取来源页面
+        ///Legacy comment translated to English.
         ///// </summary>
         ///// <param name="request"></param>
         ///// <returns></returns>
@@ -86,7 +89,7 @@ namespace Senparc.Ncf.Utility
         //}
 
         /// <summary>
-        /// 返回绝对地址
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -104,7 +107,7 @@ namespace Senparc.Ncf.Utility
         }
 
         /// <summary>
-        /// 获取客户端信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -115,7 +118,7 @@ namespace Senparc.Ncf.Utility
 
 
         /// <summary>
-        /// 获取客户端信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -156,7 +159,7 @@ namespace Senparc.Ncf.Utility
 
 
         /// <summary>
-        /// 获取客户端地址（IP）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

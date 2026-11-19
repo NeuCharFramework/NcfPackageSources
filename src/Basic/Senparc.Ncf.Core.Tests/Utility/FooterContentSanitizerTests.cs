@@ -1,10 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：FooterContentSanitizerTests.cs
-    文件功能描述：Footer 默认值与安全链接渲染测试
+    File name: FooterContentSanitizerTests.cs
+    File description: Footer default value and secure link rendering test
 
-    创建标识：Senparc - 20260802
+    Created by: Senparc - 20260802
+
 ----------------------------------------------------------------*/
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;

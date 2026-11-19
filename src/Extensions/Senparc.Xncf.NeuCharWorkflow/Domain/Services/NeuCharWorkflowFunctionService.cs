@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharWorkflowFunctionService.cs
-    文件功能描述：NeuCharPivot Function 目录、参数验证和统一安全执行入口
+    File name: NeuCharWorkflowFunctionService.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20260809
 
-    创建标识：Senparc - 20260809
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 enhance workflow orchestration, replay, Webhook, and parallel execution
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance workflow function calls, task control, and replay management
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261106
-    修改描述：执行前补齐 Function 已声明的默认值和唯一选项
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -45,8 +48,9 @@ public sealed record NeuCharFunctionDescriptor(
     string Name,
     string Description,
     IReadOnlyList<FunctionParameterInfo> Parameters,
-    NeuCharFunctionOutputDescriptor Output = null,
-    string CatalogError = null);
+    NeuCharFunctionOutputDescriptor? Output = null,
+    string? CatalogError = null,
+    bool AllowAiInvocation = true);
 
 public sealed record NeuCharFunctionOutputFieldDescriptor(
     string Path,
@@ -55,24 +59,24 @@ public sealed record NeuCharFunctionOutputFieldDescriptor(
     bool IsArray,
     bool RequiresIndex,
     string SourceKind = "output",
-    string SourceParameterName = null);
+    string? SourceParameterName = null);
 
 public sealed record NeuCharFunctionOutputDescriptor(
     string TypeName,
     string DisplayName,
     bool IsArray,
-    string ElementTypeName,
+    string? ElementTypeName,
     IReadOnlyList<NeuCharFunctionOutputFieldDescriptor> Fields);
 
 public sealed record NeuCharFunctionExecutionResult(
     bool Success,
-    object Data,
-    string ErrorMessage,
-    string RequestTempId);
+    object? Data,
+    string? ErrorMessage,
+    string? RequestTempId);
 
 /// <summary>
-/// 系统内所有 Function 调用的复用入口。只允许调用 FunctionRenderCollection 中已注册的方法，
-/// 并在每次执行前重新验证模块已安装且处于开放状态。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuCharWorkflowFunctionService
 {
@@ -86,7 +90,7 @@ public sealed class NeuCharWorkflowFunctionService
     }
 
     public async Task<IReadOnlyList<NeuCharFunctionDescriptor>> GetCatalogAsync(
-        string moduleUid = null,
+        string? moduleUid = null,
         bool loadParameterOptions = true,
         CancellationToken cancellationToken = default)
     {
@@ -167,7 +171,7 @@ public sealed class NeuCharWorkflowFunctionService
         bool loadParameterOptions)
     {
         IReadOnlyList<FunctionParameterInfo> parameters;
-        string catalogError = null;
+        string? catalogError = null;
         try
         {
             parameters = await FunctionHelper.GetFunctionParameterInfoAsync(
@@ -201,7 +205,8 @@ public sealed class NeuCharWorkflowFunctionService
             bag.FunctionRenderAttribute.Description,
             parameters,
             BuildOutputDescriptor(bag.MethodInfo),
-            catalogError);
+            catalogError,
+            bag.FunctionRenderAttribute.AllowAiInvocation);
     }
 
     public async Task<NeuCharFunctionExecutionResult> ExecuteAsync(
@@ -212,30 +217,30 @@ public sealed class NeuCharWorkflowFunctionService
     {
         if (parametersJson?.Length > 1_000_000)
         {
-            return Failure("Function 参数不能超过 1000000 个字符。");
+            return Failure("Function parameters must not exceed 1,000,000 characters.");
         }
 
         var register = XncfRegisterManager.RegisterList.FirstOrDefault(z =>
             string.Equals(z.Uid, moduleUid, StringComparison.OrdinalIgnoreCase));
         if (register == null)
         {
-            return Failure("模块未注册或程序集未加载。");
+            return Failure("The module is not registered or its assembly is not loaded.");
         }
 
         var module = await _moduleService.GetObjectAsync(z => z.Uid == register.Uid).ConfigureAwait(false);
         if (module == null)
         {
-            return Failure("模块尚未安装。");
+            return Failure("The module is not installed.");
         }
 
         if (module.State != XncfModules_State.开放)
         {
-            return Failure($"模块当前状态为 {module.State}，Function 已被禁用。");
+            return Failure($"The module is currently in state {module.State}; the Function is disabled.");
         }
 
         if (!Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var group))
         {
-            return Failure("模块没有已注册的 Function。");
+            return Failure("The module has no registered Functions.");
         }
 
         var bag = group.Values.FirstOrDefault(z =>
@@ -243,7 +248,7 @@ public sealed class NeuCharWorkflowFunctionService
             string.Equals(z.FunctionRenderAttribute.Name, functionKeyOrName, StringComparison.OrdinalIgnoreCase));
         if (bag.MethodInfo == null)
         {
-            return Failure("Function 不存在或版本升级后已被移除。");
+            return Failure("The Function does not exist or was removed by a version upgrade.");
         }
 
         var parameterInfos = await FunctionHelper.GetFunctionParameterInfoAsync(_serviceProvider, bag, true)
@@ -259,7 +264,7 @@ public sealed class NeuCharWorkflowFunctionService
         {
             cancellationToken.ThrowIfCancellationRequested();
             var methodParameters = bag.MethodInfo.GetParameters();
-            object[] arguments = null;
+            object[]? arguments = null;
             if (methodParameters.Length == 1)
             {
                 var parameterType = methodParameters[0].ParameterType;
@@ -269,24 +274,24 @@ public sealed class NeuCharWorkflowFunctionService
                 var request = SerializerHelper.GetObject(normalizedJson, parameterType) as IAppRequest;
                 if (request == null)
                 {
-                    return Failure("Function 参数无法转换为请求对象。");
+                    return Failure("Function parameters cannot be converted to the request object.");
                 }
                 arguments = new object[] { request };
             }
             else if (methodParameters.Length > 1)
             {
-                return Failure("当前仅支持零参数或单请求对象参数的 Function。");
+                    return Failure("Only zero-parameter Functions or Functions with one request-object parameter are supported.");
             }
 
             var target = _serviceProvider.GetService(bag.MethodInfo.DeclaringType);
             if (target == null)
             {
-                return Failure("Function 服务未注册，无法执行。");
+                return Failure("The Function service is not registered and cannot be executed.");
             }
 
             if (bag.MethodInfo.Invoke(target, arguments) is not Task task)
             {
-                return Failure("Function 必须返回 Task<IAppResponse>。");
+                return Failure("The Function must return Task<IAppResponse>.");
             }
 
             await task.ConfigureAwait(false);
@@ -295,7 +300,7 @@ public sealed class NeuCharWorkflowFunctionService
             var resultProperty = task.GetType().GetProperty("Result", BindingFlags.Public | BindingFlags.Instance);
             var response = resultProperty?.GetValue(task) as IAppResponse;
             return response == null
-                ? Failure("Function 未返回有效的 IAppResponse。")
+                ? Failure("The Function did not return a valid IAppResponse.")
                 : new NeuCharFunctionExecutionResult(
                     response.Success == true,
                     response.Data,
@@ -312,7 +317,7 @@ public sealed class NeuCharWorkflowFunctionService
         }
     }
 
-    public static string ValidateRequiredParameters(
+    public static string? ValidateRequiredParameters(
         IReadOnlyList<FunctionParameterInfo> parameterInfos,
         string parametersJson)
     {
@@ -331,14 +336,14 @@ public sealed class NeuCharWorkflowFunctionService
         }
         catch (JsonException)
         {
-            return "参数不是有效的 JSON 对象。";
+            return "The parameters are not a valid JSON object.";
         }
 
         using (document)
         {
             if (document.RootElement.ValueKind != JsonValueKind.Object)
             {
-                return "参数必须是 JSON 对象。";
+                return "The parameters must be a JSON object.";
             }
 
             foreach (var parameter in (parameterInfos ?? Array.Empty<FunctionParameterInfo>()).Where(z => z.IsRequired))
@@ -399,7 +404,7 @@ public sealed class NeuCharWorkflowFunctionService
             fields);
     }
 
-    public static string NormalizeValueType(Type type)
+    public static string NormalizeValueType(Type? type)
     {
         type ??= typeof(object);
         type = Nullable.GetUnderlyingType(type) ?? type;
@@ -429,7 +434,7 @@ public sealed class NeuCharWorkflowFunctionService
         return type == typeof(object) ? "any" : "object";
     }
 
-    private static Type GetResponseDataType(Type returnType)
+    private static Type? GetResponseDataType(Type? returnType)
     {
         if (returnType == null)
         {

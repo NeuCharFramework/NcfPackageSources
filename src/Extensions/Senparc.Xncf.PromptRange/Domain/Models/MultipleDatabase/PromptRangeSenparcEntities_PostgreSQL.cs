@@ -22,15 +22,15 @@ namespace Senparc.Xncf.PromptRange.Models
 
 
     /// <summary>
-    /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
-    /// <para>1、切换至 Debug 模式</para>
-    /// <para>2、运行：PM> add-migration [更新名称] -c PromptRangeSenparcEntities_PostgreSQL -o Migrations/Migrations.PostgreSQL </para>
+    /// design-time DbContext creation (used only to create Code-First database migrations during development; not executed in production)
+    /// <para>1、switch to Debug mode</para>
+    /// <para>2、run：PM> add-migration [updatename] -c PromptRangeSenparcEntities_PostgreSQL -o Migrations/Migrations.PostgreSQL </para>
     /// </summary>
     public class SenparcDbContextFactory_PostgreSQL : SenparcDesignTimeDbContextFactoryBase<PromptRangeSenparcEntities_PostgreSQL, Register>
     {
         protected override Action<IApplicationBuilder> AppAction => app =>
         {
-            //指定其他数据库
+            //specify another database
             app.UseNcfDatabase("Senparc.Ncf.Database.PostgreSQL", "Senparc.Ncf.Database.PostgreSQL", "PostgreSQLDatabaseConfiguration");
         };
 

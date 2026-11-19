@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：20261021161945_Add_PromptRange_SkillArtifactSource.cs
-    文件功能描述：20261021161945_Add_PromptRange_SkillArtifactSource 相关定义与实现
+    File name: 20261021161945_Add_PromptRange_SkillArtifactSource.cs
+    File description: 20261021161945_Add_PromptRange_SkillArtifactSource related definitions and implementation
 
+    Created by: Senparc - 20261022
 
-    创建标识：Senparc - 20261022
-
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 支持 Add_PromptRange_SkillArtifactSource 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

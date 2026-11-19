@@ -4,6 +4,14 @@
     const maxTotalUploadBytes = 100 * 1024 * 1024;
     const maxFileSizeBytes = 50 * 1024 * 1024;
 
+    function fileManagerText(key, fallback) {
+        const args = Array.prototype.slice.call(arguments, 2);
+        const value = typeof window.ncfST === 'function' ? window.ncfST(key) : fallback;
+        return value.replace(/\{(\d+)\}/g, function (token, index) {
+            return typeof args[index] === 'undefined' ? token : args[index];
+        });
+    }
+
     function resolveSystemName() {
         const name = (window.__NCF_SYSTEM_NAME__ || '').toString().trim();
         return name || 'NCF';
@@ -18,15 +26,15 @@
         const message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
         if (message) return message;
         if (error && error.response && error.response.status === 400) {
-            return '请求被服务器拒绝，请刷新页面后重试。';
+            return fileManagerText('Script.RequestRejected', 'The server rejected the request. Refresh the page and try again.');
         }
-        return (error && error.message) || '请求失败';
+        return (error && error.message) || fileManagerText('Script.RequestFailed', 'Request failed.');
     }
 
     function getRequestVerificationToken() {
         const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
         if (!tokenInput || !tokenInput.value) {
-            throw new Error('页面防伪令牌缺失，请刷新页面后重试。');
+            throw new Error(fileManagerText('Script.CsrfMissing', 'The page anti-forgery token is missing. Refresh the page and try again.'));
         }
         return tokenInput.value;
     }
@@ -85,7 +93,7 @@
                 treeFilter: '',
                 fileSearchKeyword: '',
                 orgName: resolveSystemName(),
-                rootFolderName: '企业文档',
+                rootFolderName: fileManagerText('Frontend.072', 'Enterprise documents'),
                 activeNavKey: 'enterprise',
                 dashboard: {
                     capacityRange: '7d',
@@ -97,24 +105,24 @@
                     capacityTrend: [],
                     orgUsages: [
                         { name: resolveSystemName(), size: '0B' },
-                        { name: '企业文档根目录', size: '0B' },
-                        { name: '知识库资料', size: '0B' }
+                        { name: fileManagerText('Frontend.072', 'Enterprise documents') + ' root', size: '0B' },
+                        { name: fileManagerText('Frontend.149', 'Knowledge-base materials'), size: '0B' }
                     ],
                     sizeTotalLabel: '0B',
                     countTotalLabel: '0',
                     sizeSlices: [
-                        { name: '文档', value: 0, color: '#95de64' },
-                        { name: '图片', value: 0, color: '#597ef7' },
-                        { name: '视频', value: 0, color: '#ffd666' },
-                        { name: '音频', value: 0, color: '#ff9c6e' },
-                        { name: '其他', value: 0, color: '#91d5ff' }
+                        { name: fileManagerText('Frontend.206', 'Documents'), value: 0, color: '#95de64' },
+                        { name: fileManagerText('Frontend.207', 'Images'), value: 0, color: '#597ef7' },
+                        { name: fileManagerText('Frontend.208', 'Videos'), value: 0, color: '#ffd666' },
+                        { name: fileManagerText('Frontend.209', 'Audio'), value: 0, color: '#ff9c6e' },
+                        { name: fileManagerText('Frontend.210', 'Other'), value: 0, color: '#91d5ff' }
                     ],
                     countSlices: [
-                        { name: '文档', value: 0, color: '#95de64' },
-                        { name: '图片', value: 0, color: '#597ef7' },
-                        { name: '视频', value: 0, color: '#ffd666' },
-                        { name: '音频', value: 0, color: '#ff9c6e' },
-                        { name: '其他', value: 0, color: '#91d5ff' }
+                        { name: fileManagerText('Frontend.206', 'Documents'), value: 0, color: '#95de64' },
+                        { name: fileManagerText('Frontend.207', 'Images'), value: 0, color: '#597ef7' },
+                        { name: fileManagerText('Frontend.208', 'Videos'), value: 0, color: '#ffd666' },
+                        { name: fileManagerText('Frontend.209', 'Audio'), value: 0, color: '#ff9c6e' },
+                        { name: fileManagerText('Frontend.210', 'Other'), value: 0, color: '#91d5ff' }
                     ]
                 },
                 _dashboardCharts: null,
@@ -131,7 +139,7 @@
                     treeExpandKey: 0
                 },
                 tagManagerStorageKey: 'ncf.fileManager.tagManager',
-                tagAdminOptions: ['管理员', '当前用户'],
+                tagAdminOptions: [fileManagerText('Frontend.153', 'Administrator'), fileManagerText('Frontend.226', 'Current user')],
                 tagCategoryDialog: {
                     visible: false,
                     loading: false,
@@ -146,17 +154,17 @@
                 },
                 tagCategoryRules: {
                     name: [
-                        { required: true, message: '请输入分类名称', trigger: 'blur' },
-                        { max: 50, message: '分类名称最多50个字符', trigger: 'blur' }
+                        { required: true, message: fileManagerText('Frontend.161', 'Enter a category name, up to 50 characters'), trigger: 'blur' },
+                        { max: 50, message: fileManagerText('Frontend.161', 'Enter a category name, up to 50 characters'), trigger: 'blur' }
                     ]
                 },
                 tagCreateRules: {
                     name: [
-                        { required: true, message: '请输入标签名称', trigger: 'blur' },
-                        { max: 30, message: '标签名称最多30个字符', trigger: 'blur' }
+                        { required: true, message: fileManagerText('Frontend.163', 'Enter a tag name, up to 30 characters'), trigger: 'blur' },
+                        { max: 30, message: fileManagerText('Frontend.163', 'Enter a tag name, up to 30 characters'), trigger: 'blur' }
                     ],
                     categoryId: [
-                        { required: true, message: '请选择所属分类', trigger: 'change' }
+                        { required: true, message: fileManagerText('Frontend.171', 'Select category'), trigger: 'change' }
                     ]
                 },
                 recycleBin: {
@@ -193,15 +201,15 @@
                     blockedTypesText: ''
                 },
                 navItems: [
-                    { key: 'home', label: '首页', icon: 'el-icon-s-home' },
-                    { key: 'favorite', label: '收藏', icon: 'el-icon-star-off' },
-                    { key: 'enterprise', label: '企业文档', icon: 'el-icon-folder', scope: 100 },
-                    { key: 'fine-tuning', label: '微调产物', icon: 'el-icon-s-data', scope: 300 },
-                    { key: 'recycle', label: '回收站', icon: 'el-icon-delete' },
+                    { key: 'home', label: fileManagerText('Frontend.029', 'Home'), icon: 'el-icon-s-home' },
+                    { key: 'favorite', label: fileManagerText('Frontend.119', 'Favorite'), icon: 'el-icon-star-off' },
+                    { key: 'enterprise', label: fileManagerText('Frontend.072', 'Enterprise documents'), icon: 'el-icon-folder', scope: 100 },
+                    { key: 'fine-tuning', label: fileManagerText('Frontend.106', 'Fine-tuning artifacts'), icon: 'el-icon-s-data', scope: 300 },
+                    { key: 'recycle', label: fileManagerText('Frontend.096', 'Recycle bin'), icon: 'el-icon-delete' },
                     { key: 'divider', label: '', divider: true },
-                    { key: 'dashboard', label: '数据面板', icon: 'el-icon-data-line' },
-                    { key: 'tags', label: '标签管理', icon: 'el-icon-price-tag' },
-                    { key: 'settings', label: '设置', icon: 'el-icon-setting' }
+                    { key: 'dashboard', label: fileManagerText('Frontend.120', 'Data dashboard'), icon: 'el-icon-data-line' },
+                    { key: 'tags', label: fileManagerText('Frontend.143', 'Tag Management'), icon: 'el-icon-price-tag' },
+                    { key: 'settings', label: fileManagerText('Frontend.157', 'Settings'), icon: 'el-icon-setting' }
                 ]
             };
         },
@@ -221,8 +229,10 @@
             isSiteAsset: function () { return this.resourceScope === 200; },
             isFineTuning: function () { return this.resourceScope === 300; },
             resourceScopeName: function () {
-                if (this.isFineTuning) return '微调产物';
-                return this.isSiteAsset ? '站点静态资源' : '知识库资料';
+                if (this.isFineTuning) return fileManagerText('Frontend.106', 'Fine-tuning artifacts');
+                return this.isSiteAsset
+                    ? fileManagerText('Frontend.152', 'Site resources')
+                    : fileManagerText('Frontend.149', 'Knowledge-base materials');
             },
             canGoParent: function () { return this.currentFolderId != null; },
             displayTableData: function () {
@@ -235,25 +245,25 @@
             },
             scopeHint: function () {
                 if (this.isFineTuning) {
-                    return '微调产物始终保持私有，仅供训练任务、管理员和授权的下载接口使用，不会生成公开 URL。';
+                    return fileManagerText('Frontend.193', 'Fine-tuning artifacts are always private.');
                 }
                 return this.isSiteAsset
-                    ? '站点静态资源默认私有；公开后会生成带 SHA-256 指纹的 /assets/ URL。为防止同源脚本注入，不接受 HTML、SVG、JavaScript 或压缩包。'
-                    : '知识库源文件只能是可安全提取的文本和 Office Open XML 文件。它们不会生成公开 URL，也不能在此处发布。';
+                    ? fileManagerText('Frontend.194', 'Site static resources are private by default.')
+                    : fileManagerText('Frontend.195', 'Knowledge-base source files must be safely extractable text or Office Open XML files.');
             },
             uploadExtensionHint: function () {
                 if (this.uploadSettings && this.uploadSettings.allowedTypesText) {
                     const list = this.parseExtensionList(this.uploadSettings.allowedTypesText);
                     if (list.length) {
-                        return '支持 ' + list.map(function (ext) { return ext.replace(/^\./, '').toUpperCase(); }).join('、') + '。';
+                        return fileManagerText('Frontend.196', 'Supports {0}.', list.map(function (ext) { return ext.replace(/^\./, '').toUpperCase(); }).join(', '));
                     }
                 }
                 if (this.isFineTuning) {
-                    return '支持 JSONL、JSON、ZIP 及训练运行时生成的其他私有产物格式。';
+                    return fileManagerText('Frontend.197', 'Supports JSONL, JSON, ZIP and other private artifacts generated by training.');
                 }
                 return this.isSiteAsset
-                    ? '支持 JPG、PNG、GIF、WebP、AVIF、ICO、音视频和字体格式。'
-                    : '支持文本、JSON/XML/YAML、代码、DOCX、XLSX、PPTX。';
+                    ? fileManagerText('Frontend.198', 'Supports JPG, PNG, GIF, WebP, AVIF, ICO, audio/video and font formats.')
+                    : fileManagerText('Frontend.199', 'Supports text, JSON/XML/YAML, code, DOCX, XLSX and PPTX.');
             },
             uploadTargetText: function () {
                 const currentFolder = this.folderPath.length ? this.folderPath[this.folderPath.length - 1].name : this.rootFolderName;
@@ -261,7 +271,7 @@
             },
             uploadFolderSummary: function () {
                 if (this.uploadDialog.mode !== 'folder' || !this.uploadDialog.fileList.length) return '';
-                return '已选择文件夹“' + this.uploadDialog.folderRootName + '”，共 ' + this.uploadDialog.fileList.length + ' 个文件；上传后会在左侧文件树中还原原始目录结构。';
+                return fileManagerText('Frontend.219', 'Selected folder “{0}” with {1} files; the original directory structure will be restored in the left file tree after upload.', this.uploadDialog.folderRootName, this.uploadDialog.fileList.length);
             },
             tagCategorySelectOptions: function () {
                 const list = (this.tagManager && this.tagManager.list) || [];
@@ -286,7 +296,7 @@
                 categories.forEach(function (cat) { known[cat.id] = true; });
                 const orphanTags = tags.filter(function (tag) { return !tag.categoryId || !known[tag.categoryId]; });
                 if (orphanTags.length) {
-                    groups.push({ id: '__other__', name: '未分类', tags: orphanTags });
+                    groups.push({ id: '__other__', name: fileManagerText('Frontend.220', 'Uncategorized'), tags: orphanTags });
                 }
                 return groups;
             },
@@ -377,7 +387,7 @@
                     return;
                 }
                 this.activeNavKey = item.key;
-                this.$message.info('「' + item.label + '」功能即将开放');
+                this.$message.info(fileManagerText('Frontend.221', 'The “{0}” feature is coming soon.', item.label));
             },
             initDashboardDefaults: function () {
                 const end = new Date();
@@ -481,6 +491,8 @@
                 const sizeMb = trend.map(function (x) {
                     return Number(((Number(x.totalSizeBytes || 0)) / (1024 * 1024)).toFixed(2));
                 });
+                const fileCountLabel = fileManagerText('Frontend.121', 'File count');
+                const fileSizeLabel = fileManagerText('Frontend.123', 'File size');
 
                 const capacityChart = this.getOrCreateChart(this.$refs.capacityChart);
                 if (capacityChart) {
@@ -492,33 +504,33 @@
                                 if (!params || !params.length) return '';
                                 var lines = [params[0].axisValue];
                                 params.forEach(function (p) {
-                                    var unit = p.seriesName === '文件数量' ? ' 个' : ' MB';
+                                    var unit = p.seriesName === fileCountLabel ? '' : ' MB';
                                     lines.push(p.marker + p.seriesName + '：' + p.data + unit);
                                 });
                                 return lines.join('<br/>');
                             }
                         },
-                        legend: { bottom: 0, data: ['文件数量', '总大小'] },
+                        legend: { bottom: 0, data: [fileCountLabel, fileSizeLabel] },
                         grid: { left: 48, right: 56, top: 28, bottom: 48 },
                         xAxis: { type: 'category', boundaryGap: false, data: labels },
                         yAxis: [
                             {
                                 type: 'value',
-                                name: '数量',
+                                name: fileCountLabel,
                                 minInterval: 1,
                                 axisLabel: { formatter: '{value}' },
                                 splitLine: { lineStyle: { type: 'dashed' } }
                             },
                             {
                                 type: 'value',
-                                name: '大小',
+                                name: fileSizeLabel,
                                 axisLabel: { formatter: '{value}MB' },
                                 splitLine: { show: false }
                             }
                         ],
                         series: [
                             {
-                                name: '文件数量',
+                                name: fileCountLabel,
                                 type: 'line',
                                 smooth: true,
                                 yAxisIndex: 0,
@@ -526,7 +538,7 @@
                                 areaStyle: { opacity: 0.08 }
                             },
                             {
-                                name: '总大小',
+                                name: fileSizeLabel,
                                 type: 'line',
                                 smooth: true,
                                 yAxisIndex: 1,
@@ -565,13 +577,13 @@
                 const countChart = this.getOrCreateChart(this.$refs.countChart);
                 if (countChart) {
                     countChart.setOption({
-                        tooltip: { trigger: 'item', formatter: '{b}: {c} 个 ({d}%)' },
+                        tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
                         legend: { bottom: 0, data: (this.dashboard.countSlices || []).map(function (x) { return x.name; }) },
                         series: [{
                             type: 'pie',
                             radius: ['48%', '68%'],
                             center: ['50%', '46%'],
-                            label: { formatter: '{b}\\n{c}个' },
+                            label: { formatter: '{b}\\n{c}' },
                             data: (countSlices.length ? countSlices : this.dashboard.countSlices).map(function (x) {
                                 return { name: x.name, value: Number(x.value || 0), itemStyle: { color: x.color } };
                             }),
@@ -633,7 +645,7 @@
 
                 categories.forEach(function (cat) {
                     const hasParent = !!(cat.parentId && categoryMap[cat.parentId]);
-                    cat.type = hasParent ? '二级分类' : '一级分类';
+                    cat.type = hasParent ? fileManagerText('Frontend.222', 'Subcategory') : fileManagerText('Frontend.223', 'Category');
                     cat.level = hasParent ? 2 : 1;
                     if (hasParent) {
                         categoryMap[cat.parentId].children.push(cat);
@@ -644,7 +656,7 @@
                 (this.tagManager.tags || []).forEach(function (row) {
                     const tag = Object.assign({}, row, {
                         nodeType: 'tag',
-                        type: '标签',
+                        type: fileManagerText('Frontend.224', 'Tag'),
                         tagCount: '-',
                         admin: '-',
                         children: []
@@ -734,7 +746,7 @@
             createTag: function (presetCategoryId) {
                 this.loadTagManagerFromStorage();
                 if (!(this.tagManager.list || []).length) {
-                    this.$message.warning('请先新增分类后再创建标签');
+                    this.$message.warning(fileManagerText('Frontend.128', 'Add a category first.'));
                     return;
                 }
                 this.tagCreateDialog = {
@@ -810,9 +822,9 @@
                 if (!row) return;
                 const self = this;
                 const tip = row.nodeType === 'tag'
-                    ? '确定删除标签「' + row.name + '」吗？'
-                    : '确定删除分类「' + row.name + '」及其下属标签吗？';
-                this.$confirm(tip, '提示', { type: 'warning' }).then(function () {
+                    ? fileManagerText('Frontend.257', 'Delete tag “{0}”?', row.name)
+                    : fileManagerText('Frontend.258', 'Delete category “{0}” and its child tags?', row.name);
+                this.$confirm(tip, fileManagerText('Frontend.259', 'Notice'), { type: 'warning' }).then(function () {
                     if (row.nodeType === 'tag') {
                         self.tagManager.tags = (self.tagManager.tags || []).filter(function (item) { return item.id !== row.id; });
                         const category = (self.tagManager.list || []).find(function (item) { return item.id === row.categoryId; });
@@ -832,7 +844,7 @@
                     self.syncTagCategoryOptions();
                     self.saveTagManagerToStorage();
                     self.searchTags();
-                    self.$message.success('已删除');
+                    self.$message.success(fileManagerText('Frontend.039', 'Deleted successfully'));
                 }).catch(function () { /* cancel */ });
             },
             toggleTagRowStatus: function (row) {
@@ -853,12 +865,14 @@
                 }
                 this.saveTagManagerToStorage();
                 this.searchTags();
-                this.$message.success(enabled ? '已停用' : '已启用');
+                this.$message.success(enabled
+                    ? fileManagerText('Frontend.076', 'Disable')
+                    : fileManagerText('Frontend.095', 'Enable'));
             },
             setSelectedTagStatus: function (enabled) {
                 const ids = (this.tagManager && this.tagManager.selectedIds) || [];
                 if (!ids.length) {
-                    this.$message.warning('请先选择数据');
+                    this.$message.warning(fileManagerText('Frontend.169', 'Select at least one item'));
                     return;
                 }
                 const idMap = {};
@@ -879,7 +893,9 @@
                 });
                 this.saveTagManagerToStorage();
                 this.searchTags();
-                this.$message.success(enabled ? '已启用所选项目' : '已停用所选项目');
+                this.$message.success(enabled
+                    ? fileManagerText('Frontend.095', 'Enable')
+                    : fileManagerText('Frontend.076', 'Disable'));
             },
             onTagCategoryDialogClosed: function () {
                 if (!this.tagCategoryDialog) return;
@@ -906,11 +922,11 @@
                     const editing = !!self.tagCategoryDialog.editing;
                     const currentId = form.id || '';
                     if (!name) {
-                        self.$message.warning('请输入分类名称');
+                        self.$message.warning(fileManagerText('Frontend.161', 'Enter a category name, up to 50 characters'));
                         return;
                     }
                     if (form.parentId && form.parentId === currentId) {
-                        self.$message.warning('所属分类不能选择自己');
+                        self.$message.warning(fileManagerText('Frontend.260', 'A category cannot select itself'));
                         return;
                     }
                     const exists = (self.tagManager.list || []).some(function (row) {
@@ -918,7 +934,7 @@
                         return String(row.name || '').toLowerCase() === name.toLowerCase();
                     });
                     if (exists) {
-                        self.$message.warning('分类名称已存在');
+                        self.$message.warning(fileManagerText('Frontend.082', 'The category name already exists'));
                         return;
                     }
                     self.tagCategoryDialog.loading = true;
@@ -927,7 +943,7 @@
                         if (editing) {
                             const target = (self.tagManager.list || []).find(function (row) { return row.id === currentId; });
                             if (!target) {
-                                self.$message.error('分类不存在');
+                                self.$message.error(fileManagerText('Frontend.261', 'Category does not exist'));
                                 return;
                             }
                             target.name = name;
@@ -936,7 +952,7 @@
                             target.admin = form.admin || '-';
                             target.updatedAt = now;
                             target.updatedBy = '当前用户';
-                            self.$message.success('分类已更新');
+                            self.$message.success(fileManagerText('Frontend.033', 'Updated successfully'));
                         } else {
                             self.tagManager.list.unshift({
                                 id: 'cat-' + Date.now(),
@@ -950,7 +966,7 @@
                                 updatedBy: '当前用户',
                                 admin: form.admin || '-'
                             });
-                            self.$message.success('分类已创建');
+                            self.$message.success(fileManagerText('Frontend.041', 'Created successfully'));
                         }
                         self.syncTagCategoryOptions();
                         self.saveTagManagerToStorage();
@@ -973,16 +989,16 @@
                     const editing = !!self.tagCreateDialog.editing;
                     const currentId = form.id || '';
                     if (!name) {
-                        self.$message.warning('请输入标签名称');
+                        self.$message.warning(fileManagerText('Frontend.163', 'Enter a tag name, up to 30 characters'));
                         return;
                     }
                     if (!categoryId) {
-                        self.$message.warning('请选择所属分类');
+                        self.$message.warning(fileManagerText('Frontend.171', 'Select a category'));
                         return;
                     }
                     const category = (self.tagManager.list || []).find(function (row) { return row.id === categoryId; });
                     if (!category) {
-                        self.$message.warning('所属分类不存在，请重新选择');
+                        self.$message.warning(fileManagerText('Frontend.262', 'The selected category does not exist. Select another.'));
                         return;
                     }
                     const dup = (self.tagManager.tags || []).some(function (tag) {
@@ -991,7 +1007,7 @@
                             && String(tag.name || '').toLowerCase() === name.toLowerCase();
                     });
                     if (dup) {
-                        self.$message.warning('该分类下已存在同名标签');
+                        self.$message.warning(fileManagerText('Frontend.140', 'A tag with this name already exists in the category'));
                         return;
                     }
                     self.tagCreateDialog.loading = true;
@@ -1001,7 +1017,7 @@
                         if (editing) {
                             const target = self.tagManager.tags.find(function (tag) { return tag.id === currentId; });
                             if (!target) {
-                                self.$message.error('标签不存在');
+                                self.$message.error(fileManagerText('Frontend.263', 'Tag does not exist'));
                                 return;
                             }
                             const oldCategoryId = target.categoryId;
@@ -1017,7 +1033,7 @@
                                 category.tagCount = (category.tagCount || 0) + 1;
                             }
                             category.updatedAt = now;
-                            self.$message.success('标签已更新');
+                            self.$message.success(fileManagerText('Frontend.033', 'Updated successfully'));
                         } else {
                             self.tagManager.tags.unshift({
                                 id: 'tag-' + Date.now(),
@@ -1032,7 +1048,7 @@
                             category.tagCount = (category.tagCount || 0) + 1;
                             category.updatedAt = now;
                             category.updatedBy = '当前用户';
-                            self.$message.success('标签已创建');
+                            self.$message.success(fileManagerText('Frontend.041', 'Created successfully'));
                         }
                         self.saveTagManagerToStorage();
                         self.searchTags();
@@ -1049,11 +1065,11 @@
             },
             enableSelectedTags: function () { this.setSelectedTagStatus(true); },
             disableSelectedTags: function () { this.setSelectedTagStatus(false); },
-            importTags: function () { this.$message.info('导入功能即将开放'); },
-            exportTags: function () { this.$message.info('导出功能即将开放'); },
+            importTags: function () { this.$message.info(fileManagerText('Frontend.100', 'Import')); },
+            exportTags: function () { this.$message.info(fileManagerText('Frontend.101', 'Export')); },
             openTagRowMenu: function (row) {
                 if (!row) return;
-                // 与行扩展一致：打开编辑
+                //Legacy comment translated to English.
                 this.editTagRow(row);
             },
             loadRecycleBin: function () {
@@ -1126,27 +1142,27 @@
                 this.saveRecycleToStorage();
                 this.loadRecycleBin();
 
-                // 从收藏中移除
+                //Legacy comment translated to English.
                 if (this.favoriteList && this.favoriteList.list) {
                     this.favoriteList.list = this.favoriteList.list.filter(function (item) { return item.id !== row.id; });
                     this.saveFavoritesToStorage();
                     this.searchFavorites();
                 }
 
-                // 从快速访问移除
+                //Legacy comment translated to English.
                 if (this.homePage && this.homePage.quickAccess) {
                     this.homePage.quickAccess = this.homePage.quickAccess.filter(function (item) { return item.id !== row.id; });
                     this.saveQuickAccessToStorage();
                 }
 
-                // 从当前列表移除
+                //Legacy comment translated to English.
                 this.tableData = (this.tableData || []).filter(function (item) { return item.id !== row.id; });
                 if (this.total > 0) this.total -= 1;
             },
             emptyRecycleBin: function () {
                 var list = (this.recycleBin && (this.recycleBin.list || this.recycleBin.displayList)) || [];
                 if (!list.length) {
-                    this.$message.info('回收站暂无文档');
+                    this.$message.info(fileManagerText('Frontend.133', 'No documents'));
                     return;
                 }
                 if (!this.recycleEmptyDialog) {
@@ -1167,7 +1183,7 @@
                     : (this.recycleBin.displayList || [])).slice();
                 if (!items.length) {
                     if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
-                    this.$message.info('回收站暂无文档');
+                    this.$message.info(fileManagerText('Frontend.133', 'No documents'));
                     return;
                 }
 
@@ -1178,7 +1194,7 @@
                     try {
                         result = unwrap(await post(pageUrl + '?handler=EmptyRecycle', { ids: ids }));
                     } catch (batchError) {
-                        // 后端未重编时回退为逐个 Delete
+                        //Legacy comment translated to English.
                         var remainingFallback = [];
                         var successFallback = 0;
                         var lastError = '';
@@ -1195,8 +1211,8 @@
                             deletedCount: successFallback,
                             failedIds: remainingFallback.map(function (x) { return x.id; }),
                             message: remainingFallback.length === 0
-                                ? '一键清空成功'
-                                : ('已删除 ' + successFallback + ' 个，失败 ' + remainingFallback.length + ' 个' + (lastError ? '：' + lastError : ''))
+                                ? fileManagerText('Frontend.229', 'Recycle bin emptied successfully')
+                                : fileManagerText('Frontend.230', 'Deleted {0}; failed {1}: {2}', successFallback, remainingFallback.length, lastError || '')
                         };
                     }
 
@@ -1215,14 +1231,14 @@
                     if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
 
                     if (remaining.length === 0) {
-                        this.$message.success((result && result.message) || '一键清空成功');
+                        this.$message.success((result && result.message) || fileManagerText('Frontend.229', 'Recycle bin emptied successfully'));
                     } else if (remaining.length < items.length) {
-                        this.$message.warning((result && result.message) || ('部分文件删除失败，仍有 ' + remaining.length + ' 个留在回收站'));
+                        this.$message.warning((result && result.message) || fileManagerText('Frontend.231', 'Some files could not be deleted; {0} remain in the recycle bin', remaining.length));
                     } else {
-                        this.$message.error((result && result.message) || '一键清空失败，文件未能彻底删除');
+                        this.$message.error((result && result.message) || fileManagerText('Frontend.232', 'Could not empty the recycle bin completely'));
                     }
                 } catch (error) {
-                    this.$message.error('一键清空失败：' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.233', 'Failed to empty the recycle bin: {0}', errorMessage(error)));
                 } finally {
                     this.$set(this.recycleBin, 'emptying', false);
                 }
@@ -1270,7 +1286,7 @@
                 } catch (e) { /* ignore quota */ }
             },
             buildFavoritePathText: function () {
-                const segments = [this.rootFolderName || '企业文档', this.orgName || ''].concat(
+                const segments = [this.rootFolderName || fileManagerText('Frontend.072', 'Enterprise documents'), this.orgName || ''].concat(
                     (this.folderPath || []).map(function (item) { return item.name; })
                 ).filter(function (name) { return !!name; });
                 return segments.join(' > ');
@@ -1295,7 +1311,7 @@
                 if (index >= 0) {
                     list.splice(index, 1);
                     this.$set(row, 'isFavorite', false);
-                    this.$message.success('已取消收藏');
+                this.$message.success(fileManagerText('Frontend.090', 'Remove favorite'));
                 } else {
                     list.unshift({
                         id: row.id,
@@ -1309,7 +1325,7 @@
                         isFavorite: true
                     });
                     this.$set(row, 'isFavorite', true);
-                    this.$message.success('已加入收藏');
+                this.$message.success(fileManagerText('Frontend.119', 'Favorite'));
                 }
                 this.favoriteList.list = list;
                 this.saveFavoritesToStorage();
@@ -1347,7 +1363,14 @@
                 return value.toFixed(index === 0 ? 0 : 2) + ' ' + units[index];
             },
             fileTypeLabel: function (fileType) {
-                return ({ 0: '文本', 1: 'Word', 2: 'PowerPoint', 3: 'Excel', 4: '代码', 999: '其他' })[fileType] || '其他';
+                return ({
+                    0: fileManagerText('Frontend.020', 'Text'),
+                    1: 'Word',
+                    2: 'PowerPoint',
+                    3: 'Excel',
+                    4: fileManagerText('Frontend.005', 'Code'),
+                    999: fileManagerText('Frontend.006', 'Other')
+                })[fileType] || fileManagerText('Frontend.006', 'Other');
             },
             updatedByLabel: function (row) { return '-'; },
             filterFolderNode: function (value, data) {
@@ -1392,8 +1415,8 @@
                 if (this.$refs.upload) this.$refs.upload.clearFiles();
             },
             getUploadDialogTitle: function () {
-                const segments = [this.rootFolderName || '根目录'].concat((this.folderPath || []).map(function (item) { return item.name; }));
-                return '上传文件到 【/' + segments.join('/') + '】 --支持断点续传';
+                const segments = [this.rootFolderName || fileManagerText('Frontend.023', 'Root folder')].concat((this.folderPath || []).map(function (item) { return item.name; }));
+                return fileManagerText('Frontend.234', 'Upload files to [/{0}] -- resumable upload supported', segments.join('/'));
             },
             handleRowCommand: function (command, row) {
                 if (command === 'download') return this.downloadFile(row);
@@ -1441,7 +1464,7 @@
                 const index = list.findIndex(function (item) { return item.id === row.id; });
                 if (index >= 0) {
                     list.splice(index, 1);
-                    this.$message.success('已从快速访问移除');
+                    this.$message.success(fileManagerText('Frontend.071', 'Remove from Quick Access'));
                 } else {
                     list.unshift({
                         id: row.id,
@@ -1451,7 +1474,7 @@
                         folderPathText: typeof this.buildFavoritePathText === 'function' ? this.buildFavoritePathText() : '',
                         resourceScope: this.resourceScope
                     });
-                    this.$message.success('已添加至快速访问');
+                    this.$message.success(fileManagerText('Frontend.147', 'Use Quick Access'));
                 }
                 this.saveQuickAccessToStorage();
             },
@@ -1517,9 +1540,9 @@
                             blockedTypesText: this.uploadSettings.blockedTypesText || ''
                         })
                     );
-                    this.$message.success('上传设置已保存');
+                    this.$message.success(fileManagerText('Frontend.075', 'Save settings'));
                 } catch (e) {
-                    this.$message.error('保存失败，请检查浏览器本地存储是否可用');
+                    this.$message.error(fileManagerText('Frontend.035', 'Save failed'));
                 }
             },
             resetUploadSettings: function () {
@@ -1533,9 +1556,9 @@
                             blockedTypesText: this.uploadSettings.blockedTypesText || ''
                         })
                     );
-                    this.$message.success('已恢复默认上传设置');
+                    this.$message.success(fileManagerText('Frontend.108', 'Restore defaults'));
                 } catch (e) {
-                    this.$message.error('恢复默认失败');
+                    this.$message.error(fileManagerText('Frontend.040', 'Delete failed'));
                 }
             },
             getMaxUploadSizeBytes: function () {
@@ -1548,15 +1571,15 @@
                 const ext = extMatch ? extMatch[0].toLowerCase() : '';
                 const blocked = this.parseExtensionList((this.uploadSettings && this.uploadSettings.blockedTypesText) || '');
                 if (ext && blocked.indexOf(ext) !== -1) {
-                    return '文件“' + name + '”类型 ' + ext + ' 已被过滤，无法上传。';
+                    return fileManagerText('Frontend.216', 'File “{0}” with type {1} has been filtered and cannot be uploaded.', name, ext);
                 }
                 const allowed = this.parseExtensionList((this.uploadSettings && this.uploadSettings.allowedTypesText) || '');
                 if (allowed.length && (!ext || allowed.indexOf(ext) === -1)) {
-                    return '文件“' + name + '”类型不在允许上传列表中。';
+                    return fileManagerText('Frontend.217', 'File “{0}” has a type that is not in the allowed upload list.', name);
                 }
                 const maxBytes = this.getMaxUploadSizeBytes();
                 if (fileSize > maxBytes) {
-                    return '文件“' + name + '”超过 ' + Math.round(maxBytes / 1024 / 1024) + ' MB，无法上传。';
+                    return fileManagerText('Frontend.218', 'File “{0}” exceeds {1} MB and cannot be uploaded.', name, Math.round(maxBytes / 1024 / 1024));
                 }
                 return '';
             },
@@ -1565,7 +1588,7 @@
                 if (typeof this.loadFileTagMapFromStorage === 'function') this.loadFileTagMapFromStorage();
                 const catalog = (this.tagManager && this.tagManager.tags) || [];
                 if (!catalog.length) {
-                    this.$message.warning('请先在「标签管理」中维护标签后再设置');
+                    this.$message.warning(fileManagerText('Frontend.130', 'Create tags in Tag Management first.'));
                 }
                 const existingItems = this.getFileTagItems(row);
                 const selectedIds = existingItems.map(function (item) { return item.id; }).filter(Boolean);
@@ -1668,7 +1691,7 @@
                     this.$set(row, 'tags', items.map(function (item) { return item.name; }));
                     this.$set(row, 'tagIds', items.map(function (item) { return item.id; }));
                     this.fileTagDialog.visible = false;
-                    this.$message.success(items.length ? '文件标签已更新' : '已清空文件标签');
+                    this.$message.success(items.length ? fileManagerText('Frontend.227', 'File tags updated') : fileManagerText('Frontend.228', 'File tags cleared'));
                 } finally {
                     this.fileTagDialog.loading = false;
                 }
@@ -1714,7 +1737,7 @@
                     this.syncFavoriteFlagsOnTable();
                     this.applyFileTagsToTable();
                 } catch (error) {
-                    this.$message.error('获取文件列表失败：' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.030', 'Failed to load the list') + ': ' + errorMessage(error));
                 } finally {
                     this.tableLoading = false;
                 }
@@ -1729,7 +1752,7 @@
                         return { id: folder.id, name: folder.name, description: folder.description || '', parentId: folder.parentId, hasChildren: true };
                     }));
                 } catch (error) {
-                    this.$message.error('获取文件夹失败：' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.030', 'Failed to load the list') + ': ' + errorMessage(error));
                     resolve([]);
                 }
             },
@@ -1753,7 +1776,7 @@
                     } catch (error) {
                         this.currentFolderId = null;
                         this.folderPath = [];
-                        this.$message.warning('目标文件夹不可用，已回到根目录。');
+                        this.$message.warning(fileManagerText('Frontend.215', 'The target folder is unavailable. Returned to the root folder.'));
                     }
                 } else {
                     this.folderPath = [];
@@ -1780,9 +1803,9 @@
             handleNoteChange: async function (row) {
                 try {
                     await post(pageUrl + '?handler=EditNote', { id: row.id, note: row.description || '' });
-                    this.$message.success('备注已更新');
+                    this.$message.success(fileManagerText('Frontend.033', 'Updated successfully'));
                 } catch (error) {
-                    this.$message.error('更新备注失败：' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.034', 'Update failed') + ': ' + errorMessage(error));
                 }
             },
             downloadFile: function (row) { window.location.assign(pageUrl + '?handler=Download&id=' + encodeURIComponent(row.id)); },
@@ -1841,10 +1864,10 @@
             },
             previewFile: async function (row) {
                 if (!row || row.id == null) {
-                    this.$message.warning('当前项无法预览');
+                    this.$message.warning(fileManagerText('Frontend.131', 'No previewable content'));
                     return;
                 }
-                const fileName = row.fileName || row.name || '未命名文件';
+                const fileName = row.fileName || row.name || fileManagerText('Frontend.235', 'Unnamed file');
                 const kind = this.getPreviewKind(fileName);
                 const previewUrl = this.buildPreviewUrl(row.id);
                 this.filePreviewDialog = {
@@ -1867,19 +1890,19 @@
                     }
                     if (kind === 'legacy-office') {
                         this.filePreviewDialog.mode = 'error';
-                        this.filePreviewDialog.error = '旧版 Office 格式（.doc/.xls/.ppt）暂不支持在线预览，请下载后查看。';
+                        this.filePreviewDialog.error = fileManagerText('Frontend.200', 'Legacy Office formats cannot be previewed online.');
                         return;
                     }
                     if (kind === 'unsupported') {
                         this.filePreviewDialog.mode = 'error';
-                        this.filePreviewDialog.error = '该文件类型暂不支持在线预览，请尝试下载后查看。';
+                        this.filePreviewDialog.error = fileManagerText('Frontend.201', 'This file type cannot be previewed online.');
                         return;
                     }
                     if (kind === 'docx' && typeof mammoth !== 'undefined') {
                         const arrayBuffer = await this.fetchPreviewArrayBuffer(row.id);
                         const result = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
                         this.filePreviewDialog.mode = 'html';
-                        this.filePreviewDialog.html = result.value || '<p>文档为空</p>';
+                        this.filePreviewDialog.html = result.value || '<p>' + fileManagerText('Frontend.202', 'The document is empty.') + '</p>';
                         return;
                     }
                     if (kind === 'xlsx' && typeof XLSX !== 'undefined') {
@@ -1888,7 +1911,7 @@
                         const sheetName = workbook.SheetNames && workbook.SheetNames[0];
                         if (!sheetName) {
                             this.filePreviewDialog.mode = 'error';
-                            this.filePreviewDialog.error = 'Excel 文件中没有可预览的工作表。';
+                            this.filePreviewDialog.error = fileManagerText('Frontend.203', 'The Excel file has no previewable worksheets.');
                             return;
                         }
                         this.filePreviewDialog.mode = 'excel';
@@ -1923,10 +1946,10 @@
                         return;
                     }
                     this.filePreviewDialog.mode = 'error';
-                    this.filePreviewDialog.error = '暂不支持该文件类型的在线预览。';
+                    this.filePreviewDialog.error = fileManagerText('Frontend.204', 'This file type does not support online preview.');
                 } catch (error) {
                     this.filePreviewDialog.mode = 'error';
-                    this.filePreviewDialog.error = '预览失败：' + errorMessage(error);
+                    this.filePreviewDialog.error = fileManagerText('Frontend.205', 'Preview failed: {0}', errorMessage(error));
                 } finally {
                     this.filePreviewDialog.loading = false;
                 }
@@ -1935,32 +1958,32 @@
                 try {
                     const shortName = String(row.fileName || '').replace(/\.[^.]+$/, '') || row.fileName;
                     await this.$confirm(
-                        '此操作将文件放至回收站，是否继续？',
-                        '是否删除: ' + shortName,
-                        { type: 'warning', confirmButtonText: '确定', cancelButtonText: '取消' }
+                        fileManagerText('Frontend.236', 'This will move the file to the recycle bin. Continue?'),
+                        fileManagerText('Frontend.237', 'Delete: {0}', shortName),
+                        { type: 'warning', confirmButtonText: fileManagerText('Frontend.024', 'OK'), cancelButtonText: fileManagerText('Frontend.038', 'Cancel') }
                     );
                     this.moveFileToRecycleBin(row);
-                    this.$message.success('已移至回收站');
+                    this.$message.success(fileManagerText('Frontend.238', 'Moved to the recycle bin'));
                 } catch (error) {
-                    if (error !== 'cancel') this.$message.error('删除失败：' + errorMessage(error));
+                    if (error !== 'cancel') this.$message.error(fileManagerText('Frontend.239', 'Delete failed: {0}', errorMessage(error)));
                 }
             },
             setPublication: async function (row, publish) {
                 try {
                     await post(pageUrl + '?handler=SetSiteAssetPublication', { id: row.id, publish: publish });
-                    this.$message.success(publish ? '资源已公开' : '资源已设为私有');
+                    this.$message.success(publish ? fileManagerText('Frontend.240', 'Resource published') : fileManagerText('Frontend.241', 'Resource made private'));
                     await this.getList();
                 } catch (error) {
-                    this.$message.error('更新发布状态失败：' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.242', 'Failed to update publication status: {0}', errorMessage(error)));
                 }
             },
             copyPublicUrl: async function (row) {
                 const url = window.location.origin + row.publicUrl;
                 try {
                     await navigator.clipboard.writeText(url);
-                    this.$message.success('公开 URL 已复制');
+                    this.$message.success(fileManagerText('Frontend.243', 'Public URL copied'));
                 } catch (_) {
-                    this.$prompt('请复制以下公开 URL', '公开 URL', { inputValue: url, inputType: 'textarea' });
+                    this.$prompt(fileManagerText('Frontend.244', 'Copy the following public URL'), fileManagerText('Frontend.245', 'Public URL'), { inputValue: url, inputType: 'textarea' });
                 }
             },
             resetUploadDialog: function (visible) {
@@ -1983,7 +2006,7 @@
             chooseUploadFolder: function () {
                 const input = this.$refs.folderUploadInput;
                 if (!input || !('webkitdirectory' in input)) {
-                    this.$message.warning('当前浏览器不支持选择文件夹，请使用最新版 Chrome、Edge 或 Safari。');
+                    this.$message.warning(fileManagerText('Frontend.246', 'This browser does not support folder selection. Use the latest Chrome, Edge or Safari.'));
                     return;
                 }
                 input.click();
@@ -1995,7 +2018,7 @@
                 const paths = rawFiles.map(function (file) { return file.webkitRelativePath || ''; });
                 const rootNames = Array.from(new Set(paths.map(function (path) { return path.split('/')[0]; }).filter(Boolean)));
                 if (paths.some(function (path) { return !path; }) || rootNames.length !== 1) {
-                    this.$message.error('浏览器未提供完整的文件夹相对路径，请重新选择一个文件夹。');
+                    this.$message.error(fileManagerText('Frontend.247', 'The browser did not provide a complete relative folder path. Select a folder again.'));
                     return;
                 }
 
@@ -2027,12 +2050,12 @@
                 let batchBytes = 0;
                 fileList.forEach(function (file) {
                     const rawFile = file.raw || file;
-                    if (!rawFile || !rawFile.size) throw new Error('存在无法读取的文件，请重新选择。');
+                    if (!rawFile || !rawFile.size) throw new Error(fileManagerText('Frontend.248', 'Some files could not be read. Select again.'));
                     if (typeof self.validateUploadFile === 'function') {
                         const reason = self.validateUploadFile(file.name || rawFile.name, rawFile.size);
                         if (reason) throw new Error(reason);
                     } else if (rawFile.size > maxBytes) {
-                        throw new Error('文件“' + file.name + '”超过 ' + maxMb + ' MB，无法上传。');
+                        throw new Error(fileManagerText('Frontend.218', 'File “{0}” exceeds {1} MB and cannot be uploaded.', file.name, maxMb));
                     }
                     if (batch.length && (batch.length >= maxFilesPerUpload || batchBytes + rawFile.size > maxTotalUploadBytes)) {
                         batches.push(batch);
@@ -2046,7 +2069,7 @@
                 return batches;
             },
             submitUpload: async function () {
-                if (!this.uploadDialog.fileList.length) { this.$message.warning('请选择要上传的文件'); return; }
+                if (!this.uploadDialog.fileList.length) { this.$message.warning(fileManagerText('Frontend.211', 'Select files to upload.')); return; }
                 this.uploadDialog.uploading = true;
                 this.uploadDialog.progress = 0;
                 let uploadedCount = 0;
@@ -2063,21 +2086,21 @@
                         });
                         formData.append('resourceScope', this.resourceScope);
                         if (this.currentFolderId != null) formData.append('folderId', this.currentFolderId);
-                        // 同时放入表单和请求头，兼容 Razor Pages 的 multipart 防伪验证。
+                        //Legacy comment translated to English.
                         formData.append('__RequestVerificationToken', getRequestVerificationToken());
                         await post(pageUrl + '?handler=Upload', formData);
                         uploadedCount += batches[batchIndex].length;
                         this.uploadDialog.progress = Math.round(uploadedCount * 100 / files.length);
                     }
                     this.$message.success(this.uploadDialog.mode === 'folder'
-                        ? '文件夹上传完成，已保留原始目录结构。'
-                        : '上传成功；站点静态资源仍需显式公开后才可被站点引用。');
+                        ? fileManagerText('Frontend.212', 'Folder upload completed; the original directory structure was preserved.')
+                        : fileManagerText('Frontend.213', 'Upload succeeded; site static resources must still be explicitly published before the site can reference them.'));
                     this.uploadDialog.visible = false;
                     this.reloadFolderTree();
                     await this.getList();
                 } catch (error) {
-                    const partialMessage = uploadedCount > 0 ? '，已完成 ' + uploadedCount + ' 个文件' : '';
-                    this.$message.error('上传失败' + partialMessage + '：' + errorMessage(error));
+                    const partialMessage = uploadedCount > 0 ? fileManagerText('Frontend.290', '{0} files completed', uploadedCount) : '';
+                    this.$message.error(fileManagerText('Frontend.214', 'Upload failed: {0}', partialMessage ? partialMessage + ': ' + errorMessage(error) : errorMessage(error)));
                 } finally {
                     this.uploadDialog.uploading = false;
                 }
@@ -2090,7 +2113,7 @@
             },
             submitFolder: async function () {
                 const form = this.folderDialog.form;
-                if (!form.name || !form.name.trim()) { this.$message.warning('请输入文件夹名称'); return; }
+                if (!form.name || !form.name.trim()) { this.$message.warning(fileManagerText('Frontend.249', 'Enter a folder name')); return; }
                 this.folderDialog.loading = true;
                 try {
                     if (this.folderDialog.editing) {
@@ -2103,24 +2126,24 @@
                             resourceScope: this.resourceScope
                         });
                     }
-                    this.$message.success(this.folderDialog.editing ? '文件夹已更新' : '文件夹已创建');
+                    this.$message.success(this.folderDialog.editing ? fileManagerText('Frontend.250', 'Folder updated') : fileManagerText('Frontend.251', 'Folder created'));
                     this.folderDialog.visible = false;
                     this.reloadFolderTree();
                 } catch (error) {
-                    this.$message.error('保存文件夹失败：' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.252', 'Failed to save the folder: {0}', errorMessage(error)));
                 } finally {
                     this.folderDialog.loading = false;
                 }
             },
             deleteFolder: async function (folder) {
                 try {
-                    await this.$confirm('仅空文件夹可以删除。确认删除“' + folder.name + '”吗？', '确认删除', { type: 'warning' });
+                    await this.$confirm(fileManagerText('Frontend.253', 'Only empty folders can be deleted. Delete “{0}”?', folder.name), fileManagerText('Frontend.254', 'Confirm deletion'), { type: 'warning' });
                     await post(pageUrl + '?handler=DeleteFolder&id=' + encodeURIComponent(folder.id));
                     if (this.currentFolderId === folder.id) await this.enterFolder(null);
                     this.reloadFolderTree();
-                    this.$message.success('文件夹已删除');
+                    this.$message.success(fileManagerText('Frontend.255', 'Folder deleted'));
                 } catch (error) {
-                    if (error !== 'cancel') this.$message.error('删除文件夹失败：' + errorMessage(error));
+                    if (error !== 'cancel') this.$message.error(fileManagerText('Frontend.256', 'Failed to delete the folder: {0}', errorMessage(error)));
                 }
             }
         }

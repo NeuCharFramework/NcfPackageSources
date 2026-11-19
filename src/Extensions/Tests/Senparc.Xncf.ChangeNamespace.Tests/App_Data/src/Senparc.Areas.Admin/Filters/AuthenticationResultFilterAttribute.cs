@@ -51,7 +51,7 @@ namespace Senparc.Areas.Admin.Filters
                 if (!hasRight && !(adminPageModel is Pages.IndexModel))
                 {
                     IActionResult actionResult = new Microsoft.AspNetCore.Mvc.RedirectResult("/Admin/Forbidden");
-                    //跳出
+                    //bounced
                     if (context.HttpContext.Request.Headers.TryGetValue("x-requested-with", out Microsoft.Extensions.Primitives.StringValues strings))
                     {
                         if (strings.Contains("XMLHttpRequest"))

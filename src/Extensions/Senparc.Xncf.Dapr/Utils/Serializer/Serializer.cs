@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Serializer.cs
-    文件功能描述：Serializer 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: Serializer.cs
+    File description: Serializer related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.11.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -23,8 +26,8 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
         public static Lazy<JsonSerializerOptions> JsonSerializerOptions = new Lazy<JsonSerializerOptions>(() =>
         {
             var options = new JsonSerializerOptions();
-            options.PropertyNameCaseInsensitive = true;//忽略大小写
-            //基础类型处理通过客户端自定义重载
+            options.PropertyNameCaseInsensitive = true;//Legacy comment translated to English.
+            //Legacy comment translated to English.
             options.Converters.Add(new TextJsonConverter.DateTimeParse());
             options.Converters.Add(new TextJsonConverter.IntParse());
             options.Converters.Add(new TextJsonConverter.DoubleParse());
@@ -32,9 +35,9 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
             options.Converters.Add(new TextJsonConverter.FloatParse());
             options.Converters.Add(new TextJsonConverter.GuidParse());
             options.Converters.Add(new TextJsonConverter.BoolParse());
-            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase; //响应驼峰命名
-            options.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;//中文乱码
-            options.AllowTrailingCommas = true;//允许数组末尾多余的逗号
+            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase; //Legacy comment translated to English.
+            options.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;//Legacy comment translated to English.
+            options.AllowTrailingCommas = true;//Legacy comment translated to English.
             return options;
         });
 
@@ -44,7 +47,7 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
         }
 
         /// <summary>
-        /// 序列化T为JSON字符串
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>
@@ -68,7 +71,7 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
         }
 
         /// <summary>
-        /// 反序列化JSON字符串为T
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>
@@ -89,7 +92,7 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
         }
 
         /// <summary>
-        /// 序列化JSON字符串为object
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="type"></param>
         /// <param name="input"></param>

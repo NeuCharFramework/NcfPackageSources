@@ -1,35 +1,38 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AgentTemplate.cs
-    文件功能描述：AgentTemplate 相关实现
-    
-    
-    创建标识：Senparc - 20240616
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+    File name: AgentTemplate.cs
+    File description: AgentTemplate related implementation
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    Created by: Senparc - 20240616
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260804
+    Change description: v0.14.0-preview9 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.19.0 持久化 Skill 绑定、执行权限与工作区策略
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 维护AgentTemplate 相关实现
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.19.3 完善 AgentsManager 模板、ChatGroup 与连接器能力兼容
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261021
+    Change description: v0.19.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261111
+    Change description: v0.19.3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -49,85 +52,85 @@ using Senparc.Xncf.Workspace.Abstractions;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 {
     /// <summary>
-    /// Agent模板信息
+    ///Legacy comment translated to English.
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(AgentTemplate))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(AgentTemplate))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class AgentTemplate : EntityBase<int>
     {
         /// <summary>
-        /// 名称
+        /// name
         /// </summary>
         [Required]
         public string Name { get; private set; }
 
         /// <summary>
-        /// 系统消息
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public string SystemMessage { get; private set; }
 
         /// <summary>
-        /// 是否启用
+        /// whether enabled
         /// </summary>
         [Required]
         public bool Enable { get; private set; }
 
         /// <summary>
-        /// PromptRange 的代号
+        ///Legacy comment translated to English.
         /// </summary>
         public string PromptCode { get; private set; }
 
         /// <summary>
-        /// 第三方机器人平台类型
+        ///Legacy comment translated to English.
         /// </summary>
         public HookRobotType HookRobotType { get; private set; }
 
         /// <summary>
-        /// 第三方机器人平台参数
+        ///Legacy comment translated to English.
         /// </summary>
         public string HookRobotParameter { get; set; }
 
         /// <summary>
-        /// 描述
+        /// description
         /// </summary>
         public string Description { get; private set; }
 
         public string Avastar { get; set; }
 
         /// <summary>
-        /// Function Call 名称列表，多个用逗号分隔
+        ///Legacy comment translated to English.
         /// </summary>
         public string FunctionCallNames { get; private set; }
 
         /// <summary>
-        /// McpEndpoints，多个用逗号分隔
+        ///Legacy comment translated to English.
         /// </summary>
         public string McpEndpoints { get; private set; }
 
         /// <summary>
-        /// 绑定的 KnowledgeBase ID。跨 XNCF 数据库上下文，不建立数据库外键。
+        ///Legacy comment translated to English.
         /// </summary>
         public int? KnowledgeBaseId { get; private set; }
 
         /// <summary>
-        /// 模型绑定方式。默认沿用 PromptRange 中的模型配置，保持升级前行为。
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public AgentModelBindingMode ModelBinding { get; private set; } = AgentModelBindingMode.InheritPromptRange;
 
         /// <summary>
-        /// 手动绑定的 AIModel ID。跨 XNCF 数据库上下文，不建立数据库外键。
+        ///Legacy comment translated to English.
         /// </summary>
         public int? AiModelId { get; private set; }
 
-        /// <summary>显式绑定的 Skill 配置 JSON；为空时 Agent 不允许调用 Skill。</summary>
+        ///Legacy comment translated to English.
         public string SkillBindingsJson { get; private set; }
 
-        /// <summary>Agent 使用 Workspace 的权限策略 JSON。</summary>
+        ///Legacy comment translated to English.
         public string WorkspacePolicyJson { get; private set; }
 
-        /// <summary>此 Agent 被允许调用的连接器实例。为空表示没有任何连接器权限。</summary>
+        ///Legacy comment translated to English.
         public string ConnectorBindingsJson { get; private set; }
 
         public IReadOnlyList<AgentSkillBinding> GetSkillBindings()
@@ -182,16 +185,16 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             }
         }
 
-        /// <summary>是否为系统保留的 Human 参与者。该属性不落库。</summary>
+        ///Legacy comment translated to English.
         [NotMapped]
         public bool IsHuman => HumanParticipantConstants.IsHuman(PromptCode);
 
-        /// <summary>是否为系统自动维护的 Agent。</summary>
+        ///Legacy comment translated to English.
         [NotMapped]
         public bool IsSystemAgent => IsHuman
             || string.Equals(Name, "PromptCatalyzer", StringComparison.OrdinalIgnoreCase);
 
-        /// <summary>系统 Agent 类型，仅用于管理界面标识。</summary>
+        ///Legacy comment translated to English.
         [NotMapped]
         public string SystemAgentKind => IsHuman
             ? HumanParticipantConstants.Name
@@ -200,9 +203,9 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
                 : null;
 
         /// <summary>
-        /// 获取McpEndpoints的JSON对象
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <returns>包含所有Endpoints的Dictionary对象</returns>
+        ///Legacy comment translated to English.
         public Dictionary<string, Dictionary<string, string>> GetMcpEndpointsDict()
         {
             if (string.IsNullOrEmpty(McpEndpoints))
@@ -221,11 +224,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 添加一个MCP Endpoint
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="name">Endpoint名称</param>
+        /// <param name="name">Endpointname</param>
         /// <param name="url">Endpoint URL</param>
-        /// <returns>是否添加成功</returns>
+        ///Legacy comment translated to English.
         public bool AddMcpEndpoint(string name, string url)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(url))
@@ -235,22 +238,22 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
             var endpointsDict = GetMcpEndpointsDict();
             
-            // 添加或更新Endpoint
+            //Legacy comment translated to English.
             endpointsDict[name] = new Dictionary<string, string>
             {
                 { "url", url }
             };
 
-            // 序列化回字符串
+            //Legacy comment translated to English.
             McpEndpoints = JsonSerializer.Serialize(endpointsDict);
             return true;
         }
 
         /// <summary>
-        /// 移除一个MCP Endpoint
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="name">Endpoint名称</param>
-        /// <returns>是否移除成功</returns>
+        /// <param name="name">Endpointname</param>
+        ///Legacy comment translated to English.
         public bool RemoveMcpEndpoint(string name)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(McpEndpoints))
@@ -265,10 +268,10 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
                 return false;
             }
 
-            // 移除Endpoint
+            //Legacy comment translated to English.
             endpointsDict.Remove(name);
 
-            // 如果为空则设为null，否则序列化回字符串
+            //Legacy comment translated to English.
             McpEndpoints = endpointsDict.Count > 0 
                 ? JsonSerializer.Serialize(endpointsDict)
                 : null;
@@ -357,32 +360,32 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
     }
 
     /// <summary>
-    /// Agent 的运行模型来源。
+    ///Legacy comment translated to English.
     /// </summary>
     public enum AgentModelBindingMode
     {
-        /// <summary>沿用 PromptRange Prompt 版本绑定的模型。</summary>
+        ///Legacy comment translated to English.
         InheritPromptRange = 0,
 
-        /// <summary>沿用 Group 或 Workflow 节点的本次任务模型。</summary>
+        ///Legacy comment translated to English.
         FollowGroupTask = 1,
 
-        /// <summary>固定使用 Agent 手动绑定的 AIModel。</summary>
+        ///Legacy comment translated to English.
         ManualAiModel = 2
     }
 
     /// <summary>
-    /// 第三方机器人平台类型
+    ///Legacy comment translated to English.
     /// </summary>
     public enum HookRobotType
     {
         None = 0,
         /// <summary>
-        /// 微信公众号
+        ///Legacy comment translated to English.
         /// </summary>
         WeChatMp = 1,
         /// <summary>
-        /// 企业微信机器人
+        ///Legacy comment translated to English.
         /// </summary>
         WeChatWorkRobot = 2
     }

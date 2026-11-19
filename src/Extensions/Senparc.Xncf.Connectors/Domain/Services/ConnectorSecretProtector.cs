@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ConnectorSecretProtector.cs
-    文件功能描述：保护并还原连接器密钥
-    
-    
-    创建标识：Senparc - 20261111
-    
-    修改标识：Senparc - 20261111
-    修改描述：v0.1.0 使用数据保护保存连接器密钥
+
+    File name: ConnectorSecretProtector.cs
+    File description: protect and restore connector secrets
+
+    Created by: Senparc - 20261111
+
+    Modified by: Senparc - 20261111
+    Change description: v0.1.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.1.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 

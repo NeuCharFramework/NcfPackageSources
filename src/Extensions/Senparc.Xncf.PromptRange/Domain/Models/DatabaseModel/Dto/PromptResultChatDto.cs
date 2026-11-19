@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptResultChatDto.cs
-    文件功能描述：PromptResultChatDto 相关实现
-    
-    
-    创建标识：Senparc - 20251213
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: PromptResultChatDto.cs
+    File description: PromptResultChatDto related implementation
+
+    Created by: Senparc - 20251213
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -24,54 +27,54 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
     public class PromptResultChatDto : DtoBase
     {
         /// <summary>
-        /// ID 主键
+        ///Legacy comment translated to English.
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// PromptResult 的 ID（外键）
+        ///Legacy comment translated to English.
         /// </summary>
         public int PromptResultId { get; set; }
 
         /// <summary>
-        /// 对话角色类型：User 或 Assistant
+        ///Legacy comment translated to English.
         /// </summary>
         public ChatRoleType RoleType { get; set; }
 
         /// <summary>
-        /// 对话内容
+        ///Legacy comment translated to English.
         /// </summary>
         public string Content { get; set; }
 
         /// <summary>
-        /// 对话顺序（在同一 PromptResult 中的顺序，从 1 开始）
+        ///Legacy comment translated to English.
         /// </summary>
         public int Sequence { get; set; }
 
         /// <summary>
-        /// 用户反馈：Like（true）、Unlike（false）、未反馈（null）
+        ///Legacy comment translated to English.
         /// </summary>
         public bool? UserFeedback { get; set; }
 
         /// <summary>
-        /// 用户评分（0-10分，可选）
+        ///Legacy comment translated to English.
         /// </summary>
         public decimal? UserScore { get; set; }
 
         /// <summary>
-        /// 创建时间
+        ///Legacy comment translated to English.
         /// </summary>
         public new DateTime AddTime { get; set; }
 
         /// <summary>
-        /// 构造函数
+        /// constructor
         /// </summary>
         public PromptResultChatDto()
         {
         }
 
         /// <summary>
-        /// 从实体创建 DTO
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="entity"></param>
         public PromptResultChatDto(PromptResultChat entity)

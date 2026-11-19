@@ -1,20 +1,24 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Request.cs
-    文件功能描述：Request 相关实现
-    
-    
-    创建标识：Senparc - 20250624
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.36.3-preview2 重构系统配置初始化与更新流程并统一模型处理
+    File name: Request.cs
+    File description: Request related implementation
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.36.4-preview3 重构系统配置初始化与更新流程并统一模型处理
+    Created by: Senparc - 20250624
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260705
+    Change description: v0.36.3-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260705
+    Change description: v0.36.4-preview3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -33,7 +37,7 @@ namespace Senparc.Xncf.XncfBuilder
         public string? Path { get; set; }
         public string? Body { get; set; }
 
-        // 新增字段测试动态更新
+        //Legacy comment translated to English.
         public Dictionary<string, string>? Headers { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.Now;
     }

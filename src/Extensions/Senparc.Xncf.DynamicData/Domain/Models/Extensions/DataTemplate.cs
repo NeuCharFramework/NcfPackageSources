@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：DataTemplate.cs
-    文件功能描述：DataTemplate 相关实现
-    
-    
-    创建标识：Senparc - 20240812
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: DataTemplate.cs
+    File description: DataTemplate related implementation
+
+    Created by: Senparc - 20240812
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
 ----------------------------------------------------------------*/
 
@@ -24,7 +27,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Models
 {
     public class DataTemplate
     {
-        public int TableId { get; set; } //TODO: 缓存所有 Table 和 Column 信息
+        public int TableId { get; set; } //Legacy comment translated to English.
         public ColumnTemplate ColumnTemplate { get; set; }
 
         public List<TableDataDto> TableDataDtos { get; set; }

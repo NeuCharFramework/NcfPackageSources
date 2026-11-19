@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：TenantMonitorScope.cs
-    文件功能描述：TenantMonitorScope 相关定义与实现
+    File name: TenantMonitorScope.cs
+    File description: TenantMonitorScope related definitions and implementation
 
+    Created by: Senparc - 20261001
 
-    创建标识：Senparc - 20261001
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 完善微调任务、数据集、产物文件引用、导入导出和验证流程
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 

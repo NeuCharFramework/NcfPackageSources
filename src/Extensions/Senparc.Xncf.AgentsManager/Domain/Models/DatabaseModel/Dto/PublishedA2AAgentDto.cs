@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PublishedA2AAgentDto.cs
-    文件功能描述：数据模型、DTO 与映射定义
 
+    File name: PublishedA2AAgentDto.cs
+    File description: data model, DTO, and mapping definitions
 
-    创建标识：Senparc - 20260813
+    Created by: Senparc - 20260813
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -17,7 +20,7 @@ using Senparc.Ncf.Core.Models;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 {
     /// <summary>
-    /// 本地 Agent 的 A2A 对外发布配置。AuthSecretKey 仅为部署配置键名。
+    ///Legacy comment translated to English.
     /// </summary>
     public class PublishedA2AAgentDto : DtoBase<int>
     {
@@ -35,7 +38,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public string AuthHeaderName { get; set; }
         public string AuthSecretKey { get; set; }
 
-        /// <summary>当前请求下可直接使用的标准发现地址，仅由接口响应填充。</summary>
+        ///Legacy comment translated to English.
         public string AgentCardUrl { get; set; }
 
         public PublishedA2AAgentDto() { }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Senparc.Xncf.Sandbox.Domain.Migrations.SqlServer
 {
     /// <summary>
-    /// 初始建表。注意：SQL Server 索引键不能使用 nvarchar(max)，字符串列必须带明确长度。
+    ///Legacy comment translated to English.
     /// </summary>
     public partial class Init : Migration
     {

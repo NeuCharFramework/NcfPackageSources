@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：DaprClient.cs
-    文件功能描述：DaprClient 相关实现
-    
-    
-    创建标识：Senparc - 20230920
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: DaprClient.cs
+    File description: DaprClient related implementation
+
+    Created by: Senparc - 20230920
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.11.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -43,13 +46,13 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 服务调用
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <typeparam name="TResult">返回的数据类型</typeparam>
-        /// <param name="invokeType">请求类型</param>
-        /// <param name="serviceId">服务名称 (App-Id)</param>
-        /// <param name="methodName">方法路径</param>
-        /// <param name="data">请求数据</param>
+        ///Legacy comment translated to English.
+        /// <param name="invokeType">requesttype</param>
+        ///Legacy comment translated to English.
+        /// <param name="methodName">methodpath</param>
+        /// <param name="data">requestdata</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         public async Task<TResult> InvokeMethodAsync<TResult>(InvokeType invokeType, string serviceId, string methodName, object? data = null)
@@ -110,10 +113,10 @@ namespace Senparc.Xncf.Dapr
             await InvokeMethodAsync<TResult>(InvokeType.Delete, serviceId, methodName, data);
 
         /// <summary>
-        /// 发布事件
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="topicName">主题名称</param>
-        /// <param name="data">发布内容</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task PublishEventAsync(string topicName, object data)
@@ -124,11 +127,11 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 发布事件
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="pubSubName">发布订阅组件名称</param>
-        /// <param name="topicName">主题名称</param>
-        /// <param name="data">发布数据</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task PublishEventAsync(string pubSubName, string topicName, object data)
         {
@@ -137,10 +140,10 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 获取状态
+        /// getstatus
         /// </summary>
-        /// <typeparam name="TResult">返回状态类型</typeparam>
-        /// <param name="key">缓存键</param>
+        /// <typeparam name="TResult">returnstatustype</typeparam>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<TResult> GetStateAsync<TResult>(string key)
@@ -151,11 +154,11 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 获取状态
+        /// getstatus
         /// </summary>
-        /// <typeparam name="TResult">返回状态类型</typeparam>
-        /// <param name="stateStore">状态存储组件名称</param>
-        /// <param name="key">缓存键</param>
+        /// <typeparam name="TResult">returnstatustype</typeparam>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task<TResult> GetStateAsync<TResult>(string stateStore, string key)
         {
@@ -185,11 +188,11 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 保存状态
+        /// savestatus
         /// </summary>
-        /// <typeparam name="TValue">状态类型</typeparam>
-        /// <param name="key">缓存键</param>
-        /// <param name="value">缓存数据</param>
+        /// <typeparam name="TValue">statustype</typeparam>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task SetStateAsync<TValue>(string key, TValue value)
@@ -200,12 +203,12 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 保存状态
+        /// savestatus
         /// </summary>
-        /// <typeparam name="TValue">状态类型</typeparam>
-        /// <param name="stateStore">状态存储组件名称</param>
-        /// <param name="key">缓存键</param>
-        /// <param name="value">缓存数据</param>
+        /// <typeparam name="TValue">statustype</typeparam>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task SetStateAsync<TValue>(string stateStore, string key, TValue value)
         {
@@ -214,11 +217,11 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 保存多个状态
+        /// savemultiplestatus
         /// </summary>
-        /// <typeparam name="TValue">状态类型</typeparam>
-        /// <param name="key">缓存键</param>
-        /// <param name="values">缓存数据</param>
+        /// <typeparam name="TValue">statustype</typeparam>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task SetStatesAsync(IEnumerable<StateStore> values)
@@ -229,12 +232,12 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 保存多个状态
+        /// savemultiplestatus
         /// </summary>
-        /// <typeparam name="TValue">状态类型</typeparam>
-        /// <param name="stateStore">状态存储组件名称</param>
-        /// <param name="key">缓存键</param>
-        /// <param name="values">缓存数据</param>
+        /// <typeparam name="TValue">statustype</typeparam>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task SetStatesAsync(string stateStore, IEnumerable<StateStore> values)
         {
@@ -250,9 +253,9 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 删除状态
+        /// deletestatus
         /// </summary>
-        /// <param name="key">缓存键</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task DelStateAsync(string key)
@@ -263,10 +266,10 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 删除状态
+        /// deletestatus
         /// </summary>
-        /// <param name="stateStore">状态存储组件名称</param>
-        /// <param name="key">缓存键</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task DelStateAsync(string stateStore, string key)
         {
@@ -282,7 +285,7 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 确认Dapr Sidecar是否正常运行
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public async Task<bool> HealthCheckAsync()
@@ -317,22 +320,22 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 使用Http客户端发布消息
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="message">Http请求消息</param>
-        /// <returns>Http返回消息</returns>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         private async Task<HttpResponseMessage> SendMessageAsync(HttpRequestMessage message)
         {
             return await _httpClient.SendAsync(message);
         }
 
         /// <summary>
-        /// 构建请求消息
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="requestType">调用的Dapr API类型</param>
-        /// <param name="host">服务名称 (App-Id)</param>
-        /// <param name="path">资源路径</param>
-        /// <param name="data">承载数据</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         private HttpRequestMessage BuildMessage(MessageType requestType, string host, string path, object? data = null)
@@ -342,7 +345,7 @@ namespace Senparc.Xncf.Dapr
             string url;
 
             HttpRequestMessage request;
-            //构建请求URL
+            //Legacy comment translated to English.
             switch (requestType)
             {
                 case MessageType.InvokePatch:
@@ -385,7 +388,7 @@ namespace Senparc.Xncf.Dapr
                 default:
                     throw new ArgumentException();
             }
-            //构建请求体
+            //Legacy comment translated to English.
             if (data != null)
             {
                 //request.Content.Headers.ContentType = new MediaTypeHeaderValue($"application/json");

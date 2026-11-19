@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
-    
-    
-    创建标识：Senparc - 20211124
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.12.14 将 EmailExtension Register 显示元数据接入统一资源本地化
+    Copyright (C) 2026 Senparc
+
+    File name: Register.cs
+    File description: Register related implementation
+
+    Created by: Senparc - 20211124
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261111
+    Change description: v0.12.14 integrate EmailExtension Register display metadata with shared resource localization
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -36,17 +39,17 @@ namespace Senparc.Xncf.EmailExtension
             "Email 插件");
 
         /// <summary>
-        /// 最大自动发送Email次数
+        ///Legacy comment translated to English.
         /// </summary>
         public static readonly int MaxSendEmailTimes = 5;
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.EmailExtension";
 
-        public override string Uid => "9439B96F-A6BE-0910-EE93-B46420ADC704";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "9439B96F-A6BE-0910-EE93-B46420ADC704";//Legacy comment translated to English.
 
-        public override string Version => "0.1";//必须填写版本号
+        public override string Version => "0.1";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 

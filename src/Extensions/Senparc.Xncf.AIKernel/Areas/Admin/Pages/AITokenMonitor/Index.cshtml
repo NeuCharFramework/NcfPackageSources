@@ -16,7 +16,7 @@
 }
 
 <div>
-    <!-- 统计卡片 -->
+    <!-- Statistics cards -->
     <el-row :gutter="10" style="margin-bottom: 10px">
         <el-col :span="6">
             <div class="xncf-stat-item token-stat">
@@ -48,7 +48,7 @@
         </el-col>
     </el-row>
 
-    <!-- 图表区 -->
+    <!-- Charts -->
     <el-row :gutter="10" style="margin-bottom: 10px">
         <el-col :span="12">
             <el-card class="box-card">
@@ -62,7 +62,7 @@
         </el-col>
     </el-row>
 
-    <!-- 运行并监控 -->
+    <!-- Run and monitor -->
     <el-card class="box-card" style="margin-bottom: 10px">
         <div slot="header"><span><i class="fa fa-play-circle"></i> @XR["TokenMonitor.RunMonitor"]</span></div>
         <el-form :inline="true" :model="runForm" ref="runForm" label-width="90px">
@@ -79,7 +79,7 @@
             </el-form-item>
         </el-form>
 
-        <!-- 异步进度面板 -->
+        <!-- Asynchronous progress panel -->
         <div v-if="runLoading || progressEvents.length > 0" class="progress-panel">
             <el-progress :percentage="progressPercent" :status="progressStatus" :stroke-width="18" style="margin-bottom: 12px"></el-progress>
             <el-row :gutter="10" style="margin-bottom: 8px">
@@ -106,7 +106,7 @@
         </div>
     </el-card>
 
-    <!-- 记录表 -->
+    <!-- Records table -->
     <div class="filter-container" style="margin-bottom: 10px">
         <el-button size="small" icon="el-icon-refresh" @@click="refreshAll">@XR["TokenMonitor.Refresh"]</el-button>
     </div>
@@ -163,7 +163,7 @@
 </div>
 
 @section scripts {
-    @await Html.PartialAsync("~/Areas/Admin/Pages/Shared/_AIKernelLocalizationScripts.cshtml")
+    @await Html.PartialAsync("_AIKernelLocalizationScripts")
     <script src="~/lib/echarts/dist/echarts.js"></script>
     <script src="~/js/Admin/AITokenMonitor/index.js"></script>
 }

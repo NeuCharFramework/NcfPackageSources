@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：NcfFileDto.cs
-    文件功能描述：NcfFileDto 相关实现
 
+    File name: NcfFileDto.cs
+    File description: NcfFileDto related implementation
 
-    创建标识：Senparc - 20250112
+    Created by: Senparc - 20250112
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
+    Modified by: Senparc - 20260813
+    Change description: v0.6.0-preview1 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.5 Localized file management and upload surfaces
 
 ----------------------------------------------------------------*/
 
@@ -35,7 +38,7 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto
         public string ContentHash { get; set; }
         public string PublicUrl { get; set; }
         
-        // 用于前端显示的属性
+        //Legacy comment translated to English.
         public string FileSizeDisplay => GetFileSizeDisplay();
         public string FileTypeDisplay => FileType.ToString();
 

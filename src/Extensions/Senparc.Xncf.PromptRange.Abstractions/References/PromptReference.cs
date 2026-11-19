@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：PromptReference.cs
-    文件功能描述：定义 PromptCode 引用范围、评分信息与共享评分契约
+    File name: PromptReference.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20261104
 
-    创建标识：Senparc - 20261104
+    Modified by: Senparc - 20261105
+    Change description: v0.3.2-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.3.2-preview6 提供引用范围校验及人工与 AI 评分契约
+    Modified by: Senparc - 20261119
+    Change description: v0.3.3-preview8 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 using System;

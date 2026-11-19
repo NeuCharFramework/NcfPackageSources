@@ -65,7 +65,7 @@
     </el-container>
 </div>
 @section scripts{
-    <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
+    @await Html.PartialAsync("_LocalizationScripts")
     <script>
         var app = new Vue({
             el: "#app",
@@ -90,7 +90,7 @@
                     const res = await service.get('/Admin/DynamicData/DatabaseSample?handler=Detail&uid=' + this.uid);
                     this.moduleData = res.data.data;
                 },
-                // 改变颜色
+                // Change the color.
                 async changeColor(param) {
                     const res = await service.get('/Admin/DynamicData/DatabaseSample?handler=' + param + '&uid=' + this.uid);
                     this.moduleData.colorDto = res.data.data;

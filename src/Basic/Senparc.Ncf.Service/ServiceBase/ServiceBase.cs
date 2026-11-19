@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ServiceBase.cs
-    文件功能描述：ServiceBase 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: ServiceBase.cs
+    File description: ServiceBase related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.23.13-preview12 Updated service infrastructure and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -43,13 +46,13 @@ namespace Senparc.Ncf.Service
         {
             //_serviceProvider = serviceProvider;
             RepositoryBase = repo;
-            Mapper = _serviceProvider.GetService<IMapper>();//确保 Mapper 中有值
+            Mapper = _serviceProvider.GetService<IMapper>();//Legacy comment translated to English.
         }
 
         #region Insert & DetectChange
 
         /// <summary>
-        /// 强制将实体设置为Modified状态
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="obj"></param>
         public virtual void TryDetectChange(T obj)
@@ -120,7 +123,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取所有数据
+        /// getalldata
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="where"></param>
@@ -132,7 +135,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取所有数据
+        /// getalldata
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="where"></param>
@@ -150,7 +153,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取所有数据
+        /// getalldata
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TIncludesProperty"></typeparam>
@@ -165,7 +168,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取所有数据
+        /// getalldata
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TIncludesProperty"></typeparam>
@@ -180,10 +183,10 @@ namespace Senparc.Ncf.Service
 
         #endregion
 
-        #region GetObjectList（分页）
+        #region Legacy section
 
         /// <summary>
-        /// 获取分页数据
+        /// get paginated data
         /// </summary>
         /// <typeparam name="TK"></typeparam>
         /// <param name="pageIndex"></param>
@@ -199,14 +202,14 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取分页数据
+        /// get paginated data
         /// </summary>
         /// <typeparam name="TK"></typeparam>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageCount">每页数量</param>
-        /// <param name="where">条件</param>
-        /// <param name="orderBy">排序字段</param>
-        /// <param name="orderingType">正序|倒叙</param>
+        ///Legacy comment translated to English.
+        /// <param name="pageCount">items per page</param>
+        /// <param name="where">condition</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <param name="includes"></param>
         /// <returns></returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync<TK>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
@@ -215,12 +218,12 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取分页数据
+        /// get paginated data
         /// </summary>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageCount">每页数量</param>
-        /// <param name="where">条件</param>
-        /// <param name="orderBy">排序字段 eg.(xxx desc, bbb aec),默认升序</param>
+        ///Legacy comment translated to English.
+        /// <param name="pageCount">items per page</param>
+        /// <param name="where">condition</param>
+        ///Legacy comment translated to English.
         /// <param name="includes"></param>
         /// <returns></returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync(int pageIndex, int pageCount, Expression<Func<T, bool>> where, string orderBy, params string[] includes)
@@ -234,12 +237,12 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取分页数据
+        /// get paginated data
         /// </summary>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageCount">每页数量</param>
-        /// <param name="where">条件</param>
-        /// <param name="orderBy">排序字段 eg.(xxx desc, bbb aec),默认升序</param>
+        ///Legacy comment translated to English.
+        /// <param name="pageCount">items per page</param>
+        /// <param name="where">condition</param>
+        ///Legacy comment translated to English.
         /// <param name="includesNavigationPropertyPathFunc"></param>
         /// <returns></returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync<TIncludesProperty>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, string orderBy, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
@@ -249,14 +252,14 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        /// 获取分页数据
+        /// get paginated data
         /// </summary>
         /// <typeparam name="TK"></typeparam>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageCount">每页数量</param>
-        /// <param name="where">条件</param>
-        /// <param name="orderBy">排序字段</param>
-        /// <param name="orderingType">正序|倒叙</param>
+        ///Legacy comment translated to English.
+        /// <param name="pageCount">items per page</param>
+        /// <param name="where">condition</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <param name="includesNavigationPropertyPathFunc"></param>
         /// <returns></returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync<TK, TIncludesProperty>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
@@ -436,7 +439,7 @@ namespace Senparc.Ncf.Service
         #region Transaction
 
         /// <summary>
-        /// 开启事务
+        /// enable transactions
         /// </summary>
         /// <returns></returns>
         public async Task BeginTransactionAsync()
@@ -445,7 +448,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 开启事务, 此方法回自动提交事务，失败则回滚
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public async Task BeginTransactionAsync(Action action)
@@ -464,7 +467,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 开启事务
+        /// enable transactions
         /// </summary>
         /// <returns></returns>
         public void BeginTransaction()
@@ -473,7 +476,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 开启事务
+        /// enable transactions
         /// </summary>
         /// <returns></returns>
         public void BeginTransaction(Action body, Action<Exception> rollbackAction = null)
@@ -494,7 +497,7 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        /// 开启事务, 此方法回自动提交事务，失败则回滚
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public async Task BeginTransactionAsync(Func<Task> body, Action<Exception> rollbackAction = null)
@@ -515,10 +518,10 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        /// 开启事务, 此方法会自动提交事务，失败则回滚
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="body"></param>
-        /// <param name="rollbackAction">处理一个异常并抛出自定义的异常</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task BeginTransactionAsync(Func<Task> body, Func<Exception, Exception> rollbackAction)
         {
@@ -537,10 +540,10 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        /// 开启事务, 此方法会自动提交事务，失败则回滚
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="body"></param>
-        /// <param name="rollbackAction">处理一个异常并抛出自定义的异常</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task BeginTransactionAsync(Func<Task> bodyAsync, Func<Exception, Task<Exception>> rollbackActionAsync)
         {
@@ -559,7 +562,7 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        /// 回滚事务
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public void RollbackTransaction()
@@ -568,7 +571,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 提交事务
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public void CommitTransaction()
@@ -581,7 +584,7 @@ namespace Senparc.Ncf.Service
         #region Mapping
 
         /// <summary>
-        /// 使用 Mapper.Map&lt;TDto&gt;(entity) 快速返回
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="TDto"></typeparam>
         /// <param name="entity"></param>
@@ -592,7 +595,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 将 PageList 转为 DTO 对象
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="TDto"></typeparam>
         /// <param name="pagedList"></param>
@@ -608,7 +611,7 @@ namespace Senparc.Ncf.Service
         #region Tenant
 
         /// <summary>
-        /// 强制设置租户信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="requestTenantInfo"></param>
         /// <returns></returns>

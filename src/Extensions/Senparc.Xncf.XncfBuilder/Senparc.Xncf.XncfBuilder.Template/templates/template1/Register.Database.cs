@@ -1,4 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: Register.Database.cs
+    File description: Register.Database related implementation
+
+    Created by: Senparc - 20200820
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Senparc.Ncf.Database;
@@ -6,34 +19,34 @@ using Senparc.Ncf.Core.Models;
 
 namespace Template_OrgName.Xncf.Template_XncfName
 {
-    public partial class Register : IXncfDatabase  //注册 XNCF 模块数据库（按需选用）
+    public partial class Register : IXncfDatabase  //register the XNCF module database (optional)
     {
-        #region IXncfDatabase 接口
+        #region Legacy section
 
         /// <summary>
-        /// 数据库前缀
+        /// database prefix
         /// </summary>
         public const string DATABASE_PREFIX = "Template_OrgName_Template_XncfName_";
 
         /// <summary>
-        /// 数据库前缀
+        /// database prefix
         /// </summary>
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 
         /// <summary>
-        /// 动态获取数据库上下文
+        /// retrieve the database context dynamically
         /// </summary>
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
+            //after implementing the [XncfAutoConfigurationMapping] attribute, this runs automatically and no manual registration is needed
             //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
-            //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+            //DOT REMOVE OR MODIFY THIS LINE - Entities Point
             //ex. services.AddScoped(typeof(Color));
         }
 

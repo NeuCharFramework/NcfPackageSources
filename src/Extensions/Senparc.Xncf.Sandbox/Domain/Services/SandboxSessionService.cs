@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxSessionService.cs
-    文件功能描述：SandboxSessionService.cs 相关实现
+    File name: SandboxSessionService.cs
+    File description: SandboxSessionService.cs related implementation
 
-    创建标识：Senparc - 20260822
+    Created by: Senparc - 20260822
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 完善沙箱会话状态服务与生命周期处理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
 ----------------------------------------------------------------*/
 

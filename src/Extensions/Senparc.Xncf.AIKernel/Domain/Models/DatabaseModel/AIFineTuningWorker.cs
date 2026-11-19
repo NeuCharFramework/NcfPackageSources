@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AIFineTuningWorker.cs
-    文件功能描述：微调 Worker 数据模型
+    File name: AIFineTuningWorker.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20261009
 
-    创建标识：Senparc - 20261009
+    Modified by: Senparc - 20261009
+    Change description: v0.16.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 enhance Agent Studio, group configuration, and task management interactions
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 enhance Agent Studio, group configuration, and task management interactions
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261106
-    修改描述：保存本机 Worker 的启动配置，密钥仍然不进入数据库
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 

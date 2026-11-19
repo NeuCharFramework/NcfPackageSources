@@ -4,36 +4,36 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<Version>0.0.13</Version>
 		<PackageReleaseNotes>
-		  [2026-07-17] v0.0.1 补充本地化属性、资源查找与文化回退测试
-		  1、新增本地化描述、必填校验与资源解析测试覆盖
-		  2、验证文化回退、资源键查找及多语言行为一致性
-		  3、覆盖请求-响应成功、超时、取消和类型校验场景
-		  4、验证授权同步事件不会进入通用活动流
+		  [2026-07-17] v0.0.1 Updated module behavior and related support.
+		  1. add test coverage for localized descriptions, required-field validation, and resource resolution
+		  2. validate culture fallback, resource-key lookup, and consistent multilingual behavior
+		  3. cover request-response success, timeout, cancellation, and type-validation scenarios
+		  4. verify that authorization synchronization events do not enter the general activity stream
 		  [2026-07-29] v0.0.2 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
 		  [2026-07-31] v0.0.3 Dependency update from Senparc.Ncf.Core to 0.27.0-preview4
-		  [2026-08-04] v0.0.4 补充数据库状态与页脚内容回归测试
-		  1、覆盖数据库安装及升级状态检测行为
-		  2、覆盖页脚内容安全清理与边界输入
+		  [2026-08-04] v0.0.4 Updated module behavior and related support.
+		  1. Updated module behavior and related support.
+		  2. Updated module behavior and related support.
 		  [2026-08-08] v0.0.5 Dependency updates from upstream projects
-		  1、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
-		  2、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.19-preview.6
+		  1. Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+		  2. Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.19-preview.6
 		  [2026-08-13] v0.0.6 Dependency update from Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.UnitTestExtension to 0.3.20-preview.7
-		  [2026-08-15] v0.0.7 补充核心本地化元数据回归测试
-		  1、补充本地化元数据属性和资源回退行为的回归覆盖
-		  [2026-08-22] v0.0.8 同步 Senparc.Ncf.Core.Tests 依赖版本
-		  1、递归更新上游项目依赖，保持 Senparc.Ncf.Core.Tests 与当前版本组合兼容
-		  [2026-08-29] v0.0.9 补充 FunctionRender 函数匹配与全局调用回归测试
-		  1、覆盖函数键按方法名匹配和全局调用访问元数据行为
-		  2、验证本地化元数据与新增 FunctionRender 属性保持兼容
+		  [2026-08-15] v0.0.7 Updated module behavior and related support.
+		  1. Updated module behavior and related support.
+		  [2026-08-22] v0.0.8 synchronize Senparc.Ncf.Core.Tests dependency version
+		  1. Updated module behavior and related support.
+		  [2026-08-29] v0.0.9 add FunctionRender function matching and global invocation regression tests
+		  1. coverfunction-key matching by method name and metadata access for global invocation
+		  2. Updated module behavior and related support.
 		  [2026-09-16] v0.0.10 Dependency updates from Senparc.Ncf.XncfBase.Tests to 0.0.14; Senparc.Xncf.AIAgentsHub.Tests to 0.0.13
 		  [2026-09-17] v0.0.11 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
-		  1、同步受影响的基础库、AI 模块或宿主项目版本
-		  2、保持项目引用链与当前功能兼容
+		  1. Updated module behavior and related support.
+		  2. Updated module behavior and related support.
 		  [2026-10-05] v0.0.12 Enhanced Senparc.Ncf.Core.Tests functionality and compatibility
-		  1、Updated Senparc.Ncf.Core.Tests project behavior and integration for the latest feature and reliability improvements.
-		  [2026-11-12] v0.0.13 补充 Senparc.Ncf.Core.Tests 回归测试覆盖
-		  1、覆盖当前窗口新增或调整的模块行为与边界场景。
-		  2、保持测试项目与对应模块版本及引用链兼容。
+		  1. Updated Senparc.Ncf.Core.Tests project behavior and integration for the latest feature and reliability improvements.
+		  [2026-11-12] v0.0.13 add Senparc.Ncf.Core.Tests regression testscover
+		  1. cover module behavior and boundary cases added or adjusted in the current window.
+		  2. keep the test project compatible with the corresponding module versions and reference chain.
 		</PackageReleaseNotes>
 
 		<IsPackable>false</IsPackable>

@@ -1,23 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：FineTuningModels.cs
-    文件功能描述：本地模型微调请求与响应模型
+    File name: FineTuningModels.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20261009
 
-    创建标识：Senparc - 20261009
+    Modified by: Senparc - 20261009
+    Change description: v0.16.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 enhance job management and telemetry features
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 enhance job management and telemetry features
+    Modified by: Senparc - 20261105
+    Change description: v0.17.2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.17.2 放宽微调校验提示词长度上限
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261106
-    修改描述：微调任务的后端和方法使用与管理页一致的默认值
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 

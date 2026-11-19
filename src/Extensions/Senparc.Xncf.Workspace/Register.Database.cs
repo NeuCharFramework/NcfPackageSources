@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.Database.cs
-    文件功能描述：工作区模块数据库注册
-    
-    
-    创建标识：Senparc - 20261021
-    
-    修改标识：Senparc - 20261021
-    修改描述：v0.1.1 注册工作区数据库模块
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.2 维护工作区模块数据库注册
+    Copyright (C) 2026 Senparc
+
+    File name: Register.Database.cs
+    File description: Workspace database registration
+
+    Created by: Senparc - 20261021
+
+    Modified by: Senparc - 20261021
+    Change description: v0.1.1 register the Workspace database module
+
+    Modified by: Senparc - 20261103
+    Change description: v0.2.2 maintain Workspace database registration
+
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
 
 ----------------------------------------------------------------*/
 

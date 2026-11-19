@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Register.Database.cs
-    文件功能描述：Register.Database 相关实现
-    
-    
-    创建标识：Senparc - 20211211
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: Register.Database.cs
+    File description: Register.Database related implementation
+
+    Created by: Senparc - 20211211
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.15.17 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -30,7 +33,7 @@ namespace Senparc.Xncf.Tenant
 {
     public partial class Register : IXncfDatabase
     {
-        public const string DATABASE_PREFIX = NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX;//系统表，
+        public const string DATABASE_PREFIX = NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX;//system tables，
 
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 

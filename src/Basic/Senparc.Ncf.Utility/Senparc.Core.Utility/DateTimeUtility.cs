@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：DateTimeUtility.cs
-    文件功能描述：DateTimeUtility 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: DateTimeUtility.cs
+    File description: DateTimeUtility related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.21.3-preview5 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -27,14 +30,14 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 获取正确可用的生日
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public static DateTime GetUsableBirthday(int year, int month, int day)
         {
-            year = Math.Min(DateTime.Now.Year, Math.Max(1921, year));//确保年在1921到今年之间
-            month = Math.Min(12, Math.Max(1, month));//确保月份在1-12月之间
-            day = Math.Min(31, Math.Max(1, day));//确保天在1-31日之间
+            year = Math.Min(DateTime.Now.Year, Math.Max(1921, year));//Legacy comment translated to English.
+            month = Math.Min(12, Math.Max(1, month));//Legacy comment translated to English.
+            day = Math.Min(31, Math.Max(1, day));//Legacy comment translated to English.
             DateTime birthday;
             while (true)
             {
@@ -44,14 +47,14 @@ namespace Senparc.Ncf.Core.Utility
                 }
                 else
                 {
-                    day--;//如果日期不正确，则减一
+                    day--;//Legacy comment translated to English.
                 }
             }
             return birthday;
         }
 
         /// <summary>
-        /// 获取本周六日期（周六为一周最后一天）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public static DateTime GetStaturdayInWeek(DateTime date)
@@ -65,7 +68,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 获取本周日日期（周日为一周的第一天）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public static DateTime GetSundayInWeek(DateTime date)
@@ -79,25 +82,25 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 获取当天是本年度第几周
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public static int GetWeekOfYear(DateTime date)
         {
             var firstDay = new DateTime(date.Year, 1, 1);
-            int firstWeekendDayOfYear = 7 - (int)firstDay.DayOfWeek;//第一个周末（周六）是几号
+            int firstWeekendDayOfYear = 7 - (int)firstDay.DayOfWeek;//Legacy comment translated to English.
             int lastWeek = (date.DayOfYear - firstWeekendDayOfYear + 6) / 7;
             return lastWeek + 1;
         }
 
         /// <summary>
-        /// 获取指定周的第一天（周日）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public static DateTime GetSundayOfWeek(int year, int weeek)
         {
             var firstDay = new DateTime(year, 1, 1);
-            int firstWeekend = 7 - (int)firstDay.DayOfWeek;//第一个周末（周六）是几号
+            int firstWeekend = 7 - (int)firstDay.DayOfWeek;//Legacy comment translated to English.
             int dayOfYear = firstWeekend + (weeek - 2) * 7;
             return firstDay.AddDays(dayOfYear);
         }

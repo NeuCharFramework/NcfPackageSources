@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：MyFuctionAppService.cs
-    文件功能描述：MyFuctionAppService 相关实现
-    
-    
-    创建标识：Senparc - 20240718
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.6.0-preview2 为 DynamicData 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+    File name: MyFuctionAppService.cs
+    File description: MyFuctionAppService related implementation
+
+    Created by: Senparc - 20240718
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.6.0-preview2 integrate shared resource localization and improve feature text for the DynamicData module
+
+    Modified by: Senparc - 20261119
+    Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
 ----------------------------------------------------------------*/
 
@@ -43,14 +46,22 @@ namespace Senparc.Xncf.DynamicData.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                /* 页面上点击“执行”后，将调用这里的方法
+                /* Legacy comment translated to English.
+
                   *
-                  * 参数说明：
-                  * response：已经初始化后的返回结果
-                  * logger：日志
+
+                  * parametersdescription：
+
+                  * Legacy comment translated to English.
+
+                  * Legacy comment translated to English.
+
                   * 
-                  * 如果直接对 response 的属性修改，则最终 return null，
-                  * 否则可以返回一个新的 response 对象，系统将自动覆盖原有对象
+
+                  * Legacy comment translated to English.
+
+                  * Legacy comment translated to English.
+
                   */
 
                 double calcResult = request.Number1;

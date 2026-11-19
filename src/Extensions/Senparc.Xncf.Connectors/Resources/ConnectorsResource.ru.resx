@@ -1,5 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root><resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>2.0</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
-  <data name="Module.Connectors.MenuName" xml:space="preserve"><value>Connectors</value></data>
-  <data name="Module.Connectors.Description" xml:space="preserve"><value>Configure external tools as selectable connectors. After an account is configured, Chat, Workflow and Agent templates can use it according to permissions.</value></data>
+  <data name="Module.Connectors.MenuName" xml:space="preserve"><value>Подключатели</value></data>
+  <data name="Module.Connectors.Description" xml:space="preserve"><value>Настраивает внешние инструменты как доступные для выбора подключатели. После настройки учётной записи Chat, Workflow и шаблоны Agent могут использовать её согласно разрешениям.</value></data>
+
+  <data name="Area.Connectors.Config" xml:space="preserve"><value>Настройка подключателей</value></data>
+  <data name="Area.Extensions" xml:space="preserve"><value>Расширения</value></data>
+  <data name="Function.Connectors.Invoke.Name" xml:space="preserve"><value>Вызвать подключатель</value></data>
+  <data name="Function.Connectors.Invoke.Description" xml:space="preserve"><value>Вызывает действие включённого подключателя. Добавьте узел Function в Workflow, затем выберите подключатель и действие.</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Действия, доступные ИИ</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Пример: корпоративный WeCom</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Сохранить</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Сначала настройте учётную запись и секрет, затем выберите действия, доступные ИИ. В Chat доступ можно временно сузить, узлы Function в Workflow могут напрямую вызывать подключатели, а шаблоны Agent управляют доступом каждого Agent.</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Доступные типы</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Название</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Подключатель внешних инструментов</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Секреты хранятся только на сервере. При редактировании оставьте поле пустым, чтобы сохранить существующий секрет.</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Настроено</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Модуль расширения</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Проверить</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Типы предоставляются установленными модулями. Корпоративная посещаемость WeCom предоставляется Weixin Management.</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Изменить</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Описание</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Пока ни один модуль не зарегистрировал подключатель. Установите и включите Weixin Management, чтобы увидеть здесь корпоративную посещаемость WeCom.</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Ничего не настроено. Выберите тип выше и введите корпоративный CorpId WeCom и Secret приложения.</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Какая команда или сценарий использует эту учётную запись?</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Подключатель</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Настроить</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Настроить этот подключатель</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>{0} действий</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>После включения доступно для выбора в Chat, Workflow и Agent</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Выберите значение</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Модули расширения</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Включено</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Отключено</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Описание не указано</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Подключение ещё не проверялось</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>{0}</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Изменить подключатель</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Настроить подключатель</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>Сохранено; оставьте пустым, чтобы не изменять</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Не удалось сохранить</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>Сохранено</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Не удалось сохранить. Повторите попытку позже.</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Подключение успешно</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Ошибка подключения</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Проверка не удалась. Повторите попытку позже.</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Удалить подключатель «{0}»? Ссылки, разрешённые для Agent, также перестанут работать.</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Не удалось удалить</value></data>
+  <data name="Parameter.Connectors.Instance" xml:space="preserve"><value>Подключатель||Выберите настроенный и включённый подключатель</value></data>
+  <data name="Parameter.Connectors.Action" xml:space="preserve"><value>Действие||Выберите действие подключателя для выполнения</value></data>
+  <data name="Parameter.Connectors.StartTime" xml:space="preserve"><value>Время начала||Время начала записей о посещаемости, например 2026-11-01 или 2026-11-01 09:00. Оставьте пустым, чтобы начать с полуночи сегодня</value></data>
+  <data name="Parameter.Connectors.EndTime" xml:space="preserve"><value>Время окончания||Время окончания записей о посещаемости. Оставьте пустым для текущего времени; диапазон не может превышать 30 дней</value></data>
+  <data name="Parameter.Connectors.UserIds" xml:space="preserve"><value>Учётные записи сотрудников||Userid пользователей WeCom через запятую или пробел</value></data>
+  <data name="Parameter.Connectors.CheckinType" xml:space="preserve"><value>Тип посещаемости||1 рабочая, 2 внешняя, 3 вся. Оставьте пустым, чтобы использовать всю</value></data>
+  <data name="Parameter.Connectors.Arguments" xml:space="preserve"><value>Дополнительные параметры||Объект JSON. Заполненные специальные поля имеют приоритет; подходит для других действий подключателя</value></data>
+  <data name="Error.NameRequired" xml:space="preserve"><value>Введите имя коннектора.</value></data>
+  <data name="Error.TypeNotFound" xml:space="preserve"><value>Тип коннектора не найден. Убедитесь, что соответствующий модуль установлен.</value></data>
+  <data name="Error.InstanceNotFound" xml:space="preserve"><value>Коннектор не найден.</value></data>
+  <data name="Error.TypeChangeForbidden" xml:space="preserve"><value>Тип сохранённого коннектора нельзя изменить. Создайте новый коннектор.</value></data>
+  <data name="Error.FieldRequired" xml:space="preserve"><value>Заполните поле «{0}».</value></data>
+  <data name="Error.OptionInvalid" xml:space="preserve"><value>Выбранный вариант для «{0}» недействителен.</value></data>
+  <data name="Error.ActionRequired" xml:space="preserve"><value>Выберите хотя бы одно действие, которое можно передать ИИ.</value></data>
+  <data name="Error.TypeNotInstalled" xml:space="preserve"><value>Тип коннектора не установлен.</value></data>
+  <data name="Error.TestFailed" xml:space="preserve"><value>Проверка подключения не выполнена. Проверьте учётную запись и секрет.</value></data>
+  <data name="Error.Disabled" xml:space="preserve"><value>Коннектор не существует или отключён.</value></data>
+  <data name="Error.ActionNotFound" xml:space="preserve"><value>У этого коннектора нет запрошенного действия.</value></data>
+  <data name="Error.ActionNotEnabled" xml:space="preserve"><value>Это действие не включено для коннектора.</value></data>
+  <data name="Error.InvocationFailed" xml:space="preserve"><value>Не удалось вызвать коннектор. Повторите попытку позже или проверьте права учётной записи.</value></data>
+  <data name="Message.Saved" xml:space="preserve"><value>Коннектор сохранён.</value></data>
+  <data name="Message.Deleted" xml:space="preserve"><value>Коннектор удалён.</value></data>
 </root>

@@ -5,14 +5,921 @@
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Module.MenuName" xml:space="preserve"><value>NeuChar Workflow</value></data>
-  <data name="Module.Description" xml:space="preserve"><value>Secure server-side workflows composed from Functions, system nodes, and controlled Agents.</value></data>
+  <data name="Module.Description" xml:space="preserve"><value>Безопасные серверные Workflow, состоящие из Functions, системных узлов и контролируемых Agents.</value></data>
   <data name="Area.Workflow" xml:space="preserve"><value>Workflow</value></data>
-  <data name="Area.Tasks" xml:space="preserve"><value>Tasks</value></data>
-  <data name="Area.Replay" xml:space="preserve"><value>Run replay</value></data>
+  <data name="Area.Tasks" xml:space="preserve"><value>Список задач</value></data>
+  <data name="Area.Replay" xml:space="preserve"><value>Повтор запуска</value></data>
   <data name="Title.Designer" xml:space="preserve"><value>NeuChar Workflow</value></data>
-  <data name="Title.Tasks" xml:space="preserve"><value>Workflow tasks</value></data>
-  <data name="Title.Replay" xml:space="preserve"><value>Workflow run replay</value></data>
-  <data name="Designer.Introduction" xml:space="preserve"><value>Compose Functions, system nodes, and Agents. Parameters, types, connections, and module state are checked before save and run.</value></data>
-  <data name="Action.Refresh" xml:space="preserve"><value>Refresh</value></data>
-  <data name="Action.NewWorkflow" xml:space="preserve"><value>New workflow</value></data>
+  <data name="Title.Tasks" xml:space="preserve"><value>Список задач Workflow</value></data>
+  <data name="Title.Replay" xml:space="preserve"><value>Повтор запуска Workflow</value></data>
+  <data name="Designer.Introduction" xml:space="preserve"><value>Составляйте Workflow из Functions, системных узлов и Agents. Перед сохранением и запуском проверяются параметры, типы, соединения и состояние модуля.</value></data>
+  <data name="Action.Refresh" xml:space="preserve"><value>Обновить</value></data>
+  <data name="Action.NewWorkflow" xml:space="preserve"><value>Новый Workflow</value></data>
+
+  <data name="Frontend.001" xml:space="preserve"><value>Список задач</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Просмотр запуска</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Обновить</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Быстрая очистка</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Аналитика</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Статистика задач</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Все задачи</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Выполняется</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Запуск успешен</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Ошибка запуска</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Workflow</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Состояние</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Время начала</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Время завершения</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Текущий прогресс / результат</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Действия</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Остановить</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Просмотреть запуск</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Воспроизвести запуск</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Снимка нет</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Больше записей нет</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Вернуться к списку задач</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.023" xml:space="preserve"><value>Просмотреть задачи этого Workflow</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.024" xml:space="preserve"><value>Просмотреть аналитику</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Шаги выполнения</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Входные параметры</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Результат вывода</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Текущий шаг</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Обзор запуска</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Аналитика</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Аналитика Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Состояние запусков, вызовы внешних ресурсов и записи, доступные для просмотра.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Фильтры аналитики</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.034" xml:space="preserve"><value>до</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Дата начала</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.036" xml:space="preserve"><value>Дата окончания</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Все Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Все состояния</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Все типы ресурсов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Все внешние ресурсы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Поиск Workflow, ресурсов или ошибок</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Запросить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.043" xml:space="preserve"><value>Сбросить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Обзор запуска</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Всего запусков</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.046" xml:space="preserve"><value>Доля успеха</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.047" xml:space="preserve"><value>Средняя длительность</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.048" xml:space="preserve"><value>Тенденция запусков</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Статистика по дате начала</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.050" xml:space="preserve"><value>{0} дней</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.051" xml:space="preserve"><value>В текущем диапазоне фильтра нет запусков.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Вызовы внешних ресурсов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Вызовов: {0} · ресурсов: {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Ресурс</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Вызовы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Затронутые Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.057" xml:space="preserve"><value>В текущем диапазоне фильтра нет вызовов ресурсов.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Состояние Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Нажмите название Workflow, чтобы открыть его задачи</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Запуски</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.061" xml:space="preserve"><value>Последние запуски</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.062" xml:space="preserve"><value>В текущем диапазоне фильтра нет запусков Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Детали запуска</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.064" xml:space="preserve"><value>Нажмите запись, чтобы открыть текущий запуск или просмотр только для чтения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Предыдущая страница</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Страница {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Следующая страница</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Длительность</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Результат</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Список задач Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.071" xml:space="preserve"><value>Сначала загружаются только последние 30 записей; прокрутите вниз для истории, выполняющиеся задачи обновляются автоматически.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.072" xml:space="preserve"><value>Текущий Workflow #{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Поиск Workflow или состояния</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Статистика задач</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Все задачи</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Текущая</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Выполняется</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Текущий прогресс / результат</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Подходящих задач нет</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Записей запусков пока нет</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.081" xml:space="preserve"><value>Измените ключевое слово или фильтр состояния и повторите попытку.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.082" xml:space="preserve"><value>Задачи появляются здесь после запуска с холста Workflow, Webhook или по расписанию. После завершения доступен просмотр только для чтения.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Загрузка дополнительных записей…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Продолжайте прокручивать вниз для загрузки записей</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Просмотр запуска только для чтения · #{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Запущено в {0}, {1}. Холст — снимок того момента и не влияет на последний Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Управление просмотром</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.088" xml:space="preserve"><value>Событий узлов: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.089" xml:space="preserve"><value>В этом запуске нет событий узлов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Начать</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.091" xml:space="preserve"><value>Загрузить снимок запуска</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.092" xml:space="preserve"><value>Показать больше шагов ({0} / {1})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.093" xml:space="preserve"><value>Состояние узла обновлено.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.094" xml:space="preserve"><value>Для этого исторического шага нет сохранённой записи ввода.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.095" xml:space="preserve"><value>Просмотреть диалог Agent Group</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.096" xml:space="preserve"><value>Запуск завершён.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.097" xml:space="preserve"><value>Запуск завершился ошибкой.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.098" xml:space="preserve"><value>Нажмите шаг слева или используйте управление воспроизведением для пошагового восстановления состояний узлов.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.099" xml:space="preserve"><value>Параметр {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.100" xml:space="preserve"><value>В метаданных параметра Function отсутствует имя поля; до исправления или обновления модуля можно сохранять только черновики.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.101" xml:space="preserve"><value>{0} сек</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.102" xml:space="preserve"><value>{0} мин {1} сек</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.103" xml:space="preserve"><value>Не удалось загрузить аналитику Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.104" xml:space="preserve"><value>Не удалось загрузить список задач Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.105" xml:space="preserve"><value>Не удалось обновить список задач Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.106" xml:space="preserve"><value>Не удалось загрузить дополнительные задачи Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.107" xml:space="preserve"><value>Чтение записей запуска…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.108" xml:space="preserve"><value>До начала запуска</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.109" xml:space="preserve"><value>Шаг {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.110" xml:space="preserve"><value>Отсутствует идентификатор задачи для просмотра.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.111" xml:space="preserve"><value>Данные просмотра задачи не найдены.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.112" xml:space="preserve"><value>Не удалось прочитать просмотр задачи. Выполняющиеся задачи должны завершиться; старые задачи могли не сохранить снимок.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.113" xml:space="preserve"><value>Не удалось создать черновик Workflow из текущего просмотра.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.114" xml:space="preserve"><value>Не удалось скопировать Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.115" xml:space="preserve"><value>Ожидание</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.116" xml:space="preserve"><value>Условие</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.117" xml:space="preserve"><value>Группа Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.118" xml:space="preserve"><value>Агрегация</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.119" xml:space="preserve"><value>Отправить NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.120" xml:space="preserve"><value>Обновление состояния</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.121" xml:space="preserve"><value>Предыдущий шаг</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.122" xml:space="preserve"><value>Следующий шаг</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.123" xml:space="preserve"><value>Начало</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.124" xml:space="preserve"><value>Конец</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>Скопировать и изменить текущий Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.126" xml:space="preserve"><value>Просмотреть последний Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.127" xml:space="preserve"><value>Успешно</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.128" xml:space="preserve"><value>Ошибка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.129" xml:space="preserve"><value>Инструмент Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.130" xml:space="preserve"><value>Agent или подключение A2A отсутствует, его модуль отключён или удалён</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.131" xml:space="preserve"><value>Agent запрашивает выполнение инструмента; подтвердите, разрешён ли этот вызов.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.132" xml:space="preserve"><value>Триггер Chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.133" xml:space="preserve"><value>Настройка триггера Chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.134" xml:space="preserve"><value>Вывод Console</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.135" xml:space="preserve"><value>Не удалось прочитать метаданные параметров Function; проверьте журнал модуля</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.136" xml:space="preserve"><value>Уровень HIL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.137" xml:space="preserve"><value>Участник-человек</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.138" xml:space="preserve"><value>Файл JSON</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.139" xml:space="preserve"><value>Файл YAML</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.140" xml:space="preserve"><value>L0 полностью автоматически</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.141" xml:space="preserve"><value>L1 одобрение на основе риска (одобрение MCP по умолчанию)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.142" xml:space="preserve"><value>L2 одобрение перед каждым вызовом инструмента</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.143" xml:space="preserve"><value>L3 участник-человек + одобрение инструментов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.144" xml:space="preserve"><value>Разрешения инструментов MCP</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.145" xml:space="preserve"><value>Примечания по использованию Webhook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.146" xml:space="preserve"><value>Настройка триггера Webhook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.147" xml:space="preserve"><value>Workflow ожидает человека</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.148" xml:space="preserve"><value>Узлы после break</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.149" xml:space="preserve"><value>Не включать break</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.150" xml:space="preserve"><value>Не равно</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.151" xml:space="preserve"><value>Без ограничений (GET/POST и другие)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.152" xml:space="preserve"><value>Персонализированная модель Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.153" xml:space="preserve"><value>Можно также перетащить для прямого соединения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.154" xml:space="preserve"><value>Подсказка для ввода человеком</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.155" xml:space="preserve"><value>Используется только при включённом управлении циклом</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.156" xml:space="preserve"><value>Начните добавлять узлы с триггера; поддерживаются перетаскивание, соединение портов и привязка параметров Output предыдущих узлов.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.157" xml:space="preserve"><value>Задача</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.158" xml:space="preserve"><value>Модель задачи</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.159" xml:space="preserve"><value>Ввод для дочернего Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.160" xml:space="preserve"><value>Передаёт ключ доступа; также поддерживаются параметры query</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.161" xml:space="preserve"><value>Использовать редактор синтаксиса</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.162" xml:space="preserve"><value>Инструкции по использованию</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.163" xml:space="preserve"><value>Например: Workflow должен обработать</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.164" xml:space="preserve"><value>Например: добавьте комментарий к утверждению</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.165" xml:space="preserve"><value>Например: укажите итог утверждения и следующий шаг обработки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.166" xml:space="preserve"><value>Сохранить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.167" xml:space="preserve"><value>После сохранения ключ не возвращается; оставьте пустым, чтобы сохранить его</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.168" xml:space="preserve"><value>Доступно после сохранения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.169" xml:space="preserve"><value>Создаётся автоматически после сохранения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.170" xml:space="preserve"><value>Сохранить (Command/Ctrl + S)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.171" xml:space="preserve"><value>Сохранить агрегированный массив;</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.172" xml:space="preserve"><value>Ложь</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.173" xml:space="preserve"><value>Разрешить внешнее восстановление</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.174" xml:space="preserve"><value>Разрешить гостей (без входа)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.175" xml:space="preserve"><value>Сначала сохраните Workflow, чтобы создать URL вызова и ключ доступа. Внешние запросы должны содержать этот ключ.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.176" xml:space="preserve"><value>Сначала введите фиксированный текст, затем выберите формулу справа или Output предыдущего узла ниже. Нажатие вставляет полное выражение; выделенный текст автоматически обрамляется, а много параметров оставляют пустые места.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.177" xml:space="preserve"><value>Привязать Output предыдущего узла</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.178" xml:space="preserve"><value>Закрыть</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.179" xml:space="preserve"><value>Закрыть сведения об узле</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.180" xml:space="preserve"><value>Внутренний WebAPI (вход в Admin не требуется)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.181" xml:space="preserve"><value>Минуты</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>Индекс списка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.183" xml:space="preserve"><value>Удалить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.184" xml:space="preserve"><value>Удалить соединение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.185" xml:space="preserve"><value>Решение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>Обновить список Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.187" xml:space="preserve"><value>Содержит</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.188" xml:space="preserve"><value>Исходное соединение будет заменено на «предыдущий узел → новый узел → следующий узел».</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.189" xml:space="preserve"><value>Ошибка метаданных параметров</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.190" xml:space="preserve"><value>Имя параметра, например userId</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.191" xml:space="preserve"><value>Описание параметра</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.192" xml:space="preserve"><value>Дважды щёлкните узел, чтобы добавить его в выбранное место; можно также перетащить его на холст.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.193" xml:space="preserve"><value>Отмена</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.194" xml:space="preserve"><value>Имена переменных могут содержать только буквы, цифры и подчёркивания и должны начинаться с буквы или подчёркивания. Значения по умолчанию могут использовать ограниченные формулы; JavaScript не выполняется.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.195" xml:space="preserve"><value>Имя переменной, например customerName</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.196" xml:space="preserve"><value>Запускать только при открытой текущей странице и изменении её содержимого</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.197" xml:space="preserve"><value>Показывает только Workflow, сохранённые текущим пользователем. Перед сохранением и запуском проверяются многоуровневые ссылки; прямые и косвенные вызовы самого себя запрещены.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.198" xml:space="preserve"><value>Только просматривать задачи; не обрабатывать автоматически</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.199" xml:space="preserve"><value>Можно использовать заполнители ввода, формулы или вставленные переменные</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.200" xml:space="preserve"><value>Правое значение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.201" xml:space="preserve"><value>{"input":"текст человека"}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.202" xml:space="preserve"><value>Название</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Следующие узлы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.204" xml:space="preserve"><value>При включении подключите порт break узла к входу break текущего «конца цикла»; другой результат продолжит путь по ветвям истины/лжи.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.205" xml:space="preserve"><value>и все формульные функции; присваивания влияют только на этот запуск.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.206" xml:space="preserve"><value>Добавить узел здесь</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.207" xml:space="preserve"><value>Вставить узел в соединение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.208" xml:space="preserve"><value>Объявите здесь значение по умолчанию для последующих ограниченных формул</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.209" xml:space="preserve"><value>Копировать</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.210" xml:space="preserve"><value>Копировать URL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.211" xml:space="preserve"><value>Копировать ключ доступа</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.212" xml:space="preserve"><value>Ключ внешнего восстановления</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.213" xml:space="preserve"><value>Внешняя конечная точка принимает только ключ этого узла; он хранится в зашифрованном виде и не показывается при повторном открытии редактора. После смены ключа старые ожидающие запросы используют ключ, действовавший при запуске.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.214" xml:space="preserve"><value>Дочерний Workflow выполняется как отдельная запись; родитель получает только конечный результат. Допустимо не более 8 уровней вложенности, цель должна принадлежать текущему пользователю и быть включена.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.215" xml:space="preserve"><value>Узел безопасного кода всегда передаёт исходный ввод; изменяются только переменные, объявленные в vars. В одной волне выполнения безопасный код запускается в порядке холста до других независимых узлов.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.216" xml:space="preserve"><value>Безопасный код: присваивание переменных</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.217" xml:space="preserve"><value>Импорт</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.218" xml:space="preserve"><value>Экспорт</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.219" xml:space="preserve"><value>Переменные ещё не объявлены. Добавьте переменную перед присваиванием в узле безопасного кода.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Присваивания ещё не настроены. Добавьте хотя бы одно.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.221" xml:space="preserve"><value>Привязка к ближайшей сетке</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.222" xml:space="preserve"><value>Выравнивание по ближайшей сетке выполняет только привязку на ограниченном расстоянии и предотвращает перекрытия; сохраняет порядок чтения и не удлиняет соединения.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.223" xml:space="preserve"><value>Во вложенных циклах выберите соответствующий узел цикла, чтобы внутренний «конец цикла» не был принят за внешний.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Переменные Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.225" xml:space="preserve"><value>Название Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Быстрые действия Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.227" xml:space="preserve"><value>Настройки Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Левое значение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Определённые параметры можно читать из Query, Form или тела JSON; при отсутствии параметров все данные запроса становятся вводом Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Параллельная ветвь</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.231" xml:space="preserve"><value>Параллельный узел одновременно передаёт один ввод всем следующим ветвям; ветви выполняются независимо.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.232" xml:space="preserve"><value>Применить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.233" xml:space="preserve"><value>Начинается с</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.234" xml:space="preserve"><value>Автономному Agent сейчас не предоставлены инструменты; разрешения и уровни одобрения сохраняются, но не запускаются.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.235" xml:space="preserve"><value>В этом ходе требуется ввод человека; после отправки Workflow продолжит ожидание или пойдёт дальше.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.236" xml:space="preserve"><value>Влияет на направление чтения иерархии при «автоматической раскладке по настройкам»; по умолчанию вертикально</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.237" xml:space="preserve"><value>Граница тела цикла</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.238" xml:space="preserve"><value>Управление циклом (необязательно)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.239" xml:space="preserve"><value>Обязательно</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.240" xml:space="preserve"><value>Необходимо настроить.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.241" xml:space="preserve"><value>Быстрые действия</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.242" xml:space="preserve"><value>Быстрый просмотр</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.243" xml:space="preserve"><value>Восстановить 100%</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.244" xml:space="preserve"><value>или полностью связать Output предыдущих узлов / предварительные входы Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.245" xml:space="preserve"><value>или указать количество предыдущих узлов (1–100000)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.246" xml:space="preserve"><value>или вставить Output предыдущего узла.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.247" xml:space="preserve"><value>Родительский цикл</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.248" xml:space="preserve"><value>Ручной триггер</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.249" xml:space="preserve"><value>Ручной ввод</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.250" xml:space="preserve"><value>Ручной ввод, формула или вставленная переменная</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.251" xml:space="preserve"><value>Ручной ввод или формула</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.252" xml:space="preserve"><value>Выводит текущий ввод. Настройка влияет только на отображение Console; узел по-прежнему передаёт исходный ввод дальше.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.253" xml:space="preserve"><value>Открыть</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.254" xml:space="preserve"><value>Открыть страницу Chat (доступна вошедшим пользователям и гостям)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.255" xml:space="preserve"><value>Режим обработки после открытия задачи</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.256" xml:space="preserve"><value>Открыть панель добавления узла</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.257" xml:space="preserve"><value>Выполнить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.258" xml:space="preserve"><value>Одобрение перед выполнением</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.259" xml:space="preserve"><value>Отклонить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.260" xml:space="preserve"><value>Перетащите сюда, чтобы завершить соединение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.261" xml:space="preserve"><value>Перетащите break, чтобы выйти из текущего цикла</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.262" xml:space="preserve"><value>Перетащите ветвь false</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.263" xml:space="preserve"><value>Перетащите ветвь true</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.264" xml:space="preserve"><value>Перетащите для соединения со следующим узлом</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.265" xml:space="preserve"><value>Перестроить по направлению</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.266" xml:space="preserve"><value>Автораскладка по настройкам</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.267" xml:space="preserve"><value>Рекомендуется заголовок запроса</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.268" xml:space="preserve"><value>Содержимое уведомления</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.269" xml:space="preserve"><value>Заголовок уведомления</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.270" xml:space="preserve"><value>Разрешения инструментов плагинов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.271" xml:space="preserve"><value>Вставить значение предыдущего узла</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.272" xml:space="preserve"><value>Поиск Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.273" xml:space="preserve"><value>Поддерживаемые формулы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.274" xml:space="preserve"><value>Использовать фиксированное количество</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.275" xml:space="preserve"><value>Перейти к ручному вводу</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.276" xml:space="preserve"><value>Увеличить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.277" xml:space="preserve"><value>Увеличить холст</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Индекс массива</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.279" xml:space="preserve"><value>Добавить узел</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.280" xml:space="preserve"><value>Новый Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.281" xml:space="preserve"><value>Обычное условие</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.282" xml:space="preserve"><value>Workflow отсутствуют</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.283" xml:space="preserve"><value>Другие действия Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.284" xml:space="preserve"><value>Максимальное число раундов чата</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.285" xml:space="preserve"><value>Если не выбран, использовать модель группы по умолчанию</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.286" xml:space="preserve"><value>Если не выбран, AgentGroup сначала наследует модель PromptRange владельца группы; при отсутствии доступной модели используется системная Chat-модель.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.287" xml:space="preserve"><value>Параметры не настроены: принимаются все поля Query, Form и JSON.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.288" xml:space="preserve"><value>Когда условие ложно</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.289" xml:space="preserve"><value>Выйти из цикла, когда условие ложно</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.290" xml:space="preserve"><value>Когда условие истинно</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.291" xml:space="preserve"><value>Выйти из цикла, когда условие истинно</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.292" xml:space="preserve"><value>Проверить и запустить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.293" xml:space="preserve"><value>Модуль не установлен или отключён; узел нельзя выполнить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.294" xml:space="preserve"><value>Модель</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.295" xml:space="preserve"><value>Горизонтально</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.296" xml:space="preserve"><value>Количество можно задать, взять из одного значения предыдущего узла или использовать ограниченный синтаксис; результат должен быть целым числом от 1 до 100000. Границу цикла отмечайте «конец цикла».</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.297" xml:space="preserve"><value>Приветственное сообщение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.298" xml:space="preserve"><value>У этой Function несколько предыдущих узлов; её может запустить любой допустимый источник, но за один запуск Workflow узел выполняется не более одного раза.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.299" xml:space="preserve"><value>Агрегировать вывод</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.300" xml:space="preserve"><value>Тестовый ввод (передаётся триггеру)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.301" xml:space="preserve"><value>Обработать это уведомление</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.302" xml:space="preserve"><value>Обработать все уведомления этой подписки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.303" xml:space="preserve"><value>Добавить параметр</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.304" xml:space="preserve"><value>Добавить переменную</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.305" xml:space="preserve"><value>Добавить узел</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.306" xml:space="preserve"><value>Добавить присваивание</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.307" xml:space="preserve"><value>Очистить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.308" xml:space="preserve"><value>Очистить prompt</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.309" xml:space="preserve"><value>Нажмите для перехода к холсту</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.310" xml:space="preserve"><value>Нажмите для вставки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.311" xml:space="preserve"><value>Создать новый ключ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.312" xml:space="preserve"><value>Опишите этот Workflow одним предложением</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.313" xml:space="preserve"><value>Используйте, когда просмотр отмечает элемент прочитанным; для напоминаний, требующих проверки, например DesktopBridge, выберите «только просмотр».</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.314" xml:space="preserve"><value>Каждое сообщение пользователя запускает один Workflow; при отключённом «разрешить гостей» чат доступен только вошедшим пользователям.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.315" xml:space="preserve"><value>Выравнивание холста</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.316" xml:space="preserve"><value>Если пусто, использовать название Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.317" xml:space="preserve"><value>Истина</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.318" xml:space="preserve"><value>Запрещено</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.319" xml:space="preserve"><value>Обработать позже</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.320" xml:space="preserve"><value>и другие ограниченные выражения; произвольный JavaScript не выполняется.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.321" xml:space="preserve"><value>Равно</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.322" xml:space="preserve"><value>Секунды ожидания (максимум 30 секунд на узел)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.323" xml:space="preserve"><value>Вертикально</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.324" xml:space="preserve"><value>Заканчивается на</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.325" xml:space="preserve"><value>Статистика</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.326" xml:space="preserve"><value>Наследовать уровень HIL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.327" xml:space="preserve"><value>Изменить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.328" xml:space="preserve"><value>Изменить формулу</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.329" xml:space="preserve"><value>Изменить текст формулы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.330" xml:space="preserve"><value>Изменить текст и переменные</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.331" xml:space="preserve"><value>Редактировать синтаксис</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.332" xml:space="preserve"><value>Уменьшить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.333" xml:space="preserve"><value>Уменьшить холст</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.334" xml:space="preserve"><value>Страница Chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.335" xml:space="preserve"><value>Агрегация ожидает завершения всех активированных предыдущих ветвей, объединяет их в порядке соединений и выдаёт один результат дальше.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.336" xml:space="preserve"><value>Автосохранение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.337" xml:space="preserve"><value>Автоматическое выполнение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.338" xml:space="preserve"><value>Направление авторазметки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.339" xml:space="preserve"><value>Автоматическое определение (одноуровневый цикл)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.340" xml:space="preserve"><value>Ошибка проверки узла</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.341" xml:space="preserve"><value>Настройки узла</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.342" xml:space="preserve"><value>Вызываемый Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.343" xml:space="preserve"><value>Режим запуска</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.344" xml:space="preserve"><value>Настройки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.345" xml:space="preserve"><value>Ключ доступа</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.346" xml:space="preserve"><value>Описание</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.347" xml:space="preserve"><value>Описание (необязательно)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.348" xml:space="preserve"><value>Перетащите от правого выходного порта узла к каждому узлу, который должен выполняться одновременно.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.349" xml:space="preserve"><value>Использование заголовка запроса</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.350" xml:space="preserve"><value>Метод запроса</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.351" xml:space="preserve"><value>Чтение; узел безопасного кода может присвоить значение снова в этом запуске.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.352" xml:space="preserve"><value>URL вызова:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.353" xml:space="preserve"><value>Введите ответ человека</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.354" xml:space="preserve"><value>При достижении этого узла создаётся NeuBell, а текущая ветвь приостанавливается; быстрое фоновое действие или включённый внешний API возобновляет тот же запуск. HIL от Agent/Group использует ту же панель HIL Workflow ниже.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.355" xml:space="preserve"><value>При выполнении узел выводит содержимое по указанному шаблону в нижнюю Console; исходный ввод передаётся дальше.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.356" xml:space="preserve"><value>Во время выполнения создаётся уведомление NeuBell Workflow; нажатие в Footer открывает список задач и обрабатывает уведомление согласно настройкам.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.357" xml:space="preserve"><value>Результат выполнения должен быть целым числом от 1 до 100000; можно использовать</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.358" xml:space="preserve"><value>читаемое во время выполнения; это должно быть целое число от 1 до 100000.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.359" xml:space="preserve"><value>Состояние запуска</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.360" xml:space="preserve"><value>Это не произвольный JavaScript: каждая строка — ограниченное присваивание. Доступно</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.361" xml:space="preserve"><value>Подключить к входу break</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.362" xml:space="preserve"><value>Подключить к входу continue</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.363" xml:space="preserve"><value>Подогнать под холст</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.364" xml:space="preserve"><value>Выберите переменную Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.365" xml:space="preserve"><value>Выберите сохранённый Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.366" xml:space="preserve"><value>Выберите или создайте Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.367" xml:space="preserve"><value>Выберите узел на холсте для настройки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.368" xml:space="preserve"><value>Выберите узел, Output или предварительно загруженный ввод</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.369" xml:space="preserve"><value>Слияние по элементам не ждёт все входы: каждый ввод отправляется дальше отдельно. Дальнейшие узлы выполняются последовательно по стабильному плану; один запуск Workflow обрабатывает не более 5000 активаций.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.370" xml:space="preserve"><value>Ограничения: один цикл — не более 100 000 итераций; один запуск — не более 5000 суммарных активаций цикла и слияния по элементам.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.371" xml:space="preserve"><value>Количество повторений (For)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.372" xml:space="preserve"><value>Интервал в секундах</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.373" xml:space="preserve"><value>Триггер по интервалу</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.374" xml:space="preserve"><value>Заголовок страницы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.375" xml:space="preserve"><value>Приветствие при первом открытии страницы чата; оставьте пустым для текста по умолчанию</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.376" xml:space="preserve"><value>По умолчанию</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.377" xml:space="preserve"><value>; POST JSON должен содержать как минимум</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.378" xml:space="preserve"><value>В текущем диапазоне фильтра нет деталей запусков.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.379" xml:space="preserve"><value>После запуска здесь отображаются результаты проверки, текущий узел, состояние выполнения и вывод Console.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.380" xml:space="preserve"><value>Страница {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.381" xml:space="preserve"><value>Параметры ({0}/50)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.382" xml:space="preserve"><value>Выбрано узлов: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.383" xml:space="preserve"><value>Следующих ветвей: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.384" xml:space="preserve"><value>До {0} файлов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.385" xml:space="preserve"><value>Разрешить внешним программам с ключом отправлять ввод</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.386" xml:space="preserve"><value>Разрешить обработку только администраторам</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.387" xml:space="preserve"><value>Разрешить настроенные плагины и инструменты MCP</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.388" xml:space="preserve"><value>Например: элементов — {0}:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.389" xml:space="preserve"><value>Ожидающих запросов: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.390" xml:space="preserve"><value>Показать больше шагов ({0} / {1})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="Frontend.391" xml:space="preserve"><value>Тестовый запуск готов</value></data>
+  <data name="Frontend.392" xml:space="preserve"><value>Проверка параметров и ссылок узлов</value></data>
+  <data name="Frontend.393" xml:space="preserve"><value>Остановка Workflow; ожидание отмены текущего узла</value></data>
+  <data name="Frontend.394" xml:space="preserve"><value>Ожидание ввода или одобрения человека; Workflow приостановлен</value></data>
+  <data name="Frontend.395" xml:space="preserve"><value>Workflow выполняется; редактирование заблокировано</value></data>
+  <data name="Frontend.396" xml:space="preserve"><value>Последний тестовый запуск успешен</value></data>
+  <data name="Frontend.397" xml:space="preserve"><value>Последний тестовый запуск завершился ошибкой</value></data>
+  <data name="Frontend.398" xml:space="preserve"><value>Начало выполнения узла.</value></data>
+  <data name="Frontend.399" xml:space="preserve"><value>Выполнение узла завершено.</value></data>
+  <data name="Frontend.400" xml:space="preserve"><value>Выполняется</value></data>
+  <data name="Frontend.401" xml:space="preserve"><value>Выполнение завершено</value></data>
+  <data name="Frontend.402" xml:space="preserve"><value>Ошибка выполнения</value></data>
+  <data name="Frontend.403" xml:space="preserve"><value>Выберите ветвь</value></data>
+  <data name="Frontend.404" xml:space="preserve"><value>Вывод Console</value></data>
+  <data name="Frontend.405" xml:space="preserve"><value>Обновление состояния</value></data>
+  <data name="Frontend.406" xml:space="preserve"><value>Запуск успешен</value></data>
+  <data name="Frontend.407" xml:space="preserve"><value>Ошибка запуска</value></data>
+  <data name="Frontend.408" xml:space="preserve"><value>Запуск завершён</value></data>
+
+  <data name="Frontend.409" xml:space="preserve"><value>{0} (копия задачи)</value></data>
+  <data name="Frontend.410" xml:space="preserve"><value>Массив</value></data>
+  <data name="Frontend.411" xml:space="preserve"><value>Объект</value></data>
+  <data name="Frontend.412" xml:space="preserve"><value>Условие</value></data>
+  <data name="Frontend.413" xml:space="preserve"><value>Проверка условия</value></data>
+  <data name="Frontend.414" xml:space="preserve"><value>Решение</value></data>
+  <data name="Frontend.415" xml:space="preserve"><value>Ожидание</value></data>
+  <data name="Frontend.416" xml:space="preserve"><value>Цикл (For)</value></data>
+  <data name="Frontend.417" xml:space="preserve"><value>Цикл</value></data>
+  <data name="Frontend.418" xml:space="preserve"><value>Конец цикла</value></data>
+  <data name="Frontend.419" xml:space="preserve"><value>Вызвать Workflow</value></data>
+  <data name="Frontend.420" xml:space="preserve"><value>Вызвать поток</value></data>
+  <data name="Frontend.421" xml:space="preserve"><value>Безопасный код</value></data>
+  <data name="Frontend.422" xml:space="preserve"><value>Агрегация</value></data>
+  <data name="Frontend.423" xml:space="preserve"><value>Слияние по элементам</value></data>
+  <data name="Frontend.424" xml:space="preserve"><value>Параллельно</value></data>
+  <data name="Frontend.425" xml:space="preserve"><value>Вывести в Console</value></data>
+  <data name="Frontend.426" xml:space="preserve"><value>Вывод Console</value></data>
+  <data name="Frontend.427" xml:space="preserve"><value>Отправить NeuBell</value></data>
+  <data name="Frontend.428" xml:space="preserve"><value>Ожидание ввода человека</value></data>
+  <data name="Frontend.429" xml:space="preserve"><value>Ввод человека</value></data>
+  <data name="Frontend.430" xml:space="preserve"><value>Конец</value></data>
+  <data name="Frontend.431" xml:space="preserve"><value>Системные узлы</value></data>
+  <data name="Frontend.432" xml:space="preserve"><value>Системные узлы Workflow</value></data>
+  <data name="Frontend.433" xml:space="preserve"><value>Поиск узлов, Function, модулей или объектов</value></data>
+  <data name="Frontend.434" xml:space="preserve"><value>Все модули</value></data>
+  <data name="Frontend.435" xml:space="preserve"><value>Доступно</value></data>
+  <data name="Frontend.436" xml:space="preserve"><value>Недоступно</value></data>
+  <data name="Frontend.437" xml:space="preserve"><value>Модуль не установлен или отключён</value></data>
+  <data name="Frontend.438" xml:space="preserve"><value>Дважды щёлкните или перетащите на холст для добавления</value></data>
+  <data name="Frontend.439" xml:space="preserve"><value>Каталог узлов недоступен</value></data>
+  <data name="Frontend.440" xml:space="preserve"><value>Список моделей недоступен</value></data>
+  <data name="Frontend.441" xml:space="preserve"><value>Настраиваемые элементы</value></data>
+  <data name="Frontend.442" xml:space="preserve"><value>Выходные ветви</value></data>
+  <data name="Frontend.443" xml:space="preserve"><value>Количество повторений</value></data>
+  <data name="Frontend.444" xml:space="preserve"><value>Режим выполнения</value></data>
+  <data name="Frontend.445" xml:space="preserve"><value>Ограничения</value></data>
+  <data name="Frontend.446" xml:space="preserve"><value>Обязательные параметры</value></data>
+  <data name="Frontend.447" xml:space="preserve"><value>Вывод узла</value></data>
+  <data name="Frontend.448" xml:space="preserve"><value>Удалённый A2A Agent</value></data>
+  <data name="Frontend.449" xml:space="preserve"><value>Автономный Agent</value></data>
+  <data name="Frontend.450" xml:space="preserve"><value>Объект недоступен</value></data>
+  <data name="Frontend.451" xml:space="preserve"><value>Текущий объект недоступен и не может быть добавлен</value></data>
+  <data name="Frontend.452" xml:space="preserve"><value>Вывод по шаблону в нижнюю Console</value></data>
+  <data name="Frontend.453" xml:space="preserve"><value>Вывод в нижнюю Console</value></data>
+  <data name="Frontend.454" xml:space="preserve"><value>Поток завершается здесь</value></data>
+  <data name="Frontend.455" xml:space="preserve"><value>Встроенный узел Workflow.</value></data>
+  <data name="Frontend.456" xml:space="preserve"><value>Не удалось вставить узел</value></data>
+  <data name="Frontend.457" xml:space="preserve"><value>Узлы завершения или запуска нельзя вставлять в существующее соединение.</value></data>
+  <data name="Frontend.458" xml:space="preserve"><value>Не удалось подключить</value></data>
+  <data name="Frontend.459" xml:space="preserve"><value>У цели уже есть вход, соединение создаст цикл или узел не поддерживает такой способ подключения. Для нескольких входов используйте Function, агрегацию или слияние по элементам.</value></data>
+  <data name="Frontend.460" xml:space="preserve"><value>Необязательные параметры</value></data>
+  <data name="Frontend.461" xml:space="preserve"><value>Модуль недоступен</value></data>
+  <data name="Frontend.462" xml:space="preserve"><value>Подключение успешно</value></data>
+  <data name="Frontend.463" xml:space="preserve"><value>Не проверено</value></data>
+  <data name="Frontend.464" xml:space="preserve"><value>Не удалось загрузить удалённый A2A Agent</value></data>
+  <data name="Frontend.465" xml:space="preserve"><value>Не удалось загрузить настройки публикации A2A</value></data>
+  <data name="Frontend.466" xml:space="preserve"><value>Не удалось обновить состояние</value></data>
+  <data name="Frontend.467" xml:space="preserve"><value>Ручной запуск</value></data>
+  <data name="Frontend.468" xml:space="preserve"><value>История</value></data>
+  <data name="Frontend.469" xml:space="preserve"><value>История запусков</value></data>
+  <data name="Frontend.470" xml:space="preserve"><value>Триггер Webhook</value></data>
+  <data name="Frontend.471" xml:space="preserve"><value>Плановый триггер</value></data>
+  <data name="Frontend.472" xml:space="preserve"><value>Когда условие истинно</value></data>
+  <data name="Frontend.473" xml:space="preserve"><value>Когда условие ложно</value></data>
+  <data name="Frontend.474" xml:space="preserve"><value>Управление циклом (необязательно)</value></data>
+  <data name="Frontend.475" xml:space="preserve"><value>Граница тела цикла</value></data>
+  <data name="Frontend.476" xml:space="preserve"><value>Подсказка для ввода человеком</value></data>
+  <data name="Frontend.477" xml:space="preserve"><value>Безопасный код: присваивание переменных</value></data>
+  <data name="Frontend.478" xml:space="preserve"><value>Переменные Workflow</value></data>
+  <data name="Frontend.479" xml:space="preserve"><value>Название Workflow</value></data>
+  <data name="Frontend.480" xml:space="preserve"><value>Быстрые действия Workflow</value></data>
+  <data name="Frontend.481" xml:space="preserve"><value>Настройки Workflow</value></data>
+  <data name="Frontend.482" xml:space="preserve"><value>Состояние узла обновлено.</value></data>
+  <data name="Frontend.483" xml:space="preserve"><value>Обновление состояния</value></data>
+  <data name="Frontend.484" xml:space="preserve"><value>До начала запуска</value></data>
+  <data name="Frontend.485" xml:space="preserve"><value>Дата завершения</value></data>
+  <data name="Frontend.486" xml:space="preserve"><value>Для этой задачи нет доступного снимка запуска; возможно, она создана до включения функции просмотра.</value></data>
+
+  <data name="Frontend.487" xml:space="preserve"><value>{0} (копия задачи)</value></data>
+  <data name="Frontend.488" xml:space="preserve"><value>Копия задачи</value></data>
+
+  <data name="Frontend.489" xml:space="preserve"><value>Последовательно присваивает значения заранее объявленным переменным Workflow. Разрешены только ограниченные формулы; JavaScript, сеть, файлы и циклы не запускаются.</value></data>
+  <data name="Frontend.490" xml:space="preserve"><value>Присваивание переменных и ограниченные формулы</value></data>
+  <data name="Frontend.491" xml:space="preserve"><value>Исходный ввод передаётся дальше</value></data>
+  <data name="Frontend.492" xml:space="preserve"><value>Закрыть при уходе с узла</value></data>
+  <data name="Frontend.493" xml:space="preserve"><value>Нажмите в другом месте для закрытия или дождитесь автоматического закрытия через 15 секунд</value></data>
+  <data name="Frontend.494" xml:space="preserve"><value>Функция недоступна</value></data>
+  <data name="Frontend.495" xml:space="preserve"><value>Function недоступна</value></data>
+  <data name="Frontend.496" xml:space="preserve"><value>Узел завершения нельзя вставить в соединение</value></data>
+  <data name="Frontend.497" xml:space="preserve"><value>Узел недоступен</value></data>
+  <data name="Frontend.498" xml:space="preserve"><value>Вывод в нижнюю Console</value></data>
+  <data name="Frontend.499" xml:space="preserve"><value>Вывод по шаблону в нижнюю Console</value></data>
+  <data name="Frontend.500" xml:space="preserve"><value>Ожидание ввода человека или восстановления внешнего API</value></data>
+  <data name="Frontend.501" xml:space="preserve"><value>Узел Workflow</value></data>
+  <data name="Frontend.502" xml:space="preserve"><value>Текущий узел недоступен</value></data>
+  <data name="Frontend.503" xml:space="preserve"><value>Каталог узлов недоступен</value></data>
+  <data name="Frontend.504" xml:space="preserve"><value>Список моделей недоступен</value></data>
+  <data name="Frontend.505" xml:space="preserve"><value>Связанный параметр выбора Function удалён или недоступен после обновления модуля</value></data>
+  <data name="Frontend.506" xml:space="preserve"><value>Если ничего не выбрано, AgentGroup сначала наследует модель PromptRange владельца группы; при отсутствии доступной модели используется системная Chat-модель по умолчанию</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>Текущий Workflow</value></data>
+  <data name="Frontend.508" xml:space="preserve"><value>Остановить «{0}».</value></data>
+  <data name="Frontend.509" xml:space="preserve"><value>Подтвердить остановку</value></data>
+  <data name="Frontend.510" xml:space="preserve"><value>Остановить</value></data>
+  <data name="Frontend.511" xml:space="preserve"><value>Продолжить выполнение</value></data>
+  <data name="Frontend.512" xml:space="preserve"><value>Не удалось показать подтверждение остановки.</value></data>
+  <data name="Frontend.513" xml:space="preserve"><value>Запрошена ручная остановка; задача будет отмечена как неуспешная.</value></data>
+  <data name="Frontend.514" xml:space="preserve"><value>Не удалось остановить задачу Workflow.</value></data>
+  <data name="Frontend.515" xml:space="preserve"><value>Нет завершённых записей задач для очистки; выполняющиеся задачи всегда сохраняются.</value></data>
+  <data name="Frontend.516" xml:space="preserve"><value>Подтвердить быструю очистку</value></data>
+  <data name="Frontend.517" xml:space="preserve"><value>Будет безвозвратно удалено завершённых задач: {0} (успешных {1}, неуспешных {2}). Выполняющиеся задачи, определения Workflow и версии не затрагиваются; удаление нельзя отменить.</value></data>
+  <data name="Frontend.518" xml:space="preserve"><value>Очистить {0}</value></data>
+  <data name="Frontend.519" xml:space="preserve"><value>Очищено завершённых записей задач: {0}.</value></data>
+
+  <data name="Frontend.520" xml:space="preserve"><value>Первое непустое значение</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>Совпадение префикса</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>Совпадение суффикса</value></data>
+  <data name="Frontend.523" xml:space="preserve"><value>Пусто ли</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>Является ли null</value></data>
+  <data name="Frontend.525" xml:space="preserve"><value>Подстрока</value></data>
+  <data name="Frontend.526" xml:space="preserve"><value>Удалить пробелы</value></data>
+  <data name="Frontend.527" xml:space="preserve"><value>В нижний регистр</value></data>
+  <data name="Frontend.528" xml:space="preserve"><value>В верхний регистр</value></data>
+  <data name="Frontend.529" xml:space="preserve"><value>Заменить текст</value></data>
+  <data name="Frontend.530" xml:space="preserve"><value>Разделить текст</value></data>
+  <data name="Frontend.531" xml:space="preserve"><value>Объединить значения</value></data>
+  <data name="Frontend.532" xml:space="preserve"><value>Длина</value></data>
+  <data name="Frontend.533" xml:space="preserve"><value>Количество</value></data>
+  <data name="Frontend.534" xml:space="preserve"><value>В массив</value></data>
+  <data name="Frontend.535" xml:space="preserve"><value>Первый элемент</value></data>
+  <data name="Frontend.536" xml:space="preserve"><value>Последний элемент</value></data>
+  <data name="Frontend.537" xml:space="preserve"><value>Получить по индексу</value></data>
+  <data name="Frontend.538" xml:space="preserve"><value>Объединить массив</value></data>
+  <data name="Frontend.539" xml:space="preserve"><value>Сортировка</value></data>
+  <data name="Frontend.540" xml:space="preserve"><value>Сортировка по полю</value></data>
+  <data name="Frontend.541" xml:space="preserve"><value>Обратить</value></data>
+  <data name="Frontend.542" xml:space="preserve"><value>Взять первые элементы</value></data>
+  <data name="Frontend.543" xml:space="preserve"><value>Пропустить первые элементы</value></data>
+  <data name="Frontend.544" xml:space="preserve"><value>Развернуть один уровень</value></data>
+  <data name="Frontend.545" xml:space="preserve"><value>Сумма</value></data>
+  <data name="Frontend.546" xml:space="preserve"><value>Минимум</value></data>
+  <data name="Frontend.547" xml:space="preserve"><value>Максимум</value></data>
+  <data name="Frontend.548" xml:space="preserve"><value>Уникальные</value></data>
+  <data name="Frontend.549" xml:space="preserve"><value>Ключи объекта</value></data>
+  <data name="Frontend.550" xml:space="preserve"><value>Значения объекта</value></data>
+  <data name="Frontend.551" xml:space="preserve"><value>Имеет свойство</value></data>
+  <data name="Frontend.552" xml:space="preserve"><value>В число</value></data>
+  <data name="Frontend.553" xml:space="preserve"><value>В Int32</value></data>
+  <data name="Frontend.554" xml:space="preserve"><value>В Int64</value></data>
+  <data name="Frontend.555" xml:space="preserve"><value>В Decimal</value></data>
+  <data name="Frontend.556" xml:space="preserve"><value>В логическое значение</value></data>
+  <data name="Frontend.557" xml:space="preserve"><value>В текст</value></data>
+  <data name="Frontend.558" xml:space="preserve"><value>Текущее время</value></data>
+  <data name="Frontend.559" xml:space="preserve"><value>Формат даты</value></data>
+  <data name="Frontend.560" xml:space="preserve"><value>Текст</value></data>
+  <data name="Frontend.561" xml:space="preserve"><value>Текст/массив</value></data>
+  <data name="Frontend.562" xml:space="preserve"><value>Тип</value></data>
+  <data name="Frontend.563" xml:space="preserve"><value>Время</value></data>
+
+  <data name="Frontend.564" xml:space="preserve"><value>Возвращает одно из двух значений в зависимости от условия. Первый параметр — условие, следующие два — значения для истины и лжи.</value></data>
+  <data name="Frontend.565" xml:space="preserve"><value>Возвращает первое непустое значение из нескольких параметров; дополнительные параметры можно добавить вручную.</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>Проверяет, содержит ли текст подстроку или массив указанный элемент.</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>Проверяет, начинается ли текст с указанного содержимого.</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>Проверяет, заканчивается ли текст указанным содержимым.</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>Проверяет, является ли значение null, пустым текстом или пустым массивом.</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>Проверяет, является ли значение null; пустой текст и пустой массив не считаются null.</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>Извлекает текст по начальной позиции и длине; оставьте длину пустой, чтобы извлечь до конца.</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>Удаляет пробелы, переводы строк и другие пробельные символы с начала и конца текста.</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>Преобразует текст в нижний регистр.</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>Преобразует текст в верхний регистр.</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>Заменяет указанное содержимое текста новым содержимым.</value></data>
+
+  <data name="Frontend.576" xml:space="preserve"><value>Разделяет текст по разделителю и возвращает массив.</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>Объединяет текст; если параметры содержат массивы, объединяет их элементы в новый массив.</value></data>
+  <data name="Frontend.578" xml:space="preserve"><value>Возвращает длину текста или количество элементов массива.</value></data>
+  <data name="Frontend.579" xml:space="preserve"><value>Псевдоним length; возвращает длину текста или количество элементов массива.</value></data>
+  <data name="Frontend.580" xml:space="preserve"><value>Оборачивает одиночное значение в массив; если значение уже является массивом, возвращает его копию.</value></data>
+  <data name="Frontend.581" xml:space="preserve"><value>Возвращает первый элемент массива или текста.</value></data>
+  <data name="Frontend.582" xml:space="preserve"><value>Возвращает последний элемент массива или текста.</value></data>
+  <data name="Frontend.583" xml:space="preserve"><value>Читает элемент массива или текста по индексу, начинающемуся с нуля.</value></data>
+  <data name="Frontend.584" xml:space="preserve"><value>Объединяет элементы массива в текст с указанным разделителем.</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>Сортирует массив; можно указать путь к полю и направление asc/desc.</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>Смысловой псевдоним sort для стабильной сортировки по пути поля объекта.</value></data>
+  <data name="Frontend.587" xml:space="preserve"><value>Возвращает копию элементов массива в обратном порядке.</value></data>
+
+  <data name="Frontend.588" xml:space="preserve"><value>Возвращает указанное количество элементов с начала массива.</value></data>
+  <data name="Frontend.589" xml:space="preserve"><value>Пропускает указанное количество элементов в начале массива.</value></data>
+  <data name="Frontend.590" xml:space="preserve"><value>Разворачивает один уровень вложенного массива без рекурсивной обработки более глубоких уровней.</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>Преобразует элементы массива в числа и суммирует их.</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>Возвращает минимальное число после преобразования элементов массива.</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>Возвращает максимальное число после преобразования элементов массива.</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>Удаляет дубликаты по текстовому представлению, сохраняя первое вхождение.</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>Возвращает массив имён свойств объекта.</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>Возвращает массив значений свойств объекта.</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>Проверяет, содержит ли объект указанное имя свойства.</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>Преобразует значение в число.</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>Преобразует значение в Int32.</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>Преобразует значение в Int64.</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>Преобразует значение в Decimal.</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>Преобразует значение в логическое значение; поддерживаются true/false и 1/0.</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>Преобразует значение в текст.</value></data>
+
+  <data name="Frontend.604" xml:space="preserve"><value>Возвращает текущее время UTC в виде текста ISO.</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>Форматирует дату по указанному формату; при пустом параметре используется формат по умолчанию.</value></data>
+  <data name="AiCreation.NotAuthorized" xml:space="preserve"><value>Текущий администратор недоступен.</value></data>
+  <data name="AiCreation.ModuleUnavailable" xml:space="preserve"><value>NeuChar Workflow не включён.</value></data>
+  <data name="AiCreation.NameRequired" xml:space="preserve"><value>Требуется имя Workflow.</value></data>
+  <data name="AiCreation.MetadataTooLarge" xml:space="preserve"><value>Имя или описание Workflow превышает допустимый размер.</value></data>
+  <data name="AiCreation.TriggerNotAllowed" xml:space="preserve"><value>Workflow, созданные ИИ, сейчас поддерживают только ручной триггер.</value></data>
+  <data name="AiCreation.GraphTooLarge" xml:space="preserve"><value>Граф Workflow пуст или превышает допустимый размер.</value></data>
+  <data name="AiCreation.SensitiveConfig" xml:space="preserve"><value>Создание Workflow с помощью ИИ не может передавать учётные данные или секреты внешнего восстановления.</value></data>
+  <data name="AiCreation.GraphLimit" xml:space="preserve"><value>Workflow, созданные ИИ, ограничены 30 узлами и 60 соединениями.</value></data>
+  <data name="AiCreation.ManualTriggerRequired" xml:space="preserve"><value>Граф должен содержать ровно один ручной триггер.</value></data>
+  <data name="AiCreation.EndRequired" xml:space="preserve"><value>Граф должен содержать ровно один конечный узел.</value></data>
+  <data name="AiCreation.NodeNotAllowed" xml:space="preserve"><value>Этот тип узла запрещён для Workflow, созданных ИИ.</value></data>
+  <data name="AiCreation.DisconnectedNode" xml:space="preserve"><value>Каждый узел Workflow, созданного ИИ, должен быть соединён с ручным триггером.</value></data>
+  <data name="AiCreation.FunctionReferenceRequired" xml:space="preserve"><value>Узел Function должен указать moduleUid и functionKey.</value></data>
+  <data name="AiCreation.FunctionNotFound" xml:space="preserve"><value>Запрошенная Function не существует.</value></data>
+  <data name="AiCreation.FunctionModuleUnavailable" xml:space="preserve"><value>Модуль Function не включён.</value></data>
+  <data name="AiCreation.FunctionAiDenied" xml:space="preserve"><value>Запрошенная Function недоступна для вызова ИИ.</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>Пауза</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>Воспроизвести</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>Использует левое значение, оператор сравнения и правое значение для выбора истинной или ложной ветви; внутри цикла break может немедленно выйти из текущего цикла.</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>Ожидает указанное число секунд перед продолжением к следующим узлам.</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>Передаёт один и тот же вход в тело цикла указанное число раз. Разместите Loop end в конце тела; следующие узлы выполняются один раз.</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>Обозначает границу текущего цикла For: continue завершает итерацию, а break немедленно завершает цикл.</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>Передаёт текущий вход в другой включённый Workflow и возвращает его итоговый результат следующим узлам. Циклические ссылки блокируются до сохранения и запуска.</value></data>
+  <data name="Frontend.613" xml:space="preserve"><value>Последовательно присваивает значения объявленным переменным Workflow. Разрешены только ограниченные формулы; JavaScript, сеть, файлы и циклы не выполняются.</value></data>
+  <data name="Frontend.614" xml:space="preserve"><value>Ожидает завершения всех активированных вышестоящих ветвей, объединяет их в порядке соединений и один раз выдаёт результат вниз.</value></data>
+  <data name="Frontend.615" xml:space="preserve"><value>Каждый вышестоящий вход независимо отправляется вниз; следующие узлы выполняются последовательно в стабильном порядке плана.</value></data>
+  <data name="Frontend.616" xml:space="preserve"><value>Одновременно отправляет один и тот же вход любому числу следующих узлов, чтобы независимые ветви выполнялись параллельно.</value></data>
+  <data name="Frontend.617" xml:space="preserve"><value>Обрабатывает указанный шаблон и выводит его в Console выполнения внизу страницы для отладки; вход для следующих узлов не изменяется.</value></data>
+  <data name="Frontend.618" xml:space="preserve"><value>Отправляет подписчикам уведомление NeuBell и позволяет настроить способ его обработки после нажатия.</value></data>
+  <data name="Frontend.619" xml:space="preserve"><value>Создаёт уведомление NeuBell и приостанавливает текущую ветвь, пока администратор или внешний вызов с ключом восстановления не отправит текст.</value></data>
+  <data name="Frontend.620" xml:space="preserve"><value>Обозначает конец Workflow; его нельзя вставить в существующее соединение.</value></data>
+  <data name="Chat.Title" xml:space="preserve"><value>Чат NeuChar Workflow</value></data>
+  <data name="Chat.Loading" xml:space="preserve"><value>Загрузка…</value></data>
+  <data name="Chat.NewConversation" xml:space="preserve"><value>Новый разговор</value></data>
+  <data name="Chat.InputPlaceholder" xml:space="preserve"><value>Введите сообщение и нажмите Enter для отправки</value></data>
+  <data name="Chat.Send" xml:space="preserve"><value>Отправить</value></data>
+  <data name="Chat.EnterHint" xml:space="preserve"><value>Enter — отправить · Shift + Enter — новая строка · Сообщение запускает выполнение Workflow</value></data>
+  <data name="Chat.Processing" xml:space="preserve"><value>Обработка…</value></data>
+  <data name="Chat.PreviousProcessing" xml:space="preserve"><value>Предыдущее сообщение ещё обрабатывается…</value></data>
+  <data name="Chat.Starting" xml:space="preserve"><value>Запуск Workflow…</value></data>
+  <data name="Chat.RunFailed" xml:space="preserve"><value>Выполнение Workflow завершилось ошибкой.</value></data>
+  <data name="Chat.RunCompleted" xml:space="preserve"><value>Workflow завершён.</value></data>
+  <data name="Chat.ClearConfirm" xml:space="preserve"><value>Очистить текущий разговор? Выполняющиеся Workflow не будут затронуты.</value></data>
+  <data name="Chat.ResetFailed" xml:space="preserve"><value>Не удалось сбросить состояние.</value></data>
+  <data name="Chat.SessionLoadFailed" xml:space="preserve"><value>Не удалось загрузить чат-сессию.</value></data>
+  <data name="Chat.SessionUnavailable" xml:space="preserve"><value>Не удалось загрузить сессию</value></data>
+  <data name="Chat.GuestMode" xml:space="preserve"><value>Гостевой режим</value></data>
+  <data name="Chat.SignedIn" xml:space="preserve"><value>Выполнен вход</value></data>
+  <data name="Chat.Trigger" xml:space="preserve"><value>Триггер Chat</value></data>
+  <data name="Chat.User" xml:space="preserve"><value>Я</value></data>
+  <data name="Frontend.621" xml:space="preserve"><value>Левое значение, оператор сравнения, правое значение и управление циклом</value></data>
+  <data name="Frontend.622" xml:space="preserve"><value>Истина / Ложь / break</value></data>
+  <data name="Frontend.623" xml:space="preserve"><value>Секунды ожидания</value></data>
+  <data name="Frontend.624" xml:space="preserve"><value>От 1 до 100 000 фиксированных итераций или скалярное значение из предыдущего узла</value></data>
+  <data name="Frontend.625" xml:space="preserve"><value>Цикл → тело цикла → конец цикла → следующий узел</value></data>
+  <data name="Frontend.626" xml:space="preserve"><value>Входной порт</value></data>
+  <data name="Frontend.627" xml:space="preserve"><value>продолжить / прервать</value></data>
+  <data name="Frontend.628" xml:space="preserve"><value>Выход</value></data>
+  <data name="Frontend.629" xml:space="preserve"><value>Продолжить ниже после завершения всех итераций или после break</value></data>
+  <data name="Frontend.630" xml:space="preserve"><value>Целевой Workflow и входные данные</value></data>
+  <data name="Frontend.631" xml:space="preserve"><value>Можно вызывать только собственные включённые Workflow; вложенность ограничена 8 уровнями</value></data>
+  <data name="Frontend.632" xml:space="preserve"><value>Присваивание переменных и ограниченные формулы</value></data>
+  <data name="Frontend.633" xml:space="preserve"><value>Передать исходный ввод следующим узлам</value></data>
+  <data name="Frontend.634" xml:space="preserve"><value>Несколько входов из предыдущих узлов и содержимое вывода</value></data>
+  <data name="Frontend.635" xml:space="preserve"><value>Один агрегированный результат</value></data>
+  <data name="Frontend.636" xml:space="preserve"><value>Связи для нескольких входов из предыдущих узлов</value></data>
+  <data name="Frontend.637" xml:space="preserve"><value>Выдать по одному результату для каждого входа</value></data>
+  <data name="Frontend.638" xml:space="preserve"><value>Подключить любое число ветвей от выхода</value></data>
+  <data name="Frontend.639" xml:space="preserve"><value>Распределить исходный ввод по всем ветвям</value></data>
+  <data name="Frontend.640" xml:space="preserve"><value>Выводимый текст (по умолчанию {{input}})</value></data>
+  <data name="Frontend.641" xml:space="preserve"><value>Подписка, заголовок, содержимое и режим потребления</value></data>
+  <data name="Frontend.642" xml:space="preserve"><value>Необязательное потребление</value></data>
+  <data name="Frontend.643" xml:space="preserve"><value>Текущее напоминание / все напоминания подписки / только просмотр</value></data>
+  <data name="Frontend.644" xml:space="preserve"><value>Текст, отправленный человеком</value></data>
+  <data name="Frontend.645" xml:space="preserve"><value>Внешнее восстановление</value></data>
+  <data name="Frontend.646" xml:space="preserve"><value>После включения одноразовый ID запроса и ключ восстановления узла могут вызвать внутренний WebAPI</value></data>
+  <data name="Frontend.647" xml:space="preserve"><value>Нет следующего узла; вставка в существующее соединение невозможна</value></data>
+  <data name="Frontend.648" xml:space="preserve"><value>Перетащите на холст для добавления; вставка в соединение невозможна</value></data>
+  <data name="Frontend.649" xml:space="preserve"><value>Ожидание внешнего запроса Webhook</value></data>
+  <data name="Frontend.650" xml:space="preserve"><value>Запускается пользователем вручную</value></data>
+  <data name="Frontend.651" xml:space="preserve"><value>Запускается, когда пользователь отправляет сообщение со страницы чата</value></data>
+  <data name="Frontend.652" xml:space="preserve"><value>Неизвестно</value></data>
+  <data name="Frontend.653" xml:space="preserve"><value>Подготовка выполнения…</value></data>
+  <data name="Frontend.654" xml:space="preserve"><value>Нет доступного сводного результата.</value></data>
+  <data name="Frontend.655" xml:space="preserve"><value>У этого запуска нет идентификатора отмены. Обновите список задач и повторите попытку.</value></data>
+  <data name="Frontend.656" xml:space="preserve"><value>У этого запуска нет активного идентификатора; возможно, он остался после завершения процесса службы. Сначала отмените его или дождитесь обновления состояния задачи.</value></data>
+  <data name="Frontend.657" xml:space="preserve"><value>Не удалось быстро очистить задачи Workflow.</value></data>
+  <data name="Frontend.658" xml:space="preserve"><value>Платформа</value></data>
+  <data name="Frontend.659" xml:space="preserve"><value>Сохранение…</value></data>
+  <data name="Frontend.660" xml:space="preserve"><value>Не удалось сохранить</value></data>
+  <data name="Frontend.661" xml:space="preserve"><value>Есть несохранённые изменения</value></data>
+  <data name="Frontend.662" xml:space="preserve"><value>Черновик: отключённых узлов — {0}</value></data>
+  <data name="Frontend.663" xml:space="preserve"><value>Сохранено {0}</value></data>
+  <data name="Frontend.664" xml:space="preserve"><value>Сохранено</value></data>
+  <data name="Frontend.665" xml:space="preserve"><value>Не сохранено</value></data>
+  <data name="Frontend.666" xml:space="preserve"><value>Изменить</value></data>
+  <data name="Frontend.667" xml:space="preserve"><value>Изменить текст и вставить переменные</value></data>
+  <data name="Frontend.668" xml:space="preserve"><value>Это поле поддерживает только текущий ввод и ограниченные формулы; произвольный JavaScript не выполняется.</value></data>
+  <data name="Frontend.669" xml:space="preserve"><value>Использовать привязку модели каждого Agent</value></data>
+  <data name="Frontend.670" xml:space="preserve"><value>Использовать модель этой задачи для всех Agent</value></data>
+  <data name="Frontend.671" xml:space="preserve"><value>Не предоставлять инструменты модели</value></data>
+  <data name="Frontend.672" xml:space="preserve"><value>Разрешить настроенных участников Human в этой группе</value></data>
+  <data name="Frontend.673" xml:space="preserve"><value>Пропустить участников Human для этого запуска</value></data>
+  <data name="Frontend.674" xml:space="preserve"><value>Безымянная переменная</value></data>
+  <data name="Frontend.675" xml:space="preserve"><value>Например: {{= upper(input) }}; используйте vars.variableName для чтения текущего значения переменной. Нажмите «Изменить формулу», чтобы открыть общий редактор формул.</value></data>
+  <data name="Frontend.676" xml:space="preserve"><value>Workflow с участием человека</value></data>
+  <data name="Frontend.677" xml:space="preserve"><value>Отправить и продолжить</value></data>
+  <data name="Frontend.678" xml:space="preserve"><value>Одобрить и продолжить</value></data>
+  <data name="Frontend.679" xml:space="preserve"><value>Убрать закрепление</value></data>
+  <data name="Frontend.680" xml:space="preserve"><value>Закрепить</value></data>
+  <data name="Frontend.681" xml:space="preserve"><value>Перетащите от «{0}» к порту {1} целевого узла; отпустите в пустом месте, чтобы отменить.</value></data>
+  <data name="Frontend.682" xml:space="preserve"><value>слева</value></data>
+  <data name="Frontend.683" xml:space="preserve"><value>сверху</value></data>
+  <data name="Frontend.684" xml:space="preserve"><value>Сохранённая ссылка на файл: </value></data>
+  <data name="Frontend.685" xml:space="preserve"><value>Можно использовать {{input}} или ограниченные формулы и вставлять вывод предыдущего узла как фрагмент текста.</value></data>
+  <data name="Frontend.686" xml:space="preserve"><value>Поддерживает текст формул</value></data>
+  <data name="Frontend.687" xml:space="preserve"><value>Описание текста формулы</value></data>
+  <data name="Frontend.688" xml:space="preserve"><value>Переменная / формула</value></data>
+  <data name="Frontend.689" xml:space="preserve"><value>Например: создайте сводку на основе {{value_1}}</value></data>
+  <data name="Frontend.690" xml:space="preserve"><value>При удалении тега переменной соответствующий заполнитель также удаляется из текста. В тексте формулы можно использовать {{input}} для ссылки на текущий ввод; поля с поддержкой формул также могут вставлять вывод предыдущего узла.</value></data>
+  <data name="Frontend.691" xml:space="preserve"><value>Синтаксис выражения: {{= if(contains(value_1, "VIP"), upper(value_1), "обычный") }}. Поддерживаются {0}, сравнения и условия. Для параметров нестрокового типа вводите полную формулу, например {{= toInt(value_1) }}; добавление текста превращает результат в строку. Переменные Workflow записываются как {{= vars.variableName }}; JavaScript не выполняется. Используйте кнопки формул справа для вставки выражений.</value></data>
+  <data name="Frontend.692" xml:space="preserve"><value>Запуск менее чем через 1 минуту</value></data>
+  <data name="Frontend.693" xml:space="preserve"><value>Запуск через {0} мин.</value></data>
+  <data name="Frontend.694" xml:space="preserve"><value>Запуск через {0} ч.</value></data>
+  <data name="Frontend.695" xml:space="preserve"><value>Запуск через {0} дн.</value></data>
+  <data name="Frontend.696" xml:space="preserve"><value>Следующий запуск: {0}</value></data>
+  <data name="Frontend.697" xml:space="preserve"><value>Модуль</value></data>
+  <data name="Frontend.698" xml:space="preserve"><value>Идентификатор Function</value></data>
+  <data name="Frontend.699" xml:space="preserve"><value>Модуль без метки</value></data>
+  <data name="Frontend.700" xml:space="preserve"><value>Без метки</value></data>
+  <data name="Frontend.701" xml:space="preserve"><value>Параметр</value></data>
+  <data name="Frontend.702" xml:space="preserve"><value>Другие параметры</value></data>
+  <data name="Frontend.703" xml:space="preserve"><value>Function без имени</value></data>
+  <data name="Frontend.704" xml:space="preserve"><value>Описание Function отсутствует.</value></data>
+  <data name="Frontend.705" xml:space="preserve"><value>Модуль не включён; добавить этот элемент нельзя.</value></data>
+  <data name="Frontend.706" xml:space="preserve"><value>Удалённое соединение A2A</value></data>
+  <data name="Frontend.707" xml:space="preserve"><value>Тип узла</value></data>
+  <data name="Frontend.708" xml:space="preserve"><value>Включено</value></data>
+  <data name="Frontend.709" xml:space="preserve"><value>Отключено</value></data>
+  <data name="Frontend.710" xml:space="preserve"><value>Вызов: {0}</value></data>
+  <data name="Frontend.711" xml:space="preserve"><value>Выберите целевой Workflow</value></data>
+  <data name="Frontend.712" xml:space="preserve"><value>Задать переменные Workflow: {0}</value></data>
+  <data name="Frontend.713" xml:space="preserve"><value>Объединить все входы и вывести один результат</value></data>
+  <data name="Frontend.714" xml:space="preserve"><value>Задайте содержимое агрегированного вывода</value></data>
+  <data name="Frontend.715" xml:space="preserve"><value>После нажатия обработать все уведомления этой подписки</value></data>
+  <data name="Frontend.716" xml:space="preserve"><value>После нажатия обработать текущее уведомление</value></data>
+  <data name="Frontend.717" xml:space="preserve"><value>После нажатия только просмотреть задачу</value></data>
+  <data name="Frontend.718" xml:space="preserve"><value>Ожидание ввода человека или возобновления через внешний API</value></data>
+  <data name="Frontend.719" xml:space="preserve"><value>Сведения об узле</value></data>
+  <data name="Frontend.720" xml:space="preserve"><value>Вычислять количество по формуле</value></data>
+  <data name="Frontend.721" xml:space="preserve"><value>Читать количество из предыдущего узла (до 100000)</value></data>
+  <data name="Frontend.722" xml:space="preserve"><value>Последовательно повторить {0} раз</value></data>
+  <data name="Frontend.723" xml:space="preserve"><value>Узел {0} обрабатывает вход предыдущего узла в Workflow.</value></data>
+  <data name="Frontend.724" xml:space="preserve"><value>Идентификатор базы знаний</value></data>
+  <data name="Frontend.725" xml:space="preserve"><value>Состояние группы</value></data>
+  <data name="Frontend.726" xml:space="preserve"><value>Ответ загрузки файла недействителен.</value></data>
+  <data name="Frontend.727" xml:space="preserve"><value>Не удалось загрузить файл.</value></data>
+  <data name="Frontend.728" xml:space="preserve"><value>За один раз можно выбрать не более {0} файлов.</value></data>
+  <data name="Frontend.729" xml:space="preserve"><value>Этот параметр не поддерживает встраивание переменных в текст</value></data>
+  <data name="Frontend.730" xml:space="preserve"><value>Ручной ввод</value></data>
+  <data name="Frontend.731" xml:space="preserve"><value>Источник переменной в тексте недействителен или отсутствует индекс списка предыдущего узла</value></data>
+  <data name="Frontend.732" xml:space="preserve"><value>Указанный узел больше не является допустимым предыдущим узлом</value></data>
+  <data name="Frontend.733" xml:space="preserve"><value>Указанный параметр выбора Function удалён или недоступен после обновления модуля</value></data>
+  <data name="Frontend.734" xml:space="preserve"><value>Указанное поле вывода больше не существует</value></data>
+  <data name="Frontend.735" xml:space="preserve"><value>Тип указанного поля изменился после обновления модуля; выберите источник заново</value></data>
+  <data name="Frontend.736" xml:space="preserve"><value>Предыдущее значение является списком объектов; выберите индекс списка</value></data>
+  <data name="Frontend.737" xml:space="preserve"><value>Несовпадение типов: выберите индекс массива перед передачей одиночного значения</value></data>
+  <data name="Frontend.738" xml:space="preserve"><value>Несовпадение типов: целевому параметру нужен массив</value></data>
+  <data name="Frontend.739" xml:space="preserve"><value>Несовпадение типов: ожидалось {0}, получено {1}</value></data>
+  <data name="Frontend.740" xml:space="preserve"><value>Связано: {0}{1}</value></data>
+  <data name="Frontend.741" xml:space="preserve"><value>Недопустимый источник предыдущего узла</value></data>
+  <data name="Frontend.742" xml:space="preserve"><value>Целевому параметру нужен тип {0}; формула преобразования должна занимать весь ввод, например {{= {1}(value_1) }}</value></data>
+  <data name="Frontend.743" xml:space="preserve"><value>Результат чистой формулы — {0}, но целевому параметру нужен тип {1}</value></data>
+  <data name="Frontend.744" xml:space="preserve"><value>Режим чистой формулы сохраняет тип во время выполнения; целевому параметру нужен {0}</value></data>
+  <data name="Frontend.745" xml:space="preserve"><value>Результат чистой формулы: {0} → целевой параметр {1}</value></data>
+  <data name="Frontend.746" xml:space="preserve"><value>Можно использовать {{input}} для ссылки на текущий ввод или открыть редактор и вставить вывод предыдущего узла.</value></data>
+  <data name="Frontend.747" xml:space="preserve"><value>Не удалось обновить список Workflow</value></data>
+  <data name="Frontend.748" xml:space="preserve"><value>Повторите попытку позже.</value></data>
+  <data name="Frontend.749" xml:space="preserve"><value>Не удалось загрузить каталог узлов Function, Agent или A2A.</value></data>
+  <data name="Frontend.750" xml:space="preserve"><value>Проверьте модуль AIKernel и права текущей учётной записи.</value></data>
+  <data name="Frontend.751" xml:space="preserve"><value>Не удалось открыть задачу</value></data>
+  <data name="Frontend.752" xml:space="preserve"><value>Задача или Workflow больше не существуют.</value></data>
+  <data name="Frontend.753" xml:space="preserve"><value>Не удалось проверить файл Workflow.</value></data>
+  <data name="Frontend.754" xml:space="preserve"><value>Не удалось импортировать</value></data>
+  <data name="Frontend.755" xml:space="preserve"><value>После импорта нужно заново настроить чувствительные поля: {0}.</value></data>
+  <data name="Frontend.756" xml:space="preserve"><value>Импортировать «{0}» как отключённый черновик.{1}</value></data>
+  <data name="Frontend.757" xml:space="preserve"><value>Подтвердить импорт Workflow</value></data>
+  <data name="Frontend.758" xml:space="preserve"><value>Импортировать черновик</value></data>
+  <data name="Frontend.759" xml:space="preserve"><value>Импортировано как отключённый черновик. Проверьте конфигурацию перед включением.</value></data>
+  <data name="Frontend.760" xml:space="preserve"><value>Ошибка импорта</value></data>
+  <data name="Frontend.761" xml:space="preserve"><value>Не удалось импортировать файл Workflow.</value></data>
+  <data name="Frontend.762" xml:space="preserve"><value>Этот браузер не может безопасно создать ключ восстановления. Введите надёжный случайный ключ вручную.</value></data>
+  <data name="Frontend.763" xml:space="preserve"><value>Создан новый внешний ключ восстановления. После сохранения передайте его доверенному внешнему вызывающему.</value></data>
+  <data name="Frontend.764" xml:space="preserve"><value>Сначала отключите узел</value></data>
+  <data name="Frontend.765" xml:space="preserve"><value>Чтобы не менять существующий поток незаметно, в соединение можно перетаскивать только неподключённые узлы.</value></data>
+  <data name="Frontend.766" xml:space="preserve"><value>Копия: {0}</value></data>
+  <data name="Frontend.767" xml:space="preserve"><value>Исходное соединение изменилось; снова откройте меню вставки.</value></data>
+  <data name="Frontend.768" xml:space="preserve"><value>В теле узла цикла «{0}» может быть только один узел «конец цикла».</value></data>
+  <data name="Frontend.769" xml:space="preserve"><value>Узел цикла «{0}» должен быть соединён с входом тела цикла.</value></data>
+  <data name="Frontend.770" xml:space="preserve"><value>Путь тела узла цикла «{0}» недействителен.</value></data>
+  <data name="Frontend.771" xml:space="preserve"><value>Тело цикла ссылается на отсутствующий узел.</value></data>
+  <data name="Frontend.772" xml:space="preserve"><value>Тело узла цикла «{0}» не поддерживает конечные, параллельные, агрегирующие и объединяющие узлы.</value></data>
+  <data name="Frontend.773" xml:space="preserve"><value>После завершения вложенный цикл должен быть соединён со следующим узлом.</value></data>
+  <data name="Frontend.774" xml:space="preserve"><value>Для вложенного цикла «{0}» нужно явно настроить один уникальный узел конца цикла.</value></data>
+  <data name="Frontend.775" xml:space="preserve"><value>После завершения вложенный цикл «{0}» должен быть соединён со следующим узлом.</value></data>
+  <data name="Frontend.776" xml:space="preserve"><value>Выход break узла условия «{0}» должен быть соединён со входом break текущего цикла.</value></data>
+  <data name="Frontend.777" xml:space="preserve"><value>Узел условия «{0}» внутри тела цикла должен иметь истинную и ложную ветви.</value></data>
+  <data name="Frontend.778" xml:space="preserve"><value>Тело узла цикла «{0}» должно быть единственным путём.</value></data>
+  <data name="Frontend.779" xml:space="preserve"><value>во время выполнения должно быть целым числом от 1 до 100000</value></data>
+  <data name="Frontend.780" xml:space="preserve"><value>Недопустимый источник предыдущего узла</value></data>
+  <data name="Frontend.781" xml:space="preserve"><value>Формула количества узла цикла «{0}» не может быть пустой.</value></data>
+  <data name="Frontend.782" xml:space="preserve"><value>Формула количества узла цикла «{0}» должна быть числовой формулой или ссылкой на число предыдущего узла.</value></data>
+  <data name="Frontend.783" xml:space="preserve"><value>В текущем Workflow есть несохранённые изменения. При выходе они будут потеряны.</value></data>
+  <data name="Frontend.784" xml:space="preserve"><value>Выйти из текущего Workflow?</value></data>
+  <data name="Frontend.785" xml:space="preserve"><value>Отменить изменения</value></data>
+  <data name="Frontend.786" xml:space="preserve"><value>Продолжить редактирование</value></data>
+  <data name="Frontend.787" xml:space="preserve"><value>Нет изменений для сохранения.</value></data>
+  <data name="Frontend.788" xml:space="preserve"><value>Проверьте конфигурацию узла.</value></data>
+  <data name="Frontend.789" xml:space="preserve"><value>Не удалось сохранить</value></data>
+  <data name="Frontend.790" xml:space="preserve"><value>Черновик сохранён. Несоединённые узлы ({0}) будут препятствовать запуску; Workflow автоматически отключён. Соедините их перед повторным включением.</value></data>
+  <data name="Frontend.791" xml:space="preserve"><value>Сохранено с помощью сочетания клавиш.</value></data>
+  <data name="Frontend.792" xml:space="preserve"><value>Workflow сохранён.</value></data>
+  <data name="Frontend.793" xml:space="preserve"><value>Автосохранение приостановлено</value></data>
+  <data name="Frontend.794" xml:space="preserve"><value>Не удалось сохранить</value></data>
+  <data name="Frontend.795" xml:space="preserve"><value>Проверка перед запуском не пройдена.</value></data>
+  <data name="Frontend.796" xml:space="preserve"><value>Сохранение и проверка текущего Workflow…</value></data>
+  <data name="Frontend.797" xml:space="preserve"><value>Проверка параметров, ссылок и типов пройдена.</value></data>
+  <data name="Frontend.798" xml:space="preserve"><value>Не удалось запустить</value></data>
+  <data name="Frontend.799" xml:space="preserve"><value>Запуск Workflow завершён.</value></data>
+  <data name="Frontend.800" xml:space="preserve"><value>Запуск Workflow завершился ошибкой.</value></data>
+  <data name="Frontend.801" xml:space="preserve"><value>Не удалось прочитать состояние запуска.</value></data>
+  <data name="Frontend.802" xml:space="preserve"><value>Требуется ввод Human</value></data>
+  <data name="Frontend.803" xml:space="preserve"><value>Введите текст, прежде чем продолжить Workflow.</value></data>
+  <data name="Frontend.804" xml:space="preserve"><value>Быстрый ввод Workflow</value></data>
+  <data name="Frontend.805" xml:space="preserve"><value>Быстрое утверждение Workflow</value></data>
+  <data name="Frontend.806" xml:space="preserve"><value>Ответ Human отправлен; поток продолжит ожидание или выполнение.</value></data>
+  <data name="Frontend.807" xml:space="preserve"><value>Вызов инструмента отклонён; поток продолжит обработку.</value></data>
+  <data name="Frontend.808" xml:space="preserve"><value>Не удалось обработать Human</value></data>
+  <data name="Frontend.809" xml:space="preserve"><value>Запрос мог быть обработан через другой вход.</value></data>
+  <data name="Frontend.810" xml:space="preserve"><value>Текущий Workflow будет остановлен. Запущенные внешние вызовы могут ждать собственного ответа отмены.</value></data>
+  <data name="Frontend.811" xml:space="preserve"><value>Подтвердить отмену</value></data>
+  <data name="Frontend.812" xml:space="preserve"><value>Отменить</value></data>
+  <data name="Frontend.813" xml:space="preserve"><value>Продолжить</value></data>
+  <data name="Frontend.814" xml:space="preserve"><value>Запрошена ручная отмена; ожидание ответа текущего узла на отмену.</value></data>
+  <data name="Frontend.815" xml:space="preserve"><value>Не удалось отменить Workflow.</value></data>
+  <data name="Frontend.816" xml:space="preserve"><value>Не удалось отменить</value></data>
+  <data name="Frontend.817" xml:space="preserve"><value>Удалить Workflow «{0}»? Это действие нельзя отменить.</value></data>
+  <data name="Frontend.818" xml:space="preserve"><value>Удалить Workflow</value></data>
+  <data name="Frontend.819" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Frontend.820" xml:space="preserve"><value>Введите имя Workflow.</value></data>
+  <data name="Frontend.821" xml:space="preserve"><value>В Workflow может быть не более 30 переменных.</value></data>
+  <data name="Frontend.822" xml:space="preserve"><value>Имена переменных Workflow должны быть уникальными, начинаться с буквы или подчёркивания, содержать только буквы, цифры и подчёркивания и не быть input или vars.</value></data>
+  <data name="Frontend.823" xml:space="preserve"><value>Переменная Workflow «{0}» указана повторно.</value></data>
+  <data name="Frontend.824" xml:space="preserve"><value>Значение переменной Workflow «{0}» не может превышать 8000 символов.</value></data>
+  <data name="Frontend.825" xml:space="preserve"><value>Workflow должен содержать ровно один триггер.</value></data>
+  <data name="Frontend.826" xml:space="preserve"><value>Недопустимый тип узла-триггера.</value></data>
+  <data name="Frontend.827" xml:space="preserve"><value>Недопустимый метод запроса Webhook.</value></data>
+  <data name="Frontend.828" xml:space="preserve"><value>Недопустимый формат имени параметра Webhook.</value></data>
+  <data name="Frontend.829" xml:space="preserve"><value>Параметр Webhook «{0}» указан повторно.</value></data>
+  <data name="Frontend.830" xml:space="preserve"><value>Описание параметра Webhook «{0}» не может превышать 500 символов.</value></data>
+  <data name="Frontend.831" xml:space="preserve"><value>Заголовок Chat не может превышать 100 символов.</value></data>
+  <data name="Frontend.832" xml:space="preserve"><value>Приветствие Chat не может превышать 500 символов.</value></data>
+  <data name="Frontend.833" xml:space="preserve"><value>На холсте есть узлы, не соединённые с триггером.</value></data>
+  <data name="Frontend.834" xml:space="preserve"><value>Узел «{0}» принимает только один предыдущий ввод; для нескольких входов используйте Function, агрегирование или объединение.</value></data>
+  <data name="Frontend.835" xml:space="preserve"><value>Для агрегирующего узла «{0}» нужно задать содержимое вывода.</value></data>
+  <data name="Frontend.836" xml:space="preserve"><value>Вывод агрегирующего узла «{0}» не может превышать 8000 символов.</value></data>
+  <data name="Frontend.837" xml:space="preserve"><value>Количество повторов узла цикла «{0}» должно быть целым числом от 1 до {1} или ссылкой на одно предыдущее значение.</value></data>
+  <data name="Frontend.838" xml:space="preserve"><value>В узле безопасного кода «{0}» должно быть от 1 до 30 присваиваний переменных.</value></data>
+  <data name="Frontend.839" xml:space="preserve"><value>Узел безопасного кода «{0}» может присваивать только объявленные переменные Workflow.</value></data>
+  <data name="Frontend.840" xml:space="preserve"><value>Присваивание в узле безопасного кода «{0}» не может превышать 8000 символов.</value></data>
+  <data name="Frontend.841" xml:space="preserve"><value>Для узла дочернего Workflow «{0}» нужно выбрать сохранённый Workflow.</value></data>
+  <data name="Frontend.842" xml:space="preserve"><value>Целевой Workflow узла дочернего Workflow «{0}» не включён.</value></data>
+  <data name="Frontend.843" xml:space="preserve"><value>Узел дочернего Workflow «{0}» не может вызвать текущий Workflow.</value></data>
+  <data name="Frontend.844" xml:space="preserve"><value>Узел «{0}» ссылается на отключённый модуль или удалённую Function.</value></data>
+  <data name="Frontend.845" xml:space="preserve"><value>В узле «{0}» отсутствует обязательный параметр «{1}».</value></data>
+  <data name="Frontend.846" xml:space="preserve"><value>В параметре «{1}» узла «{0}» отсутствует исходное имя поля. Сохранять можно только черновики; исправьте или обновите соответствующий модуль XNCF.</value></data>
+  <data name="Frontend.847" xml:space="preserve"><value>Узел «{0}», параметр «{1}»: {2}</value></data>
+  <data name="Frontend.848" xml:space="preserve"><value>Узел «{0}» ссылается на недоступное соединение Agent или A2A.</value></data>
+  <data name="Frontend.849" xml:space="preserve"><value>Метаданные вариантов недоступны</value></data>
+  <data name="Frontend.850" xml:space="preserve"><value>Выбор предварительно загруженного ввода</value></data>
+  <data name="Frontend.851" xml:space="preserve"><value>Несколько</value></data>
+  <data name="Frontend.852" xml:space="preserve"><value>Одно</value></data>
+  <data name="Frontend.853" xml:space="preserve"><value>Наблюдалось при выполнении</value></data>
+  <data name="Frontend.854" xml:space="preserve"><value>Текст</value></data>
+  <data name="Frontend.855" xml:space="preserve"><value>Присваивание переменной {0}</value></data>
+  <data name="Frontend.856" xml:space="preserve"><value>(пустой текст)</value></data>
+  <data name="Frontend.857" xml:space="preserve"><value>Скопировано в буфер обмена.</value></data>
+  <data name="Frontend.858" xml:space="preserve"><value>Не удалось скопировать. Скопируйте вручную.</value></data>
+  <data name="Frontend.859" xml:space="preserve"><value>Обработано уведомлений текущей подписки: {0}.</value></data>
+  <data name="Frontend.860" xml:space="preserve"><value>Текущее уведомление обработано.</value></data>
+  <data name="Frontend.861" xml:space="preserve"><value>Это уведомление уже обработано или больше не принадлежит текущей учётной записи.</value></data>
+  <data name="Frontend.862" xml:space="preserve"><value>Не удалось автоматически обработать уведомление; его состояние сохранено. Обработайте его на соответствующей странице.</value></data>
 </root>

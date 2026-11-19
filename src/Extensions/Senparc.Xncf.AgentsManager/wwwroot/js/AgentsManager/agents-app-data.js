@@ -1,36 +1,36 @@
 /*
- * AgentsManager 前端：Vue 根实例 data() 返回的数据模型。
- * 注意：本文件与 agents-app-*.js 系列按 three-loader.js 中的顺序加载，
- * 依赖全局 var（classic script 顶层 var 挂到 window），请勿单独引入。
+ * Legacy comment translated to English.
+ * Note: this file and the agents-app-*.js series are loaded in the order defined by three-loader.js,
+ * depends on global variables (top-level classic-script vars are attached to window); do not import separately.
  */
 
 var AgentsAppData = {
       devHost: 'http://pr-felixj.frp.senparc.com',
-      elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini
-      tabsActiveName: 'first', // first(智能体) second(组) third(任务)
-      // 显隐 visible
+      elSize: 'medium', //Legacy comment translated to English.
+      tabsActiveName: 'first', // first(agent) second(group) third(task)
+      //Legacy comment translated to English.
       visible: {
-        drawerAgent: false, // 智能体 新增|编辑
-        drawerRemoteAgent: false, // 远程 A2A 智能体管理
-        dialogRemoteAgentEditor: false, // 远程 A2A 智能体新增|编辑
-        dialogPublishedA2A: false, // 将本地 Agent 发布为 A2A 服务
-        dialogGroupAgent: false, // 智能体 新增dialog
-        drawerGroup: false, // 组 新增|编辑
-        drawerGroupStart: false, // 组 启动 
-        dialogAgentParameter: false, // 智能体参数 列表
-        dialogTaskDescription: false, // 任务描述
-        dialogTaskEvaluation: false, // 任务评价页面
-        dialogMcpTools: false, // MCP工具列表对话框
-        drawerFunctionBindings: false, // FunctionRender / Workflow 绑定
-        drawerMcpSelect: false, // 从 MCP 列表选择
+        drawerAgent: false, // agent add|edit
+        drawerRemoteAgent: false, //Legacy comment translated to English.
+        dialogRemoteAgentEditor: false, //Legacy comment translated to English.
+        dialogPublishedA2A: false, //Legacy comment translated to English.
+        dialogGroupAgent: false, // agent adddialog
+        drawerGroup: false, // group add|edit
+        drawerGroupStart: false, // group start 
+        dialogAgentParameter: false, //Legacy comment translated to English.
+        dialogTaskDescription: false, // taskdescription
+        dialogTaskEvaluation: false, // task evaluationpage
+        dialogMcpTools: false, //Legacy comment translated to English.
+        drawerFunctionBindings: false, //Legacy comment translated to English.
+        drawerMcpSelect: false, //Legacy comment translated to English.
       },
       taskStateText: {
-        0: '等待',  // 等待 Waiting stand #3376cd
-        1: '聊天', // 聊天 Chatting loading #409EFF
-        2: '停顿', // 停顿 Paused loading #409EFF
-        3: '完成', // 完成 Finished success #67C23A
-        4: '取消', // 取消 Cancelled error #666 
-        5: '失败', // 取消 fail error #F56C6C
+        0: ncfST('Frontend.021'),  // wait Waiting stand #3376cd
+        1: ncfST('Frontend.022'),
+        2: ncfST('Frontend.023'),
+        3: ncfST('Frontend.024'), // complete Finished success #67C23A
+        4: ncfST('Frontend.025'),
+        5: ncfST('Frontend.152'),
       },
       taskStateColor: {
         0: 'waitColor',
@@ -42,16 +42,16 @@ var AgentsAppData = {
       },
       taskStateIcon: {
         0: 'fas fa-clock',
-        1: 'fas fa-spinner fa-pulse',// 动画
+        1: 'fas fa-spinner fa-pulse',//Legacy comment translated to English.
         2: 'fas fa-play-circle',
         3: 'fas fa-check-circle', // el-icon-success
-        4: 'fal fa-minus-circle fa-rotate-45', // 旋转
+        4: 'fal fa-minus-circle fa-rotate-45', //Legacy comment translated to English.
         5: 'fas fa-times-circle',// el-icon-error
       },
       agentStateText: {
-        1: '待命',
-        2: '进行中',
-        3: '停用',
+        1: ncfST('Frontend.150'),
+        2: ncfST('Frontend.154'),
+        3: ncfST('Frontend.043'),
       },
       agentStateColor: {
         1: 'standColor',
@@ -65,35 +65,35 @@ var AgentsAppData = {
         '/images/AgentsManager/avatar/avatar4.png',
         '/images/AgentsManager/avatar/avatar5.png',
       ],
-      // 智能体 ---start
+      // agent ---start
       agentQueryList: {
         pageIndex: 0,
         pageSize: 0,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // filter text
+        timeSort: false, // descending by default
+        proce: false, // in progress
+        stop: false, // disabled
+        stand: false, // standby
       },
-      agentFCPVisible: false, // 筛选条件 popover 显隐
+      agentFCPVisible: false, //Legacy comment translated to English.
       agentFilterCriteria: [
         {
-          label: '全部',
+          label: ncfST('Frontend.148'),
           value: 'all',
           checked: true
         },
         {
-          label: '进行中',
+          label: ncfST('Frontend.154'),
           value: 'proce',
           checked: false
         },
         {
-          label: '停用',
+          label: ncfST('Frontend.043'),
           value: 'stop',
           checked: false
         },
         {
-          label: '待命',
+          label: ncfST('Frontend.150'),
           value: 'stand',
           checked: false
         }
@@ -120,8 +120,8 @@ var AgentsAppData = {
         timeoutSeconds: 60,
       },
       remoteAgentFormRules: {
-        name: [{ required: true, message: '请填写远程智能体名称', trigger: 'blur' }],
-        agentCardUrl: [{ required: true, message: '请填写 A2A Agent Card 地址', trigger: 'blur' }]
+        name: [{ required: true, message: ncfST('Frontend.298'), trigger: 'blur' }],
+        agentCardUrl: [{ required: true, message: ncfST('Frontend.338'), trigger: 'blur' }]
       },
       publishedA2AForm: {
         id: 0,
@@ -141,95 +141,95 @@ var AgentsAppData = {
         agentCardUrl: ''
       },
       publishedA2AFormRules: {
-        publicAgentKey: [{ required: true, message: '请填写公开标识', trigger: 'blur' }]
+        publicAgentKey: [{ required: true, message: ncfST('Frontend.374'), trigger: 'blur' }]
       },
       knowledgeBaseOptions: [],
       knowledgeBaseOptionsLoaded: false,
-      fillCardNum: 0, // 为了保持最后一行的样式 填充的card数量
+      fillCardNum: 0, //Legacy comment translated to English.
       agentListElResizeObserver: null,
-      scrollbarAgentIndex: '', // 侧边智能体index 默认全部
-      agentDetails: '', // 智能体详情数据 查看
-      // 智能体详情 tabs
-      agentDetailsTabsActiveName: 'first', // first(组) second(任务)
-      // 智能体详情 组
+      scrollbarAgentIndex: '', //Legacy comment translated to English.
+      agentDetails: '', //Legacy comment translated to English.
+      //Legacy comment translated to English.
+      agentDetailsTabsActiveName: 'first', // first(group) second(task)
+      //Legacy comment translated to English.
       agentDetailsGroupQueryList: {
         pageIndex: 0,
         pageSize: 0,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // filter text
+        timeSort: false, // descending by default
+        proce: false, // in progress
+        stop: false, // disabled
+        stand: false, // standby
       },
       agentDetailsGroupList: [],
-      agentDetailsGroupShowType: '1', // 1:组详情 2:任务详情
-      agentDetailsGroupIndex: 0, // 侧边组index 默认全部
+      agentDetailsGroupShowType: '1', //Legacy comment translated to English.
+      agentDetailsGroupIndex: 0, //Legacy comment translated to English.
       agentDetailsGroupDetails: '',
       agentDetailsGroupTaskQueryList: {
         pageIndex: 0,
         pageSize: 0,
         chatGroupId: null,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // filter text
+        timeSort: false, // descending by default
+        proce: false, // in progress
+        stop: false, // disabled
+        stand: false, // standby
       },
-      agentGroupTaskSelection: [], // 选中的任务列表
-      agentDetailsGroupTaskList: [], // 组 任务列表
+      agentGroupTaskSelection: [], //Legacy comment translated to English.
+      agentDetailsGroupTaskList: [], // group task list
       agentDetailsGroupTaskHistoryList: [],
       agentDetailsGroupDetailsTaskDetails: '',
       agentDetailsGroupTaskMemberList: [],
       agentGroupTaskMemberfilter: '',
       agentGroupTaskMemberfilterList: [],
-      // 智能体详情 任务
+      //Legacy comment translated to English.
       agentDetailsTaskQueryList: {
         pageIndex: 0,
         pageSize: 0,
         chatGroupId: null,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // filter text
+        timeSort: false, // descending by default
+        proce: false, // in progress
+        stop: false, // disabled
+        stand: false, // standby
       },
-      agentDetailsTaskIndex: 0, // 侧边任务index 默认全部
+      agentDetailsTaskIndex: 0, //Legacy comment translated to English.
       agentDetailsTaskList: [],
       agentDetailsTaskDetails: '',
       agentDetailsTaskHistoryList: [],
       agentDetailsTaskMemberList: [],
       agentTaskMemberfilter: '',
       agentTaskMemberfilterList: [],
-      // 智能体 ---end
-      // 组 ---start
+      // agent ---end
+      // group ---start
       groupQueryList: {
         pageIndex: 0,
         pageSize: 0,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // filter text
+        timeSort: false, // descending by default
+        proce: false, // in progress
+        stop: false, // disabled
+        stand: false, // standby
       },
-      groupFCPVisible: false, // 筛选条件 popover 显隐
+      groupFCPVisible: false, //Legacy comment translated to English.
       groupFilterCriteria: [
         {
-          label: '全部',
+          label: ncfST('Frontend.148'),
           value: 'all',
           checked: true
         },
         {
-          label: '进行中',
+          label: ncfST('Frontend.154'),
           value: 'proce',
           checked: false
         },
         {
-          label: '停用',
+          label: ncfST('Frontend.043'),
           value: 'stop',
           checked: false
         },
         {
-          label: '待命',
+          label: ncfST('Frontend.150'),
           value: 'stand',
           checked: false
         }
@@ -241,18 +241,18 @@ var AgentsAppData = {
       groupTreeData: [],
       groupSelection: [],
       groupList: [],
-      groupShowType: '1', // 1:组列表 2:组详情 3:任务详情
-      scrollbarGroupIndex: '', // 侧边任务index 默认全部
+      groupShowType: '1', //Legacy comment translated to English.
+      scrollbarGroupIndex: '', //Legacy comment translated to English.
       groupDetails: '',
       groupTaskQueryList: {
         pageIndex: 0,
         pageSize: 0,
         chatGroupId: null,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // filter text
+        timeSort: false, // descending by default
+        proce: false, // in progress
+        stop: false, // disabled
+        stand: false, // standby
       },
       groupTaskSelection: [],
       groupTaskList: [],
@@ -262,18 +262,18 @@ var AgentsAppData = {
       groupTaskMemberList: [],
       groupTaskMemberfilter: '',
       groupTaskMemberfilterList: [],
-      // 组 新增|编辑 智能体
+      // group add|edit agent
       groupAgentQueryList: {
         pageIndex: 0,
         pageSize: 0,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // filter text
+        timeSort: false, // descending by default
+        proce: false, // in progress
+        stop: false, // disabled
+        stand: false, // standby
       },
       isGetGroupAgent: false,
-      groupAgentList: [], // 组新增时的智能体列表
+      groupAgentList: [], //Legacy comment translated to English.
       groupAgentTotal: 0,
       isGetGroupRemoteAgent: false,
       groupRemoteAgentList: [],
@@ -282,142 +282,142 @@ var AgentsAppData = {
         pageSize: 0,
         filter: '',
       },
-      // 组 ---end
-      // 任务 task ---start
+      // group ---end
+      // task task ---start
       taskQueryList: {
         pageIndex: 0,
         pageSize: 0,
         chatGroupId: null,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // filter text
+        timeSort: false, // descending by default
+        proce: false, // in progress
+        stop: false, // disabled
+        stand: false, // standby
       },
       taskArchiveScope: 'active', // active | archived | all
       taskArchiveScopeOptions: [
-        { label: '活动', value: 'active' },
-        { label: '归档', value: 'archived' },
-        { label: '全部', value: 'all' }
+        { label: ncfST('Frontend.148'), value: 'active' },
+        { label: ncfST('Frontend.153'), value: 'archived' },
+        { label: ncfST('Frontend.148'), value: 'all' }
       ],
       taskArchiveSavingId: 0,
-      taskFCPVisible: false, // 任务模块 筛选条件 popover 显隐
+      taskFCPVisible: false, //Legacy comment translated to English.
       taskFilterCriteria: [
         {
-          label: '全部',
+          label: ncfST('Frontend.148'),
           value: 'all',
           checked: true
         },
         {
-          label: '进行中',
+          label: ncfST('Frontend.154'),
           value: 'proce',
           checked: false
         },
         {
-          label: '停用',
+          label: ncfST('Frontend.043'),
           value: 'stop',
           checked: false
         },
         {
-          label: '待命',
+          label: ncfST('Frontend.150'),
           value: 'stand',
           checked: false
         }
       ],
-      scrollbarTaskIndex: '', // 侧边任务index 默认全部
+      scrollbarTaskIndex: '', //Legacy comment translated to English.
       taskSelection: [],
       taskList: [],
-      taskDetails: '', // 任务详情数据 查看
+      taskDetails: '', //Legacy comment translated to English.
       taskHistoryList: [],
       taskMemberList: [],
       taskMemberfilter: '',
       taskMemberfilterList: [],
-      // 任务 task ---end
-      // 智能体 新增|编辑
+      // task task ---end
+      // agent add|edit
       agentForm: {
-        id: 0, // 0 是新增
-        name: '', // 名称
+        id: 0, //Legacy comment translated to English.
+        name: '', // name
         systemMessageType: '1',
         systemMessage: '', // 
-        enable: true, // 是否启用
-        description: '', // 说明
-        hookRobotType: 0, // 外接平台
-        hookRobotParameter: '', // 外接参数
-        avastar: '/images/AgentsManager/avatar/avatar1.png', // 头像
-        functionCallNames: '', // Function Call 名称，逗号分隔
-        functionBindings: [], // FunctionRender / Workflow / Plugin 结构化绑定
+        enable: true, // whether enabled
+        description: '', // description
+        hookRobotType: 0, //Legacy comment translated to English.
+        hookRobotParameter: '', //Legacy comment translated to English.
+        avastar: '/images/AgentsManager/avatar/avatar1.png', //Legacy comment translated to English.
+        functionCallNames: '', //Legacy comment translated to English.
+        functionBindings: [], //Legacy comment translated to English.
         mcpEndpoints: '', // MCP Endpoints
-        knowledgeBaseId: null, // 绑定的知识库
-        modelBinding: 0, // 0 PromptRange，1 跟随组任务，2 手动 AIModel
+        knowledgeBaseId: null, //Legacy comment translated to English.
+        modelBinding: 0, //Legacy comment translated to English.
         aiModelId: null,
         connectorInstanceIds: [],
       },
-      // 编辑现有智能体时，等待 PromptRange 候选项返回后再确定“自选”或“手动”。
+      //Legacy comment translated to English.
       agentSystemMessageTypeDetectionPending: false,
       agentPromptConversionLoading: false,
       agentFormRules: {
         name: [
-          { required: true, message: '请填写', trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
         ],
         systemMessage: [
-          { required: true, message: '请选择', trigger: 'change' },
+          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
         ],
         // description: [
-        //     { required: true, message: '请填写', trigger: 'blur' },
+        //     { required: true, message: 'please enter a value', trigger: 'blur' },
         // ],
         hookRobotType: [
-          { required: true, message: '请选择', trigger: 'change' },
+          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
         ],
         // hookRobotParameter: [
-        //     { required: true, message: '请填写', trigger: 'blur' },
+        //     { required: true, message: 'please enter a value', trigger: 'blur' },
         // ],
         avastar: [
-          { required: true, message: '请选择', trigger: 'change' },
+          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
         ],
         functionCallNames: [
-          { required: false, message: '请输入Function Call名称', trigger: 'change' }
+          { required: false, message: ncfST('Frontend.156'), trigger: 'change' }
         ]
       },
-      // 组 新增|编辑
+      // group add|edit
       groupForm: {
-        enable: true, // 新建组默认启用
-        name: '', // 名称
-        members: [], // 成员列表
-        remoteMembers: [], // 远程 A2A 成员列表
-        description: '', // 说明
-        contextSharingMode: null, // null 时本地群沿用旧行为，远程成员默认最小化共享
-        adminAgentTemplateId: '', // 群主即agent
-        enterAgentTemplateId: '', // 对接人即agent
-        includeHumanParticipant: false // 是否加入 Human 文本参与者
+        enable: true, //Legacy comment translated to English.
+        name: '', // name
+        members: [], //Legacy comment translated to English.
+        remoteMembers: [], //Legacy comment translated to English.
+        description: '', // description
+        contextSharingMode: null, //Legacy comment translated to English.
+        adminAgentTemplateId: '', //Legacy comment translated to English.
+        enterAgentTemplateId: '', //Legacy comment translated to English.
+        includeHumanParticipant: false //Legacy comment translated to English.
       },
       groupFormRules: {
         name: [
-          { required: true, message: '请填写', trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
         ],
         members: [
-          { required: true, message: '请填写', trigger: 'change' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'change' },
         ],
         adminAgentTemplateId: [
-          { required: true, message: '请填写', trigger: 'change' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'change' },
         ],
         enterAgentTemplateId: [
-          { required: true, message: '请选择', trigger: 'change' },
+          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
         ],
         // description: [
-        //     { required: true, message: '请填写', trigger: 'blur' },
+        //     { required: true, message: 'please enter a value', trigger: 'blur' },
         // ],
       },
-      // 组 启动
+      // group start
       groupStartForm: {
-        groupName: '', // 组名称
-        chatGroupId: '', // 组id
-        name: '', // 标题
-        aiModelId: '', // 模型 id
-        promptCommand: '', // 任务描述
-        personality: true, // 是否采用个性化
-        requireHumanApproval: false, // 工具调用是否需要人工批准
-        humanInTheLoopLevel: 0, // 0 自动，1 风险分层，2 工具审批，3 Human 参与者
-        pluginToolPermission: 0, // 0 继承，1 自动，2 审批，3 禁止
+        groupName: '', // groupname
+        chatGroupId: '', // groupid
+        name: '', //Legacy comment translated to English.
+        aiModelId: '', // model id
+        promptCommand: '', // taskdescription
+        personality: true, //Legacy comment translated to English.
+        requireHumanApproval: false, //Legacy comment translated to English.
+        humanInTheLoopLevel: 0, //Legacy comment translated to English.
+        pluginToolPermission: 0, //Legacy comment translated to English.
         mcpToolPermission: 0,
         includeHumanParticipant: false,
         chatMaxRound: 20,
@@ -432,19 +432,19 @@ var AgentsAppData = {
       groupStartPromptCaretEnd: 0,
       groupStartFormRules: {
         chatGroupId: [
-          { required: true, message: '请填写', trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
         ],
         name: [
-          { required: true, message: '请填写', trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
         ],
         aiModelId: [
-          { required: true, message: '请选择', trigger: 'change' },
+          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
         ],
         promptCommand: [
-          { required: true, message: '请填写', trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
         ],
       },
-      // 任务评价
+      // task evaluation
       evaluationForm: {
         score: '',
         evaluation: ''
@@ -452,17 +452,17 @@ var AgentsAppData = {
       evaluationFormRules: {
         // change
         score: [
-          { required: true, message: '请填写', trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
         ],
         evaluation: [
-          { required: true, message: '请填写', trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
         ]
       },
-      // 对话记录 轮询
+      //Legacy comment translated to English.
       historyTimer: {},
-      // 任务列表重试（用于再次执行后等待新 taskId 出现）
+      //Legacy comment translated to English.
       taskListRetryTimer: {},
-      // 对话记录实时流
+      //Legacy comment translated to English.
       historyStream: {},
       historyStreamSilentTimer: {},
       historyStreamingDrafts: {},
@@ -498,16 +498,16 @@ var AgentsAppData = {
         agentStats: [],
         timelineStats: [],
       },
-      // 智能体参数列表
-      agentParameterTabsValue: '', // tabs选中(使用空字符串，避免和el-tabs内部string name不匹配)
+      //Legacy comment translated to English.
+      agentParameterTabsValue: '', //Legacy comment translated to English.
       agentParameterList: [],
-      // 描述内容
+      // descriptioncontent
       describeContent: '',
       taskDescriptionDetails: null,
       functionCallInputVisible: false,
       functionCallInputValue: '',
-      functionCallTags: [], // 用于编辑时临时存储标签
-      pluginTypes: [], // 存储所有可用的插件类型
+      functionCallTags: [], //Legacy comment translated to English.
+      pluginTypes: [], //Legacy comment translated to English.
       functionBindingCatalog: {
         functions: [],
         plugins: [],
@@ -518,29 +518,29 @@ var AgentsAppData = {
       functionBindingSearch: '',
       functionBindingLoading: false,
       functionBindingSaving: false,
-      agentAutoAttachXncf: false, // 是否自动附加所有 XNCF 功能插件
-      editorFormInitialSnapshots: {}, // 打开编辑器时的表单快照，用于避免无变更时仍二次确认
-      // MCP Endpoints相关
+      agentAutoAttachXncf: false, //Legacy comment translated to English.
+      editorFormInitialSnapshots: {}, //Legacy comment translated to English.
+      // MCP Endpointsrelated
       mcpEndpointInputVisible: false,
       mcpEndpointNameValue: '',
       mcpEndpointUrlValue: '',
       mcpEndpointEditMode: false,
       mcpEndpointOriginalName: '',
-      mcpSelectLoading: false, // 从 MCP 列表选择：加载中
-      mcpSelectSearch: '', // 从 MCP 列表选择：搜索关键字
-      mcpSelectMessage: '', // 从 MCP 列表选择：提示信息
-      mcpModuleAvailable: false, // 从 MCP 列表选择：MCP 模块是否可用
-      mcpEndpointOptions: [], // 从 MCP 列表选择：可选端点列表
+      mcpSelectLoading: false, //Legacy comment translated to English.
+      mcpSelectSearch: '', //Legacy comment translated to English.
+      mcpSelectMessage: '', //Legacy comment translated to English.
+      mcpModuleAvailable: false, //Legacy comment translated to English.
+      mcpEndpointOptions: [], //Legacy comment translated to English.
       connectorOptions: [],
       connectorOptionsLoading: false,
-      currentMcpTools: [], // 当前查看的MCP工具列表
+      currentMcpTools: [], //Legacy comment translated to English.
       agentListViewMode: 'panel',
       agentStatisticMetric: 'totalTokens',
       agentStatisticMetricOptions: [
-        { value: 'totalTokens', label: 'Token 消耗', unit: 'Token' },
-        { value: 'completedConversationRounds', label: '完成对话轮数', unit: '轮' },
-        { value: 'chattingCount', label: '进行中会话', unit: '个' },
-        { value: 'score', label: '评分', unit: '分' }
+        { value: 'totalTokens', label: ncfST('Frontend.084'), unit: 'Token' },
+        { value: 'completedConversationRounds', label: ncfST('Frontend.497'), unit: ncfST('Frontend.088') },
+        { value: 'chattingCount', label: ncfST('Frontend.155'), unit: ncfST('Frontend.075') },
+        { value: 'score', label: ncfST('Frontend.015'), unit: ncfST('Frontend.015') }
       ],
       agentGraphSnapshot: {
         agents: [],

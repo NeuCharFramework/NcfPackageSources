@@ -13,7 +13,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Module.AgentsManager.MenuName" xml:space="preserve">
-    <value>Agents 管理</value>
+    <value>エージェント管理</value>
   </data>
   <data name="Module.AgentsManager.Description" xml:space="preserve">
     <value>AI エージェントと関連設定を管理します</value>
@@ -22,13 +22,13 @@
     <value>ホーム</value>
   </data>
   <data name="Parameter.Agents.Template.Name" xml:space="preserve">
-    <value>名前||Agent テンプレート名</value>
+    <value>名前||エージェントテンプレート名</value>
   </data>
   <data name="Parameter.Agents.Template.Id" xml:space="preserve">
     <value>ID||0 で新規作成</value>
   </data>
   <data name="Parameter.Agents.Template.SystemMessage" xml:space="preserve">
-    <value>SystemMessage||システムメッセージの PromptRangeCode。検索、選択、手動入力に対応</value>
+    <value>システムメッセージ||システムメッセージの PromptRangeCode。検索、選択、手動入力に対応</value>
   </data>
   <data name="Parameter.Agents.Template.Description" xml:space="preserve">
     <value>説明||テンプレートの説明。モデルの動作には影響しません</value>
@@ -40,19 +40,19 @@
     <value>プラットフォーム引数||キーなどの接続引数</value>
   </data>
   <data name="Parameter.Agents.Template.FunctionCalls" xml:space="preserve">
-    <value>Function Calls||カンマ区切りの Function Call 名</value>
+    <value>関数呼び出し||カンマ区切りの関数呼び出し名</value>
   </data>
   <data name="Parameter.Agents.Create.Name" xml:space="preserve">
-    <value>Agent 名||新しい Agent の名前</value>
+    <value>エージェント名||新しいエージェントの名前</value>
   </data>
   <data name="Parameter.Agents.Create.ManualPromptCode" xml:space="preserve">
-    <value>PromptCode を手動入力||レンジ名、タクティック接頭辞、完全版に対応。SystemMessage の手動入力時は必須</value>
+    <value>PromptCode を手動入力||レンジ名、タクティック接頭辞、完全版に対応。システムメッセージを手動入力する場合は必須</value>
   </data>
   <data name="Parameter.Agents.Create.Description" xml:space="preserve">
-    <value>説明||新しい Agent の説明（任意）</value>
+    <value>説明||新しいエージェントの説明（任意）</value>
   </data>
   <data name="Parameter.Agents.Create.FunctionCalls" xml:space="preserve">
-    <value>Function Calls||カンマ区切りの Function Call 名（任意）</value>
+    <value>関数呼び出し||カンマ区切りの関数呼び出し名（任意）</value>
   </data>
   <data name="Parameter.Agents.Search.Query" xml:space="preserve">
     <value>検索語||名前、PromptCode、キーワード。最大 10 件、合計 500 文字まで</value>
@@ -61,7 +61,7 @@
     <value>最大件数||キーワードごとに最大 10 件。既定 5</value>
   </data>
   <data name="Parameter.Agents.Chat.Search.Query" xml:space="preserve">
-    <value>検索語||ChatGroup 名または用途のキーワード</value>
+    <value>検索語||チャットグループ名または用途のキーワード</value>
   </data>
   <data name="Parameter.Agents.Chat.Search.TopN" xml:space="preserve">
     <value>最大結果数||既定値 5、最大 10</value>
@@ -85,16 +85,16 @@
     <value>メンバー（手動）||名前、ID、PromptCode。複数はカンマ、セミコロン、改行で区切ります</value>
   </data>
   <data name="Parameter.Agents.Chat.Admin" xml:space="preserve">
-    <value>グループ所有者||最高評価のホスト Agent を自動使用。手動入力は互換用です</value>
+    <value>グループ所有者||最高評価のホストエージェントを自動使用。手動入力は互換用です</value>
   </data>
   <data name="Parameter.Agents.Chat.AdminManual" xml:space="preserve">
     <value>所有者（手動）||名前、ID、PromptCode（任意）</value>
   </data>
   <data name="Parameter.Agents.Chat.Contact" xml:space="preserve">
-    <value>連絡 Agent||最高評価のホスト Agent を自動使用。手動入力は互換用です</value>
+    <value>連絡エージェント||最高評価のホストエージェントを自動使用。手動入力は互換用です</value>
   </data>
   <data name="Parameter.Agents.Chat.ContactManual" xml:space="preserve">
-    <value>連絡 Agent（手動）||名前、ID、PromptCode（任意）</value>
+    <value>連絡エージェント（手動）||名前、ID、PromptCode（任意）</value>
   </data>
   <data name="Parameter.Agents.Chat.Description" xml:space="preserve">
     <value>説明||グループの説明</value>
@@ -103,19 +103,19 @@
     <value>グループを選択||実行するグループを選択</value>
   </data>
   <data name="Parameter.Agents.Chat.AIModel" xml:space="preserve">
-    <value>AI モデル||このタスクに使う外部 AI モデル</value>
+    <value>AIモデル||このタスクに使う外部AIモデル</value>
   </data>
   <data name="Parameter.Agents.Chat.Individuation" xml:space="preserve">
-    <value>パーソナライズ Agent||</value>
+    <value>パーソナライズされたエージェント||</value>
   </data>
   <data name="Common.Yes" xml:space="preserve">
     <value>はい</value>
   </data>
   <data name="Agents.Chat.Individuation.Help" xml:space="preserve">
-    <value>個別の AI パラメーターで Agent を実行</value>
+    <value>個別のAIパラメーターでエージェントを実行</value>
   </data>
   <data name="Parameter.Agents.Chat.Command" xml:space="preserve">
-    <value>何をお手伝いしますか||Agents に依頼する作業を説明してください</value>
+    <value>何をお手伝いしますか||エージェントに依頼する作業を説明してください</value>
   </data>
   <data name="Parameter.Agents.Chat.SelectDelete" xml:space="preserve">
     <value>削除する会話||会話とすべてのメッセージ、タスクを削除</value>
@@ -127,7 +127,7 @@
     <value>{0}（作成日時：{1:g}）</value>
   </data>
   <data name="Agents.Plugin.Crawl.Description" xml:space="preserve">
-    <value>Web ページをクロールして関連内容を返します</value>
+    <value>Webページをクロールして関連内容を返します</value>
   </data>
   <data name="Agents.Plugin.Crawl.Url" xml:space="preserve">
     <value>クロール URL</value>
@@ -157,997 +157,997 @@
     <value>あなたは {0} に堪能なプロの翻訳者です。ユーザーの文章を正確に翻訳し、訳文のみ出力してください。</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>AgentsManager ホーム||AgentsManager ホーム</value>
+    <value>エージェントマネージャーのホーム</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>拡張モジュール||拡張モジュール</value>
+    <value>拡張モジュール</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>エージェント管理||エージェント管理</value>
+    <value>エージェントマネージャー</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>ホーム||ホーム</value>
+    <value>ホーム</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>エージェント||エージェント</value>
+    <value>エージェント</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>エージェント一覧||エージェント一覧</value>
+    <value>エージェント一覧</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>名前で検索||名前で検索</value>
+    <value>名前で検索</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>時間順||時間順</value>
+    <value>時間で並べ替え</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>ステータスを選択||ステータスを選択</value>
+    <value>ステータスの選択</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>すべてのエージェント||すべてのエージェント</value>
+    <value>すべてのエージェント</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>データなし||データなし</value>
+    <value>データがありません。</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>パネルビュー||パネルビュー</value>
+    <value>パネルビュー</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>3Dビュー||3Dビュー</value>
+    <value>3D表示</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>参加中||参加中</value>
+    <value>参加中</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>スコア||スコア</value>
+    <value>スコア</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>編集||編集</value>
+    <value>編集</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>詳細||詳細</value>
+    <value>詳細</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>削除||削除</value>
+    <value>削除</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>すべてのグループ||すべてのグループ</value>
+    <value>すべてのグループ</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>タスク状態||タスク状態</value>
+    <value>タスクステータス</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>待機||待機</value>
+    <value>待機中</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>チャット中||チャット中</value>
+    <value>チャット</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>一時停止||一時停止</value>
+    <value>一時停止</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>完了||完了</value>
+    <value>完了</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>キャンセル||キャンセル</value>
+    <value>キャンセル</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>実行中のグループのみ||実行中のグループのみ</value>
+    <value>実行中のグループのみ</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>グループをすぐ開く||グループをすぐ開く</value>
+    <value>グループをクイックオープン</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>グループを開く||グループを開く</value>
+    <value>グループを開く</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>タスクをすぐ開く||タスクをすぐ開く</value>
+    <value>クイックオープンタスク</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>タスクを開く||タスクを開く</value>
+    <value>タスクを開く</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Group の柱にカーソルを合わせるとメンバーが強調されます。Group をクリックするとロックまたはロック解除できます。上部の数字は、そのグループで実行中のタスク状態の集計です。||Group の柱にカーソルを合わせるとメンバーが強調されます。Group をクリックするとロックまたはロック解除できます。上部の数字は、そのグループで実行中のタスク状態の集計です。</value>
+    <value>グループ列にカーソルを合わせると、そのメンバーが強調表示されます。グループをクリックすると、そのグループをロックまたはロック解除できます。上部の数字は、そのグループの実行中のタスクのステータス数を示しています。</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>グループ||グループ</value>
+    <value>グループ</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>タスク||タスク</value>
+    <value>タスク</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>実行中のタスク||実行中のタスク</value>
+    <value>実行中のタスク</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>レンジ:||レンジ:</value>
+    <value>範囲:</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>タクティクス:||タクティクス:</value>
+    <value>戦術</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>実行||実行</value>
+    <value>実行</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Model:||Model:</value>
+    <value>モデル：</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>AIモデルを管理||AIモデルを管理</value>
+    <value>AIモデルを管理</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>モデルパラメータ||モデルパラメータ</value>
+    <value>モデルパラメータ</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>モデルスコア:||モデルスコア:</value>
+    <value>モデルスコア：</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>状態:||状態:</value>
+    <value>状態：</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>無効||無効</value>
+    <value>無効</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>有効||有効</value>
+    <value>有効</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>グループ||グループ</value>
+    <value>グループ</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>ジョブ||ジョブ</value>
+    <value>ジョブ</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>グループを退出||グループを退出</value>
+    <value>グループを脱退</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>起動||起動</value>
+    <value>スタート</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>選択を起動||選択を起動</value>
+    <value>選択済みを開始</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>選択を停止||選択を停止</value>
+    <value>選択したものを停止</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>選択を削除||選択を削除</value>
+    <value>選択した項目を削除</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>タスク数:||タスク数:</value>
+    <value>タスク:</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>オーナー:||オーナー:</value>
+    <value>所有者:</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>担当者:||担当者:</value>
+    <value>連絡先：</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>グループメンバー：||グループメンバー：</value>
+    <value>グループ メンバー</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>実行中のタスク||実行中のタスク</value>
+    <value>実行中のタスク</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>開始時刻||開始時刻</value>
+    <value>開始</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>継続時間||継続時間</value>
+    <value>所要時間</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>モデル名||モデル名</value>
+    <value>モデル名</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>タスク説明||タスク説明</value>
+    <value>タスクの説明</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>アクション||アクション</value>
+    <value>アクション</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>エージェントパラメータ||エージェントパラメータ</value>
+    <value>エージェントパラメーター</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>再実行||再実行</value>
+    <value>テストを再実行</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>強制停止||強制停止</value>
+    <value>強制停止</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>使用量分析||使用量分析</value>
+    <value>利用状況分析</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>タスク開始時刻：||タスク開始時刻：</value>
+    <value>開始時刻：</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>タスク終了時刻：||タスク終了時刻：</value>
+    <value>タスク終了時間：</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>採点:||採点:</value>
+    <value>スコア：</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>タスク評価:||タスク評価:</value>
+    <value>タスクの確認：</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>使用量の概要||使用量の概要</value>
+    <value>使用状況の概要</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>メッセージ総数||メッセージ総数</value>
+    <value>総メッセージ</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>入力と出力の合計 Token||入力と出力の合計 Token</value>
+    <value>合計トークン（入力+出力）</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>平均応答時間||平均応答時間</value>
+    <value>平均応答時間</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>最大時間||最大時間</value>
+    <value>最大期間</value>
   </data>
   <data name="Frontend.075" xml:space="preserve">
-    <value>エージェント ·||エージェント ·</value>
+    <value>エージェント ·</value>
   </data>
   <data name="Frontend.076" xml:space="preserve">
-    <value>タスク使用量分析||タスク使用量分析</value>
+    <value>利用状況分析</value>
   </data>
   <data name="Frontend.077" xml:space="preserve">
-    <value>タスク：||タスク：</value>
+    <value>タスク:</value>
   </data>
   <data name="Frontend.078" xml:space="preserve">
-    <value>～||～</value>
+    <value>宛先：</value>
   </data>
   <data name="Frontend.079" xml:space="preserve">
-    <value>開始時刻||開始時刻</value>
+    <value>開始</value>
   </data>
   <data name="Frontend.080" xml:space="preserve">
-    <value>終了時刻||終了時刻</value>
+    <value>完了</value>
   </data>
   <data name="Frontend.081" xml:space="preserve">
-    <value>すべての Agents||すべての Agents</value>
+    <value>すべてのエージェント</value>
   </data>
   <data name="Frontend.082" xml:space="preserve">
-    <value>検索||検索</value>
+    <value>検索する</value>
   </data>
   <data name="Frontend.083" xml:space="preserve">
-    <value>リセット||リセット</value>
+    <value>リセット</value>
   </data>
   <data name="Frontend.084" xml:space="preserve">
-    <value>Tokenの合計||Tokenの合計</value>
+    <value>合計トークン</value>
   </data>
   <data name="Frontend.085" xml:space="preserve">
-    <value>入力 / 出力の Token||入力 / 出力の Token</value>
+    <value>入出力トークン</value>
   </data>
   <data name="Frontend.086" xml:space="preserve">
-    <value>P95 / 最長の時間||P95 / 最長の時間</value>
+    <value>P95 / 最大期間</value>
   </data>
   <data name="Frontend.087" xml:space="preserve">
-    <value>会話ラウンド||会話ラウンド</value>
+    <value>会話のラウンド</value>
   </data>
   <data name="Frontend.088" xml:space="preserve">
-    <value>ラウンド||ラウンド</value>
+    <value>ラウンド</value>
   </data>
   <data name="Frontend.089" xml:space="preserve">
-    <value>メッセージ数||メッセージ数</value>
+    <value>メッセージ</value>
   </data>
   <data name="Frontend.090" xml:space="preserve">
-    <value>入力 Token||入力 Token</value>
+    <value>入力トークン</value>
   </data>
   <data name="Frontend.091" xml:space="preserve">
-    <value>出力 Token||出力 Token</value>
+    <value>出力トークン</value>
   </data>
   <data name="Frontend.092" xml:space="preserve">
-    <value>平均レスポンス (ms)||平均レスポンス (ms)</value>
+    <value>平均応答時間（ミリ秒）</value>
   </data>
   <data name="Frontend.093" xml:space="preserve">
-    <value>個別の Agents||個別の Agents</value>
+    <value>個人エージェント</value>
   </data>
   <data name="Frontend.094" xml:space="preserve">
-    <value>時間別||時間別</value>
+    <value>時間別</value>
   </data>
   <data name="Frontend.095" xml:space="preserve">
-    <value>タイムバケット（時間）||タイムバケット（時間）</value>
+    <value>時間枠（時間）</value>
   </data>
   <data name="Frontend.096" xml:space="preserve">
-    <value>エージェントを編集||エージェントを編集</value>
+    <value>エージェントを編集</value>
   </data>
   <data name="Frontend.097" xml:space="preserve">
-    <value>エージェントを追加||エージェントを追加</value>
+    <value>エージェントを追加</value>
   </data>
   <data name="Frontend.098" xml:space="preserve">
-    <value>エージェント名||エージェント名</value>
+    <value>エージェント名</value>
   </data>
   <data name="Frontend.099" xml:space="preserve">
-    <value>記入してください||記入してください</value>
+    <value>ご記入をお願いします。</value>
   </data>
   <data name="Frontend.100" xml:space="preserve">
-    <value>選択||選択</value>
+    <value>選択</value>
   </data>
   <data name="Frontend.101" xml:space="preserve">
-    <value>手動||手動</value>
+    <value>手動</value>
   </data>
   <data name="Frontend.102" xml:space="preserve">
-    <value>選択してください||選択してください</value>
+    <value>選択</value>
   </data>
   <data name="Frontend.103" xml:space="preserve">
-    <value>手入力||手入力</value>
+    <value>手動入力</value>
   </data>
   <data name="Frontend.104" xml:space="preserve">
-    <value>有効||有効</value>
+    <value>有効</value>
   </data>
   <data name="Frontend.105" xml:space="preserve">
-    <value>エージェントを有効化||エージェントを有効化</value>
+    <value>エージェントを有効にします</value>
   </data>
   <data name="Frontend.106" xml:space="preserve">
-    <value>外部プラットフォーム||外部プラットフォーム</value>
+    <value>外部プラットフォーム</value>
   </data>
   <data name="Frontend.107" xml:space="preserve">
-    <value>外部プラットフォームのパラメータ||外部プラットフォームのパラメータ</value>
+    <value>外部プラットフォームのパラメーター</value>
   </data>
   <data name="Frontend.108" xml:space="preserve">
-    <value>すべての XNCF 機能プラグインを自動で付加||すべての XNCF 機能プラグインを自動で付加</value>
+    <value>すべてのXNCF機能プラグインを自動的に添付</value>
   </data>
   <data name="Frontend.109" xml:space="preserve">
-    <value>手動選択||手動選択</value>
+    <value>手動選択</value>
   </data>
   <data name="Frontend.110" xml:space="preserve">
-    <value>オンにすると、登録済みの XNCF 機能プラグインがすべて自動で付加され、エージェントが対応するモジュールの機能を認識して起動できます||オンにすると、登録済みの XNCF 機能プラグインがすべて自動で付加され、エージェントが対応するモジュールの機能を認識して起動できます</value>
+    <value>有効にすると、登録されているすべてのXNCF機能プラグインが自動的に添付され、エージェントは一致するモジュールの機能を認識して呼び出せます。</value>
   </data>
   <data name="Frontend.111" xml:space="preserve">
-    <value>Plugin のクラス名、または名前空間を含む完全名を入力できます||Plugin のクラス名、または名前空間を含む完全名を入力できます</value>
+    <value>プラグインクラス名、または名前空間を含む完全な名前を入力できます</value>
   </data>
   <data name="Frontend.112" xml:space="preserve">
-    <value>+ 追加||+ 追加</value>
+    <value>+追加</value>
   </data>
   <data name="Frontend.113" xml:space="preserve">
-    <value>利用可能なプラグイン種別：||利用可能なプラグイン種別：</value>
+    <value>利用可能なプラグインの種類：</value>
   </data>
   <data name="Frontend.114" xml:space="preserve">
-    <value>接続しました||接続しました</value>
+    <value>正常に接続されました</value>
   </data>
   <data name="Frontend.115" xml:space="preserve">
-    <value>ツールを表示||ツールを表示</value>
+    <value>ツールを表示</value>
   </data>
   <data name="Frontend.116" xml:space="preserve">
-    <value>接続失敗:||接続失敗:</value>
+    <value>接続に失敗しました。</value>
   </data>
   <data name="Frontend.117" xml:space="preserve">
-    <value>接続をテスト||接続をテスト</value>
+    <value>接続をテスト</value>
   </data>
   <data name="Frontend.118" xml:space="preserve">
-    <value>+ MCP Endpoint を追加||+ MCP Endpoint を追加</value>
+    <value>+ MCPエンドポイントを追加</value>
   </data>
   <data name="Frontend.119" xml:space="preserve">
-    <value>MCP Endpoint を編集||MCP Endpoint を編集</value>
+    <value>MCPエンドポイントを編集</value>
   </data>
   <data name="Frontend.120" xml:space="preserve">
-    <value>MCP Endpoint を追加||MCP Endpoint を追加</value>
+    <value>MCPエンドポイントを追加</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
-    <value>Endpoint の名前 (例: mcp-server-NCF-7)||Endpoint の名前 (例: mcp-server-NCF-7)</value>
+    <value>エンドポイント名（例：mcp-server-NCF-7）</value>
   </data>
   <data name="Frontend.122" xml:space="preserve">
-    <value>確認||確認</value>
+    <value>確認</value>
   </data>
   <data name="Frontend.123" xml:space="preserve">
-    <value>メモ||メモ</value>
+    <value>注</value>
   </data>
   <data name="Frontend.124" xml:space="preserve">
-    <value>記入（管理者のみ表示）||記入（管理者のみ表示）</value>
+    <value>記入（管理者のみ）</value>
   </data>
   <data name="Frontend.125" xml:space="preserve">
-    <value>グループを編集||グループを編集</value>
+    <value>グループを編集</value>
   </data>
   <data name="Frontend.126" xml:space="preserve">
-    <value>グループを追加||グループを追加</value>
+    <value>グループを追加</value>
   </data>
   <data name="Frontend.127" xml:space="preserve">
-    <value>グループ名||グループ名</value>
+    <value>グループ名</value>
   </data>
   <data name="Frontend.128" xml:space="preserve">
-    <value>グループメンバー||グループメンバー</value>
+    <value>グループ メンバー</value>
   </data>
   <data name="Frontend.129" xml:space="preserve">
-    <value>検索||検索</value>
+    <value>検索する</value>
   </data>
   <data name="Frontend.130" xml:space="preserve">
-    <value>選択中:||選択中:</value>
+    <value>選択中:</value>
   </data>
   <data name="Frontend.131" xml:space="preserve">
-    <value>説明||説明</value>
+    <value>内容</value>
   </data>
   <data name="Frontend.132" xml:space="preserve">
-    <value>オーナー||オーナー</value>
+    <value>所有者</value>
   </data>
   <data name="Frontend.133" xml:space="preserve">
-    <value>担当者||担当者</value>
+    <value>連絡先</value>
   </data>
   <data name="Frontend.134" xml:space="preserve">
-    <value>説明||説明</value>
+    <value>内容</value>
   </data>
   <data name="Frontend.135" xml:space="preserve">
-    <value>グループを起動||グループを起動</value>
+    <value>グループを開始</value>
   </data>
   <data name="Frontend.136" xml:space="preserve">
-    <value>グループを選択||グループを選択</value>
+    <value>グループを選択</value>
   </data>
   <data name="Frontend.137" xml:space="preserve">
-    <value>タスクタイトル||タスクタイトル</value>
+    <value>タスクタイトル</value>
   </data>
   <data name="Frontend.138" xml:space="preserve">
-    <value>モデルを選択||モデルを選択</value>
+    <value>モデルを選択</value>
   </data>
   <data name="Frontend.139" xml:space="preserve">
-    <value>パーソナライズエージェント||パーソナライズエージェント</value>
+    <value>パーソナライズされたエージェント</value>
   </data>
   <data name="Frontend.140" xml:space="preserve">
-    <value>個別パラメータでエージェントを実行||個別パラメータでエージェントを実行</value>
+    <value>パーソナライズされたパラメーターでエージェントを実行</value>
   </data>
   <data name="Frontend.141" xml:space="preserve">
-    <value>何をお手伝いできますか||何をお手伝いできますか</value>
+    <value>- どうしました？</value>
   </data>
   <data name="Frontend.142" xml:space="preserve">
-    <value>MCPツール一覧||MCPツール一覧</value>
+    <value>MCPツール一覧</value>
   </data>
   <data name="Frontend.143" xml:space="preserve">
-    <value>ツール名||ツール名</value>
+    <value>ツール名。</value>
   </data>
   <data name="Frontend.144" xml:space="preserve">
-    <value>パラメータ||パラメータ</value>
+    <value>パラメーター</value>
   </data>
   <data name="Frontend.145" xml:space="preserve">
-    <value>パラメータなし||パラメータなし</value>
+    <value>パラメータはありません。</value>
   </data>
   <data name="Frontend.146" xml:space="preserve">
-    <value>利用可能なツールはありません||利用可能なツールはありません</value>
+    <value>利用可能なツールはありません</value>
   </data>
   <data name="Frontend.147" xml:space="preserve">
-    <value>閉じる||閉じる</value>
+    <value>閉じる</value>
   </data>
   <data name="Frontend.148" xml:space="preserve">
-    <value>すべて||すべて</value>
+    <value>すべて</value>
   </data>
   <data name="Frontend.149" xml:space="preserve">
-    <value>イベント||イベント</value>
+    <value>イベント</value>
   </data>
   <data name="Frontend.150" xml:space="preserve">
-    <value>スタンバイ||スタンバイ</value>
+    <value>スタンバイ</value>
   </data>
   <data name="Frontend.151" xml:space="preserve">
-    <value>一時停止||一時停止</value>
+    <value>一時停止</value>
   </data>
   <data name="Frontend.152" xml:space="preserve">
-    <value>失敗||失敗</value>
+    <value>失敗しました</value>
   </data>
   <data name="Frontend.153" xml:space="preserve">
-    <value>アーカイブ||アーカイブ</value>
+    <value>アーカイブ</value>
   </data>
   <data name="Frontend.154" xml:space="preserve">
-    <value>進行中||進行中</value>
+    <value>実行中</value>
   </data>
   <data name="Frontend.155" xml:space="preserve">
-    <value>チャット||チャット</value>
+    <value>チャットする</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
-    <value>Function Call 名を入力してください||Function Call 名を入力してください</value>
+    <value>関数呼び出し名を入力してください</value>
   </data>
   <data name="Frontend.157" xml:space="preserve">
-    <value>更新||更新</value>
+    <value>再読み込みする</value>
   </data>
   <data name="Frontend.158" xml:space="preserve">
-    <value>PromptRange を管理||PromptRange を管理</value>
+    <value>PromptRangeを管理</value>
   </data>
   <data name="Frontend.159" xml:space="preserve">
-    <value>説明なし||説明なし</value>
+    <value>説明はありません</value>
   </data>
   <data name="Frontend.160" xml:space="preserve">
-    <value>パラメータ:||パラメータ:</value>
+    <value>パラメーター :</value>
   </data>
   <data name="Frontend.161" xml:space="preserve">
-    <value>このエージェントは、現在どのグループのメンバーでもありません。||このエージェントは、現在どのグループのメンバーでもありません。</value>
+    <value>このエージェントは現在、どのグループにも属していません。</value>
   </data>
   <data name="Frontend.162" xml:space="preserve">
-    <value>記入してください||記入してください</value>
+    <value>ご記入をお願いします。</value>
   </data>
   <data name="Frontend.163" xml:space="preserve">
-    <value>対象文字列||対象文字列</value>
+    <value>ターゲット文字列</value>
   </data>
   <data name="Frontend.164" xml:space="preserve">
-    <value>対象外の文字列||対象外の文字列</value>
+    <value>非ターゲット文字列</value>
   </data>
   <data name="Frontend.165" xml:space="preserve">
-    <value>保存しました||保存しました</value>
+    <value>保存しました</value>
   </data>
   <data name="Frontend.166" xml:space="preserve">
-    <value>削除しました||削除しました</value>
+    <value>正常に削除されました</value>
   </data>
   <data name="Frontend.167" xml:space="preserve">
-    <value>成功||成功</value>
+    <value>成功</value>
   </data>
   <data name="Frontend.168" xml:space="preserve">
-    <value>エラー||エラー</value>
+    <value>操作が失敗しました</value>
   </data>
   <data name="Frontend.169" xml:space="preserve">
-    <value>少なくとも1件選択してください||少なくとも1件選択してください</value>
+    <value>ページを選択してください</value>
   </data>
   <data name="Frontend.170" xml:space="preserve">
-    <value>続行しますか？||続行しますか？</value>
+    <value>続行しますか ?</value>
   </data>
   <data name="Frontend.171" xml:space="preserve">
-    <value>通知||通知</value>
+    <value>お知らせ</value>
   </data>
   <data name="Frontend.172" xml:space="preserve">
-    <value>確認||確認</value>
+    <value>確認</value>
   </data>
   <data name="Frontend.173" xml:space="preserve">
-    <value>読み込み失敗||読み込み失敗</value>
+    <value>ロードに失敗しました。</value>
   </data>
   <data name="Frontend.174" xml:space="preserve">
-    <value>コンテンツなし||コンテンツなし</value>
+    <value>コンテンツなし</value>
   </data>
   <data name="Frontend.175" xml:space="preserve">
-    <value>秒||秒</value>
+    <value>秒</value>
   </data>
   <data name="Frontend.176" xml:space="preserve">
-    <value>分||分</value>
+    <value>分</value>
   </data>
   <data name="Frontend.177" xml:space="preserve">
-    <value>時間||時間</value>
+    <value>時間</value>
   </data>
   <data name="Frontend.178" xml:space="preserve">
-    <value>日||日</value>
+    <value>日</value>
   </data>
   <data name="Frontend.179" xml:space="preserve">
-    <value>コピーしました||コピーしました</value>
+    <value>コピー成功</value>
   </data>
   <data name="Frontend.180" xml:space="preserve">
-    <value>コピー失敗||コピー失敗</value>
+    <value>コピーできませんでした</value>
   </data>
   <data name="Frontend.181" xml:space="preserve">
-    <value>タスク説明:||タスク説明:</value>
+    <value>タスクの説明</value>
   </data>
   <data name="Frontend.182" xml:space="preserve">
-    <value>グループ一覧||グループ一覧</value>
+    <value>グループリスト</value>
   </data>
   <data name="Frontend.183" xml:space="preserve">
-    <value>タスク数||タスク数</value>
+    <value>タスク</value>
   </data>
   <data name="Frontend.184" xml:space="preserve">
-    <value>最終実行||最終実行</value>
+    <value>最後の実行</value>
   </data>
   <data name="Frontend.185" xml:space="preserve">
-    <value>タスク一覧||タスク一覧</value>
+    <value>タスクリスト</value>
   </data>
   <data name="Frontend.186" xml:space="preserve">
-    <value>アーカイブ解除||アーカイブ解除</value>
+    <value>アーカイブ化解除</value>
   </data>
   <data name="Frontend.187" xml:space="preserve">
-    <value>アーカイブ||アーカイブ</value>
+    <value>アーカイブ</value>
   </data>
   <data name="Frontend.188" xml:space="preserve">
-    <value>タスク：（#）||タスク：（#）</value>
+    <value>タスク: (#)</value>
   </data>
   <data name="Frontend.189" xml:space="preserve">
-    <value>Agentアバター||Agentアバター</value>
+    <value>エージェントのアバター</value>
   </data>
   <data name="Frontend.190" xml:space="preserve">
-    <value>Endpoint URL（たとえば http://localhost:5000/mcp/sse）||Endpoint URL（たとえば http://localhost:5000/mcp/sse）</value>
+    <value>エンドポイント URL（例：http://localhost:5000/mcp/sse）</value>
   </data>
   <data name="Frontend.191" xml:space="preserve">
-    <value>キャンセル||キャンセル</value>
+    <value>キャンセル</value>
   </data>
   <data name="Frontend.192" xml:space="preserve">
-    <value>OK||OK</value>
+    <value>確認</value>
   </data>
   <data name="Frontend.193" xml:space="preserve">
-    <value>エイム:||エイム:</value>
+    <value>目的：</value>
   </data>
   <data name="Frontend.194" xml:space="preserve">
-    <value>平均点:||平均点:</value>
+    <value>平均値:</value>
   </data>
   <data name="Frontend.195" xml:space="preserve">
-    <value>最高点:||最高点:</value>
+    <value>ハイスコア</value>
   </data>
   <data name="Frontend.196" xml:space="preserve">
-    <value>[所要時間（ミリ秒）：]||[所要時間（ミリ秒）：]</value>
+    <value>[経過時間（ミリ秒）：]</value>
   </data>
   <data name="Frontend.197" xml:space="preserve">
-    <value>書式付き HTML コードをコピー||書式付き HTML コードをコピー</value>
+    <value>書式設定されたHTMLコードをコピー</value>
   </data>
   <data name="Frontend.198" xml:space="preserve">
-    <value>元の内容をコピーします（markdown の記号もコピーされます）||元の内容をコピーします（markdown の記号もコピーされます）</value>
+    <value>生のコンテンツをコピーする（たとえば、マークダウンマーカーがコピーされます）</value>
   </data>
   <data name="Frontend.199" xml:space="preserve">
-    <value>生データ||生データ</value>
+    <value>元画像</value>
   </data>
   <data name="Frontend.200" xml:space="preserve">
-    <value>閉じる||閉じる</value>
+    <value>閉じる</value>
   </data>
   <data name="Frontend.201" xml:space="preserve">
-    <value>タスク評価||タスク評価</value>
+    <value>タスク評価</value>
   </data>
   <data name="Frontend.202" xml:space="preserve">
-    <value>スコアを入力（0-10）||スコアを入力（0-10）</value>
+    <value>スコア（0～10）を入力してください</value>
   </data>
   <data name="Frontend.203" xml:space="preserve">
-    <value>評価を入力||評価を入力</value>
+    <value>評価を入力してください</value>
   </data>
   <data name="Frontend.204" xml:space="preserve">
-    <value>データベース操作例||データベース操作例</value>
+    <value>データベースのサンプル</value>
   </data>
   <data name="Frontend.205" xml:space="preserve">
-    <value>実行できるタスクはまだありません||実行できるタスクはまだありません</value>
+    <value>実行可能なタスクはまだありません</value>
   </data>
   <data name="Frontend.206" xml:space="preserve">
-    <value>統計の読み込みに失敗しました||統計の読み込みに失敗しました</value>
+    <value>統計情報を読み込めませんでした</value>
   </data>
   <data name="Frontend.207" xml:space="preserve">
-    <value>{0}失敗||{0}失敗</value>
+    <value>{0}に失敗しました</value>
   </data>
   <data name="Frontend.208" xml:space="preserve">
-    <value>{0}に成功||{0}に成功</value>
+    <value>{0}が成功しました</value>
   </data>
   <data name="Frontend.209" xml:space="preserve">
-    <value>{0}に失敗：{1}||{0}に失敗：{1}</value>
+    <value>{0}に失敗しました：{1}</value>
   </data>
   <data name="Frontend.210" xml:space="preserve">
-    <value>不明なエラー||不明なエラー</value>
+    <value>不明なエラー</value>
   </data>
   <data name="Frontend.211" xml:space="preserve">
-    <value>今すぐ閉じますか？||今すぐ閉じますか？</value>
+    <value>今すぐ閉じますか？</value>
   </data>
   <data name="Frontend.212" xml:space="preserve">
-    <value>エージェント {0} を無効にしますか？||エージェント {0} を無効にしますか？</value>
+    <value>エージェント {0}を無効にしますか？</value>
   </data>
   <data name="Frontend.213" xml:space="preserve">
-    <value>このエージェントは、この後の新しいタスクには参加しません||このエージェントは、この後の新しいタスクには参加しません</value>
+    <value>このエージェントは、今後の新しいタスクに参加しません</value>
   </data>
   <data name="Frontend.214" xml:space="preserve">
-    <value>エージェント {0} を有効にしますか？||エージェント {0} を有効にしますか？</value>
+    <value>エージェント {0}を有効にしますか？</value>
   </data>
   <data name="Frontend.215" xml:space="preserve">
-    <value>グループ {0} から脱退しますか？||グループ {0} から脱退しますか？</value>
+    <value>グループ「{0}」を退出しますか？</value>
   </data>
   <data name="Frontend.216" xml:space="preserve">
-    <value>外すと、以前参加したタスクの記録は見られなくなります||外すと、以前参加したタスクの記録は見られなくなります</value>
+    <value>削除後、以前に参加したタスクの記録は表示されなくなります</value>
   </data>
   <data name="Frontend.217" xml:space="preserve">
-    <value>操作の確認||操作の確認</value>
+    <value>操作を確認</value>
   </data>
   <data name="Frontend.218" xml:space="preserve">
-    <value>操作が成功しました!||操作が成功しました!</value>
+    <value>操作が成功しました。</value>
   </data>
   <data name="Frontend.219" xml:space="preserve">
-    <value>操作をキャンセルしました||操作をキャンセルしました</value>
+    <value>操作がキャンセルされました</value>
   </data>
   <data name="Frontend.220" xml:space="preserve">
-    <value>エージェント「{0}」は現在削除できません。||エージェント「{0}」は現在削除できません。</value>
+    <value>エージェント「{0}」を現在削除できません。</value>
   </data>
   <data name="Frontend.221" xml:space="preserve">
-    <value>オーナーであるグループ：{0}||オーナーであるグループ：{0}</value>
+    <value>オーナーとしてのグループ：{0}</value>
   </data>
   <data name="Frontend.222" xml:space="preserve">
-    <value>担当者であるグループ：{0}||担当者であるグループ：{0}</value>
+    <value>連絡先としてのグループ：{0}</value>
   </data>
   <data name="Frontend.223" xml:space="preserve">
-    <value>削除する前に、該当グループのオーナー／担当者を置き換えてください。||削除する前に、該当グループのオーナー／担当者を置き換えてください。</value>
+    <value>削除する前に、該当するグループのオーナー/連絡先を置き換えてください。</value>
   </data>
   <data name="Frontend.224" xml:space="preserve">
-    <value>削除不可||削除不可</value>
+    <value>削除がブロックされました</value>
   </data>
   <data name="Frontend.225" xml:space="preserve">
-    <value>了解||了解</value>
+    <value>了解です</value>
   </data>
   <data name="Frontend.226" xml:space="preserve">
-    <value>エージェント「{0}」を削除しますか？||エージェント「{0}」を削除しますか？</value>
+    <value>エージェント「{0}」を削除しますか？</value>
   </data>
   <data name="Frontend.227" xml:space="preserve">
-    <value>メンバーを外すグループ：{0}||メンバーを外すグループ：{0}</value>
+    <value>メンバーが脱退するグループ：{0}</value>
   </data>
   <data name="Frontend.228" xml:space="preserve">
-    <value>このエージェントに関する過去のメッセージ記録も削除され、元に戻せません。||このエージェントに関する過去のメッセージ記録も削除され、元に戻せません。</value>
+    <value>このエージェントに関連するメッセージ履歴も削除され、復元できなくなります。</value>
   </data>
   <data name="Frontend.229" xml:space="preserve">
-    <value>削除しました！||削除しました！</value>
+    <value>正常に削除されました</value>
   </data>
   <data name="Frontend.230" xml:space="preserve">
-    <value>削除前チェックに失敗しました。しばらくしてから再試行してください。||削除前チェックに失敗しました。しばらくしてから再試行してください。</value>
+    <value>削除の事前チェックに失敗しました。後ほどもう一度お試しください。</value>
   </data>
   <data name="Frontend.231" xml:space="preserve">
-    <value>このデータを削除しますか？||このデータを削除しますか？</value>
+    <value>このデータを削除しますか？</value>
   </data>
   <data name="Frontend.232" xml:space="preserve">
-    <value>先に削除するグループを選択してください||先に削除するグループを選択してください</value>
+    <value>最初に削除するグループを選択してください</value>
   </data>
   <data name="Frontend.233" xml:space="preserve">
-    <value>選択したデータを一括削除しますか？||選択したデータを一括削除しますか？</value>
+    <value>選択したデータを一括で削除しますか？</value>
   </data>
   <data name="Frontend.234" xml:space="preserve">
-    <value>先に起動するタスクを選択してください||先に起動するタスクを選択してください</value>
+    <value>最初に開始するタスクを選択</value>
   </data>
   <data name="Frontend.235" xml:space="preserve">
-    <value>選択したデータを一括起動しますか？||選択したデータを一括起動しますか？</value>
+    <value>選択したデータをバッチで開始しますか？</value>
   </data>
   <data name="Frontend.236" xml:space="preserve">
-    <value>先に削除するタスクを選択してください||先に削除するタスクを選択してください</value>
+    <value>最初に削除するタスクを選択してください</value>
   </data>
   <data name="Frontend.237" xml:space="preserve">
-    <value>このタスクを強制停止しますか？||このタスクを強制停止しますか？</value>
+    <value>このタスクを強制的に停止しますか？</value>
   </data>
   <data name="Frontend.238" xml:space="preserve">
-    <value>先に停止するタスクを選択してください||先に停止するタスクを選択してください</value>
+    <value>最初に停止するタスクを選択</value>
   </data>
   <data name="Frontend.239" xml:space="preserve">
-    <value>選択したタスクを一括で強制停止しますか？||選択したタスクを一括で強制停止しますか？</value>
+    <value>選択したタスクを強制停止しますか？</value>
   </data>
   <data name="Frontend.240" xml:space="preserve">
-    <value>未設定||未設定</value>
+    <value>未設定</value>
   </data>
   <data name="Frontend.241" xml:space="preserve">
-    <value>(下書き)||(下書き)</value>
+    <value>(下書き)</value>
   </data>
   <data name="Frontend.242" xml:space="preserve">
-    <value>名称未設定のツール||名称未設定のツール</value>
+    <value>名前のないツール</value>
   </data>
   <data name="Frontend.243" xml:space="preserve">
-    <value>接続テスト成功||接続テスト成功</value>
+    <value>接続テストに成功しました</value>
   </data>
   <data name="Frontend.244" xml:space="preserve">
-    <value>接続テストに失敗：||接続テストに失敗：</value>
+    <value>接続テストに失敗。</value>
   </data>
   <data name="Frontend.245" xml:space="preserve">
-    <value>接続テストでエラー：||接続テストでエラー：</value>
+    <value>接続テストエラー：</value>
   </data>
   <data name="Frontend.246" xml:space="preserve">
-    <value>プラグイン種別の読み込みに失敗しました||プラグイン種別の読み込みに失敗しました</value>
+    <value>プラグインタイプの読み込みに失敗しました</value>
   </data>
   <data name="Frontend.247" xml:space="preserve">
-    <value>名前とURLは空にできません||名前とURLは空にできません</value>
+    <value>名前とURLは空にできません</value>
   </data>
   <data name="Frontend.248" xml:space="preserve">
-    <value>endpointパラメータが空です||endpointパラメータが空です</value>
+    <value>エンドポイントパラメーターが空です</value>
   </data>
   <data name="Frontend.249" xml:space="preserve">
-    <value>利用可能なツール情報がありません||利用可能なツール情報がありません</value>
+    <value>利用できる情報がありません。</value>
   </data>
   <data name="Frontend.250" xml:space="preserve">
-    <value>ツール一覧 ({0})||ツール一覧 ({0})</value>
+    <value>ツールリスト（{0}）</value>
   </data>
   <data name="Frontend.251" xml:space="preserve">
-    <value>説明なし||説明なし</value>
+    <value>説明はありません</value>
   </data>
   <data name="Frontend.252" xml:space="preserve">
-    <value>パラメータ:||パラメータ:</value>
+    <value>パラメーター :</value>
   </data>
   <data name="Frontend.253" xml:space="preserve">
-    <value>パラメータなし||パラメータなし</value>
+    <value>パラメータはありません。</value>
   </data>
   <data name="Frontend.254" xml:space="preserve">
-    <value>MCPツール一覧||MCPツール一覧</value>
+    <value>MCPツール一覧</value>
   </data>
   <data name="Frontend.255" xml:space="preserve">
-    <value>閉じる||閉じる</value>
+    <value>閉じる</value>
   </data>
   <data name="Frontend.256" xml:space="preserve">
-    <value>{0}年||{0}年</value>
+    <value>{0}年</value>
   </data>
   <data name="Frontend.257" xml:space="preserve">
-    <value>{0}日||{0}日</value>
+    <value>{0}日</value>
   </data>
   <data name="Frontend.258" xml:space="preserve">
-    <value>{0} 時間||{0} 時間</value>
+    <value>{0}時間</value>
   </data>
   <data name="Frontend.259" xml:space="preserve">
-    <value>{0}分||{0}分</value>
+    <value>{0}分</value>
   </data>
   <data name="Frontend.260" xml:space="preserve">
-    <value>{0}秒||{0}秒</value>
+    <value>{0}秒</value>
   </data>
   <data name="Frontend.261" xml:space="preserve">
-    <value>モデルを管理||モデルを管理</value>
+    <value>モデルを管理</value>
   </data>
   <data name="Frontend.262" xml:space="preserve">
-    <value>Agent ID||エージェント ID</value>
+    <value>エージェント ID</value>
   </data>
   <data name="Frontend.263" xml:space="preserve">
-    <value>SystemMessage||システムメッセージ</value>
+    <value>システムメッセージ</value>
   </data>
   <data name="Frontend.264" xml:space="preserve">
-    <value>None||なし</value>
+    <value>なし</value>
   </data>
   <data name="Frontend.265" xml:space="preserve">
-    <value>Function Calls||関数呼び出し</value>
+    <value>関数呼び出し</value>
   </data>
   <data name="Frontend.266" xml:space="preserve">
-    <value>MCP Endpoints||MCP Endpoint</value>
+    <value>MCPエンドポイント</value>
   </data>
   <data name="Frontend.267" xml:space="preserve">
-    <value>Endpoint の名前 (例: mcp-server-NCF-7)||エンドポイント名（例：mcp-server-NCF-7）</value>
+    <value>エンドポイント名（例：mcp-server-NCF-7）</value>
   </data>
   <data name="Frontend.268" xml:space="preserve">
-    <value>Endpoint URL（たとえば http://localhost:5000/mcp/sse）||エンドポイント URL（例：http://localhost:5000/mcp/sse）</value>
+    <value>エンドポイント URL（例：http://localhost:5000/mcp/sse）</value>
   </data>
   <data name="Frontend.269" xml:space="preserve">
-    <value>MCPツール一覧||MCPツール一覧</value>
+    <value>MCPツール一覧</value>
   </data>
   <data name="Frontend.270" xml:space="preserve">
-    <value>Top_p:||Top P：</value>
+    <value>上限P：</value>
   </data>
   <data name="Frontend.271" xml:space="preserve">
-    <value>MaxToken:||Tokenの最大数：</value>
+    <value>トークンの最大数：</value>
   </data>
   <data name="Frontend.272" xml:space="preserve">
-    <value>Presence_penalty:||存在ペナルティ：</value>
+    <value>存在ペナルティ：</value>
   </data>
   <data name="Frontend.273" xml:space="preserve">
-    <value>Temperature:||温度：</value>
+    <value>温度：</value>
   </data>
   <data name="Frontend.274" xml:space="preserve">
-    <value>Frequeny_penalty:||頻度ペナルティ：</value>
+    <value>頻度ペナルティ：</value>
   </data>
   <data name="Frontend.275" xml:space="preserve">
-    <value>StopSequences:||停止シーケンス：</value>
+    <value>停止シーケンス：</value>
   </data>
   <data name="Frontend.276" xml:space="preserve">
-    <value>利用できる Chat タイプの AI Model が見つかりません。データベースにはモデルが {0} 件ありますが、Chat タイプはありません。先に AIKernel モジュールで Chat Model を 1 つ以上設定してください。||利用できる Chat タイプの AI Model が見つかりません。データベースにはモデルが {0} 件ありますが、Chat タイプはありません。先に AIKernel モジュールで Chat Model を 1 つ以上設定してください。</value>
+    <value>利用可能なチャットAIモデルが見つかりませんでした。データベースには{0}モデルがありますが、チャットモデルはありません。まず、AIKernelモジュールで少なくとも1つのチャットモデルを構成してください。</value>
   </data>
   <data name="Frontend.277" xml:space="preserve">
-    <value>読み込みに失敗: {0}||読み込みに失敗: {0}</value>
+    <value>読み込みに失敗しました：{0}</value>
   </data>
   <data name="Frontend.278" xml:space="preserve">
-    <value>有効な AI Model を選択してください||有効な AI Model を選択してください</value>
+    <value>有効なAIモデルを選択してください</value>
   </data>
   <data name="Frontend.279" xml:space="preserve">
-    <value>ID が {0} の AI Model が見つかりません||ID が {0} の AI Model が見つかりません</value>
+    <value>AIモデル（ID {0}）が見つかりませんでした</value>
   </data>
   <data name="Frontend.280" xml:space="preserve">
-    <value>Model '{0}' は Chat タイプではありません。Chat タイプの Model を選択してください。||Model '{0}' は Chat タイプではありません。Chat タイプの Model を選択してください。</value>
+    <value>モデル「{0}」はチャットタイプではありません。チャットモデルを選択してください。</value>
   </data>
   <data name="Frontend.281" xml:space="preserve">
-    <value>初期化に成功しました||初期化に成功しました</value>
+    <value>初期化が正常に完了しました</value>
   </data>
   <data name="Frontend.282" xml:space="preserve">
-    <value>最適化リクエストがタイムアウト: {0}||最適化リクエストがタイムアウト: {0}</value>
+    <value>最適化リクエストがタイムアウトしました：{0}</value>
   </data>
   <data name="Frontend.283" xml:space="preserve">
-    <value>Chat グループが見つかりません: {0}||Chat グループが見つかりません: {0}</value>
+    <value>チャットグループが見つかりません：{0}</value>
   </data>
   <data name="Frontend.284" xml:space="preserve">
-    <value>選択した AI モデルは存在しません: {0}||選択した AI モデルは存在しません: {0}</value>
+    <value>選択されたAIモデルは存在しません：{0}</value>
   </data>
   <data name="Frontend.285" xml:space="preserve">
-    <value>Chat グループ [{0}] には有効なエージェントがありません。||Chat グループ [{0}] には有効なエージェントがありません。</value>
+    <value>チャットグループ[{0}]には、利用可能な有効なエージェントがいません。</value>
   </data>
   <data name="Frontend.286" xml:space="preserve">
-    <value>チャットグループ [{0}] に有効な管理者エージェント（ID: {1}）が見つかりません。||チャットグループ [{0}] に有効な管理者エージェント（ID: {1}）が見つかりません。</value>
+    <value>チャットグループ[{0}]に有効な管理者エージェント（ID：{1}）が見つかりませんでした。</value>
   </data>
   <data name="Frontend.287" xml:space="preserve">
-    <value>Chat グループ [{0}] のマルチエージェント協働には、有効なエージェントが少なくとも 2 つ必要です。||Chat グループ [{0}] のマルチエージェント協働には、有効なエージェントが少なくとも 2 つ必要です。</value>
+    <value>マルチエージェントコラボレーションには、チャットグループ[{0}]に少なくとも2人の有効なエージェントが必要です。</value>
   </data>
   <data name="Frontend.288" xml:space="preserve">
-    <value>マルチエージェントのワークフローは外部からの応答を待っており、現在の実行パスは自動では続行できません。||マルチエージェントのワークフローは外部からの応答を待っており、現在の実行パスは自動では続行できません。</value>
+    <value>マルチエージェントワークフローは外部からの応答を待っており、現在の実行パスは自動的に続行できません。</value>
   </data>
   <data name="Frontend.289" xml:space="preserve">
-    <value>システムメッセージ：マルチエージェントの編成に失敗し（{0}）、代替実行でも表示できるテキストが返りませんでした。||システムメッセージ：マルチエージェントの編成に失敗し（{0}）、代替実行でも表示できるテキストが返りませんでした。</value>
+    <value>システムメッセージ：マルチエージェントオーケストレーションに失敗しました（{0}）。フォールバック実行では、表示するテキストが返されませんでした。</value>
   </data>
   <data name="Frontend.290" xml:space="preserve">
-    <value>システムメッセージ：AI サービスが 403（Forbidden）を返したため、現在のタスクは続行できません。モデルの権限、API Key、または選択したモデルが使えるかを確認してください。||システムメッセージ：AI サービスが 403（Forbidden）を返したため、現在のタスクは続行できません。モデルの権限、API Key、または選択したモデルが使えるかを確認してください。</value>
+    <value>システムメッセージ：AIサービスが403（アクセス拒否）を返し、現在のタスクを続行できません。モデルの権限、APIキー、または選択したモデルが利用可能かどうかを確認してください。</value>
   </data>
   <data name="Frontend.291" xml:space="preserve">
-    <value>システムメッセージ：AI サービスの認証に失敗しました（401）。API Key / Endpoint の設定を確認してください。||システムメッセージ：AI サービスの認証に失敗しました（401）。API Key / Endpoint の設定を確認してください。</value>
+    <value>システムメッセージ：AIサービスの認証に失敗しました（401）。APIキーとエンドポイントの設定を確認してください。</value>
   </data>
   <data name="Frontend.292" xml:space="preserve">
-    <value>システムメッセージ：AI サービスの呼び出しに失敗し、タスクは中断されました。理由：{0}||システムメッセージ：AI サービスの呼び出しに失敗し、タスクは中断されました。理由：{0}</value>
+    <value>システムメッセージ：AIサービス呼び出しに失敗し、タスクが中断されました。理由：{0}</value>
   </data>
   <data name="Frontend.293" xml:space="preserve">
-    <value>モデル設定が空です（AIModelDto == null）||モデル設定が空です（AIModelDto == null）</value>
+    <value>モデル構成が空です（AIModelDto == null）</value>
   </data>
   <data name="Frontend.294" xml:space="preserve">
-    <value>PromptCatalyzer ChatGroup が見つかりません。先に初期化を完了してください。||PromptCatalyzer ChatGroup が見つかりません。先に初期化を完了してください。</value>
+    <value>PromptCatalyzerのチャットグループが見つかりませんでした。最初に初期化を完了してください。</value>
   </data>
   <data name="Frontend.295" xml:space="preserve">
-    <value>PromptCatalyzer Agent が見つかりません。先に初期化を完了してください。||PromptCatalyzer Agent が見つかりません。先に初期化を完了してください。</value>
+    <value>PromptCatalyzerのエージェントが見つかりませんでした。最初に初期化を完了してください。</value>
   </data>
   <data name="Frontend.296" xml:space="preserve">
-    <value>Agent の会話に失敗しました: {0}||Agent の会話に失敗しました: {0}</value>
+    <value>エージェントとの会話に失敗しました：{0}</value>
   </data>
   <data name="Frontend.297" xml:space="preserve">
-    <value>PromptCode を選択するか、手入力してください||PromptCode を選択するか、手入力してください</value>
+    <value>PromptCodeを選択するか、手動で入力してください</value>
   </data>
   <data name="Frontend.298" xml:space="preserve">
-    <value>エージェント名を入力||エージェント名を入力</value>
+    <value>エージェントの名前を入力してください</value>
   </data>
   <data name="Frontend.299" xml:space="preserve">
-    <value>検索語を入力してください（名前、PromptCode、またはキーワード）||検索語を入力してください（名前、PromptCode、またはキーワード）</value>
+    <value>検索語（名前、PromptCode、またはキーワード）を入力してください</value>
   </data>
   <data name="Frontend.300" xml:space="preserve">
-    <value>有効な検索語を入力||有効な検索語を入力</value>
+    <value>有効な検索キーワードを入力してください</value>
   </data>
   <data name="Frontend.301" xml:space="preserve">
-    <value>有効化しました||有効化しました</value>
+    <value>二要素承認を有効にしました。</value>
   </data>
   <data name="Frontend.302" xml:space="preserve">
-    <value>無効化しました||無効化しました</value>
+    <value>二要素承認を無効にしました。</value>
   </data>
   <data name="Frontend.303" xml:space="preserve">
-    <value>接続しました||接続しました</value>
+    <value>正常に接続されました</value>
   </data>
   <data name="Frontend.304" xml:space="preserve">
-    <value>接続失敗||接続失敗</value>
+    <value>接続に失敗しました。</value>
   </data>
   <data name="Frontend.305" xml:space="preserve">
-    <value>Agent ID が指定されていません||Agent ID が指定されていません</value>
+    <value>エージェントIDが指定されていません</value>
   </data>
   <data name="Frontend.306" xml:space="preserve">
-    <value>PromptCatalyzer の初期化がタイムアウトしました（2 分）||PromptCatalyzer の初期化がタイムアウトしました（2 分）</value>
+    <value>PromptCatalyzerの初期化がタイムアウトしました（2分）</value>
   </data>
   <data name="Frontend.307" xml:space="preserve">
-    <value>Prompt の初期化に失敗しました: {0}||Prompt の初期化に失敗しました: {0}</value>
+    <value>プロンプトの初期化に失敗しました：{0}</value>
   </data>
   <data name="Frontend.308" xml:space="preserve">
-    <value>Prompt の初期化が返した PromptCode が空です||Prompt の初期化が返した PromptCode が空です</value>
+    <value>プロンプトの初期化によって返されたPromptCodeは空です</value>
   </data>
   <data name="Frontend.309" xml:space="preserve">
-    <value>この Prompt の最適化タスクは既に実行中です。再送信しないでください（ダブルクリックを避けるなど）。||この Prompt の最適化タスクは既に実行中です。再送信しないでください（ダブルクリックを避けるなど）。</value>
+    <value>このプロンプトに対して最適化タスクが既に実行されています。再度送信しないでください（たとえば、ダブルクリックを避けてください）。</value>
   </data>
   <data name="Frontend.310" xml:space="preserve">
-    <value>Prompt 最適化リクエストがタイムアウトしました（15 分）||Prompt 最適化リクエストがタイムアウトしました（15 分）</value>
+    <value>プロンプト最適化リクエストがタイムアウトしました（15分）</value>
   </data>
   <data name="Frontend.311" xml:space="preserve">
-    <value>編集対象の ChatGroup が見つかりません。ID：{0}||編集対象の ChatGroup が見つかりません。ID：{0}</value>
+    <value>編集するチャットグループが見つかりませんでした。ID：{0}</value>
   </data>
   <data name="Frontend.312" xml:space="preserve">
-    <value>グループメンバーの選択に失敗：{0}||グループメンバーの選択に失敗：{0}</value>
+    <value>グループメンバーの選択に失敗しました：{0}</value>
   </data>
   <data name="Frontend.313" xml:space="preserve">
-    <value>グループメンバーを 1 人以上指定してください（ID または名前）||グループメンバーを 1 人以上指定してください（ID または名前）</value>
+    <value>少なくとも1人のグループメンバー（IDまたは名前）を入力してください</value>
   </data>
   <data name="Frontend.314" xml:space="preserve">
-    <value>利用できる Chat タイプの AI モデルがないため、進行役の Agent を自動作成できません||利用できる Chat タイプの AI モデルがないため、進行役の Agent を自動作成できません</value>
+    <value>利用可能なチャットAIモデルが見つからなかったため、ホストエージェントを自動的に作成できません</value>
   </data>
   <data name="Frontend.315" xml:space="preserve">
-    <value>入力が空です。Agent の ID、名前、または PromptCode を渡してください。||入力が空です。Agent の ID、名前、または PromptCode を渡してください。</value>
+    <value>入力が空です。エージェントID、名前、またはPromptCodeを指定してください。</value>
   </data>
   <data name="Frontend.316" xml:space="preserve">
-    <value>有効な Agent が見つかりません。ID：{0}||有効な Agent が見つかりません。ID：{0}</value>
+    <value>有効なエージェントが見つかりませんでした。ID：{0}</value>
   </data>
   <data name="Frontend.317" xml:space="preserve">
-    <value>「{0}」は複数の Agent に一致しました。ID を指定してください：{1}||「{0}」は複数の Agent に一致しました。ID を指定してください：{1}</value>
+    <value>「{0}」は複数のエージェントと一致しました。IDを指定してください：{1}</value>
   </data>
   <data name="Frontend.318" xml:space="preserve">
-    <value>一致する Agent が見つかりません：{0}||一致する Agent が見つかりません：{0}</value>
+    <value>一致するエージェントが見つかりません：{0}</value>
   </data>
   <data name="Frontend.319" xml:space="preserve">
-    <value>少なくとも1つのグループを選択してください！||少なくとも1つのグループを選択してください！</value>
+    <value>最低一つのグループを選択</value>
   </data>
   <data name="Frontend.320" xml:space="preserve">
-    <value>タスクを作成して開始しました。実行状態は ChatTask 一覧で確認してください。||タスクを作成して開始しました。実行状態は ChatTask 一覧で確認してください。</value>
+    <value>タスクが作成され、開始されました。チャットタスク一覧でステータスを確認してください。</value>
   </data>
   <data name="Frontend.321" xml:space="preserve">
-    <value>削除する会話を選択してください！||削除する会話を選択してください！</value>
+    <value>削除する会話を選択してください！</value>
   </data>
   <data name="Frontend.322" xml:space="preserve">
-    <value>削除を確定するには、「削除を確認」にチェックを入れてください！||削除を確定するには、「削除を確認」にチェックを入れてください！</value>
+    <value>「削除を確認」ボックスをチェックして、削除を確認してください！</value>
   </data>
   <data name="Frontend.323" xml:space="preserve">
-    <value>グループ ID が指定されていません||グループ ID が指定されていません</value>
+    <value>グループIDが提供されていません</value>
   </data>
   <data name="Frontend.324" xml:space="preserve">
-    <value>タスクが存在しません：{0}||タスクが存在しません：{0}</value>
+    <value>タスクが存在しません：{0}</value>
   </data>
   <data name="Frontend.325" xml:space="preserve">
-    <value>アーカイブしました||アーカイブしました</value>
+    <value>アーカイブに成功しました</value>
   </data>
   <data name="Frontend.326" xml:space="preserve">
-    <value>アーカイブを解除しました||アーカイブを解除しました</value>
+    <value>アーカイブ解除に成功しました</value>
   </data>
   <data name="Frontend.327" xml:space="preserve">
-    <value>タスク ID が指定されていません||タスク ID が指定されていません</value>
+    <value>タスクIDが提供されていません</value>
   </data>
   <data name="Frontend.328" xml:space="preserve">
-    <value>起動できるタスクが見つかりません||起動できるタスクが見つかりません</value>
+    <value>開始可能なタスクが見つかりません</value>
   </data>
   <data name="Frontend.329" xml:space="preserve">
-    <value>一括開始が完了しました：成功 {0} 件、スキップ {1} 件||一括開始が完了しました：成功 {0} 件、スキップ {1} 件</value>
+    <value>バッチ開始が完了しました：{0}が成功し、{1}がスキップされました</value>
   </data>
   <data name="Frontend.330" xml:space="preserve">
-    <value>強制停止が完了しました：成功 {0} 件、スキップ {1} 件||強制停止が完了しました：成功 {0} 件、スキップ {1} 件</value>
+    <value>強制停止が完了しました：{0}が成功し、{1}がスキップされました</value>
   </data>
   <data name="Frontend.331" xml:space="preserve">
-    <value>タスクの削除が完了しました：成功 {0} 件||タスクの削除が完了しました：成功 {0} 件</value>
+    <value>タスクの削除が完了しました：{0}が成功しました</value>
   </data>
   <data name="Agents.Error.MissingRunRequest" xml:space="preserve">
     <value>チャットグループの実行リクエストは提供されていません。</value>
@@ -1162,19 +1162,19 @@
     <value>タスクのプロンプトがありません。</value>
   </data>
   <data name="Agents.Error.ChatGroupNotFound" xml:space="preserve">
-    <value>Chat グループが見つかりません: {0}</value>
+    <value>チャットグループが見つかりません: {0}</value>
   </data>
   <data name="Agents.Error.ChatGroupDisabled" xml:space="preserve">
-    <value>Chat グループ「{0}」は無効なため、新しい実行タスクを開始できません。</value>
+    <value>チャットグループ「{0}」は無効なため、新しい実行タスクを開始できません。</value>
   </data>
   <data name="Agents.Error.AiModelNotFound" xml:space="preserve">
     <value>選択した AI モデルは存在しません: {0}</value>
   </data>
   <data name="Agents.Error.NoEnabledAgents" xml:space="preserve">
-    <value>Chat グループ [{0}] には有効なエージェントがありません。</value>
+    <value>チャットグループ [{0}] には有効なエージェントがありません。</value>
   </data>
   <data name="Agents.Error.MultiAgentMinMembers" xml:space="preserve">
-    <value>Chat グループ [{0}] のマルチエージェント協働には、有効なエージェントが少なくとも 2 つ必要です。</value>
+    <value>チャットグループ [{0}] のマルチエージェント協働には、有効なエージェントが少なくとも2つ必要です。</value>
   </data>
   <data name="Agents.Error.AdminAgentNotFound" xml:space="preserve">
     <value>チャットグループ [{0}] に有効な管理者エージェント（ID: {1}）が見つかりません。</value>
@@ -1459,10 +1459,10 @@
     <value>スタンバイ</value>
   </data>
   <data name="Function.Agents.TemplateManagement.Name" xml:space="preserve">
-    <value>Agent テンプレート管理</value>
+    <value>エージェントテンプレート管理</value>
   </data>
   <data name="Function.Agents.TemplateManagement.Description" xml:space="preserve">
-    <value>AgentTemplate を作成・編集します。ChatGroup のメンバーを構成するときは、まず「Agent テンプレートを検索」を使い、タスクに適した役割を持つ有効なテンプレートを優先してください。既存 Agent で不足する場合のみ新しい Agent を作成します。新しい Agent にはプレーンテキストの System Prompt を使用できます。その後、適切な Agent を ChatGroup に設定してください。</value>
+    <value>エージェントテンプレートを作成・編集します。チャットグループのメンバーを構成するときは、まず「エージェントテンプレートを検索」を使い、タスクに適した役割を持つ有効なテンプレートを優先してください。既存のエージェントで不足する場合のみ新しいエージェントを作成します。新しいエージェントにはプレーンテキストのシステムプロンプトを使用できます。その後、適切なエージェントをチャットグループに設定してください。</value>
   </data>
   <data name="Function.Agents.CreateFromPromptCode.Name" xml:space="preserve">
     <value>PromptCode からエージェントを作成</value>
@@ -1471,28 +1471,28 @@
     <value>範囲、タクティクス、完全指定の PromptCode からエージェントを作成します</value>
   </data>
   <data name="Function.Agents.SearchTemplate.Name" xml:space="preserve">
-    <value>Agent テンプレートを検索して ID を返す</value>
+    <value>エージェントテンプレートを検索してIDを返す</value>
   </data>
   <data name="Function.Agents.SearchTemplate.Description" xml:space="preserve">
-    <value>AgentTemplate または ChatGroup の作成前に、名前、役割のキーワード、PromptCode で既存 AgentTemplate を検索して候補を返します。タスクに適した有効なテンプレートを優先してください。複数キーワードに対応します。</value>
+    <value>エージェントテンプレートまたはチャットグループの作成前に、名前、役割のキーワード、PromptCodeで既存のエージェントテンプレートを検索して候補を返します。タスクに適した有効なテンプレートを優先してください。複数キーワードに対応します。</value>
   </data>
   <data name="Function.Agents.SearchChatGroup.Name" xml:space="preserve">
-    <value>ChatGroup を検索して ID を返す</value>
+    <value>チャットグループを検索してIDを返す</value>
   </data>
   <data name="Function.Agents.SearchChatGroup.Description" xml:space="preserve">
-    <value>ChatGroup を作成する前に、名前または用途のキーワードで既存グループを検索し、ID、説明、メンバーを最大 10 件返します。必ず適切な既存グループを確認して再利用し、名前だけを理由に重複作成しないでください。</value>
+    <value>チャットグループを作成する前に、名前または用途のキーワードで既存グループを検索し、ID、説明、メンバーを最大10件返します。必ず適切な既存グループを確認して再利用し、名前だけを理由に重複作成しないでください。</value>
   </data>
   <data name="Function.Agents.ManageChatGroup.Name" xml:space="preserve">
-    <value>ChatGroup を管理</value>
+    <value>チャットグループを管理</value>
   </data>
   <data name="Function.Agents.ManageChatGroup.Description" xml:space="preserve">
-    <value>まずタスクに適した役割を持つ既存 AgentTemplate を検索して優先し、次にタスクのキーワードで「ChatGroup を検索」を呼び出して、名前、用途、メンバーが適したグループを再利用してください。既存 Agent で不足する場合のみ、プレーンテキストの System Prompt を使って AgentTemplate を作成します。適切な ChatGroup がない場合は、作成するグループ名、Agent、用途をユーザーに説明し、明示的な確認を待ってから「新規グループ」を選択してください。用途の説明は必須で、システムが [AdminChat:AutoGenerated] マーカーを追加します。</value>
+    <value>まずタスクに適した役割を持つ既存のエージェントテンプレートを検索して優先し、次にタスクのキーワードで「チャットグループを検索」を呼び出して、名前、用途、メンバーが適したグループを再利用してください。既存のエージェントで不足する場合のみ、プレーンテキストのシステムプロンプトを使ってエージェントテンプレートを作成します。適切なチャットグループがない場合は、作成するグループ名、エージェント、用途をユーザーに説明し、明示的な確認を待ってから「新規グループ」を選択してください。用途の説明は必須で、システムが [AdminChat:AutoGenerated] マーカーを追加します。</value>
   </data>
   <data name="Function.Agents.StartChatGroup.Name" xml:space="preserve">
-    <value>ChatGroup を開始</value>
+    <value>チャットグループを開始</value>
   </data>
   <data name="Function.Agents.StartChatGroup.Description" xml:space="preserve">
-    <value>タスクに適した既存の ChatGroup を開始します。新規作成の前に既存グループを確認し、ユーザーの明示的な確認を得てください。</value>
+    <value>タスクに適した既存のチャットグループを開始します。新規作成の前に既存グループを確認し、ユーザーの明示的な確認を得てください。</value>
   </data>
   <data name="Function.Agents.DeleteConversation.Name" xml:space="preserve">
     <value>会話を削除</value>
@@ -1501,4 +1501,298 @@
     <value>会話と関連するすべてのデータを削除します</value>
   </data>
 
+
+  <data name="Frontend.332" xml:space="preserve"><value>A2Aエージェントカードには、名前、説明、スキルのみが表示されます。プロンプト、シークレット、内部ツールは表示されません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.333" xml:space="preserve"><value>A2A公共サービス</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.334" xml:space="preserve"><value>リモートA2A</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.335" xml:space="preserve"><value>リモートA2Aエージェント</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.336" xml:space="preserve"><value>A2A:シークレット:キー名</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.337" xml:space="preserve"><value>エージェントカード名</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.338" xml:space="preserve"><value>エージェントカードURL</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.339" xml:space="preserve"><value>エージェントテンプレートには、承認されたコネクターがありません。ここで選択しても呼び出されません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.340" xml:space="preserve"><value>グループに人間のメンバーがいる場合、人間のターンになるとテキストによる返信を待つよう一時停止します。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.341" xml:space="preserve"><value>HILレベル</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.342" xml:space="preserve"><value>人間はモデルを呼び出しません。このバインディングは、システムエージェントのタスクポリシーを維持し、デフォルトでグループタスクに従います。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.343" xml:space="preserve"><value>人間の参加者</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.344" xml:space="preserve"><value>人間のターン</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.345" xml:space="preserve"><value>L0全自動（プラグイン/MCPが自動的に実行されます）</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.346" xml:space="preserve"><value>L1リスクベースの承認（MCPデフォルトの承認）</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.347" xml:space="preserve"><value>L2ツールの承認（最初にすべてのツールを確認）</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.348" xml:space="preserve"><value>L3 ヒューマンパートシパント + ツールの承認</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.349" xml:space="preserve"><value>MCPツールの権限</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.350" xml:space="preserve"><value>コンテキストの共有</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.351" xml:space="preserve"><value>コネクタを承認しない</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.352" xml:space="preserve"><value>ナレッジベースをバインドしない</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.353" xml:space="preserve"><value>今回はコネクタを使用しない場合は、選択解除したままにします</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.354" xml:space="preserve"><value>パーソナライズされたパラメーター</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.355" xml:space="preserve"><value>ここで管理されています。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.356" xml:space="preserve"><value>タスクの指示のみ</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.357" xml:space="preserve"><value>MCPリストから選択</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.358" xml:space="preserve"><value>PromptRangeから継承</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.359" xml:space="preserve"><value>これらのエンドポイントは、MCPモジュールレジストリからのものです。いずれかを選択して、名前 + URL として現在の構成に追加します。これはいつでも削除できます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.360" xml:space="preserve"><value>タスクの指示 + 現在のターンの主な結論</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.361" xml:space="preserve"><value>タスクの説明と実行戦略</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.362" xml:space="preserve"><value>現在のプレーンテキストのプロンプトと選択したチャットモデルからプロンプト範囲を作成し、1回実行してAIでスコアを付け、範囲レベルの参照に自動的に切り替えます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.363" xml:space="preserve"><value>例：X-A2A-Token</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.364" xml:space="preserve"><value>例：X-API-Key</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.365" xml:space="preserve"><value>例：パートナー-ncf</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.366" xml:space="preserve"><value>例：リサーチエージェント</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.367" xml:space="preserve"><value>例：外部リサーチアシスタント</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.368" xml:space="preserve"><value>リモートシステムがエージェントを選択するために使用します。プロンプトや内部情報を入力しないでください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.369" xml:space="preserve"><value>保存</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.370" xml:space="preserve"><value>保存</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.371" xml:space="preserve"><value>ローカルツールの呼び出しを許可する</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.372" xml:space="preserve"><value>受信認証</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.373" xml:space="preserve"><value>説明</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.374" xml:space="preserve"><value>公開識別子</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.375" xml:space="preserve"><value>プラグインの互換性</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.376" xml:space="preserve"><value>互換性のある強制承認</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.377" xml:space="preserve"><value>互換性スイッチ：すべてのツール呼び出しの前に承認を求める</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.378" xml:space="preserve"><value>従来のグループとの互換性：完全な履歴（リモートメンバーがいない場合のみ）</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.379" xml:space="preserve"><value>エージェントを削除</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.380" xml:space="preserve"><value>データを更新</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.381" xml:space="preserve"><value>状態を更新</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.382" xml:space="preserve"><value>人間のテキスト参加者を追加する</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.383" xml:space="preserve"><value>公開すると、標準のエージェントカードが作成され、A2A互換システムから検出および呼び出しが可能になります。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.384" xml:space="preserve"><value>ローカルのエージェントをA2Aサービスとして公開</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.385" xml:space="preserve"><value>小文字、数字、ハイフンのみが使用できます。有効化後はアドレスは変更されません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.386" xml:space="preserve"><value>トークン値ではなく、シークレット名のみを入力してください</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.387" xml:space="preserve"><value>現在の管理者が利用できるワークフローのみが表示されます。エージェントまたはワークフローを保存する際に、権限と循環参照が再度チェックされます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.388" xml:space="preserve"><value>ここで選択したコネクターのみを、このエージェントが呼び出せます。外部ツールへのアクセスを許可しない場合は、空のままにしてください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.389" xml:space="preserve"><value>メンション可能なグループメンバー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.390" xml:space="preserve"><value>オプション。管理者のみに表示されます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.391" xml:space="preserve"><value>氏名</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.392" xml:space="preserve"><value>公開サービスを有効にする</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.393" xml:space="preserve"><value>このグループを有効にする</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.394" xml:space="preserve"><value>コピー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.395" xml:space="preserve"><value>複雑なバインディングは右側のドロワーで管理され、現在のエージェント編集状態が保持されます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.396" xml:space="preserve"><value>すべてのパラメータ</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.397" xml:space="preserve"><value>パブリックサービスが有効になっています。認証された外部システムはこのエージェントを呼び出すことができます。プロンプト、ナレッジベース、および応答を共有できることを確認し、HTTPS、ゲートウェイ制限、および監視を使用してアクセスとモデルコストを制御します。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.398" xml:space="preserve"><value>ツール</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.399" xml:space="preserve"><value>ツールとワークフロー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>ツール呼び出しの承認</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.401" xml:space="preserve"><value>ローカルエージェントの記録済み累積データとライブデータ</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.402" xml:space="preserve"><value>接続済み</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.403" xml:space="preserve"><value>有効にすると、以下のより寛容なツールの権限が上書きされます。新しい構成では、HILレベルとカテゴリの権限を直接使用する必要があります。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.404" xml:space="preserve"><value>有効にすると、外部リクエストが間接的に、このローカルエージェント用に構成された関数またはMCPツールを呼び出す可能性があります。信頼できる呼び出し元だけに公開してください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.405" xml:space="preserve"><value>現在のグループは、人間のターンとテキストによる返信を待っています。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.406" xml:space="preserve"><value>受信認証が無効になっています。これは、分離された制御されたネットワークでのみ使用してください。公開呼び出しまたは組織間呼び出しでは、Bearerトークンまたはカスタムヘッダーを使用する必要があります。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.407" xml:space="preserve"><value>現在のグループにはメンション可能なメンバーがいません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.408" xml:space="preserve"><value>クイック編集</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.409" xml:space="preserve"><value>手動プロンプトには、チャットAIモデルを手動で選択する必要があります。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.410" xml:space="preserve"><value>この手動プロンプトに継承できるPromptRangeモデルはありません。チャットAIモデルを手動で選択してください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.411" xml:space="preserve"><value>AIモデルを手動で選択</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.412" xml:space="preserve"><value>実行前に承認する</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.413" xml:space="preserve"><value>承認</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.414" xml:space="preserve"><value>公開スキル説明</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.415" xml:space="preserve"><value>スキルの識別子/名前</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.416" xml:space="preserve"><value>許可しない</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.417" xml:space="preserve"><value>名称でフィルタ</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.418" xml:space="preserve"><value>人間による回答を送信</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.419" xml:space="preserve"><value>プラグインツールの権限</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.420" xml:space="preserve"><value>名前、URL、または説明を検索</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.421" xml:space="preserve"><value>名前、モジュール、または説明を検索</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.422" xml:space="preserve"><value>データベースにはシークレット参照のみが保存されます。実際のトークンはデプロイ設定で構成します。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.423" xml:space="preserve"><value>追加</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.424" xml:space="preserve"><value>リモートA2Aを追加</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.425" xml:space="preserve"><value>新しいグループはデフォルトで有効になっています。無効化されたグループは、新しいタスクを作成したり、ワークフローノードとして機能したりすることはありません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.426" xml:space="preserve"><value>タイルの面積は、選択した指標の相対的な大きさを表します。タイルをクリックしてエージェントを編集します。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.427" xml:space="preserve"><value>認証なし</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.428" xml:space="preserve"><value>なし（制御されたネットワークのみ）</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.429" xml:space="preserve"><value>レガシーベクトルデータを、安全なエージェント分離検索用の公開コレクションにするには、ナレッジベースで再ベクトル化する必要があります。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.430" xml:space="preserve"><value>エージェント統計チャート</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.431" xml:space="preserve"><value>統計に使用できるエージェントはありません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.432" xml:space="preserve"><value>最大チャットラウンド数</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.433" xml:space="preserve"><value>未検証</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.434" xml:space="preserve"><value>バインドされていません</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.435" xml:space="preserve"><value>関連付けられているナレッジベースはありません</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.436" xml:space="preserve"><value>ローカル</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.437" xml:space="preserve"><value>ローカルエージェント</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.438" xml:space="preserve"><value>ローカルツールの呼び出しが有効になっています。外部リクエストは、間接的に関数またはMCPの書き込みや外部アクセスを引き起こす可能性があります。これは、信頼できる呼び出し元にのみ公開してください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.439" xml:space="preserve"><value>地域のメンバー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.440" xml:space="preserve"><value>ポリシーを実行</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.441" xml:space="preserve"><value>この実行のコネクタ</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.442" xml:space="preserve"><value>タスクを表示</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.443" xml:space="preserve"><value>このエージェントに関連付けられているタスクを表示</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.444" xml:space="preserve"><value>このタスクは、ポリシーの記録が有効になる前に作成されました。その履歴のHILとツールの権限を復元することはできません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.445" xml:space="preserve"><value>テスト</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.446" xml:space="preserve"><value>すべてテスト</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.447" xml:space="preserve"><value>テスト失敗。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.448" xml:space="preserve"><value>混合グループでは、すべてのリモートメンバーに求められる最も厳格なポリシーが適用されます。ローカルグループの設定がない場合、アップグレード前の動作が維持されます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.449" xml:space="preserve"><value>メンバーをクリックすると、下のタスクの説明でカーソルがある位置にメンションが挿入されます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.450" xml:space="preserve"><value>ステータス</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.451" xml:space="preserve"><value>PromptRangeで生成し、スコアリングを実行する</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.452" xml:space="preserve"><value>カード名を使用するには空のままにします</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.453" xml:space="preserve"><value>公開用の説明文を使用するには、空のままにしてください</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.454" xml:space="preserve"><value>ローカルのエージェント名を使用するには、空のままにします</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.455" xml:space="preserve"><value>禁止</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.456" xml:space="preserve"><value>後で返信する</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.457" xml:space="preserve"><value>後で対応する</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.458" xml:space="preserve"><value>バインディングを管理</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.459" xml:space="preserve"><value>素材を管理する</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.460" xml:space="preserve"><value>リモートA2Aを管理</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.461" xml:space="preserve"><value>リモートA2Aエージェントを管理</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.462" xml:space="preserve"><value>タイプ</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.463" xml:space="preserve"><value>モデルをバインド</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.464" xml:space="preserve"><value>ナレッジベース</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.465" xml:space="preserve"><value>ナレッジベース</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.466" xml:space="preserve"><value>統計チャート</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.467" xml:space="preserve"><value>統計の範囲</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.468" xml:space="preserve"><value>HILレベルを継承</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.469" xml:space="preserve"><value>設定を編集</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.470" xml:space="preserve"><value>自動実行</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.471" xml:space="preserve"><value>カスタムリクエストヘッダー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.472" xml:space="preserve"><value>必要に応じて、モデルにFunctionRender、ワークフロー、または互換性のあるプラグインを呼び出させます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.473" xml:space="preserve"><value>設定</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.474" xml:space="preserve"><value>リクエストヘッダー名</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.475" xml:space="preserve"><value>テキストを入力してください。送信後にタスクが続行されます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.476" xml:space="preserve"><value>チャットモデルを選択</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.477" xml:space="preserve"><value>マテリアル</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.478" xml:space="preserve"><value>グループタスクをフォロー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.479" xml:space="preserve"><value>実行が人間のターンに達すると、タスクが一時停止し、ダイアログがテキストを受け入れます。正常に返信されると、MAFワークフローが続行されます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.480" xml:space="preserve"><value>リモートA2A</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.481" xml:space="preserve"><value>リモートA2Aメンバー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.482" xml:space="preserve"><value>リモートA2Aエージェント</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.483" xml:space="preserve"><value>リモートメンバーには、デフォルトでタスクの指示と現在のターンのテキスト結論のみが送信されます。ツール呼び出し、生のモデルコンテンツ、および完全な履歴は共有されません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.484" xml:space="preserve"><value>リモートメンバーのデフォルト：手順 + 主要な結論</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.485" xml:space="preserve"><value>リモートエージェント</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.486" xml:space="preserve"><value>接続</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.487" xml:space="preserve"><value>コネクタの権限</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.488" xml:space="preserve"><value>接続タイムアウト (秒)</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.489" xml:space="preserve"><value>デプロイシークレット名</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.490" xml:space="preserve"><value>A2Aエージェントとして構成・公開</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.491" xml:space="preserve"><value>認証モード</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.492" xml:space="preserve"><value>最大入力文字数</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.493" xml:space="preserve"><value>ローカルツールの呼び出しが有効になっています。外部リクエストは、間接的に関数またはMCPの書き込みや外部アクセスを引き起こす可能性があります。これは、信頼できる呼び出し元にのみ公開してください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.494" xml:space="preserve"><value>ローカルツールの呼び出しが有効になっています。外部リクエストは、間接的に関数またはMCPの書き込みや外部アクセスを引き起こす可能性があります。これは、信頼できる呼び出し元にのみ公開してください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.495" xml:space="preserve"><value>ローカルツールの呼び出しが有効です。外部リクエストによって関数またはMCPへの書き込みや外部アクセスが間接的に発生する可能性があるため、信頼できる呼び出し元に必要最小限だけ公開してください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.496" xml:space="preserve"><value>合計</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.497" xml:space="preserve"><value>完了したラウンド</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.498" xml:space="preserve"><value>ナレッジベース</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.499" xml:space="preserve"><value>A2A公開を管理</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.500" xml:space="preserve"><value>A2Aとして公開</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.501" xml:space="preserve"><value>無効化</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.502" xml:space="preserve"><value>有効化</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.503" xml:space="preserve"><value>完了した会話ラウンド:</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.504" xml:space="preserve"><value>完了したタスク:</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.505" xml:space="preserve"><value>入力トークン:</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.506" xml:space="preserve"><value>出力トークン:</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.507" xml:space="preserve"><value>合計トークン:</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.508" xml:space="preserve"><value>平均応答:</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.509" xml:space="preserve"><value>最終アクティビティ:</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.510" xml:space="preserve"><value>選択可能なバインディングはありません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.511" xml:space="preserve"><value>選択可能なMCPエンドポイントはありません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.512" xml:space="preserve"><value>{0}個のエンドポイントが設定されています</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.513" xml:space="preserve"><value>グループ設定を読み込み中</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.514" xml:space="preserve"><value>確認</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.515" xml:space="preserve"><value>A2A呼び出しを許可</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.516" xml:space="preserve"><value>明示的に許可</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.517" xml:space="preserve"><value>ツールとワークフローのバインディング</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.518" xml:space="preserve"><value>コピー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+
+
+  <data name="Frontend.520" xml:space="preserve"><value>各エージェントが承認したコネクターを使用</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>選択したコネクターのみ使用</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>対象文字列</value></data>
+  <data name="Frontend.523" xml:space="preserve"><value>対象外文字列</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>統計データを更新しました</value></data>
+  <data name="Frontend.525" xml:space="preserve"><value>グループメンバーの読み込みに失敗しました</value></data>
+  <data name="Frontend.526" xml:space="preserve"><value>メンバー一覧を完全に更新できないため、読み込み済みのメンバーのみ表示しています</value></data>
+  <data name="Frontend.527" xml:space="preserve"><value>未保存の変更があります。このまま閉じますか？</value></data>
+  <data name="Frontend.528" xml:space="preserve"><value>操作を確認</value></data>
+  <data name="Frontend.529" xml:space="preserve"><value>未検証</value></data><data name="Frontend.530" xml:space="preserve"><value>利用可能</value></data><data name="Frontend.531" xml:space="preserve"><value>利用不可</value></data><data name="Frontend.532" xml:space="preserve"><value>停止中</value></data><data name="Frontend.533" xml:space="preserve"><value>接続テストに失敗しました</value></data><data name="Frontend.534" xml:space="preserve"><value>テスト可能なリモートA2Aエージェントがありません</value></data><data name="Frontend.535" xml:space="preserve"><value>すべて成功：{0}個のリモートA2Aエージェントが利用可能です</value></data><data name="Frontend.536" xml:space="preserve"><value>リモートA2A一括テスト結果</value></data><data name="Frontend.537" xml:space="preserve"><value>了解</value></data><data name="Frontend.538" xml:space="preserve"><value>リモートA2Aエージェントの読み込みに失敗しました</value></data><data name="Frontend.539" xml:space="preserve"><value>ローカルエージェントを先に保存してから、A2A公開を設定してください</value></data><data name="Frontend.540" xml:space="preserve"><value>A2A公開設定の読み込みに失敗しました</value></data><data name="Frontend.541" xml:space="preserve"><value>保存に失敗しました</value></data><data name="Frontend.542" xml:space="preserve"><value>リモートA2Aエージェントを保存しました</value></data><data name="Frontend.543" xml:space="preserve"><value>リモートA2Aエージェントの保存に失敗しました</value></data><data name="Frontend.544" xml:space="preserve"><value>A2Aエージェントカードに接続しました</value></data><data name="Frontend.545" xml:space="preserve"><value>接続の一括テストに失敗しました</value></data><data name="Frontend.546" xml:space="preserve"><value>状態の更新に失敗しました</value></data><data name="Frontend.547" xml:space="preserve"><value>状態を更新しました</value></data><data name="Frontend.548" xml:space="preserve"><value>削除を確認</value></data><data name="Frontend.549" xml:space="preserve"><value>リモートA2Aエージェント「{0}」を削除しますか？グループに追加済みのエージェントは削除できません。</value></data><data name="Frontend.550" xml:space="preserve"><value>削除に失敗しました</value></data><data name="Frontend.551" xml:space="preserve"><value>削除しました</value></data>
+  <data name="Frontend.552" xml:space="preserve"><value>実行可能なタスクはまだありません</value></data>
+  <data name="Frontend.553" xml:space="preserve"><value>タスクメンバーの読み込みに失敗しました</value></data>
+  <data name="Frontend.554" xml:space="preserve"><value>統計データの取得に失敗しました</value></data>
+  <data name="Frontend.555" xml:space="preserve"><value>なし</value></data>
+  <data name="Frontend.556" xml:space="preserve"><value>有効なチャットグループが見つかりません。チャットグループまたはタスク詳細から開始画面を開いてください。</value></data>
+  <data name="Frontend.557" xml:space="preserve"><value>ユーザーが確認しました</value></data>
+  <data name="Frontend.558" xml:space="preserve"><value>ユーザーが拒否しました</value></data>
+  <data name="Frontend.559" xml:space="preserve"><value>人間による承認の送信に失敗しました</value></data>
+  <data name="Frontend.560" xml:space="preserve"><value>ツール呼び出しを承認しました。タスクを続行します</value></data>
+  <data name="Frontend.561" xml:space="preserve"><value>ツール呼び出しを拒否しました。タスクを続行します</value></data>
+  <data name="Frontend.562" xml:space="preserve"><value>Humanの返信を入力してください</value></data>
+  <data name="Frontend.563" xml:space="preserve"><value>Humanの返信の送信に失敗しました</value></data>
+  <data name="Frontend.564" xml:space="preserve"><value>Humanの返信を送信しました</value></data>
+  <data name="Frontend.565" xml:space="preserve"><value>（パラメーター未指定）</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>現在のタスク使用量</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>平均応答</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>合計トークン</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>最近のアクティビティ</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>接続確認</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>使用量は現在のタスクで読み込まれた記録だけを集計します</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>新しいウィンドウで Agent を編集</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>種類 {0}</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>プラットフォーム {0}</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>A2A 公開設定を保存しました（現在は無効）</value></data>
+  <data name="Frontend.576" xml:space="preserve"><value>コピーに失敗しました。アドレスを手動でコピーしてください</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>利用できないリモート A2A Agent が {0} 件あります。メンバー一覧から手動で再テストしてください</value></data>
+  <data name="Frontend.578" xml:space="preserve"><value>このタスクに参加</value></data>
+  <data name="Frontend.579" xml:space="preserve"><value>このタスクでは無効</value></data>
+  <data name="Function.Workflow.Execute.Description" xml:space="preserve"><value>Workflow「{0}」を実行します。</value></data>
+  <data name="Function.Workflow.Execute.WithDescription" xml:space="preserve"><value>Workflow「{0}」を実行します：{1}</value></data>
+  <data name="Function.Workflow.Input.Description" xml:space="preserve"><value>Workflow に渡す通常の入力内容です。</value></data>
+  <data name="Function.Workflow.Parameter.Optional" xml:space="preserve"><value>Workflow パラメーター「{0}」（任意）。</value></data>
+  <data name="Function.Workflow.Parameter.OptionalSuffix" xml:space="preserve"><value>（任意）</value></data>
+  <data name="Error.Workflow.InputRequired" xml:space="preserve"><value>Workflow の呼び出しに失敗しました：input パラメーターは空にできません。</value></data>
+  <data name="Error.Workflow.InvocationFailed" xml:space="preserve"><value>Workflow の呼び出しに失敗しました：{0}</value></data>
+  <data name="Error.Workflow.Unknown" xml:space="preserve"><value>不明なエラー</value></data>
+  <data name="Frontend.580" xml:space="preserve"><value>その他の操作</value></data>
+  <data name="Frontend.581" xml:space="preserve"><value>バインド後はモデル呼び出し前に RAG 検索を優先して実行し、検索に失敗した場合はモデルのフォールバックを維持します。</value></data>
+  <data name="Frontend.582" xml:space="preserve"><value>設定のみ保存</value></data>
+  <data name="Frontend.583" xml:space="preserve"><value>安全のため既定で無効</value></data>
+  <data name="Frontend.584" xml:space="preserve"><value>残り {0} 件。確認するには「バインドを管理」をクリックしてください</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>システム Agent：{0}</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>Human の入力はログイン中のユーザーが提供し、モデルやツールは呼び出しません。モデルバインドは調整できますが、システムの身元や Prompt は変更できません。</value></data>
+  <data name="Frontend.587" xml:space="preserve"><value>システム Agent はモジュールによって作成または管理されます（例：PromptCatalyzer）。モデルバインドを変更する前に、関連する自動タスクの要件を確認してください。</value></data>
+  <data name="Frontend.588" xml:space="preserve"><value>現在のプレーンテキスト Prompt と選択した Chat モデルで Prompt Range を作成し、1 回採点した後、Range レベルの参照へ自動的に切り替えます。</value></data>
+  <data name="Frontend.589" xml:space="preserve"><value>この手動 Prompt に継承可能な PromptRange モデルはありません。Chat AIModel を手動で選択してください。</value></data>
+  <data name="Frontend.590" xml:space="preserve"><value>Human はモデルを呼び出しません。このバインドはシステム Agent のタスクポリシーを保持し、既定ではグループタスクに従います。</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>外部システムから呼び出されると、入力と Agent の通常の返信がシステム境界を越えます。Prompt、ナレッジベース、返信を外部共有できることを確認してください。</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>呼び出しごとにモデルとツールの費用が発生する可能性があります。HTTPS ゲートウェイでアクセス制御、レート制限、監視、アラートを設定してください。</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>受信認証が無効です。分離された管理ネットワークでのみ使用し、インターネットに直接公開しないでください。</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>ローカル Function / MCP ツールの呼び出しが許可されています。外部入力が間接的に書き込みや外部アクセスを引き起こす可能性があるため、権限を最小限にしてください。</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>有効にすると、このローカル Agent は標準 A2A サービスとして外部呼び出しを受け付けます。</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>A2A 公開サービスを有効にしますか</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>理解した上で保存</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>モジュールを利用できません</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>呼び出し可能</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>MCP エンドポイントを追加しました：{0}</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>グループ「{0}」を有効にしますか？</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>有効にすると、新しいタスクを作成でき、このグループを Workflow ノードとして使用できます。</value></data>
+  <data name="Frontend.604" xml:space="preserve"><value>グループ「{0}」を無効にしますか？</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>無効にすると、新しいタスクは作成されず、Workflow ノードとしても使用できません。開始済みのタスクは中断されません。</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>グループ「{0}」を{1}にしました</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>有効</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>無効</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>AIModel を手動で選択する場合は、Chat モデルを選択してください。</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>プレーンテキストの Prompt を含む AgentTemplate を先に保存してください。</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>未バインド</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>状態を読み込み中</value></data>
+  <data name="Frontend.613" xml:space="preserve"><value>ナレッジベースを利用できません</value></data>
+  <data name="Frontend.614" xml:space="preserve"><value>旧版のベクトル化済み。公開待ち</value></data>
+  <data name="Frontend.615" xml:space="preserve"><value>検索可能</value></data>
+  <data name="Frontend.616" xml:space="preserve"><value>ベクトル化待ち</value></data>
+  <data name="Frontend.617" xml:space="preserve"><value>ベクトル化済み。再公開待ち</value></data>
+  <data name="Frontend.618" xml:space="preserve"><value>未ベクトル化</value></data>
+  <data name="Frontend.620" xml:space="preserve"><value>この Prompt を検証するタスク内容を入力してください。</value></data>
+  <data name="Frontend.621" xml:space="preserve"><value>Prompt のテスト入力</value></data>
+  <data name="Frontend.622" xml:space="preserve"><value>テスト入力は空にできません。</value></data>
+  <data name="Frontend.623" xml:space="preserve"><value>結果は Agent「{0}」の役割に合い、テスト入力に対して正確で明確かつ実行可能な回答を提供する必要があります。</value></data>
+  <data name="Frontend.624" xml:space="preserve"><value>テストタスクを基準にします。</value></data>
+  <data name="Frontend.625" xml:space="preserve"><value>期待する結果または採点基準を説明してください。PromptRange はこれを AI 採点に使用します。</value></data>
+  <data name="Frontend.626" xml:space="preserve"><value>Prompt の自動採点基準</value></data>
+  <data name="Frontend.627" xml:space="preserve"><value>採点基準は空にできません。</value></data>
+  <data name="Frontend.628" xml:space="preserve"><value>PromptRange の変換に失敗しました。</value></data>
+  <data name="Frontend.629" xml:space="preserve"><value>PromptRange の変換が完了しました</value></data>
+  <data name="Frontend.630" xml:space="preserve"><value>{0} の情報を表示</value></data>
+  <data name="Frontend.631" xml:space="preserve"><value>Prompt を作成し、1 回採点しました。\nRange 参照：{0}\n採点バージョン：{1}\nスコア：{2}/10\n\n採点結果：\n{3}</value></data>
+  <data name="Frontend.632" xml:space="preserve"><value>成功：{0} 件、失敗：{1} 件。\n\n{2}</value></data>
+  <data name="Frontend.634" xml:space="preserve"><value>有効なナレッジベースを先に選択してください。</value></data>
+  <data name="Frontend.635" xml:space="preserve"><value>現在の環境では新しいウィンドウを開けません。未保存の Agent の変更を保持するため先に保存してください。確認後、現在のページでナレッジベースへ移動します。</value></data>
+  <data name="Frontend.636" xml:space="preserve"><value>ナレッジベースを開く</value></data>
+  <data name="Frontend.637" xml:space="preserve"><value>移動を続行</value></data>
+  <data name="Frontend.638" xml:space="preserve"><value>ナレッジベースの状態を更新しました</value></data>
+  <data name="Frontend.639" xml:space="preserve"><value>ナレッジベースの状態を更新できませんでした</value></data>
 </root>

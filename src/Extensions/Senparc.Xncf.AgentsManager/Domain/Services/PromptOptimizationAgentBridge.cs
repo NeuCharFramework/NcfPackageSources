@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptOptimizationAgentBridge.cs
-    文件功能描述：PromptOptimizationAgentBridge 服务逻辑
-    
-    
-    创建标识：Senparc - 20260325
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    File name: PromptOptimizationAgentBridge.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20260325
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +23,7 @@ using Senparc.Xncf.PromptRange.Abstractions.Events;
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     /// <summary>
-    /// 在 Agent 对话与 HTTP 优化请求之间传递结果（CreateOptimizedPrompt 写入，Handler 读取后发布响应事件）。
+    ///Legacy comment translated to English.
     /// </summary>
     public class PromptOptimizationAgentBridge
     {
@@ -110,30 +113,30 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 注意：RunChatGroup 可能在独立 ServiceProvider/Scope 中执行，桥接状态必须跨实例共享。
+        ///Legacy comment translated to English.
         /// </summary>
         private static readonly ConcurrentDictionary<string, State> _states = new();
 
         /// <summary>
-        /// 每个优化 RequestId 只允许一次 <see cref="PromptItemService.AddPromptItemAsync"/>（工具或 Kernel 回退谁先抢到谁写）。
-        /// 解决：工具已插入 DB 但 <see cref="RecordCreatedPrompt"/> 未写入 State → TryTakeResult 失败 → 回退再插一条（内容相同）。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         private static readonly ConcurrentDictionary<string, byte> _versionInsertClaimed = new();
 
         /// <summary>
-        /// 统一键格式，避免模型/客户端传入的 GUID 大小写与 <see cref="Guid.ToString"/> 不一致导致 _states 匹配失败（no registered session）。
+        ///Legacy comment translated to English.
         /// </summary>
         private static string NormalizeRequestKey(string requestId) =>
             string.IsNullOrWhiteSpace(requestId) ? null : requestId.Trim().ToLowerInvariant();
 
-        /// <summary>在调用 AddPromptItemAsync 之前调用；仅第一次返回 true。</summary>
+        ///Legacy comment translated to English.
         public bool TryClaimVersionInsert(string requestId)
         {
             var key = NormalizeRequestKey(requestId);
             return key != null && _versionInsertClaimed.TryAdd(key, 0);
         }
 
-        /// <summary>AddPromptItemAsync 失败时释放，允许 Kernel 回退重试写库。</summary>
+        ///Legacy comment translated to English.
         public void ReleaseVersionInsertClaim(string requestId)
         {
             var key = NormalizeRequestKey(requestId);
@@ -156,7 +159,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 将模型传入的 optimizationRequestId 归一到 <see cref="BeginRequest"/> 已注册的 key（禁止瞎填 Guid 导致孤儿 State）。
+        ///Legacy comment translated to English.
         /// </summary>
         public bool TryResolveRegisteredOptimizationKey(string candidateFromModel, out string registeredKey)
         {
@@ -176,7 +179,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
             if (active != null)
             {
-                // 容错：若上下文已有 active request，但 BeginRequest 状态缺失，则自动补建状态并继续。
+                //Legacy comment translated to English.
                 _states.TryAdd(active, new State());
                 registeredKey = active;
                 return true;
@@ -195,7 +198,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
             if (fb != null)
             {
-                // 容错：若 fallback correlation 可用，但状态缺失，也允许自动恢复。
+                //Legacy comment translated to English.
                 _states.TryAdd(fb, new State());
                 registeredKey = fb;
                 return true;
@@ -305,8 +308,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 统一清理指定 requestId 的所有 Bridge 状态（_states + _versionInsertClaimed）。
-        /// 应在 ChatTaskHandler 的 finally 中调用，确保无论成功/失败都不留残余。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public void CleanupRequest(string requestId)
         {

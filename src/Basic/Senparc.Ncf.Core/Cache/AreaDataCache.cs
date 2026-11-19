@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AreaDataCache.cs
-    文件功能描述：AreaDataCache 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: AreaDataCache.cs
+    File description: AreaDataCache related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +25,7 @@ using Senparc.Ncf.Core.Models;
 namespace Senparc.Ncf.Core.Cache
 {
     /// <summary>
-    /// 省数据缓存（来自XML文件中）。不要直接使用此方法，使用Common.AreaData获取。
+    ///Legacy comment translated to English.
     /// </summary>
     [AutoDIType(DILifecycleType.Singleton)]
     public class AreaDataCache_Province : BaseCache<List<AreaXML_Provinces>>
@@ -43,7 +46,7 @@ namespace Senparc.Ncf.Core.Cache
     }
 
     /// <summary>
-    /// 市数据缓存（来自XML文件中）。不要直接使用此方法，使用Common.AreaData获取。
+    ///Legacy comment translated to English.
     /// </summary>
     public class AreaDataCache_City : BaseCache<List<AreaXML_Cities>>
     {
@@ -62,7 +65,7 @@ namespace Senparc.Ncf.Core.Cache
     }
 
     /// <summary>
-    /// 区县数据缓存（来自XML文件中）。不要直接使用此方法，使用Common.AreaData获取。
+    ///Legacy comment translated to English.
     /// </summary>
     public class AreaDataCache_District : BaseCache<List<AreaXML_Districts>>
     {

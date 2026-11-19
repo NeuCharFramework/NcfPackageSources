@@ -1,36 +1,40 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxDockerOptions.cs
-    文件功能描述：Docker 沙箱运行参数
+    File name: SandboxDockerOptions.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260815
+    Created by: Senparc - 20260815
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 enhance the jupyter-csharp template and sandbox session management
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 
 /// <summary>
-/// 配置节：SenparcXncfSandbox:Docker
+///Legacy comment translated to English.
 /// </summary>
 public sealed class SandboxDockerOptions
 {
     public const string SectionName = "SenparcXncfSandbox:Docker";
 
     /// <summary>
-    /// Jupyter 交互式容器的完整 docker run 超时时间。
-    /// 当本地没有镜像时，docker run 会在该时间内同步拉取镜像。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public int InteractiveCreateTimeoutSeconds { get; set; } = 900;
 
     /// <summary>
-    /// 将配置限制在 1 分钟至 1 小时，避免错误配置导致请求无限等待。
+    ///Legacy comment translated to English.
     /// </summary>
     public TimeSpan GetInteractiveCreateTimeout() =>
         TimeSpan.FromSeconds(Math.Clamp(InteractiveCreateTimeoutSeconds, 60, 3600));

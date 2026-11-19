@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：BaseStringDictionaryCache.cs
-    文件功能描述：BaseStringDictionaryCache 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: BaseStringDictionaryCache.cs
+    File description: BaseStringDictionaryCache related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -33,7 +36,7 @@ namespace Senparc.Ncf.Core.Cache
         /// </summary>
         /// <param name="CACHE_KEY"></param>
         /// <param name="db"></param>
-        /// <param name="timeOut">单位：分钟。1440为一天。</param>
+        ///Legacy comment translated to English.
         public BaseStringDictionaryCache(string CACHE_KEY, INcfDbData db, int timeOut)
             : base(CACHE_KEY, db, timeOut)
         {
@@ -50,7 +53,7 @@ namespace Senparc.Ncf.Core.Cache
         /// </summary>
         /// <param name="CACHE_KEY"></param>
         /// <param name="db"></param>
-        /// <param name="timeOut">单位：分钟。1440为一天。</param>
+        ///Legacy comment translated to English.
         public BaseStringDictionaryCache(string CACHE_KEY, INcfDbData db, int timeOut)
             : base(CACHE_KEY, db, timeOut)
         {

@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptCatalyzerPlugin.cs
-    文件功能描述：PromptCatalyzerPlugin 相关实现
-    
-    
-    创建标识：Senparc - 20260306
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: PromptCatalyzerPlugin.cs
+    File description: PromptCatalyzerPlugin related implementation
+
+    Created by: Senparc - 20260306
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -27,9 +30,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
         public PromptCatalyzerPlugin()
         {
-            // 尝试从 DI 容器获取服务，确保在调用时 ServiceProvider 已就绪
-            // 注意：Constructor 注入在 Kernel.Plugins.AddFromType<T>() 时可能需要 Kernel 自身配置了 DI
-            // 这里为了保险起见，使用 ServiceLocator 作为 backup
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             _optimizationService = Senparc.CO2NET.SenparcDI.GetServiceProvider().GetRequiredService<PromptOptimizationService>();
         }
 

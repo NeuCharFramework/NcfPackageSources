@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：StartupHelper.cs
-    文件功能描述：StartupHelper 相关实现
-    
-    
-    创建标识：Senparc - 20240107
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: StartupHelper.cs
+    File description: StartupHelper related implementation
+
+    Created by: Senparc - 20240107
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +25,7 @@ namespace Senparc.Ncf.XncfBase.Helpers
     public class StartupHelper
     {
         /// <summary>
-        /// 获取模块版本号
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="TXncfDatabaseRegister"></typeparam>
         /// <returns></returns>

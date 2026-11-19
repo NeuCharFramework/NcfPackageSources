@@ -103,4 +103,202 @@
     <value>Случайно</value>
   </data>
 
+
+  <data name="Frontend.001" xml:space="preserve"><value>Модули расширения</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Панель</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Панель Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Подготовка среды</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Обзор среды Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Зарегистрированные сессии</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Выполняется</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Интерактивные сессии</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Обновить</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Все Function</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Документация среды</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Обзор сессий</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Все сессии</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Зарегистрировано</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Доступно сейчас</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Notebook / предпросмотр</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Требует внимания</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Ошибка или истекло</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Быстрые действия Function</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Открыть Function модуля</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Создать Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Выполнить код</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.023" xml:space="preserve"><value>Уничтожить Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.024" xml:space="preserve"><value>Среда выполнения</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Жизненный цикл</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Автоматическая очистка TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Проверить среду</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Сессии Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Шаблон</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Псевдоним</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Среда выполнения</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Состояние</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Порт</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.034" xml:space="preserve"><value>Дополнительные порты</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Доступ</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.036" xml:space="preserve"><value>Открыть интерактивную сессию</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Открыть</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Действия</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Изменить псевдоним</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Задать псевдоним</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Продлить или изменить TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Уничтожить среду выполнения</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.043" xml:space="preserve"><value>Безвозвратно удалить запись сессии</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Псевдоним сессии</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Оставьте пустым, чтобы удалить псевдоним</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.046" xml:space="preserve"><value>Отмена</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.047" xml:space="preserve"><value>Сохранить</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.048" xml:space="preserve"><value>Изменить TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Плановая очистка</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Хранить бессрочно</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.051" xml:space="preserve"><value>Локальная проверка</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Проверить снова</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Доступно</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Недоступно</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Префикс реестра образов</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Не настроено (используются общедоступные образы по умолчанию; см. документацию)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Контрольный список ручной настройки (кратко)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Открыть панель Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Документация:</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Проверяйте доступность Docker, префиксы образов и сведения о развёртывании на странице подготовки среды.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.061" xml:space="preserve"><value>Нет</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.062" xml:space="preserve"><value>Настройте здесь префиксы или переопределения; см. документацию.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Использует зарегистрированную модулем точку выполнения; проверка параметров и журналы результатов соответствуют странице Function модуля.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.064" xml:space="preserve"><value>После сохранения пересчитывает срок от текущего момента и автоматически уничтожает сессию по истечении.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Создать</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Отправляет короткий код задачи в сессии шаблона Exec.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Установите и запустите Docker (или совместимый CLI) на той же машине, где работает NCF. Модуль</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Для внутреннего реестра настройте его на хосте</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Выполнить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Заранее загрузите нужные образы по официальной документации; используйте указанные имена и версии.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.071" xml:space="preserve"><value>После успешной проверки откройте Function модуля «Создать Sandbox», выберите Python Exec в списке шаблонов и запустите; имя шаблона в командной строке не требуется.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.072" xml:space="preserve"><value>Состояние:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.073" xml:space="preserve"><value>из</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Установить Docker автоматически.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Эта сессия не уничтожается сканированием TTL и должна быть уничтожена администратором вручную.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Введите SessionId, чтобы остановить и очистить указанную сессию.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Выберите шаблон выполнения и среду, чтобы создать изолированную сессию.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Получайте доступ к интерактивным сессиям через обратный прокси сайта; ссылки не раскрывают токен контейнера.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Уничтожить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Префикс реестра образов:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.081" xml:space="preserve"><value>Просматривайте состояние сессий в одном месте и создавайте, выполняйте и очищайте изолированные среды через Function модуля.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.082" xml:space="preserve"><value>Состояние обновлено: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Сессий: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Сессий Sandbox нет</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Псевдонимы идентифицируют сессии в списках, результатах Function и журналах; на среду выполнения они не влияют.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Создание</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Остановка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.088" xml:space="preserve"><value>Остановлено</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Ошибка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Истёк</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.091" xml:space="preserve"><value>Неизвестно ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.092" xml:space="preserve"><value>Docker готов; можно продолжить создание песочниц.</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>Docker не готов: выполните ручную установку и предварительно загрузите образы согласно документации.</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>Установите и запустите Docker (или совместимый CLI) на той же машине, где работает NCF. Модуль не устанавливает Docker автоматически.</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>Для внутреннего реестра настройте префикс или переопределения в SenparcXncfSandbox:Images файла appsettings.json на хосте; см. документацию.</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>Ожидание очистки</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>Не удалось обновить сессии Sandbox. Проверьте состояние службы.</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>Псевдоним обновлён.</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>Псевдоним очищен.</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>Не удалось обновить псевдоним. Проверьте состояние сессии.</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>Установлено постоянное хранение.</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>TTL обновлён.</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>Не удалось обновить TTL. Проверьте состояние сессии и настройку TTL.</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>После уничтожения среда выполнения будет остановлена и удалена. Продолжить?</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>Уничтожить песочницу</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>Сессия Sandbox уничтожена.</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>Не удалось уничтожить сессию Sandbox. Проверьте журналы службы.</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>Эта операция навсегда удалит запись сессии, отменить её нельзя. Убедитесь, что среда выполнения уничтожена. Продолжить?</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>Удалить запись сессии</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>Запись сессии Sandbox удалена.</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>Не удалось удалить запись сессии. Сначала уничтожьте среду выполнения или проверьте журналы службы.</value></data>
+  <data name="Function.Sandbox.List.Name" xml:space="preserve"><value>Список песочниц</value></data>
+  <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>Показывает последние сеансы песочницы.</value></data>
+  <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>Состояние песочницы</value></data>
+  <data name="Function.Sandbox.Status.Description" xml:space="preserve"><value>Запрашивает сеанс песочницы по SessionId.</value></data>
+  <data name="Function.Sandbox.Create.Name" xml:space="preserve"><value>Создать песочницу</value></data>
+  <data name="Function.Sandbox.Create.Description" xml:space="preserve"><value>Создаёт изолированный сеанс песочницы по шаблону (Docker или заглушка Wasm).</value></data>
+  <data name="Function.Sandbox.Exec.Name" xml:space="preserve"><value>Выполнить код</value></data>
+  <data name="Function.Sandbox.Exec.Description" xml:space="preserve"><value>Выполняет фрагмент кода в сеансе шаблона Exec.</value></data>
+  <data name="Function.Sandbox.LabExec.Name" xml:space="preserve"><value>Выполнить команду Lab</value></data>
+  <data name="Function.Sandbox.LabExec.Description" xml:space="preserve"><value>Выполняет Shell-команду ограниченное время в работающем постоянном пространстве JupyterLab.</value></data>
+  <data name="Function.Sandbox.LabUploadFile.Name" xml:space="preserve"><value>Загрузить файл Lab</value></data>
+  <data name="Function.Sandbox.LabUploadFile.Description" xml:space="preserve"><value>Записывает содержимое файла Base64 в работающее постоянное пространство JupyterLab.</value></data>
+  <data name="Function.Sandbox.LabDownloadFile.Name" xml:space="preserve"><value>Скачать файл Lab</value></data>
+  <data name="Function.Sandbox.LabDownloadFile.Description" xml:space="preserve"><value>Читает файл из работающего постоянного пространства JupyterLab и возвращает содержимое Base64.</value></data>
+  <data name="Function.Sandbox.LabListFiles.Name" xml:space="preserve"><value>Список файлов Lab</value></data>
+  <data name="Function.Sandbox.LabListFiles.Description" xml:space="preserve"><value>Перечисляет файлы в работающем постоянном пространстве JupyterLab.</value></data>
+  <data name="Function.Sandbox.CreateNotebook.Name" xml:space="preserve"><value>Создать Notebook</value></data>
+  <data name="Function.Sandbox.CreateNotebook.Description" xml:space="preserve"><value>Создаёт файл .ipynb Python или C# в работающем пространстве JupyterLab.</value></data>
+  <data name="Function.Sandbox.UpdateAlias.Name" xml:space="preserve"><value>Обновить псевдоним</value></data>
+  <data name="Function.Sandbox.UpdateAlias.Description" xml:space="preserve"><value>Устанавливает или очищает псевдоним сеанса песочницы.</value></data>
+  <data name="Function.Sandbox.Destroy.Name" xml:space="preserve"><value>Уничтожить песочницу</value></data>
+  <data name="Function.Sandbox.Destroy.Description" xml:space="preserve"><value>Останавливает и очищает указанный сеанс.</value></data>
+  <data name="Function.Sandbox.DeleteRecord.Name" xml:space="preserve"><value>Удалить запись песочницы</value></data>
+  <data name="Function.Sandbox.DeleteRecord.Description" xml:space="preserve"><value>Окончательно удаляет запись остановленного, просроченного или полностью очищенного сеанса.</value></data>
+  <data name="Function.Sandbox.UpdateTtl.Name" xml:space="preserve"><value>Обновить TTL</value></data>
+  <data name="Function.Sandbox.UpdateTtl.Description" xml:space="preserve"><value>Продлевает, сокращает или делает хранение песочницы постоянным.</value></data>
+  <data name="Parameter.Sandbox.Template" xml:space="preserve"><value>Шаблон</value></data>
+  <data name="Parameter.Sandbox.Template.Help" xml:space="preserve"><value>Выберите шаблон песочницы (достаточно одного пункта списка).</value></data>
+  <data name="Parameter.Sandbox.Runtime" xml:space="preserve"><value>Среда выполнения</value></data>
+  <data name="Parameter.Sandbox.Runtime.Help" xml:space="preserve"><value>Для первого выпуска выберите Docker; Wasm пока недоступен.</value></data>
+  <data name="Parameter.Sandbox.TtlMinutes" xml:space="preserve"><value>TTL (минуты)</value></data>
+  <data name="Parameter.Sandbox.TtlMinutes.Help" xml:space="preserve"><value>Оставьте пустым, чтобы использовать значение шаблона по умолчанию; положительные числа ограничены 240 минутами.</value></data>
+  <data name="Parameter.Sandbox.KeepAlive" xml:space="preserve"><value>Сохранять навсегда</value></data>
+  <data name="Parameter.Sandbox.KeepAlive.Help" xml:space="preserve"><value>При включении сеанс не истекает автоматически и должен быть уничтожен администратором.</value></data>
+  <data name="Parameter.Sandbox.Alias" xml:space="preserve"><value>Псевдоним</value></data>
+  <data name="Parameter.Sandbox.Alias.Help" xml:space="preserve"><value>Необязательный идентификатор сеанса в списке; не более 128 символов.</value></data>
+  <data name="Parameter.Sandbox.ExtraPortMappings" xml:space="preserve"><value>Дополнительные сопоставления портов</value></data>
+  <data name="Parameter.Sandbox.ExtraPortMappings.Help" xml:space="preserve"><value>Необязательно и действует только для шаблонов JupyterLab; несколько значений разделяйте точкой с запятой. Максимум 8.</value></data>
+  <data name="Parameter.Sandbox.SessionId" xml:space="preserve"><value>Идентификатор сеанса</value></data>
+  <data name="Parameter.Sandbox.SessionId.Help" xml:space="preserve"><value>Должен указывать на работающий сеанс JupyterLab.</value></data>
+  <data name="Parameter.Sandbox.MaxBytes" xml:space="preserve"><value>Предел чтения (байты)</value></data>
+  <data name="Parameter.Sandbox.MaxBytes.Help" xml:space="preserve"><value>Оставьте пустым или укажите 0, чтобы использовать системный предел.</value></data>
+  <data name="Frontend.112" xml:space="preserve"><value>Короткая задача Python (Docker)</value></data>
+  <data name="Frontend.113" xml:space="preserve"><value>Короткая задача C# (образ Docker SDK)</value></data>
+  <data name="Frontend.114" xml:space="preserve"><value>Интерактивный Python Notebook (требует много памяти)</value></data>
+  <data name="Frontend.115" xml:space="preserve"><value>Интерактивный C# Notebook (сначала нужно собрать/настроить образ)</value></data>
+  <data name="Frontend.116" xml:space="preserve"><value>Требуется локальный Docker</value></data>
+  <data name="Frontend.117" xml:space="preserve"><value>Заполнитель первой версии; пока недоступно</value></data>
+  <data name="Function.Sandbox.LabUploadFiles.Name" xml:space="preserve"><value>Загрузить файлы Lab</value></data>
+  <data name="Function.Sandbox.LabUploadFiles.Description" xml:space="preserve"><value>Записывает несколько загруженных файлов потоково в работающее постоянное пространство JupyterLab.</value></data>
+  <data name="Frontend.118" xml:space="preserve"><value>Код</value></data>
+  <data name="Frontend.119" xml:space="preserve"><value>Исходный код короткой задачи. Пример Python: print('hello from NCF Sandbox'); пример C#: Console.WriteLine("hello from NCF Sandbox"); (строки C# используют двойные кавычки)</value></data>
+  <data name="Frontend.120" xml:space="preserve"><value>Команда</value></data>
+  <data name="Frontend.121" xml:space="preserve"><value>Команда выполняется через /bin/sh -lc внутри контейнера Lab; рабочий каталог ограничен пространством Lab.</value></data>
+  <data name="Frontend.122" xml:space="preserve"><value>Рабочий каталог</value></data>
+  <data name="Frontend.123" xml:space="preserve"><value>Каталог относительно пространства Lab; оставьте пустым для корня.</value></data>
+  <data name="Frontend.124" xml:space="preserve"><value>Тайм-аут (секунды)</value></data>
+  <data name="Frontend.125" xml:space="preserve"><value>Максимальная длительность команды: по умолчанию 30 секунд, максимум 120 секунд.</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>Стандартный ввод</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>Необязательно; при наличии команда запускается через docker exec -i, а содержимое построчно передаётся в stdin, максимум 32768 символов.</value></data>
+  <data name="Parameter.Sandbox.RelativePath" xml:space="preserve"><value>Путь к файлу рабочего пространства</value></data>
+  <data name="Parameter.Sandbox.RelativePath.Help" xml:space="preserve"><value>Разрешён только относительный путь внутри пространства, например data/input.json.</value></data>
+  <data name="Parameter.Sandbox.Base64" xml:space="preserve"><value>Содержимое Base64</value></data>
+  <data name="Parameter.Sandbox.Base64.Help" xml:space="preserve"><value>Содержимое файла в кодировке Base64; размер одного файла — примерно до 3 МБ.</value></data>
+  <data name="Parameter.Sandbox.Overwrite" xml:space="preserve"><value>Перезаписывать существующий файл</value></data>
+  <data name="Parameter.Sandbox.Overwrite.Help" xml:space="preserve"><value>При отключении операция завершается ошибкой, если целевой файл существует.</value></data>
+  <data name="Parameter.Sandbox.RelativeDirectory" xml:space="preserve"><value>Каталог рабочего пространства</value></data>
+  <data name="Parameter.Sandbox.RelativeDirectory.Help" xml:space="preserve"><value>Файлы записываются с исходными именами в этот каталог; оставьте пустым для корня.</value></data>
+  <data name="Parameter.Sandbox.Files" xml:space="preserve"><value>Файлы</value></data>
+  <data name="Parameter.Sandbox.Files.Help" xml:space="preserve"><value>Можно загрузить несколько файлов сразу; содержимое передаётся через безопасные ссылки на файлы.</value></data>
+  <data name="Parameter.Sandbox.Language" xml:space="preserve"><value>Язык ядра</value></data>
+  <data name="Parameter.Sandbox.Language.Help" xml:space="preserve"><value>python использует ядро Python 3, а csharp — ядро C# .NET SDK от dotnet-interactive.</value></data>
+  <data name="Parameter.Sandbox.Title" xml:space="preserve"><value>Заголовок</value></data>
+  <data name="Parameter.Sandbox.Title.Help" xml:space="preserve"><value>Необязательно; если задан, становится первым Markdown-блоком с заголовком первого уровня.</value></data>
+  <data name="Parameter.Sandbox.Cells" xml:space="preserve"><value>Содержимое ячеек</value></data>
+  <data name="Parameter.Sandbox.Cells.Help" xml:space="preserve"><value>Процентный формат: поместите # %% на отдельную строку для разделения ячеек кода; после # %% [markdown] идёт Markdown-ячейка, а текст до первого маркера — первая ячейка кода.</value></data>
+  <data name="Parameter.Sandbox.ListDirectory" xml:space="preserve"><value>Каталог рабочего пространства</value></data>
+  <data name="Parameter.Sandbox.ListDirectory.Help" xml:space="preserve"><value>Каталог относительно пространства Lab; оставьте пустым для корня.</value></data>
+  <data name="Parameter.Sandbox.Recursive" xml:space="preserve"><value>Рекурсивный список</value></data>
+  <data name="Parameter.Sandbox.Recursive.Help" xml:space="preserve"><value>Нужно ли рекурсивно перечислять дочерние каталоги.</value></data>
+  <data name="Parameter.Sandbox.MaxItems" xml:space="preserve"><value>Максимальное число элементов</value></data>
+  <data name="Parameter.Sandbox.MaxItems.Help" xml:space="preserve"><value>Оставьте пустым или укажите 0, чтобы использовать системный предел.</value></data>
+  <data name="Parameter.Sandbox.NotebookPath" xml:space="preserve"><value>Путь к файлу рабочего пространства</value></data>
+  <data name="Parameter.Sandbox.NotebookPath.Help" xml:space="preserve"><value>Путь должен заканчиваться на .ipynb, например notebooks/demo.ipynb.</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Стандартное ядро Python 3</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>Ядро C# от dotnet-interactive; требуется образ Jupyter для C#.</value></data>
 </root>

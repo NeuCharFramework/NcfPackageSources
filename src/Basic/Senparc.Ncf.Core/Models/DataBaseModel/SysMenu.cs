@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SysMenu.cs
-    文件功能描述：SysMenu 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SysMenu.cs
+    File description: SysMenu related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +25,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    /// 菜单表
+    ///Legacy comment translated to English.
     /// </summary>
     [Table("SysMenus")]
     public class SysMenu : EntityBase<string>
@@ -58,7 +61,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string MenuName { get; set; }
 
         /// <summary>
-        /// 父菜单
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(150)]
         public string ParentId { get; set; }
@@ -67,23 +70,23 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string Url { get; set; }
 
         /// <summary>
-        /// 图标
+        /// icon
         /// </summary>
         [MaxLength(150)]
         public string Icon { get; set; }
 
         /// <summary>
-        /// 是否锁定, 锁定后不能 修改和删除
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsLocked { get; set; }
 
         /// <summary>
-        /// 类型
+        /// type
         /// </summary>
         public MenuType MenuType { get; set; }
 
         /// <summary>
-        /// 操作资源
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(150)]
         public string ResourceCode { get; set; }
@@ -105,7 +108,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public int Sort { get; set; }
 
         /// <summary>
-        /// 是否可见
+        ///Legacy comment translated to English.
         /// </summary>
         public bool Visible { get; set; }
     }

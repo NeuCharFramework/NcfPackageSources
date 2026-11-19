@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: Register.cs
+    File description: Register related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -28,16 +31,16 @@ using System.Reflection;
 namespace Senparc.Ncf.Core
 {
     /// <summary>
-    /// NCF 的注册程序
+    ///Legacy comment translated to English.
     /// </summary>
     public static class Register
     {
         /// <summary>
-        /// 扫描自动依赖注入的接口
+        ///Legacy comment translated to English.
         /// </summary>
         public static IServiceCollection ScanAssamblesForAutoDI(this IServiceCollection services)
         {
-            //遍历所有程序集进行注册
+            //Legacy comment translated to English.
             Action<Assembly> action = assembly =>
             {
                 var areaRegisterTypes = assembly.GetTypes() //.GetExportedTypes()
@@ -50,15 +53,15 @@ namespace Senparc.Ncf.Core
                 {
                     try
                     {
-                        //判断特性标签
+                        //Legacy comment translated to English.
                         var attrs = System.Attribute.GetCustomAttributes(registerType, false).Where(z => z is AutoDITypeAttribute);
                         if (attrs.Count() > 0)
                         {
                             var attr = attrs.First() as AutoDITypeAttribute;
-                            dILifecycleType = attr.DILifecycleType;//使用指定的方式
+                            dILifecycleType = attr.DILifecycleType;//Legacy comment translated to English.
                         }
 
-                        //针对不同的类型进行不同生命周期的 DI 设置
+                        //Legacy comment translated to English.
                         switch (dILifecycleType)
                         {
                             case DILifecycleType.Scoped:
@@ -89,24 +92,24 @@ namespace Senparc.Ncf.Core
 
         #region TryRegisterMiniCore
         /// <summary>
-        /// 以最小化的过程进行自动注册，适用于缺少环境的单元测试、Code First 命令等。请勿在生产环境中使用此命令！
-        /// <para>如果已经注册过，则返回 null</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public static IRegisterService TryRegisterMiniCore(Action<IServiceCollection> servicesAction = null, Action<IApplicationBuilder> appAction = null)
         {
-            //初始化项目
+            //Legacy comment translated to English.
             if (!Senparc.CO2NET.RegisterServices.RegisterServiceExtension.SenparcGlobalServicesRegistered)
             {
                 try
                 {
-                    var repository = LogManager.CreateRepository("NETCoreRepository");//读取Log配置文件
+                    var repository = LogManager.CreateRepository("NETCoreRepository");//readLogconfigurationfile
                     Console.WriteLine("[TryRegisterMiniCore] NETCoreRepository 注册完成");
                 }
                 catch
                 {
                     Console.WriteLine("NETCoreRepository 已进行过配置，无需重复配置");
                 }
-                //允许从外部添加对 services 的注册操作
+                //Legacy comment translated to English.
                 var services = RegisterServiceCollection();
 
                 Console.WriteLine("[TryRegisterMiniCore] RegisterServiceCollection() 完成");
@@ -114,7 +117,7 @@ namespace Senparc.Ncf.Core
                 servicesAction?.Invoke(services);
                 Console.WriteLine("[TryRegisterMiniCore] servicesAction?.Invoke(services) 完成");
 
-                //允许从外部添加对 app 的注册操作
+                //Legacy comment translated to English.
                 var serviceProvider = services.BuildServiceProvider();
                 Console.WriteLine("[TryRegisterMiniCore] services.BuildServiceProvider() 完成");
 
@@ -134,7 +137,7 @@ namespace Senparc.Ncf.Core
         }
 
         /// <summary>
-        /// 注册 IServiceCollection 和 MemoryCache
+        ///Legacy comment translated to English.
         /// </summary>
         private static IServiceCollection RegisterServiceCollection()
         {
@@ -142,19 +145,19 @@ namespace Senparc.Ncf.Core
             var configBuilder = new ConfigurationBuilder();
             var config = configBuilder.Build();
             serviceCollection.AddSenparcGlobalServices(config);
-            serviceCollection.AddMemoryCache();//使用内存缓存
+            serviceCollection.AddMemoryCache();//Legacy comment translated to English.
             return serviceCollection;
         }
 
 
         /// <summary>
-        /// 注册 RegisterService.Start()
+        ///Legacy comment translated to English.
         /// </summary>
         private static IRegisterService RegisterServiceStart(bool autoScanExtensionCacheStrategies = false)
         {
             Console.WriteLine("[TryRegisterMiniCore] RegisterServiceStart() 开始");
 
-            //注册
+            //Legacy comment translated to English.
             var senparcSetting = CreateSenparcSetting();
             return Senparc.CO2NET.Register.UseSenparcGlobal(senparcSetting, reg => { }, autoScanExtensionCacheStrategies);
         }

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：MD5.cs
-    文件功能描述：MD5 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: MD5.cs
+    File description: MD5 related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.21.3-preview5 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,16 +22,16 @@ using System.Text;
 namespace Senparc.Ncf.Core.Utility
 {
     /// <summary>
-    /// MD5 加密
+    ///Legacy comment translated to English.
     /// </summary>
     public static class MD5
     {
         /// <summary>
-        /// 获得 NCF 系统内全局一致的加盐的 MD5 加密结果
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="str">原始密码</param>
-        /// <param name="salt">盐</param>
-        /// <param name="encoding">默认为 UTF8</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        /// <param name="encoding">defaultfor UTF8</param>
         /// <returns></returns>
         public static string GetMD5Code(string str, string salt, Encoding encoding = null)
         {

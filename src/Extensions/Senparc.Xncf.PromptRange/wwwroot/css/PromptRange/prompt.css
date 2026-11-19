@@ -1013,7 +1013,11 @@
                 }
 
                 .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox::before {
-                    content: '备注:';
+                    content: none;
+                    display: none;
+                }
+
+                .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkLabel {
                     position: absolute;
                     left: 15px;
                     top: 5px;
@@ -2399,7 +2403,7 @@ think {
 }
 
 think::before {
-    content: "推理过程";
+    content: "Reasoning process";
     position: absolute;
     top: -10px;
     left: 10px;
@@ -2409,6 +2413,13 @@ think::before {
     color: #666;
     border-radius: 4px;
 }
+
+html[lang^="zh"] think::before { content: "推理过程"; }
+html[lang^="en"] think::before { content: "Reasoning process"; }
+html[lang^="ja"] think::before { content: "推論プロセス"; }
+html[lang^="fr"] think::before { content: "Processus de raisonnement"; }
+html[lang^="es"] think::before { content: "Proceso de razonamiento"; }
+html[lang^="ru"] think::before { content: "Процесс рассуждения"; }
 
 /* ========== Prompt 对比对话框样式（Git Diff 风格） ========== */
 

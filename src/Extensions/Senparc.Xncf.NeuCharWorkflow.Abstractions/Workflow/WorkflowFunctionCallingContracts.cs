@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WorkflowFunctionCallingContracts.cs
-    文件功能描述：WorkflowFunctionCallingContracts.cs 相关实现
+    File name: WorkflowFunctionCallingContracts.cs
+    File description: WorkflowFunctionCallingContracts.cs related implementation
 
+    Created by: Senparc - 20260821
 
-    创建标识：Senparc - 20260821
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 扩展工作流依赖、函数调用和人工交互契约
+    Modified by: Senparc - 20261119
+    Change description: v0.3.2 Localized Workflow designer and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -55,3 +58,66 @@ public sealed record WorkflowFunctionCallingResult(
     bool Success,
     string? Output,
     string? ErrorMessage);
+
+/// <summary>
+/// Optional, explicitly gated integration boundary used by hosts that want to let
+/// an AI assistant design and create a Workflow for the current administrator.
+/// Implementations must validate the definition again at save time.
+/// </summary>
+public interface IWorkflowCreationProvider
+{
+    Task<WorkflowCreationCapabilities> GetCapabilitiesAsync(
+        int adminUserId,
+        CancellationToken cancellationToken = default);
+
+    Task<WorkflowCreationValidationResult> ValidateAsync(
+        int adminUserId,
+        WorkflowCreationRequest request,
+        CancellationToken cancellationToken = default);
+
+    Task<WorkflowCreationResult> CreateAsync(
+        int adminUserId,
+        WorkflowCreationRequest request,
+        CancellationToken cancellationToken = default);
+}
+
+public sealed record WorkflowCreationRequest(
+    string Name,
+    string? Description,
+    string TriggerType,
+    string GraphJson,
+    bool Enabled = true);
+
+public sealed record WorkflowCreationCapabilities(
+    IReadOnlyList<string> TriggerTypes,
+    IReadOnlyList<string> NodeTypes,
+    IReadOnlyList<WorkflowCreationFunctionDescriptor> FunctionRenders,
+    int MaxNodes,
+    int MaxEdges,
+    string? ExampleGraphJson = null);
+
+public sealed record WorkflowCreationFunctionDescriptor(
+    string ModuleUid,
+    string ModuleName,
+    string FunctionKey,
+    string Name,
+    string Description,
+    bool ModuleAvailable);
+
+public sealed record WorkflowCreationValidationResult(
+    bool Success,
+    string? NormalizedGraphJson,
+    int NodeCount,
+    int EdgeCount,
+    IReadOnlyList<string> Warnings,
+    string? ErrorCode = null,
+    string? ErrorMessage = null);
+
+public sealed record WorkflowCreationResult(
+    bool Success,
+    int WorkflowId,
+    string? Name,
+    string? TriggerType,
+    bool Enabled,
+    string? ErrorCode = null,
+    string? ErrorMessage = null);

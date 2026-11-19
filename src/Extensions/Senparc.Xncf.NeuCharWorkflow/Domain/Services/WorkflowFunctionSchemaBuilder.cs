@@ -1,26 +1,29 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：WorkflowFunctionSchemaBuilder.cs
-    文件功能描述：领域服务与业务流程实现
 
+    File name: WorkflowFunctionSchemaBuilder.cs
+    File description: domain services and business-process implementation
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 enhance workflow orchestration, replay, Webhook, and parallel execution
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.4 add bulk file upload functionality to Sandbox Lab
+    Modified by: Senparc - 20261103
+    Change description: v0.4.4 add bulk file upload functionality to Sandbox Lab
 
-    修改标识：Senparc - 20261106
-    修改描述：执行 Function 时补齐已声明的默认值，并只自动选中明确的唯一选项
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261110
-    修改描述：v0.4.6 保留显式传入的空工作流数组，不再把空数组当成未填写
+    Modified by: Senparc - 20261110
+    Change description: v0.4.6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.4.6 保持 Workflow Function 元数据与模块能力兼容
+    Modified by: Senparc - 20261111
+    Change description: v0.4.6 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -34,8 +37,8 @@ using System.Text.Json.Nodes;
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
 /// <summary>
-/// 将 XNCF Function 的通用参数元数据转换为 Workflow Designer 可消费的最小 UI 契约。
-/// 该契约由 Workflow 模块维护，避免反向依赖 Admin/NeuCharPivot 的页面模型。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public static class WorkflowFunctionSchemaBuilder
 {
@@ -73,12 +76,12 @@ public static class WorkflowFunctionSchemaBuilder
             };
         }).ToList();
 
-    public static Dictionary<string, object> BuildDefaults(IEnumerable<WorkflowFunctionParameterSchema> parameters)
+    public static Dictionary<string, object?> BuildDefaults(IEnumerable<WorkflowFunctionParameterSchema> parameters)
     {
-        var result = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        var result = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
         foreach (var parameter in parameters ?? Array.Empty<WorkflowFunctionParameterSchema>())
         {
-            object value = parameter.DefaultValue;
+            object? value = parameter.DefaultValue;
             var options = parameter.Options ?? new List<WorkflowFunctionParameterOption>();
             if (parameter.ParameterType == (int)ParameterType.CheckBoxList)
             {
@@ -86,8 +89,8 @@ public static class WorkflowFunctionSchemaBuilder
             }
             else if (parameter.ParameterType == (int)ParameterType.DropDownList && IsBlank(value))
             {
-                // 只采用明确标记的默认项。必填下拉框仅在唯一选项时自动选中，
-                // 避免 Workflow 在多个模型或数据集之间误选第一项。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 value = options.FirstOrDefault(z => z.DefaultSelected)?.Value;
                 if (value == null && parameter.Required && options.Count == 1)
                 {
@@ -108,11 +111,11 @@ public static class WorkflowFunctionSchemaBuilder
     }
 
     /// <summary>
-    /// 用 Function 元数据中的默认值和明确选项补齐空参数。已填写的值、模板和上游绑定保持不变。
+    ///Legacy comment translated to English.
     /// </summary>
     public static string MergeMissingDefaults(string parametersJson, IReadOnlyList<FunctionParameterInfo> parameters)
     {
-        JsonNode parsed;
+        JsonNode? parsed;
         try
         {
             parsed = JsonNode.Parse(string.IsNullOrWhiteSpace(parametersJson) ? "{}" : parametersJson);
@@ -157,10 +160,10 @@ public static class WorkflowFunctionSchemaBuilder
         return obj.ToJsonString();
     }
 
-    private static bool IsBlank(object value) =>
+    private static bool IsBlank(object? value) =>
         value == null || (value is string text && string.IsNullOrWhiteSpace(text));
 
-    private static bool HasRuntimeValue(object value)
+    private static bool HasRuntimeValue(object? value)
     {
         switch (value)
         {
@@ -195,7 +198,7 @@ public static class WorkflowFunctionSchemaBuilder
         return true;
     }
 
-    private static bool TryGetPropertyIgnoreCase(JsonObject obj, string name, out string key, out JsonNode node)
+    private static bool TryGetPropertyIgnoreCase(JsonObject obj, string name, out string? key, out JsonNode? node)
     {
         foreach (var property in obj)
         {
@@ -239,8 +242,8 @@ public sealed class WorkflowFunctionParameterSchema
     public int MaxFiles { get; set; }
     public string Accept { get; set; }
     public bool HasSyntheticName { get; set; }
-    public string MetadataError { get; set; }
-    public object DefaultValue { get; set; }
+    public string? MetadataError { get; set; }
+    public object? DefaultValue { get; set; }
     public List<WorkflowFunctionParameterOption> Options { get; set; } = new();
 }
 

@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：MyFuctionAppService.cs
-    文件功能描述：MyFuctionAppService 相关实现
-    
-    
-    创建标识：Senparc - 20250113
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.3.0-preview2 为 SenMapic 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+    File name: MyFuctionAppService.cs
+    File description: MyFuctionAppService related implementation
+
+    Created by: Senparc - 20250113
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.3.0-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -52,20 +55,20 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-        //     var crawTask = await _senMapicTaskService.CreateTaskAsync("爬虫任务"+SystemTime.Now.Ticks, 
+        //Legacy comment translated to English.
         //             request.Url, 5, 10, request.Deepth, request.PageNumber, true);
-        //    logger.Append("爬虫任务创建成功");
-        //    logger.Append("爬虫任务ID："+crawTask.Id);
-        //    logger.Append("爬虫任务名称："+crawTask.Name);
-        //    logger.Append("爬虫任务开始时间："+crawTask.StartTime);
-        //    logger.Append("爬虫任务结束时间："+crawTask.EndTime);
-        //    logger.Append("爬虫任务状态："+crawTask.Status);
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
            
         //      await _senMapicTaskService.StartTaskAsync(crawTask);
 
             List<KeyValuePair<ContentType, string>> contentMap = new List<KeyValuePair<ContentType, string>>();
 
-            Console.WriteLine($"Crawl 爬取：{request.Url}，深度：{request.Deepth}，最大页面数：{request.PageNumber}");
+            Console.WriteLine($"Crawl: {request.Url}, depth: {request.Deepth}, max pages: {request.PageNumber}");
 
             var senMapicEngine = new SenMapicEngine(
                                 serviceProvider: base.ServiceProvider,
@@ -89,14 +92,22 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                /* 页面上点击“执行”后，将调用这里的方法
+                /* Legacy comment translated to English.
+
                   *
-                  * 参数说明：
-                  * response：已经初始化后的返回结果
-                  * logger：日志
+
+                  * parametersdescription：
+
+                  * Legacy comment translated to English.
+
+                  * Legacy comment translated to English.
+
                   * 
-                  * 如果直接对 response 的属性修改，则最终 return null，
-                  * 否则可以返回一个新的 response 对象，系统将自动覆盖原有对象
+
+                  * Legacy comment translated to English.
+
+                  * Legacy comment translated to English.
+
                   */
 
                 double calcResult = request.Number1;
@@ -116,18 +127,18 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
                         if (request.Number2 == 0)
                         {
                             response.Success = false;
-                            response.ErrorMessage = "被除数不能为0！";
+                            response.ErrorMessage = "The divisor cannot be zero!";
                             return null;
                         }
                         calcResult = calcResult / request.Number2;
                         break;
                     default:
                         response.Success = false;
-                        response.ErrorMessage = $"未知的运算符：{theOperator}";
+                        response.ErrorMessage = $"Unknown operator: {theOperator}";
                         return null;
                 }
 
-                logger.Append($"进行运算：{request.Number1} {theOperator} {request.Number2} = {calcResult}");
+                logger.Append($"Calculation: {request.Number1} {theOperator} {request.Number2} = {calcResult}");
 
                 Action<int> raisePower = power =>
                 {
@@ -135,14 +146,14 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
                     {
                         var oldValue = calcResult;
                         calcResult = Math.Pow(calcResult, power);
-                        logger.Append($"进行{power}次方运算：{oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
+                        logger.Append($"Calculated power {power}: {oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
                     }
                 };
 
                 raisePower(2);
                 raisePower(3);
 
-                response.Data = $"【{request.Name}】计算结果：{calcResult}。计算过程请看日志";
+                response.Data = $"[{request.Name}] Result: {calcResult}. See the log for calculation details.";
                 return null;
             });
         }

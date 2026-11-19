@@ -1,26 +1,29 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Index.cshtml.cs
-    文件功能描述：Index.cshtml 相关实现
 
+    File name: Index.cshtml.cs
+    File description: Index.cshtml related implementation
 
-    创建标识：Senparc - 20250105
+    Created by: Senparc - 20250105
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.3.1-preview3 加强文件上传校验和物理路径安全
+    Modified by: Senparc - 20260729
+    Change description: v0.3.1-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
+    Modified by: Senparc - 20260813
+    Change description: v0.6.0-preview1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.7.0 优化文件管理、标签与回收站交互
+    Modified by: Senparc - 20260915
+    Change description: v0.7.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.1 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+    Modified by: Senparc - 20261103
+    Change description: v0.8.1 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.5 Localized file management and upload surfaces
 
 ----------------------------------------------------------------*/
 

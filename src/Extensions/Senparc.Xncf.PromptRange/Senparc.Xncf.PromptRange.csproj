@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.15</Version>
+    <Version>0.20.16</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -11,168 +11,171 @@
     <AssemblyName>Senparc.Xncf.PromptRange</AssemblyName>
     <RootNamespace>Senparc.Xncf.PromptRange</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>你的提示词（Prompt）训练场</Description>
+    <Description>Your Prompt Training Range</Description>
     <Copyright>Senparc</Copyright>
     <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.PromptRange</PackageTags>
     <Authors>Senparc</Authors>
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Title>提示词靶场</Title>
+    <Title>Prompt Training Range</Title>
     <!--<ProjectUrl>
     https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>      [2024-08-06] v0.9.6.0-preview1 update Senparc.AI.Kernel
-      [2024-08-29] v0.9.9.0-preview1 更新首页统计
-      [2024-08-31] v0.10.0-preview1 PromptRange 支持 Markdown 输出格式展示
-      [2024-09-03] v0.10.1-preview1 PromptRange 结果提供“复制”功能
-      [2024-09-04] v0.10.2-preview1 PromptRange 完善结果显示样式，添加“复制”功能
-      [2024-09-07] v0.10.2.10-preview1 PromptRange 优化输出格式
-      [2024-09-07] v0.10.2.11-preview1 PromptRange 修复自动初始化 Prompt 调用过程中的一个 bug
-      [2024-09-07] v0.10.3-preview1 更新 Senparc.AI 基础库，并在 XncfBuilder 使用 AI 生成代码时，优先使用已选中的模型。
-      [2024-09-08] v0.10.3.1-preview1 优化 XncfBuilder AI 代码生成过程的模型选用
-      [2024-09-10] v0.10.4-preview1 升级缓存基础库
-      [2024-09-27] v0.10.5-preview1 修复首页的下拉栏过长的问题
-      [2024-10-09] v0.10.7-preview1 升级基础库
-      [2024-10-16] v0.10.5-preview1 提供 PromptRangeAppService.GetPromptRangeTree() 方法，输出树状
-      PromptRange 信息
-      [2024-10-16] v0.10.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-      [2024-10-16] v0.10.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-      [2024-11-04] v0.11.0-preview1 重构 PromptRange 界面；大幅提升树状 Prompt 检索性能（约20倍）
-      [2024-11-08] v0.11.1-preview1 升级 Senparc.AI
-      [2024-11-15] v0.12.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-      [2024-11-15] v0.12.1-preview1 升级备注名称替换功能
-      [2024-11-21] v0.13.2-preview1 更新 CO2NET 及缓存基础库
-      [2024-11-28] v0.13.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName
-      property
-      [2024-12-27] v0.13.4-preview1 Add exception log for UseXncfModules() auto progress
-      [2025-01-25] v0.13.8-preview1 Update Agents functions, support for function calling
-      [2025-01-28] v0.13.9-preview1 update Senparc.AI
-      [2025-02-06] v0.13.10-preview1 update NeuCharAI model update
-      [2025-02-22] v0.13.11-preview1 add DeepSeek-R1 &lt;think&gt; tag style
-      [2025-03-21] v0.13.12-preview1 PromptRange's 3D charts are accurate to 1 decimal place
-      [2025-04-29] v0.13.14-preview1 Update CO2NET and AIKernel
-      [2025-05-18] v0.13.15-preview1 Update Installation
-      [2025-06-20] v0.13.16-preview1 Add MCP functions in XncfRegisterBase class
-      [2025-08-19] v0.13.17-preview.1 remove debug code in prompt.js
-      [2025-11-01] update basic libraries, including Senparc.AI
-      [2025-11-06] v0.13.19-preview.1 add AI score standard setting
-      [2025-11-06] v0.14.0-preview.1 Support Prompt comparison; Optimize the PromptRange layout and
-      provide a scalable layout
-      [2025-11-07] v0.14.1-preview.1 Optimize Prompt comparison
-      [2025-12-11] v0.14.2-preview.1 Optimize Prompt keyword highlight
-      [2025-12-14] v0.15.0-preview.1 PromptRange support Chat mode
-      [2025-12-14] v0.15.1-preview.1 Optimize Prompt score 3D chart and conversation mode for Brust Shotting mode
-      [2025-12-16] v0.15.2-preview.1 Optimize Prompt score 3D chart
-      [2025-12-17] v0.15.3-preview.1 Optimize Prompt score 3D chart, support SystemMessage storage for Chat Shooting mode
-      [2026-07-02] v0.16.2-preview1 优化 PromptRange 提示处理流程与会话模式控制，支持流式输出并优化交互体验
-      1、优化 PromptRange 提示处理流程与会话模式控制
-      2、支持流式输出并优化交互体验
-      [2026-07-05] v0.16.3-preview2 增强文生图重试机制并兼容 TLS1.2/TLS1.3，重构系统配置初始化与更新流程并统一模型处理
-      1、增强文生图重试机制并兼容 TLS1.2/TLS1.3
-      2、重构系统配置初始化与更新流程并统一模型处理
-      [2026-07-05] v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3，重构系统配置初始化与更新流程并统一模型处理
-      1、增强文生图重试机制并兼容 TLS1.2/TLS1.3
-      2、重构系统配置初始化与更新流程并统一模型处理
-      3、支持 Continue Chat 待确认消息的追加、确认与移除，提升对话状态管理能力
-      4、优化 PromptRange 页面间距与响应式布局，改善不同屏高下的展示一致性
-      5、新增 Prompt 执行选项模型并补齐文本向量检索请求/响应结构，统一接口参数约定
-      [2026-07-07] v0.16.5-preview4 增强 Embedding 请求兼容处理并优化向量检索稳定性
-      1、新增 embedding 请求兼容逻辑，针对不支持 dimensions 参数的模型自动降级处理
-      2、优化向量集合命名与来源 ID 生成策略，降低并发检索场景下的数据冲突风险
-      3、调整嵌入检索卡片样式，避免右侧浮层遮挡操作按钮
-      4、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
-      [2026-07-17] v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
-      1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
-      2、更新 FunctionRender 与请求模型文案的资源化解析
-      3、统一模块注册信息、菜单名称与功能描述的本地化输出
-      4、同步管理页面与前端交互文案的多语言显示
-      5、统一提示词页面复制工具和剪贴板回退，改善内嵌 WebView 兼容性
-      [2026-07-29] v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
-      1、为提示词、音频、图片和流式接口统一增加 AdminOnly 授权保护
-      2、限制插件压缩包大小、条目数、解压体积和路径穿越，并安全渲染结果内容
-      [2026-07-31] v0.18.0-preview7 扩展 PromptRange 管理界面的多语言能力
-      1、补齐提示词、模型、菜单、复制与日期显示的多语言资源
-      2、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0
-      [2026-08-04] v0.19.0-preview8 完善 PromptRange 管理页多语言体验
-      1、为 Prompt、Model 与 Index 页面接入统一本地化脚本
-      2、补充中文、英文、日文、法文、西班牙文与俄文资源
-      [2026-08-08] v0.19.1-preview9 Dependency updates from upstream projects
-      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
-      2、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
-      3、Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
-      4、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
-      5、Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
-      6、Dependency update from Senparc.Xncf.SystemManager to 0.15.4-preview7
-      7、Dependency update from Senparc.Xncf.Tenant to 0.15.4-preview6
-      8、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.2.4-preview4
-      [2026-08-13] v0.19.2-preview10 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7; Senparc.Xncf.AIKernel to 0.15.3-preview10
-      [2026-08-15] v0.19.3 Dependency update from Senparc.Xncf.AIKernel to 0.15.3-preview12
-      1、改进流式输出文本提取，兼容更多 Agent 响应增量字段
-      2、为 Ollama 低 Token 场景补充最小 thinking token 预算，降低流式调用失败率
-      3、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
-      4、补充流式输出字段提取和低 Token 场景处理，降低 Ollama 调用结果为空的概率
-      [2026-08-29] v0.19.4 Dependency updates from Senparc.Ncf.XncfBase to 0.26.1
-      1、Dependency update from Senparc.Ncf.XncfBase to 0.26.1
-      [2026-09-15] v0.19.5 适配共享 AI 依赖与 Harness 版本
-      1、同步 AgentKernel 及 Microsoft Agents AI Harness 依赖
-      2、保持 PromptRange 宿主集成与模型调用兼容
-      [2026-09-16] v0.19.6 Dependency updates from Senparc.IntegrationSample to 0.0.13; Senparc.Xncf.AIAgentsHub to 0.13.9; Senparc.Xncf.AgentsManager to 0.17.2; Senparc.Xncf.AgentsManagerTests to 0.0.15; Senparc.Xncf.WeixinManager to 0.24.7; Senparc.Web to 0.39.1
-      [2026-09-17] v0.19.7 适配共享 AgentKernel 预览依赖版本
-      1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
-      2、保持 PromptRange 工具调用与模型集成兼容
-      [2026-10-05] v0.19.8 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
-      1、Updated Senparc.Xncf.PromptRange project behavior and integration for the latest feature and reliability improvements.
-      2、chore: update package versions and dependencies across multiple projects
-      [2026-10-09] v0.19.9 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
-      v0.1.0 创世
-      v0.2.0 完成数据库和基本测试功能
-      v0.2.0.1024 升级至 1024 特别版，支持 SK v1.0.0-beta3（2023.10.24发布）
-      v0.2.1 重构当前解决方案 XNCF 模块自动获取的方法到 Senparc.Xncf.XncfBase 项目中，位于 FunctionHelper.LoadXncfProjects()
-      v0.3.0 重构 PromptRange 数据库和逻辑
-      v0.3.10 引用 Senparc.Xncf.AIKernel
-      v0.4.0 完成 PromptRange 基本功能
-      v0.4.2 优化 PromptRange 模糊查询
-      v0.4.7 支持手动打分精确到小数点后 1 位
-      v0.4.11 添加 PromptResultService.GetPromptConfigParameterFromAiSetting() 方法
-      v0.6.4 更新 Prompt 导入和导出 #207
-      v0.6.5 优化通过 PromptRangeCode 查询
-      [2026-10-21] v0.20.0 支持 Skill 类型、执行策略与隔离测试
-      [2026-10-21] v0.20.1 generate PromptRange SkillKind migrations with dotnet ef
-      1、Prompt 可标记为 Prompt 或 Skill，并携带执行策略
-      2、新增 Skill 隔离测试运行器与管理端 Skill 页面
-      3、执行请求可附带策略，并适配 Senparc.AI.AgentKernel 0.1.15-preview2
-      [2026-10-21] v0.20.2 upgrade Skill management with GitHub folder import, AI Draft generation, version tree preview, and safer content inspection
-      [2026-10-22] v0.20.3 persist Skill package artifacts through FileManager and add source metadata to PromptRange
-      [2026-11-02] Fix Memory default prompt note length and support scoped, evidence-based incremental extraction.
-      [2026-11-02] Add the AdminChat.Memory system prompt provider with published-version score selection.
-      [2026-11-02] Return prompt scores and support server-side average-score and PromptCode sorting in the reusable selector.
-      [2026-11-02] Add authorized prompt selector APIs for range/lane options, paginated keyword search and on-demand prompt content.
-      [2026-11-03] Recognize durable reply preferences and safely refresh unchanged, unscored Memory defaults without replacing customized or scored prompts.
-      [2026-11-03] v0.20.8 支持 Skill 管理、包上传和来源文件关联，并补齐多数据库迁移
-      1、提供 PromptRange 选择与评分信息，支持聊天记忆提示词
-    [2026-11-03] Add shared contextual documentation beside prompt range selection.
-    [2026-11-05] v0.20.14 完善 PromptCode 评分、记忆保存规则与多语言文案
-    1、将默认记忆抽取扩展到普通事实和需要审核的显式上下文引用，并迁移未被改动的旧默认项，不替换已自定义或已评分提示词
-    2、提供显式 PromptCode 引用、共享的最近一次人工或 AI 评分、当前分数选择，并补齐六类数据库迁移
-    3、增加记忆意图分类和结构化的更新、延后或不处理输出，升级未被改动的上下文抽取默认项
-    4、支持带证据审核的短上下文记忆保存，并避免覆盖已自定义或已评分提示词
-    5、提供授权的轻量 Range 分数总览和只读预览，不必加载提示词正文
-    6、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
-    7、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
-    8、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
-    9、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
-    10、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-    11、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
-    12、Dependency update from Senparc.Xncf.SystemManager to 0.15.12
-    13、Dependency update from Senparc.Xncf.Tenant to 0.15.15
-    14、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview7
-    [2026-11-11] v0.20.14 统一模块注册文案，并升级共享 AI 依赖
-    1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
-    2、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17、Microsoft Agent Framework 1.28.0、OpenAI 2.14.0 与 Microsoft.Extensions.AI.OpenAI 10.11.0。
-    [2026-11-12] v0.20.15 统一模块注册显示名称与说明的多语言资源键
-    1、模块注册信息优先使用稳定资源键解析多语言显示文本。
-    2、兼容现有资源与默认文案，避免缺少翻译时影响模块加载。
+    <PackageReleaseNotes>[2024-08-06] v0.9.6.0-preview1 update Senparc.AI.Kernel
+        [2024-08-29] v0.9.9.0-preview1 Updated module behavior and related support.
+        [2024-08-31] v0.10.0-preview1 Updated module behavior and related support.
+        [2024-09-03] v0.10.1-preview1 Updated module behavior and related support.
+        [2024-09-04] v0.10.2-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.10.2.10-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.10.2.11-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.10.3-preview1 Updated module behavior and related support.
+        [2024-09-08] v0.10.3.1-preview1 Updated module behavior and related support.
+        [2024-09-10] v0.10.4-preview1 upgrade the cache foundation libraries
+        [2024-09-27] v0.10.5-preview1 Updated module behavior and related support.
+        [2024-10-09] v0.10.7-preview1 Updated module behavior and related support.
+        [2024-10-16] v0.10.5-preview1 Updated module behavior and related support.
+        PromptRange
+        [2024-10-16] v0.10.8-preview1 Updated module behavior and related support.
+        [2024-10-16] v0.10.8-preview1 Updated module behavior and related support.
+        [2024-11-04] v0.11.0-preview1 Updated module behavior and related support.
+        [2024-11-08] v0.11.1-preview1 upgrade Senparc.AI
+        [2024-11-15] v0.12.0-preview1 Updated module behavior and related support.
+        [2024-11-15] v0.12.1-preview1 Updated module behavior and related support.
+        [2024-11-21] v0.13.2-preview1 Updated module behavior and related support.
+        [2024-11-28] v0.13.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName
+        property
+        [2024-12-27] v0.13.4-preview1 Add exception log for UseXncfModules() auto progress
+        [2025-01-25] v0.13.8-preview1 Update Agents functions, support for function calling
+        [2025-01-28] v0.13.9-preview1 update Senparc.AI
+        [2025-02-06] v0.13.10-preview1 update NeuCharAI model update
+        [2025-02-22] v0.13.11-preview1 add DeepSeek-R1 &lt;think&gt; tag style
+        [2025-03-21] v0.13.12-preview1 PromptRange's 3D charts are accurate to 1 decimal place
+        [2025-04-29] v0.13.14-preview1 Update CO2NET and AIKernel
+        [2025-05-18] v0.13.15-preview1 Update Installation
+        [2025-06-20] v0.13.16-preview1 Add MCP functions in XncfRegisterBase class
+        [2025-08-19] v0.13.17-preview.1 remove debug code in prompt.js
+        [2025-11-01] update basic libraries, including Senparc.AI
+        [2025-11-06] v0.13.19-preview.1 add AI score standard setting
+        [2025-11-06] v0.14.0-preview.1 Support Prompt comparison; Optimize the PromptRange layout and
+        provide a scalable layout
+        [2025-11-07] v0.14.1-preview.1 Optimize Prompt comparison
+        [2025-12-11] v0.14.2-preview.1 Optimize Prompt keyword highlight
+        [2025-12-14] v0.15.0-preview.1 PromptRange support Chat mode
+        [2025-12-14] v0.15.1-preview.1 Optimize Prompt score 3D chart and conversation mode for Brust Shotting mode
+        [2025-12-16] v0.15.2-preview.1 Optimize Prompt score 3D chart
+        [2025-12-17] v0.15.3-preview.1 Optimize Prompt score 3D chart, support SystemMessage storage for Chat Shooting mode
+        [2026-07-02] v0.16.2-preview1 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-05] v0.16.3-preview2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-05] v0.16.4-preview3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        [2026-07-07] v0.16.5-preview4 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        [2026-07-17] v0.17.0-preview5 Updated module behavior and related support.
+        1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        [2026-07-29] v0.17.1-preview6 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-31] v0.18.0-preview7 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-04] v0.19.0-preview8 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-08] v0.19.1-preview9 Dependency updates from upstream projects
+        1. Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+        2. Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+        3. Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
+        4. Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+        5. Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
+        6. Dependency update from Senparc.Xncf.SystemManager to 0.15.4-preview7
+        7. Dependency update from Senparc.Xncf.Tenant to 0.15.4-preview6
+        8. Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.2.4-preview4
+        [2026-08-13] v0.19.2-preview10 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7; Senparc.Xncf.AIKernel to 0.15.3-preview10
+        [2026-08-15] v0.19.3 Dependency update from Senparc.Xncf.AIKernel to 0.15.3-preview12
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Dependency update from Senparc.Xncf.AIKernel to 0.15.4
+        4. Updated module behavior and related support.
+        [2026-08-29] v0.19.4 Dependency updates from Senparc.Ncf.XncfBase to 0.26.1
+        1. Dependency update from Senparc.Ncf.XncfBase to 0.26.1
+        [2026-09-15] v0.19.5 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-09-16] v0.19.6 Dependency updates from Senparc.IntegrationSample to 0.0.13; Senparc.Xncf.AIAgentsHub to 0.13.9; Senparc.Xncf.AgentsManager to 0.17.2; Senparc.Xncf.AgentsManagerTests to 0.0.15; Senparc.Xncf.WeixinManager to 0.24.7; Senparc.Web to 0.39.1
+        [2026-09-17] v0.19.7 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-10-05] v0.19.8 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+        1. Updated Senparc.Xncf.PromptRange project behavior and integration for the latest feature and reliability improvements.
+        2. chore: update package versions and dependencies across multiple projects
+        [2026-10-09] v0.19.9 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
+        v0.1.0 initial release
+        v0.2.0 Updated module behavior and related support.
+        v0.2.0.1024 Updated module behavior and related support.
+        v0.2.1 Updated module behavior and related support.
+        v0.3.0 Updated module behavior and related support.
+        v0.3.10 reference Senparc.Xncf.AIKernel
+        v0.4.0 Updated module behavior and related support.
+        v0.4.2 Updated module behavior and related support.
+        v0.4.7 Updated module behavior and related support.
+        v0.4.11 add PromptResultService.GetPromptConfigParameterFromAiSetting() method
+        v0.6.4 Updated module behavior and related support.
+        v0.6.5 Updated module behavior and related support.
+        [2026-10-21] v0.20.0 Updated module behavior and related support.
+        [2026-10-21] v0.20.1 generate PromptRange SkillKind migrations with dotnet ef
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-10-21] v0.20.2 upgrade Skill management with GitHub folder import, AI Draft generation, version tree preview, and safer content inspection
+        [2026-10-22] v0.20.3 persist Skill package artifacts through FileManager and add source metadata to PromptRange
+        [2026-11-02] Fix Memory default prompt note length and support scoped, evidence-based incremental extraction.
+        [2026-11-02] Add the AdminChat.Memory system prompt provider with published-version score selection.
+        [2026-11-02] Return prompt scores and support server-side average-score and PromptCode sorting in the reusable selector.
+        [2026-11-02] Add authorized prompt selector APIs for range/lane options, paginated keyword search and on-demand prompt content.
+        [2026-11-03] Recognize durable reply preferences and safely refresh unchanged, unscored Memory defaults without replacing customized or scored prompts.
+        [2026-11-03] v0.20.8 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-11-03] Add shared contextual documentation beside prompt range selection.
+        [2026-11-05] v0.20.14 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        6. Updated module behavior and related support.
+        7. Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+        8. Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+        9. Dependency update from Senparc.Xncf.AIKernel to 0.17.2
+        10. Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+        11. Dependency update from Senparc.Xncf.SystemCore to 0.14.12
+        12. Dependency update from Senparc.Xncf.SystemManager to 0.15.12
+        13. Dependency update from Senparc.Xncf.Tenant to 0.15.15
+        14. Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview7
+        [2026-11-11] v0.20.14 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-12] v0.20.15 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-19] v0.20.16 Localized PromptRange administration and runtime surfaces
+        1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+        2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
@@ -224,7 +227,6 @@
     <Content Remove="wwwroot\js\Admin\PromptRange\model.js" />
     <Content Remove="wwwroot\js\admin\promptrange\prompt.js" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
-    <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
     <!--<PackageReference
     Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
   </ItemGroup>

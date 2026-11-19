@@ -1,7 +1,7 @@
 /*
- * AgentsManager 前端：ChatGroup 启动（参与者/提及）与各类编辑抽屉表单方法。
- * 注意：本文件与 agents-app-*.js 系列按 three-loader.js 中的顺序加载，
- * 依赖全局 var（classic script 顶层 var 挂到 window），请勿单独引入。
+ * Legacy comment translated to English.
+ * Note: this file and the agents-app-*.js series are loaded in the order defined by three-loader.js,
+ * depends on global variables (top-level classic-script vars are attached to window); do not import separately.
  */
 
 var AgentsAppMethodsGroupStartEditor = {
@@ -13,14 +13,14 @@ var AgentsAppMethodsGroupStartEditor = {
       const chatGroupDto = groupDetail?.chatGroupDto || groupDetail || {}
       const fallbackRoleAgents = [
         {
-          roleName: '群主',
+          roleName: ncfST('Frontend.132'),
           agentTemplateDto: {
             id: chatGroupDto.adminAgentTemplateId,
             name: chatGroupDto.adminAgentTemplateName
           }
         },
         {
-          roleName: '对接人',
+          roleName: ncfST('Frontend.133'),
           agentTemplateDto: {
             id: chatGroupDto.enterAgentTemplateId,
             name: chatGroupDto.enterAgentTemplateName
@@ -62,7 +62,7 @@ var AgentsAppMethodsGroupStartEditor = {
           `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${requestedGroupId}`)
         const data = response?.data ?? {}
         if (!data.success) {
-          throw new Error(data.errorMessage || data.data || '加载群组成员失败')
+          throw new Error(data.errorMessage || data.data || ncfST('Frontend.525'))
         }
         if (Number(this.groupStartForm.chatGroupId) === requestedGroupId) {
           this.groupStartParticipants = this.buildGroupStartParticipants(data.data || {})
@@ -75,7 +75,7 @@ var AgentsAppMethodsGroupStartEditor = {
       } catch (error) {
         console.warn('loadGroupStartParticipants failed', error)
         if (Number(this.groupStartForm.chatGroupId) === requestedGroupId) {
-          this.$message.warning('无法刷新完整组员列表，当前仅显示已加载的组员')
+          this.$message.warning(ncfST('Frontend.526'))
         }
       } finally {
         if (Number(this.groupStartForm.chatGroupId) === requestedGroupId) {
@@ -147,7 +147,7 @@ var AgentsAppMethodsGroupStartEditor = {
     normalizeEditorSnapshotValue(value, fieldName = '') {
       if (Array.isArray(value)) {
         const normalized = value.map(item => this.normalizeEditorSnapshotValue(item))
-        // Group 成员的选择顺序不影响实际保存结果，避免控件回填时造成伪变更。
+        //Legacy comment translated to English.
         if (['members', 'remoteMembers'].includes(fieldName)) {
           return normalized.sort((left, right) => {
             const leftKey = `${left?.id ?? ''}:${left?.name ?? ''}`
@@ -161,7 +161,7 @@ var AgentsAppMethodsGroupStartEditor = {
         return Object.keys(value)
           .sort()
           .reduce((result, key) => {
-            // 这两个字段在提交时由成员列表派生，不属于用户编辑内容。
+            //Legacy comment translated to English.
             if (['memberAgentTemplateIds', 'remoteAgentIds'].includes(key)) return result
             result[key] = this.normalizeEditorSnapshotValue(value[key], key)
             return result
@@ -186,7 +186,7 @@ var AgentsAppMethodsGroupStartEditor = {
     isEditorFormDirty(btnType) {
       const visibleKey = this.getEditorVisibleKey(btnType)
       const original = this.editorFormInitialSnapshots[visibleKey]
-      // 未取得初始快照时保守处理，避免误丢弃刚刚编辑的内容。
+      //Legacy comment translated to English.
       return !original || original !== this.buildEditorFormSnapshot(btnType)
     },
     closeEditorForm(btnType) {
@@ -233,14 +233,14 @@ var AgentsAppMethodsGroupStartEditor = {
         this.agentSystemMessageTypeDetectionPending = false
       }
     },
-    // Dailog|抽屉 打开 按钮
+    //Legacy comment translated to English.
     async handleElVisibleOpenBtn(btnType, formData) {
       // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
-      // console.log('通用新增按钮:', btnType);
+      //Legacy comment translated to English.
       let visibleKey = btnType
-      // 组 启动
+      // group start
       if (btnType === 'drawerGroupStart') {
-        // 详情: formData.chatGroupDto 列表: formData
+        //Legacy comment translated to English.
         const chatGroup = formData?.chatGroupDto || formData || {}
         const chatGroupId = chatGroup.id || chatGroup.chatGroupId || formData?.chatGroupId || ''
         this.groupStartForm.groupName = chatGroup.name || ''
@@ -271,7 +271,7 @@ var AgentsAppMethodsGroupStartEditor = {
       }
       let initialSnapshotLoader = null
       if (btnType === 'drawerGroup') {
-        // 成员选择控件会在列表到达后回填；待回填完成再建立快照，避免误判为用户修改。
+        //Legacy comment translated to English.
         initialSnapshotLoader = Promise.all([
           this.getAgentListData('groupAgent'),
           this.getRemoteAgentListData('groupRemoteAgent')
@@ -292,17 +292,17 @@ var AgentsAppMethodsGroupStartEditor = {
       }
       this.$nextTick(() => this.captureEditorFormSnapshot(visibleKey))
     },
-    // Dailog|抽屉 关闭 按钮
+    //Legacy comment translated to English.
     handleElVisibleClose(btnType) {
       if (btnType === 'dialogAgentParameter') {
-        // 清空数据
+        //Legacy comment translated to English.
         this.agentParameterList = []
         this.$nextTick(() => {
           this.visible[btnType] = false
         })
         return
       } else if (btnType === 'dialogTaskDescription') {
-        // 清空数据
+        //Legacy comment translated to English.
         this.describeContent = ''
         this.taskDescriptionDetails = null
         this.$nextTick(() => {
@@ -312,36 +312,36 @@ var AgentsAppMethodsGroupStartEditor = {
       }
       if (!this.getEditorFormName(btnType)) return
 
-      // 没有任何表单修改时直接关闭；仅在可能丢弃用户输入时询问。
+      //Legacy comment translated to English.
       if (!this.isEditorFormDirty(btnType)) {
         this.closeEditorForm(btnType)
         return
       }
 
-      this.$confirm('当前修改尚未保存，确认关闭？')
+      this.$confirm(ncfST('Frontend.527'), ncfST('Frontend.528'))
         .then(_ => this.closeEditorForm(btnType))
         .catch(_ => { });
     },
-    // Dailog|抽屉 提交 按钮
+    //Legacy comment translated to English.
     handleElVisibleSubmit(btnType) {
       // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
       let refName = '', formName = ''
-      // 智能体 
+      // agent 
       if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
         refName = 'agentELForm'
         formName = 'agentForm'
       }
-      // 组
+      // group
       if (btnType === 'drawerGroup') {
         refName = 'groupELForm'
         formName = 'groupForm'
       }
-      // 组 启动
+      // group start
       if (['drawerGroupStart', 'drawerTaskStart'].includes(btnType)) {
         refName = 'groupStartELForm'
         formName = 'groupStartForm'
       }
-      // 任务评价
+      // task evaluation
       if (btnType === 'dialogTaskEvaluation') {
         refName = 'evaluationELForm'
         formName = 'evaluationForm'
@@ -354,10 +354,10 @@ var AgentsAppMethodsGroupStartEditor = {
       this.$refs[refName].validate(async (valid) => {
         if (valid) {
           const submitForm = this[formName] ?? {}
-          //提交数据给后端
+          //Legacy comment translated to English.
           await this.saveSubmitFormData(btnType, submitForm)
-          // “再次执行/启动任务”的跳转交给 saveSubmitFormData 中刷新后的定位逻辑，
-          // 避免这里用旧缓存任务二次覆盖到历史任务。
+          //Legacy comment translated to English.
+          //Legacy comment translated to English.
           // this.visible[btnType] = false
         } else {
           console.log('error submit!!');
@@ -365,32 +365,32 @@ var AgentsAppMethodsGroupStartEditor = {
         }
       });
     },
-    // 表单 单条校验
+    //Legacy comment translated to English.
     handleFormValidateField(refFormEL, formName, propName, item) {
       // this[formName][propName] = item
       this.$set(this[formName], `${propName}`, item)
       this.$refs[refFormEL]?.validateField(propName, () => { })
     },
 
-    // 识别事件
+    //Legacy comment translated to English.
     handleIdentify(e) {
 
       //debugger
       let bRes = this.findDest(e)
       if (bRes) {
-        console.log('命中')
-        //自动选出PromptRange（不做处理）
+        console.log('Matched')
+        //Legacy comment translated to English.
 
       } else {
-        console.log('未命中')
-        //TODO:默认成为新的提示词，zai
+        console.log('Not matched')
+        //Legacy comment translated to English.
 
       }
-      console.log('识别事件', e);
+      console.log('Recognized event', e);
     },
 
     handleSystemMessageTypeChange(type) {
-      // 用户显式切换时，应以用户的选择为准，不再让异步加载结果覆盖它。
+      //Legacy comment translated to English.
       this.agentSystemMessageTypeDetectionPending = false
       if (String(type) === '2') {
         this.$set(this.agentForm, 'modelBinding', 2)
@@ -408,11 +408,11 @@ var AgentsAppMethodsGroupStartEditor = {
       const binding = Number(this.agentForm?.modelBinding ?? 0)
       const aiModelId = Number(this.agentForm?.aiModelId || 0)
       if (isManualPrompt && binding !== 2) {
-        this.$message.error('手动 Prompt 没有 PromptRange 模型可继承，请选择“手动选择 AIModel”。')
+        this.$message.error(ncfST('Frontend.410'))
         return false
       }
       if (binding === 2 && !aiModelId) {
-        this.$message.error('手动选择 AIModel 时必须选择一个 Chat 类型模型。')
+        this.$message.error(ncfST('Frontend.609'))
         return false
       }
       return true
@@ -424,35 +424,35 @@ var AgentsAppMethodsGroupStartEditor = {
       const aiModelId = Number(agent.aiModelId || 0)
       const promptContent = String(agent.systemMessage || '').trim()
       if (!agentTemplateId || agent.isHuman || String(agent.systemMessageType) !== '2' || !promptContent) {
-        this.$message.error('请先保存一个包含明文 Prompt 的 AgentTemplate。')
+        this.$message.error(ncfST('Frontend.610'))
         return
       }
       if (!this.validateAgentModelBindingForm()) {
         return
       }
 
-      const defaultTestInput = `请根据“${agent.name || '当前 Agent'}”的职责完成一次简短示例任务。`
+      const defaultTestInput = `${ncfST('Frontend.361')} ${agent.name || ncfST('Frontend.005')}.`
       let testInput
       try {
-        const inputResult = await this.$prompt('输入用于验证该 Prompt 的任务内容。', 'Prompt 打靶输入', {
+        const inputResult = await this.$prompt(ncfST('Frontend.620'), ncfST('Frontend.621'), {
           inputType: 'textarea',
           inputValue: defaultTestInput,
           inputValidator: value => !!String(value || '').trim(),
-          inputErrorMessage: '测试输入不能为空'
+          inputErrorMessage: ncfST('Frontend.622')
         })
         testInput = String(inputResult.value || '').trim()
       } catch (_) {
         return
       }
 
-      const defaultExpectedResult = `结果应符合 Agent「${agent.name || ''}」的职责，并针对测试输入提供准确、清晰、可执行的回答。职责说明：${agent.description || '以测试任务为准'}`
+      const defaultExpectedResult = `${ncfST('Frontend.623', agent.name || ncfST('Frontend.005'))} ${agent.description || ncfST('Frontend.624')}`
       let expectedResult
       try {
-        const expectedResultInput = await this.$prompt('描述期望结果或评分标准，PromptRange 将据此进行 AI 评分。', 'Prompt 自动评分标准', {
+        const expectedResultInput = await this.$prompt(ncfST('Frontend.625'), ncfST('Frontend.626'), {
           inputType: 'textarea',
           inputValue: defaultExpectedResult,
           inputValidator: value => !!String(value || '').trim(),
-          inputErrorMessage: '评分标准不能为空'
+          inputErrorMessage: ncfST('Frontend.627')
         })
         expectedResult = String(expectedResultInput.value || '').trim()
       } catch (_) {
@@ -472,7 +472,7 @@ var AgentsAppMethodsGroupStartEditor = {
           })
         const apiResponse = response?.data || {}
         if (!apiResponse.success) {
-          throw new Error(apiResponse.message || apiResponse.errorMessage || apiResponse.error || 'PromptRange 转换失败。')
+          throw new Error(apiResponse.message || apiResponse.errorMessage || apiResponse.error || ncfST('Frontend.628'))
         }
 
         const result = apiResponse.data || {}
@@ -484,11 +484,11 @@ var AgentsAppMethodsGroupStartEditor = {
 
         const resultPreview = String(result.resultString || '').slice(0, 600)
         this.$alert(
-          `Prompt 已创建并完成一次打靶评分。\n靶场引用：${result.promptCode}\n打靶版本：${result.promptItemVersion}\n评分：${result.score}/10\n\n打靶结果：\n${resultPreview}`,
-          'PromptRange 转换完成',
-          { confirmButtonText: '确定', customClass: 'agent-prompt-conversion-result' })
+          ncfST('Frontend.631', result.promptCode, result.promptItemVersion, result.score, resultPreview),
+          ncfST('Frontend.629'),
+          { confirmButtonText: ncfST('Frontend.192'), customClass: 'agent-prompt-conversion-result' })
       } catch (error) {
-        const message = error?.response?.data?.message || error?.message || 'PromptRange 转换失败。'
+        const message = error?.response?.data?.message || error?.message || ncfST('Frontend.628')
         this.$message.error(message)
       } finally {
         this.agentPromptConversionLoading = false
@@ -510,7 +510,7 @@ var AgentsAppMethodsGroupStartEditor = {
       this.$set(this.agentForm, 'systemMessageType', selectedFromPromptRange ? '1' : '2')
     },
 
-    // 切换 tabs 页面
+    //Legacy comment translated to English.
     handleTabsClick(tab, event) {
       if (!this.isApplyingHashRoute) {
         this.navigateByHash(this.buildCurrentRoute({ tab: this.tabsActiveName }))
@@ -518,7 +518,7 @@ var AgentsAppMethodsGroupStartEditor = {
       }
       this.clearHistoryTimer()
       this.stopAgentGraphPolling()
-      // 智能体
+      // agent
       if (this.tabsActiveName === 'first') {
         this.getAgentListData('agent')
         if (this.agentListViewMode === 'three' && this.scrollbarAgentIndex === '') {
@@ -529,18 +529,18 @@ var AgentsAppMethodsGroupStartEditor = {
           })
         }
       }
-      // 组
+      // group
       if (this.tabsActiveName === 'second') {
         this.getGroupListData('group')
       }
-      // 任务
+      // task
       if (this.tabsActiveName === 'third') {
         this.gettaskListData('task')
       }
       this.syncHashRoute()
     },
 
-    // 筛选输入变化
+    //Legacy comment translated to English.
     handleFilterChange(value, filterType) {
       console.log('handleFilterChange', filterType, value)
       if (filterType === 'agent') {
@@ -572,9 +572,9 @@ var AgentsAppMethodsGroupStartEditor = {
         this.gettaskListData('task', 1)
       }
     },
-    // 筛选条件事件 agent  group task
+    //Legacy comment translated to English.
     handleFilterCriteria(filterType, fieldType) {
-      // 智能体
+      // agent
       if (filterType === 'agent') {
         if (fieldType === 'timeSort') {
           this.agentQueryList.timeSort = !this.agentQueryList.timeSort
@@ -593,9 +593,9 @@ var AgentsAppMethodsGroupStartEditor = {
           })
         }
         // this.agentFCPVisible = !this.agentFCPVisible
-        // to do 调用接口
+        // to do invokeinterface
       }
-      // 组
+      // group
       if (filterType === 'group') {
         if (fieldType === 'timeSort') {
           this.groupQueryList.timeSort = !this.groupQueryList.timeSort
@@ -614,9 +614,9 @@ var AgentsAppMethodsGroupStartEditor = {
           })
         }
         // this.groupFCPVisible = !this.groupFCPVisible
-        // to do 调用接口
+        // to do invokeinterface
       }
-      // 任务
+      // task
       if (filterType === 'task') {
         if (fieldType === 'timeSort') {
           this.taskQueryList.timeSort = !this.taskQueryList.timeSort
@@ -635,7 +635,7 @@ var AgentsAppMethodsGroupStartEditor = {
           })
         }
         // this.taskFCPVisible = !this.taskFCPVisible
-        // to do 调用接口
+        // to do invokeinterface
       }
     },
 

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ExtensionEntity.cs
-    文件功能描述：ExtensionEntity 相关实现
-    
-    
-    创建标识：Senparc - 20211128
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: ExtensionEntity.cs
+    File description: ExtensionEntity related implementation
+
+    Created by: Senparc - 20211128
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -21,7 +24,7 @@ namespace Senparc.Xncf.EmailExtension.Domain.Models
     #region Email
 
     /// <summary>
-    /// 自动发送
+    /// automaticsend
     /// </summary>
     public class AutoSendEmail
     {
@@ -41,7 +44,7 @@ namespace Senparc.Xncf.EmailExtension.Domain.Models
     }
 
     /// <summary>
-    /// 自动发送完成
+    /// automaticsendcomplete
     /// </summary>
     public class AutoSendEmailBak
     {
@@ -82,7 +85,7 @@ namespace Senparc.Xncf.EmailExtension.Domain.Models
     #endregion
 
 
-    #region XML Config格式
+    #region Legacy section
     /// <summary>
     /// Email
     /// </summary>

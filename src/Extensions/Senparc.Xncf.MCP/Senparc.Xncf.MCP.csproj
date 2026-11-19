@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.5.13</Version>
+    <Version>0.5.14</Version>
     <AssemblyName>Senparc.Xncf.MCP</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -17,88 +17,91 @@
     <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>      [2025-06-20] v0.2.1-beta Add MCP functions in XncfRegisterBase class
-      [2025-06-20] v0.2.2-beta Add MCP functions in XncfRegisterBase class
-      v0.1.0 创世
-      v0.2.0 Update new ModelContextProtocol library
-      [2025-06-28] v0.2.3-preview.1 Add MCP server selection in MyFunction_MCPCallRequest
-      [2025-11-01] update basic libraries, including Senparc.AI
-      [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
-      [2026-07-02] v0.3.2-preview1 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
-      1、支持流式输出并优化交互体验
-      2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
-      [2026-07-07] v0.3.3-preview2 Dependency updates from upstream modules
-      1、Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
-      2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
-      [2026-07-16] v0.3.3.1-preview3 remove .placeholder file in wwwroot folder
-      [2026-07-17] v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
-      1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
-      2、更新 FunctionRender 与请求模型文案的资源化解析
-      3、统一模块注册信息、菜单名称与功能描述的本地化输出
-      4、同步管理页面与前端交互文案的多语言显示
-      5、同步 AIKernel 0.14.0-preview5 的 NeuChar 模型 API 版本适配
-      [2026-07-29] v0.4.1-preview4 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
-      [2026-07-31] v0.4.2-preview5 升级 MCP 模块的 AI 与 CO2NET 兼容依赖
-      1、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0 二进制接口
-      2、升级 Senparc.CO2NET.WebApi 至 2.1.9-preview
-      [2026-08-04] v0.4.3-preview6 Dependency updates from upstream projects
-      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.1-preview5
-      2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.5-preview5
-      3、Dependency update from Senparc.Ncf.Service to 0.23.5-preview5
-      4、Dependency update from Senparc.Xncf.AIKernel to 0.15.1-preview8
-      5、Dependency update from Senparc.Xncf.SenMapic to 0.4.1-preview5
-      6、Dependency update from Senparc.Xncf.AreasBase to 0.13.3-preview5
-      [2026-08-08] v0.4.4-preview7 Dependency updates from upstream projects
-      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
-      2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
-      3、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
-      4、Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
-      5、Dependency update from Senparc.Xncf.SenMapic to 0.4.2-preview6
-      6、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
-      [2026-08-13] v0.5.0-preview8 补充 A2A 发布管理所需 MCP 功能与多语言资源
-      1、扩展发布智能体相关 MCP 应用服务能力
-      2、补齐多语言资源，保持管理端功能文案一致
-      [2026-08-15] v0.5.1 Dependency update from Senparc.Xncf.AIKernel to 0.15.3-preview12
-      1、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
-      2、更新 AIKernel 依赖，保持发布智能体相关 MCP 能力兼容
-      [2026-08-29] v0.5.2 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10; Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
-      1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
-      2、Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
-      [2026-09-15] v0.5.3 适配 AgentKernel 与 Harness 依赖版本
-      1、同步共享 AI 依赖版本和 Harness 包引用
-      2、保持 MCP 工具调用与宿主模块的兼容性
-      [2026-09-16] v0.5.4 Dependency updates from Senparc.Xncf.AgentsManager to 0.17.2; Senparc.Web to 0.39.1
-      [2026-09-17] v0.5.5 适配共享 AgentKernel 预览依赖版本
-      1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
-      2、保持 MCP 工具调用与宿主模块兼容
-      [2026-09-24] v0.5.6 可视化 MCP 端点管理：配置记录、列表、连接测试与工具查看
-      1、管理端提供 MCP 端点列表、新增/编辑/删除、启用开关与 Bearer Token 配置
-      2、连接测试基于 Senparc.AI.AgentKernel 建立真实连接，展示可展开的 Function 工具列表、参数与 inputSchema
-      3、新增 Senparc.Xncf.MCP.Abstractions 契约包，通过 EventBus 提供 QueryMcpEndpoints 请求/响应与端点变更事件
-      4、MCPEndpoint 实体记录最近测试结果与工具数量，并补齐 5 个数据库提供方的 EF 迁移
-      [2026-10-03] v0.5.7 修复 MCP 端点管理 API 注册、列表和保存错误提示，补齐输入校验及传输模式/超时测试
-      [2026-10-04] v0.5.8 展示本站实际发布的 MCP 服务，完整移除数据库示例并提供保留端点配置的升级迁移
-      [2026-10-05] v0.5.6 feat: add MCP endpoint selection feature in AgentsManager
-      1、Updated Senparc.Xncf.MCP project behavior and integration for the latest feature and reliability improvements.
-      [2026-10-09] v0.5.9 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
-      [2026-11-03] v0.5.10 MCP 函数调用接入 Token 用量记录
-      1、MyFunction 对话结果写入 Token 用量
-      2、适配 Senparc.AI.AgentKernel 0.1.15-preview2
-      3、维护 MCP 端点管理、模块菜单与后台租户作用域
-      4、Dependency update from Senparc.Xncf.MCP.Abstractions to 0.1.1
-    [2026-11-03] Add shared contextual documentation beside MCP client connections.
-    [2026-11-03] v0.5.12 以中文资源为基准统一整理多语言文案
-    1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
-    2、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
-    3、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
-    4、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
-    5、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
-    6、Dependency update from Senparc.Xncf.SenMapic to 0.4.11
-    7、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-    [2026-11-11] v0.5.13 对齐 Microsoft.Extensions.AI 10.11.0 与 Agent Framework 1.28
-    1、Microsoft.Extensions.AI 升级到 10.11.0，以适配 Microsoft Agent Framework 1.28。
-    2、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17 与 OpenAI 2.14.0。
-    3、Register 通过 XncfRegisterText 用稳定资源键解析菜单名称与模块说明。
+    <PackageReleaseNotes>[2025-06-20] v0.2.1-beta Add MCP functions in XncfRegisterBase class
+        [2025-06-20] v0.2.2-beta Add MCP functions in XncfRegisterBase class
+        v0.1.0 initial release
+        v0.2.0 Update new ModelContextProtocol library
+        [2025-06-28] v0.2.3-preview.1 Add MCP server selection in MyFunction_MCPCallRequest
+        [2025-11-01] update basic libraries, including Senparc.AI
+        [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+        [2026-07-02] v0.3.2-preview1 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-07] v0.3.3-preview2 Dependency updates from upstream modules
+        1. Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
+        2. Updated module behavior and related support.
+        [2026-07-16] v0.3.3.1-preview3 remove .placeholder file in wwwroot folder
+        [2026-07-17] v0.4.0-preview3 Updated module behavior and related support.
+        1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        [2026-07-29] v0.4.1-preview4 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
+        [2026-07-31] v0.4.2-preview5 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-04] v0.4.3-preview6 Dependency updates from upstream projects
+        1. Dependency update from Senparc.Ncf.AreaBase to 0.23.1-preview5
+        2. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.5-preview5
+        3. Dependency update from Senparc.Ncf.Service to 0.23.5-preview5
+        4. Dependency update from Senparc.Xncf.AIKernel to 0.15.1-preview8
+        5. Dependency update from Senparc.Xncf.SenMapic to 0.4.1-preview5
+        6. Dependency update from Senparc.Xncf.AreasBase to 0.13.3-preview5
+        [2026-08-08] v0.4.4-preview7 Dependency updates from upstream projects
+        1. Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+        2. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+        3. Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
+        4. Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
+        5. Dependency update from Senparc.Xncf.SenMapic to 0.4.2-preview6
+        6. Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+        [2026-08-13] v0.5.0-preview8 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-15] v0.5.1 Dependency update from Senparc.Xncf.AIKernel to 0.15.3-preview12
+        1. Dependency update from Senparc.Xncf.AIKernel to 0.15.4
+        2. Updated module behavior and related support.
+        [2026-08-29] v0.5.2 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10; Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
+        1. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
+        2. Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
+        [2026-09-15] v0.5.3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-09-16] v0.5.4 Dependency updates from Senparc.Xncf.AgentsManager to 0.17.2; Senparc.Web to 0.39.1
+        [2026-09-17] v0.5.5 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-09-24] v0.5.6 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        [2026-10-03] v0.5.7 Updated module behavior and related support.
+        [2026-10-04] v0.5.8 Updated module behavior and related support.
+        [2026-10-05] v0.5.6 feat: add MCP endpoint selection feature in AgentsManager
+        1. Updated Senparc.Xncf.MCP project behavior and integration for the latest feature and reliability improvements.
+        [2026-10-09] v0.5.9 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
+        [2026-11-03] v0.5.10 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. adapt Senparc.AI.AgentKernel 0.1.15-preview2
+        3. Updated module behavior and related support.
+        4. Dependency update from Senparc.Xncf.MCP.Abstractions to 0.1.1
+        [2026-11-03] Add shared contextual documentation beside MCP client connections.
+        [2026-11-03] v0.5.12 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+        3. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
+        4. Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+        5. Dependency update from Senparc.Xncf.AIKernel to 0.17.2
+        6. Dependency update from Senparc.Xncf.SenMapic to 0.4.11
+        7. Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+        [2026-11-11] v0.5.13 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-11-19] v0.5.14 Updated module behavior, localization metadata, and English source comments
+        1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+        2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

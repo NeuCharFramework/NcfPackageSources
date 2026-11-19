@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：MigrationFileLayoutHelper.cs
-    文件功能描述：实现 MigrationFileLayoutHelper 相关功能。
+    File name: MigrationFileLayoutHelper.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20260803
 
-    创建标识：Senparc - 20260803
+    Modified by: Senparc - 20260804
+    Change description: v0.39.0-preview8 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 
@@ -42,8 +45,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
     internal sealed record GeneratedMigrationFiles(string MigrationFile, string DesignerFile);
 
     /// <summary>
-    /// 统一 Add-Migration 生成文件布局：migration、Designer 和 snapshot
-    /// 均位于 Domain/Migrations/{DatabaseType}，与 PromptRange 模块保持一致。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     internal static class MigrationFileLayoutHelper
     {

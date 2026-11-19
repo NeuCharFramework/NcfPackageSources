@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AgentKernelTokenUsageObserver.cs
-    文件功能描述：观察 AgentKernel 调用并记录 Token 用量
-    
-    
-    创建标识：Senparc - 20261014
-    
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 观察 AgentKernel 调用并写入 Token 用量
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+    Copyright (C) 2026 Senparc
+
+    File name: AgentKernelTokenUsageObserver.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20261014
+
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 

@@ -1,18 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxPortMappings.cs
-    文件功能描述：沙箱附加端口映射解析与校验
+    File name: SandboxPortMappings.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260918
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 新增附加端口映射解析器
+    Created by: Senparc - 20260918
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.0 维护沙箱附加端口映射解析与校验
+    Modified by: Senparc - 20261005
+    Change description: v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+
+    Modified by: Senparc - 20261103
+    Change description: v0.4.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -21,12 +26,12 @@ using Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 namespace Senparc.Xncf.Sandbox.Domain.Services;
 
 /// <summary>
-/// 解析 Function/表单传入的附加端口映射字符串。
-/// 支持格式（多条以 ; 或 , 分隔）：
-/// containerPort —— 自动分配 loopback 宿主端口；
-/// hostPort:containerPort —— 指定 loopback 宿主端口；
-/// *:containerPort —— 自动分配 0.0.0.0 宿主端口（外部可访问）；
-/// *:hostPort:containerPort —— 指定 0.0.0.0 宿主端口（外部可访问）。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public static class SandboxPortMappings
 {

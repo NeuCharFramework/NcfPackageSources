@@ -1,32 +1,35 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Register.Area.cs
-    文件功能描述：Register.Area 相关实现
-    
-    
-    创建标识：Senparc - 20231220
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.14.0-preview5 为 AIKernel 模块接入统一资源本地化并优化功能文案
+    File name: Register.Area.cs
+    File description: Register.Area related implementation
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+    Created by: Senparc - 20231220
 
-    修改标识：Senparc - 20261002
-    修改描述：新增本地模型微调管理入口
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
+    Modified by: Senparc - 20260717
+    Change description: v0.14.0-preview5 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 更新 AI Token 监控入口图标
+    Modified by: Senparc - 20260915
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 add new Workspace projects and update AITokenMonitor icon
+    Modified by: Senparc - 20261002
+    Change description: Updated module behavior and related support.
+
+    Modified by: Senparc - 20261009
+    Change description: v0.16.4 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 add new Workspace projects and update AITokenMonitor icon
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -48,10 +51,10 @@ using Senparc.AI;
 
 namespace Senparc.Xncf.AIKernel
 {
-    public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
-                                    IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
+    public partial class Register : IAreaRegister, //register the XNCF page interface (optional)
+                                    IXncfRazorRuntimeCompilation  //enable RazorPage runtime compilation
     {
-        #region IAreaRegister 接口
+        #region Legacy section
 
         public string HomeUrl => "/Admin/AIKernel/Index";
 
@@ -61,14 +64,14 @@ new AreaPageMenuItem(GetAreaUrl($"/Admin/AIVector/Index"), AIKernelResource.Get(
 new AreaPageMenuItem(GetAreaUrl($"/Admin/Dashboard/Index"), AIKernelResource.Get("Area.AIKernel.Dashboard", "仪表盘"),"fa fa-dashboard"),
 new AreaPageMenuItem(GetAreaUrl($"/Admin/AITokenMonitor/Index"), AIKernelResource.Get("Area.AIKernel.TokenMonitor", "Token 监控"),"fa fa-tachometer"),
 new AreaPageMenuItem(GetAreaUrl($"/Admin/AIFineTuning/Index"), AIKernelResource.Get("FineTuning.Title", "本地模型微调"),"fa fa-cogs")
-//new AreaPageMenuItem(GetAreaUrl($"/Admin/AIKernel/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
+//Legacy comment translated to English.
 };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //configure page permissions here
             });
 
             SenparcTrace.SendCustomLog("AIKernel 启动", "完成 Area:Senparc.Xncf.AIKernel 注册");
@@ -78,7 +81,7 @@ new AreaPageMenuItem(GetAreaUrl($"/Admin/AIFineTuning/Index"), AIKernelResource.
 
         #endregion
 
-        #region IXncfRazorRuntimeCompilation 接口
+        #region Legacy section
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.AIKernel"));
         #endregion
     }

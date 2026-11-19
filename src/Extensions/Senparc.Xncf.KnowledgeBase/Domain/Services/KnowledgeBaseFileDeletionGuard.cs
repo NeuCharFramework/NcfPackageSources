@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：KnowledgeBaseFileDeletionGuard.cs
-    文件功能描述：领域服务与业务流程实现
 
+    File name: KnowledgeBaseFileDeletionGuard.cs
+    File description: domain services and business-process implementation
 
-    创建标识：Senparc - 20260813
+    Created by: Senparc - 20260813
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.6.0-preview8 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
 ----------------------------------------------------------------*/
 

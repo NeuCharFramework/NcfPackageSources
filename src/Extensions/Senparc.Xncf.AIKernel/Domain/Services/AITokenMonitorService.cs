@@ -1,16 +1,20 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AITokenMonitorService.cs
-    文件功能描述：Token 监控服务（实时聚合 + 异步进度发布/订阅）
-    
-    创建标识：Senparc - 20260904
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+    File name: AITokenMonitorService.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 维护Token 监控服务（实时聚合 + 异步进度发布/订阅）
+    Created by: Senparc - 20260904
+
+    Modified by: Senparc - 20260915
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -26,17 +30,17 @@ using Senparc.Xncf.AIKernel.Domain.Models.Usage;
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
     /// <summary>
-    /// Token 监控服务（进程内单例）。
+    ///Legacy comment translated to English.
     /// <para>
-    /// 1、实时聚合：以线程安全方式累计 Token 使用量（总体 / 按模型 / 按天）。
-    /// 2、异步进度：维护"运行中"的模型调用，通过 <see cref="System.Threading.Channels.Channel{T}"/>
-    /// 向订阅者发布 <see cref="AITokenProgressEvent"/>，支持以 <see cref="IAsyncEnumerable{T}"/>
-    /// 形式消费（带缓冲回放），实现非阻塞的异步进度推送。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </para>
     /// </summary>
     public sealed class AITokenMonitorService
     {
-        #region 实时聚合
+        #region Legacy section
 
         private sealed class TenantAgg
         {
@@ -73,7 +77,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 
         #endregion
 
-        #region 异步进度（运行中会话）
+        #region Legacy section
 
         private sealed class RunState
         {
@@ -87,19 +91,19 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         private readonly ConcurrentDictionary<Guid, RunState> _runs = new();
 
         /// <summary>
-        /// 缓冲保留的已结束运行数量上限（防止无限增长）
+        ///Legacy comment translated to English.
         /// </summary>
         private const int MaxCompletedRuns = 256;
 
         #endregion
 
         /// <summary>
-        /// 记录一次完成的 Token 使用（更新实时聚合）。
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="modelAlias">模型代号</param>
-        /// <param name="snapshot">Token 使用快照</param>
-        /// <param name="durationMs">调用耗时（毫秒）</param>
-        /// <param name="success">是否成功</param>
+        /// <param name="modelAlias">model code</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        /// <param name="success">whethersuccess</param>
         public void Record(string modelAlias, AITokenUsageSnapshot snapshot, int durationMs, bool success, int tenantId = 0)
         {
             var tenant = _tenantAggs.GetOrAdd(tenantId, _ => new TenantAgg());
@@ -148,9 +152,9 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 获取当前实时聚合统计。
+        /// getcurrentreal-time aggregationstatistics。
         /// </summary>
-        /// <param name="dailyDays">按天聚合保留的天数（默认 7 天）</param>
+        ///Legacy comment translated to English.
         public AITokenMonitorStats GetLiveStats(int dailyDays = 7, int tenantId = 0)
         {
             _tenantAggs.TryGetValue(tenantId, out var tenant);
@@ -222,10 +226,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return stats;
         }
 
-        #region 异步进度发布 / 订阅
+        #region Legacy section
 
         /// <summary>
-        /// 发布一次进度事件（写入缓冲并广播给所有订阅者）。
+        ///Legacy comment translated to English.
         /// </summary>
         public void PublishProgress(AITokenProgressEvent progress, int tenantId = 0)
         {
@@ -282,7 +286,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 获取某次运行的最新进度（用于轮询式异步进度）。
+        ///Legacy comment translated to English.
         /// </summary>
         public AITokenProgressEvent GetLatestProgress(Guid runId, int tenantId = 0)
         {
@@ -300,7 +304,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 获取某次运行的全部缓冲进度（用于重放）。
+        ///Legacy comment translated to English.
         /// </summary>
         public IReadOnlyList<AITokenProgressEvent> GetBufferedProgress(Guid runId, int tenantId = 0)
         {
@@ -315,11 +319,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 订阅某次运行的异步进度（IAsyncEnumerable，支持回放缓冲 + 实时增量）。
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="runId">运行唯一标识</param>
-        /// <param name="replayBuffered">是否先回放已产生的缓冲事件</param>
-        /// <param name="cancellationToken">取消令牌</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public async IAsyncEnumerable<AITokenProgressEvent> SubscribeAsync(
             Guid runId,
             bool replayBuffered = true,

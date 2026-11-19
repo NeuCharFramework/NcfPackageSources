@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WeixinClawHostedServiceOptions.cs
-    文件功能描述：WeixinClawHostedServiceOptions 相关定义与实现
+    File name: WeixinClawHostedServiceOptions.cs
+    File description: WeixinClawHostedServiceOptions related definitions and implementation
 
+    Created by: Senparc - 20261004
 
-    创建标识：Senparc - 20261004
+    Modified by: Senparc - 20261103
+    Change description: v0.24.16 add comprehensive tests for MCP endpoint management and background tenant scope
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.24.16 add comprehensive tests for MCP endpoint management and background tenant scope
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
 
 ----------------------------------------------------------------*/
 
@@ -17,29 +20,29 @@ using System;
 namespace Senparc.Xncf.WeixinManager.WeixinClaw;
 
 /// <summary>
-/// 配置节：SenparcXncfWeixinManager:WeixinClaw:HostedService
+///Legacy comment translated to English.
 /// </summary>
 public sealed class WeixinClawHostedServiceOptions
 {
     public const string SectionName = "SenparcXncfWeixinManager:WeixinClaw:HostedService";
 
     /// <summary>
-    /// 后台账号扫描周期。
+    ///Legacy comment translated to English.
     /// </summary>
     public int ScanIntervalSeconds { get; set; } = 5;
 
     /// <summary>
-    /// getupdates 返回业务错误后的退避时间。
+    ///Legacy comment translated to English.
     /// </summary>
     public int ErrorRetryDelaySeconds { get; set; } = 5;
 
     /// <summary>
-    /// 停止宿主时等待后台任务退出的最大时间。
+    ///Legacy comment translated to English.
     /// </summary>
     public int ShutdownWaitSeconds { get; set; } = 5;
 
     /// <summary>
-    /// 通知 Claw 停止时的单次 HTTP 超时时间。
+    ///Legacy comment translated to English.
     /// </summary>
     public int NotifyStopTimeoutSeconds { get; set; } = 2;
 

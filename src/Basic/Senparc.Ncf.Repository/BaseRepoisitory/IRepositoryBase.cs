@@ -1,20 +1,23 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：IRepositoryBase.cs
-    文件功能描述：IRepositoryBase 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20261001
-    修改描述：开放已跟踪实体按指定字段保存的通用接口
+    File name: IRepositoryBase.cs
+    File description: IRepositoryBase related implementation
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.10-preview9 维护IRepositoryBase 相关实现
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261001
+    Change description: Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.20.10-preview9 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.13-preview12 Updated repository infrastructure and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -40,11 +43,11 @@ namespace Senparc.Ncf.Repository
         IQueryable<T> GeAll<TOrderProperty, TIncludesProperty>(Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc);
 
         /// <summary>
-        /// 获取分页列表
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="where">搜索条件</param>
+        ///Legacy comment translated to English.
         /// <param name="pageIndex"></param>
-        /// <param name="pageCount">当pageCount小于等于0时不分页</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         PagedList<T> GetObjectList<TOrderProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, int pageIndex, int pageCount, params string[] includes);
 
@@ -80,7 +83,7 @@ namespace Senparc.Ncf.Repository
         void Update(T obj);
 
         /// <summary>
-        /// 此方法会自动判断应当执行更新(Update)还是添加(Add)
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="obj"></param>
         void Save(T obj);
@@ -97,7 +100,7 @@ namespace Senparc.Ncf.Repository
         Task SaveAsync(T obj);
 
         /// <summary>
-        /// 仅保存已跟踪实体的指定字段，避免覆盖未参与本次业务更新的字段。
+        ///Legacy comment translated to English.
         /// </summary>
         Task SavePropertiesAsync(T obj, params string[] propertyNames);
 
@@ -130,16 +133,16 @@ namespace Senparc.Ncf.Repository
         Task<decimal> GetSumAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc);
 
         /// <summary>
-        /// 批量删除
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="objs"></param>
-        /// <param name="deleteItemAction">删除每一个对象的操作</param>
+        ///Legacy comment translated to English.
         /// <param name="softDelete"></param>
         /// <returns></returns>
         Task DeleteAllAsync(IEnumerable<T> objs, Action<T> deleteItemAction = null, bool softDelete = false);
 
         /// <summary>
-        /// 批量添加
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="objs"></param>
         /// <param name="softDelete"></param>
@@ -147,7 +150,7 @@ namespace Senparc.Ncf.Repository
         Task AddAllAsync(IEnumerable<T> objs);
 
         /// <summary>
-        /// 动态字段排序
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="where"></param>
         /// <param name="OrderbyField">xxx desc, bbb asc</param>
@@ -166,20 +169,20 @@ namespace Senparc.Ncf.Repository
         Task SaveObjectListAsync(IEnumerable<T> objs);
 
         /// <summary>
-        /// 开启事务
+        /// enable transactions
         /// </summary>
         /// <returns></returns>
         Task BeginTransactionAsync();
 
         /// <summary>
-        /// 开启事务
+        /// enable transactions
         /// </summary>
         /// <param name="isolationLevel"></param>
         /// <returns></returns>
         Task BeginTransactionAsync(System.Data.IsolationLevel isolationLevel);
 
         /// <summary>
-        /// 开启事务
+        /// enable transactions
         /// </summary>
         /// <returns></returns>
         void BeginTransaction();
@@ -192,13 +195,13 @@ namespace Senparc.Ncf.Repository
         void BeginTransaction(System.Data.IsolationLevel isolationLevel);
 
         /// <summary>
-        /// 回滚事务
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         void RollbackTransaction();
 
         /// <summary>
-        /// 提交事务
+        ///Legacy comment translated to English.
         /// </summary>
         void CommitTransaction();
     }

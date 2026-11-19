@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：XncfDevelopmentJobRequest.cs
-    文件功能描述：受控 XNCF 开发工作流 Function 请求模型
+    File name: XncfDevelopmentJobRequest.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260814
+    Created by: Senparc - 20260814
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.41.0 增强隔离开发任务与 Sandbox 预览流程
+    Modified by: Senparc - 20260815
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
+    Modified by: Senparc - 20260822
+    Change description: v0.41.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 

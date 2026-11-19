@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：ResourceStringLocalizer.cs
-    文件功能描述：ResourceStringLocalizer 相关实现
-    
-    
-    创建标识：Senparc - 20260717
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.25.0-preview2 新增统一资源本地化基础设施并支持 FunctionRender 动态文案
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.30.4-preview10 统一本地化资源回退与语言配置能力
+    Copyright (C) 2026 Senparc
+
+    File name: ResourceStringLocalizer.cs
+    File description: ResourceStringLocalizer related implementation
+
+    Created by: Senparc - 20260717
+
+    Modified by: Senparc - 20260717
+    Change description: v0.25.0-preview2 add unify resource localization base facilities and support FunctionRender dynamic text
+
+    Modified by: Senparc - 20261111
+    Change description: v0.30.4-preview10 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 using System;

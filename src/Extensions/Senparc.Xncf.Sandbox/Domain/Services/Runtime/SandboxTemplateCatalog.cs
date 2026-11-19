@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxTemplateCatalog.cs
-    文件功能描述：沙箱运行模板目录与查找服务
+    File name: SandboxTemplateCatalog.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20260808
 
-    创建标识：Senparc - 20260808
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 add the NCF preview sandbox workload
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 增加 NCF 预览沙箱工作负载
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 enhance the jupyter-csharp template and sandbox session management
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
 ----------------------------------------------------------------*/
 

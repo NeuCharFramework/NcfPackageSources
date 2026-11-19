@@ -166,7 +166,7 @@ PromptOptimizationController.OptimizeAsync
 ```bash
 # 在运行 dotnet run 的终端中按 Ctrl+C 停止
 # 然后重新运行
-cd tools/NcfSimulatedSite/Senparc.Web
+cd tools/NcfWebAdminBaseline/Senparc.Web
 dotnet run
 ```
 
@@ -278,7 +278,7 @@ ORDER BY Id DESC
 1. **停止当前运行的应用**（在终端 5 中按 `Ctrl+C`）
 2. **重新启动应用**:
    ```bash
-   cd tools/NcfSimulatedSite/Senparc.Web
+   cd tools/NcfWebAdminBaseline/Senparc.Web
    dotnet run
    ```
 3. **等待应用完全启动**（看到 "自检完成" 消息）

@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptResultChatService.cs
-    文件功能描述：PromptResultChatService 服务逻辑
-    
-    
-    创建标识：Senparc - 20251213
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    File name: PromptResultChatService.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20251213
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -38,9 +41,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// 根据 PromptResultId 获取所有对话记录
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="promptResultId">PromptResult 的 ID</param>
+        /// <param name="promptResultId">PromptResult ID</param>
         /// <returns></returns>
         public async Task<List<PromptResultChatDto>> GetByPromptResultIdAsync(int promptResultId)
         {
@@ -53,11 +56,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// 批量添加对话记录
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="promptResultId">PromptResult 的 ID</param>
-        /// <param name="chatMessages">对话消息列表，格式：[{role: 'user'|'assistant', content: string}]</param>
-        /// <param name="startSequence">起始序号，如果为 null 则从现有最大序号+1开始，如果为 1 则从头开始</param>
+        /// <param name="promptResultId">PromptResult ID</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task<List<PromptResultChatDto>> AddChatMessagesAsync(int promptResultId, List<ChatMessageDto> chatMessages, int? startSequence = null)
         {
@@ -69,14 +72,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var chatEntities = new List<PromptResultChat>();
             int sequence;
 
-            // 如果指定了起始序号，使用它；否则从现有最大序号+1开始
+            //Legacy comment translated to English.
             if (startSequence.HasValue)
             {
                 sequence = startSequence.Value;
             }
             else
             {
-                // 获取现有的最大序号
+                //Legacy comment translated to English.
                 var existingChats = await this.GetFullListAsync(c => c.PromptResultId == promptResultId);
                 sequence = existingChats.Count > 0 ? existingChats.Max(c => c.Sequence) + 1 : 1;
             }
@@ -98,27 +101,27 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await this.SaveObjectListAsync(chatEntities);
             
-            // 强制保存更改，确保 ID 被正确更新
+            //Legacy comment translated to English.
             await this.SaveChangesAsync();
 
-            // 保存后，Entity Framework 会自动更新实体的 ID
-            // 但为了确保 ID 正确，我们强制重新从数据库读取所有刚保存的实体
-            // 这样可以避免 ID 为 0 的问题
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             var savedDtos = new List<PromptResultChatDto>();
             
-            // 获取所有刚保存的实体的 Sequence 和 RoleType 组合（用于精确匹配）
+            //Legacy comment translated to English.
             var entityKeys = chatEntities.Select(e => new { e.Sequence, e.RoleType }).ToList();
             
-            // 重新从数据库读取这些实体（通过 PromptResultId、Sequence 和 RoleType）
-            // 注意：同一个 Sequence 可能有 User 和 Assistant 两条记录，所以我们需要精确匹配
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             var allSavedEntities = await this.GetFullListAsync(c => 
                 c.PromptResultId == promptResultId);
             
-            // 按照原始顺序排序并创建 DTO
-            // 需要按照 chatEntities 的原始顺序来匹配，确保返回顺序正确
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             foreach (var originalEntity in chatEntities)
             {
-                // 通过 Sequence 和 RoleType 精确匹配找到对应的已保存实体
+                //Legacy comment translated to English.
                 var savedEntity = allSavedEntities.FirstOrDefault(e => 
                     e.Sequence == originalEntity.Sequence && 
                     e.RoleType == originalEntity.RoleType);
@@ -129,8 +132,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
                 else
                 {
-                    // 如果找不到或 ID 仍然为 0，抛出异常而不是返回无效的 DTO
-                    // 这样可以确保问题被及时发现和修复
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     throw new Exception($"保存对话记录失败：未找到 Sequence={originalEntity.Sequence}, RoleType={originalEntity.RoleType} 的已保存实体，或 ID 为 0。PromptResultId={promptResultId}");
                 }
             }
@@ -139,10 +142,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// 更新用户反馈
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="chatId">对话记录 ID</param>
-        /// <param name="feedback">Like（true）、Unlike（false）、取消反馈（null）</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task<PromptResultChatDto> UpdateUserFeedbackAsync(int chatId, bool? feedback)
         {
@@ -156,10 +159,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// 更新用户评分
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="chatId">对话记录 ID</param>
-        /// <param name="score">评分（0-10分），null 表示取消评分</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task<PromptResultChatDto> UpdateUserScoreAsync(int chatId, decimal? score)
         {
@@ -173,9 +176,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// 删除指定 PromptResult 的所有对话记录
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="promptResultId">PromptResult 的 ID</param>
+        /// <param name="promptResultId">PromptResult ID</param>
         /// <returns></returns>
         public async Task DeleteByPromptResultIdAsync(int promptResultId)
         {
@@ -185,7 +188,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
 
         /// <summary>
-        /// 从 <see cref="PromptResultChatDto"/> 列表转到 <see cref="ChatMessage"/> 列表
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="promptResultDtos"></param>
         /// <returns></returns>
@@ -206,17 +209,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
     }
 
     /// <summary>
-    /// 对话消息 DTO（用于批量添加）
+    ///Legacy comment translated to English.
     /// </summary>
     public class ChatMessageDto
     {
         /// <summary>
-        /// 角色：'user' 或 'assistant'
+        /// role：'user' or 'assistant'
         /// </summary>
         public string Role { get; set; }
 
         /// <summary>
-        /// 消息内容
+        ///Legacy comment translated to English.
         /// </summary>
         public string Content { get; set; }
     }

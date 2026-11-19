@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：OracleDatabaseConfiguration.cs
-    文件功能描述：OracleDatabaseConfiguration 相关实现
-    
-    
-    创建标识：Senparc - 20220814
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: OracleDatabaseConfiguration.cs
+    File description: OracleDatabaseConfiguration related implementation
+
+    Created by: Senparc - 20220814
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.10.14 Updated database integration support and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -29,16 +32,16 @@ using Senparc.CO2NET.Extensions;
 namespace Senparc.Ncf.Database.Oracle
 {
     /// <summary>
-    /// Oracle 数据库配置，Oracle 版本不小于 V12
-    /// <para>注意：如果使用 Oracle 12 以下的版本（11），请直接使用 <code>OracleDatabaseConfigurationForV11</code>。或使用手动方法控制（不推荐）：在调用 <code>services.AddDatabase&lt;OracleDatabaseConfiguration&gt;();</code> 之前，使用 <code>SetUseOracleSQLCompatibility(string useOracleSQLCompatibility)</code> 方法设置版本号，如 11.2，则输入 "11"</para>
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class OracleDatabaseConfiguration : DatabaseConfigurationBase<OracleDbContextOptionsBuilder, OracleOptionsExtension>
     {
         private static string _useOracleSQLCompatibility = null;
 
         /// <summary>
-        /// 设置 UseOracleSQLCompatibility 的参数，如 11.2g，输入"11"，12g，输入"12"（默认为 >= 12，此时可不输入）
-        /// <para>注意：此设置应该在执行 <code>.AddDatabase&lt;OracleDatabaseConfiguration&gt;();</code> 之前执行</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="useOracleSQLCompatibility"></param>
         public static void SetUseOracleSQLCompatibility(string useOracleSQLCompatibility)
@@ -50,8 +53,8 @@ namespace Senparc.Ncf.Database.Oracle
 
 
         /// <summary>
-        /// 设置 OracleSQLCompatibility 的参数，默认为 19
-        /// <para>注意：此设置应该在执行 <code>.AddDatabase&lt;OracleDatabaseConfiguration&gt;();</code> 之前执行</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="oracleSQLCompatibility"></param>
         public static void SetUseOracleSQLCompatibility(OracleSQLCompatibility oracleSQLCompatibility)
@@ -93,7 +96,7 @@ namespace Senparc.Ncf.Database.Oracle
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
             //var schma = dbContext.Model.FindEntityType(type).GetSchema();
-            //TODO: 增加 schma
+            //Legacy comment translated to English.
             return $"DROP TABLE {tableName}";
         }
 

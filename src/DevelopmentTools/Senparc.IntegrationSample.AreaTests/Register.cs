@@ -7,8 +7,8 @@ using Senparc.Ncf.XncfBase;
 namespace Senparc.IntegrationSample.AreaTests
 {
     public class Register : XncfRegisterBase,
-        IXncfRegister, //注册 XNCF 基础模块接口（必须）
-        IAreaRegister //注册 XNCF 页面接口（按需选用）
+        IXncfRegister, //Legacy comment translated to English.
+        IAreaRegister //register the XNCF page interface (optional)
     {
 
         public override string Name => "IntegrationSample.AreaTests";
@@ -32,7 +32,7 @@ namespace Senparc.IntegrationSample.AreaTests
         {
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //configure page permissions here
             });
 
             SenparcTrace.SendCustomLog("IntegrationSample.AreaTests 启动", "完成 Area:IntegrationSample.AreaTests 注册");

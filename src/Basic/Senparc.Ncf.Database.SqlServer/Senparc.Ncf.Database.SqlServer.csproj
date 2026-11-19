@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.13</Version>
+    <Version>0.20.14</Version>
     <AssemblyName>Senparc.Ncf.Database.SqlServer</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.SqlServer</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -16,38 +16,40 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-				v0.1.0 创世
-				[2024-09-10] v0.18.4-preview1 升级缓存基础库
-				[2025-01-25] v0.19.5-preview1 Update Agents functions, support for function calling
-				[2025-04-29] v0.19.7-preview1 Update CO2NET and AIKernel
-				[2025-04-29] v0.19.8-preview1 Update CO2NET and AIKernel
-				[2025-11-01] update basic libraries, including Senparc.AI
-				[2026-07-17] v0.20.2-preview2 同步上游项目版本并适配统一本地化能力
-				1、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
-				2、Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
-				3、Dependency update from Senparc.Ncf.Utility to 0.21.0-preview2
-				[2026-07-29] v0.20.3-preview3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
-				[2026-07-31] v0.20.4-preview4 升级 CO2NET 4.2.0 基础依赖
-				1、升级 Senparc.CO2NET 至 4.2.0 并保持现有项目行为兼容
-				[2026-08-04] v0.20.5-preview5 Dependency updates from upstream projects
-				1、Dependency update from Senparc.Ncf.Core to 0.28.0-preview5
-				2、Dependency update from Senparc.Ncf.Database to 0.21.5-preview5
-				[2026-08-08] v0.20.6-preview6 Dependency updates from upstream projects
-				1、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
-				2、Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
-				[2026-08-13] v0.20.7-preview7 Dependency update from Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.Database to 0.21.7-preview7
-				[2026-08-15] v0.20.8-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
-				[2026-08-22] v0.20.9-preview9 同步 Senparc.Ncf.Database.SqlServer 依赖版本
-				1、递归更新上游项目依赖，保持 Senparc.Ncf.Database.SqlServer 与当前版本组合兼容
-				[2026-08-29] v0.20.10 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
-				1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
-				[2026-11-03] v0.20.11 Dependency update from Senparc.Ncf.Core to 0.30.3-preview9
-				1、Dependency update from Senparc.Ncf.Database to 0.21.11
-				[2026-11-05] v0.20.12 同步直接依赖项目版本
-				1、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
-				2、Dependency update from Senparc.Ncf.Database to 0.21.12
-				[2026-11-12] v0.20.13 Dependency updates from Senparc.Ncf.Core to 0.31.0-preview11；Senparc.Ncf.Database to 0.21.13；Senparc.Ncf.Utility to 0.21.2-preview4
+    <PackageReleaseNotes>v0.1.0 initial release
+        [2024-09-10] v0.18.4-preview1 upgrade the cache foundation libraries
+        [2025-01-25] v0.19.5-preview1 Update Agents functions, support for function calling
+        [2025-04-29] v0.19.7-preview1 Update CO2NET and AIKernel
+        [2025-04-29] v0.19.8-preview1 Update CO2NET and AIKernel
+        [2025-11-01] update basic libraries, including Senparc.AI
+        [2026-07-17] v0.20.2-preview2 synchronize upstream project versions and adopt shared localization capabilities
+        1. Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
+        2. Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
+        3. Dependency update from Senparc.Ncf.Utility to 0.21.0-preview2
+        [2026-07-29] v0.20.3-preview3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
+        [2026-07-31] v0.20.4-preview4 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-08-04] v0.20.5-preview5 Dependency updates from upstream projects
+        1. Dependency update from Senparc.Ncf.Core to 0.28.0-preview5
+        2. Dependency update from Senparc.Ncf.Database to 0.21.5-preview5
+        [2026-08-08] v0.20.6-preview6 Dependency updates from upstream projects
+        1. Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+        2. Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
+        [2026-08-13] v0.20.7-preview7 Dependency update from Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.Database to 0.21.7-preview7
+        [2026-08-15] v0.20.8-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
+        [2026-08-22] v0.20.9-preview9 synchronize Senparc.Ncf.Database.SqlServer dependency version
+        1. Updated module behavior and related support.
+        [2026-08-29] v0.20.10 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
+        1. Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
+        [2026-11-03] v0.20.11 Dependency update from Senparc.Ncf.Core to 0.30.3-preview9
+        1. Dependency update from Senparc.Ncf.Database to 0.21.11
+        [2026-11-05] v0.20.12 synchronize direct dependency project versions
+        1. Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+        2. Dependency update from Senparc.Ncf.Database to 0.21.12
+        [2026-11-12] v0.20.13 Dependency updates from Senparc.Ncf.Core to 0.31.0-preview11;Senparc.Ncf.Database to 0.21.13;Senparc.Ncf.Utility to 0.21.2-preview4
+        [2026-11-19] v0.20.14 Updated database integration support and related localization metadata
+        1. Updated affected project files while preserving existing public integration behavior.
+        2. Standardized related English source comments and package metadata for the current release.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -1,0 +1,226 @@
+<el-dialog
+    title="@AR["AdminChat.AddReferenceModule"]"
+    :visible.sync="moduleSelectorVisible"
+    width="960px"
+    class="chat-module-selector-dialog"
+    append-to-body>
+    <el-tabs v-model="moduleSelectorTab" class="chat-reference-tabs">
+        <el-tab-pane label="XNCF 模块" name="modules">
+    <div class="module-selector-toolbar">
+        <div class="module-selector-toolbar-left">
+            <el-input
+                size="small"
+                clearable
+                v-model="moduleSearchKeyword"
+                placeholder="@AR["AdminChat.SearchModulePlaceholder"]"
+                style="max-width: 320px;">
+            </el-input>
+            <el-checkbox
+                :indeterminate="moduleSelectionIndeterminate"
+                :value="isAllFilteredSelected"
+                @@change="handleSelectAllFiltered">
+                @AR["AdminChat.SelectFiltered"]
+            </el-checkbox>
+            <el-button size="mini" @@click="clearModuleSelectionInDialog">@AR["AdminChat.ClearSelection"]</el-button>
+        </div>
+        <div class="module-selector-toolbar-right">
+            @AR["AdminChat.Selected"] {{ selectedModuleUids.length }} / {{ filteredAvailableModules.length }}
+        </div>
+    </div>
+
+    <div class="module-selector-layout" v-loading="loadingModuleOptions" v-if="filteredAvailableModules.length > 0">
+        <div class="module-selector-list-pane">
+            <div
+                v-for="item in sortedFilteredAvailableModules"
+                :key="item.uid"
+                class="selector-module-row"
+                :class="{ 'is-selected': selectedModuleUids.includes(item.uid), 'is-active': activePreviewModuleUid === item.uid }"
+                @@click="setPreviewModule(item.uid)">
+                <div class="selector-module-row-main">
+                    <el-checkbox
+                        :value="selectedModuleUids.includes(item.uid)"
+                        @@change="() => toggleModuleSelection(item.uid)"
+                        @@click.native.stop>
+                    </el-checkbox>
+                    <i :class="[item.icon, 'selector-module-icon']"></i>
+                    <div class="selector-module-row-content">
+                        <div class="selector-module-row-title">
+                            <span class="selector-module-name" :title="item.name">{{ item.name }}</span>
+                            <span class="selector-module-version" v-if="item.version">v{{ item.version }}</span>
+                        </div>
+                        <div class="selector-module-description" :title="item.description">{{ item.description }}</div>
+                    </div>
+                </div>
+                <div class="selector-module-row-actions" @@click.stop>
+                    <a :href="'/Admin/XncfModule/Start/?uid=' + item.uid">@AR["AdminChat.QuickOpen"]</a>
+                    <el-popover
+                        v-if="item.menus && item.menus.length > 0"
+                        placement="right"
+                        width="300"
+                        trigger="click">
+                        <el-table
+                            :data="item.menus"
+                            row-key="id"
+                            :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+                            max-height="260"
+                            :show-header="false"
+                            size="mini">
+                            <el-table-column prop="name" label="@AR["Xncf.MenuName"]" width="280">
+                                <template slot-scope="scope">
+                                    <a :href="scope.row.url">{{ scope.row.name }}</a>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <el-button slot="reference" size="mini" icon="el-icon-s-fold">@AR["Xncf.MenuName"]</el-button>
+                    </el-popover>
+                    <span v-else class="selector-module-menu-empty">@AR["AdminChat.NoMenu"]</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="module-selector-preview-pane" v-if="previewModule">
+            <div class="module-selector-preview-header">
+                <div class="module-selector-preview-title">
+                    <i :class="[previewModule.icon, 'selector-module-icon']"></i>
+                    <span>{{ previewModule.name }}</span>
+                    <span class="selector-module-version" v-if="previewModule.version">v{{ previewModule.version }}</span>
+                </div>
+            </div>
+
+            <div class="module-selector-preview-body">
+                <!-- 菜单层级 -->
+                <div v-if="previewModule.menus && previewModule.menus.length > 0" class="module-selector-preview-section">
+                    <div class="module-selector-preview-section-title">@AR["AdminChat.MenuHierarchy"]</div>
+                    <el-tree
+                        :data="previewModule.menus"
+                        node-key="id"
+                        :props="{ label: 'name', children: 'children' }"
+                        default-expand-all
+                        class="module-selector-menu-tree">
+                        <span class="custom-tree-node" slot-scope="{ data }">
+                            <a :href="data.url">{{ data.name }}</a>
+                        </span>
+                    </el-tree>
+                </div>
+
+                <!-- Functions列表 -->
+                <div v-if="previewModule.functions && previewModule.functions.length > 0" class="module-selector-preview-section">
+                    <div class="module-selector-preview-section-title">Functions</div>
+                    <div class="module-selector-functions-list">
+                        <div v-for="func in previewModule.functions" :key="func.name" class="module-selector-function-item">
+                            <div class="module-selector-function-name">{{ func.name }}</div>
+                            <div class="module-selector-function-description">{{ func.description }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 空状态 -->
+                <div v-if="(!previewModule.menus || previewModule.menus.length === 0) && (!previewModule.functions || previewModule.functions.length === 0)" class="module-selector-preview-empty">
+                    @AR["AdminChat.NoMenuOrFunctions"]
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div v-else class="module-selector-empty">
+        <i class="el-icon-search"></i>
+        <p>@AR["AdminChat.NoMatchingModules"]</p>
+    </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="Workflow" name="workflows">
+            <div class="module-selector-toolbar">
+                <div class="module-selector-toolbar-left">
+                    <el-input
+                        size="small"
+                        clearable
+                        v-model="workflowSearchKeyword"
+                        placeholder="搜索 Workflow 名称 / 描述 / 参数"
+                        style="max-width: 320px;">
+                    </el-input>
+                    <el-checkbox
+                        :indeterminate="workflowSelectionIndeterminate"
+                        :value="isAllFilteredWorkflowsSelected"
+                        @@change="handleSelectAllFilteredWorkflows">
+                        当前筛选结果全选
+                    </el-checkbox>
+                    <el-button size="mini" @@click="selectedWorkflowIds = []">清空选择</el-button>
+                </div>
+                <div class="module-selector-toolbar-right">
+                    已选 {{ selectedWorkflowIds.length }} / {{ filteredAvailableWorkflows.length }}
+                </div>
+            </div>
+
+            <div class="module-selector-layout" v-loading="loadingWorkflowOptions" v-if="filteredAvailableWorkflows.length > 0">
+                <div class="module-selector-list-pane">
+                    <div
+                        v-for="item in sortedFilteredAvailableWorkflows"
+                        :key="`workflow-${item.id}`"
+                        class="selector-module-row"
+                        :class="{ 'is-selected': selectedWorkflowIds.includes(item.id), 'is-active': activePreviewWorkflowId === item.id }"
+                        @@click="setPreviewWorkflow(item.id)">
+                        <div class="selector-module-row-main">
+                            <el-checkbox
+                                :value="selectedWorkflowIds.includes(item.id)"
+                                @@change="() => toggleWorkflowSelection(item.id)"
+                                @@click.native.stop>
+                            </el-checkbox>
+                            <i class="fa fa-random selector-module-icon"></i>
+                            <div class="selector-module-row-content">
+                                <div class="selector-module-row-title">
+                                    <span class="selector-module-name" :title="item.name">{{ item.name }}</span>
+                                    <span class="selector-module-version">#{{ item.id }}</span>
+                                </div>
+                                <div class="selector-module-description" :title="item.description">
+                                    {{ item.description || '已启用 Workflow' }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="selector-module-row-actions" @@click.stop>
+                            <a :href="'/Admin/NeuCharWorkflow/Index?workflowId=' + encodeURIComponent(item.id)">打开</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module-selector-preview-pane" v-if="previewWorkflow">
+                    <div class="module-selector-preview-header">
+                        <div class="module-selector-preview-title">
+                            <i class="fa fa-random selector-module-icon"></i>
+                            <span>{{ previewWorkflow.name }}</span>
+                        </div>
+                    </div>
+                    <div class="module-selector-preview-body">
+                        <div class="module-selector-preview-subtitle">
+                            {{ previewWorkflow.description || '已启用 Workflow' }}
+                        </div>
+                        <div class="module-selector-preview-section">
+                            <div class="module-selector-preview-section-title">Function Calling 参数</div>
+                            <div v-if="previewWorkflow.parameters && previewWorkflow.parameters.length > 0"
+                                 class="module-selector-functions-list">
+                                <div v-for="parameter in previewWorkflow.parameters"
+                                     :key="`workflow-${previewWorkflow.id}-${parameter.name}`"
+                                     class="module-selector-function-item">
+                                    <div class="module-selector-function-name">{{ parameter.name }}</div>
+                                    <div class="module-selector-function-description">
+                                        {{ parameter.description || '可选参数' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else class="module-selector-preview-empty">仅接收常规 input 参数</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div v-else class="module-selector-empty">
+                <i class="el-icon-search"></i>
+                <p>没有可用的已启用 Workflow</p>
+            </div>
+        </el-tab-pane>
+    </el-tabs>
+
+    <span slot="footer" class="dialog-footer">
+        <el-button @@click="moduleSelectorVisible = false">@AR["Common.取消"]</el-button>
+        <el-button type="primary" @@click="applyModuleSelection">@AR["AdminChat.ConfirmAdd"]</el-button>
+    </span>
+</el-dialog>

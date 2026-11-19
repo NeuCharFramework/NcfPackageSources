@@ -12,6 +12,28 @@ namespace Senparc.Ncf.Core.Tests.Localization;
 public class NcfFallbackStringLocalizerTests
 {
     [TestMethod]
+    public void FrontendCatalog_ShouldIgnoreUntranslatedEnglishSourceFallback()
+    {
+        var originalCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            var factory = new NcfFallbackStringLocalizerFactory();
+
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("en");
+            var english = FrontendTranslationCatalog.Get(factory, typeof(AttributeTestResource));
+            Assert.AreEqual("Running", english["运行中"]);
+
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("zh-CN");
+            var chinese = FrontendTranslationCatalog.Get(factory, typeof(AttributeTestResource));
+            Assert.AreEqual("运行中", chinese["运行中"]);
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalCulture;
+        }
+    }
+
+    [TestMethod]
     public void MissingJapaneseResource_ShouldUseEnglishBeforeChinese()
     {
         var originalCulture = CultureInfo.CurrentUICulture;

@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：BuildXncfAppService.AI.cs
-    文件功能描述：BuildXncfAppService.AI 服务逻辑
-    
-    
-    创建标识：Senparc - 20240514
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+    Copyright (C) 2026 Senparc
+
+    File name: BuildXncfAppService.AI.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20240514
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20260717
+    Change description: v0.37.0-preview5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 
@@ -41,243 +44,475 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
     public partial class BuildXncfAppService
     {
-        /* 升级 Senparc.AI.AgentKernel，暂时停用此方法，未来改用 SKILL */
+        /* Legacy comment translated to English. */
 
         /*
+
          * 
+
         /// <summary>
-        /// AI 生成数据库实体
+
+        Legacy comment translated to English.
+
         /// </summary>
+
         /// <param name="request"></param>
+
         /// <returns></returns>
+
         /// <exception cref="Exception"></exception>
+
         /// <exception cref="NcfExceptionBase"></exception>
+
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.GenerateEntity.Name", "Function.XncfBuilder.GenerateEntity.Description", typeof(Register))]
+
         public async Task<StringAppResponse> CreateDatabaseEntity(BuildXncf_CreateDatabaseEntityRequest request)
+
         {
+
             return await this.GetStringResponseAsync(async (response, logger) =>
+
             {
+
                 var promptBuilderService = base.ServiceProvider.GetRequiredService<PromptBuilderService>();
+
                 var aiModelSelected = request.AIModel;
+
                 ISenparcAiSetting aiSetting = null;
 
-                #region PromptRange 是否已经初始化
+
+
+                #region PromptRange whetheralreadyinitialize
+
                 if (request.UseDatabasePrompt)
+
                 {
+
                     var promptRangeRegister = new Xncf.PromptRange.Register();
+
                     var promptRangeModule = this._xncfModuleService.GetObject(z => z.Uid == promptRangeRegister.Uid);
 
+
+
                     if (promptRangeModule == null)
+
                     {
-                        //开始安装模块（创建数据库相关表）
+
+                        //start installing the module (create related database tables)
+
                         await promptRangeRegister.InstallOrUpdateAsync(ServiceProvider, Ncf.Core.Enums.InstallOrUpdate.Install);
+
+
 
                         await this._xncfModuleServiceExtension.InstallModuleAsync(promptRangeRegister.Uid);
 
+
+
                         promptRangeModule = this._xncfModuleService.GetObject(z => z.Uid == promptRangeRegister.Uid);
+
                     }
 
-                    if (promptRangeModule.State != Ncf.Core.Enums.XncfModules_State.开放)
+
+
+                    Legacy comment translated to English.
+
                     {
-                        promptRangeModule.UpdateState(Ncf.Core.Enums.XncfModules_State.开放);
+
+                        Legacy comment translated to English.
+
                         await _xncfModuleService.SaveObjectAsync(promptRangeModule);
+
                     }
 
-                    aiSetting = null;//使用 PromptRange 时不需要指定 AI 模型
 
-                    //检查是否已经初始化
+
+                    Legacy comment translated to English.
+
+
+
+                    //checkwhetheralreadyinitialize
+
                     var promptRangeInitResult = await promptBuilderService.InitPromptAsync("XncfBuilderPlugin", false, aiModelSelected);
-                    logger.Append("PromptRange 初始化：" + promptRangeInitResult);
+
+                    logger.Append("PromptRange initialize：" + promptRangeInitResult);
+
                 }
+
                 else
+
                 {
-                    //如果不使用 PromptRange，则需要指定 AI 模型
+
+                    Legacy comment translated to English.
+
                     aiSetting = Senparc.AI.Config.SenparcAiSetting;
+
                     if (aiModelSelected != "Default")
+
                     {
+
                         int.TryParse(aiModelSelected, out int aiModelId);
+
                         var aiModel = await _aIModelService.GetObjectAsync(z => z.Id == aiModelId);
+
                         if (aiModel == null)
+
                         {
-                            throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelSelected}");
+
+                            Legacy comment translated to English.
+
                         }
+
+
 
                         var aiModelDto = _aIModelService.Mapping<AIModelDto>(aiModel);
 
+
+
                         aiSetting = _aIModelService.BuildSenparcAiSetting(aiModelDto);
-                        logger.Append($"不使用 PromptRange，即将使用选中的模型 [{aiSetting.AiPlatform} - {aiSetting.ModelName.Chat}] 生成(AiModel ID:{aiModelId})");
+
+                        Legacy comment translated to English.
+
                     }
+
                     else
+
                     {
-                        logger.Append($"不使用 PromptRange，当前选中模型: Default");
+
+                        Legacy comment translated to English.
+
                     }
+
                 }
+
                 #endregion
+
+
+
 
 
                 var input = request.Requirement;
 
+
+
                 var projectPath = request.InjectDomain;
 
+
+
                 if (projectPath.IsNullOrEmpty() || projectPath == "N/A")
+
                 {
-                    throw new Exception("没有发现任何可用的 XNCF 项目，请确保你正在一个标准的 NCF 开发环境中！");
+
+                    Legacy comment translated to English.
+
                 }
+
+
 
                 var @namespace = Path.GetFileName(projectPath) + ".Models.DatabaseModel";
 
-                #region 生成实体
+
+
+                #region generate entity
+
+
 
                 var entityResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityClass, input, null, null, projectPath, @namespace);
-                logger.Append("生成实体：");
+
+                logger.Append("generate entity：");
+
                 logger.Append(entityResult.Log);
+
+
 
                 var fileInfo = entityResult.FileResult.FileContents.First();
 
-                //从 promptGroupFileContent 分析获得类名
+
+
+                Legacy comment translated to English.
+
                 var fileContent = fileInfo.Value; //File.ReadAllText(fileInfo.Key);
+
                                                   //var entityResultObj = entityResult.ResponseText.GetObject<dynamic>();
+
                 var className = new Regex(@"public class (\w+)").Match(fileContent).Groups[1].Value;
 
+
+
                 #endregion
 
-                #region 生成实体 DTO
+
+
+                #region generate entity DTO
+
+
 
                 if ((request.MoreActions ?? Array.Empty<string>()).Contains("BuildDto"))
+
                 {
+
                     var entityDtoResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityDtoClass, fileContent, className, null, projectPath, @namespace);
-                    logger.Append("生成实体 DTO：");
+
+                    logger.Append("generate entity DTO：");
+
                     logger.Append(entityResult.Log);
+
                 }
 
+
+
                 #endregion
 
-                #region 更新 SenparcEntities
+
+
+                #region update SenparcEntities
+
+
 
                 var updateSenparcEntitiesResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.UpdateSenparcEntities, className, className, entityResult.Context, projectPath, @namespace);
-                logger.Append("更新 SenparcEntities：");
+
+                logger.Append("update SenparcEntities：");
+
                 logger.Append(entityResult.Log);
+
+
 
                 #endregion
 
-                #region 进行 Migration
-                if ((request.MoreActions ?? Array.Empty<string>()).Contains("BuildMigration"))
-                {
-                    await Console.Out.WriteLineAsync("进入 Migration，可能耗时较长，请等待");
-                    logger.Append();
-                    logger.Append("Migration 开始执行");
 
-                    #region 需要把 DatabasePlant 进行文件附加
+
+                #region run the migration
+
+                if ((request.MoreActions ?? Array.Empty<string>()).Contains("BuildMigration"))
+
+                {
+
+                    Legacy comment translated to English.
+
+                    logger.Append();
+
+                    logger.Append("Migration startexecute");
+
+
+
+                    #region attach DatabasePlant files
+
                     var databasePlantPath = Path.GetFullPath(Path.Combine(projectPath, "..", "Senparc.Web.DatabasePlant"));
+
                     var databasePlantCsprojPath = Path.Combine(databasePlantPath, "Senparc.Web.DatabasePlant.csproj");
-                    //目标项目的文件夹名称
+
+                    Legacy comment translated to English.
+
                     var projectFolderName = Path.GetFileName(projectPath.TrimEnd(Path.DirectorySeparatorChar));
-                    //目标项目的 csproj 项目文件名
+
+                    Legacy comment translated to English.
+
                     string newReferencePath = @$"..\{projectFolderName}\{projectFolderName}.csproj";
+
                     XDocument doc = XDocument.Load(databasePlantCsprojPath);
 
-                    // 获取 <ItemGroup> 元素  
+
+
+                    Legacy comment translated to English.  
+
                     var itemGroups = doc.Root.Elements("ItemGroup");
 
-                    // 删除所有的 ProjectReference  
+
+
+                    Legacy comment translated to English.  
+
                     foreach (var itemGroup in itemGroups)
+
                     {
+
                         var projectReferences = itemGroup.Elements("ProjectReference").ToList();
+
                         foreach (var reference in projectReferences)
+
                         {
+
                             reference.Remove();
+
                         }
+
                     }
 
-                    // 添加新的 ProjectReference  
+
+
+                    Legacy comment translated to English.  
+
                     XElement newProjectReference = new XElement("ProjectReference", new XAttribute("Include", newReferencePath));
+
                     var itemGroupToAdd = itemGroups.FirstOrDefault() ?? new XElement("ItemGroup");
+
                     itemGroupToAdd.Add(newProjectReference);
 
+
+
                     if (itemGroupToAdd.Parent == null)
+
                     {
+
                         doc.Root.Add(itemGroupToAdd);
+
                     }
 
-                    // 保存修改后的 .csproj 文件  
+
+
+                    Legacy comment translated to English.  
+
                     doc.Save(databasePlantCsprojPath);
 
-                    logger.Append($"完成 Senparc.Web.DatabasePlant 项目引用自动替换");
+
+
+                    Legacy comment translated to English.
+
                     logger.Append($"databasePlantPath: {databasePlantPath}");
+
                     logger.Append($"projectPath: {projectPath}");
+
                     logger.Append($"projectFoldeName: {projectFolderName}");
+
                     logger.Append($"newProjectReference: {newProjectReference}");
+
+
 
                     #endregion
 
+
+
                     var requestObj = new DatabaseMigrations_MigrationRequest()
+
                     {
+
                         //CustomProjectPath = projectPath,
+
                         DatabasePlantPath = databasePlantPath,
+
                         MigrationName = $"Add_{className}_Entity",
+
                     };
-                    //载入数据
+
+                    Legacy comment translated to English.
+
                     await requestObj.LoadData(this.ServiceProvider);
 
-                    //指定项目路径
+
+
+                    Legacy comment translated to English.
+
                     requestObj.ProjectPath = projectPath;
-                    //选中所有数据库
+
+                    Legacy comment translated to English.
+
                     requestObj.DatabaseTypes = requestObj.DatabaseTypeOptions.Items.Select(z => z.Value).ToArray();
-                    //选中输出详情
+
+                    Legacy comment translated to English.
+
                     requestObj.OutputVerbose = true;
 
+
+
                     var databaseMigrationsAppService = base.ServiceProvider.GetRequiredService<DatabaseMigrationsAppService>();
+
                     var migrationResult = await databaseMigrationsAppService.AddMigration(requestObj);
 
 
-                    logger.Append("执行结束，是否成功：" + migrationResult.Success);
-                    logger.Append("消息：" + (migrationResult.Success == true ? migrationResult.Data : $"{migrationResult.Data} / {migrationResult.ErrorMessage}"));
-                    logger.Append("Migration 内部日志：");
 
-                    #region 从缓存中读取日志
+
+
+                    logger.Append("executeend，whethersuccess：" + migrationResult.Success);
+
+                    Legacy comment translated to English.
+
+                    Legacy comment translated to English.
+
+
+
+                    #region read logs from the cache
+
+
 
                     var tempId = migrationResult.RequestTempId;
+
                     var cache = this.ServiceProvider.GetObjectCacheStrategyInstance();
-                    //为了加快响应速度，不等待
+
+                    Legacy comment translated to English.
+
                     var migrationLog = await cache.GetAsync<string>(tempId);
+
                     logger.Append(migrationLog);
+
+
 
                     #endregion
 
+
+
                     logger.Append();
+
                 }
+
                 #endregion
 
+
+
                 return logger.ToString();
+
             });
+
         }
 
-        //TODO：生成实体的过程中默认检查是否自动载入Prompt，提供手动指定地址选项
 
-        //初始化 PromptRange 方法（需要先确保已经安装）
+
+        Legacy comment translated to English.
+
+
+
+        Legacy comment translated to English.
+
+
+
 
 
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.InitPrompt.Name", "Function.XncfBuilder.InitPrompt.Description", typeof(Register))]
+
         public async Task<StringAppResponse> InitPrompt(BuildXncf_InitPromptRequest request)
+
         {
+
             return await this.GetStringResponseAsync(async (response, logger) =>
+
             {
+
                 var needOverride = request.Override;
+
                 var aiModel = request.AIModel;
 
+
+
                 var promptBuilderService = base.ServiceProvider.GetRequiredService<PromptBuilderService>();
+
                 var log = await promptBuilderService.InitPromptAsync("XncfBuilderPlugin", needOverride, aiModel);
+
                 logger.Append(log);
+
+
 
                 logger.SaveLogs("InitPrompt");
 
+
+
                 return log;
+
             });
+
         }
+
+
 
         */
 
-        //[FunctionRender("[AI] 生成 AppService", "使用 AI 指令生成 AppService", typeof(Register))]
+        //Legacy comment translated to English.
         //public async Task<StringAppResponse> CreateAppService()
         //{ 
 

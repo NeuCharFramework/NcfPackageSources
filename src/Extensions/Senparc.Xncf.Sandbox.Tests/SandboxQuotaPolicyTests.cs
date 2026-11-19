@@ -1,12 +1,14 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxQuotaPolicyTests.cs
-    文件功能描述：沙箱配额默认值回归测试
+    File name: SandboxQuotaPolicyTests.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260918
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 新增配额默认值回归测试
+    Created by: Senparc - 20260918
+
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

@@ -1,0 +1,1561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Ожидается дальнейшее содержимое или подтверждение сохранения. В этом ходе Memory не изменена.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>Намерение обновить долговременную память сейчас не обнаружено. В этом ходе ничего не сохранено.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Эта группа содержит сведения от ассистента и ещё не сохранена. Проверьте и сохраните каждую запись: утверждения ассистента могут быть неточными.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>Недавний контекст не позволяет определить, что запомнить. Отправьте «Remember: …» с полным фактом в одном сообщении; при необходимости проверьте PromptCode.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>Вы проверили и сохранили эти предложения.</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Проверить предложение</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>Предложение из контекста ещё не сохранено. Проверьте текст и область, затем сохраните запись. Удаление требует подтверждения. ИИ не изменяет закреплённые ручные записи.</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>Завершите черновик и закройте настройки перед проверкой предложения.</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>Исходный текст (не проверен)</value></data>
+  <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>Развернуть панель чатов</value></data>
+  <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>Свернуть панель чатов</value></data>
+  <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>Изменить ширину панели (стрелки влево/вправо)</value></data>
+  <data name="AdminChat.Sidebar.Reorder" xml:space="preserve"><value>Перетащите внутри группы или нажмите Alt + Вверх/Вниз</value></data>
+  <data name="AdminChat.Sidebar.Running" xml:space="preserve"><value>Выполняется</value></data>
+  <data name="AdminChat.Sidebar.Stopping" xml:space="preserve"><value>Остановка</value></data>
+  <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>Порядок сохранён для этой учётной записи на всех устройствах</value></data>
+  <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>Не удалось сохранить порядок. Повторите попытку.</value></data>
+  <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>Не удалось прочитать или сохранить настройки панели. Этот вид действует только на текущей странице.</value></data>
+  <data name="AdminChat.Sidebar.Archive" xml:space="preserve"><value>Архивировать и отметить как завершённый</value></data>
+  <data name="AdminChat.Sidebar.ArchiveRunning" xml:space="preserve"><value>Этот чат ещё выполняется. Архивируйте его после завершения.</value></data>
+  <data name="AdminChat.Archive.Menu" xml:space="preserve"><value>Архив</value></data>
+  <data name="AdminChat.Archive.Empty" xml:space="preserve"><value>Нет архивных чатов</value></data>
+  <data name="AdminChat.Archive.Open" xml:space="preserve"><value>Открыть архивный чат: {0}</value></data>
+  <data name="AdminChat.Archive.Delete" xml:space="preserve"><value>Удалить архивный чат: {0}</value></data>
+  <data name="AdminChat.Archive.Action" xml:space="preserve"><value>В архив</value></data>
+  <data name="AdminChat.Archive.Restore" xml:space="preserve"><value>Восстановить</value></data>
+  <data name="AdminChat.Archive.RestoreLabel" xml:space="preserve"><value>Восстановить архивный чат: {0}</value></data>
+  <data name="AdminChat.Archive.RestoreSuccess" xml:space="preserve"><value>Чат снова в списке активных</value></data>
+  <data name="AdminChat.Archive.RestoreFailed" xml:space="preserve"><value>Не удалось восстановить чат. Повторите попытку.</value></data>
+  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>Чат архивирован. Откройте меню «Ещё» рядом с «Новый чат», чтобы просмотреть, восстановить или удалить его.</value></data>
+  <data name="AdminChat.Sidebar.Tools" xml:space="preserve"><value>Ещё</value></data>
+  <data name="AdminChat.Sidebar.Unread" xml:space="preserve"><value>Не прочитано</value></data>
+  <data name="AdminChat.Archive.Failed" xml:space="preserve"><value>Не удалось архивировать чат. Повторите попытку.</value></data>
+  <data name="AdminChat.Archive.Tag" xml:space="preserve"><value>В архиве</value></data>
+  <data name="AdminChat.Archive.LoadFailed" xml:space="preserve"><value>Не удалось загрузить архивные чаты</value></data>
+  <data name="AdminChat.ArchiveSessionSuccess" xml:space="preserve"><value>Чат архивирован</value></data>
+  <data name="AdminChat.Rail.Label" xml:space="preserve"><value>Мои сообщения</value></data>
+  <data name="AdminChat.Rail.Jump" xml:space="preserve"><value>Перейти к этому сообщению</value></data>
+  <data name="AdminChat.Rail.EmptyMessage" xml:space="preserve"><value>(Пустое сообщение)</value></data>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AdminChat.Memory.Subtitle" xml:space="preserve"><value>Управляйте устойчивыми предпочтениями для более личных разговоров</value></data>
+  <data name="AdminChat.Memory.Private" xml:space="preserve"><value>Закрытая память</value></data>
+  <data name="AdminChat.Memory.SaveChanges" xml:space="preserve"><value>Сохранить изменения</value></data>
+  <data name="AdminChat.Memory.ClearDraft" xml:space="preserve"><value>Очистить черновик</value></data>
+  <data name="AdminChat.Memory.EntriesHint" xml:space="preserve"><value>Ваши глобальные записи и записи текущего Workspace в одном месте</value></data>
+  <data name="AdminChat.Memory.Guide" xml:space="preserve"><value>Области, правила обучения и хранение</value></data>
+  <data name="AdminChat.Memory.FormatGuide" xml:space="preserve"><value>Формат Markdown и правила сохранения</value></data>
+  <data name="AdminChat.Memory.SaveEntry" xml:space="preserve"><value>Сохранить запись</value></data>
+  <data name="AdminChat.Memory.EmptyEntries" xml:space="preserve"><value>Записей Memory пока нет. Добавьте первое предпочтение, чтобы начать.</value></data>
+  <data name="AdminChat.Memory.EmptyLoaded" xml:space="preserve"><value>Отчёта о загрузке пока нет. Включите Memory и отправьте сообщение, чтобы увидеть его здесь.</value></data>
+  <data name="AdminChat.Memory.Settings" xml:space="preserve"><value>Настройки Memory / Chat</value></data>
+  <data name="AdminChat.Memory.UpdateSaved" xml:space="preserve"><value>Memory сохранена: {0} глобальных изменений и {1} изменений текущего Workspace (частное хранение в базе данных, файл не создан).</value></data>
+  <data name="AdminChat.Memory.UpdateReason.mode-off" xml:space="preserve"><value>Долгосрочная Memory не сохранена: для этого чата Memory выключена. Подтверждение ассистента не доказывает сохранение.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.read-only" xml:space="preserve"><value>Долгосрочная Memory не сохранена: этот чат только для чтения. Переключитесь на Learn или отредактируйте записи вручную.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.input-not-eligible" xml:space="preserve"><value>Memory не обновлена: ввод не соответствовал условиям обучения или превысил ограничение длины.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-candidates" xml:space="preserve"><value>Memory не обновлена: экстрактор не вернул долгосрочных записей. Добавьте запись вручную или проверьте PromptCode этого хода. Слова ассистента, что он запомнил, не подтверждают сохранение.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pinned" xml:space="preserve"><value>Memory не обновлена: соответствующая запись закреплена от изменений или удаления ИИ. Отредактируйте её вручную.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-difference" xml:space="preserve"><value>Memory без изменений: возвращённое содержимое уже существует, либо не было подходящей записи для удаления.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.revision-conflict" xml:space="preserve"><value>Memory не сохранена: она изменилась в этом ходе. Более новая версия сохранена; проверьте её перед повтором.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.timeout" xml:space="preserve"><value>Memory не сохранена: истекло время извлечения. Повторите попытку или добавьте запись вручную.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.invalid-change" xml:space="preserve"><value>Memory не сохранена: проверка доказательств, безопасности, области или полей отклонила всю пачку.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.capacity" xml:space="preserve"><value>Memory не сохранена: достигнут предел в 80 записей. Сначала удалите ненужные записи.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.invalid-json" xml:space="preserve"><value>Memory не сохранена: экстрактор не вернул допустимый JSON в требуемом формате. Проверьте промпт.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending" xml:space="preserve"><value>Сохранение Memory не подтверждено. Не считайте обещание ассистента доказательством сохранения.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.update-failed" xml:space="preserve"><value>Обновление Memory не удалось; сохранение не подтверждено. Проверьте конфигурацию промпта, модели или базы данных. Существующие записи сохранены.</value></data>
+  <data name="AdminChat.Memory.StorageNotice" xml:space="preserve"><value>Записи хранятся в вашей частной базе данных, а не в файлах Workspace. Memory.md в Workspace — обычный файл, он не создаётся и не импортируется автоматически. Управляйте записями здесь; доверяйте результату обновления системы, а не текстовому подтверждению ассистента.</value></data>
+  <data name="AdminChat.Memory.Use" xml:space="preserve"><value>Использовать мою глобальную Memory</value></data>
+  <data name="AdminChat.Memory.Notice" xml:space="preserve"><value>Off: без извлечения и обучения. Read-only: только извлечение. Learn: обновление при явных предпочтениях или сигналах запоминания и исправления. Частные области глобального пользователя и текущего Workspace; истёкшие и архивные записи исключены. Бюджет: 1000 tokens, Core до 300; неизвестные модели используют осторожную оценку. Никогда не храните секреты или конфиденциальные сведения.</value></data>
+  <data name="AdminChat.Memory.ModeOff" xml:space="preserve"><value>Закрыть</value></data>
+  <data name="AdminChat.Memory.ModeReadOnly" xml:space="preserve"><value>Только чтение</value></data>
+  <data name="AdminChat.Memory.ModeLearn" xml:space="preserve"><value>Обучение</value></data>
+  <data name="AdminChat.Memory.Entries" xml:space="preserve"><value>Записи</value></data>
+  <data name="AdminChat.Memory.ScopeNotice" xml:space="preserve"><value>Показаны только ваши глобальные записи и записи Workspace текущего чата. Редактирование Workspace требует чат, привязанный к этому Workspace. Факты Workspace имеют приоритет над глобальными фактами с тем же ключом.</value></data>
+  <data name="AdminChat.Memory.Add" xml:space="preserve"><value>Добавить запись</value></data>
+  <data name="AdminChat.Memory.Text" xml:space="preserve"><value>Содержимое</value></data>
+  <data name="AdminChat.Memory.Scope" xml:space="preserve"><value>Область</value></data>
+  <data name="AdminChat.Memory.ScopeGlobal" xml:space="preserve"><value>Мой глобальный</value></data>
+  <data name="AdminChat.Memory.Tier" xml:space="preserve"><value>Уровень загрузки</value></data>
+  <data name="AdminChat.Memory.Kind" xml:space="preserve"><value>Тип</value></data>
+  <data name="AdminChat.Memory.Topic" xml:space="preserve"><value>Тема (обязательно для уровня темы)</value></data>
+  <data name="AdminChat.Memory.Expires" xml:space="preserve"><value>Истекает (необязательно)</value></data>
+  <data name="AdminChat.Memory.Pinned" xml:space="preserve"><value>Закрепить: запретить изменения или удаление ИИ</value></data>
+  <data name="AdminChat.Memory.DeleteNotice" xml:space="preserve"><value>Удалить запись и стереть её историческое содержимое? Исходные сообщения чата не удаляются.</value></data>
+  <data name="AdminChat.Memory.Delete" xml:space="preserve"><value>Удалить</value></data>
+  <data name="AdminChat.Memory.Source" xml:space="preserve"><value>исходный чат / сообщение</value></data>
+  <data name="AdminChat.Memory.Loaded" xml:space="preserve"><value>Загружено в этом ходе</value></data>
+  <data name="AdminChat.Memory.LoadedNotice" xml:space="preserve"><value>Записи, переданные модели для последнего хода на этой странице; это не доказательство, что модель их использовала. Подсчёт включает текст границы Memory и исключает SystemMessage, историю и накладные расходы протокола. Этот отчёт не сохраняется после обновления.</value></data>
+  <data name="AdminChat.Memory.Reason" xml:space="preserve"><value>Причина выбора</value></data>
+  <data name="AdminChat.Memory.History" xml:space="preserve"><value>История изменений</value></data>
+  <data name="AdminChat.Memory.Time" xml:space="preserve"><value>Время</value></data>
+  <data name="AdminChat.Memory.MarkdownScope" xml:space="preserve"><value>Memory.md редактирует и экспортирует только ваши глобальные записи. Для записей Workspace используйте редактирование записей; очистка Markdown их не удаляет.</value></data>
+  <data name="AdminChat.Memory.UnsavedMarkdown" xml:space="preserve"><value>Сохраните черновик Markdown перед редактированием отдельных записей.</value></data>
+  <data name="AdminChat.Memory.Preview" xml:space="preserve"><value>Предпросмотр Memory.md</value></data>
+  <data name="AdminChat.Memory.Edit" xml:space="preserve"><value>Изменить / Уровни</value></data>
+  <data name="AdminChat.Memory.Format" xml:space="preserve"><value>Используйте заголовки ## Core, ## Topic: name и ## Archive с записями '- ': до 300 символов каждая, всего 80 записей. Ручное сохранение закрепляет все записи от замены ИИ. Очистите редактор и сохраните, чтобы удалить все записи. Опубликуйте и оцените новую версию в диапазоне AdminChat.Memory PromptRange; опубликованный промпт с наивысшим средним баллом заменяет промпт по умолчанию.</value></data>
+  <data name="AdminChat.Memory.SystemMessage" xml:space="preserve"><value>SystemMessage</value></data>
+  <data name="AdminChat.Memory.SystemNotice" xml:space="preserve"><value>Применяется ко всем моим чатам со следующего хода, даже если Memory выключена. Не выдаёт права на инструменты. До 2000 символов.</value></data>
+  <data name="AdminChat.Memory.GlobalSystem" xml:space="preserve"><value>SystemMessage для всего арендатора (суперадминистратор)</value></data>
+  <data name="AdminChat.Memory.GlobalNotice" xml:space="preserve"><value>Применяется к чатам всех пользователей этого арендатора или ко всему сайту в одноарендном режиме. Исключает внутренние задачи генерации, такие как заголовки и извлечение Memory.</value></data>
+  <data name="AdminChat.Memory.SaveGlobal" xml:space="preserve"><value>Сохранить глобальный SystemMessage</value></data>
+  <data name="AdminChat.Memory.Download" xml:space="preserve"><value>Скачать Memory.md</value></data>
+  <data name="AdminChat.Memory.Clear" xml:space="preserve"><value>Очистить черновик (сохранить, чтобы удалить)</value></data>
+  <data name="AdminChat.Memory.Save" xml:space="preserve"><value>Сохранить мою Memory / настройки</value></data>
+  <data name="AdminChat.Memory.Saved" xml:space="preserve"><value>Сохранено.</value></data>
+  <data name="AdminChat.Memory.Failed" xml:space="preserve"><value>Операция Memory не удалась. Перезагрузите перед повтором.</value></data>
+  <data name="AdminChat.Memory.UpdateWarning" xml:space="preserve"><value>В этом ходе Memory не обновлена; существующие записи сохранены. Проверьте PromptRange или снова откройте настройки Memory.</value></data>
+  <data name="Admin.Title" xml:space="preserve">
+    <value>System Admin Panel</value>
+  </data>
+  <data name="Admin.Nav.Home" xml:space="preserve">
+    <value>Главная</value>
+  </data>
+  <data name="Admin.Tabs.List" xml:space="preserve">
+    <value>Открытые страницы</value>
+  </data>
+  <data name="Admin.Tabs.Close" xml:space="preserve">
+    <value>Закрыть вкладку</value>
+  </data>
+  <data name="Admin.Tabs.Untitled" xml:space="preserve">
+    <value>Страница без названия</value>
+  </data>
+  <data name="Admin.Tabs.BackToSource" xml:space="preserve"><value>Вернуться к источнику:</value></data>
+  <data name="Admin.Tabs.CurrentPage" xml:space="preserve"><value>Текущая страница</value></data>
+  <data name="Admin.Tabs.ScrollLeft" xml:space="preserve">
+    <value>Прокрутить вкладки влево</value>
+  </data>
+  <data name="Admin.Tabs.ScrollRight" xml:space="preserve">
+    <value>Прокрутить вкладки вправо</value>
+  </data>
+  <data name="Admin.Nav.Search" xml:space="preserve">
+    <value>Поиск меню</value>
+  </data>
+  <data name="Admin.Nav.SearchPlaceholder" xml:space="preserve">
+    <value>Введите ключевое слово для фильтрации меню</value>
+  </data>
+  <data name="Admin.Nav.SearchEmpty" xml:space="preserve">
+    <value>Совпадающее меню не найдено</value>
+  </data>
+  <data name="Admin.Nav.ConfigTitle" xml:space="preserve">
+    <value>Настройка меню</value>
+  </data>
+  <data name="Admin.Nav.ConfigHint" xml:space="preserve">
+    <value>Перетащите верхнеуровневые меню для изменения порядка; сохранение обновит значения сортировки</value>
+  </data>
+  <data name="Admin.Nav.ConfigSave" xml:space="preserve">
+    <value>Сохранить порядок</value>
+  </data>
+  <data name="Admin.Nav.ConfigSaved" xml:space="preserve">
+    <value>Порядок меню сохранён</value>
+  </data>
+  <data name="Admin.Layout.Welcome" xml:space="preserve">
+    <value>Добро пожаловать,</value>
+  </data>
+  <data name="Admin.Layout.LogoAlt" xml:space="preserve">
+    <value>Логотип NeuCharFramework</value>
+  </data>
+  <data name="Admin.Logout.Title" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
+  <data name="Admin.Logout.Confirm" xml:space="preserve">
+    <value>Вы уверены, что хотите выйти?</value>
+  </data>
+  <data name="Admin.Logout.Yes" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
+  <data name="Admin.Logout.No" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Admin.Login.Title" xml:space="preserve">
+    <value>Вход администратора</value>
+  </data>
+  <data name="Admin.Login.Username" xml:space="preserve">
+    <value>Имя пользователя</value>
+  </data>
+  <data name="Admin.Login.Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="Admin.Login.Tenant" xml:space="preserve">
+    <value>Название тенанта</value>
+  </data>
+  <data name="Admin.Login.Submit" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="Admin.Login.UsernamePlaceholder" xml:space="preserve">
+    <value>Введите имя пользователя</value>
+  </data>
+  <data name="Admin.Login.PasswordPlaceholder" xml:space="preserve">
+    <value>Введите пароль</value>
+  </data>
+  <data name="Admin.Login.TenantPlaceholder" xml:space="preserve">
+    <value>Введите название тенанта</value>
+  </data>
+  <data name="Admin.Login.Error.UsernameRequired" xml:space="preserve">
+    <value>Введите имя пользователя</value>
+  </data>
+  <data name="Admin.Login.Error.PasswordRequired" xml:space="preserve">
+    <value>Введите пароль</value>
+  </data>
+  <data name="Admin.Language.SelectLanguage" xml:space="preserve">
+    <value>Выбор языка</value>
+  </data>
+  <data name="Admin.Login.Error.InvalidCredentials" xml:space="preserve"><value>Неверное имя пользователя или пароль.</value></data>
+  <data name="Common.系统管理" xml:space="preserve"><value>Управление системой</value></data>
+  <data name="Common.增加" xml:space="preserve"><value>Добавить</value></data>
+  <data name="Common.排序" xml:space="preserve"><value>Сортировка</value></data>
+  <data name="Common.备注" xml:space="preserve"><value>Примечания</value></data>
+  <data name="Common.说明" xml:space="preserve"><value>Описание</value></data>
+  <data name="Common.添加时间" xml:space="preserve"><value>Дата создания</value></data>
+  <data name="Common.操作" xml:space="preserve"><value>Действия</value></data>
+  <data name="Common.编辑" xml:space="preserve"><value>Изменить</value></data>
+  <data name="Common.删除" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Common.取消" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Common.确认" xml:space="preserve"><value>Подтвердить</value></data>
+  <data name="Common.请输入说明" xml:space="preserve"><value>Введите описание</value></data>
+  <data name="Common.请输入备注" xml:space="preserve"><value>Введите примечания</value></data>
+  <data name="Common.返回" xml:space="preserve"><value>Назад</value></data>
+  <data name="Common.保存" xml:space="preserve"><value>Сохранить</value></data>
+  <data name="Menu.管理" xml:space="preserve"><value>Управление меню</value></data>
+  <data name="Menu.列表" xml:space="preserve"><value>Список меню</value></data>
+  <data name="Menu.增加菜单" xml:space="preserve"><value>Добавить меню</value></data>
+  <data name="Menu.名称" xml:space="preserve"><value>Название меню</value></data>
+  <data name="Menu.增加下级" xml:space="preserve"><value>Добавить подменю</value></data>
+  <data name="Menu.确认删除" xml:space="preserve"><value>Удалить это меню?</value></data>
+  <data name="Menu.父级" xml:space="preserve"><value>Родительское меню</value></data>
+  <data name="Menu.类型" xml:space="preserve"><value>Тип</value></data>
+  <data name="Menu.菜单" xml:space="preserve"><value>Меню</value></data>
+  <data name="Menu.页面" xml:space="preserve"><value>Страница</value></data>
+  <data name="Menu.按钮" xml:space="preserve"><value>Кнопка</value></data>
+  <data name="Menu.路径" xml:space="preserve"><value>Путь</value></data>
+  <data name="Menu.操作代码" xml:space="preserve"><value>Код действия</value></data>
+  <data name="Menu.是否锁定" xml:space="preserve"><value>Заблокировано</value></data>
+  <data name="Menu.是否显示" xml:space="preserve"><value>Отображать</value></data>
+  <data name="Menu.图标" xml:space="preserve"><value>Значок</value></data>
+  <data name="Menu.选择图标" xml:space="preserve"><value>Выбрать значок</value></data>
+  <data name="Menu.图标列表" xml:space="preserve"><value>Список значков</value></data>
+  <data name="Role.管理" xml:space="preserve"><value>Управление ролями</value></data>
+  <data name="Role.列表" xml:space="preserve"><value>Список ролей</value></data>
+  <data name="Role.名称" xml:space="preserve"><value>Название роли</value></data>
+  <data name="Role.代码" xml:space="preserve"><value>Код роли</value></data>
+  <data name="Role.权限" xml:space="preserve"><value>Разрешения</value></data>
+  <data name="Role.确认删除" xml:space="preserve"><value>Удалить эту роль?</value></data>
+  <data name="Role.请输入名称" xml:space="preserve"><value>Введите название роли</value></data>
+  <data name="Role.请输入代码" xml:space="preserve"><value>Введите код роли</value></data>
+  <data name="Role.是否启用" xml:space="preserve"><value>Включено</value></data>
+  <data name="Role.为角色授权" xml:space="preserve"><value>Назначить разрешения роли</value></data>
+  <data name="Trace.日志" xml:space="preserve"><value>Журналы SenparcTrace</value></data>
+  <data name="Trace.编号" xml:space="preserve"><value>№</value></data>
+  <data name="Trace.日期" xml:space="preserve"><value>Дата</value></data>
+  <data name="AdminUserInfo.角色授予" xml:space="preserve"><value>Назначение ролей</value></data>
+  <data name="AdminUserInfo.管理员管理" xml:space="preserve"><value>Управление администраторами</value></data>
+  <data name="Tenant.NameExists" xml:space="preserve"><value>Имя арендатора {0} уже существует</value></data>
+  <data name="Tenant.KeyExists" xml:space="preserve"><value>Правило сопоставления арендатора {0} уже существует</value></data>
+  <data name="Tenant.SaveSuccess.Edit" xml:space="preserve"><value>Арендатор успешно обновлен</value></data>
+  <data name="Tenant.SaveSuccess.Create" xml:space="preserve"><value>Арендатор успешно создан</value></data>
+  <data name="Tenant.PlatformAdminOnly" xml:space="preserve"><value>В режиме нескольких арендаторов управлять информацией об арендаторах может только администратор платформы!</value></data>
+  <data name="Tenant.NotFound" xml:space="preserve"><value>Арендатор не найден</value></data>
+  <data name="Tenant.SetInfoFailed" xml:space="preserve"><value>Не удалось установить информацию об арендаторе</value></data>
+  <data name="Tenant.InitializeSuccess" xml:space="preserve"><value>Инициализация успешно завершена</value></data>
+  <data name="Xncf.ModuleNotAdded" xml:space="preserve"><value>Модуль не был добавлен.</value></data>
+  <data name="Xncf.StateChangedSuccess" xml:space="preserve"><value>Статус успешно изменен.</value></data>
+  <data name="Xncf.ModuleNotRegistered" xml:space="preserve"><value>Модуль не зарегистрирован.</value></data>
+  <data name="Xncf.ModuleNotInstalled" xml:space="preserve"><value>Текущий модуль не установлен.</value></data>
+  <data name="Xncf.InvalidModuleState" xml:space="preserve"><value>Текущее состояние модуля: [{0}]. Только модули в состоянии [Открыт] могут выполнять это действие.\r\nЕсли вы принудительно выполните это действие, система все равно будет работать с непроверенной сборкой, так как ранее установленная версия могла быть уже перезаписана более новой сборкой.</value></data>
+  <data name="Xncf.FunctionNotMatched" xml:space="preserve"><value>Подходящий метод не найден.</value></data>
+  <data name="Xncf.FunctionSingleParameterOnly" xml:space="preserve"><value>Методы FunctionRender могут объявлять только один входной параметр.</value></data>
+  <data name="Xncf.LogFileNotFoundOrDownloaded" xml:space="preserve"><value>Файл журнала не существует или уже был загружен.</value></data>
+  <data name="Xncf.ModuleIdNotProvided" xml:space="preserve"><value>Идентификатор модуля не указан.</value></data>
+  <data name="Xncf.ModuleMissingOrNotLoaded" xml:space="preserve"><value>Модуль отсутствует или не загружен ({0}).</value></data>
+  <data name="Xncf.FunctionLoadError" xml:space="preserve"><value>Ошибка при загрузке {0}. Проверьте журналы. Если вы только что добавили миграцию базы данных, сначала завершите обновление модуля.</value></data>
+  <data name="Xncf.Install.PublishModeEnabled" xml:space="preserve"><value>Режим публикации включен, поэтому это действие недоступно.</value></data>
+  <data name="Xncf.Install.ModuleNotFound" xml:space="preserve"><value>Целевой модуль не найден и не может быть установлен.</value></data>
+  <data name="Xncf.Install.Success" xml:space="preserve"><value>Установка успешно завершена.</value></data>
+  <data name="Xncf.Install.Failed" xml:space="preserve"><value>Сбой установки: {0}</value></data>
+  <data name="Admin.Register.MenuName" xml:space="preserve"><value>System Admin Panel</value></data>
+  <data name="Admin.Register.Description" xml:space="preserve"><value>Это модуль административной панели системы NCF для самостоятельного управления серверной частью. Не удаляйте этот модуль. Если вам действительно нужно это сделать, сначала создайте резервную копию данных.</value></data>
+  <data name="Admin.Area.MenuManagement" xml:space="preserve"><value>Управление меню</value></data>
+  <data name="Admin.Area.TraceLog" xml:space="preserve"><value>Журналы SenparcTrace</value></data>
+  <data name="AdminChat.UserNotLoggedIn" xml:space="preserve"><value>Пользователь не вошел в систему</value></data>
+  <data name="AdminChat.NewConversation" xml:space="preserve"><value>Новый диалог</value></data>
+  <data name="AdminChat.SessionNotFoundOrForbidden" xml:space="preserve"><value>Сеанс не существует или доступ запрещен</value></data>
+  <data name="AdminChat.SessionNotFoundOrNoDeletePermission" xml:space="preserve"><value>Сеанс не существует или не может быть удален</value></data>
+  <data name="AdminChat.DeleteSessionSuccess" xml:space="preserve"><value>Успешно удалено</value></data>
+  <data name="AdminChat.MessageNotFound" xml:space="preserve"><value>Сообщение не найдено</value></data>
+  <data name="AdminChat.SetFeedbackSuccess" xml:space="preserve"><value>Отзыв успешно отправлен</value></data>
+  <data name="AdminChat.SelectAtLeastOneMessage" xml:space="preserve"><value>Выберите хотя бы одно сообщение</value></data>
+  <data name="AdminChat.SelectAtLeastOneModule" xml:space="preserve"><value>Выберите хотя бы один модуль XNCF</value></data>
+  <data name="AdminChat.DeleteMessagesSuccess" xml:space="preserve"><value>Успешно удалено. Удалено сообщений: {0}</value></data>
+  <data name="AdminChat.AddModulesSuccess" xml:space="preserve"><value>Модули успешно добавлены</value></data>
+  <data name="Admin.Layout.Account" xml:space="preserve"><value>Моя учетная запись</value></data>
+  <data name="Admin.Layout.CurrentAccount" xml:space="preserve"><value>Текущая учетная запись: {0}</value></data>
+  <data name="Admin.Layout.PoweredBy" xml:space="preserve"><value>При поддержке</value></data>
+  <data name="Admin.Footer.NeuBellLabel" xml:space="preserve"><value>NeuBell</value></data>
+  <data name="Admin.Session.Title" xml:space="preserve"><value>Срок входа скоро истечет</value></data>
+  <data name="Admin.Session.Message" xml:space="preserve"><value>Срок вашей сессии входа скоро истечет. Можно продолжить работу или выйти сейчас.</value></data>
+  <data name="Admin.Session.KeepLogin" xml:space="preserve"><value>Остаться в системе</value></data>
+  <data name="Admin.Session.LogoutNow" xml:space="preserve"><value>Выйти сейчас</value></data>
+  <data name="Admin.Session.KeepLoginSuccess" xml:space="preserve"><value>Вход сохранен, сессия продлена.</value></data>
+  <data name="Admin.Common.NoTime" xml:space="preserve"><value>Нет времени</value></data>
+  <data name="Admin.Common.CopySuccess" xml:space="preserve"><value>Скопировано. Используйте Ctrl+V для вставки.</value></data>
+  <data name="Admin.Home.Header" xml:space="preserve"><value>Панель администратора NeuCharFramework</value></data>
+  <data name="Admin.Home.HostMetrics" xml:space="preserve"><value>Монитор ресурсов хоста</value></data>
+  <data name="Admin.Home.HostMetricsRealtime" xml:space="preserve"><value>В реальном времени · каждые 2 секунды</value></data>
+  <data name="Admin.Home.HostCpu" xml:space="preserve"><value>CPU хоста (общая)</value></data>
+  <data name="Admin.Home.HostCpuDetail" xml:space="preserve"><value>Общая загрузка хоста</value></data>
+  <data name="Admin.Home.HostScope" xml:space="preserve"><value>Хост</value></data>
+  <data name="Admin.Home.WebScope" xml:space="preserve"><value>Web</value></data>
+  <data name="Admin.Home.HostMemory" xml:space="preserve"><value>Физическая память</value></data>
+  <data name="Admin.Home.HostMemoryAvailable" xml:space="preserve"><value>Доступно</value></data>
+  <data name="Admin.Home.HostNetwork" xml:space="preserve"><value>Сетевой трафик в реальном времени</value></data>
+  <data name="Admin.Home.HostNetworkTotal" xml:space="preserve"><value>Всего</value></data>
+  <data name="Admin.Home.HostInterfaces" xml:space="preserve"><value>активных интерфейсов</value></data>
+  <data name="Admin.Home.HostProcess" xml:space="preserve"><value>Текущий веб-процесс</value></data>
+  <data name="Admin.Home.HostProcessCpu" xml:space="preserve"><value>CPU веб-процесса</value></data>
+  <data name="Admin.Home.HostProcessWorkingSet" xml:space="preserve"><value>Рабочий набор памяти</value></data>
+  <data name="Admin.Home.HostProcessUptime" xml:space="preserve"><value>Время работы</value></data>
+  <data name="Admin.Home.HostMetricsChart" xml:space="preserve"><value>Динамика ресурсов</value></data>
+  <data name="Admin.Home.HostNetworkReceive" xml:space="preserve"><value>Приём</value></data>
+  <data name="Admin.Home.HostNetworkSend" xml:space="preserve"><value>Передача</value></data>
+  <data name="Admin.Home.HostMetricsInvalidResponse" xml:space="preserve"><value>API метрик хоста вернул недопустимые данные</value></data>
+  <data name="Admin.Home.HostMetricsUnavailable" xml:space="preserve"><value>Метрики хоста временно недоступны</value></data>
+  <data name="Admin.Home.WebProcessMemory" xml:space="preserve"><value>Память процесса Web</value></data>
+  <data name="Admin.Home.ResourceMonitor" xml:space="preserve"><value>Монитор ресурсов (последние 24 часа)</value></data>
+  <data name="Admin.Home.ResourceMonitorRealtime" xml:space="preserve"><value>Запись каждые 10 с в фоне · кэш до 24 ч</value></data>
+  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>Выделите область или используйте колесо для масштаба; двойной щелчок сбрасывает диапазон</value></data>
+  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>Сбросить диапазон</value></data>
+  <data name="Admin.Home.ResourceMonitorRange" xml:space="preserve"><value>Диапазон времени</value></data>
+  <data name="Admin.Home.ResourceMonitor5Minutes" xml:space="preserve"><value>5 мин</value></data>
+  <data name="Admin.Home.ResourceMonitor30Minutes" xml:space="preserve"><value>30 мин</value></data>
+  <data name="Admin.Home.ResourceMonitor6Hours" xml:space="preserve"><value>6 ч</value></data>
+  <data name="Admin.Home.ResourceMonitor24Hours" xml:space="preserve"><value>24 ч</value></data>
+  <data name="Admin.Home.ResourceMonitorReturnLive" xml:space="preserve"><value>Вернуться к текущим данным</value></data>
+  <data name="Admin.Home.ResourceMonitorFollowing" xml:space="preserve"><value>Текущие данные</value></data>
+  <data name="Admin.Home.ResourceMonitorPaused" xml:space="preserve"><value>Просмотр на паузе (запись продолжается)</value></data>
+  <data name="Admin.Home.ResourceMonitorEmpty" xml:space="preserve"><value>Фоновая запись запускается (~10 с) или в этом диапазоне пока нет данных</value></data>
+  <data name="Admin.Home.ResourceMonitorUnavailable" xml:space="preserve"><value>Сейчас нельзя получить данные монитора ресурсов</value></data>
+  <data name="Admin.Home.ResourceMonitorNow" xml:space="preserve"><value>сейчас</value></data>
+  <data name="Admin.Home.InstalledModules" xml:space="preserve"><value>Установленные модули</value></data>
+  <data name="Admin.Home.PendingUpdates" xml:space="preserve"><value>Модули, ожидающие обновления</value></data>
+  <data name="Admin.Home.NewModules" xml:space="preserve"><value>Найдены новые модули</value></data>
+  <data name="Admin.Home.ModuleErrors" xml:space="preserve"><value>Ошибки модулей</value></data>
+  <data name="Admin.Home.AiTitle" xml:space="preserve"><value>ИИ-помощник</value></data>
+  <data name="Admin.Home.AiSubtitle" xml:space="preserve"><value>Задайте вопрос, и я помогу эффективнее управлять системой.</value></data>
+  <data name="Admin.Home.AiPlaceholder" xml:space="preserve"><value>Введите вопрос, например: как настроить параметры системы?&#10;&#10;Подсказка: нажмите Ctrl+Enter или Cmd+Enter для отправки.</value></data>
+  <data name="Admin.Home.StartConversation" xml:space="preserve"><value>Начать диалог</value></data>
+  <data name="Admin.Home.SupportMultiTurn" xml:space="preserve"><value>Многошаговые диалоги</value></data>
+  <data name="Admin.Home.AddModulesContext" xml:space="preserve"><value>Добавление модулей в контекст диалога</value></data>
+  <data name="Admin.Home.SaveHistory" xml:space="preserve"><value>Автоматически сохранять историю</value></data>
+  <data name="Admin.Home.ReferenceModules" xml:space="preserve"><value>Ссылочные модули (необязательно)</value></data>
+  <data name="Admin.Home.AddReferenceModule" xml:space="preserve"><value>Добавить ссылочный модуль</value></data>
+  <data name="Admin.Home.Clear" xml:space="preserve"><value>Очистить</value></data>
+  <data name="Admin.Home.EmptyReference" xml:space="preserve"><value>Нажмите «Добавить ссылочный модуль», чтобы выбрать контекст</value></data>
+  <data name="Admin.Home.FeatureModules" xml:space="preserve"><value>Функциональные модули</value></data>
+  <data name="Admin.Home.CurrentVersion" xml:space="preserve"><value>Текущая версия: v{0}</value></data>
+  <data name="Admin.Home.UpdateVersion" xml:space="preserve"><value>Доступно обновление: v{0}</value></data>
+  <data name="Admin.Home.MenuName" xml:space="preserve"><value>Название меню</value></data>
+  <data name="Admin.Home.NoDescription" xml:space="preserve"><value>Описание отсутствует</value></data>
+  <data name="Admin.Home.LogStats" xml:space="preserve"><value>Статистика журналов</value></data>
+  <data name="Admin.Home.Last14Days" xml:space="preserve"><value>Последние 14 дней</value></data>
+  <data name="Admin.Home.NormalLogs" xml:space="preserve"><value>Обычные журналы</value></data>
+  <data name="Admin.Home.ErrorLogs" xml:space="preserve"><value>Журналы ошибок</value></data>
+  <data name="Admin.Home.TodayLogStats" xml:space="preserve"><value>Статистика журналов за сегодня</value></data>
+  <data name="Admin.Home.DynamicData" xml:space="preserve"><value>Динамические данные</value></data>
+  <data name="Admin.Home.LogType" xml:space="preserve"><value>Тип журнала</value></data>
+  <data name="Admin.Home.LogCountUnit" xml:space="preserve"><value>зап.</value></data>
+  <data name="AdminUserInfo.Title" xml:space="preserve"><value>Управление администраторами</value></data>
+  <data name="AdminUserInfo.List" xml:space="preserve"><value>Список администраторов</value></data>
+  <data name="AdminUserInfo.AddTitle" xml:space="preserve"><value>Добавить администратора</value></data>
+  <data name="AdminUserInfo.EditTitle" xml:space="preserve"><value>Изменить администратора</value></data>
+  <data name="AdminUserInfo.EditUsernameTip" xml:space="preserve"><value>Изменение имени пользователя не рекомендуется.</value></data>
+  <data name="AdminUserInfo.Username" xml:space="preserve"><value>Имя пользователя</value></data>
+  <data name="AdminUserInfo.Note" xml:space="preserve"><value>Примечание</value></data>
+  <data name="AdminUserInfo.AddTime" xml:space="preserve"><value>Дата создания</value></data>
+  <data name="AdminUserInfo.Actions" xml:space="preserve"><value>Действия</value></data>
+  <data name="AdminUserInfo.SetRole" xml:space="preserve"><value>Назначить роли</value></data>
+  <data name="AdminUserInfo.DeleteConfirm" xml:space="preserve"><value>Удалить этого администратора?</value></data>
+  <data name="AdminUserInfo.ConfirmPassword" xml:space="preserve"><value>Подтвердите пароль</value></data>
+  <data name="AdminUserInfo.RealName" xml:space="preserve"><value>Настоящее имя</value></data>
+  <data name="AdminUserInfo.Phone" xml:space="preserve"><value>Номер телефона</value></data>
+  <data name="AdminUserInfo.NotePlaceholder" xml:space="preserve"><value>Введите примечание</value></data>
+  <data name="AdminUserInfo.Success" xml:space="preserve"><value>Успешно</value></data>
+  <data name="AdminUserInfo.PasswordRequired" xml:space="preserve"><value>Введите пароль</value></data>
+  <data name="AdminUserInfo.PasswordConfirmRequired" xml:space="preserve"><value>Введите пароль еще раз</value></data>
+  <data name="AdminUserInfo.PasswordMismatch" xml:space="preserve"><value>Введите одинаковые пароли</value></data>
+  <data name="AdminUserInfo.RoleTitle" xml:space="preserve"><value>Назначить роли</value></data>
+  <data name="SystemConfig.Title" xml:space="preserve"><value>Системная информация</value></data>
+  <data name="SystemConfig.BasicInfo" xml:space="preserve"><value>Основная информация</value></data>
+  <data name="SystemConfig.SystemName" xml:space="preserve"><value>Название системы</value></data>
+  <data name="SystemConfig.PublishMode" xml:space="preserve"><value>Режим публикации модулей</value></data>
+  <data name="SystemConfig.NameRequired" xml:space="preserve"><value>Название системы обязательно</value></data>
+  <data name="SystemConfig.Updated" xml:space="preserve"><value>Успешно обновлено.</value></data>
+  <data name="SystemConfig.UpdateFailed" xml:space="preserve"><value>Ошибка обновления: </value></data>
+  <data name="Admin.Common.Error" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="AdminChat.Conversation" xml:space="preserve"><value>Диалог</value></data>
+  <data name="AdminChat.History" xml:space="preserve"><value>История диалогов</value></data>
+  <data name="AdminChat.Search.Open" xml:space="preserve"><value>Поиск диалогов</value></data>
+  <data name="AdminChat.Search.Placeholder" xml:space="preserve"><value>Поиск среди неархивных диалогов</value></data>
+  <data name="AdminChat.Search.ChatTab" xml:space="preserve"><value>Диалоги</value></data>
+  <data name="AdminChat.Search.ToolTab" xml:space="preserve"><value>Вызовы</value></data>
+  <data name="AdminChat.Search.ToolPlaceholder" xml:space="preserve"><value>Поиск имени метода</value></data>
+  <data name="AdminChat.Search.ToolCall" xml:space="preserve"><value>Вызов метода</value></data>
+  <data name="AdminChat.Search.Empty" xml:space="preserve"><value>Нет подходящих неархивных диалогов</value></data>
+  <data name="AdminChat.Search.Hint" xml:space="preserve"><value>Ищет только неархивные диалоги, не более 10 результатов</value></data>
+  <data name="AdminChat.Search.ToolHint" xml:space="preserve"><value>Ищет имена методов, которые Harness реально вызывал в неархивных диалогах, не более 10 результатов</value></data>
+  <data name="AdminChat.Search.Failed" xml:space="preserve"><value>Не удалось выполнить поиск</value></data>
+  <data name="AdminChat.Search.TitleMatch" xml:space="preserve"><value>Совпадение заголовка</value></data>
+  <data name="AdminChat.EmptyHistory" xml:space="preserve"><value>История диалогов отсутствует</value></data>
+  <data name="AdminChat.SelectModel" xml:space="preserve"><value>Выберите модель ИИ</value></data>
+  <data name="AdminChat.Manage" xml:space="preserve"><value>Управление</value></data>
+  <data name="AdminChat.Done" xml:space="preserve"><value>Готово</value></data>
+  <data name="AdminChat.MenuHierarchy" xml:space="preserve"><value>Иерархия меню</value></data>
+  <data name="AdminChat.NoPreview" xml:space="preserve"><value>Для этого модуля нет данных для просмотра</value></data>
+  <data name="AdminChat.SelectedCount" xml:space="preserve"><value>Выбрано: {0}</value></data>
+  <data name="AdminChat.Copy" xml:space="preserve"><value>Копировать</value></data>
+  <data name="AdminChat.ClearSelection" xml:space="preserve"><value>Очистить выбор</value></data>
+  <data name="AdminChat.StartPrompt" xml:space="preserve"><value>Начните диалог</value></data>
+  <data name="AdminChat.InputPlaceholder" xml:space="preserve"><value>Введите вопрос...</value></data>
+  <data name="AdminChat.SendHint" xml:space="preserve"><value>Нажмите Ctrl + Enter или Cmd + Enter для отправки</value></data>
+  <data name="AdminChat.Send" xml:space="preserve"><value>Отправить</value></data>
+  <data name="AdminChat.Thinking" xml:space="preserve"><value>Обдумываю...</value></data>
+  <data name="AdminChat.ModeSimple" xml:space="preserve"><value>Chat</value></data>
+  <data name="AdminChat.ModeHarness" xml:space="preserve"><value>Харнесс</value></data>
+  <data name="AdminChat.HarnessSteps" xml:space="preserve"><value>Шаги харнесса</value></data>
+  <data name="AdminChat.TrajectoryNotFound" xml:space="preserve"><value>Траектория не найдена.</value></data>
+  <data name="AdminChat.NewSessionDescription" xml:space="preserve"><value>Введите вопрос и выберите ссылочные модули для начала диалога</value></data>
+  <data name="AdminChat.ComputePower" xml:space="preserve"><value>Модель ИИ</value></data>
+  <data name="AdminChat.DeleteConfirm" xml:space="preserve"><value>Удалить этот диалог?</value></data>
+  <data name="AdminChat.DeleteConfirmTitle" xml:space="preserve"><value>Подтверждение удаления</value></data>
+  <data name="AdminChat.RoleMe" xml:space="preserve"><value>Я</value></data>
+  <data name="AdminChat.RoleAssistant" xml:space="preserve"><value>ИИ-помощник</value></data>
+  <data name="AdminChat.RoleSystem" xml:space="preserve"><value>Система</value></data>
+  <data name="AdminChat.RoleUnknown" xml:space="preserve"><value>Неизвестно</value></data>
+  <data name="AdminChat.FallbackModelName" xml:space="preserve"><value>Системный SenparcAiSetting</value></data>
+  <data name="AdminChat.FallbackModelDescription" xml:space="preserve"><value>Использовать активную конфигурацию Chat по умолчанию из appsettings.json</value></data>
+  <data name="AdminChat.LoadSessionFailed" xml:space="preserve"><value>Не удалось загрузить диалоги</value></data>
+  <data name="AdminChat.LoadDetailFailed" xml:space="preserve"><value>Не удалось загрузить сведения о диалоге</value></data>
+  <data name="AdminChat.InputRequired" xml:space="preserve"><value>Введите сообщение</value></data>
+  <data name="AdminChat.SessionRequired" xml:space="preserve"><value>Сначала выберите или создайте диалог</value></data>
+  <data name="AdminChat.SendFailed" xml:space="preserve"><value>Не удалось отправить сообщение</value></data>
+  <data name="AdminChat.SendFailedRetry" xml:space="preserve"><value>Не удалось отправить сообщение. Повторите позже.</value></data>
+  <data name="AdminChat.FeedbackFailed" xml:space="preserve"><value>Не удалось отправить отзыв</value></data>
+  <data name="AdminChat.CopyCount" xml:space="preserve"><value>Скопировано сообщений: {0}</value></data>
+  <data name="AdminChat.CopyFailed" xml:space="preserve"><value>Не удалось скопировать. Скопируйте вручную.</value></data>
+  <data name="AdminChat.SelectMessages" xml:space="preserve"><value>Сначала выберите сообщения для операции</value></data>
+  <data name="AdminChat.DeleteMessagesConfirm" xml:space="preserve"><value>Удалить выбранные сообщения ({0})? Отменить это действие нельзя.</value></data>
+  <data name="AdminChat.DeleteFailed" xml:space="preserve"><value>Не удалось удалить</value></data>
+  <data name="AdminChat.DeleteFailedRetry" xml:space="preserve"><value>Не удалось удалить. Повторите позже.</value></data>
+  <data name="AdminChat.Functions" xml:space="preserve"><value>Функции</value></data>
+  <data name="AdminChat.SelectAll" xml:space="preserve"><value>Выбрать все</value></data>
+  <data name="AdminChat.JustNow" xml:space="preserve"><value>Только что</value></data>
+  <data name="AdminChat.MinutesAgo" xml:space="preserve"><value>{0} мин назад</value></data>
+  <data name="AdminChat.HoursAgo" xml:space="preserve"><value>{0} ч назад</value></data>
+  <data name="AdminChat.DaysAgo" xml:space="preserve"><value>{0} дн. назад</value></data>
+  <data name="AdminChat.UnknownModule" xml:space="preserve"><value>Модуль без имени</value></data>
+  <data name="Menu.ButtonRequired" xml:space="preserve"><value>Для кнопочного типа это поле обязательно</value></data>
+  <data name="Menu.NameRequired" xml:space="preserve"><value>Название меню обязательно</value></data>
+  <data name="Menu.TypeRequired" xml:space="preserve"><value>Тип обязателен</value></data>
+  <data name="Menu.AddTitle" xml:space="preserve"><value>Добавить меню</value></data>
+  <data name="Menu.EditTitle" xml:space="preserve"><value>Изменить меню</value></data>
+  <data name="Menu.AddChildTitle" xml:space="preserve"><value>Добавить дочернее меню</value></data>
+  <data name="Menu.AuthorizationSuccess" xml:space="preserve"><value>Авторизация выполнена успешно</value></data>
+  <data name="Role.NameRequired" xml:space="preserve"><value>Название роли обязательно</value></data>
+  <data name="Role.CodeRequired" xml:space="preserve"><value>Код роли обязателен</value></data>
+  <data name="Role.AddTitle" xml:space="preserve"><value>Добавить роль</value></data>
+  <data name="Role.EditTitle" xml:space="preserve"><value>Изменить роль</value></data>
+  <data name="Role.AuthorizationSuccess" xml:space="preserve"><value>Авторизация выполнена успешно</value></data>
+  <data name="Xncf.ModuleReadFailed" xml:space="preserve"><value>Не удалось прочитать модуль. Обновите его и перезагрузите страницу. Модуль: {0}</value></data>
+  <data name="Tenant.Title" xml:space="preserve"><value>Информация о мультитенантности</value></data>
+  <data name="Tenant.CurrentInfo" xml:space="preserve"><value>Текущий клиент</value></data>
+  <data name="Tenant.Disabled" xml:space="preserve"><value>Мультитенантность отключена</value></data>
+  <data name="Tenant.MatchRule" xml:space="preserve"><value>Текущее правило сопоставления:</value></data>
+  <data name="Tenant.Name" xml:space="preserve"><value>Имя</value></data>
+  <data name="Tenant.MatchKeyword" xml:space="preserve"><value>Ключевое слово сопоставления</value></data>
+  <data name="Tenant.MatchTime" xml:space="preserve"><value>Время сопоставления</value></data>
+  <data name="Tenant.ListTitle" xml:space="preserve"><value>Информация о клиентах</value></data>
+  <data name="Tenant.Add" xml:space="preserve"><value>Добавить клиента</value></data>
+  <data name="Tenant.Id" xml:space="preserve"><value>ID</value></data>
+  <data name="Tenant.Rule" xml:space="preserve"><value>Правило сопоставления</value></data>
+  <data name="Tenant.AdminNote" xml:space="preserve"><value>Примечание администратора</value></data>
+  <data name="Tenant.Enabled" xml:space="preserve"><value>Включено</value></data>
+  <data name="Tenant.Actions" xml:space="preserve"><value>Действия</value></data>
+  <data name="Tenant.Edit" xml:space="preserve"><value>Изменить</value></data>
+  <data name="Tenant.Initialize" xml:space="preserve"><value>Инициализировать</value></data>
+  <data name="Tenant.DeleteConfirm" xml:space="preserve"><value>Удалить этого клиента? Вся информация о клиентах станет несвязанной. Действуйте осторожно.</value></data>
+  <data name="Tenant.Delete" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Tenant.NamePlaceholder" xml:space="preserve"><value>Введите имя клиента</value></data>
+  <data name="Tenant.KeyPlaceholder" xml:space="preserve"><value>Введите ключевое слово сопоставления</value></data>
+  <data name="Tenant.NotePlaceholder" xml:space="preserve"><value>Введите примечание администратора</value></data>
+  <data name="Tenant.EnableQuestion" xml:space="preserve"><value>Включено</value></data>
+  <data name="Tenant.InitializeTitle" xml:space="preserve"><value>Инициализация клиента</value></data>
+  <data name="Tenant.SystemName" xml:space="preserve"><value>Название системы</value></data>
+  <data name="Tenant.AdminAccount" xml:space="preserve"><value>Учетная запись администратора по умолчанию</value></data>
+  <data name="Tenant.SystemNamePlaceholder" xml:space="preserve"><value>Введите название системы</value></data>
+  <data name="Tenant.AdminAccountPlaceholder" xml:space="preserve"><value>Введите учетную запись администратора по умолчанию</value></data>
+  <data name="Tenant.ResultTitle" xml:space="preserve"><value>Результат инициализации</value></data>
+  <data name="Tenant.KeepSecret" xml:space="preserve"><value>Сохраните эту информацию в безопасном месте. Пароль больше нельзя будет просмотреть.</value></data>
+  <data name="Tenant.TenantInfo" xml:space="preserve"><value>Информация о клиенте</value></data>
+  <data name="Tenant.AdminInfo" xml:space="preserve"><value>Учетная запись администратора</value></data>
+  <data name="Tenant.Username" xml:space="preserve"><value>Имя пользователя</value></data>
+  <data name="Tenant.Password" xml:space="preserve"><value>Пароль</value></data>
+  <data name="Tenant.RecordClose" xml:space="preserve"><value>Я записал данные; закрыть</value></data>
+  <data name="Tenant.CreateTitle" xml:space="preserve"><value>Добавить клиента</value></data>
+  <data name="Tenant.EditTitle" xml:space="preserve"><value>Изменить клиента</value></data>
+  <data name="Tenant.NameRequired" xml:space="preserve"><value>Имя клиента обязательно</value></data>
+  <data name="Tenant.KeyRequired" xml:space="preserve"><value>Правило сопоставления обязательно</value></data>
+  <data name="Tenant.SystemNameRequired" xml:space="preserve"><value>Название системы обязательно</value></data>
+  <data name="Tenant.AdminAccountRequired" xml:space="preserve"><value>Учетная запись администратора обязательна</value></data>
+  <data name="Tenant.DeleteSuccess" xml:space="preserve"><value>Успешно удалено</value></data>
+  <data name="Tenant.InitializeFailed" xml:space="preserve"><value>Ошибка инициализации</value></data>
+  <data name="Xncf.Title" xml:space="preserve"><value>Управление модулями</value></data>
+  <data name="Xncf.ExtensionModules" xml:space="preserve"><value>Модули расширения</value></data>
+  <data name="Xncf.NewModules" xml:space="preserve"><value>Новые модули</value></data>
+  <data name="Xncf.InstalledModules" xml:space="preserve"><value>Установленные модули</value></data>
+  <data name="Xncf.PendingUpdates" xml:space="preserve"><value>Модули, ожидающие обновления</value></data>
+  <data name="Xncf.BatchUpdateAndEnable" xml:space="preserve"><value>Обновить и включить выбранные</value></data>
+  <data name="Xncf.BatchUpdate.SelectedCount" xml:space="preserve"><value>Выбрано модулей: {0}</value></data>
+  <data name="Xncf.BatchUpdate.SelectAtLeastOne" xml:space="preserve"><value>Выберите хотя бы один модуль, ожидающий обновления.</value></data>
+  <data name="Xncf.BatchUpdate.Confirm" xml:space="preserve"><value>Обновить и включить выбранные модули ({0})?</value></data>
+  <data name="Xncf.BatchUpdate.Title" xml:space="preserve"><value>Пакетное обновление модулей</value></data>
+  <data name="Xncf.BatchUpdateResult" xml:space="preserve"><value>Состояние пакетной операции</value></data>
+  <data name="Xncf.BatchUpdate.Summary" xml:space="preserve"><value>Обработано модулей: {0}; успешно: {1}; с ошибкой: {2}.</value></data>
+  <data name="Xncf.BatchUpdate.VersionResult" xml:space="preserve"><value>Изменение версии</value></data>
+  <data name="Xncf.BatchUpdate.TargetVersion" xml:space="preserve"><value>Целевая версия: {0}</value></data>
+  <data name="Xncf.BatchUpdate.UpdateStatus" xml:space="preserve"><value>Обновление</value></data>
+  <data name="Xncf.BatchUpdate.EnableStatus" xml:space="preserve"><value>Включение</value></data>
+  <data name="Xncf.BatchUpdate.FinalState" xml:space="preserve"><value>Итоговое состояние</value></data>
+  <data name="Xncf.BatchUpdate.Details" xml:space="preserve"><value>Сведения</value></data>
+  <data name="Xncf.BatchUpdate.Success" xml:space="preserve"><value>Успешно</value></data>
+  <data name="Xncf.BatchUpdate.Failed" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Xncf.BatchUpdate.NoResult" xml:space="preserve"><value>Результат пакетной операции не получен.</value></data>
+  <data name="Xncf.BatchUpdate.RefreshFailed" xml:space="preserve"><value>Операция завершена, но обновить состояние не удалось. Обновите страницу вручную.</value></data>
+  <data name="Xncf.BatchUpdate.RequestFailed" xml:space="preserve"><value>Не удалось выполнить пакетное обновление и включение.</value></data>
+  <data name="Xncf.BatchUpdate.UnknownModule" xml:space="preserve"><value>Неизвестный модуль</value></data>
+  <data name="Xncf.BatchUpdate.ModuleUnavailable" xml:space="preserve"><value>Модуль не существует, игнорируется или не загружен.</value></data>
+  <data name="Xncf.BatchUpdate.UpdateNotApplied" xml:space="preserve"><value>Обновление модуля не применено.</value></data>
+  <data name="Xncf.BatchUpdate.EnableNotApplied" xml:space="preserve"><value>Не удалось перевести модуль во включённое состояние.</value></data>
+  <data name="Xncf.BatchUpdate.VersionMismatch" xml:space="preserve"><value>Целевая версия — {0}, фактическая версия — {1}.</value></data>
+  <data name="Xncf.BatchUpdate.UpdateAndEnableSuccess" xml:space="preserve"><value>Модуль успешно обновлён и включён.</value></data>
+  <data name="Xncf.BatchUpdate.EnableFailed" xml:space="preserve"><value>Обновление выполнено, но включить модуль не удалось: {0}</value></data>
+  <data name="Xncf.BatchUpdate.UpdateFailed" xml:space="preserve"><value>Ошибка обновления: {0}</value></data>
+  <data name="Xncf.ModuleName" xml:space="preserve"><value>Имя модуля</value></data>
+  <data name="Xncf.MenuName" xml:space="preserve"><value>Имя меню (отображаемое имя)</value></data>
+  <data name="Xncf.Version" xml:space="preserve"><value>Версия</value></data>
+  <data name="Xncf.UniqueCode" xml:space="preserve"><value>Уникальный код (глобально уникальный)</value></data>
+  <data name="Xncf.MenuAndVersion" xml:space="preserve"><value>Имя меню / версия</value></data>
+  <data name="Xncf.ModuleAndCode" xml:space="preserve"><value>Имя модуля / уникальный код (глобально уникальный)</value></data>
+  <data name="Xncf.Search" xml:space="preserve"><value>Введите ключевые слова</value></data>
+  <data name="Xncf.Install" xml:space="preserve"><value>Установить</value></data>
+  <data name="Xncf.Status" xml:space="preserve"><value>Состояние</value></data>
+  <data name="Xncf.Actions" xml:space="preserve"><value>Действия</value></data>
+  <data name="Xncf.Home" xml:space="preserve"><value>Главная</value></data>
+  <data name="Xncf.Missing" xml:space="preserve"><value>Модуль не развернут или файл сборки отсутствует</value></data>
+  <data name="Xncf.Module" xml:space="preserve"><value>Модуль</value></data>
+  <data name="Xncf.DeleteConfirm" xml:space="preserve"><value>Удалить этот модуль? Связанные данные также будут удалены. Сначала создайте резервную копию.</value></data>
+  <data name="Xncf.Delete" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Xncf.NewVersion" xml:space="preserve"><value>Найдена новая версия: v{0}</value></data>
+  <data name="Xncf.UpdateNow" xml:space="preserve"><value>Обновить сейчас</value></data>
+  <data name="Xncf.UniqueNumber" xml:space="preserve"><value>Уникальный идентификатор</value></data>
+  <data name="Xncf.Features" xml:space="preserve"><value>Возможности</value></data>
+  <data name="Xncf.View" xml:space="preserve"><value>Просмотр</value></data>
+  <data name="Xncf.ExecuteMethod" xml:space="preserve"><value>Исполняемые методы</value></data>
+  <data name="Xncf.Open" xml:space="preserve"><value>Включить</value></data>
+  <data name="Xncf.Close" xml:space="preserve"><value>Отключить</value></data>
+  <data name="Xncf.DisabledTip" xml:space="preserve"><value>Отключенные модули не могут выполнять функции</value></data>
+  <data name="Xncf.Description" xml:space="preserve"><value>Описание</value></data>
+  <data name="Xncf.UpdateLog" xml:space="preserve"><value>Журнал обновлений</value></data>
+  <data name="Xncf.EnterModuleHome" xml:space="preserve"><value>Перейти на главную {0}</value></data>
+  <data name="Xncf.EnterHome" xml:space="preserve"><value>Открыть главную</value></data>
+  <data name="Xncf.Address" xml:space="preserve"><value>Адрес</value></data>
+  <data name="Xncf.PageOverview" xml:space="preserve"><value>Обзор страницы</value></data>
+  <data name="Xncf.PageOverviewTip" xml:space="preserve"><value>Примечание: модуль предоставляет интерактивный интерфейс, поэтому этот вход доступен.</value></data>
+  <data name="Xncf.Execute" xml:space="preserve"><value>Выполнить</value></data>
+  <data name="Xncf.ParameterOverview" xml:space="preserve"><value>Обзор параметров</value></data>
+  <data name="Xncf.ParameterName" xml:space="preserve"><value>Имя</value></data>
+  <data name="Xncf.ParameterDescription" xml:space="preserve"><value>Описание</value></data>
+  <data name="Xncf.ParameterType" xml:space="preserve"><value>Тип</value></data>
+  <data name="Xncf.Required" xml:space="preserve"><value>Обязательно</value></data>
+  <data name="Xncf.Yes" xml:space="preserve"><value>Да</value></data>
+  <data name="Xncf.No" xml:space="preserve"><value>Нет</value></data>
+  <data name="Xncf.NoInputData" xml:space="preserve"><value>Данные не требуются</value></data>
+  <data name="Xncf.Executing" xml:space="preserve"><value>Выполняется</value></data>
+  <data name="Xncf.DownloadLog" xml:space="preserve"><value>Скачать журнал (действует один раз в течение 5 минут)</value></data>
+  <data name="Xncf.DownloadLogTip" xml:space="preserve"><value>Скачать журнал</value></data>
+  <data name="Xncf.CloseDialog" xml:space="preserve"><value>Закрыть</value></data>
+  <data name="Xncf.ThreadDetails" xml:space="preserve"><value>Просмотр потоков</value></data>
+  <data name="Xncf.ThreadName" xml:space="preserve"><value>Имя</value></data>
+  <data name="Xncf.ThreadActivity" xml:space="preserve"><value>Активность / фон</value></data>
+  <data name="Xncf.ThreadState" xml:space="preserve"><value>Состояние потока</value></data>
+  <data name="Xncf.ThreadStory" xml:space="preserve"><value>Последняя история</value></data>
+  <data name="Xncf.Prompt" xml:space="preserve"><value>Уведомление</value></data>
+  <data name="Xncf.EnableFirst" xml:space="preserve"><value>Перед выполнением включите модуль</value></data>
+  <data name="Xncf.SourcePathRequired" xml:space="preserve"><value>Введите физический путь к исходному коду</value></data>
+  <data name="Xncf.RequiredOption" xml:space="preserve"><value>{0} является обязательным</value></data>
+  <data name="Xncf.RequiredField" xml:space="preserve"><value>{0} является обязательным</value></data>
+  <data name="Xncf.RunError" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Xncf.ErrorInfo" xml:space="preserve"><value>Сведения об ошибке</value></data>
+  <data name="Xncf.RunSuccess" xml:space="preserve"><value>Выполнение успешно</value></data>
+  <data name="Xncf.UrlResultTip" xml:space="preserve"><value>Получен URL. Нажмите ниже, чтобы открыть его.&lt;br /&gt;(Ссылка предоставлена третьей стороной; соблюдайте осторожность):</value></data>
+  <data name="Xncf.ReturnInfo" xml:space="preserve"><value>Возвращенная информация</value></data>
+  <data name="Xncf.ExecutionError" xml:space="preserve"><value>Во время выполнения произошла ошибка</value></data>
+  <data name="Xncf.RunFailed" xml:space="preserve"><value>Выполнение не удалось</value></data>
+  <data name="Xncf.EnableManager" xml:space="preserve"><value>Включить режим управления модулями расширения</value></data>
+  <data name="Xncf.HideManager" xml:space="preserve"><value>Переключиться в режим публикации и скрыть управление модулями расширения</value></data>
+  <data name="Xncf.EnableManagerConfirm" xml:space="preserve"><value>После включения все модули расширения появятся в подменю Модули расширения. Открыть?</value></data>
+  <data name="Xncf.HideManagerConfirm" xml:space="preserve"><value>После скрытия все модули расширения появятся на верхнем уровне. Чтобы открыть снова, посетите [/Admin/XncfModule]. Скрыть?</value></data>
+  <data name="Xncf.AreaFeature" xml:space="preserve"><value>Web</value></data>
+  <data name="Xncf.DatabaseFeature" xml:space="preserve"><value>База данных</value></data>
+  <data name="Xncf.MiddlewareFeature" xml:space="preserve"><value>Промежуточное ПО</value></data>
+  <data name="Xncf.ThreadFeature" xml:space="preserve"><value>Поток</value></data>
+  <data name="Xncf.TypeText" xml:space="preserve"><value>Текст</value></data>
+  <data name="Xncf.TypeNumber" xml:space="preserve"><value>Число</value></data>
+  <data name="Xncf.TypeDate" xml:space="preserve"><value>Дата</value></data>
+  <data name="Xncf.TypeOption" xml:space="preserve"><value>Варианты</value></data>
+  <data name="Xncf.TypeBoolean" xml:space="preserve"><value>Логическое значение</value></data>
+  <data name="Admin.Common.Success" xml:space="preserve"><value>Успех</value></data>
+  <data name="AdminChat.StreamInputRequired" xml:space="preserve"><value>Введите действительный сеанс и сообщение.</value></data>
+  <data name="AdminChat.StreamSessionForbidden" xml:space="preserve"><value>Сеанс не существует или доступ запрещен.</value></data>
+  <data name="AdminChat.AgentReplyFailed" xml:space="preserve"><value>Ошибка ответа Agent.</value></data>
+  <data name="AdminChat.LoadModulesFailedRetry" xml:space="preserve"><value>Не удалось загрузить модули. Повторите попытку позже.</value></data>
+  <data name="AdminChat.CreateSessionFailed" xml:space="preserve"><value>Не удалось создать сеанс</value></data>
+  <data name="AdminChat.CreateSessionFailedRetry" xml:space="preserve"><value>Не удалось создать сеанс. Повторите попытку позже.</value></data>
+  <data name="Admin.Login.Error.LoginFailed" xml:space="preserve"><value>Ошибка входа</value></data>
+  <data name="Admin.Login.Error.LoginRetry" xml:space="preserve"><value>Ошибка входа, повторите попытку</value></data>
+  <data name="Admin.Login.CaptchaPlaceholder" xml:space="preserve"><value>Введите код подтверждения</value></data>
+  <data name="Admin.Login.CaptchaRequired" xml:space="preserve"><value>Введите код с изображения</value></data>
+  <data name="Admin.Login.CaptchaRefresh" xml:space="preserve"><value>Нажмите на изображение, чтобы обновить</value></data>
+  <data name="Admin.Login.Error.CaptchaInvalid" xml:space="preserve"><value>Неверный код подтверждения, повторите попытку</value></data>
+  <data name="Admin.Login.Support" xml:space="preserve"><value>Техническая поддержка:</value></data>
+  <data name="Admin.Login.VisitWebsite" xml:space="preserve"><value>Открыть официальный сайт</value></data>
+  <data name="Admin.Session.InvalidUser" xml:space="preserve"><value>Текущая учетная запись недействительна, JWT нельзя продлить. Войдите снова.</value></data>
+  <data name="SystemConfig.RequestEmpty" xml:space="preserve"><value>Параметры запроса не могут быть пустыми</value></data>
+  <data name="SystemConfig.NameEmpty" xml:space="preserve"><value>Название системы не может быть пустым</value></data>
+  <data name="SystemConfig.ConfigNotFound" xml:space="preserve"><value>Конфигурация системы не найдена</value></data>
+  <data name="Role.PermissionManagement" xml:space="preserve"><value>Управление разрешениями ролей</value></data>
+  <data name="Role.PermissionSettings" xml:space="preserve"><value>Настройки разрешений</value></data>
+  <data name="AdminUserInfo.UsernamePlaceholder" xml:space="preserve"><value>Введите имя пользователя</value></data>
+  <data name="AdminUserInfo.PasswordConfirmPlaceholder" xml:space="preserve"><value>Введите пароль ещё раз</value></data>
+  <data name="AdminUserInfo.RealNamePlaceholder" xml:space="preserve"><value>Введите настоящее имя</value></data>
+  <data name="AdminUserInfo.PhonePlaceholder" xml:space="preserve"><value>Введите номер телефона</value></data>
+  <data name="Admin.Common.Submit" xml:space="preserve"><value>Отправить</value></data>
+  <data name="Xncf.SettingsAndExecute" xml:space="preserve"><value>Настройки / Выполнить</value></data>
+  <data name="Admin.Session.ExpiredRedirect" xml:space="preserve"><value>Срок действия сеанса истёк. Переход на страницу входа.</value></data>
+  <data name="Admin.Session.AccessDenied" xml:space="preserve"><value>У вас нет разрешения на доступ к этому ресурсу.</value></data>
+  <data name="Trace.Today" xml:space="preserve"><value>Сегодня</value></data>
+  <data name="Trace.LastHour" xml:space="preserve"><value>Последний час</value></data>
+  <data name="Trace.ShowAll" xml:space="preserve"><value>Показать все полные результаты</value></data>
+  <data name="Trace.ShowExceptions" xml:space="preserve"><value>Показать только исключения</value></data>
+  <data name="Trace.ExceptionInfo" xml:space="preserve"><value>Сведения об исключении</value></data>
+  <data name="Trace.KeywordPlaceholder" xml:space="preserve"><value>Введите ключевое слово</value></data>
+  <data name="Trace.To" xml:space="preserve"><value>до</value></data>
+  <data name="Trace.StartTime" xml:space="preserve"><value>Время начала</value></data>
+  <data name="Trace.EndTime" xml:space="preserve"><value>Время окончания</value></data>
+  <data name="Trace.SelectThread" xml:space="preserve"><value>Выберите поток</value></data>
+  <data name="Trace.SelectType" xml:space="preserve"><value>Выберите тип</value></data>
+  <data name="Trace.ExceptionStatus" xml:space="preserve"><value>Статус исключения</value></data>
+  <data name="Trace.All" xml:space="preserve"><value>Все</value></data>
+  <data name="Trace.NumberAndLine" xml:space="preserve"><value>Номер / Строка</value></data>
+  <data name="Trace.Time" xml:space="preserve"><value>Время</value></data>
+  <data name="Trace.Thread" xml:space="preserve"><value>Поток</value></data>
+  <data name="Trace.Type" xml:space="preserve"><value>Тип</value></data>
+  <data name="Trace.IsException" xml:space="preserve"><value>Исключение</value></data>
+  <data name="Trace.Title" xml:space="preserve"><value>Заголовок</value></data>
+  <data name="Trace.Content" xml:space="preserve"><value>Содержимое</value></data>
+  <data name="Trace.ReturnResult" xml:space="preserve"><value>Возвращённый результат</value></data>
+  <data name="Trace.PostData" xml:space="preserve"><value>Данные POST</value></data>
+  <data name="AdminChat.AddReferenceModule" xml:space="preserve"><value>Добавить справочные модули</value></data>
+  <data name="AdminChat.SearchModulePlaceholder" xml:space="preserve"><value>Поиск по имени / описанию / UID</value></data>
+  <data name="AdminChat.SelectFiltered" xml:space="preserve"><value>Выбрать все результаты фильтра</value></data>
+  <data name="AdminChat.Selected" xml:space="preserve"><value>Выбрано</value></data>
+  <data name="AdminChat.QuickOpen" xml:space="preserve"><value>Открыть</value></data>
+  <data name="AdminChat.NoMenu" xml:space="preserve"><value>Нет меню</value></data>
+  <data name="AdminChat.NoMenuOrFunctions" xml:space="preserve"><value>В этом модуле нет доступных меню или функций.</value></data>
+  <data name="AdminChat.NoMatchingModules" xml:space="preserve"><value>Совпадающие модули не найдены</value></data>
+  <data name="AdminChat.ConfirmAdd" xml:space="preserve"><value>Подтвердить добавление</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Модули расширения</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Главная</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Пример работы с базой данных</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Добавить</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Добавить</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Изменить</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Подтвердить</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Подтвердить</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Сохранить</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Закрыть</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Назад</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Поиск</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Поиск</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Сбросить</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Обновить</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Действия</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Имя</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Тип</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Состояние</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Примечания</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>Описание</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>Сведения</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Настроить</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Управление</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Список</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Загрузить</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Скачать</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Импорт</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Экспорт</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Включено</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Отключено</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>Все</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Нет данных</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>Нет содержимого</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Выберите</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Заполните</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Введите</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Время добавления</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Время начала</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Время завершения</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>Создано</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Время обновления</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Имя файла</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>Размер файла</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>Время загрузки</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>Удалить выбранные</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Добавить файл</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Выбрать файл</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>Назад</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Вперед</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Успешно</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Успешно</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Ошибка загрузки</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Модули успешно добавлены</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Ошибка добавления</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Успешно обновлено</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>Ошибка изменения</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>Удалено успешно</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Ошибка удаления</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>Загружено</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Ошибка загрузки</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Скопировано</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Ошибка копирования</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Уведомление</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Предупреждение</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>Да</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>Нет</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Включено</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Неизвестно</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Не задано</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Нет записей</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Введите ключевое слово</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Выберите тип</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Выбрать статус</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Создать</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>Отправить</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>Просмотр</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Сделать по умолчанию</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Тест</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Подключение выполнено</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Ошибка подключения</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Пароль обязателен!</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>{0} повторяется.</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Администратор не может удалить себя!</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Администратор не существует!</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value>Успешно удалено!</value></data>
+  <data name="Frontend.092" xml:space="preserve"><value>Файл журнала WeChat не существует:</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>{0} должен быть длиннее 16 символов!</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>Текущий сеанс не связан ни с одним Модулем XNCF.</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>Подходящий Модуль не найден: «{0}». Сначала вызовите GetSessionModuleList, чтобы подтвердить модули текущего сеанса.</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>Модуль не найден: «{0}». Сначала вызовите GetSessionModuleList, чтобы подтвердить доступные модули.</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>Регистрация времени выполнения Модуля {0} не найдена, поэтому нельзя прочитать сведения базы данных.</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>В системе нет зарегистрированных модулей.</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>SenparcAiSetting не прочитан. Проверьте конфигурацию appsettings.json.</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>SenparcAiSetting.AiPlatform всё ещё UnSet. Сначала задайте доступную платформу в appsettings.json.</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>Модуль AIKernel не установлен или не включён, поэтому нельзя переключиться на указанную модель ИИ.</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>Не удалось разрешить AIModelService, поэтому указанную модель ИИ загрузить нельзя.</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>Выбранная модель ИИ не существует: {0}</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>Выбранная модель ИИ не относится к типу Chat: {0}</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>Текущий пользователь не вошёл в систему, продление невозможно.</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>Сведения о пользователе не существуют!</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>Имя пользователя не существует или пароль неверен: {0}!</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>Имя пользователя не существует или пароль неверен!</value></data>
+  <data name="Admin.Home.AgentsOverview" xml:space="preserve"><value>Обзор работы Agents</value></data>
+  <data name="Admin.Home.AgentsOverviewLive" xml:space="preserve"><value>В реальном времени</value></data>
+  <data name="Admin.Home.AgentsManage" xml:space="preserve"><value>Управление Agents</value></data>
+  <data name="Admin.Home.AgentsTotal" xml:space="preserve"><value>Всего Agents</value></data>
+  <data name="Admin.Home.AgentsLocal" xml:space="preserve"><value>Локальные</value></data>
+  <data name="Admin.Home.AgentsRemoteA2A" xml:space="preserve"><value>Подключённые A2A</value></data>
+  <data name="Admin.Home.AgentsEnabled" xml:space="preserve"><value>Включено</value></data>
+  <data name="Admin.Home.AgentsDisabled" xml:space="preserve"><value>Отключено</value></data>
+  <data name="Admin.Home.AgentsPublishedA2A" xml:space="preserve"><value>Опубликованные A2A</value></data>
+  <data name="Admin.Home.AgentsConfigured" xml:space="preserve"><value>Настроено</value></data>
+  <data name="Admin.Home.AgentsActive" xml:space="preserve"><value>Активные</value></data>
+  <data name="Admin.Home.AgentsGroups" xml:space="preserve"><value>Группы сотрудничества</value></data>
+  <data name="Admin.Home.AgentsChatting" xml:space="preserve"><value>В диалоге</value></data>
+  <data name="Admin.Home.AgentsActiveTasks" xml:space="preserve"><value>Активные задачи</value></data>
+  <data name="Admin.Home.AgentsWaitingOrPaused" xml:space="preserve"><value>Ожидание / пауза</value></data>
+  <data name="Admin.Home.AiQuickDescription" xml:space="preserve"><value>Используйте быстрый AI-чат в Footer, чтобы при необходимости открыть полный диалог и выбрать контекст.</value></data>
+  <data name="Admin.Home.AiQuickDialog" xml:space="preserve"><value>Открыть быстрый чат</value></data>
+  <data name="Menu.ConfigMode" xml:space="preserve">
+    <value>Режим настройки</value>
+  </data>
+  <data name="Menu.ConfigModeExit" xml:space="preserve">
+    <value>Выйти из режима настройки</value>
+  </data>
+  <data name="Menu.ConfigModeTip" xml:space="preserve">
+    <value>Ниже перечислены все меню/страницы по иерархии (кнопки не сортируются). Перетаскивайте элементы одного уровня, чтобы изменить порядок, или введите число в поле «Сортировка» и нажмите Enter, чтобы переместить на эту позицию. После сохранения реально обновляются значения Sort и обновляется левое меню.</value>
+  </data>
+  <data name="Menu.ConfigSave" xml:space="preserve">
+    <value>Сохранить порядок</value>
+  </data>
+  <data name="Menu.ConfigSaveSuccess" xml:space="preserve">
+    <value>Порядок меню сохранён</value>
+  </data>
+  <data name="Menu.ConfigEmpty" xml:space="preserve">
+    <value>Нет меню или страниц для сортировки</value>
+  </data>
+  <data name="Admin.Footer.NeuBellWebHookSettings" xml:space="preserve"><value>Настройки WebHook</value></data>
+  <data name="DocHelp.Help" xml:space="preserve"><value>Справка</value></data>
+  <data name="DocHelp.Title" xml:space="preserve"><value>Документация функции</value></data>
+  <data name="DocHelp.OpenWindow" xml:space="preserve"><value>Открыть в новом окне</value></data>
+  <data name="DocHelp.Close" xml:space="preserve"><value>Закрыть</value></data>
+  <data name="DocHelp.Loading" xml:space="preserve"><value>Загрузка документации...</value></data>
+  <data name="DocHelp.Notice" xml:space="preserve"><value>Если документ пуст или заблокирован, откройте его в новом окне.</value></data>
+  <data name="DocHelp.LoadFailed" xml:space="preserve"><value>Ошибка загрузки или истекло время ожидания. Повторите попытку или откройте новое окно.</value></data>
+  <data name="DocHelp.Retry" xml:space="preserve"><value>Повторить</value></data>
+  <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>Неверная настройка документации. Обратитесь к администратору.</value></data>
+
+  <data name="SystemMenu.AdministratorManagement" xml:space="preserve"><value>Administrator management</value></data>
+  <data name="SystemMenu.RoleManagement" xml:space="preserve"><value>Role management</value></data>
+  <data name="SystemMenu.SystemInfo" xml:space="preserve"><value>System information</value></data>
+  <data name="SystemMenu.TenantInfo" xml:space="preserve"><value>Tenant information</value></data>
+  <data name="SystemMenu.ExtensionModules" xml:space="preserve"><value>Extension modules</value></data>
+  <data name="SystemMenu.ModuleManagement" xml:space="preserve"><value>Module management</value></data>
+  <data name="Xncf.ModuleFunctionCatalog" xml:space="preserve"><value>Каталог Function модуля и точки выполнения</value></data>
+  <data name="Xncf.ModuleFunctionAccessControl" xml:space="preserve"><value>Управление доступом во вкладке iframe NeuCharPivot</value></data>
+  <data name="Xncf.Capabilities" xml:space="preserve"><value>Возможности</value></data>
+  <data name="Xncf.ModuleCapabilities" xml:space="preserve"><value>Возможности модуля</value></data>
+  <data name="Xncf.Refresh" xml:space="preserve"><value>Обновить</value></data>
+  <data name="Xncf.NoAdditionalInterfaces" xml:space="preserve"><value>Дополнительные интерфейсы не объявлены</value></data>
+  <data name="Xncf.RuntimeDataCapabilities" xml:space="preserve"><value>Возможности выполнения и данных</value></data>
+  <data name="Xncf.RegisteredThreads" xml:space="preserve"><value>Зарегистрированные потоки</value></data>
+  <data name="Xncf.DedicatedDatabase" xml:space="preserve"><value>Выделенная база данных</value></data>
+  <data name="Xncf.DatabasePrefix" xml:space="preserve"><value>Префикс базы данных</value></data>
+  <data name="Xncf.DatabaseContext" xml:space="preserve"><value>Контекст базы данных</value></data>
+  <data name="Xncf.DataTables" xml:space="preserve"><value>Таблицы данных</value></data>
+  <data name="Xncf.DataTablesAndMigrations" xml:space="preserve"><value>Таблицы данных и миграции</value></data>
+  <data name="Xncf.DatabaseReauthenticationRequired" xml:space="preserve"><value>В этой области отображаются схема и статистика базы данных. Для продолжения повторно введите текущий пароль администратора.</value></data>
+  <data name="Xncf.CurrentAdministratorPassword" xml:space="preserve"><value>Текущий пароль администратора</value></data>
+  <data name="Xncf.VerifyAndView" xml:space="preserve"><value>Проверить и просмотреть</value></data>
+  <data name="Xncf.EntityCount" xml:space="preserve"><value>Количество сущностей</value></data>
+  <data name="Xncf.TablePrefix" xml:space="preserve"><value>Префикс таблицы</value></data>
+  <data name="Xncf.AppliedMigrations" xml:space="preserve"><value>Применённые миграции</value></data>
+  <data name="Xncf.PendingMigrations" xml:space="preserve"><value>Ожидающие миграции</value></data>
+  <data name="Xncf.Table" xml:space="preserve"><value>Таблица</value></data>
+  <data name="Xncf.Entity" xml:space="preserve"><value>Сущность</value></data>
+  <data name="Xncf.CurrentRowCount" xml:space="preserve"><value>Текущее количество строк</value></data>
+  <data name="Xncf.Columns" xml:space="preserve"><value>Столбцы</value></data>
+  <data name="Xncf.MigrationHistory" xml:space="preserve"><value>История миграций</value></data>
+  <data name="Xncf.LoadCapabilitiesFailed" xml:space="preserve"><value>Не удалось загрузить возможности модуля.</value></data>
+  <data name="Xncf.EnterCurrentAdministratorPassword" xml:space="preserve"><value>Введите текущий пароль администратора.</value></data>
+  <data name="Xncf.PasswordVerificationFailed" xml:space="preserve"><value>Не удалось проверить пароль.</value></data>
+  <data name="Xncf.LoadDataTablesFailed" xml:space="preserve"><value>Не удалось загрузить сведения о таблицах данных.</value></data>
+  <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - Управление доступом</value></data>
+  <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>Модуль не загружен.</value></data>
+  <data name="Xncf.PasswordRequired" xml:space="preserve"><value>Введите пароль.</value></data>
+  <data name="Xncf.Function" xml:space="preserve"><value>Function</value></data>
+  <data name="Xncf.Key" xml:space="preserve"><value>Ключ</value></data>
+  <data name="Xncf.NeuCharPivot" xml:space="preserve"><value>NeuCharPivot</value></data>
+  <data name="Admin.Pagination.Goto" xml:space="preserve"><value>Перейти</value></data>
+  <data name="Admin.Pagination.PageSize" xml:space="preserve"><value>на странице</value></data>
+  <data name="Admin.Pagination.Total" xml:space="preserve"><value>Всего {total}</value></data>
+  <data name="Admin.Pagination.Page" xml:space="preserve"><value>Страница</value></data>
+
+  <data name="AdminChat.Settings.Title" xml:space="preserve"><value>Chat settings</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.ModeLabel" xml:space="preserve"><value>Mode</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.ModeTitle" xml:space="preserve"><value>Choose execution mode</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.ModeCaption" xml:space="preserve"><value>Strategy used by the next request in this conversation.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.LauncherModeCaption" xml:space="preserve"><value>This mode applies only to the next request; Plan and Execute use MAF Harness.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.HarnessAdvanced" xml:space="preserve"><value>Harness advanced settings</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.MaxIterations" xml:space="preserve"><value>Max iterations</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.MaxOutputTokens" xml:space="preserve"><value>Max output tokens</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.CapabilityNotice" xml:space="preserve"><value>FileMemory can only be changed with /harness file-memory on|off; Agent Skills and Hosted Web Search are off by default. Enabling them changes privacy, tool, and external-access boundaries.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.Close" xml:space="preserve"><value>Close chat settings</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.Stop" xml:space="preserve"><value>Stop</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.Simple" xml:space="preserve"><value>Chat</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.SimpleDescription" xml:space="preserve"><value>One response without the MAF long-running task loop.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.Plan" xml:space="preserve"><value>Plan</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.PlanDescription" xml:space="preserve"><value>Plan first, then call tools as needed and wait for approval.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.Execute" xml:space="preserve"><value>Execute</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.ExecuteDescription" xml:space="preserve"><value>Enter MAF execution mode directly for well-defined tasks.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.Mode" xml:space="preserve"><value>Switch execution mode</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.Help" xml:space="preserve"><value>Show available commands</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.MaxToken" xml:space="preserve"><value>Set output limit</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.MaxIterations" xml:space="preserve"><value>Set Harness max iterations</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.Harness" xml:space="preserve"><value>Set Harness capabilities</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStats" xml:space="preserve"><value>Usage Stats</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsTitle" xml:space="preserve"><value>User Usage Statistics (AdminChat)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsTip" xml:space="preserve"><value>Only the per-account session/message counts are shown. No session or message content is exposed.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.User" xml:space="preserve"><value>Account</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Total" xml:space="preserve"><value>Sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Active" xml:space="preserve"><value>Active</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Archived" xml:space="preserve"><value>Archived</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Deleted" xml:space="preserve"><value>Deleted</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Messages" xml:space="preserve"><value>Messages</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.LastActive" xml:space="preserve"><value>Last Active</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsLoadFailed" xml:space="preserve"><value>Failed to load user usage statistics</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.SuperAdminOnly" xml:space="preserve"><value>Only super administrators can view per-account usage statistics</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.AdminUserCount" xml:space="preserve"><value>Admins</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.DeleteCurrentTenantNotAllowed" xml:space="preserve"><value>You cannot delete the tenant currently in use!</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.DeleteLastTenantNotAllowed" xml:space="preserve"><value>The system must keep at least one enabled tenant; the last tenant cannot be deleted!</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.DeleteHasAdminUsers" xml:space="preserve"><value>Tenant {0} still has {1} admin account(s). Reassign or delete them before deleting the tenant!</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.DeleteNotFound" xml:space="preserve"><value>Tenant not found!</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Title" xml:space="preserve"><value>PromptRange · Select a prompt</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Range" xml:space="preserve"><value>All ranges</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Tactic" xml:space="preserve"><value>All lanes</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Keyword" xml:space="preserve"><value>Search name, content, range or version</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Search" xml:space="preserve"><value>Search</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Retry" xml:space="preserve"><value>Reload</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Empty" xml:space="preserve"><value>No matching prompts. Try different filters.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Draft" xml:space="preserve"><value>Draft</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Preview" xml:space="preserve"><value>Prompt preview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.SelectHint" xml:space="preserve"><value>Select a prompt on the left to preview its full content.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.InsertHint" xml:space="preserve"><value>Insert at the cursor (replace selected text), without sending or executing.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Cancel" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Insert" xml:space="preserve"><value>Insert prompt</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.LoadFailed" xml:space="preserve"><value>Unable to load prompts. Please retry.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.AccessDenied" xml:space="preserve"><value>Your session expired or access was denied. Sign in again or contact an administrator.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Unavailable" xml:space="preserve"><value>PromptRange selector is unavailable. Check that the module is installed, enabled and updated.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.TargetChanged" xml:space="preserve"><value>The input changed or is no longer editable. Close the picker and select again.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.TooLong" xml:space="preserve"><value>The inserted content would exceed the input length limit. Shorten it first.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Sort" xml:space="preserve"><value>Sort by</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.SortScore" xml:space="preserve"><value>Score (current, high to low)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.SortPromptCode" xml:space="preserve"><value>PromptCode (ascending)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.AverageScore" xml:space="preserve"><value>Average score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.MaxScore" xml:space="preserve"><value>Highest score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Unrated" xml:space="preserve"><value>Not rated</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.CurrentScore" xml:space="preserve"><value>Current score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Score" xml:space="preserve"><value>Rate (0–10)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.View" xml:space="preserve"><value>View prompt</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Locate" xml:space="preserve"><value>Locate referenced text</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Remove" xml:space="preserve"><value>Remove reference (keep text)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Unrated" xml:space="preserve"><value>Not rated</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Unavailable" xml:space="preserve"><value>PromptRange is unavailable or the request failed. Please retry.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.InvalidReference" xml:space="preserve"><value>The prompt reference is invalid. Insert the prompt again.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.InvalidScore" xml:space="preserve"><value>Enter a score from 0 to 10 with at most one decimal place.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.LastScoreWins" xml:space="preserve"><value>The last successful rating wins, whether manual or AI. All references share the current score.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.AIConfirm" xml:space="preserve"><value>Evaluate this input and reply against the PromptCode benchmark using AI? Model charges may apply. A successful rating replaces the current score.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.AIScore" xml:space="preserve"><value>Rate with AI</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.AIUnavailable" xml:space="preserve"><value>AI rating requires a benchmark and a corresponding completed reply.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Cancel" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Save" xml:space="preserve"><value>Save manual score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.TooMany" xml:space="preserve"><value>At most 32 prompt references are allowed per message. Remove unused references first.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.RangeScores" xml:space="preserve"><value>Range score overview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.ScoringTarget" xml:space="preserve"><value>Rating this PromptCode</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.LocateTarget" xml:space="preserve"><value>Locate rating target</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.DraftHint" xml:space="preserve"><value>Dragging only previews the score and green bar height. Changes take effect after saving the manual score.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.ChartHint" xml:space="preserve"><value>Green marks the rating target; a blue outline marks the preview. Clicking only previews a version and never changes the rating target. Scroll horizontally to browse all versions.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.PreviewOnly" xml:space="preserve"><value>Read-only preview · does not affect your rating</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.CurrentScore" xml:space="preserve"><value>Current saved score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.HumanScore" xml:space="preserve"><value>Manual score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.RobotScore" xml:space="preserve"><value>AI score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Retry" xml:space="preserve"><value>Retry</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.109" xml:space="preserve"><value>GET (no body; data is passed through URL placeholders)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.110" xml:space="preserve"><value>NeuBell WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.111" xml:space="preserve"><value>POST (default, with a JSON body)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.112" xml:space="preserve"><value>PUT (with a request body)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.113" xml:space="preserve"><value>Provider filter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.114" xml:space="preserve"><value>WebHook URL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.115" xml:space="preserve"><value>WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.116" xml:space="preserve"><value>WebHook request payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.117" xml:space="preserve"><value>For example: operations duty bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.118" xml:space="preserve"><value>This records request data and results for parameter-triggered NeuBell notifications, settings-page tests, and monitored change notifications.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.119" xml:space="preserve"><value>Action value ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.120" xml:space="preserve"><value>Placeholders</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.121" xml:space="preserve"><value>Complete default JSON payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.122" xml:space="preserve"><value>Configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.123" xml:space="preserve"><value>Payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.124" xml:space="preserve"><value>Search name, URL, or Provider</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>Count ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.126" xml:space="preserve"><value>Add WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.127" xml:space="preserve"><value>Notify on added</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.128" xml:space="preserve"><value>Method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.129" xml:space="preserve"><value>Time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.130" xml:space="preserve"><value>No request logs yet.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.131" xml:space="preserve"><value>Titles added/removed in this event (joined with 、)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.132" xml:space="preserve"><value>Item ID ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.133" xml:space="preserve"><value>Item updated at</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.134" xml:space="preserve"><value>Item title ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.135" xml:space="preserve"><value>Item link (absolute when a site root is configured) ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.136" xml:space="preserve"><value>Template</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.137" xml:space="preserve"><value>Clear (keep 50)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.138" xml:space="preserve"><value>Choose Add WebHook in the upper right to configure an external WebAPI notification endpoint.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.139" xml:space="preserve"><value>Leave empty to use the default JSON payload; values starting with { or [ are treated as JSON. For example: {</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.140" xml:space="preserve"><value>Leave empty for all Providers</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.141" xml:space="preserve"><value>Tenant identifier (empty without a tenant)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.142" xml:space="preserve"><value>Removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.143" xml:space="preserve"><value>Notify on removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.144" xml:space="preserve"><value>Signature</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.145" xml:space="preserve"><value>Signing secret</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.146" xml:space="preserve"><value>Result</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.147" xml:space="preserve"><value>Duration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.148" xml:space="preserve"><value>Request body template</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.149" xml:space="preserve"><value>Request method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.150" xml:space="preserve"><value>Журналы запросов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.151" xml:space="preserve"><value>WebHookはまだありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.152" xml:space="preserve"><value>Время уведомления (ISO 8601) ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.153" xml:space="preserve"><value>Настроенные запросы содержат X-NeuBell-Signature (HMAC-SHA256)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.154" xml:space="preserve"><value>(тот же формат, что и текстовые шаблоны Workflow,</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.155" xml:space="preserve"><value>Панель NeuCharPivot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.156" xml:space="preserve"><value>Список Provit Block (перетащите для сортировки)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.157" xml:space="preserve"><value>admin-home (главная Admin)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.158" xml:space="preserve"><value>Однострочное описание</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.159" xml:space="preserve"><value>Цвет темы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.160" xml:space="preserve"><value>Например: панель операций на главной Admin</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.161" xml:space="preserve"><value>Количество столбцов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.162" xml:space="preserve"><value>Создать панель</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.163" xml:space="preserve"><value>Отправить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.164" xml:space="preserve"><value>Название блока</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.165" xml:space="preserve"><value>Привязывает панель (Provit Panel) к странице вроде admin-home, объединяет Provit Block из любых модулей XNCF и поддерживает создание и изменение через AI Chat.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.166" xml:space="preserve"><value>Отключено</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.167" xml:space="preserve"><value>Ссылки предварительно заполнены по отсутствующим блокам главной страницы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.168" xml:space="preserve"><value>Поиск названия панели или идентификатора страницы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.169" xml:space="preserve"><value>Блоков пока нет. Нажмите «Добавить блок», чтобы выбрать Pivot Function из любого модуля XNCF.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.170" xml:space="preserve"><value>UID модуля:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.171" xml:space="preserve"><value>Оранжевый</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.172" xml:space="preserve"><value>Добавить Provit Block</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.173" xml:space="preserve"><value>Добавить блок</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.174" xml:space="preserve"><value>Серый</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.175" xml:space="preserve"><value>Нажмите «Создать панель» в правом верхнем углу, чтобы привязать её к странице вроде admin-home.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.176" xml:space="preserve"><value>Одним предложением опишите задачу для ИИ, например: добавить мониторинг хоста и задачи в три столбца.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.177" xml:space="preserve"><value>Фиолетовый</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.178" xml:space="preserve"><value>Зелёный</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.179" xml:space="preserve"><value>Синий</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.180" xml:space="preserve"><value>Панелей пока нет</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.181" xml:space="preserve"><value>Выберите Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>Выберите Pivot Function любого модуля XNCF для этого блока панели.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.183" xml:space="preserve"><value>Выберите модуль</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.184" xml:space="preserve"><value>Панель</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.185" xml:space="preserve"><value>Название панели</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>Идентификатор страницы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.187" xml:space="preserve"><value>Состояние Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.188" xml:space="preserve"><value>Function: все</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.189" xml:space="preserve"><value>Function: доступные</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.190" xml:space="preserve"><value>Function: удалённые</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.191" xml:space="preserve"><value>Состояние LoopTask</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.192" xml:space="preserve"><value>LoopTask: последний сбой</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.193" xml:space="preserve"><value>LoopTask: обратный отсчёт</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.194" xml:space="preserve"><value>LoopTask: все</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.195" xml:space="preserve"><value>LoopTask: отключённые</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.196" xml:space="preserve"><value>LoopTask: ожидающие</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.197" xml:space="preserve"><value>LoopTask: выполняющиеся</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.198" xml:space="preserve"><value>LoopTask: не настроены</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.199" xml:space="preserve"><value>Навигация модуля NeuCharPivot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.200" xml:space="preserve"><value>Агрегация NeuCharPivot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.201" xml:space="preserve"><value>Выполнение Pivot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.202" xml:space="preserve"><value>Связи Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Триггер Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.204" xml:space="preserve"><value>Workflow: все</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.205" xml:space="preserve"><value>Workflow: связанные</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.206" xml:space="preserve"><value>Workflow: несвязанные</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.207" xml:space="preserve"><value>Последний сбой</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.208" xml:space="preserve"><value>Доступно / всего</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.209" xml:space="preserve"><value>Включено / настроено</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.210" xml:space="preserve"><value>Удалено в текущей версии</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.211" xml:space="preserve"><value>Успешно / ошибки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.212" xml:space="preserve"><value>Выполнить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.213" xml:space="preserve"><value>Выполняется / обратный отсчёт</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.214" xml:space="preserve"><value>Состояние выполнения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.215" xml:space="preserve"><value>Поиск модулей, Function или Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.216" xml:space="preserve"><value>Модуль</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.217" xml:space="preserve"><value>Навигация по модулю</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.218" xml:space="preserve"><value>Модуль закрыт</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.219" xml:space="preserve"><value>Состояние модуля</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Состояние модуля: недоступен</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.221" xml:space="preserve"><value>Состояние модуля: все</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.222" xml:space="preserve"><value>Состояние модуля: доступен</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.223" xml:space="preserve"><value>Подходящий NeuCharPivot не найден</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Агрегация</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.225" xml:space="preserve"><value>Модуль не установлен или отключён; настройки Function сохраняются, но выполнение запрещено.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Измените фильтры или сначала откройте в любом модуле «Настройки / Выполнение → NeuCharPivot», чтобы создать панель действий.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.227" xml:space="preserve"><value>Сбросить фильтры</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Просматривайте панели модулей, параметризованные Function, обратный отсчёт LoopTask и Workflow, запускаемые после завершения.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Глобальный контроль доступа Provit для Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Function больше не существует; политика сохранена как избыточная</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.231" xml:space="preserve"><value>Применить политику «ограничено» к Function. В этом режиме доступ к глобальному Provit получают только привязанные пользователи, роли или коды разрешений; привяжите хотя бы один.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.232" xml:space="preserve"><value>Настраивает политики доступа к базе данных для Function любого модуля XNCF с привязкой пользователей, ролей или кодов разрешений. Политика базы данных переопределяет атрибуты кода; после удаления модуля она остаётся избыточной и снова действует после переустановки, пока не будет очищена вручную.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.233" xml:space="preserve"><value>Базовая политика кода</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.234" xml:space="preserve"><value>Базовая политика кода (FunctionRenderAttribute)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.235" xml:space="preserve"><value>Любой вошедший администратор</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.236" xml:space="preserve"><value>Сохранить политику</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.237" xml:space="preserve"><value>Разрешённые коды разрешений</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.238" xml:space="preserve"><value>Разрешённые пользователи</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.239" xml:space="preserve"><value>Разрешённые роли</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.240" xml:space="preserve"><value>Ограничено</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.241" xml:space="preserve"><value>Применить к выбранным</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.242" xml:space="preserve"><value>Политика базы данных не настроена; сейчас применяется базовая политика кода.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.243" xml:space="preserve"><value>Существующие привязки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.244" xml:space="preserve"><value>Применить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.245" xml:space="preserve"><value>Открыто</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.246" xml:space="preserve"><value>Текущая политика базы данных</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.247" xml:space="preserve"><value>Пакетное ограничение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.248" xml:space="preserve"><value>Пакетная настройка ограничений</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.249" xml:space="preserve"><value>Пакетное открытие</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.250" xml:space="preserve"><value>Пакетно восстановить наследование</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.251" xml:space="preserve"><value>Пакетная очистка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.252" xml:space="preserve"><value>Пакетное отключение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.253" xml:space="preserve"><value>Поиск модуля / Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.254" xml:space="preserve"><value>Политика базы данных</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.255" xml:space="preserve"><value>Не задано (базовая политика кода)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.256" xml:space="preserve"><value>Модуль недоступен</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.257" xml:space="preserve"><value>Модуль очищен</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.258" xml:space="preserve"><value>Модуль очищен; базовую политику кода прочитать нельзя, поэтому используется запись базы данных.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.259" xml:space="preserve"><value>Режим</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.260" xml:space="preserve"><value>Очистить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.261" xml:space="preserve"><value>Действующая политика</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.262" xml:space="preserve"><value>Сведения о цели</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.263" xml:space="preserve"><value>Отключено</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.264" xml:space="preserve"><value>После сохранения сохраняется как избыточная; автоматически действует после переустановки модуля</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.265" xml:space="preserve"><value>Режим политики</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.266" xml:space="preserve"><value>Наследовать код</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.267" xml:space="preserve"><value>Запишите причину изменения политики для последующего аудита</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.268" xml:space="preserve"><value>Настройки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.269" xml:space="preserve"><value>Настроить глобальную политику доступа Provit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.270" xml:space="preserve"><value>Контроль доступа</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.271" xml:space="preserve"><value>Введите коды ресурсов разрешений</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.272" xml:space="preserve"><value>Введите коды ресурсов разрешений (например sandbox.execute; любое совпадение разрешает доступ)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.273" xml:space="preserve"><value>Выберите администраторов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.274" xml:space="preserve"><value>Выберите администраторов (любое совпадение разрешает доступ)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.275" xml:space="preserve"><value>Выберите или введите коды ролей</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.276" xml:space="preserve"><value>Выберите или введите коды ролей (любое совпадение разрешает доступ)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.277" xml:space="preserve"><value>(Нет)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Редактирование Chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.279" xml:space="preserve"><value>ChatAgent · текущий модуль XNCF</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.280" xml:space="preserve"><value>ChatAgent объединяет все Function в декларативную панель быстрых действий. Скрипты, созданные ИИ, и произвольные внутренние методы не выполняются.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.281" xml:space="preserve"><value>Уведомление NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.282" xml:space="preserve"><value>Во время генерации NeuCharPivot Function Calling отключён; полный AdminChat загружает только публично зарегистрированные FunctionRender модулей, явно связанных с сессией. При выполнении Pivot/Workflow сервер повторно проверяет список разрешений и состояние модуля.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.283" xml:space="preserve"><value>Не связано</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.284" xml:space="preserve"><value>Например: поместите частые действия в первую группу и откройте только необходимые параметры</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.285" xml:space="preserve"><value>Отправить и обновить Pivot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.286" xml:space="preserve"><value>Перед включением все обязательные параметры проверяются снова; при отключённом модуле или удалённой Function выполнение не запускается.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.287" xml:space="preserve"><value>Запустить Workflow после завершения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.288" xml:space="preserve"><value>Текущая ссылка:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.289" xml:space="preserve"><value>Открыть полный AdminChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.290" xml:space="preserve"><value>Модуль не установлен или отключён; все Pivot Function и плановые задачи отключены на базовом уровне.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.291" xml:space="preserve"><value>Создать NeuCharPivot для этого модуля</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.292" xml:space="preserve"><value>Создать интерфейс</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.293" xml:space="preserve"><value>Автоматическое выполнение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.294" xml:space="preserve"><value>Выберите вычислительную мощность ИИ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.295" xml:space="preserve"><value>Интервал (секунды)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.296" xml:space="preserve"><value>Возможность Workflow не включена. Список доступен, но мобильные команды не сработают.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.297" xml:space="preserve"><value>Личный WeChat Bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.298" xml:space="preserve"><value>Интеграция личного WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.299" xml:space="preserve"><value>Интеграция личного WeChat отключена; мобильные команды не попадут в Admin.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.300" xml:space="preserve"><value>Создать настройки привязки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.301" xml:space="preserve"><value>Доступные Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.302" xml:space="preserve"><value>Префикс команды @Model.PageData.CommandPrefix@(Model.PageData.RequireCommandPrefix ? " · обязательно" : " · необязательно")</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.303" xml:space="preserve"><value>Завершите привязку в WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.304" xml:space="preserve"><value>Копировать</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.305" xml:space="preserve"><value>ID текущего пользователя Admin</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.306" xml:space="preserve"><value>Для текущего администратора нет доступных Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.307" xml:space="preserve"><value>Текущие возможности</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.308" xml:space="preserve"><value>Мобильные команды</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.309" xml:space="preserve"><value>Открыть личный WeChat Bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.310" xml:space="preserve"><value>Свяжите текущего администратора с аккаунтом WeChat, чтобы просматривать и запускать Workflow с телефона.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.311" xml:space="preserve"><value>Отправьте код привязки другому пользователю</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.312" xml:space="preserve"><value>Поиск выполняется по ID текущего администратора @Model.PageData.WorkflowUserId. Отправка с телефона команды «Получить список Workflow» возвращает тот же результат.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.313" xml:space="preserve"><value>Поиск ID или названия</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.314" xml:space="preserve"><value>Настройка привязки базы данных</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.315" xml:space="preserve"><value>включено</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.316" xml:space="preserve"><value>Система хранит только необратимый хеш. После успешного создания или изменения сразу отправьте открытый код привязки соответствующему пользователю WeChat.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.317" xml:space="preserve"><value>Попросите пользователя отправить «Привязать аккаунт WeChat». После привязки отправьте «Получить список Workflow», чтобы увидеть тот же список, что и на этой странице.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.318" xml:space="preserve"><value>Нет включённых настроек привязки. Сначала создайте привязку аккаунта WeChat в личном WeChat Bot, чтобы телефон мог определить администратора.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.319" xml:space="preserve"><value>Состояние интеграции</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.320" xml:space="preserve"><value>Первая привязка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.321" xml:space="preserve"><value>Pivot Block не инициализирован</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.322" xml:space="preserve"><value>Открыть настройки NeuCharPivot модуля</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.323" xml:space="preserve"><value>Открыть настройки панели и заполнить код</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.324" xml:space="preserve"><value>Function, на которую ссылается этот блок, не найдена в базе данных. Инициализируйте или восстановите её, затем вернитесь к настройкам панели и выберите её снова.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.325" xml:space="preserve"><value>Управление панелями</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.326" xml:space="preserve"><value>Японский</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.327" xml:space="preserve"><value>Упрощённый китайский</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.328" xml:space="preserve"><value>Suzhou Senparc Network Technology Co., Ltd.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.329" xml:space="preserve"><value>Параметры Function Calling</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.330" xml:space="preserve"><value>Модуль XNCF</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.331" xml:space="preserve"><value>Принимает только обычные параметры input</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.332" xml:space="preserve"><value>Открыть</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.333" xml:space="preserve"><value>Поиск названия / описания / параметров Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.334" xml:space="preserve"><value>Нет доступных включённых Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.335" xml:space="preserve"><value>Очистить выбор</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.336" xml:space="preserve"><value>Быстрый чат ИИ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.337" xml:space="preserve"><value>Быстрый чат Admin Chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.338" xml:space="preserve"><value>Уведомление NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.339" xml:space="preserve"><value>Показывает только журналы браузера, собранные после загрузки страницы; stdout сервера не включается.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.340" xml:space="preserve"><value>Закрыть всё</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.341" xml:space="preserve"><value>Перейти на полноценную страницу</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.342" xml:space="preserve"><value>Сейчас ни один модуль не предоставляет сведения NeuBell.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.343" xml:space="preserve"><value>Журналов нет</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.344" xml:space="preserve"><value>Время сервера</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.345" xml:space="preserve"><value>Консоль браузера</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.346" xml:space="preserve"><value>Потребить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.347" xml:space="preserve"><value>Потребить всё</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.348" xml:space="preserve"><value>Очистить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.349" xml:space="preserve"><value>Выберите уведомления модулей для Footer. Настройка сохраняется в браузере этой учётной записи.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.350" xml:space="preserve"><value>Поддерживает обычный текст и теги &lt;a&gt; с абсолютными ссылками http/https; остальной HTML кодируется.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.351" xml:space="preserve"><value>1 час</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.352" xml:space="preserve"><value>24 часа</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.353" xml:space="preserve"><value>7 дней</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.354" xml:space="preserve"><value>Команда AdminChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.355" xml:space="preserve"><value>Анонимная публикация HTML-снимка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.356" xml:space="preserve"><value>Трассировка задачи Harness</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.357" xml:space="preserve"><value>Предпросмотр PDF Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.358" xml:space="preserve"><value>Название Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.359" xml:space="preserve"><value>Файлы и пути Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.360" xml:space="preserve"><value>Ресурсы Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.361" xml:space="preserve"><value>Предыдущий раздел</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.362" xml:space="preserve"><value>Загрузить материалы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.363" xml:space="preserve"><value>Следующий раздел</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.364" xml:space="preserve"><value>Скачать / сохранить как</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.365" xml:space="preserve"><value>Скачать текущий каталог (.zip)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.366" xml:space="preserve"><value>Не использовать Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.367" xml:space="preserve"><value>Начать напрямую без ссылки на модули</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.368" xml:space="preserve"><value>Добавить вызываемые модули или Workflow в текущий диалог</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.369" xml:space="preserve"><value>Выбрать Workspace для текущего диалога</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.370" xml:space="preserve"><value>Разрешить отправку сжатого изображения визуальной модели только в этом ходе; это может потребовать дополнительных токенов.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.371" xml:space="preserve"><value>Удалить из этого хода и удалить файлы Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.372" xml:space="preserve"><value>Любой, у кого есть ссылка, может просмотреть этот снимок.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.373" xml:space="preserve"><value>Трассировка задачи</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.374" xml:space="preserve"><value>Например: пример проекта Yield C#</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.375" xml:space="preserve"><value>Сохранить файл</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.376" xml:space="preserve"><value>Разрешить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.377" xml:space="preserve"><value>Разрешить ИИ записывать файлы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.378" xml:space="preserve"><value>Разрешить ИИ выполнять Python</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.379" xml:space="preserve"><value>Закрыть панель ресурсов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.380" xml:space="preserve"><value>Срок действия публикации</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.381" xml:space="preserve"><value>Создать ссылку на снимок только для чтения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.382" xml:space="preserve"><value>Анонимная ссылка на снимок</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.383" xml:space="preserve"><value>Отменить редактирование</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.384" xml:space="preserve"><value>Доступно для записи</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.385" xml:space="preserve"><value>Исполняемый CLI</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.386" xml:space="preserve"><value>Необязательно: добавьте примечание или причину отказа</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.387" xml:space="preserve"><value>Открыть во внешнем браузере (только чтение)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.388" xml:space="preserve"><value>Развернуть до максимальной доступной ширины</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.389" xml:space="preserve"><value>Связанные модули</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.390" xml:space="preserve"><value>Текущая сессия</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.391" xml:space="preserve"><value>Текущий каталог пуст</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.392" xml:space="preserve"><value>Отклонить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.393" xml:space="preserve"><value>Поиск моделей</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.394" xml:space="preserve"><value>Отменить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.395" xml:space="preserve"><value>Создать Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.396" xml:space="preserve"><value>Трассировка Harness отсутствует</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.397" xml:space="preserve"><value>Не сохранено</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.398" xml:space="preserve"><value>Просмотреть выполнение в реальном времени</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.399" xml:space="preserve"><value>Поиск трасс, инструментов или результатов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>Поиск Workspace…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.401" xml:space="preserve"><value>Предпросмотр текста не поддерживается для этого типа файла</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.402" xml:space="preserve"><value>Подходящие файлы или пути не найдены</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.403" xml:space="preserve"><value>Управление анонимными публикациями</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.404" xml:space="preserve"><value>Редактировать файл</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.405" xml:space="preserve"><value>Визуальный режим</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.406" xml:space="preserve"><value>Ресурсы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.407" xml:space="preserve"><value>Перейти</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.408" xml:space="preserve"><value>Перейти к строке</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.409" xml:space="preserve"><value>Системный prompt по умолчанию управляется PromptRange; текущий текст содержит личные настройки или настройки арендатора.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.410" xml:space="preserve"><value>, ссылка на файл или путь через @@</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.411" xml:space="preserve"><value>, введите @@ для ссылки на файл или путь</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.412" xml:space="preserve"><value>Поддерживает обычный текст и теги &lt;a&gt; с абсолютными ссылками http/https; остальной HTML кодируется.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.413" xml:space="preserve"><value>Ветка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.414" xml:space="preserve"><value>Обдумывание</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.415" xml:space="preserve"><value>Ожидание подтверждения инструмента</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.416" xml:space="preserve"><value>Событие воспроизведения #{0} ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.417" xml:space="preserve"><value>Нажмите Ctrl + Enter или Cmd + Enter для запуска</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.418" xml:space="preserve"><value>Ветка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.419" xml:space="preserve"><value>Нет действующих публикаций</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.420" xml:space="preserve"><value>Ещё элементов: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.421" xml:space="preserve"><value>Просмотреть предпросмотр</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.422" xml:space="preserve"><value>Вернуться к тексту</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.423" xml:space="preserve"><value>Древовидное представление</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.424" xml:space="preserve"><value>Просмотреть исходный код</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.425" xml:space="preserve"><value>Загрузка предпросмотра…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.426" xml:space="preserve"><value>Отсутствует Function:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.427" xml:space="preserve"><value>Выбрать все результаты фильтра</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.428" xml:space="preserve"><value>Выбрано: {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.429" xml:space="preserve"><value>NeuBell · настройки WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.430" xml:space="preserve"><value>Редактировать WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.431" xml:space="preserve"><value>Добавить WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.432" xml:space="preserve"><value>Интеграция личного WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.433" xml:space="preserve"><value>Подходящий Workflow не найден</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.434" xml:space="preserve"><value>Политик базы данных: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.435" xml:space="preserve"><value>Осиротевших политик: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.436" xml:space="preserve"><value>доступных Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.437" xml:space="preserve"><value>панелей</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.438" xml:space="preserve"><value>До {0} файлов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.439" xml:space="preserve"><value>Показать недоступные модули ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.440" xml:space="preserve"><value>Версия модуля</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.441" xml:space="preserve"><value>До {0} файлов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.442" xml:space="preserve"><value>Всего: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.443" xml:space="preserve"><value>{0} на странице</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.444" xml:space="preserve"><value>Перейти</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.445" xml:space="preserve"><value>Страница</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.446" xml:space="preserve"><value>10 на странице</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.447" xml:space="preserve"><value>20 на странице</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.448" xml:space="preserve"><value>30 на странице</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.449" xml:space="preserve"><value>40 на странице</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.450" xml:space="preserve"><value>Префикс команды {0} · обязательно</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.451" xml:space="preserve"><value>Префикс команды {0} · необязательно</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.452" xml:space="preserve"><value>Harness отключён</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.453" xml:space="preserve"><value>Привязать аккаунт WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.454" xml:space="preserve"><value>Получить список Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.455" xml:space="preserve"><value>Текущий префикс команды:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.456" xml:space="preserve"><value>{0} / {1} элементов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.457" xml:space="preserve"><value>Ввод</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.458" xml:space="preserve"><value>Новых сообщений: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.459" xml:space="preserve"><value>Префикс команды</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="WeixinClaw.Workflow.IntegrationDisabled" xml:space="preserve"><value>Workflow integration is disabled or the host has not loaded the NeuCharWorkflow module.</value></data>
+  <data name="WeixinClaw.Workflow.NoAvailable" xml:space="preserve"><value>No Workflows are currently available.</value></data>
+  <data name="WeixinClaw.Workflow.ListPrompt" xml:space="preserve"><value>Available Workflows are listed below. Send /workflow &lt;WorkflowId&gt; &lt;input&gt; next time to run a specific Workflow:</value></data>
+  <data name="WeixinClaw.Workflow.NotFound" xml:space="preserve"><value>The Workflow does not exist, is disabled, or the current administrator has no access.</value></data>
+  <data name="WeixinClaw.Workflow.Completed" xml:space="preserve"><value>Workflow "{0}" completed:
+{1}</value></data>
+  <data name="WeixinClaw.Workflow.Failed" xml:space="preserve"><value>Workflow "{0}" failed: {1}</value></data>
+  <data name="WeixinClaw.Workflow.HelpList" xml:space="preserve"><value>{0}workflow - List available Workflows and Workflow IDs</value></data>
+  <data name="WeixinClaw.Workflow.HelpExecute" xml:space="preserve"><value>{0}workflow &lt;WorkflowId&gt; &lt;input&gt; - Execute the specified Workflow</value></data>
+
+  <data name="Frontend.500" xml:space="preserve"><value>NeuCharPivot · Контроль доступа</value></data>
+
+  <data name="Frontend.501" xml:space="preserve"><value>Контроль доступа</value></data>
+
+  <data name="Frontend.502" xml:space="preserve"><value>Глобальный контроль доступа Provit для Function</value></data>
+
+  <data name="Frontend.503" xml:space="preserve"><value>Настраивает политики доступа для Function любого модуля XNCF с привязкой пользователей, ролей или кодов. Политики базы данных переопределяют атрибуты кода; после очистки модуля они сохраняются и снова действуют после переустановки, пока не будут очищены вручную.</value></data>
+
+  <data name="Frontend.504" xml:space="preserve"><value>Поиск модуля / Function</value></data>
+
+  <data name="Frontend.505" xml:space="preserve"><value>Обновить</value></data>
+
+  <data name="Frontend.506" xml:space="preserve"><value>Function: {0}</value></data>
+
+  <data name="Frontend.507" xml:space="preserve"><value>Политик базы данных: {0}</value></data>
+
+  <data name="Frontend.508" xml:space="preserve"><value>Осиротевших политик: {0}</value></data>
+
+  <data name="Frontend.509" xml:space="preserve"><value>Пакетное открытие</value></data>
+
+  <data name="Frontend.510" xml:space="preserve"><value>Пакетное ограничение</value></data>
+
+  <data name="Frontend.511" xml:space="preserve"><value>Пакетное отключение</value></data>
+
+  <data name="Frontend.512" xml:space="preserve"><value>Пакетно восстановить наследование</value></data>
+
+  <data name="Frontend.513" xml:space="preserve"><value>Пакетная очистка</value></data>
+
+  <data name="Frontend.514" xml:space="preserve"><value>Модуль</value></data>
+
+  <data name="Frontend.515" xml:space="preserve"><value>Модуль очищен</value></data>
+
+  <data name="Frontend.516" xml:space="preserve"><value>Модуль недоступен</value></data>
+
+  <data name="Frontend.517" xml:space="preserve"><value>Базовая политика кода</value></data>
+
+  <data name="Frontend.518" xml:space="preserve"><value>Глобальный доступ разрешён</value></data>
+
+  <data name="Frontend.519" xml:space="preserve"><value>Глобальный доступ не объявлен</value></data>
+
+  <data name="Frontend.520" xml:space="preserve"><value>Любой вошедший администратор</value></data>
+
+  <data name="Frontend.521" xml:space="preserve"><value>Политика базы данных</value></data>
+
+  <data name="Frontend.522" xml:space="preserve"><value>Источник: политика базы данных</value></data>
+
+  <data name="Frontend.523" xml:space="preserve"><value>Вступает в силу после переустановки</value></data>
+
+  <data name="Frontend.524" xml:space="preserve"><value>Источник: атрибуты кода</value></data>
+
+  <data name="Frontend.525" xml:space="preserve"><value>Действующая политика</value></data>
+
+  <data name="Frontend.526" xml:space="preserve"><value>Действия</value></data>
+
+  <data name="Frontend.527" xml:space="preserve"><value>Настройки</value></data>
+
+  <data name="Frontend.528" xml:space="preserve"><value>Очистить</value></data>
+
+  <data name="Frontend.529" xml:space="preserve"><value>Настроить глобальную политику доступа Provit</value></data>
+
+  <data name="Frontend.530" xml:space="preserve"><value>Сведения о цели</value></data>
+
+  <data name="Frontend.531" xml:space="preserve"><value>Неизвестная версия</value></data>
+
+  <data name="Frontend.532" xml:space="preserve"><value>После сохранения сохраняется как избыточная и вступает в силу после переустановки модуля</value></data>
+
+  <data name="Frontend.533" xml:space="preserve"><value>Function больше не существует; политика сохранена как избыточная</value></data>
+
+  <data name="Frontend.534" xml:space="preserve"><value>(Нет)</value></data>
+
+  <data name="Frontend.535" xml:space="preserve"><value>Описание</value></data>
+
+  <data name="Frontend.536" xml:space="preserve"><value>Базовая политика кода (FunctionRenderAttribute)</value></data>
+
+  <data name="Frontend.537" xml:space="preserve"><value>Разрешено в глобальном Provit</value></data>
+
+  <data name="Frontend.538" xml:space="preserve"><value>Не разрешено в глобальном Provit</value></data>
+
+  <data name="Frontend.539" xml:space="preserve"><value>Модуль очищен, поэтому базовую политику кода прочитать нельзя; главной считается политика базы данных.</value></data>
+
+  <data name="Frontend.540" xml:space="preserve"><value>Текущая политика базы данных</value></data>
+
+  <data name="Frontend.541" xml:space="preserve"><value>Режим</value></data>
+
+  <data name="Frontend.542" xml:space="preserve"><value>Создано</value></data>
+
+  <data name="Frontend.543" xml:space="preserve"><value>Существующие привязки</value></data>
+
+  <data name="Frontend.544" xml:space="preserve"><value>Заметки</value></data>
+
+  <data name="Frontend.545" xml:space="preserve"><value>Политика базы данных не настроена; сейчас применяется базовая политика кода.</value></data>
+
+  <data name="Frontend.546" xml:space="preserve"><value>Режим политики</value></data>
+
+  <data name="Frontend.547" xml:space="preserve"><value>Наследовать код</value></data>
+
+  <data name="Frontend.548" xml:space="preserve"><value>Открыто</value></data>
+
+  <data name="Frontend.549" xml:space="preserve"><value>Ограничено</value></data>
+
+  <data name="Frontend.550" xml:space="preserve"><value>Отключено</value></data>
+
+  <data name="Frontend.551" xml:space="preserve"><value>Выберите или введите коды ролей (любое совпадение разрешает доступ)</value></data>
+
+  <data name="Frontend.552" xml:space="preserve"><value>Разрешённые роли</value></data>
+
+  <data name="Frontend.553" xml:space="preserve"><value>Разрешённые коды разрешений</value></data>
+
+  <data name="Frontend.554" xml:space="preserve"><value>Введите коды разрешений (например sandbox.execute; любое совпадение разрешает доступ)</value></data>
+
+  <data name="Frontend.555" xml:space="preserve"><value>Разрешённые пользователи</value></data>
+
+  <data name="Frontend.556" xml:space="preserve"><value>Выберите администраторов (любое совпадение разрешает доступ)</value></data>
+
+  <data name="Frontend.557" xml:space="preserve"><value>Запишите причину изменения политики для последующего аудита</value></data>
+
+  <data name="Frontend.558" xml:space="preserve"><value>Отмена</value></data>
+
+  <data name="Frontend.559" xml:space="preserve"><value>Сохранить политику</value></data>
+
+  <data name="Frontend.560" xml:space="preserve"><value>Пакетная настройка ограничений</value></data>
+
+  <data name="Frontend.561" xml:space="preserve"><value>Применить политику «ограничено» к выбранным Function ({0}). В этом режиме доступ к глобальному Provit получают только привязанные пользователи, роли или коды разрешений; привяжите хотя бы один элемент.</value></data>
+
+  <data name="Frontend.562" xml:space="preserve"><value>Выберите или введите коды ролей</value></data>
+
+  <data name="Frontend.563" xml:space="preserve"><value>Введите коды ресурсов разрешений</value></data>
+
+  <data name="Frontend.564" xml:space="preserve"><value>Выберите администраторов</value></data>
+
+  <data name="Frontend.565" xml:space="preserve"><value>Применить</value></data>
+
+  <data name="Frontend.566" xml:space="preserve"><value>Неизвестно</value></data>
+
+  <data name="Frontend.567" xml:space="preserve"><value>Вступит в силу после переустановки</value></data>
+
+  <data name="Frontend.568" xml:space="preserve"><value>Не использовать политики базы данных; выполнять только по атрибутам кода (AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes).</value></data>
+
+  <data name="Frontend.569" xml:space="preserve"><value>Любой вошедший администратор может получить доступ к этой Function через глобальный Provit (ограничения кода переопределяются; используйте осторожно).</value></data>
+
+  <data name="Frontend.570" xml:space="preserve"><value>Доступ разрешён только пользователям, ролям или кодам разрешений, привязанным ниже (достаточно одного совпадения); остальные учётные записи отклоняются.</value></data>
+
+  <data name="Frontend.571" xml:space="preserve"><value>Явно запретить весь глобальный доступ Provit, даже если атрибуты кода его разрешают.</value></data>
+
+  <data name="Frontend.572" xml:space="preserve"><value>Политика сохранена</value></data>
+
+  <data name="Frontend.573" xml:space="preserve"><value>Не удалось сохранить</value></data>
+
+  <data name="Frontend.574" xml:space="preserve"><value>Очистить политику базы данных для {0} / {1}? После очистки снова будет применяться базовая политика кода.</value></data>
+
+  <data name="Frontend.575" xml:space="preserve"><value>Очистить политику</value></data>
+
+  <data name="Frontend.576" xml:space="preserve"><value>Политика очищена</value></data>
+
+  <data name="Frontend.577" xml:space="preserve"><value>Не удалось очистить</value></data>
+
+  <data name="Frontend.578" xml:space="preserve"><value>Открыть все выбранные Function ({0})? Доступ будет разрешён любому вошедшему администратору.</value></data>
+
+  <data name="Frontend.579" xml:space="preserve"><value>Отключить все выбранные Function ({0})? Глобальный доступ Provit будет всегда запрещён.</value></data>
+
+  <data name="Frontend.580" xml:space="preserve"><value>Восстановить для выбранных Function ({0}) режим «наследовать код»? Политики базы данных больше не будут переопределять базовую политику кода.</value></data>
+
+  <data name="Frontend.581" xml:space="preserve"><value>Очистить политики базы данных для выбранных Function ({0}) и восстановить базовую политику кода? Отменить это действие нельзя.</value></data>
+
+  <data name="Frontend.582" xml:space="preserve"><value>Подтвердить выполнение?</value></data>
+
+  <data name="Frontend.583" xml:space="preserve"><value>Пакетная операция</value></data>
+
+  <data name="Frontend.584" xml:space="preserve"><value>Подтвердить</value></data>
+
+  <data name="Frontend.585" xml:space="preserve"><value>Пакетная операция завершена; затронуто политик: {0}</value></data>
+
+  <data name="Frontend.586" xml:space="preserve"><value>Пакетная операция завершилась ошибкой</value></data>
+
+  <data name="Frontend.600" xml:space="preserve"><value>Выберите уведомления модулей, отображаемые в Footer. Настройка сохраняется в браузере этой учётной записи.</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>Сейчас ни один модуль не предоставляет сведения NeuBell.</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>Потребить всё</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>Потребить</value></data>
+  <data name="Frontend.604" xml:space="preserve"><value>Уведомления NeuBell</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>Закрыть всё</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>Свернуть</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>Ещё {0}; нажмите для раскрытия</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>Тестовое уведомление NeuBell</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>Отправлено Function; обработайте это уведомление в Function или очистите все уведомления текущей подписки.</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>Проверка удалённых подключений DesktopBridge</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>Ожидают обработки запросы сопряжения устройств: {0}.</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>Нет ожидающих запросов сопряжения устройств.</value></data>
+  <data name="AdminChat.WorkflowCreation.Capabilities.Description" xml:space="preserve"><value>Перечисляет безопасные триггеры, узлы и FunctionRender для создания Workflow с помощью ИИ. Вызовите перед проектированием графа.</value></data>
+  <data name="AdminChat.WorkflowCreation.Validate.Description" xml:space="preserve"><value>Проверяет безопасный граф Workflow без сохранения. Граф должен содержать один ручной триггер и один конечный узел.</value></data>
+  <data name="AdminChat.WorkflowCreation.Create.Description" xml:space="preserve"><value>Создаёт и при необходимости включает проверенный Workflow. Операция всегда требует явного подтверждения администратора.</value></data>
+  <data name="AdminChat.WorkflowCreation.Name" xml:space="preserve"><value>Имя Workflow, не более 200 символов.</value></data>
+  <data name="AdminChat.WorkflowCreation.DescriptionField" xml:space="preserve"><value>Необязательное описание Workflow.</value></data>
+  <data name="AdminChat.WorkflowCreation.Trigger" xml:space="preserve"><value>Workflow, созданные ИИ, сейчас поддерживают только ручной триггер.</value></data>
+  <data name="AdminChat.WorkflowCreation.Graph" xml:space="preserve"><value>JSON-граф с nodes и edges. Используйте типы узлов и ссылки FunctionRender из workflow_get_creation_capabilities.</value></data>
+  <data name="AdminChat.WorkflowCreation.Enabled" xml:space="preserve"><value>Включить после создания. Ручные Workflow по-прежнему запускаются оператором.</value></data>
+</root>

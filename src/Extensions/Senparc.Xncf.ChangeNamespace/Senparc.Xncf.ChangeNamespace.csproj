@@ -1,62 +1,65 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
-    <Version>0.22.13</Version>
+    <Version>0.22.14</Version>
     <AssemblyName>Senparc.Xncf.ChangeNamespace</AssemblyName>
     <RootNamespace>Senparc.Xncf.ChangeNamespace</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-    <Description>Senparc.Xncf.ChangeNamespace 修改命名空间</Description>
+    <Description>Senparc.Xncf.ChangeNamespace namespace-change module</Description>
     <Copyright>NeuCharFramework</Copyright>
     <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.ChangeNamespace</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Title>XNCF 更改命名空间模块</Title>
+    <Title>XNCF Namespace Change Module</Title>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>      v0.1 创世
-      v0.2 完成修改命名空间功能
-      v0.3 完成还原命名空间功能
-      v0.4 升级命名空间修改功能
-      [2024-09-10] v0.19.4-preview1 升级缓存基础库
-      [2025-01-25] v0.20.5-preview1 Update Agents functions, support for function calling
-      [2025-04-29] v0.20.7-preview1 Update CO2NET and AIKernel
-      [2025-05-18] v0.20.8-preview1 Update Installation
-      [2025-06-20] v0.20.9-preview1 Add MCP functions in XncfRegisterBase class
-      [2025-11-01] update basic libraries, including Senparc.AI
-      [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
-      [2026-07-17] v0.22.0-preview2 为 ChangeNamespace 模块接入统一资源本地化并优化功能文案
-      1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
-      2、更新 FunctionRender 与请求模型文案的资源化解析
-      3、统一模块注册信息、菜单名称与功能描述的本地化输出
-      4、补充并统一多语言资源键及资源文件
-      [2026-07-29] v0.22.1-preview3 Dependency update from Senparc.Ncf.XncfBase to 0.23.4-preview3
-      [2026-07-31] v0.22.2-preview4 Dependency update from Senparc.Ncf.XncfBase to 0.23.5-preview4
-      [2026-08-04] v0.22.3-preview5 Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
-      [2026-08-08] v0.22.4-preview6 Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
-      [2026-08-13] v0.22.5-preview7 Dependency update from Senparc.Ncf.XncfBase to 0.25.0-preview7
-      [2026-08-15] v0.22.6-preview8 Dependency update from Senparc.Ncf.XncfBase to 0.25.1-preview8
-      [2026-08-22] v0.22.7-preview9 同步 Senparc.Xncf.ChangeNamespace 依赖版本
-      1、递归更新上游项目依赖，保持 Senparc.Xncf.ChangeNamespace 与当前版本组合兼容
-      [2026-08-29] v0.22.8 Dependency updates from Senparc.Ncf.XncfBase to 0.26.1
-      1、Dependency update from Senparc.Ncf.XncfBase to 0.26.1
-      [2026-09-16] v0.22.9 Dependency updates from upstream modules
-      [2026-09-17] v0.22.10 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
-      1、同步受影响的基础库、AI 模块或宿主项目版本
-      2、保持项目引用链与当前功能兼容
-      [2026-10-05] v0.22.11 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
-      1、Updated Senparc.Xncf.ChangeNamespace project behavior and integration for the latest feature and reliability improvements.
-      2、chore: update package versions and dependencies across multiple projects
-      [2026-11-03] v0.22.12 以中文资源为基准统一整理多语言文案
-      1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
-      2、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
-      [2026-11-11] v0.22.12 统一模块注册显示名称与说明的多语言资源键
-      1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
-      [2026-11-12] v0.22.13 统一模块注册显示名称与说明的多语言资源键
-      1、模块注册信息优先使用稳定资源键解析多语言显示文本。
-      2、兼容现有资源与默认文案，避免缺少翻译时影响模块加载。
+    <PackageReleaseNotes>v0.1 initial release
+        v0.2 Updated module behavior and related support.
+        v0.3 Updated module behavior and related support.
+        v0.4 Updated module behavior and related support.
+        [2024-09-10] v0.19.4-preview1 upgrade the cache foundation libraries
+        [2025-01-25] v0.20.5-preview1 Update Agents functions, support for function calling
+        [2025-04-29] v0.20.7-preview1 Update CO2NET and AIKernel
+        [2025-05-18] v0.20.8-preview1 Update Installation
+        [2025-06-20] v0.20.9-preview1 Add MCP functions in XncfRegisterBase class
+        [2025-11-01] update basic libraries, including Senparc.AI
+        [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+        [2026-07-17] v0.22.0-preview2 Updated module behavior and related support.
+        1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        [2026-07-29] v0.22.1-preview3 Dependency update from Senparc.Ncf.XncfBase to 0.23.4-preview3
+        [2026-07-31] v0.22.2-preview4 Dependency update from Senparc.Ncf.XncfBase to 0.23.5-preview4
+        [2026-08-04] v0.22.3-preview5 Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
+        [2026-08-08] v0.22.4-preview6 Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+        [2026-08-13] v0.22.5-preview7 Dependency update from Senparc.Ncf.XncfBase to 0.25.0-preview7
+        [2026-08-15] v0.22.6-preview8 Dependency update from Senparc.Ncf.XncfBase to 0.25.1-preview8
+        [2026-08-22] v0.22.7-preview9 synchronize Senparc.Xncf.ChangeNamespace dependency version
+        1. Updated module behavior and related support.
+        [2026-08-29] v0.22.8 Dependency updates from Senparc.Ncf.XncfBase to 0.26.1
+        1. Dependency update from Senparc.Ncf.XncfBase to 0.26.1
+        [2026-09-16] v0.22.9 Dependency updates from upstream modules
+        [2026-09-17] v0.22.10 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-10-05] v0.22.11 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+        1. Updated Senparc.Xncf.ChangeNamespace project behavior and integration for the latest feature and reliability improvements.
+        2. chore: update package versions and dependencies across multiple projects
+        [2026-11-03] v0.22.12 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+        [2026-11-11] v0.22.12 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-11-12] v0.22.13 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-19] v0.22.14 Updated module behavior, localization metadata, and English source comments
+        1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+        2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

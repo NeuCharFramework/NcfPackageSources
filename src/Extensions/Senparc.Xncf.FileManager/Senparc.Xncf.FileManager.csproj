@@ -1,89 +1,92 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.8.4</Version>
+    <Version>0.8.5</Version>
     <AssemblyName>Senparc.Xncf.FileManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.FileManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>文件管理</Description>
+    <Description>file management</Description>
     <Copyright>Senparc</Copyright>
     <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.FileManager</PackageTags>
     <Authors>Senparc</Authors>
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Title>文件管理</Title>
+    <Title>file management</Title>
     <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>      [2025-06-20] v0.1.5-preview Add MCP functions in XncfRegisterBase class
-      v0.1.0 创世
-      v0.1.3.4 修复文件上传问题
-      [2025-07-27] v0.1.6-preview.1 update Knowledge Base
-      [2025-11-01] update basic libraries, including Senparc.AI
-      [2026-01-07] v0.1.9-preview.1 Reset all database migrations
-      [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
-      [2026-07-17] v0.3.0-preview2 为 FileManager 模块接入统一资源本地化并优化功能文案
-      1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
-      2、更新 FunctionRender 与请求模型文案的资源化解析
-      3、统一模块注册信息、菜单名称与功能描述的本地化输出
-      4、同步管理页面与前端交互文案的多语言显示
-      5、调整文件管理页链接导航处理，兼容桌面内嵌 WebView
-      [2026-07-29] v0.3.1-preview3 加强文件上传校验和物理路径安全
-      1、增加防伪校验、文件数量/大小/扩展名限制并规范原始文件名
-      2、通过规范化路径阻止文件读取、删除和下载越界
-      [2026-07-31] v0.4.0-preview4 扩展 FileManager 管理界面的多语言能力
-      1、新增文件管理资源与前端本地化脚本
-      2、升级 Senparc.CO2NET.WebApi 至 2.1.9-preview
-      [2026-08-04] v0.5.0-preview5 新增文件文本提取与文件管理服务
-      1、新增 NcfFileTextExtractor 以支持文件内容提取
-      2、优化文件、目录及模板应用服务的处理流程
-      [2026-08-08] v0.5.1-preview6 Dependency updates from upstream projects
-      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
-      2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
-      3、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
-      4、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
-      [2026-08-13] v0.6.0-preview1 重构文件资源边界
-      1、区分知识库源文件和站点静态资源，按用途隔离文件夹、列表与知识库摄取
-      2、站点资源默认私有，显式发布后提供带 SHA-256 指纹的公开 URL 和长期缓存
-      3、补齐 MIME、完整性指纹、流式下载、目录编辑删除与静态资源发布管理
-      4、同步当前窗口中的资源边界模型、服务与管理页兼容性调整
-      [2026-08-15] v0.6.1-preview2 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.8-preview8; Senparc.Ncf.Service to 0.23.8-preview8
-      [2026-08-22] v0.6.2-preview3 修复文件管理脚本缓存刷新
-      1、为文件管理页面脚本引用补充版本参数，确保部署后加载最新资源
-      [2026-08-29] v0.6.3 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10; Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
-      1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
-      2、Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
-      [2026-09-15] v0.7.0 优化文件管理、标签与回收站交互
-      1、优化文件列表、数据面板、快速访问和树形标签管理布局
-      2、完善文件上传、模板、批量操作与回收站清理的前后端处理
-      3、优化文件资源在线预览控制器与安全发布访问路径
-      [2026-09-16] v0.7.1 Dependency updates from Senparc.Xncf.KnowledgeBase to 0.7.3; Senparc.Web to 0.39.1
-      [2026-09-17] v0.7.2 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
-      1、同步受影响的基础库、AI 模块或宿主项目版本
-      2、保持项目引用链与当前功能兼容
-      [2026-10-01] v0.7.3 增加跨模块私有附件导入能力
-      1、通过 Abstractions EventBus 契约接收微信等模块的文件导入请求
-      2、增加私有附件资源域并保持租户隔离和默认私有访问
-      [2026-10-21] v0.8.0 支持将微调产物作为文件资源导入
-      1、文件网关、资源策略与文件服务支持 FineTuning 资源类型
-      2、管理端文件列表可区分微调产物
-      [2026-10-24] Expose bounded document sections for Workspace attachments, preserve worksheet names/cell addresses and presentation order, and guard Office archive expansion.
-      [2026-11-03] v0.8.1 支持文件流上传、跨模块文件引用与资源访问策略
-      1、完善文件管理页面、本地文本提取和文件导入服务
-    [2026-11-03] Add shared contextual documentation beside upload settings.
-    [2026-11-03] v0.8.3 以中文资源为基准统一整理多语言文案
-    1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
-    2、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
-    3、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
-    4、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
-    5、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-    [2026-11-11] v0.8.3 统一模块注册显示名称与说明的多语言资源键
-    1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
-    [2026-11-12] v0.8.4 统一模块注册显示名称与说明的多语言资源键
-    1、模块注册信息优先使用稳定资源键解析多语言显示文本。
-    2、兼容现有资源与默认文案，避免缺少翻译时影响模块加载。
+    <PackageReleaseNotes>[2025-06-20] v0.1.5-preview Add MCP functions in XncfRegisterBase class
+        v0.1.0 initial release
+        v0.1.3.4 Updated module behavior and related support.
+        [2025-07-27] v0.1.6-preview.1 update Knowledge Base
+        [2025-11-01] update basic libraries, including Senparc.AI
+        [2026-01-07] v0.1.9-preview.1 Reset all database migrations
+        [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+        [2026-07-17] v0.3.0-preview2 Updated module behavior and related support.
+        1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        [2026-07-29] v0.3.1-preview3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-31] v0.4.0-preview4 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-04] v0.5.0-preview5 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-08] v0.5.1-preview6 Dependency updates from upstream projects
+        1. Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+        2. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+        3. Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
+        4. Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+        [2026-08-13] v0.6.0-preview1 refactorfile resourcesboundary
+        1. Updated module behavior and related support.
+        2. siteresourceprivate by default, provide a public URL with a SHA-256 fingerprint and long-term caching after explicit publication
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        [2026-08-15] v0.6.1-preview2 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.8-preview8; Senparc.Ncf.Service to 0.23.8-preview8
+        [2026-08-22] v0.6.2-preview3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-08-29] v0.6.3 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10; Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
+        1. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
+        2. Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
+        [2026-09-15] v0.7.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-09-16] v0.7.1 Dependency updates from Senparc.Xncf.KnowledgeBase to 0.7.3; Senparc.Web to 0.39.1
+        [2026-09-17] v0.7.2 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-10-01] v0.7.3 addcross-moduleprivateattachmentimportcapabilities
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-10-21] v0.8.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-10-24] Expose bounded document sections for Workspace attachments, preserve worksheet names/cell addresses and presentation order, and guard Office archive expansion.
+        [2026-11-03] v0.8.1 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-11-03] Add shared contextual documentation beside upload settings.
+        [2026-11-03] v0.8.3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+        3. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
+        4. Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+        5. Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+        [2026-11-11] v0.8.3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-11-12] v0.8.4 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-19] v0.8.5 Localized file management and upload surfaces
+        1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+        2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

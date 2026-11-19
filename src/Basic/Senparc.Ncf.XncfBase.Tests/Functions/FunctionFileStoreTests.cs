@@ -1,8 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：FunctionFileStoreTests.cs
-    文件功能描述：FunctionRender 文件存储测试
+    File name: FunctionFileStoreTests.cs
+    File description: Related implementation.
 
 ----------------------------------------------------------------*/
 

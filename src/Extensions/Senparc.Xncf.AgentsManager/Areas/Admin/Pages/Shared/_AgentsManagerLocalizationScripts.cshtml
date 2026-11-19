@@ -1,0 +1,18 @@
+@using System.Text.Json
+@using Microsoft.Extensions.Localization
+@using Senparc.Ncf.Core.Localization
+@using Senparc.Xncf.AgentsManager
+@inject IStringLocalizer<AgentsManagerResource> XR
+@inject IStringLocalizerFactory LocalizationFactory
+@{
+    var translations = XR.GetAllStrings(includeParentCultures: true)
+        .ToDictionary(item => $"AgentsManager.{item.Name}", item => item.Value);
+    var sourceTranslations = FrontendTranslationCatalog.Get(
+        LocalizationFactory,
+        typeof(AgentsManagerResource));
+}
+<script>
+    window.AgentsManagerI18n = Object.assign(window.AgentsManagerI18n || {}, @Html.Raw(JsonSerializer.Serialize(translations)));
+    window.ncfI18n = Object.assign(window.ncfI18n || {}, window.AgentsManagerI18n);
+    window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)), "AgentsManager");
+</script>

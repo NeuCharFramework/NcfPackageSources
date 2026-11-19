@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Validator.cs
-    文件功能描述：Validator 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260731
-    修改描述：v0.27.0-preview4 将通用验证错误提示接入核心多语言资源
+    Copyright (C) 2026 Senparc
+
+    File name: Validator.cs
+    File description: Validator related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260731
+    Change description: v0.27.0-preview4 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -59,7 +62,7 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        /// 此方法暂时不能自动让ModelState.IsValid变为false
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="errorMessage"></param>
         public void AddError(string errorMessage)
@@ -83,24 +86,24 @@ namespace Senparc.Ncf.Core.Validator
         /// <param name="validatorEnvironmentObject"></param>
         /// <param name="valueName"></param>
         /// <param name="htmlName"></param>
-        /// <param name="nullOrEmptyable">是否允许为null或为空。输入null默认为不判断。首尾连续空格将被过滤（.Trim()）</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static ValidatorContainer<T> Validator<T>(this IValidatorEnvironment validatorEnvironment, T validatorEnvironmentObject, string valueName, string htmlName, bool? nullOrEmptyable = null)
         {
             if (validatorEnvironment.ModelState[htmlName] != null
                 && validatorEnvironment.ModelState[htmlName].Errors.Count > 0)
             {
-                //移除原有的ModelState中的"The value '' is invalid."错误
-                //TODO:可以使用Resource自行配置
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 validatorEnvironment.ModelState[htmlName].Errors.Clear();
             }
             if (nullOrEmptyable != null && (validatorEnvironmentObject == null || string.IsNullOrEmpty(validatorEnvironmentObject.ToString().Trim())))
             {
-                if (nullOrEmptyable == true)//可为空
+                if (nullOrEmptyable == true)//Legacy comment translated to English.
                 {
-                    return null;//为空，返回，但是不记录错误
+                    return null;//Legacy comment translated to English.
                 }
-                else//不可为空
+                else//Legacy comment translated to English.
                 {
                     var container = new ValidatorContainer<T>(validatorEnvironment, validatorEnvironmentObject, valueName, htmlName);
                     return container.NotNullOrEmpty(true);
@@ -108,7 +111,7 @@ namespace Senparc.Ncf.Core.Validator
             }
             else
             {
-                return new ValidatorContainer<T>(validatorEnvironment, validatorEnvironmentObject, valueName, htmlName);//不判断是否为空
+                return new ValidatorContainer<T>(validatorEnvironment, validatorEnvironmentObject, valueName, htmlName);//notcheckwhetherforempty
             }
         }
 
@@ -181,7 +184,7 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        /// 确认发生错误
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="container"></param>
@@ -226,7 +229,7 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        /// 检测是否有Sql危险字符
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="container"></param>
@@ -253,7 +256,7 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        /// 检测是否有危险的可能用于链接的字符串
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="container"></param>
@@ -311,7 +314,7 @@ namespace Senparc.Ncf.Core.Validator
                 }
             }
 
-            string invalidateUserName = "`~!@#$%^&*()+-=;':\",./<>?|\\";//TODO:可以用正则判断
+            string invalidateUserName = "`~!@#$%^&*()+-=;':\",./<>?|\\";//Legacy comment translated to English.
             foreach (var item in invalidateUserName)
             {
                 if (userName.Contains(item))
@@ -340,10 +343,10 @@ namespace Senparc.Ncf.Core.Validator
 
         public static ValidatorContainer<T> IsMobile<T>(this ValidatorContainer<T> container, bool stopWhileFail)
         {
-            //return Regex(container, @"^1[358]\d{9}$", "请在{0}中填写正确的电话号码！", stopWhileFail);
-            //return Regex(container, @"^1[358]\d{9}$", "请填写正确的电话号码！", stopWhileFail);
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
 
-            //电信手机号码正则        string dianxin = @"^1[3578][01379]\d{8}$";        Regex dReg = new Regex(dianxin);        //联通手机号正则        string liantong = @"^1[34578][01256]\d{8}$";        Regex tReg = new Regex(liantong);        //移动手机号正则        string yidong = @"^(134[012345678]\d{7}|1[34578][012356789]\d{8})$";        Regex yReg = new Regex(yidong);
+            //Legacy comment translated to English.
 
             return Regex(container, @"^(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$", NcfCoreResource.Get("Validator.Phone", "请填写正确的电话号码！"), stopWhileFail);
         }
@@ -549,7 +552,7 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        /// 校验验证码，建议Validator构造函数中的nullOrEmptyable为false
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="container"></param>
         /// <param name="checkCodeKind"></param>

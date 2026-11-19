@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AreaData.cs
-    文件功能描述：AreaData 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: AreaData.cs
+    File description: AreaData related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -24,7 +27,7 @@ using Microsoft.AspNetCore.Http;
 namespace Senparc.Ncf.Core.Area
 {
     /// <summary>
-    /// 地区信息
+    /// District Information
     /// </summary>
     public class AreaData
     {
@@ -37,15 +40,15 @@ namespace Senparc.Ncf.Core.Area
             return XElement.Load(SenparcHttpContext.MapPath(xmlApplicationPath));
         }
 
-        #region 省
+        #region State
 
         /// <summary>
-        /// 获取所有省份数据（从缓存中获取）
+        /// getallprovince data (get from cache)
         /// </summary>
         /// <returns></returns>
         public List<AreaXML_Provinces> GetProvincesData()
         {
-            //检查缓存
+            //Check cache
             AreaDataCache_Province cacheData = new AreaDataCache_Province();
 
             if (cacheData.Data == null)
@@ -65,7 +68,7 @@ namespace Senparc.Ncf.Core.Area
         }
 
         /// <summary>
-        /// 获取单个省份信息
+        /// getsingleprovince information
         /// </summary>
         /// <param name="provinceName"></param>
         /// <returns></returns>
@@ -74,7 +77,7 @@ namespace Senparc.Ncf.Core.Area
             return GetProvincesData().FirstOrDefault(z => z.ProvinceName == provinceName);
         }
         /// <summary>
-        /// 获取单个省份信息
+        /// getsingleprovince information
         /// </summary>
         /// <param name="provinceID"></param>
         /// <returns></returns>
@@ -84,9 +87,9 @@ namespace Senparc.Ncf.Core.Area
         }
 
         /// <summary>
-        /// 获取指定CityName（城市）所属的省份信息
+        /// get the province information to which the specified CityName (city) belongs
         /// </summary>
-        /// <param name="cityName">城市名称</param>
+        /// <param name="cityName">City cityname</param>
         /// <returns></returns>
         public AreaXML_Provinces GetProvinceDataByCityName(string cityName)
         {
@@ -97,14 +100,14 @@ namespace Senparc.Ncf.Core.Area
         #endregion
 
 
-        #region 市
+        #region City
         /// <summary>
-        /// 获取所有市区数据(从缓存中获取)
+        /// getallcitydistrictdata (get from cache)
         /// </summary>
         /// <returns></returns>
         public List<AreaXML_Cities> GetCitiesData()
         {
-            //检查缓存
+            //Check cache
             AreaDataCache_City cacheData = new AreaDataCache_City();
             if (cacheData.Data == null)
             {
@@ -118,13 +121,13 @@ namespace Senparc.Ncf.Core.Area
                                                     int.Parse(p.Attribute("MaxShopId").Value))
                 ).ToList();
 
-                cacheData.Data = dataList; //更新缓存
+                cacheData.Data = dataList; //Update cache
             }
             return cacheData.Data;
         }
 
         /// <summary>
-        /// 获取指定PID城市数据
+        /// get specified PID citydata
         /// </summary>
         /// <param name="pID"></param>
         /// <returns></returns>
@@ -138,7 +141,7 @@ namespace Senparc.Ncf.Core.Area
         }
 
         /// <summary>
-        /// 获取制定省份下面的所有市区名称
+        /// get to define allcitydistrictname under province
         /// </summary>
         /// <param name="provinceName"></param>
         /// <returns></returns>
@@ -150,7 +153,7 @@ namespace Senparc.Ncf.Core.Area
                 var provinceData = fullProvincesData.Where(p => p.ProvinceName == provinceName).FirstOrDefault();// (from p in doc.Elements() where  select p.Attribute("PID").Value).First();
 
                 if (provinceData != null)
-                    return GetCitiesData(provinceData.ID);//省份存在，查询其下城市
+                    return GetCitiesData(provinceData.ID);//Province is stored in . Query the cities under it.
                 else
                     return new List<AreaXML_Cities>();
             }
@@ -166,7 +169,7 @@ namespace Senparc.Ncf.Core.Area
             List<AreaXML_Cities> fullCitiesData = GetCitiesData();
 
             AreaXML_Cities city = (from c in fullCitiesData
-                                   where c.GetType().GetProperty(attributeName).GetValue(c, null).ToString() == value//应用到反射
+                                   where c.GetType().GetProperty(attributeName).GetValue(c, null).ToString() == value//Apply to Reflection
                                    select c).FirstOrDefault();
             return city;
         }
@@ -193,36 +196,36 @@ namespace Senparc.Ncf.Core.Area
 
 
         /// <summary>
-        /// 更新城市的区号、邮编
+        /// Update the district number and postal code of the city
         /// </summary>
-        /// <param name="cityName">城市名称</param>
-        /// <param name="cityCode">区号</param>
-        /// <param name="zipCode">邮编</param>
+        /// <param name="cityName">City cityname</param>
+        /// <param name="cityCode">District No.</param>
+        /// <param name="zipCode">Postal Code</param>
         /// <returns></returns>
         public bool UpdateCityCodeAndZipCode(string cityName, int cityCode, int zipCode)
         {
             try
             {
-                //TODO:最好能应用单件模式
-                XElement doc = this.GetXmlElement(CITIES_XML_PATH);//获取XML文档
-                string xmlFilePath = SenparcHttpContext.MapPath(CITIES_XML_PATH);//路径
-                string backUpXmlFilePath = xmlFilePath + "." + DateTime.Now.ToString().Replace(":", "_") + ".更新区号邮编（" + cityName + "）.bak";//备份文件路径
+                //TODO: It is best to apply the singleton pattern.
+                XElement doc = this.GetXmlElement(CITIES_XML_PATH);//getXML Document
+                string xmlFilePath = SenparcHttpContext.MapPath(CITIES_XML_PATH);//path
+                string backUpXmlFilePath = xmlFilePath + "." + DateTime.Now.ToString().Replace(":", "_") + ".更新区号邮编（" + cityName + "）.bak";//Backup filepath
 
                 var cityData = (from c in doc.Elements() where c.Attribute("CityName").Value == cityName select c).Single();
-                //备份当前数据
+                //Backup currentdata
                 //File.Copy(xmlFilePath, backUpXmlFilePath);
-                cityData.Save(backUpXmlFilePath);//备份单条信息
+                cityData.Save(backUpXmlFilePath);//Backup single piece of information
 
-                cityData.SetAttributeValue("CityCode", cityCode.ToString());//更新区号
-                cityData.SetAttributeValue("ZipCode", zipCode.ToString());//更新邮编
+                cityData.SetAttributeValue("CityCode", cityCode.ToString());//updatedistrict number
+                cityData.SetAttributeValue("ZipCode", zipCode.ToString());//Update ZIP code
 
-                //保存
+                //save
                 doc.Save(xmlFilePath);
 
-                //更新缓存
+                //Update cache
                 AreaDataCache_City areaData = new AreaDataCache_City();
-                areaData.Data.Clear();//清空
-                GetCitiesData();//使用调用，更新缓存
+                areaData.Data.Clear();//clear
+                GetCitiesData();//useinvoke, update cache
 
                 return true;
             }
@@ -232,7 +235,7 @@ namespace Senparc.Ncf.Core.Area
         }
 
         /// <summary>
-        /// 察看未定义邮编的城市
+        /// View cities with undefined ZIP codes
         /// </summary>
         /// <returns></returns>
         public List<AreaXML_Cities> GetWrongCityCode()
@@ -254,10 +257,10 @@ namespace Senparc.Ncf.Core.Area
         #endregion
 
 
-        #region 区
+        #region Area
         public List<AreaXML_Districts> GetDistrictsData()
         {
-            //检查缓存
+            //Check cache
             AreaDataCache_District cacheData = new AreaDataCache_District();
             if (cacheData.Data == null)
             {
@@ -276,7 +279,7 @@ namespace Senparc.Ncf.Core.Area
         }
 
         /// <summary>
-        /// 获取制定城市CID下面所有的区县数据
+        /// get all district data under city CID
         /// </summary>
         /// <param name="cID"></param>
         /// <returns></returns>
@@ -289,7 +292,7 @@ namespace Senparc.Ncf.Core.Area
                                                 //orderby p.Attribute("ID")
                                                 select d).ToList();
 
-            //TODO:添加“其他区”，可以在XML中添加，但又似乎没有必要，再议。   ——2008.5.25 By TNT2
+            //TODO: Add "Other District". It can be added in XML, but it doesn't seem necessary. To be discussed further.   ——5/25/2008 By TNT2
             if (dictData.Count > 0)
                 dictData.Add(new AreaXML_Districts(-1, cID, "其他区"));
 
@@ -297,7 +300,7 @@ namespace Senparc.Ncf.Core.Area
         }
 
         /// <summary>
-        /// 获取制定城市名称CityName下面所有的区县数据
+        /// get the district data for all districts under the city citynameCityName
         /// </summary>
         /// <param name="cityName"></param>
         /// <returns></returns>
@@ -327,7 +330,7 @@ namespace Senparc.Ncf.Core.Area
         #endregion
 
         /// <summary>
-        /// 获取默认，或者用户所在地区的列表，不设置第一项默认项
+        /// getdefault, or the list of districts where the user is located, not the first default item in settings
         /// </summary>
         /// <param name="provinceName"></param>
         /// <param name="cityName"></param>
@@ -339,13 +342,13 @@ namespace Senparc.Ncf.Core.Area
 
 
         /// <summary>
-        /// 获取默认，或者用户所在地区的列表
+        /// getdefault, or a table listing the districts where the user is located
         /// </summary>
         /// <param name="provinceName"></param>
         /// <param name="cityName"></param>
-        /// <param name="TopProvince">Province第一项</param>
-        /// <param name="TopCities">Cities第一项</param>
-        /// <param name="TopDistricts">Districts第一项</param>
+        /// <param name="TopProvince">Province First Item</param>
+        /// <param name="TopCities">Cities First Item</param>
+        /// <param name="TopDistricts">Districts First Item</param>
         /// <returns></returns>
         public Base_AreaXmlVD GetAreaDataByProvinceAndCity(string provinceName, string cityName, string districtName, AreaXML_Provinces TopProvince, AreaXML_Cities TopCities, AreaXML_Districts TopDistricts)
         {
@@ -360,14 +363,14 @@ namespace Senparc.Ncf.Core.Area
                 CurrentDistrict = districtName ?? ""
             };
 
-            //加入第一行提示
+            //Add a prompt to the first line
             if (string.IsNullOrEmpty(provinceName))
             {
                 vd.Cities = this.GetCitiesData("北京市");
                 vd.Districts = this.GetDistrictsData("北京市");
             }
 
-            //新增第一项
+            //Add the first item
             if (TopProvince != null)
                 vd.Provinces.Insert(0, TopProvince);
 
@@ -383,7 +386,7 @@ namespace Senparc.Ncf.Core.Area
 
 
         /// <summary>
-        /// 增加区号属性
+        /// Add district number property
         /// </summary>
         //public void AddCityCodeAttrbuite()
         //{
@@ -395,15 +398,15 @@ namespace Senparc.Ncf.Core.Area
         //    var codeList = ctx.AreaCityCodes.ToList();
         //    foreach (var item in cityList)
         //    {
-        //        ////增加属性
+        //        ////Add property
         //        //item.SetAttributeValue("CityCode", "");
         //        //item.SetAttributeValue("MaxShopId", "100000");
 
-        //        //城市名称配对
-        //        //var citys = codeList.Where(s => item.CityName.Contains(s.City.Replace("自治区", "").Replace("县", "").Replace("市", ""))).ToList();
+        //        // City name matching
+        //        //var citys = codeList.Where(s => item.CityName.Contains(s.City.Replace("Autonomous District", "").Replace("County", "").Replace("City", ""))).ToList();
 
 
-        //        var citys = codeList.Where(s => item.Attribute("CityName").Value.Contains(s.City.Replace("自治区","")));
+        //        var citys = codeList.Where(s => item.Attribute("CityName").Value.Contains(s.City.Replace("Autonomous District","")));
 
         //        if (citys.Count() != 0)
         //        {
@@ -413,9 +416,9 @@ namespace Senparc.Ncf.Core.Area
         //        }
         //        else
         //        {
-        //            //没有找到区号的城市
+        //            // No city with a district number has been found
         //            System.Web.HttpContext.Current.Response.Write(
-        //                "省："+this.GetProvincesData().Single(p=>p.ID==int.Parse(item.Attribute("PID").Value)).ProvinceName+" ,市："+ item.Attribute("CityName").Value+"<br />");
+        //                "province："+this.GetProvincesData().Single(p=>p.ID==int.Parse(item.Attribute("PID").Value)).ProvinceName+" ,city："+ item.Attribute("CityName").Value+"<br />");
         //        }
         //    }
         //    doc.Save(System.Web.HttpContext.Current.Server.MapPath(CITIES_XML_PATH+".bak"));
@@ -428,51 +431,51 @@ namespace Senparc.Ncf.Core.Area
 
 
         /// <summary>
-        /// 获取城市区号
+        /// get city/district number
         /// </summary>
         /// <param name="cityName"></param>
-        /// <param name="format">是否格式化（前面加0）</param>
+        /// <param name="format">whether formatting (preceded by 0)</param>
         /// <returns></returns>
         public string GetCityCode(/*string provinceName,*/ string cityName, bool format)
         {
             string cityCode = this.GetCityData(cityName).CityCode;
-            return format ? "0" + cityCode : cityCode;//需要格式化，则在区号前加0
+            return format ? "0" + cityCode : cityCode;//Needs formatting; then add 0 before the district number.
         }
 
-        //#region ShopId相关
+        //#region ShopIdrelated
 
         ///// <summary>
-        ///// 获取一个可用的ShopId
+        ///// Get an available ShopId
         ///// </summary>
         ///// <param name="cityName"></param>
         ///// <returns></returns>
         //public int GetUseableMaxShopId(string cityName)
         //{
-        //    //获得Shop的XML设置
+        //    // Get the XML settings of the Shop
         //    var shopConfig = Config.XmlConfig.GetShopConfig();
-        //    //获得当前ShopId
+        //    // Get currentShopId
         //    var cityData = this.GetCityData(cityName);
-        //    int currentMaxShopId = cityData.MaxShopId;//当前XML的MaxShopId
-        //    int cityCode = int.Parse(cityData.CityCode);//区号
+        //    int currentMaxShopId = cityData.MaxShopId;//MaxShopId of currentXML
+        //    int cityCode = int.Parse(cityData.CityCode);//district number
         //    int maxShopId = currentMaxShopId;
 
-        //    //比较可用的ShopId
+        //    // Compare available ShopIds
         //    bool findUseableShopId = false;
         //    while (!findUseableShopId)
         //    {
         //        if (shopConfig.ForbidShopIds.Contains(maxShopId.ToString()))
         //        {
-        //            //存在于禁用ID列表中，退出，尝试下一个Id
+        //            // Store in the disabled ID column table, exit, and try the next ID
         //            maxShopId++;
         //            continue;
         //        }
         //        else
         //        {
-        //            //查找是否有相同ID存在
+        //            // Check whether there is an entry with the same ID in
         //            GLJKDataContext ctx = new GLJKDataContext();
         //            if (ctx.Shop_GetShopByCityCodeAndShopId(cityCode, maxShopId) == null)
         //            {
-        //                //ID可用
+        //                //ID available
         //                findUseableShopId = true;
         //            }
         //            else
@@ -486,35 +489,35 @@ namespace Senparc.Ncf.Core.Area
         //    return maxShopId;
         //}
         ///// <summary>
-        ///// 更新XML中对应城市的MaxShopId
+        ///// MaxShopId corresponding to the city in updateXML
         ///// </summary>
-        ///// <param name="cityName">城市名称</param>
-        ///// <param name="newMaxShopId">当前使用掉的MaxShopId</param>
+        /////<param name="cityName">City cityname</param>
+        /////<param name="newMaxShopId">MaxShopId dropped by currentuse</param>
         ///// <returns></returns>
         //public bool UpdateMaxShopId(string cityName, int newMaxShopId)
         //{
         //    try
         //    {
-        //        //TODO:最好能应用单件模式
-        //        XElement doc = this.GetXmlElement(CITIES_XML_PATH);//获取XML文档
-        //        string xmlFilePath = System.Web.HttpContext.Current.Server.MapPath(CITIES_XML_PATH);//路径
-        //        string backUpXmlFilePath = xmlFilePath + "." + DateTime.Now.ToString().Replace(":", "_") + ".更新MaxShopId（" + cityName + "）.bak";//备份文件路径
+        //        //TODO: It is best to apply the singleton pattern
+        //        XElement doc = this.GetXmlElement(CITIES_XML_PATH);//get XML document
+        //        string xmlFilePath = System.Web.HttpContext.Current.Server.MapPath(CITIES_XML_PATH);//path
+        //        string backUpXmlFilePath = xmlFilePath + "." + DateTime.Now.ToString().Replace(":", "_") + ".updateMaxShopId（" + cityName + "）.bak";//backup filepath
 
         //        var cityData = (from c in doc.Elements() where c.Attribute("CityName").Value == cityName select c).Single();
         //        //int shopId = int.Parse(cityData.Attribute("MaxShopId").Value);
 
-        //        //备份当前数据
+        //        // Backup currentdata
         //        //File.Copy(xmlFilePath, backUpXmlFilePath);
-        //        cityData.Save(backUpXmlFilePath);//备份单条数据
+        //        cityData.Save(backUpXmlFilePath);//Back up a single data item
 
         //        cityData.SetAttributeValue("MaxShopId", newMaxShopId + 1);
-        //        //保存
+        //        //save
         //        doc.Save(xmlFilePath);
 
-        //        //更新缓存
+        //        // Update cache
         //        CacheData.AreaData_City areaData = new AreaDataCache_City();
-        //        areaData.Clear();//清空
-        //        GetCitiesData();//使用调用，更新缓存
+        //        areaData.Clear();//clear
+        //        GetCitiesData();//use invoke, update cache
 
         //        return true;
         //    }
@@ -528,22 +531,22 @@ namespace Senparc.Ncf.Core.Area
 
 
         /// <summary>
-        /// 通过IP数据的Country(省、市、区名称)，分割省、市、区信息以便查询
+        /// Split province, city, and district information for querying using Country (province, city, districtname) from IPdata
         /// </summary>
         /// <param name="ipCountry"></param>
         /// <param name="provinceName"></param>
-        /// <param name="cityName">为null时连同不获取，</param>
-        /// <param name="districtName">districtName不获取</param>
+        /// <param name="cityName">When fornull is used together with notget,</param>
+        /// <param name="districtName">districtNamenotget</param>
         public static void GetProvinceCityNameFromIPCountry(string ipCountry, ref string provinceName, ref string cityName, ref string districtName)
         {
             int areaStartIndex = 0;
-            //省
+            //province
             if (provinceName == null)
                 return;
             else
                 provinceName = GetProvinceAreaNameFromIPCountry(ipCountry, new string[] { "省", "自治区" }, ref areaStartIndex);
 
-            //市
+            //city
             if (cityName == null)
             {
                 return;
@@ -551,12 +554,12 @@ namespace Senparc.Ncf.Core.Area
             else
             {
                 if (ipCountry.IndexOf("市") != -1 && areaStartIndex == 0)
-                    provinceName = cityName; //直辖市
+                    provinceName = cityName; //Municipality
 
                 cityName = GetProvinceAreaNameFromIPCountry(ipCountry, new string[] { "市", "自治州" }, ref areaStartIndex);
             }
 
-            //区
+            //district
             if (districtName == null)
                 return;
             else
@@ -564,11 +567,11 @@ namespace Senparc.Ncf.Core.Area
 
         }
         /// <summary>
-        /// 通过IP数据的Country(省、市、区名称)
+        /// Country (province, city, district name) via IP data
         /// </summary>
-        /// <param name="ipCountry">从IP数据库中得到的ipCountry字符串</param>
-        /// <param name="areaNameList">地区级别称谓，如"省""市""区"</param>
-        /// <param name="areaStartIndex">开始搜索字符串位置的游标</param>
+        /// <param name="ipCountry">ipCountry string for "to" from the IP database</param>
+        /// <param name="areaNameList">District-level designations, such as "province," "city," "district"</param>
+        /// <param name="areaStartIndex">startsearch string position cursor</param>
         /// <returns></returns>
         private static string GetProvinceAreaNameFromIPCountry(string ipCountry, string[] areaNameList, ref int areaStartIndex)
         {
@@ -577,8 +580,8 @@ namespace Senparc.Ncf.Core.Area
             {
                 if (ipCountry.IndexOf(area) != -1)
                 {
-                    areaNameResult = ipCountry.Substring(areaStartIndex, ipCountry.IndexOf(area) - areaStartIndex + area.Length);//获得地区名称
-                    areaStartIndex += areaNameResult.Length;//字符串游标，搜索“区”的时候可忽略
+                    areaNameResult = ipCountry.Substring(areaStartIndex, ipCountry.IndexOf(area) - areaStartIndex + area.Length);//Obtained districtname
+                    areaStartIndex += areaNameResult.Length;//String cursor, can be ignored when searching for "district"
                     break;
                 }
             }

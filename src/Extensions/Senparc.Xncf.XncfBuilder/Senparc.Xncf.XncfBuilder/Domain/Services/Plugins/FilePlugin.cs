@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：FilePlugin.cs
-    文件功能描述：FilePlugin 服务逻辑
-    
-    
-    创建标识：Senparc - 20231003
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+    Copyright (C) 2026 Senparc
+
+    File name: FilePlugin.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20231003
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20260717
+    Change description: v0.37.0-preview5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 
@@ -80,7 +83,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
             return result;
         }
 
-        //TODO：文件修改（从文件中抽取，然后给到 LLM 进行修改）
+        //Legacy comment translated to English.
 
         [KernelFunction, LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.ReadDbContext")]
         public async Task<FileSaveResult> UpdateSenparcEntities(
@@ -99,8 +102,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 
             string tempFile = Path.GetTempFileName();
 
-            string targetComment1 = "//DOT REMOVE OR MODIFY THIS LINE"; //"//DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point";
-            string targetComment2 = "//DON'T REMOVE OR MODIFY THIS LINE"; //"//DON'T REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point";
+            string targetComment1 = "//DOT REMOVE OR MODIFY THIS LINE"; //"//DOT REMOVE OR MODIFY THIS LINE - Entities Point";
+            string targetComment2 = "//DON'T REMOVE OR MODIFY THIS LINE"; //"//DON'T REMOVE OR MODIFY THIS LINE do not remove or modify this line - Entities Point";
             string insertStr = $"        public DbSet<{entityName}> {pluralEntityName} {{ get; set; }}";
             bool inserted = false;
 

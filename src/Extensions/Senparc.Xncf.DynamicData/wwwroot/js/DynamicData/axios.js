@@ -1,12 +1,15 @@
 ﻿/**
- * axios封装
- * 请求拦截、响应拦截、错误统一处理
+
+ * Legacy comment translated to English.
+
+ * Legacy comment translated to English.
+
  */
-// 创建一个axios实例
+//Legacy comment translated to English.
 var servicePR = axios.create({
     timeout: 100000 // request timeout
 });
-// 请求拦截
+//Legacy comment translated to English.
 servicePR.interceptors.request.use(
     config => {
         if (config.method.toUpperCase() === 'POST') {
@@ -20,11 +23,11 @@ servicePR.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-// 响应拦截器
+//Legacy comment translated to English.
 servicePR.interceptors.response.use(
     response => {
         //console.log('response', response)
-        // 二进制数据处理
+        //Legacy comment translated to English.
         //if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
         //    if (response.data.type === 'application/json') {
         //        const reader = new FileReader();
@@ -43,13 +46,13 @@ servicePR.interceptors.response.use(
         //} else
         if (response.status === 200) {
             if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
-                // console.log('文件流：', response)
+                //Legacy comment translated to English.
                 return Promise.resolve(response);
             } else if (response.data.success) {
                 return Promise.resolve(response);
             } else {
-                // 请求已发出，其他状态
-                // 切换隐藏时不给错误提示，直接刷新
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 if (response.config.url.includes('HideManager') || response.config.url.includes('ChangeState')) {
                     return;
                 }

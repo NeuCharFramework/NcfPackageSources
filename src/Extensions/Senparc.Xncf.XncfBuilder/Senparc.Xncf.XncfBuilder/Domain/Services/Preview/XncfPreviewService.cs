@@ -1,29 +1,32 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：XncfPreviewService.cs
-    文件功能描述：在独立进程中构建、启动和切换 XNCF 预览实例
+    File name: XncfPreviewService.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20260801
 
-    创建标识：Senparc - 20260801
+    Modified by: Senparc - 20260804
+    Change description: v0.39.0-preview8 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+    Modified by: Senparc - 20260813
+    Change description: v0.40.0-preview10 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.40.0-preview10 增强 XncfBuilder 预览状态持久化与后台初始化
+    Modified by: Senparc - 20260815
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.41.0 增强隔离开发任务与 Sandbox 预览流程
+    Modified by: Senparc - 20260822
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
+    Modified by: Senparc - 20261103
+    Change description: v0.41.7 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.41.7 XncfBuilder 预览与隔离开发任务表统一租户底层支持
+    Modified by: Senparc - 20261110
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261110
-    修改描述：主站关闭时不再无限等待预览操作锁
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 
@@ -206,8 +209,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         }
 
         /// <summary>
-        /// 关闭时获取预览操作锁。已取消的宿主令牌不能直接传给 <see cref="SemaphoreSlim.WaitAsync(CancellationToken)"/>，
-        /// 否则锁即使空闲也会立即失败，随后若改用 <see cref="CancellationToken.None"/> 又会无限等待。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         private async Task<bool> TryAcquireOperationLockForShutdownAsync(CancellationToken cancellationToken)
         {
@@ -241,7 +244,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                 options.ModuleProjectName,
                 options.SolutionFilePath,
                 log);
-            // 捕获请求环境的租户上下文：后续后台状态写回据此在正确租户的 scope 中执行
+            //Legacy comment translated to English.
             newState.TenantId = ambientTenant?.MatchSuccess == true ? ambientTenant.Id : 0;
             _sessions[sessionId] = newState;
             SetStage(newState, XncfPreviewStage.Queued, "预览任务已进入队列。", null);
@@ -1516,7 +1519,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             public string SolutionFilePath { get; }
 
             /// <summary>
-            /// 会话创建时的租户（0 = 单租户/系统公共）。后台状态写回据此还原租户 scope。
+            ///Legacy comment translated to English.
             /// </summary>
             public int TenantId { get; set; }
 

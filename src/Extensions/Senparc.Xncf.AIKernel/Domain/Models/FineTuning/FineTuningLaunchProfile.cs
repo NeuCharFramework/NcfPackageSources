@@ -1,11 +1,14 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：FineTuningLaunchProfile.cs
-    文件功能描述：微调 Worker 的本机启动配置
+    File name: FineTuningLaunchProfile.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20261106
 
-    创建标识：Senparc - 20261106
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 

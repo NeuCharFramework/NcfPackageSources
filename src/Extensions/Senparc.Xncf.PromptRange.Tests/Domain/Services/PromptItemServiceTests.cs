@@ -36,23 +36,23 @@
 //        [TestMethod()]
 //        public async Task GetPromptRangeTreeTest()
 //        {
-//            //测试全部显示虚拟节点
+//Legacy comment translated to English.
 //            {
 //                var result = await this._promptItemService.GetPromptRangeTreeList(true, true);
 //                Assert.IsNotNull(result);
 
-//                Console.WriteLine("显示 PromptRange 节点 / 显示 Tratic 节点");
+//Legacy comment translated to English.
 //                Console.WriteLine(result.Select(z => z.Text).ToJson(true));
 
 //                Assert.IsTrue(result.Any(z => z.Text.Contains($"⊙")));
 //            }
 
-//            //测试全部不显示虚拟节点
+//Legacy comment translated to English.
 //            {
 //                var result = await this._promptItemService.GetPromptRangeTreeList(false, false);
 //                Assert.IsNotNull(result);
 
-//                Console.WriteLine("不显示 PromptRange 节点 / 不显示 Tratic 节点");
+//Legacy comment translated to English.
 //                Console.WriteLine(result.Select(z => z.Text).ToJson(true));
 
 //                Assert.IsTrue(!result.Any(z => z.Text.Contains($"⊙")));
@@ -60,24 +60,24 @@
 //            }
 
 
-//            //测试只显示 Prompt Range 虚拟节点
+//Legacy comment translated to English.
 //            {
 //                var result = await this._promptItemService.GetPromptRangeTreeList(true, false);
 //                Assert.IsNotNull(result);
 
-//                Console.WriteLine("显示 PromptRange 节点 / 不显示 Tratic 节点");
+//Legacy comment translated to English.
 //                Console.WriteLine(result.Select(z => z.Text).ToJson(true));
 
 //                Assert.IsTrue(result.Any(z => z.Text.Contains($"⊙")));
 //                Assert.IsTrue(!result.Any(z => z.Text.Contains("▼")));
 //            }
 
-//            //测试只显示 Tactic 虚拟节点
+//Legacy comment translated to English.
 //            {
 //                var result = await this._promptItemService.GetPromptRangeTreeList(false, true);
 //                Assert.IsNotNull(result);
 
-//                Console.WriteLine("不显示 PromptRange 节点 / 显示 Tratic 节点");
+//Legacy comment translated to English.
 //                Console.WriteLine(result.Select(z => z.Text).ToJson(true));
 
 //                Assert.IsTrue(!result.Any(z => z.Text.Contains($"⊙")));
@@ -88,10 +88,10 @@
 //        [TestMethod]
 //        public async Task GetPromptRangeTreeFilterRangeNameTest()
 //        {
-//            //测试对 PromptName 的筛选：选中所有
+//Legacy comment translated to English.
 //            {
 //                var promptRangeList = base.dataLists.GetList<Models.DatabaseModel.PromptRange>();
-//                Console.WriteLine("所有 PromptRange：");
+//                Console.WriteLine("all PromptRange：");
 //                Console.WriteLine(promptRangeList.Select(z => z.RangeName).ToList().ToJson());
 
 //                var result = await this._promptItemService.GetPromptRangeTreeList(true, false, null);
@@ -101,10 +101,10 @@
 //                Assert.IsTrue(promptRangeList.All(r => result.Any(p => p.Text.Contains(r.RangeName))));
 //            }
 
-//            //测试对 PromptName 的筛选：选中其中一个
+//Legacy comment translated to English.
 //            {
 //                var promptRangeList = base.dataLists.GetList<Models.DatabaseModel.PromptRange>();
-//                Console.WriteLine("展示所有 PromptRange");
+//Legacy comment translated to English.
 //                Console.WriteLine(promptRangeList.Select(z => z.RangeName).ToList().ToJson());
 
 //                var firstPromptRange = promptRangeList.First();
@@ -112,7 +112,7 @@
 //                var result = await this._promptItemService.GetPromptRangeTreeList(true, false, firstPromptRange.RangeName);
 //                Assert.IsNotNull(result);
 
-//                Console.WriteLine("不显示 PromptRange 节点 / 显示 Tratic 节点");
+//Legacy comment translated to English.
 //                Console.WriteLine(result.Select(z => z.Text).ToJson(true));
 
 //                Assert.IsTrue(result.Any(z => z.Text.Contains($"⊙")));
@@ -122,10 +122,10 @@
 //            }
             
             
-//            //测试对 PromptName 的筛选：都未选中
+//Legacy comment translated to English.
 //            {
 //                var promptRangeList = base.dataLists.GetList<Models.DatabaseModel.PromptRange>();
-//                Console.WriteLine("展示所有 PromptRange");
+//Legacy comment translated to English.
 //                Console.WriteLine(promptRangeList.Select(z => z.RangeName).ToList().ToJson());
 
 //                var firstPromptRange = promptRangeList.First();

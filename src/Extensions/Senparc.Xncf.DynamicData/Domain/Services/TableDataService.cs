@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：TableDataService.cs
-    文件功能描述：TableDataService 相关实现
-    
-    
-    创建标识：Senparc - 20240719
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: TableDataService.cs
+    File description: TableDataService related implementation
+
+    Created by: Senparc - 20240719
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
 ----------------------------------------------------------------*/
 
@@ -38,7 +41,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         }
 
         /// <summary>
-        /// 根据模板创建 TableDataDto 列表
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="tableId"></param>
         /// <returns></returns>
@@ -50,13 +53,13 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         }
 
         /// <summary>
-        /// 根据模板创建 TableDataDto 列表
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="columnTemplate"></param>
         /// <returns></returns>
         public DataTemplate GetTableDataTemplate(ColumnTemplate columnTemplate)
         {
-            //从ColumnMetadataDto中获取TableDataDto
+            //Legacy comment translated to English.
             var tableDataDtos = new List<TableDataDto>();
             foreach (var columnMetadataDto in columnTemplate)
             {
@@ -102,7 +105,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         }
 
         /// <summary>
-        /// 设置数据
+        /// settingsdata
         /// </summary>
         /// <param name="dataTemplate"></param>
         /// <param name="dataList"></param>

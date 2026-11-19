@@ -1,0 +1,254 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Version>0.12.29</Version>
+		<PackageReleaseNotes>[2026-07-02] v0.0.2 supportstreamingoutputimproveinteraction, improve AgentsManager frontendinterface
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-07-05] v0.0.3 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-07-05] v0.0.4 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-07-07] v0.0.5 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    [2026-07-17] v0.1.0 Updated module behavior and related support.
+		    1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    5. Updated module behavior and related support.
+		    6. Updated module behavior and related support.
+		    7. Updated module behavior and related support.
+		    [2026-07-29] v0.2.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-07-31] v0.2.1 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-08-04] v0.3.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    [2026-08-08] v0.4.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    [2026-08-13] v0.5.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    [2026-08-15] v0.5.1 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    [2026-08-22] v0.6.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-08-29] v0.7.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    [2026-09-15] v0.8.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    [2026-09-16] v0.9.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    [2026-09-17] v0.10.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-09-26] v0.11.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    [2026-10-01] v0.10.2 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    [2026-10-01] v0.10.1 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    [2026-10-05] v0.10.3 Updated module behavior and related support.
+		    [2026-10-09] v0.11.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-10-21] v0.11.1 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    5. adapt Senparc.AI.AgentKernel 0.1.15-preview2
+		    [2026-10-24] Add private Workspace attachments, bounded local Office/PDF reading and explicit opt-in image vision. Preserve attachment references and original files; never insert binary Base64 into text prompts. Refresh live Markdown styles in the running host.
+		    1. Upload, paste or drop up to 4 files per message. User uploads do not grant AI write/CLI permission. Read/write size limits come from Workspace configuration and are displayed by the upload control.
+		    2. DOCX/XLSX/PPTX and text use local extraction; PDF text is read per page, up to 200 pages. Old DOC/XLS/PPT are stored without claiming text extraction. Scanned pages require OCR or explicitly authorized image screenshots; no paid OCR is called automatically.
+		    3. Document tools paginate up to 4000 characters per call and share a 16000-character per-turn output budget with Workspace listing/reading/search. These are character safeguards, not exact token estimates; model-reported Usage remains authoritative.
+		    4. Vision is off by default and limited to 2 images per message. Browsers create an EXIF-free JPEG preview with a maximum 1536-pixel side and 512 KB; original files remain unchanged. The selected model must support image input.
+		    5. Chat messages persist only canonical attachment references and ETags in a nullable AttachmentsJson column. File changes invalidate stale references; generated migrations cover all six database providers.
+		    6. Admin design-time factories locate the real Senparc.Web configuration when launched from DatabasePlant and refuse to silently target its example database.
+		    [2026-10-24] Add authenticated HTML browser previews, bounded file/ZIP downloads, and expiring revocable read-only snapshot shares. Anonymous snapshots disable scripts and external resources; keep App_Data and Data Protection keys private and persistent.
+		    1. Browser preview and downloads require session and Workspace ownership; anonymous links grant read-only access to a frozen HTML snapshot, never directory access or downloads.
+		    2. Snapshots expire after 1 hour, 24 hours or 7 days; up to 10 active shares per owner. Revocation/expiry blocks new requests, not previously saved copies. Expired snapshots are purged on access or owner management.
+		    3. HTML and each resource are limited to 2 MB, generated snapshots to 8 MB and 100 resources. ZIPs are limited to 1000 entries, 32 levels and 64 MB uncompressed; per-file reads also honor Workspace configuration.
+		    4. App_Data/WorkspaceAssetShares is private encrypted storage outside wwwroot. Persist it and Data Protection keys together; replicas must share both. Use HTTPS, exclude capability URLs from access logs and keep App_Data out of static-file mappings/backups accessible to clients.
+		    5. Fix doubled live Markdown line breaks without changing stream text, paragraphs or code-block whitespace.
+		    [2026-10-24] Expand Workspace previews while preserving Chat minimum width; render Markdown with a source toggle.
+		    [2026-10-24] Fix Chat Workspace asset panel template nesting, file entry fields, and split-pane resizing.
+		    [2026-11-01] Improve missing custom NeuCharPivot Block handling
+		    1. Show a friendly placeholder with the missing module UID and Function Code instead of opening an error popup.
+		    2. Add hover/click guidance and prefilled links to the Pivot and module settings pages.
+		    3. Preserve missing-block metadata when loading Admin home panels and cover the client fallback behavior with regression tests.
+		    [2026-11-02] Upgrade Memory with database encryption, Workspace scopes, Off/Read-only/Learn modes, evidence/history, token budgets and compact dropdown settings.
+		    [2026-11-02] Add private per-user tiered Chat Memory, opt-in automatic extraction with PromptRange, revision-safe editing, and personal/tenant SystemMessage settings.
+		    [2026-11-02] Route AdminChat large attachments through streaming Workspace processing
+		    1. Support files above the local parsing limit through a 300 MiB streaming upload endpoint.
+		    2. Skip full-text extraction for large attachments and expose Workspace/Python batch-processing guidance with file size metadata.
+		    [2026-11-02] Add shared bilingual contextual documentation help with an iframe dialog, new-window access and page/feature pilots.
+		    [2026-11-02] Merge live Host metrics and historical resource trends into one linear, zoomable monitor with network throughput and selectable time ranges.
+		    [2026-11-02] Display average/highest prompt scores and add score/PromptCode sorting to the shared PromptRange picker.
+		    [2026-11-02] Add the reusable v-prompt-range selector with range/lane filters, keyword search, preview and cursor insertion; integrate both AdminChat composers.
+		    [2026-11-02] Fix sparse resource-monitor rendering with ECharts 3 and reuse Host panel spacing, borders and header styles.
+		    [2026-11-02] Restore the GetHostMetrics API binding and show specific global Pivot access denial reasons without changing access policies.
+		    [2026-11-02] Add streamed large-file Workspace uploads and clean up unsubmitted Chat attachments
+		    1. Add a multi-file Workspace management upload flow with a 300 MiB per-file limit and tenant-aware ownership checks.
+		    2. Remove unsubmitted Chat attachment resources through a protected server endpoint and preserve submitted attachment files.
+		    3. Allow the first Chat turn to be attachment-only and clean up pending resources when changing sessions.
+		    [2026-11-02] v0.12.1 Updated module behavior and related support.
+		    [2026-11-03] Report verified Memory save outcomes and scopes, distinguish skipped/rejected extraction, and prevent assistant-only persistence claims; clarify private database storage.
+		    [2026-11-03] Add collapsible Workspace groups, resizable/collapsible Chat sidebar, account-owned persistent in-group session ordering across devices, and reduced-motion-aware live task indicators.
+		    [2026-11-03] Isolate AdminChat live generation, streamed messages, usage and trajectory callbacks by originating session; reject stale detail responses when navigating between sessions.
+		    [2026-11-03] Redesign Memory settings with a structured header, collapsible guidance, consistent actions, scope badges and responsive layouts.
+		    [2026-11-03] v0.12.15 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Dependency update from Senparc.Ncf.Mvc.UI to 0.22.6-preview10
+		    5. Dependency update from Senparc.Xncf.NeuCharWorkflow.Abstractions to 0.3.1
+		    [2026-11-03] Expand bilingual documentation help to all interactive Admin pages, legacy forms and contextual panels; validate every route and anchor.
+		    [2026-11-03] Add bilingual Memory documentation and contextual help for Chat launchers, modes, entries, loading reports, Markdown and SystemMessage settings.
+		    [2026-11-03] Receive WorkspaceAgent runtime files through project references to fix mixed-configuration CI builds and publishing.
+		    [2026-11-03] Version embedded Admin assets with content hashes to prevent stale documentation catalogs; keep contextual help attached to Chat controls without crowding sidebar actions.
+		    [2026-11-05] v0.12.26 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    5. Updated module behavior and related support.
+		    6. Updated module behavior and related support.
+		    7. Updated module behavior and related support.
+		    8. Updated module behavior and related support.
+		    9. Updated module behavior and related support.
+		    10. Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+		    11. Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+		    12. Dependency update from Senparc.Ncf.Mvc.UI to 0.22.7-preview11
+		    13. Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+		    14. Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview7
+		    15. Dependency update from Senparc.Xncf.Workspace to 0.2.7
+		    16. Dependency update from Senparc.Xncf.FileManager to 0.8.3
+		    17. Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+		    18. Dependency update from Senparc.Xncf.WeixinManager to 0.24.18
+		    19. Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+		    20. Dependency update from Senparc.Xncf.Menu to 0.14.12
+		    21. Dependency update from Senparc.Xncf.SystemCore to 0.14.12
+		    22. Dependency update from Senparc.Xncf.SystemManager to 0.15.12
+		    23. Dependency update from Senparc.Xncf.SystemPermission to 0.15.12
+		    24. Dependency update from Senparc.Xncf.Tenant to 0.15.15
+		    25. Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
+		    [2026-11-10] v0.12.27 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    [2026-11-11] v0.12.28 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    5. Updated module behavior and related support.
+		    [2026-11-19] v0.12.29 Localized administration, chat, and workflow surfaces
+		    1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+		    2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
+		</PackageReleaseNotes>
+		<!--<TargetFramework>net5.0</TargetFramework>-->
+		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
+		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+		<DocumentationFile>../Senparc.Web/App_Data/ApiDocXml/Senparc.Areas.Admin.XML</DocumentationFile>
+		<Configurations>Debug;Release;Debug-Dapr;ModifyPublish;ModifyPublish</Configurations>
+			<NoWarn>$(NoWarn);MEAI001;MAAI001</NoWarn>
+	</PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.ML.Tokenizers" Version="2.0.0" />
+        <PackageReference Include="Microsoft.ML.Tokenizers.Data.O200kBase" Version="2.0.0" />
+        <PackageReference Include="Microsoft.ML.Tokenizers.Data.Cl100kBase" Version="2.0.0" />
+    </ItemGroup>
+	<ItemGroup>
+		<!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
+
+		<EmbeddedResource Include="wwwroot\**\*" />
+
+		<Compile Remove="Areas\Admin\Pages\Dto\**" />
+
+		<Content Remove="Areas\Admin\Pages\Dto\**" />
+
+		<EmbeddedResource Remove="Areas\Admin\Pages\Dto\**" />
+
+		<None Remove="Areas\Admin\Pages\Dto\**" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
+		<PackageReference Include="AngleSharp" Version="1.3.0" />
+		<PackageReference Include="PdfPig" Version="0.1.16" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+		<PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="2.3.3" />
+		<PackageReference Include="Senparc.CO2NET.Cache.Redis" Version="5.3.0" />
+		<!--<PackageReference Include="Senparc.Ncf.AreaBase" Version="0.18.7-preview1" />
+		<PackageReference Include="Senparc.Ncf.Core" Version="0.21.3.2-preview1" />
+		<PackageReference Include="Senparc.Ncf.Log" Version="0.18.5-preview1" />
+		<PackageReference Include="Senparc.Ncf.Mvc.UI" Version="0.18.7-preview1" />
+		<PackageReference Include="Senparc.Ncf.Service" Version="0.21.1-preview1" />
+		<PackageReference Include="Senparc.Ncf.Utility" Version="0.18.7-preview1" />
+		<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.21.12-preview1" />
+
+		<PackageReference Include="Senparc.Xncf.AreasBase" Version="0.9.9.2-preview1" />
+
+		<PackageReference Include="Senparc.Xncf.DynamicData" Version="0.2.8-pre-alpha" />
+		<PackageReference Include="Senparc.Xncf.SystemCore" Version="0.10.8-preview1" />
+		<PackageReference Include="Senparc.Xncf.SystemManager" Version="0.11.9-preview1" />
+		<PackageReference Include="Senparc.Xncf.XncfModuleManager" Version="0.11.9-preview1" />
+		<PackageReference Include="Senparc.Xncf.Tenant" Version="0.11.8-preview1" />
+		-->
+
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Mvc.UI\Senparc.Ncf.Mvc.UI.csproj" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Shared.Abstractions\Senparc.Ncf.Shared.Abstractions.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.NeuCharWorkflow.Abstractions\Senparc.Xncf.NeuCharWorkflow.Abstractions.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.PromptRange.Abstractions\Senparc.Xncf.PromptRange.Abstractions.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace.Abstractions\Senparc.Xncf.Workspace.Abstractions.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace\Senparc.Xncf.Workspace.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Connectors\Senparc.Xncf.Connectors.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.FileManager\Senparc.Xncf.FileManager.csproj" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Menu\[5940]Senparc.Xncf.Menu.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemPermission\[5960]Senparc.Xncf.SystemPermission.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
+	</ItemGroup>
+	<Import Project="$(MSBuildThisFileDirectory)..\..\..\src\Senparc.AI.AgentKernel.props" />
+</Project>

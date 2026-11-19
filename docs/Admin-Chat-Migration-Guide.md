@@ -37,7 +37,7 @@
 ### 步骤 1: 创建数据库 Migration
 
 ```bash
-cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfSimulatedSite/Senparc.Web
+cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfWebAdminBaseline/Senparc.Web
 
 # 创建 Migration
 dotnet ef migrations add AddAdminChatTables \
@@ -67,7 +67,7 @@ dotnet ef migrations add AddAdminChatTables \
 ### 步骤 3: 执行 Migration
 
 ```bash
-cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfSimulatedSite/Senparc.Web
+cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfWebAdminBaseline/Senparc.Web
 
 # 应用 Migration 到数据库
 dotnet ef database update \
@@ -100,7 +100,7 @@ DESCRIBE ADMIN_AdminChatSessionModule;
 ### 步骤 5: 启动应用程序
 
 ```bash
-cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfSimulatedSite/Senparc.Web
+cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfWebAdminBaseline/Senparc.Web
 
 # 启动应用
 dotnet run

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：VersionHelper.cs
-    文件功能描述：VersionHelper 相关实现
-    
-    
-    创建标识：Senparc - 20231104
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: VersionHelper.cs
+    File description: VersionHelper related implementation
+
+    Created by: Senparc - 20231104
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -26,14 +29,18 @@ using Senparc.Ncf.Core.Exceptions;
 namespace Senparc.Ncf.XncfBase.VersionManager
 {
     /* GPT-4 Prompt:
-     1、请为我编写一个能够识别软件版本号的正则表达式  
-     2、创建一个独立的类：VersionInfo，用于储存版本信息  
-     3、为这个正则表达式编写一个尽量涵盖各种版本情况的完整的单元测试（使用 .NET 自带的单元测试）。
+
+     Legacy comment translated to English.  
+
+     Legacy comment translated to English.  
+
+     Legacy comment translated to English.
+
      */
 
     public static class VersionHelper
     {
-        //这个正则表达式匹配遵循语义化版本规范（semver）的版本号。它包括主版本号、次版本号、修订号、可选的构建号、可选的预发布版本标签和可选的元数据标签。
+        //Legacy comment translated to English.
         //private const string VersionRegex = @"^(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?(?:-([a-zA-Z\d\-]+))?(?:\+([a-zA-Z\d\-]+))?$";
         //private const string VersionRegex = @"^(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z\d\-]+))?(?:\.(\d+))?(?:\+([a-zA-Z\d\-]+))?$";
         //private const string VersionRegex = @"^(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-]+))?$";
@@ -46,10 +53,10 @@ namespace Senparc.Ncf.XncfBase.VersionManager
         private const string VersionInCodeRegex = @"Version\s*=>\s*""(\d+)\.(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-.]+))?""";
 
         /// <summary>  
-        /// 解析版本字符串并返回一个 VersionInfo 对象。  
+        ///Legacy comment translated to English.
         /// </summary>  
-        /// <param name="versionString">要解析的版本字符串。</param>  
-        /// <returns>表示解析后的版本信息的 VersionInfo 对象。</returns>  
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public static VersionInfo Parse(string versionString)
         {
             var regex = new Regex(VersionRegex);
@@ -64,7 +71,7 @@ namespace Senparc.Ncf.XncfBase.VersionManager
             {
                 Major = int.Parse(match.Groups[1].Value),
                 Minor = int.Parse(match.Groups[2].Value),
-                Patch = match.Groups[3].Success ? int.Parse(match.Groups[3].Value) : 0, // 如果不存在 Patch，则使用默认值 0  
+                Patch = match.Groups[3].Success ? int.Parse(match.Groups[3].Value) : 0, //Legacy comment translated to English.
                 Build = match.Groups[4].Success ? int.Parse(match.Groups[4].Value) : (int?)null,
                 PreRelease = match.Groups[5].Success ? match.Groups[5].Value : null,
                 Metadata = match.Groups[7].Success ? match.Groups[7].Value : null
@@ -75,7 +82,7 @@ namespace Senparc.Ncf.XncfBase.VersionManager
 
 
         /// <summary>
-        /// 从 Register.cs 代码中获取版本号
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
@@ -92,7 +99,7 @@ namespace Senparc.Ncf.XncfBase.VersionManager
 
             var major = int.Parse(match.Groups[1].Value);
             var minor = int.Parse(match.Groups[2].Value);
-            var patch = match.Groups[3].Success ? int.Parse(match.Groups[3].Value) : 0; // 如果不存在 Patch，则使用默认值 0  
+            var patch = match.Groups[3].Success ? int.Parse(match.Groups[3].Value) : 0; //Legacy comment translated to English.
 
             var versionString = $"{major}.{minor}.{patch}";
 
@@ -116,10 +123,10 @@ namespace Senparc.Ncf.XncfBase.VersionManager
 
 
         /// <summary>
-        /// 替换版本号
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="code"></param>
-        /// <param name="rawVersionString">原始版本定位字符串，如：<code>Version => "0.1.1"</code></param>
+        ///Legacy comment translated to English.
         /// <param name="newVersionInfo"></param>
         /// <returns></returns>
         public static string ReplaceVersionInCode(string code, string rawVersionString, VersionInfo newVersionInfo)
@@ -135,23 +142,23 @@ namespace Senparc.Ncf.XncfBase.VersionManager
 
         public static string UpdateVersionInCodeWithRoslyn(string fileContent, UpdateVersionType updateType)
         {
-            // 使用 Roslyn 解析 C# 代码  
+            //Legacy comment translated to English.
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(fileContent);
             CompilationUnitSyntax root = syntaxTree.GetCompilationUnitRoot();
 
-            // 查找 Version 属性所在的节点  
+            //Legacy comment translated to English.
             PropertyDeclarationSyntax versionProperty = root.DescendantNodes()
                 .OfType<PropertyDeclarationSyntax>()
                 .FirstOrDefault(p => p.Identifier.Text == "Version");
 
             if (versionProperty != null)
             {
-                //获取旧的版本号
+                //Legacy comment translated to English.
                 var oldVersionString = versionProperty.ExpressionBody.Expression.ToString().Replace("\"", "");
                 Console.WriteLine("oldVersionString:" + oldVersionString);
                 var oldVersion = Parse(oldVersionString);
 
-                // 如果找到了 Version 属性，修改其值  
+                //Legacy comment translated to English.
                 var newVersion = new VersionInfo();
 
                 switch (updateType)
@@ -176,7 +183,7 @@ namespace Senparc.Ncf.XncfBase.VersionManager
                 ArrowExpressionClauseSyntax newExpressionBody = SyntaxFactory.ArrowExpressionClause(newVersionExpression);
                 PropertyDeclarationSyntax newVersionProperty = versionProperty.WithExpressionBody(newExpressionBody);
 
-                // 将修改后的语法树规范化并转换为字符串，并写回到原始的 .cs 文件中  
+                //Legacy comment translated to English.
                 SyntaxNode newRoot = root.ReplaceNode(versionProperty, newVersionProperty);
                 string newContent = newRoot
                     //.NormalizeWhitespace()

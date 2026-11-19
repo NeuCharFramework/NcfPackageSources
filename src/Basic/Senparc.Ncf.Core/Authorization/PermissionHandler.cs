@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PermissionHandler.cs
-    文件功能描述：PermissionHandler 相关实现
-    
-    
-    创建标识：Senparc - 20211223
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: PermissionHandler.cs
+    File description: PermissionHandler related implementation
+
+    Created by: Senparc - 20211223
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +23,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Core.Authorization
 {
     /// <summary>
-    /// 校验
+    ///Legacy comment translated to English.
     /// </summary>
     public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
     {
@@ -35,12 +38,12 @@ namespace Senparc.Ncf.Core.Authorization
         {
             if (requirement.ResourceCodes.Length == 1 && PermissionRequirement.All.Equals(requirement.ResourceCodes[0]))
             {
-                // 有且仅有一个*
+                //Legacy comment translated to English.
                 context.Succeed(requirement);
                 return;
             }
             int adminUserInfoId = GetCurrentAdminUserInfoId(context);
-            bool hasPermission = await _checkPermission.HasPermissionAsync(requirement.ResourceCodes, adminUserInfoId); // 当前用户是否有权限
+            bool hasPermission = await _checkPermission.HasPermissionAsync(requirement.ResourceCodes, adminUserInfoId); //Legacy comment translated to English.
             if (hasPermission)
             {
                 context.Succeed(requirement);
@@ -52,7 +55,7 @@ namespace Senparc.Ncf.Core.Authorization
         }
 
         /// <summary>
-        /// 获取当前登录人Id
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>

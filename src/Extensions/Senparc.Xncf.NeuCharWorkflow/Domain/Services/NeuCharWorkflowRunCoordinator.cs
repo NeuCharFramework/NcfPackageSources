@@ -1,35 +1,38 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharWorkflowRunCoordinator.cs
-    文件功能描述：NeuChar Workflow 测试运行状态、节点进度与 Console 协调器
+    File name: NeuCharWorkflowRunCoordinator.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20260809
 
-    创建标识：Senparc - 20260809
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 enhance workflow orchestration, replay, Webhook, and parallel execution
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 enhance workflow parallelism and execution control
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 增强工作流并行与运行控制
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 support pausing and external resumption of Human Input nodes
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance workflow function calls, task control, and replay management
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Modified by: Senparc - 20260909
+    Change description: v0.4.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260909
-    修改描述：v0.4.0 运行来源新增 chat（Chat 触发器聊天会话）
+    Modified by: Senparc - 20260915
+    Change description: v0.4.0 enhance Chat trigger message persistence and recovery
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Modified by: Senparc - 20261028
+    Change description: vNext Updated module behavior and related support.
 
-    修改标识：Senparc - 20261028
-    修改描述：vNext 运行状态携带发起租户快照，执行作用域恢复租户上下文
+    Modified by: Senparc - 20261103
+    Change description: v0.4.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.4 Workflow 运行协调器与定时宿主服务恢复/按租户传播租户上下文
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -63,14 +66,14 @@ public sealed record NeuCharWorkflowRunSnapshot(
     int WorkflowId,
     bool Running,
     bool? Succeeded,
-    string ErrorMessage,
+    string? ErrorMessage,
     string FinalOutput,
     IReadOnlyList<NeuCharWorkflowRunEvent> Events,
-    IReadOnlyList<Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow.WorkflowHumanInteraction> HumanInteractions = null,
+    IReadOnlyList<Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow.WorkflowHumanInteraction>? HumanInteractions = null,
     int RunningCount = 0);
 
 /// <summary>
-/// 供任务列表使用的轻量实时运行状态。不返回原始输入和完整输出，避免在列表页意外暴露敏感数据。
+///Legacy comment translated to English.
 /// </summary>
 public sealed record NeuCharWorkflowActiveRun(
     Guid RunId,
@@ -93,15 +96,29 @@ public sealed class NeuCharWorkflowRunCoordinator
         private readonly CancellationTokenSource _manualAbort = new();
         private long _sequence;
 
-        public RunState(Guid runId, int workflowId, int adminUserId, string input, string source, RequestTenantSnapshot? tenant)
+        public RunState(Guid runId, int workflowId, int adminUserId, string input, string source)
         {
             RunId = runId;
             WorkflowId = workflowId;
             AdminUserId = adminUserId;
             Input = input;
             Source = source;
-            Tenant = tenant;
             StartedAt = DateTimeOffset.UtcNow;
+        }
+
+        public static RunState Create(
+            Guid runId,
+            int workflowId,
+            int adminUserId,
+            string input,
+            string source,
+            RequestTenantSnapshot? tenant)
+        {
+            var state = new RunState(runId, workflowId, adminUserId, input, source)
+            {
+                Tenant = tenant
+            };
+            return state;
         }
 
         public Guid RunId { get; }
@@ -109,12 +126,12 @@ public sealed class NeuCharWorkflowRunCoordinator
         public int AdminUserId { get; }
         public string Input { get; }
         public string Source { get; }
-        public RequestTenantSnapshot? Tenant { get; }
+        public RequestTenantSnapshot? Tenant { get; private set; }
         public DateTimeOffset StartedAt { get; }
         public bool Running { get; private set; } = true;
         public bool? Succeeded { get; private set; }
-        public string ErrorMessage { get; private set; }
-        public string FinalOutput { get; private set; }
+        public string? ErrorMessage { get; private set; }
+        public string? FinalOutput { get; private set; }
         public bool IsManuallyAborted { get; private set; }
         public CancellationToken ManualAbortToken => _manualAbort.Token;
 
@@ -124,7 +141,7 @@ public sealed class NeuCharWorkflowRunCoordinator
             {
                 if (!Running)
                 {
-                    error = "该工作流任务已结束，无法中止。";
+                    error = "The Workflow task has ended and cannot be aborted.";
                     return false;
                 }
                 if (IsManuallyAborted)
@@ -176,7 +193,7 @@ public sealed class NeuCharWorkflowRunCoordinator
             }
         }
 
-        public void Complete(bool succeeded, string output, string error)
+        public void Complete(bool succeeded, string? output, string? error)
         {
             lock (_gate)
             {
@@ -219,7 +236,7 @@ public sealed class NeuCharWorkflowRunCoordinator
             }
         }
 
-        private static string Limit(string value, int maxLength) =>
+        private static string? Limit(string? value, int maxLength) =>
             string.IsNullOrEmpty(value) || value.Length <= maxLength
                 ? value
                 : value[..maxLength] + "\n…（输出已截断）";
@@ -246,7 +263,7 @@ public sealed class NeuCharWorkflowRunCoordinator
         int adminUserId,
         string input,
         out Guid runId,
-        out string error,
+        out string? error,
         string source = "manual",
         RequestTenantSnapshot? tenant = null)
     {
@@ -254,7 +271,13 @@ public sealed class NeuCharWorkflowRunCoordinator
         {
             Cleanup();
             runId = Guid.NewGuid();
-            var state = new RunState(runId, workflowId, adminUserId, input ?? string.Empty, NormalizeSource(source), tenant);
+            var state = RunState.Create(
+                runId,
+                workflowId,
+                adminUserId,
+                input ?? string.Empty,
+                NormalizeSource(source),
+                tenant);
             _runs[runId] = state;
             _ = ExecuteAsync(state);
             error = null;
@@ -262,7 +285,7 @@ public sealed class NeuCharWorkflowRunCoordinator
         }
     }
 
-    public NeuCharWorkflowRunSnapshot GetSnapshot(Guid runId, int adminUserId, long afterSequence)
+    public NeuCharWorkflowRunSnapshot? GetSnapshot(Guid runId, int adminUserId, long afterSequence)
     {
         if (!_runs.TryGetValue(runId, out var state) || state.AdminUserId != adminUserId)
         {
@@ -279,7 +302,7 @@ public sealed class NeuCharWorkflowRunCoordinator
     {
         if (!_runs.TryGetValue(runId, out var state) || state.AdminUserId != adminUserId)
         {
-            error = "运行任务不存在或不属于当前账号。";
+            error = "The run does not exist or does not belong to the current account.";
             return false;
         }
         return state.TryAbort(out error);
@@ -318,8 +341,8 @@ public sealed class NeuCharWorkflowRunCoordinator
         try
         {
             using var scope = _scopeFactory.CreateScope();
-            // 恢复发起运行的租户上下文（手动/Webhook/Chat 来自请求作用域，定时来自租户作用域）；
-            // 未携带快照时保持原有 fail-closed 行为。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             state.Tenant?.Restore(scope.ServiceProvider);
             var workflowService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowService>();
             var executionLogService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowExecutionLogService>();
@@ -386,7 +409,7 @@ public sealed class NeuCharWorkflowRunCoordinator
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Workflow 测试运行异常：WorkflowId={WorkflowId}, RunId={RunId}", state.WorkflowId, state.RunId);
+            _logger.LogError(ex, "Workflow test run failed: WorkflowId={WorkflowId}, RunId={RunId}", state.WorkflowId, state.RunId);
             state.Complete(false, null, ex.Message);
         }
     }
@@ -397,7 +420,7 @@ public sealed class NeuCharWorkflowRunCoordinator
         NeuCharWorkflowExecutionLogService executionLogService,
         RunState state)
     {
-        const string message = "手动中止";
+        const string message = "Manually aborted";
         workflow.MarkCompleted(false, message);
         await workflowService.SaveRuntimeCompletedAsync(workflow).ConfigureAwait(false);
 

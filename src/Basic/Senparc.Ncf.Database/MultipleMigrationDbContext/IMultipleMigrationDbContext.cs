@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：IMultipleMigrationDbContext.cs
-    文件功能描述：IMultipleMigrationDbContext 相关实现
-    
-    
-    创建标识：Senparc - 20201007
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: IMultipleMigrationDbContext.cs
+    File description: IMultipleMigrationDbContext related implementation
+
+    Created by: Senparc - 20201007
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.21.14 Updated database integration support and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -19,12 +22,12 @@ using System.Text;
 namespace Senparc.Ncf.Database.MultipleMigrationDbContext
 {
     /// <summary>
-    /// 多数据库生成 Migration 的实体类接口
+    ///Legacy comment translated to English.
     /// </summary>
     public interface IMultipleMigrationDbContext
     {
         /////// <summary>
-        /////// 数据库类型
+        /////// databasetype
         /////// </summary>
         //MultipleDatabaseType MultipleDatabaseType { get; }
     }

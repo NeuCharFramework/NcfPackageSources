@@ -1,10 +1,15 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：Index.cshtml.cs
-    文件功能描述：DesktopBridge 配对审批和会话撤销后台
+    File name: Index.cshtml.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260801
+    Created by: Senparc - 20260801
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;

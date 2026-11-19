@@ -1,23 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：FunctionRequestParameterNormalizer.cs
-    文件功能描述：FunctionRequestParameterNormalizer 相关实现
 
+    File name: FunctionRequestParameterNormalizer.cs
+    File description: FunctionRequestParameterNormalizer related implementation
 
-    创建标识：Senparc - 20260424
+    Created by: Senparc - 20260424
 
-    修改标识：Senparc - 20260704
-    修改描述：v0.23.2-preview1 增强函数请求参数归一化与占位符处理能力
+    Modified by: Senparc - 20260704
+    Change description: v0.23.2-preview1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.24.0-preview5 统一数据库设计时工厂与函数参数处理
+    Modified by: Senparc - 20260804
+    Change description: v0.24.0-preview5 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.25.0-preview7 增强线程生命周期控制与函数参数数值类型解析
+    Modified by: Senparc - 20260813
+    Change description: v0.25.0-preview7 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.28.1 add bulk file upload functionality to Sandbox Lab
+    Modified by: Senparc - 20261103
+    Change description: v0.28.1 add bulk file upload functionality to Sandbox Lab
+
+    Modified by: Senparc - 20261119
+    Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.XncfBase.Functions;

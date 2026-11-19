@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceAgentProcessFactory.cs
-    文件功能描述：创建跨平台原生或 Docker Workspace Agent 进程
+    File name: WorkspaceAgentProcessFactory.cs
+    File description: create native or Docker Workspace Agent processes across platforms
 
-    创建标识：Senparc - 20261024
+    Created by: Senparc - 20261024
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.2 enhance workspace functionality with file preview and management features
+    Modified by: Senparc - 20261103
+    Change description: v0.2.2 enhance workspace functionality with file preview and management features
+
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
 
 ----------------------------------------------------------------*/
 

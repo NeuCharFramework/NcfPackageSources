@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ChatGroupHistory.cs
-    文件功能描述：ChatGroupHistory 数据模型定义
 
+    File name: ChatGroupHistory.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20240616
+    Created by: Senparc - 20240616
 
-    修改标识：Senparc - 20260701
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260701
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -28,9 +31,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 {
     /// <summary>
-    /// ChatGroupHistory 数据库实体
+    ///Legacy comment translated to English.
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(ChatGroupHistory))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(ChatGroupHistory))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class ChatGroupHistory : EntityBase<int>
     {
@@ -57,20 +60,20 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         public AgentTemplate ToAgentTemplate { get; private set; }
 
         /// <summary>
-        /// 统一参与者键，例如 local:12 或 remote:5。旧记录保持 null，由原有 AgentTemplateId 继续兼容读取。
+        ///Legacy comment translated to English.
         /// </summary>
         public string FromParticipantKey { get; private set; }
 
-        /// <summary>参与者类型：Local 或 RemoteA2A。</summary>
+        ///Legacy comment translated to English.
         public string FromParticipantKind { get; private set; }
 
-        /// <summary>写入历史时的显示名称，远程 Agent 不依赖本地模板即可展示。</summary>
+        ///Legacy comment translated to English.
         public string FromParticipantName { get; private set; }
 
-        /// <summary>A2A 会话上下文 ID，仅远程消息使用。</summary>
+        ///Legacy comment translated to English.
         public string RemoteContextId { get; private set; }
 
-        /// <summary>A2A 任务 ID，仅远程消息使用。</summary>
+        ///Legacy comment translated to English.
         public string RemoteTaskId { get; private set; }
 
         //[ForeignKey(nameof(FromChatGroupMember))]

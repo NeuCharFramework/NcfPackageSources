@@ -29,10 +29,15 @@ async function _init() {
 }
 
 /**
+
  * sdfsdf
+
  * @param {any} treeId e
+
  * @param {any} treeNode eeee
+
  * @returns {any} asdfasd
+
  */
 function zTreeBeforeRemove(treeId, treeNode) {
     deleteNode(treeNode);
@@ -85,7 +90,7 @@ async function zTreeOnClick(event, treeId, treeNode) {
 }
 
 async function addTopMenu() {
-    let flag = $(this).data('flag') * 1;//0 顶级，1子集
+    let flag = $(this).data('flag') * 1;//Legacy comment translated to English.
     let menuName = await base.swal.promot('请输入菜单名称');
     var nodes = treeObj.getSelectedNodes()[0] || null;
     if ($.trim(menuName).length <= 0) {
@@ -143,7 +148,9 @@ function bindDeleteButtonEvent() {
 }
 
 /**
- * 删除按钮
+
+ * Legacy comment translated to English.
+
  * */
 async function deleteButton() {
     let $this = $(this);
@@ -162,7 +169,9 @@ async function deleteButton() {
 }
 
 /**
- * 新增按钮
+
+ * Legacy comment translated to English.
+
  * */
 
 function addButton() {

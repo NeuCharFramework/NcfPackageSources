@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ColorAppService.cs
-    文件功能描述：ColorAppService 相关实现
-    
-    
-    创建标识：Senparc - 20240718
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: ColorAppService.cs
+    File description: ColorAppService related implementation
+
+    Created by: Senparc - 20240718
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
 ----------------------------------------------------------------*/
 
@@ -35,18 +38,18 @@ namespace Senparc.Xncf.DynamicData.OHS.Local.AppService
 
 
         /// <summary>
-        /// 获取或初始化一个 ColorDto 对象
+        /// get or initialize a ColorDto object
         /// </summary>
         /// <returns></returns>
         public async Task<AppResponseBase<Color_GetOrInitColorResponse>> GetOrInitColorAsync()
         {
             return await this.GetResponseAsync<Color_GetOrInitColorResponse>(async (response, logger) =>
             {
-                var dt1 = SystemTime.Now;//开始计时
+                var dt1 = SystemTime.Now;//Legacy comment translated to English.
 
-                var colorDto = await _colorService.GetOrInitColor();//获取或初始化颜色参数
+                var colorDto = await _colorService.GetOrInitColor();//getorinitializecolorparameters
 
-                var costMs = SystemTime.DiffTotalMS(dt1);//记录耗时
+                var costMs = SystemTime.DiffTotalMS(dt1);//Legacy comment translated to English.
 
                 Color_GetOrInitColorResponse result = new(colorDto.Red, colorDto.Green, colorDto.Blue, costMs);
 

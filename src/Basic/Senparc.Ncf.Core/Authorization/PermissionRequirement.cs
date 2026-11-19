@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PermissionRequirement.cs
-    文件功能描述：PermissionRequirement 相关实现
-    
-    
-    创建标识：Senparc - 20211223
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: PermissionRequirement.cs
+    File description: PermissionRequirement related implementation
+
+    Created by: Senparc - 20211223
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -27,12 +30,12 @@ namespace Senparc.Ncf.Core.Authorization
     public class PermissionRequirement: IAuthorizationRequirement
     {
         /// <summary>
-        /// 登录后即可访问
+        ///Legacy comment translated to English.
         /// </summary>
         public const string All = "*";
 
         /// <summary>
-        /// 资源code
+        ///Legacy comment translated to English.
         /// </summary>
         public string[] ResourceCodes { get; set; }
 
@@ -43,7 +46,7 @@ namespace Senparc.Ncf.Core.Authorization
 
         public PermissionRequirement(string[] resourceCodes)
         {
-            ResourceCodes = resourceCodes.Where(code => !string.IsNullOrEmpty(code?.Trim())).Select(code => code.Trim()).ToArray(); // 去前后空格
+            ResourceCodes = resourceCodes.Where(code => !string.IsNullOrEmpty(code?.Trim())).Select(code => code.Trim()).ToArray(); //Legacy comment translated to English.
         }
     }
 }

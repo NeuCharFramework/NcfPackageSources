@@ -6,8 +6,8 @@ using System.Linq;
 namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
 {
     /// <summary>
-    /// 设计时工厂共享配置。仅选择实际包含 SenparcConfig.config 的站点目录，
-    /// 同时兼容源码仓库、传统相邻项目和发布目录结构。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     internal static class SenparcDbContextFactoryConfig
     {
@@ -27,7 +27,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
 
             for (var directory = new DirectoryInfo(projectPath); directory != null; directory = directory.Parent)
             {
-                candidates.Add(Path.Combine(directory.FullName, "tools", "NcfSimulatedSite", "Senparc.Web"));
+                candidates.Add(Path.Combine(directory.FullName, "tools", "NcfWebAdminBaseline", "Senparc.Web"));
                 candidates.Add(Path.Combine(directory.FullName, "src", "back-end", "Senparc.Web"));
             }
 

@@ -1,0 +1,1605 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>等待你提供后续内容或确认保存，本轮未写入 Memory。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>本轮未识别到立即更新长期记忆的意图，未写入 Memory。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>本批候选包含助手来源的信息，尚未保存。请逐条核对并保存；助手的说法可能不准确。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>未能从近期前文确定要记住的具体内容。请在同一条消息中写明“记住：……”及完整事实；必要时检查本轮 PromptCode。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>本批候选已由你核对并保存。</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>核对候选</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>这是从前文整理的候选，尚未保存。请核对内容与作用域，再点击“保存条目”；删除候选需点击“删除”并确认。锁定的手工条目不会被 AI 自动改写。</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>请先处理当前编辑草稿并关闭设置，再核对候选。</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>参考原文（待核实）</value></data>
+  <data name="AdminChat.Memory.Subtitle" xml:space="preserve"><value>管理长期偏好，让每一次对话更懂你</value></data>
+  <data name="AdminChat.Memory.Private" xml:space="preserve"><value>私有记忆</value></data>
+  <data name="AdminChat.Memory.SaveChanges" xml:space="preserve"><value>保存更改</value></data>
+  <data name="AdminChat.Memory.ClearDraft" xml:space="preserve"><value>清空草稿</value></data>
+  <data name="AdminChat.Memory.EntriesHint" xml:space="preserve"><value>集中管理我的全局与当前 Workspace 记忆</value></data>
+  <data name="AdminChat.Memory.Guide" xml:space="preserve"><value>作用域、学习规则与存储说明</value></data>
+  <data name="AdminChat.Memory.FormatGuide" xml:space="preserve"><value>Markdown 格式与保存规则</value></data>
+  <data name="AdminChat.Memory.SaveEntry" xml:space="preserve"><value>保存条目</value></data>
+  <data name="AdminChat.Memory.EmptyEntries" xml:space="preserve"><value>暂无记忆，添加第一条偏好开始使用</value></data>
+  <data name="AdminChat.Memory.EmptyLoaded" xml:space="preserve"><value>暂无本轮加载报告。启用 Memory 并发送消息后可在此查看。</value></data>
+  <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>展开会话侧栏</value></data>
+  <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>收起会话侧栏</value></data>
+  <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>调整侧栏宽度（左右方向键）</value></data>
+  <data name="AdminChat.Sidebar.Reorder" xml:space="preserve"><value>分类内拖动排序，或按 Alt + 上/下方向键</value></data>
+  <data name="AdminChat.Sidebar.Running" xml:space="preserve"><value>进行中</value></data>
+  <data name="AdminChat.Sidebar.Stopping" xml:space="preserve"><value>正在停止</value></data>
+  <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>顺序已保存，同一账号可跨设备读取</value></data>
+  <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>排序保存失败，请重试</value></data>
+  <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>侧栏布局偏好无法读取或保存，当前布局仅在本页有效</value></data>
+  <data name="AdminChat.Sidebar.Archive" xml:space="preserve"><value>归档，标记为已完成</value></data>
+  <data name="AdminChat.Sidebar.ArchiveRunning" xml:space="preserve"><value>这条会话还在进行，完成后再归档</value></data>
+  <data name="AdminChat.Archive.Menu" xml:space="preserve"><value>已归档</value></data>
+  <data name="AdminChat.Archive.Empty" xml:space="preserve"><value>还没有归档会话</value></data>
+  <data name="AdminChat.Archive.Open" xml:space="preserve"><value>打开归档会话：{0}</value></data>
+  <data name="AdminChat.Archive.Delete" xml:space="preserve"><value>删除归档会话：{0}</value></data>
+  <data name="AdminChat.Archive.Action" xml:space="preserve"><value>归档</value></data>
+  <data name="AdminChat.Archive.Restore" xml:space="preserve"><value>还原</value></data>
+  <data name="AdminChat.Archive.RestoreLabel" xml:space="preserve"><value>还原归档会话：{0}</value></data>
+  <data name="AdminChat.Archive.RestoreSuccess" xml:space="preserve"><value>已还原到进行中的会话</value></data>
+  <data name="AdminChat.Archive.RestoreFailed" xml:space="preserve"><value>还原失败，请重试</value></data>
+  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>已归档。可从左侧「新对话」旁的更多菜单查看、还原或删除</value></data>
+  <data name="AdminChat.Sidebar.Tools" xml:space="preserve"><value>更多</value></data>
+  <data name="AdminChat.Sidebar.Unread" xml:space="preserve"><value>未读</value></data>
+  <data name="AdminChat.Archive.Failed" xml:space="preserve"><value>归档失败，请重试</value></data>
+  <data name="AdminChat.Archive.Tag" xml:space="preserve"><value>已归档</value></data>
+  <data name="AdminChat.Archive.LoadFailed" xml:space="preserve"><value>加载归档会话失败</value></data>
+  <data name="AdminChat.ArchiveSessionSuccess" xml:space="preserve"><value>会话已归档</value></data>
+  <data name="AdminChat.Rail.Label" xml:space="preserve"><value>我的发言</value></data>
+  <data name="AdminChat.Rail.Jump" xml:space="preserve"><value>定位到这条发言</value></data>
+  <data name="AdminChat.Rail.EmptyMessage" xml:space="preserve"><value>（空发言）</value></data>
+  <data name="AdminChat.Memory.Settings" xml:space="preserve"><value>Memory / 对话设置</value></data>
+  <data name="AdminChat.Memory.UpdateSaved" xml:space="preserve"><value>Memory 已保存：我的全局 {0} 项，当前 Workspace {1} 项变更（数据库存储，不创建文件）。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.mode-off" xml:space="preserve"><value>未保存长期 Memory：当前对话已关闭 Memory。助手的口头确认不代表保存成功。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.read-only" xml:space="preserve"><value>未保存长期 Memory：当前为只读模式，请切换到学习或手工编辑。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.input-not-eligible" xml:space="preserve"><value>未更新 Memory：本轮输入未满足学习触发条件，或超过长度限制。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-candidates" xml:space="preserve"><value>未更新 Memory：提取模型没有返回可保存的长期记忆。可手工添加，或检查本轮使用的 PromptCode；助手口头说“记住”不代表已保存。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pinned" xml:space="preserve"><value>未更新 Memory：相关条目已锁定，AI 不得修改或删除，请手工编辑。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-difference" xml:space="preserve"><value>Memory 无变更：返回的内容已存在，或没有匹配到要删除的条目。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.revision-conflict" xml:space="preserve"><value>未保存 Memory：记忆在本轮执行期间被修改，较新版本已保留，请重新检查。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.timeout" xml:space="preserve"><value>未保存 Memory：记忆提取超时，请重试或手工添加。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.invalid-change" xml:space="preserve"><value>未保存 Memory：提取结果未通过证据、安全、作用域或字段校验，整批拒绝。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.capacity" xml:space="preserve"><value>未保存 Memory：记忆已达到 80 条上限，请先删除不需要的条目。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.invalid-json" xml:space="preserve"><value>未保存 Memory：提取模型未返回有效的规定格式 JSON，请检查提示词。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending" xml:space="preserve"><value>Memory 尚无保存确认，请勿以助手的口头承诺作为持久化凭证。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.update-failed" xml:space="preserve"><value>Memory 更新失败，未确认保存。请检查提示词、模型或数据库配置，原有记忆保留。</value></data>
+  <data name="AdminChat.Memory.StorageNotice" xml:space="preserve"><value>记忆保存在当前用户的私有数据库中，不会自动创建或读取 Workspace 内的 Memory.md。请在此管理条目；工作区同名文件仅是普通文件。助手的文字回复不代表保存成功，以系统更新结果为准。</value></data>
+  <data name="AdminChat.Memory.Use" xml:space="preserve"><value>使用我的全局 Memory</value></data>
+  <data name="AdminChat.Memory.Notice" xml:space="preserve"><value>关闭：不读取或学习；只读：仅加载；学习：遇到明确偏好、记住或纠正等表达时更新。用户全局 + 当前 Workspace 隔离加载，过期和归档不加载。参考预算 1000 tokens（Core 最多 300），未知模型使用保守估计。请勿保存秘密或敏感信息。</value></data>
+  <data name="AdminChat.Memory.ModeOff" xml:space="preserve"><value>关闭</value></data>
+  <data name="AdminChat.Memory.ModeReadOnly" xml:space="preserve"><value>只读</value></data>
+  <data name="AdminChat.Memory.ModeLearn" xml:space="preserve"><value>学习</value></data>
+  <data name="AdminChat.Memory.Entries" xml:space="preserve"><value>记忆条目</value></data>
+  <data name="AdminChat.Memory.ScopeNotice" xml:space="preserve"><value>只展示自己的全局记忆及当前对话 Workspace 的记忆。创建对话并绑定 Workspace 后可编辑其记忆；同一事实优先使用 Workspace 版本。</value></data>
+  <data name="AdminChat.Memory.Add" xml:space="preserve"><value>添加条目</value></data>
+  <data name="AdminChat.Memory.Text" xml:space="preserve"><value>内容</value></data>
+  <data name="AdminChat.Memory.Scope" xml:space="preserve"><value>作用域</value></data>
+  <data name="AdminChat.Memory.ScopeGlobal" xml:space="preserve"><value>我的全局</value></data>
+  <data name="AdminChat.Memory.Tier" xml:space="preserve"><value>加载层级</value></data>
+  <data name="AdminChat.Memory.Kind" xml:space="preserve"><value>类型</value></data>
+  <data name="AdminChat.Memory.Topic" xml:space="preserve"><value>主题（Topic 必填）</value></data>
+  <data name="AdminChat.Memory.Expires" xml:space="preserve"><value>过期时间（可选）</value></data>
+  <data name="AdminChat.Memory.Pinned" xml:space="preserve"><value>锁定：禁止 AI 修改或删除</value></data>
+  <data name="AdminChat.Memory.DeleteNotice" xml:space="preserve"><value>删除条目并清除其历史内容？原始聊天消息不会删除。</value></data>
+  <data name="AdminChat.Memory.Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="AdminChat.Memory.Source" xml:space="preserve"><value>来源对话 / 消息</value></data>
+  <data name="AdminChat.Memory.Loaded" xml:space="preserve"><value>本轮加载</value></data>
+  <data name="AdminChat.Memory.LoadedNotice" xml:space="preserve"><value>显示本页面最近一轮提供给模型的记忆及选择原因，并不代表模型一定采用。计数含记忆边界提示，不含 SystemMessage、历史消息和模型协议开销；刷新后不保留此报告。</value></data>
+  <data name="AdminChat.Memory.Reason" xml:space="preserve"><value>选择原因</value></data>
+  <data name="AdminChat.Memory.History" xml:space="preserve"><value>变更历史</value></data>
+  <data name="AdminChat.Memory.Time" xml:space="preserve"><value>时间</value></data>
+  <data name="AdminChat.Memory.MarkdownScope" xml:space="preserve"><value>Memory.md 仅编辑/导出我的全局记忆；Workspace 记忆请使用条目编辑。清空不会删除 Workspace 记忆。</value></data>
+  <data name="AdminChat.Memory.UnsavedMarkdown" xml:space="preserve"><value>请先保存 Markdown 草稿，再编辑单个条目。</value></data>
+  <data name="AdminChat.Memory.Preview" xml:space="preserve"><value>预览 Memory.md</value></data>
+  <data name="AdminChat.Memory.Edit" xml:space="preserve"><value>编辑 / 分层</value></data>
+  <data name="AdminChat.Memory.Format" xml:space="preserve"><value>使用 ## Core、## Topic: 主题、## Archive 标题；每条记忆以“- ”开头，最多 300 字符，共 80 条。保存手工编辑后所有条目固定，AI 不会覆盖。清空编辑框再保存可删除全部记忆。PromptRange 的 AdminChat.Memory 中可发布并评分新版本，平均分最高的已发布版本将替换默认提示词。</value></data>
+  <data name="AdminChat.Memory.SystemMessage" xml:space="preserve"><value>SystemMessage</value></data>
+  <data name="AdminChat.Memory.SystemNotice" xml:space="preserve"><value>影响我的所有 Chat，从下一轮生效，与 Memory 开关无关；不改变工具权限。最多 2000 字符。</value></data>
+  <data name="AdminChat.Memory.GlobalSystem" xml:space="preserve"><value>当前租户的全局 SystemMessage（超级管理员）</value></data>
+  <data name="AdminChat.Memory.GlobalNotice" xml:space="preserve"><value>影响当前租户所有用户的 Chat；单租户模式影响本站所有 Chat。不会用于标题或 Memory 等内部生成任务。</value></data>
+  <data name="AdminChat.Memory.SaveGlobal" xml:space="preserve"><value>保存全局 SystemMessage</value></data>
+  <data name="AdminChat.Memory.Download" xml:space="preserve"><value>下载 Memory.md</value></data>
+  <data name="AdminChat.Memory.Clear" xml:space="preserve"><value>清空草稿（保存后删除）</value></data>
+  <data name="AdminChat.Memory.Save" xml:space="preserve"><value>保存我的 Memory / 设置</value></data>
+  <data name="AdminChat.Memory.Saved" xml:space="preserve"><value>已保存。</value></data>
+  <data name="AdminChat.Memory.Failed" xml:space="preserve"><value>Memory 操作失败，请重新加载后重试。</value></data>
+  <data name="AdminChat.Memory.UpdateWarning" xml:space="preserve"><value>本轮 Memory 未更新，已有记忆保留。请检查 PromptRange 或重新打开 Memory 设置。</value></data>
+  <data name="Admin.Title" xml:space="preserve">
+    <value>System Admin Panel</value>
+  </data>
+  <data name="Admin.Nav.Home" xml:space="preserve">
+    <value>首页</value>
+  </data>
+  <data name="Admin.Tabs.List" xml:space="preserve">
+    <value>已打开的页面</value>
+  </data>
+  <data name="Admin.Tabs.Close" xml:space="preserve">
+    <value>关闭标签</value>
+  </data>
+  <data name="Admin.Tabs.Untitled" xml:space="preserve">
+    <value>未命名页面</value>
+  </data>
+  <data name="Admin.Tabs.BackToSource" xml:space="preserve"><value>返回来源：</value></data>
+  <data name="Admin.Tabs.CurrentPage" xml:space="preserve"><value>当前页面</value></data>
+  <data name="Admin.Tabs.ScrollLeft" xml:space="preserve">
+    <value>向左查看标签</value>
+  </data>
+  <data name="Admin.Tabs.ScrollRight" xml:space="preserve">
+    <value>向右查看标签</value>
+  </data>
+  <data name="Admin.Nav.Search" xml:space="preserve">
+    <value>搜索菜单</value>
+  </data>
+  <data name="Admin.Nav.SearchPlaceholder" xml:space="preserve">
+    <value>输入关键字筛选左侧菜单</value>
+  </data>
+  <data name="Admin.Nav.SearchEmpty" xml:space="preserve">
+    <value>未找到匹配的菜单</value>
+  </data>
+  <data name="Admin.Nav.ConfigTitle" xml:space="preserve">
+    <value>菜单配置</value>
+  </data>
+  <data name="Admin.Nav.ConfigHint" xml:space="preserve">
+    <value>拖拽一级菜单调整顺序，保存后将更新菜单排序值</value>
+  </data>
+  <data name="Admin.Nav.ConfigSave" xml:space="preserve">
+    <value>保存顺序</value>
+  </data>
+  <data name="Admin.Nav.ConfigSaved" xml:space="preserve">
+    <value>菜单顺序已保存</value>
+  </data>
+  <data name="Admin.Layout.Welcome" xml:space="preserve">
+    <value>欢迎，</value>
+  </data>
+  <data name="Admin.Layout.LogoAlt" xml:space="preserve">
+    <value>NeuCharFramework 标志</value>
+  </data>
+  <data name="Admin.Logout.Title" xml:space="preserve">
+    <value>退出登录</value>
+  </data>
+  <data name="Admin.Logout.Confirm" xml:space="preserve">
+    <value>确定退出吗？</value>
+  </data>
+  <data name="Admin.Logout.Yes" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="Admin.Logout.No" xml:space="preserve">
+    <value>不用了</value>
+  </data>
+  <data name="Admin.Login.Title" xml:space="preserve">
+    <value>管理员登录</value>
+  </data>
+  <data name="Admin.Login.Username" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="Admin.Login.Password" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="Admin.Login.Tenant" xml:space="preserve">
+    <value>租户名称</value>
+  </data>
+  <data name="Admin.Login.Submit" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="Admin.Login.UsernamePlaceholder" xml:space="preserve">
+    <value>请输入用户名</value>
+  </data>
+  <data name="Admin.Login.PasswordPlaceholder" xml:space="preserve">
+    <value>请输入密码</value>
+  </data>
+  <data name="Admin.Login.TenantPlaceholder" xml:space="preserve">
+    <value>请输入租户名称</value>
+  </data>
+  <data name="Admin.Login.Error.UsernameRequired" xml:space="preserve">
+    <value>请输入用户名</value>
+  </data>
+  <data name="Admin.Login.Error.PasswordRequired" xml:space="preserve">
+    <value>请输入密码</value>
+  </data>
+  <data name="Admin.Language.SelectLanguage" xml:space="preserve">
+    <value>选择语言</value>
+  </data>
+  <data name="Admin.Login.Error.InvalidCredentials" xml:space="preserve"><value>账号或密码错误！</value></data>
+  <data name="Common.系统管理" xml:space="preserve"><value>系统管理</value></data>
+  <data name="Common.增加" xml:space="preserve"><value>增加</value></data>
+  <data name="Common.排序" xml:space="preserve"><value>排序</value></data>
+  <data name="Common.备注" xml:space="preserve"><value>备注</value></data>
+  <data name="Common.说明" xml:space="preserve"><value>说明</value></data>
+  <data name="Common.添加时间" xml:space="preserve"><value>添加时间</value></data>
+  <data name="Common.操作" xml:space="preserve"><value>操作</value></data>
+  <data name="Common.编辑" xml:space="preserve"><value>编辑</value></data>
+  <data name="Common.删除" xml:space="preserve"><value>删除</value></data>
+  <data name="Common.取消" xml:space="preserve"><value>取消</value></data>
+  <data name="Common.确认" xml:space="preserve"><value>确认</value></data>
+  <data name="Common.请输入说明" xml:space="preserve"><value>请输入说明</value></data>
+  <data name="Common.请输入备注" xml:space="preserve"><value>请输入备注信息</value></data>
+  <data name="Common.返回" xml:space="preserve"><value>返回</value></data>
+  <data name="Common.保存" xml:space="preserve"><value>保存</value></data>
+  <data name="Menu.管理" xml:space="preserve"><value>菜单管理</value></data>
+  <data name="Menu.列表" xml:space="preserve"><value>菜单列表</value></data>
+  <data name="Menu.增加菜单" xml:space="preserve"><value>增加菜单</value></data>
+  <data name="Menu.名称" xml:space="preserve"><value>菜单名称</value></data>
+  <data name="Menu.增加下级" xml:space="preserve"><value>增加下一级</value></data>
+  <data name="Menu.确认删除" xml:space="preserve"><value>确认删除此菜单吗？</value></data>
+  <data name="Menu.父级" xml:space="preserve"><value>父级菜单</value></data>
+  <data name="Menu.类型" xml:space="preserve"><value>类型</value></data>
+  <data name="Menu.菜单" xml:space="preserve"><value>菜单</value></data>
+  <data name="Menu.页面" xml:space="preserve"><value>页面</value></data>
+  <data name="Menu.按钮" xml:space="preserve"><value>按钮</value></data>
+  <data name="Menu.路径" xml:space="preserve"><value>路径</value></data>
+  <data name="Menu.操作代码" xml:space="preserve"><value>操作代码</value></data>
+  <data name="Menu.是否锁定" xml:space="preserve"><value>是否锁定</value></data>
+  <data name="Menu.是否显示" xml:space="preserve"><value>是否显示</value></data>
+  <data name="Menu.图标" xml:space="preserve"><value>图标</value></data>
+  <data name="Menu.选择图标" xml:space="preserve"><value>选择图标</value></data>
+  <data name="Menu.图标列表" xml:space="preserve"><value>图标列表</value></data>
+  <data name="Role.管理" xml:space="preserve"><value>角色管理</value></data>
+  <data name="Role.列表" xml:space="preserve"><value>角色列表</value></data>
+  <data name="Role.名称" xml:space="preserve"><value>角色名称</value></data>
+  <data name="Role.代码" xml:space="preserve"><value>角色代码</value></data>
+  <data name="Role.权限" xml:space="preserve"><value>权限</value></data>
+  <data name="Role.确认删除" xml:space="preserve"><value>确认删除此角色吗？</value></data>
+  <data name="Role.请输入名称" xml:space="preserve"><value>请输入角色名称</value></data>
+  <data name="Role.请输入代码" xml:space="preserve"><value>请输入角色代码</value></data>
+  <data name="Role.是否启用" xml:space="preserve"><value>是否启用</value></data>
+  <data name="Role.为角色授权" xml:space="preserve"><value>为角色授权</value></data>
+  <data name="Trace.日志" xml:space="preserve"><value>SenparcTrace 日志</value></data>
+  <data name="Trace.编号" xml:space="preserve"><value>编号</value></data>
+  <data name="Trace.日期" xml:space="preserve"><value>日期</value></data>
+  <data name="AdminUserInfo.角色授予" xml:space="preserve"><value>角色授予</value></data>
+  <data name="AdminUserInfo.管理员管理" xml:space="preserve"><value>管理员管理</value></data>
+  <data name="Tenant.NameExists" xml:space="preserve"><value>{0} 租户名称已存在</value></data>
+  <data name="Tenant.KeyExists" xml:space="preserve"><value>{0} 租户匹配规则已存在</value></data>
+  <data name="Tenant.SaveSuccess.Edit" xml:space="preserve"><value>编辑租户成功</value></data>
+  <data name="Tenant.SaveSuccess.Create" xml:space="preserve"><value>新增租户成功</value></data>
+  <data name="Tenant.PlatformAdminOnly" xml:space="preserve"><value>多租户模式下，仅平台管理员（系统级账号）可以管理租户信息！</value></data>
+  <data name="Tenant.NotFound" xml:space="preserve"><value>租户不存在</value></data>
+  <data name="Tenant.SetInfoFailed" xml:space="preserve"><value>租户信息设置失败</value></data>
+  <data name="Tenant.InitializeSuccess" xml:space="preserve"><value>初始化成功</value></data>
+  <data name="Xncf.ModuleNotAdded" xml:space="preserve"><value>模块未添加！</value></data>
+  <data name="Xncf.StateChangedSuccess" xml:space="preserve"><value>状态变更成功！</value></data>
+  <data name="Xncf.ModuleNotRegistered" xml:space="preserve"><value>模块未注册！</value></data>
+  <data name="Xncf.ModuleNotInstalled" xml:space="preserve"><value>当前模块未安装！</value></data>
+  <data name="Xncf.InvalidModuleState" xml:space="preserve"><value>当前模块状态为【{0}】,必须为【开放】状态的模块才可执行！\r\n此外，如果您强制执行此方法，也将按照未通过验证的程序集执行，因为您之前安装的版本可能已经被新的程序所覆盖。</value></data>
+  <data name="Xncf.FunctionNotMatched" xml:space="preserve"><value>方法未匹配上！</value></data>
+  <data name="Xncf.FunctionSingleParameterOnly" xml:space="preserve"><value>FunctionRender 只允许方法具有一个传入参数！</value></data>
+  <data name="Xncf.LogFileNotFoundOrDownloaded" xml:space="preserve"><value>日志文件不存在或已下载！</value></data>
+  <data name="Xncf.ModuleIdNotProvided" xml:space="preserve"><value>模块编号未提供！</value></data>
+  <data name="Xncf.ModuleMissingOrNotLoaded" xml:space="preserve"><value>模块丢失或未加载（{0}）！</value></data>
+  <data name="Xncf.FunctionLoadError" xml:space="preserve"><value>载入 {0} 时出错，请查看日志！如果刚添加数据库迁移，请先完成模块升级！</value></data>
+  <data name="Xncf.Install.PublishModeEnabled" xml:space="preserve"><value>已经启用“发布模式”，无法进行此操作</value></data>
+  <data name="Xncf.Install.ModuleNotFound" xml:space="preserve"><value>文档模块不存在，无法完成安装！</value></data>
+  <data name="Xncf.Install.Success" xml:space="preserve"><value>安装成功！</value></data>
+  <data name="Xncf.Install.Failed" xml:space="preserve"><value>安装失败：{0}</value></data>
+  <data name="Admin.Register.MenuName" xml:space="preserve"><value>System Admin Panel</value></data>
+  <data name="Admin.Register.Description" xml:space="preserve"><value>这是管理员后台模块，用于 NCF 系统后台的自我管理，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。</value></data>
+  <data name="Admin.Area.MenuManagement" xml:space="preserve"><value>菜单管理</value></data>
+  <data name="Admin.Area.TraceLog" xml:space="preserve"><value>SenparcTrace 日志</value></data>
+  <data name="AdminChat.UserNotLoggedIn" xml:space="preserve"><value>用户未登录</value></data>
+  <data name="AdminChat.NewConversation" xml:space="preserve"><value>新对话</value></data>
+  <data name="AdminChat.SessionNotFoundOrForbidden" xml:space="preserve"><value>会话不存在或无权访问</value></data>
+  <data name="AdminChat.SessionNotFoundOrNoDeletePermission" xml:space="preserve"><value>会话不存在或无权删除</value></data>
+  <data name="AdminChat.DeleteSessionSuccess" xml:space="preserve"><value>删除成功</value></data>
+  <data name="AdminChat.MessageNotFound" xml:space="preserve"><value>消息不存在</value></data>
+  <data name="AdminChat.SetFeedbackSuccess" xml:space="preserve"><value>反馈成功</value></data>
+  <data name="AdminChat.SelectAtLeastOneMessage" xml:space="preserve"><value>请至少选择一条消息</value></data>
+  <data name="AdminChat.SelectAtLeastOneModule" xml:space="preserve"><value>请至少选择一个 XNCF 模块</value></data>
+  <data name="AdminChat.DeleteMessagesSuccess" xml:space="preserve"><value>删除成功，共删除 {0} 条消息</value></data>
+  <data name="AdminChat.AddModulesSuccess" xml:space="preserve"><value>添加成功</value></data>
+  <data name="Admin.Layout.Account" xml:space="preserve"><value>我的账号</value></data>
+  <data name="Admin.Layout.CurrentAccount" xml:space="preserve"><value>当前账号：{0}</value></data>
+  <data name="Admin.Layout.PoweredBy" xml:space="preserve"><value>技术支持</value></data>
+  <data name="Admin.Footer.NeuBellLabel" xml:space="preserve"><value>纽铃</value></data>
+  <data name="Admin.Session.Title" xml:space="preserve"><value>登录即将过期</value></data>
+  <data name="Admin.Session.Message" xml:space="preserve"><value>检测到当前登录会话即将过期，您可以保持登录或立即退出。</value></data>
+  <data name="Admin.Session.KeepLogin" xml:space="preserve"><value>保持登录</value></data>
+  <data name="Admin.Session.LogoutNow" xml:space="preserve"><value>立即退出登录</value></data>
+  <data name="Admin.Session.KeepLoginSuccess" xml:space="preserve"><value>已保持登录，会话已续期。</value></data>
+  <data name="Admin.Common.NoTime" xml:space="preserve"><value>暂无时间</value></data>
+  <data name="Admin.Common.CopySuccess" xml:space="preserve"><value>复制成功！请使用 Ctrl+V 组合键进行粘贴操作。</value></data>
+  <data name="Admin.Home.Header" xml:space="preserve"><value>NeuCharFramework 管理员后台</value></data>
+  <data name="Admin.Home.HostMetrics" xml:space="preserve"><value>Host 资源监控</value></data>
+  <data name="Admin.Home.HostMetricsRealtime" xml:space="preserve"><value>实时 · 每 2 秒刷新</value></data>
+  <data name="Admin.Home.HostCpu" xml:space="preserve"><value>Host CPU（整体）</value></data>
+  <data name="Admin.Home.HostCpuDetail" xml:space="preserve"><value>Host 整体使用率</value></data>
+  <data name="Admin.Home.HostScope" xml:space="preserve"><value>Host</value></data>
+  <data name="Admin.Home.WebScope" xml:space="preserve"><value>Web</value></data>
+  <data name="Admin.Home.HostMemory" xml:space="preserve"><value>物理内存</value></data>
+  <data name="Admin.Home.HostMemoryAvailable" xml:space="preserve"><value>可用</value></data>
+  <data name="Admin.Home.HostNetwork" xml:space="preserve"><value>实时网络吞吐</value></data>
+  <data name="Admin.Home.HostNetworkTotal" xml:space="preserve"><value>累计</value></data>
+  <data name="Admin.Home.HostInterfaces" xml:space="preserve"><value>个活动网卡</value></data>
+  <data name="Admin.Home.HostProcess" xml:space="preserve"><value>当前 Web 进程</value></data>
+  <data name="Admin.Home.HostProcessCpu" xml:space="preserve"><value>Web 进程 CPU</value></data>
+  <data name="Admin.Home.HostProcessWorkingSet" xml:space="preserve"><value>工作集内存</value></data>
+  <data name="Admin.Home.HostProcessUptime" xml:space="preserve"><value>运行时长</value></data>
+  <data name="Admin.Home.HostMetricsChart" xml:space="preserve"><value>资源趋势</value></data>
+  <data name="Admin.Home.HostNetworkReceive" xml:space="preserve"><value>下行</value></data>
+  <data name="Admin.Home.HostNetworkSend" xml:space="preserve"><value>上行</value></data>
+  <data name="Admin.Home.HostMetricsInvalidResponse" xml:space="preserve"><value>Host 指标接口返回了无效数据</value></data>
+  <data name="Admin.Home.HostMetricsUnavailable" xml:space="preserve"><value>暂时无法获取 Host 实时指标</value></data>
+  <data name="Admin.Home.WebProcessMemory" xml:space="preserve"><value>Web 进程内存</value></data>
+  <data name="Admin.Home.ResourceMonitor" xml:space="preserve"><value>资源监控（最近 24 小时）</value></data>
+  <data name="Admin.Home.ResourceMonitorRealtime" xml:space="preserve"><value>后台每 10 秒记录 · CO2NET 缓存最多保留 24 小时</value></data>
+  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>拖拽选择范围或滚轮缩放；双击重置范围</value></data>
+  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>重置范围</value></data>
+  <data name="Admin.Home.ResourceMonitorRange" xml:space="preserve"><value>时间范围</value></data>
+  <data name="Admin.Home.ResourceMonitor5Minutes" xml:space="preserve"><value>5 分钟</value></data>
+  <data name="Admin.Home.ResourceMonitor30Minutes" xml:space="preserve"><value>30 分钟</value></data>
+  <data name="Admin.Home.ResourceMonitor6Hours" xml:space="preserve"><value>6 小时</value></data>
+  <data name="Admin.Home.ResourceMonitor24Hours" xml:space="preserve"><value>24 小时</value></data>
+  <data name="Admin.Home.ResourceMonitorReturnLive" xml:space="preserve"><value>回到实时</value></data>
+  <data name="Admin.Home.ResourceMonitorFollowing" xml:space="preserve"><value>跟随实时</value></data>
+  <data name="Admin.Home.ResourceMonitorPaused" xml:space="preserve"><value>视图已暂停（仍在记录）</value></data>
+  <data name="Admin.Home.ResourceMonitorEmpty" xml:space="preserve"><value>后台记录启动中（约 10 秒），或该时间范围暂无数据</value></data>
+  <data name="Admin.Home.ResourceMonitorUnavailable" xml:space="preserve"><value>暂时无法获取资源监控数据</value></data>
+  <data name="Admin.Home.ResourceMonitorNow" xml:space="preserve"><value>现在</value></data>
+  <data name="Admin.Home.InstalledModules" xml:space="preserve"><value>已安装模块</value></data>
+  <data name="Admin.Home.PendingUpdates" xml:space="preserve"><value>待更新模块</value></data>
+  <data name="Admin.Home.NewModules" xml:space="preserve"><value>发现新模块</value></data>
+  <data name="Admin.Home.ModuleErrors" xml:space="preserve"><value>模块异常</value></data>
+  <data name="Admin.Home.AiTitle" xml:space="preserve"><value>AI 智能助手</value></data>
+  <data name="Admin.Home.AiSubtitle" xml:space="preserve"><value>向我提问，我将帮助您更高效地管理系统</value></data>
+  <data name="Admin.Home.AiPlaceholder" xml:space="preserve"><value>输入您的问题，例如：如何配置系统参数？&#10;&#10;提示：按 Ctrl+Enter 或 Cmd+Enter 发送消息</value></data>
+  <data name="Admin.Home.StartConversation" xml:space="preserve"><value>开始对话</value></data>
+  <data name="Admin.Home.SupportMultiTurn" xml:space="preserve"><value>支持多轮对话</value></data>
+  <data name="Admin.Home.AddModulesContext" xml:space="preserve"><value>可添加模块作为对话上下文</value></data>
+  <data name="Admin.Home.SaveHistory" xml:space="preserve"><value>自动保存历史记录</value></data>
+  <data name="Admin.Home.ReferenceModules" xml:space="preserve"><value>引用模块（可选）</value></data>
+  <data name="Admin.Home.AddReferenceModule" xml:space="preserve"><value>添加引用模块</value></data>
+  <data name="Admin.Home.Clear" xml:space="preserve"><value>清空</value></data>
+  <data name="Admin.Home.EmptyReference" xml:space="preserve"><value>点击“添加引用模块”可选择多个模块作为上下文</value></data>
+  <data name="Admin.Home.FeatureModules" xml:space="preserve"><value>功能模块</value></data>
+  <data name="Admin.Home.CurrentVersion" xml:space="preserve"><value>当前版本：v{0}</value></data>
+  <data name="Admin.Home.UpdateVersion" xml:space="preserve"><value>可更新至：v{0}</value></data>
+  <data name="Admin.Home.MenuName" xml:space="preserve"><value>菜单名称</value></data>
+  <data name="Admin.Home.NoDescription" xml:space="preserve"><value>暂无描述</value></data>
+  <data name="Admin.Home.LogStats" xml:space="preserve"><value>日志统计</value></data>
+  <data name="Admin.Home.Last14Days" xml:space="preserve"><value>近 14 天</value></data>
+  <data name="Admin.Home.NormalLogs" xml:space="preserve"><value>常规日志</value></data>
+  <data name="Admin.Home.ErrorLogs" xml:space="preserve"><value>异常日志</value></data>
+  <data name="Admin.Home.TodayLogStats" xml:space="preserve"><value>今日日志统计</value></data>
+  <data name="Admin.Home.DynamicData" xml:space="preserve"><value>动态数据</value></data>
+  <data name="Admin.Home.LogType" xml:space="preserve"><value>日志类型</value></data>
+  <data name="Admin.Home.LogCountUnit" xml:space="preserve"><value>条</value></data>
+  <data name="AdminUserInfo.Title" xml:space="preserve"><value>管理员管理</value></data>
+  <data name="AdminUserInfo.List" xml:space="preserve"><value>管理员列表</value></data>
+  <data name="AdminUserInfo.AddTitle" xml:space="preserve"><value>新增管理员</value></data>
+  <data name="AdminUserInfo.EditTitle" xml:space="preserve"><value>编辑管理员</value></data>
+  <data name="AdminUserInfo.EditUsernameTip" xml:space="preserve"><value>不建议修改用户名！</value></data>
+  <data name="AdminUserInfo.Username" xml:space="preserve"><value>用户名</value></data>
+  <data name="AdminUserInfo.Note" xml:space="preserve"><value>备注</value></data>
+  <data name="AdminUserInfo.AddTime" xml:space="preserve"><value>添加时间</value></data>
+  <data name="AdminUserInfo.Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="AdminUserInfo.SetRole" xml:space="preserve"><value>设置角色</value></data>
+  <data name="AdminUserInfo.DeleteConfirm" xml:space="preserve"><value>确认删除此管理员吗？</value></data>
+  <data name="AdminUserInfo.ConfirmPassword" xml:space="preserve"><value>再次确认密码</value></data>
+  <data name="AdminUserInfo.RealName" xml:space="preserve"><value>真实姓名</value></data>
+  <data name="AdminUserInfo.Phone" xml:space="preserve"><value>手机号</value></data>
+  <data name="AdminUserInfo.NotePlaceholder" xml:space="preserve"><value>请输入备注信息</value></data>
+  <data name="AdminUserInfo.Success" xml:space="preserve"><value>成功</value></data>
+  <data name="AdminUserInfo.PasswordRequired" xml:space="preserve"><value>请输入密码</value></data>
+  <data name="AdminUserInfo.PasswordConfirmRequired" xml:space="preserve"><value>请再次输入密码</value></data>
+  <data name="AdminUserInfo.PasswordMismatch" xml:space="preserve"><value>请输入相同的密码</value></data>
+  <data name="AdminUserInfo.RoleTitle" xml:space="preserve"><value>设置角色</value></data>
+  <data name="SystemConfig.Title" xml:space="preserve"><value>系统信息</value></data>
+  <data name="SystemConfig.BasicInfo" xml:space="preserve"><value>基础信息</value></data>
+  <data name="SystemConfig.SystemName" xml:space="preserve"><value>系统名称</value></data>
+  <data name="SystemConfig.PublishMode" xml:space="preserve"><value>模块发布模式</value></data>
+  <data name="SystemConfig.NameRequired" xml:space="preserve"><value>系统名称为必填项</value></data>
+  <data name="SystemConfig.Updated" xml:space="preserve"><value>更新成功！</value></data>
+  <data name="SystemConfig.UpdateFailed" xml:space="preserve"><value>更新失败：</value></data>
+  <data name="Admin.Common.Error" xml:space="preserve"><value>错误</value></data>
+  <data name="AdminChat.Conversation" xml:space="preserve"><value>对话</value></data>
+  <data name="AdminChat.History" xml:space="preserve"><value>对话历史</value></data>
+  <data name="AdminChat.Search.Open" xml:space="preserve"><value>搜索对话</value></data>
+  <data name="AdminChat.Search.Placeholder" xml:space="preserve"><value>搜索未归档对话</value></data>
+  <data name="AdminChat.Search.ChatTab" xml:space="preserve"><value>对话</value></data>
+  <data name="AdminChat.Search.ToolTab" xml:space="preserve"><value>方法</value></data>
+  <data name="AdminChat.Search.ToolPlaceholder" xml:space="preserve"><value>搜索方法名</value></data>
+  <data name="AdminChat.Search.ToolCall" xml:space="preserve"><value>方法调用</value></data>
+  <data name="AdminChat.Search.Empty" xml:space="preserve"><value>没有匹配的未归档对话</value></data>
+  <data name="AdminChat.Search.Hint" xml:space="preserve"><value>只搜索未归档对话，最多 10 条</value></data>
+  <data name="AdminChat.Search.ToolHint" xml:space="preserve"><value>只搜索未归档会话里，Harness 实际调用过的方法名，最多 10 条</value></data>
+  <data name="AdminChat.Search.Failed" xml:space="preserve"><value>搜索失败</value></data>
+  <data name="AdminChat.Search.TitleMatch" xml:space="preserve"><value>标题匹配</value></data>
+  <data name="AdminChat.EmptyHistory" xml:space="preserve"><value>暂无对话历史</value></data>
+  <data name="AdminChat.SelectModel" xml:space="preserve"><value>选择 AI 算力</value></data>
+  <data name="AdminChat.Manage" xml:space="preserve"><value>管理</value></data>
+  <data name="AdminChat.Done" xml:space="preserve"><value>完成</value></data>
+  <data name="AdminChat.MenuHierarchy" xml:space="preserve"><value>菜单层级</value></data>
+  <data name="AdminChat.NoPreview" xml:space="preserve"><value>当前模块无可预览详情</value></data>
+  <data name="AdminChat.SelectedCount" xml:space="preserve"><value>已选 {0} 条</value></data>
+  <data name="AdminChat.Copy" xml:space="preserve"><value>复制</value></data>
+  <data name="AdminChat.ClearSelection" xml:space="preserve"><value>清空选择</value></data>
+  <data name="AdminChat.StartPrompt" xml:space="preserve"><value>开始您的对话吧</value></data>
+  <data name="AdminChat.InputPlaceholder" xml:space="preserve"><value>输入您的问题...</value></data>
+  <data name="AdminChat.SendHint" xml:space="preserve"><value>Ctrl + Enter 或 Cmd + Enter 发送</value></data>
+  <data name="AdminChat.Send" xml:space="preserve"><value>发送</value></data>
+  <data name="AdminChat.Thinking" xml:space="preserve"><value>正在思考中...</value></data>
+  <data name="AdminChat.ModeSimple" xml:space="preserve"><value>普通对话</value></data>
+  <data name="AdminChat.ModeHarness" xml:space="preserve"><value>长任务</value></data>
+  <data name="AdminChat.HarnessSteps" xml:space="preserve"><value>执行步骤</value></data>
+  <data name="AdminChat.TrajectoryNotFound" xml:space="preserve"><value>未找到任务轨迹。</value></data>
+  <data name="AdminChat.NewSessionDescription" xml:space="preserve"><value>输入问题并选择引用模块，开始新的对话会话</value></data>
+  <data name="AdminChat.ComputePower" xml:space="preserve"><value>AI 算力</value></data>
+  <data name="AdminChat.DeleteConfirm" xml:space="preserve"><value>确定要删除这个会话吗？</value></data>
+  <data name="AdminChat.DeleteConfirmTitle" xml:space="preserve"><value>删除确认</value></data>
+  <data name="AdminChat.RoleMe" xml:space="preserve"><value>我</value></data>
+  <data name="AdminChat.RoleAssistant" xml:space="preserve"><value>AI 助手</value></data>
+  <data name="AdminChat.RoleSystem" xml:space="preserve"><value>系统</value></data>
+  <data name="AdminChat.RoleUnknown" xml:space="preserve"><value>未知</value></data>
+  <data name="AdminChat.FallbackModelName" xml:space="preserve"><value>系统级 SenparcAiSetting</value></data>
+  <data name="AdminChat.FallbackModelDescription" xml:space="preserve"><value>使用 appsettings.json 中当前生效的默认 Chat 配置</value></data>
+  <data name="AdminChat.LoadSessionFailed" xml:space="preserve"><value>加载会话列表失败</value></data>
+  <data name="AdminChat.LoadDetailFailed" xml:space="preserve"><value>加载会话详情失败</value></data>
+  <data name="AdminChat.InputRequired" xml:space="preserve"><value>请输入消息内容</value></data>
+  <data name="AdminChat.SessionRequired" xml:space="preserve"><value>请先选择或创建会话</value></data>
+  <data name="AdminChat.SendFailed" xml:space="preserve"><value>发送消息失败</value></data>
+  <data name="AdminChat.SendFailedRetry" xml:space="preserve"><value>发送消息失败，请稍后重试</value></data>
+  <data name="AdminChat.FeedbackFailed" xml:space="preserve"><value>反馈失败</value></data>
+  <data name="AdminChat.CopyCount" xml:space="preserve"><value>已复制 {0} 条消息</value></data>
+  <data name="AdminChat.CopyFailed" xml:space="preserve"><value>复制失败，请手动复制</value></data>
+  <data name="AdminChat.SelectMessages" xml:space="preserve"><value>请先选择要操作的消息</value></data>
+  <data name="AdminChat.DeleteMessagesConfirm" xml:space="preserve"><value>确定删除选中的 {0} 条消息吗？此操作不可撤销。</value></data>
+  <data name="AdminChat.DeleteFailed" xml:space="preserve"><value>删除失败</value></data>
+  <data name="AdminChat.DeleteFailedRetry" xml:space="preserve"><value>删除失败，请稍后重试</value></data>
+  <data name="AdminChat.Functions" xml:space="preserve"><value>功能</value></data>
+  <data name="AdminChat.SelectAll" xml:space="preserve"><value>全选</value></data>
+  <data name="AdminChat.JustNow" xml:space="preserve"><value>刚刚</value></data>
+  <data name="AdminChat.MinutesAgo" xml:space="preserve"><value>{0}分钟前</value></data>
+  <data name="AdminChat.HoursAgo" xml:space="preserve"><value>{0}小时前</value></data>
+  <data name="AdminChat.DaysAgo" xml:space="preserve"><value>{0}天前</value></data>
+  <data name="AdminChat.UnknownModule" xml:space="preserve"><value>未命名模块</value></data>
+  <data name="Menu.ButtonRequired" xml:space="preserve"><value>当类型是按钮类型时此项必填</value></data>
+  <data name="Menu.NameRequired" xml:space="preserve"><value>菜单名称为必填项</value></data>
+  <data name="Menu.TypeRequired" xml:space="preserve"><value>类型为必选项</value></data>
+  <data name="Menu.AddTitle" xml:space="preserve"><value>新增菜单</value></data>
+  <data name="Menu.EditTitle" xml:space="preserve"><value>编辑菜单</value></data>
+  <data name="Menu.AddChildTitle" xml:space="preserve"><value>增加下一级菜单</value></data>
+  <data name="Menu.AuthorizationSuccess" xml:space="preserve"><value>授权成功</value></data>
+  <data name="Role.NameRequired" xml:space="preserve"><value>角色名称为必填项</value></data>
+  <data name="Role.CodeRequired" xml:space="preserve"><value>角色代码为必填项</value></data>
+  <data name="Role.AddTitle" xml:space="preserve"><value>新增角色</value></data>
+  <data name="Role.EditTitle" xml:space="preserve"><value>编辑角色</value></data>
+  <data name="Role.AuthorizationSuccess" xml:space="preserve"><value>授权成功</value></data>
+  <data name="Xncf.ModuleReadFailed" xml:space="preserve"><value>模块读取失败，请尝试更新此模块后刷新页面！模块：{0}</value></data>
+  <data name="Tenant.Title" xml:space="preserve"><value>多租户信息</value></data>
+  <data name="Tenant.CurrentInfo" xml:space="preserve"><value>当前租户信息</value></data>
+  <data name="Tenant.Disabled" xml:space="preserve"><value>当前系统已关闭多租户</value></data>
+  <data name="Tenant.MatchRule" xml:space="preserve"><value>当前系统匹配规则：</value></data>
+  <data name="Tenant.Name" xml:space="preserve"><value>名称</value></data>
+  <data name="Tenant.MatchKeyword" xml:space="preserve"><value>匹配关键字</value></data>
+  <data name="Tenant.MatchTime" xml:space="preserve"><value>匹配时间</value></data>
+  <data name="Tenant.ListTitle" xml:space="preserve"><value>多租户信息</value></data>
+  <data name="Tenant.Add" xml:space="preserve"><value>新增租户</value></data>
+  <data name="Tenant.Id" xml:space="preserve"><value>ID</value></data>
+  <data name="Tenant.Rule" xml:space="preserve"><value>匹配规则</value></data>
+  <data name="Tenant.AdminNote" xml:space="preserve"><value>管理员备注</value></data>
+  <data name="Tenant.Enabled" xml:space="preserve"><value>启用</value></data>
+  <data name="Tenant.Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="Tenant.Edit" xml:space="preserve"><value>编辑</value></data>
+  <data name="Tenant.Initialize" xml:space="preserve"><value>初始化</value></data>
+  <data name="Tenant.DeleteConfirm" xml:space="preserve"><value>确认删除此租户吗？删除后所有租户信息将处于游离状态，请谨慎操作！</value></data>
+  <data name="Tenant.Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Tenant.NamePlaceholder" xml:space="preserve"><value>请输入租户名称</value></data>
+  <data name="Tenant.KeyPlaceholder" xml:space="preserve"><value>请输入租户匹配关键字</value></data>
+  <data name="Tenant.NotePlaceholder" xml:space="preserve"><value>请输入管理员备注</value></data>
+  <data name="Tenant.EnableQuestion" xml:space="preserve"><value>是否启用</value></data>
+  <data name="Tenant.InitializeTitle" xml:space="preserve"><value>租户初始化</value></data>
+  <data name="Tenant.SystemName" xml:space="preserve"><value>系统名称</value></data>
+  <data name="Tenant.AdminAccount" xml:space="preserve"><value>默认管理员账号</value></data>
+  <data name="Tenant.SystemNamePlaceholder" xml:space="preserve"><value>请输入系统名称</value></data>
+  <data name="Tenant.AdminAccountPlaceholder" xml:space="preserve"><value>请输入默认管理员账号</value></data>
+  <data name="Tenant.ResultTitle" xml:space="preserve"><value>初始化结果</value></data>
+  <data name="Tenant.KeepSecret" xml:space="preserve"><value>请妥善保管以下信息，密码将无法再次查看！</value></data>
+  <data name="Tenant.TenantInfo" xml:space="preserve"><value>租户信息</value></data>
+  <data name="Tenant.AdminInfo" xml:space="preserve"><value>管理员账号</value></data>
+  <data name="Tenant.Username" xml:space="preserve"><value>用户名</value></data>
+  <data name="Tenant.Password" xml:space="preserve"><value>密码</value></data>
+  <data name="Tenant.RecordClose" xml:space="preserve"><value>我已记录，关闭</value></data>
+  <data name="Tenant.CreateTitle" xml:space="preserve"><value>新增租户信息</value></data>
+  <data name="Tenant.EditTitle" xml:space="preserve"><value>编辑租户信息</value></data>
+  <data name="Tenant.NameRequired" xml:space="preserve"><value>租户名称为必填项</value></data>
+  <data name="Tenant.KeyRequired" xml:space="preserve"><value>租户匹配规则为必填项</value></data>
+  <data name="Tenant.SystemNameRequired" xml:space="preserve"><value>系统名称为必填项</value></data>
+  <data name="Tenant.AdminAccountRequired" xml:space="preserve"><value>默认管理员账号为必填项</value></data>
+  <data name="Tenant.DeleteSuccess" xml:space="preserve"><value>删除成功</value></data>
+  <data name="Tenant.InitializeFailed" xml:space="preserve"><value>初始化失败</value></data>
+  <data name="Xncf.Title" xml:space="preserve"><value>模块管理</value></data>
+  <data name="Xncf.ExtensionModules" xml:space="preserve"><value>扩展模块</value></data>
+  <data name="Xncf.NewModules" xml:space="preserve"><value>新模块</value></data>
+  <data name="Xncf.InstalledModules" xml:space="preserve"><value>已安装模块</value></data>
+  <data name="Xncf.PendingUpdates" xml:space="preserve"><value>待更新模块</value></data>
+  <data name="Xncf.BatchUpdateAndEnable" xml:space="preserve"><value>批量更新并启用</value></data>
+  <data name="Xncf.BatchUpdate.SelectedCount" xml:space="preserve"><value>已选择 {0} 个模块</value></data>
+  <data name="Xncf.BatchUpdate.SelectAtLeastOne" xml:space="preserve"><value>请至少选择一个待更新模块。</value></data>
+  <data name="Xncf.BatchUpdate.Confirm" xml:space="preserve"><value>确定要更新并启用选中的 {0} 个模块吗？</value></data>
+  <data name="Xncf.BatchUpdate.Title" xml:space="preserve"><value>批量更新模块</value></data>
+  <data name="Xncf.BatchUpdateResult" xml:space="preserve"><value>批量操作状态汇总</value></data>
+  <data name="Xncf.BatchUpdate.Summary" xml:space="preserve"><value>共处理 {0} 个模块：成功 {1} 个，失败 {2} 个。</value></data>
+  <data name="Xncf.BatchUpdate.VersionResult" xml:space="preserve"><value>版本变化</value></data>
+  <data name="Xncf.BatchUpdate.TargetVersion" xml:space="preserve"><value>目标版本：{0}</value></data>
+  <data name="Xncf.BatchUpdate.UpdateStatus" xml:space="preserve"><value>更新状态</value></data>
+  <data name="Xncf.BatchUpdate.EnableStatus" xml:space="preserve"><value>启用状态</value></data>
+  <data name="Xncf.BatchUpdate.FinalState" xml:space="preserve"><value>最终状态</value></data>
+  <data name="Xncf.BatchUpdate.Details" xml:space="preserve"><value>详情</value></data>
+  <data name="Xncf.BatchUpdate.Success" xml:space="preserve"><value>成功</value></data>
+  <data name="Xncf.BatchUpdate.Failed" xml:space="preserve"><value>失败</value></data>
+  <data name="Xncf.BatchUpdate.NoResult" xml:space="preserve"><value>未获取到批量操作结果。</value></data>
+  <data name="Xncf.BatchUpdate.RefreshFailed" xml:space="preserve"><value>操作已完成，但状态刷新失败，请手动刷新页面。</value></data>
+  <data name="Xncf.BatchUpdate.RequestFailed" xml:space="preserve"><value>批量更新并启用请求失败。</value></data>
+  <data name="Xncf.BatchUpdate.UnknownModule" xml:space="preserve"><value>未知模块</value></data>
+  <data name="Xncf.BatchUpdate.ModuleUnavailable" xml:space="preserve"><value>模块不存在、已忽略或未加载。</value></data>
+  <data name="Xncf.BatchUpdate.UpdateNotApplied" xml:space="preserve"><value>未执行模块更新。</value></data>
+  <data name="Xncf.BatchUpdate.EnableNotApplied" xml:space="preserve"><value>模块未能切换为启用状态。</value></data>
+  <data name="Xncf.BatchUpdate.VersionMismatch" xml:space="preserve"><value>目标版本为 {0}，实际版本为 {1}。</value></data>
+  <data name="Xncf.BatchUpdate.UpdateAndEnableSuccess" xml:space="preserve"><value>更新并启用成功。</value></data>
+  <data name="Xncf.BatchUpdate.EnableFailed" xml:space="preserve"><value>更新成功，但启用失败：{0}</value></data>
+  <data name="Xncf.BatchUpdate.UpdateFailed" xml:space="preserve"><value>更新失败：{0}</value></data>
+  <data name="Xncf.ModuleName" xml:space="preserve"><value>模块名称</value></data>
+  <data name="Xncf.MenuName" xml:space="preserve"><value>菜单名称（显示名称）</value></data>
+  <data name="Xncf.Version" xml:space="preserve"><value>版本号</value></data>
+  <data name="Xncf.UniqueCode" xml:space="preserve"><value>唯一编码（全局唯一）</value></data>
+  <data name="Xncf.MenuAndVersion" xml:space="preserve"><value>菜单名称/版本号</value></data>
+  <data name="Xncf.ModuleAndCode" xml:space="preserve"><value>模块名称/唯一编码（全局唯一）</value></data>
+  <data name="Xncf.Search" xml:space="preserve"><value>输入关键字搜索</value></data>
+  <data name="Xncf.Install" xml:space="preserve"><value>安装</value></data>
+  <data name="Xncf.Status" xml:space="preserve"><value>状态</value></data>
+  <data name="Xncf.Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="Xncf.Home" xml:space="preserve"><value>主页</value></data>
+  <data name="Xncf.Missing" xml:space="preserve"><value>此模块未被部署或程序集文件已丢失</value></data>
+  <data name="Xncf.Module" xml:space="preserve"><value>模块</value></data>
+  <data name="Xncf.DeleteConfirm" xml:space="preserve"><value>确认删除此模块吗？此模块内相关数据也将被删除，请做好备份！</value></data>
+  <data name="Xncf.Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Xncf.NewVersion" xml:space="preserve"><value>发现新版本：v{0}</value></data>
+  <data name="Xncf.UpdateNow" xml:space="preserve"><value>立即更新</value></data>
+  <data name="Xncf.UniqueNumber" xml:space="preserve"><value>唯一编号</value></data>
+  <data name="Xncf.Features" xml:space="preserve"><value>特性</value></data>
+  <data name="Xncf.View" xml:space="preserve"><value>查看</value></data>
+  <data name="Xncf.ExecuteMethod" xml:space="preserve"><value>执行方法</value></data>
+  <data name="Xncf.Open" xml:space="preserve"><value>开启</value></data>
+  <data name="Xncf.Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="Xncf.DisabledTip" xml:space="preserve"><value>未开启的模块无法执行功能</value></data>
+  <data name="Xncf.Description" xml:space="preserve"><value>介绍</value></data>
+  <data name="Xncf.UpdateLog" xml:space="preserve"><value>更新记录</value></data>
+  <data name="Xncf.EnterModuleHome" xml:space="preserve"><value>进入 {0} 的首页</value></data>
+  <data name="Xncf.EnterHome" xml:space="preserve"><value>进入首页</value></data>
+  <data name="Xncf.Address" xml:space="preserve"><value>地址</value></data>
+  <data name="Xncf.PageOverview" xml:space="preserve"><value>页面透视</value></data>
+  <data name="Xncf.PageOverviewTip" xml:space="preserve"><value>说明：当前模块配备了可互动操作的UI界面，因此您可以看到这个入口。</value></data>
+  <data name="Xncf.Execute" xml:space="preserve"><value>执行</value></data>
+  <data name="Xncf.ParameterOverview" xml:space="preserve"><value>参数透视</value></data>
+  <data name="Xncf.ParameterName" xml:space="preserve"><value>名称</value></data>
+  <data name="Xncf.ParameterDescription" xml:space="preserve"><value>说明</value></data>
+  <data name="Xncf.ParameterType" xml:space="preserve"><value>类型</value></data>
+  <data name="Xncf.Required" xml:space="preserve"><value>必须</value></data>
+  <data name="Xncf.Yes" xml:space="preserve"><value>是</value></data>
+  <data name="Xncf.No" xml:space="preserve"><value>否</value></data>
+  <data name="Xncf.NoInputData" xml:space="preserve"><value>无需填写数据</value></data>
+  <data name="Xncf.Executing" xml:space="preserve"><value>执行中</value></data>
+  <data name="Xncf.DownloadLog" xml:space="preserve"><value>下载日志（5分钟内1次有效）</value></data>
+  <data name="Xncf.DownloadLogTip" xml:space="preserve"><value>下载日志</value></data>
+  <data name="Xncf.CloseDialog" xml:space="preserve"><value>关闭</value></data>
+  <data name="Xncf.ThreadDetails" xml:space="preserve"><value>查看线程</value></data>
+  <data name="Xncf.ThreadName" xml:space="preserve"><value>名称</value></data>
+  <data name="Xncf.ThreadActivity" xml:space="preserve"><value>活动状态/后台</value></data>
+  <data name="Xncf.ThreadState" xml:space="preserve"><value>线程状态</value></data>
+  <data name="Xncf.ThreadStory" xml:space="preserve"><value>最近故事</value></data>
+  <data name="Xncf.Prompt" xml:space="preserve"><value>提示</value></data>
+  <data name="Xncf.EnableFirst" xml:space="preserve"><value>请开启后执行</value></data>
+  <data name="Xncf.SourcePathRequired" xml:space="preserve"><value>请填写源码物理路径</value></data>
+  <data name="Xncf.RequiredOption" xml:space="preserve"><value>{0} 为必选项</value></data>
+  <data name="Xncf.RequiredField" xml:space="preserve"><value>{0} 为必填项</value></data>
+  <data name="Xncf.RunError" xml:space="preserve"><value>遇到错误</value></data>
+  <data name="Xncf.ErrorInfo" xml:space="preserve"><value>错误信息</value></data>
+  <data name="Xncf.RunSuccess" xml:space="preserve"><value>执行成功</value></data>
+  <data name="Xncf.UrlResultTip" xml:space="preserve"><value>收到网址，点击下方打开&lt;br /&gt;（此链接由第三方提供，请注意安全）：</value></data>
+  <data name="Xncf.ReturnInfo" xml:space="preserve"><value>返回信息</value></data>
+  <data name="Xncf.ExecutionError" xml:space="preserve"><value>执行过程中发生错误</value></data>
+  <data name="Xncf.RunFailed" xml:space="preserve"><value>执行失败</value></data>
+  <data name="Xncf.EnableManager" xml:space="preserve"><value>开启【扩展模块】管理模式</value></data>
+  <data name="Xncf.HideManager" xml:space="preserve"><value>切换至发布状态，隐藏【扩展模块】管理单元</value></data>
+  <data name="Xncf.EnableManagerConfirm" xml:space="preserve"><value>打开【扩展模块】管理功能后，所有扩展模块将显示在【扩展模块】二级目录中。确定要打开吗？</value></data>
+  <data name="Xncf.HideManagerConfirm" xml:space="preserve"><value>隐藏【扩展模块】管理功能后，所有扩展模块将并列显示在一级目录中。如需重新打开，请直接浏览器内访问此页面【/Admin/XncfModule】。确定要隐藏吗？</value></data>
+  <data name="Xncf.AreaFeature" xml:space="preserve"><value>网页</value></data>
+  <data name="Xncf.DatabaseFeature" xml:space="preserve"><value>数据库</value></data>
+  <data name="Xncf.MiddlewareFeature" xml:space="preserve"><value>中间件</value></data>
+  <data name="Xncf.ThreadFeature" xml:space="preserve"><value>线程</value></data>
+  <data name="Xncf.TypeText" xml:space="preserve"><value>文本</value></data>
+  <data name="Xncf.TypeNumber" xml:space="preserve"><value>数字</value></data>
+  <data name="Xncf.TypeDate" xml:space="preserve"><value>日期</value></data>
+  <data name="Xncf.TypeOption" xml:space="preserve"><value>选项</value></data>
+  <data name="Xncf.TypeBoolean" xml:space="preserve"><value>布尔</value></data>
+  <data name="Admin.Common.Success" xml:space="preserve"><value>成功</value></data>
+  <data name="AdminChat.StreamInputRequired" xml:space="preserve"><value>请输入有效的会话和消息内容。</value></data>
+  <data name="AdminChat.StreamSessionForbidden" xml:space="preserve"><value>会话不存在或无权访问。</value></data>
+  <data name="AdminChat.AgentReplyFailed" xml:space="preserve"><value>Agent 回复失败。</value></data>
+  <data name="AdminChat.LoadModulesFailedRetry" xml:space="preserve"><value>加载模块列表失败，请稍后重试</value></data>
+  <data name="AdminChat.CreateSessionFailed" xml:space="preserve"><value>创建会话失败</value></data>
+  <data name="AdminChat.CreateSessionFailedRetry" xml:space="preserve"><value>创建会话失败，请稍后重试</value></data>
+  <data name="Admin.Login.Error.LoginFailed" xml:space="preserve"><value>登录失败</value></data>
+  <data name="Admin.Login.Error.LoginRetry" xml:space="preserve"><value>登录失败，请重试</value></data>
+  <data name="Admin.Login.CaptchaPlaceholder" xml:space="preserve"><value>请输入验证码</value></data>
+  <data name="Admin.Login.CaptchaRequired" xml:space="preserve"><value>请输入图形验证码</value></data>
+  <data name="Admin.Login.CaptchaRefresh" xml:space="preserve"><value>看不清？点击图片刷新</value></data>
+  <data name="Admin.Login.Error.CaptchaInvalid" xml:space="preserve"><value>验证码错误，请重试</value></data>
+  <data name="Admin.Login.Support" xml:space="preserve"><value>技术支持：</value></data>
+  <data name="Admin.Login.VisitWebsite" xml:space="preserve"><value>点击进入官网</value></data>
+  <data name="Admin.Session.InvalidUser" xml:space="preserve"><value>当前用户身份无效，无法续期 JWT。请重新登录。</value></data>
+  <data name="SystemConfig.RequestEmpty" xml:space="preserve"><value>请求参数不能为空</value></data>
+  <data name="SystemConfig.NameEmpty" xml:space="preserve"><value>系统名称不能为空</value></data>
+  <data name="SystemConfig.ConfigNotFound" xml:space="preserve"><value>系统配置信息不存在</value></data>
+  <data name="Role.PermissionManagement" xml:space="preserve"><value>角色权限管理</value></data>
+  <data name="Role.PermissionSettings" xml:space="preserve"><value>权限设置</value></data>
+  <data name="AdminUserInfo.UsernamePlaceholder" xml:space="preserve"><value>请输入用户名</value></data>
+  <data name="AdminUserInfo.PasswordConfirmPlaceholder" xml:space="preserve"><value>请再次输入密码</value></data>
+  <data name="AdminUserInfo.RealNamePlaceholder" xml:space="preserve"><value>请输入真实姓名</value></data>
+  <data name="AdminUserInfo.PhonePlaceholder" xml:space="preserve"><value>请输入手机号</value></data>
+  <data name="Admin.Common.Submit" xml:space="preserve"><value>提交</value></data>
+  <data name="Xncf.SettingsAndExecute" xml:space="preserve"><value>设置/执行</value></data>
+  <data name="Admin.Session.ExpiredRedirect" xml:space="preserve"><value>登录已过期，即将跳转到登录页面</value></data>
+  <data name="Admin.Session.AccessDenied" xml:space="preserve"><value>您没有访问权限</value></data>
+  <data name="Trace.Today" xml:space="preserve"><value>今天</value></data>
+  <data name="Trace.LastHour" xml:space="preserve"><value>最近一小时</value></data>
+  <data name="Trace.ShowAll" xml:space="preserve"><value>显示所有完整结果</value></data>
+  <data name="Trace.ShowExceptions" xml:space="preserve"><value>只显示所有异常信息</value></data>
+  <data name="Trace.ExceptionInfo" xml:space="preserve"><value>异常信息</value></data>
+  <data name="Trace.KeywordPlaceholder" xml:space="preserve"><value>请输入关键字</value></data>
+  <data name="Trace.To" xml:space="preserve"><value>至</value></data>
+  <data name="Trace.StartTime" xml:space="preserve"><value>开始时间</value></data>
+  <data name="Trace.EndTime" xml:space="preserve"><value>结束时间</value></data>
+  <data name="Trace.SelectThread" xml:space="preserve"><value>选择线程</value></data>
+  <data name="Trace.SelectType" xml:space="preserve"><value>选择类型</value></data>
+  <data name="Trace.ExceptionStatus" xml:space="preserve"><value>异常状态</value></data>
+  <data name="Trace.All" xml:space="preserve"><value>全部</value></data>
+  <data name="Trace.NumberAndLine" xml:space="preserve"><value>编号/行号</value></data>
+  <data name="Trace.Time" xml:space="preserve"><value>时间</value></data>
+  <data name="Trace.Thread" xml:space="preserve"><value>线程</value></data>
+  <data name="Trace.Type" xml:space="preserve"><value>类型</value></data>
+  <data name="Trace.IsException" xml:space="preserve"><value>是否异常</value></data>
+  <data name="Trace.Title" xml:space="preserve"><value>标题</value></data>
+  <data name="Trace.Content" xml:space="preserve"><value>内容</value></data>
+  <data name="Trace.ReturnResult" xml:space="preserve"><value>返回结果</value></data>
+  <data name="Trace.PostData" xml:space="preserve"><value>Post 数据</value></data>
+  <data name="AdminChat.AddReferenceModule" xml:space="preserve"><value>添加引用模块</value></data>
+  <data name="AdminChat.SearchModulePlaceholder" xml:space="preserve"><value>搜索模块名称 / 描述 / UID</value></data>
+  <data name="AdminChat.SelectFiltered" xml:space="preserve"><value>当前筛选结果全选</value></data>
+  <data name="AdminChat.Selected" xml:space="preserve"><value>已选</value></data>
+  <data name="AdminChat.QuickOpen" xml:space="preserve"><value>快速进入</value></data>
+  <data name="AdminChat.NoMenu" xml:space="preserve"><value>无菜单</value></data>
+  <data name="AdminChat.NoMenuOrFunctions" xml:space="preserve"><value>当前模块无可用菜单和 Functions</value></data>
+  <data name="AdminChat.NoMatchingModules" xml:space="preserve"><value>没有匹配的模块</value></data>
+  <data name="AdminChat.ConfirmAdd" xml:space="preserve"><value>确认添加</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>扩展模块</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>首页</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>数据库操作示例</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>新增</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>添加</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>编辑</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>删除</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>取消</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>确定</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>确认</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>保存</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>关闭</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>返回</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>搜索</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>查询</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>重置</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>刷新</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>操作</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>名称</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>类型</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>状态</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>备注</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>说明</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>详情</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>配置</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>管理</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>列表</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>上传</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>下载</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>导入</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>导出</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>启用</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>停用</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>全部</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>暂无数据</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>暂无内容</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>请选择</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>请填写</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>请输入</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>添加时间</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>开始时间</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>结束时间</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>创建时间</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>更新时间</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>文件名</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>文件大小</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>上传时间</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>批量删除</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>新增文件</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>选择文件</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>上一页</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>下一页</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>成功</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>失败</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>操作成功</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>操作失败</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>加载失败</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>添加成功</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>添加失败</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>编辑成功</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>编辑失败</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>删除成功</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>删除失败</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>上传成功</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>上传失败</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>复制成功</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>复制失败</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>提示</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>警告</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>错误</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>是</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>否</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>开启</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>未知</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>未设置</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>暂无记录</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>请输入关键字</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>选择类型</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>选择状态</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>创建</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>提交</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>查看</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>设为默认</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>测试</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>连接成功</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>连接失败</value></data>
+  <data name="Frontend.087" xml:space="preserve">
+    <value>密码为必填项！</value>
+  </data>
+  <data name="Frontend.088" xml:space="preserve">
+    <value>{0} 重复</value>
+  </data>
+  <data name="Frontend.089" xml:space="preserve">
+    <value>管理员不能删除自己！</value>
+  </data>
+  <data name="Frontend.090" xml:space="preserve">
+    <value>管理员不存在！</value>
+  </data>
+  <data name="Frontend.091" xml:space="preserve">
+    <value>删除成功！</value>
+  </data>
+  <data name="Frontend.092" xml:space="preserve">
+    <value>微信日志文件不存在：</value>
+  </data>
+  <data name="Frontend.093" xml:space="preserve">
+    <value>{0} 必须大于 16 位！</value>
+  </data>
+  <data name="Frontend.094" xml:space="preserve">
+    <value>当前会话没有关联任何 XNCF 模块。</value>
+  </data>
+  <data name="Frontend.095" xml:space="preserve">
+    <value>未找到匹配的模块：&quot;{0}&quot;。请先调用 GetSessionModuleList 确认当前会话中的模块列表。</value>
+  </data>
+  <data name="Frontend.096" xml:space="preserve">
+    <value>未找到模块：&quot;{0}&quot;。请先调用 GetSessionModuleList 确认可用模块。</value>
+  </data>
+  <data name="Frontend.097" xml:space="preserve">
+    <value>模块 {0} 的运行时注册未找到，无法读取数据库信息。</value>
+  </data>
+  <data name="Frontend.098" xml:space="preserve">
+    <value>系统中没有已注册的模块。</value>
+  </data>
+  <data name="Frontend.099" xml:space="preserve">
+    <value>未读取到 SenparcAiSetting，请检查 appsettings.json 配置。</value>
+  </data>
+  <data name="Frontend.100" xml:space="preserve">
+    <value>SenparcAiSetting.AiPlatform 仍为 UnSet，请先在 appsettings.json 中设置可用平台。</value>
+  </data>
+  <data name="Frontend.101" xml:space="preserve">
+    <value>当前系统未安装或未启用 AIKernel 模块，无法切换到指定 AI 模型。</value>
+  </data>
+  <data name="Frontend.102" xml:space="preserve">
+    <value>未能解析 AIModelService，无法加载指定 AI 模型。</value>
+  </data>
+  <data name="Frontend.103" xml:space="preserve">
+    <value>当前选择的 AI 模型不存在：{0}</value>
+  </data>
+  <data name="Frontend.104" xml:space="preserve">
+    <value>当前选择的 AI 模型不是 Chat 类型：{0}</value>
+  </data>
+  <data name="Frontend.105" xml:space="preserve">
+    <value>当前用户未登录，无法续期。</value>
+  </data>
+  <data name="Frontend.106" xml:space="preserve">
+    <value>用户信息不存在！</value>
+  </data>
+  <data name="Frontend.107" xml:space="preserve">
+    <value>用户名不存在或密码不正确：{0}！</value>
+  </data>
+  <data name="Frontend.108" xml:space="preserve">
+    <value>用户名不存在或密码不正确！</value>
+  </data>
+  <data name="Admin.Home.AgentsOverview" xml:space="preserve"><value>Agents 运行概览</value></data>
+  <data name="Admin.Home.AgentsOverviewLive" xml:space="preserve"><value>实时</value></data>
+  <data name="Admin.Home.AgentsManage" xml:space="preserve"><value>管理 Agents</value></data>
+  <data name="Admin.Home.AgentsTotal" xml:space="preserve"><value>Agents 总计</value></data>
+  <data name="Admin.Home.AgentsLocal" xml:space="preserve"><value>本地</value></data>
+  <data name="Admin.Home.AgentsRemoteA2A" xml:space="preserve"><value>外接 A2A</value></data>
+  <data name="Admin.Home.AgentsEnabled" xml:space="preserve"><value>启用</value></data>
+  <data name="Admin.Home.AgentsDisabled" xml:space="preserve"><value>停用</value></data>
+  <data name="Admin.Home.AgentsPublishedA2A" xml:space="preserve"><value>已对外开放 A2A</value></data>
+  <data name="Admin.Home.AgentsConfigured" xml:space="preserve"><value>已配置</value></data>
+  <data name="Admin.Home.AgentsActive" xml:space="preserve"><value>活跃</value></data>
+  <data name="Admin.Home.AgentsGroups" xml:space="preserve"><value>协作群组</value></data>
+  <data name="Admin.Home.AgentsChatting" xml:space="preserve"><value>对话中</value></data>
+  <data name="Admin.Home.AgentsActiveTasks" xml:space="preserve"><value>活跃任务</value></data>
+  <data name="Admin.Home.AgentsWaitingOrPaused" xml:space="preserve"><value>等待 / 暂停</value></data>
+  <data name="Admin.Home.AiQuickDescription" xml:space="preserve"><value>使用页脚 AI 快捷对话，随时展开完整会话与上下文选择。</value></data>
+  <data name="Admin.Home.AiQuickDialog" xml:space="preserve"><value>打开快捷对话</value></data>
+  <data name="Menu.ConfigMode" xml:space="preserve">
+    <value>配置模式</value>
+  </data>
+  <data name="Menu.ConfigModeExit" xml:space="preserve">
+    <value>退出配置模式</value>
+  </data>
+  <data name="Menu.ConfigModeTip" xml:space="preserve">
+    <value>下方按层级列出所有“菜单/页面”（按钮不参与排序）。同级之间可直接拖拽调整顺序，也可在右侧“排序”框输入数字后回车跳转到对应位置；保存后将真实更新 Sort 数值并刷新左侧菜单</value>
+  </data>
+  <data name="Menu.ConfigSave" xml:space="preserve">
+    <value>保存排序</value>
+  </data>
+  <data name="Menu.ConfigSaveSuccess" xml:space="preserve">
+    <value>菜单排序已保存</value>
+  </data>
+  <data name="Menu.ConfigEmpty" xml:space="preserve">
+    <value>暂无可排序的菜单或页面</value>
+  </data>
+  <data name="Admin.Footer.NeuBellWebHookSettings" xml:space="preserve"><value>WebHook 设置</value></data>
+  <data name="DocHelp.Help" xml:space="preserve"><value>帮助</value></data>
+  <data name="DocHelp.Title" xml:space="preserve"><value>功能文档</value></data>
+  <data name="DocHelp.OpenWindow" xml:space="preserve"><value>在新窗口打开</value></data>
+  <data name="DocHelp.Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="DocHelp.Loading" xml:space="preserve"><value>正在加载文档…</value></data>
+  <data name="DocHelp.Notice" xml:space="preserve"><value>若文档空白或被浏览器阻止，请在新窗口打开。</value></data>
+  <data name="DocHelp.LoadFailed" xml:space="preserve"><value>文档加载失败或等待超时，请重试或在新窗口打开。</value></data>
+  <data name="DocHelp.Retry" xml:space="preserve"><value>重试</value></data>
+  <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>帮助文档索引配置无效，请联系管理员。</value></data>
+  <data name="AdminChat.Settings.Title" xml:space="preserve"><value>对话设置</value></data>
+  <data name="AdminChat.Settings.ModeLabel" xml:space="preserve"><value>执行模式</value></data>
+  <data name="AdminChat.Settings.ModeTitle" xml:space="preserve"><value>选择执行模式</value></data>
+  <data name="AdminChat.Settings.ModeCaption" xml:space="preserve"><value>当前会话下一轮请求使用的策略。</value></data>
+  <data name="AdminChat.Settings.LauncherModeCaption" xml:space="preserve"><value>模式只影响下一轮请求；Plan / Execute 使用 MAF Harness。</value></data>
+  <data name="AdminChat.Settings.HarnessAdvanced" xml:space="preserve"><value>Harness 高级设置</value></data>
+  <data name="AdminChat.Settings.MaxIterations" xml:space="preserve"><value>最大迭代</value></data>
+  <data name="AdminChat.Settings.MaxOutputTokens" xml:space="preserve"><value>最大输出 Token</value></data>
+  <data name="AdminChat.Settings.CapabilityNotice" xml:space="preserve"><value>FileMemory 仅通过 /harness file-memory on|off 设置；Agent Skills 和 Hosted Web Search 默认关闭。开启这些能力会改变隐私、工具和外部访问边界。</value></data>
+  <data name="AdminChat.Settings.Close" xml:space="preserve"><value>关闭对话设置</value></data>
+  <data name="AdminChat.Settings.Stop" xml:space="preserve"><value>终止</value></data>
+  <data name="AdminChat.Mode.Simple" xml:space="preserve"><value>普通对话</value></data>
+  <data name="AdminChat.Mode.SimpleDescription" xml:space="preserve"><value>单轮回答，不启动 MAF 长任务循环。</value></data>
+  <data name="AdminChat.Mode.Plan" xml:space="preserve"><value>Plan</value></data>
+  <data name="AdminChat.Mode.PlanDescription" xml:space="preserve"><value>先规划任务，再按需调用工具并等待审批。</value></data>
+  <data name="AdminChat.Mode.Execute" xml:space="preserve"><value>Execute</value></data>
+  <data name="AdminChat.Mode.ExecuteDescription" xml:space="preserve"><value>直接进入 MAF 执行模式，适合已经明确的任务。</value></data>
+  <data name="AdminChat.Command.Mode" xml:space="preserve"><value>切换执行模式</value></data>
+  <data name="AdminChat.Command.Help" xml:space="preserve"><value>查看可用命令</value></data>
+  <data name="AdminChat.Command.MaxToken" xml:space="preserve"><value>设置输出上限</value></data>
+  <data name="AdminChat.Command.MaxIterations" xml:space="preserve"><value>设置 Harness 最大迭代</value></data>
+  <data name="AdminChat.Command.Harness" xml:space="preserve"><value>设置 Harness 能力</value></data>
+
+  <data name="SystemMenu.AdministratorManagement" xml:space="preserve"><value>管理员管理</value></data>
+  <data name="SystemMenu.RoleManagement" xml:space="preserve"><value>角色管理</value></data>
+  <data name="SystemMenu.SystemInfo" xml:space="preserve"><value>系统信息</value></data>
+  <data name="SystemMenu.TenantInfo" xml:space="preserve"><value>多租户信息</value></data>
+  <data name="SystemMenu.ExtensionModules" xml:space="preserve"><value>扩展模块</value></data>
+  <data name="SystemMenu.ModuleManagement" xml:space="preserve"><value>模块管理</value></data>
+  <data name="Xncf.ModuleFunctionCatalog" xml:space="preserve"><value>模块 Function 清单与执行入口</value></data>
+  <data name="Xncf.ModuleFunctionAccessControl" xml:space="preserve"><value>在 NeuCharPivot iframe 标签页中管理访问控制</value></data>
+  <data name="Xncf.Capabilities" xml:space="preserve"><value>能力透视</value></data>
+  <data name="Xncf.ModuleCapabilities" xml:space="preserve"><value>模块能力</value></data>
+  <data name="Xncf.Refresh" xml:space="preserve"><value>刷新</value></data>
+  <data name="Xncf.NoAdditionalInterfaces" xml:space="preserve"><value>未声明额外接口</value></data>
+  <data name="Xncf.RuntimeDataCapabilities" xml:space="preserve"><value>运行与数据能力</value></data>
+  <data name="Xncf.RegisteredThreads" xml:space="preserve"><value>注册线程</value></data>
+  <data name="Xncf.DedicatedDatabase" xml:space="preserve"><value>独立数据库</value></data>
+  <data name="Xncf.DatabasePrefix" xml:space="preserve"><value>数据库前缀</value></data>
+  <data name="Xncf.DatabaseContext" xml:space="preserve"><value>数据库上下文</value></data>
+  <data name="Xncf.DataTables" xml:space="preserve"><value>数据表透视</value></data>
+  <data name="Xncf.DataTablesAndMigrations" xml:space="preserve"><value>数据表与迁移</value></data>
+  <data name="Xncf.DatabaseReauthenticationRequired" xml:space="preserve"><value>此区域包含数据库结构和数据统计。请再次输入当前管理员密码后继续。</value></data>
+  <data name="Xncf.CurrentAdministratorPassword" xml:space="preserve"><value>当前管理员密码</value></data>
+  <data name="Xncf.VerifyAndView" xml:space="preserve"><value>验证并查看</value></data>
+  <data name="Xncf.EntityCount" xml:space="preserve"><value>实体数</value></data>
+  <data name="Xncf.TablePrefix" xml:space="preserve"><value>表前缀</value></data>
+  <data name="Xncf.AppliedMigrations" xml:space="preserve"><value>已应用迁移</value></data>
+  <data name="Xncf.PendingMigrations" xml:space="preserve"><value>待执行迁移</value></data>
+  <data name="Xncf.Table" xml:space="preserve"><value>表</value></data>
+  <data name="Xncf.Entity" xml:space="preserve"><value>实体</value></data>
+  <data name="Xncf.CurrentRowCount" xml:space="preserve"><value>当前数据总条数</value></data>
+  <data name="Xncf.Columns" xml:space="preserve"><value>字段</value></data>
+  <data name="Xncf.MigrationHistory" xml:space="preserve"><value>迁移记录</value></data>
+  <data name="Xncf.LoadCapabilitiesFailed" xml:space="preserve"><value>加载模块能力失败。</value></data>
+  <data name="Xncf.EnterCurrentAdministratorPassword" xml:space="preserve"><value>请输入当前管理员密码。</value></data>
+  <data name="Xncf.PasswordVerificationFailed" xml:space="preserve"><value>密码验证失败。</value></data>
+  <data name="Xncf.LoadDataTablesFailed" xml:space="preserve"><value>加载数据表信息失败。</value></data>
+  <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - 访问控制</value></data>
+  <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>模块未加载。</value></data>
+  <data name="Xncf.PasswordRequired" xml:space="preserve"><value>请输入密码。</value></data>
+  <data name="Xncf.Function" xml:space="preserve"><value>Function</value></data>
+  <data name="Xncf.Key" xml:space="preserve"><value>Key</value></data>
+  <data name="Xncf.NeuCharPivot" xml:space="preserve"><value>NeuCharPivot</value></data>
+  <data name="Admin.Pagination.Goto" xml:space="preserve"><value>前往</value></data>
+  <data name="Admin.Pagination.PageSize" xml:space="preserve"><value>条/页</value></data>
+  <data name="Admin.Pagination.Total" xml:space="preserve"><value>共 {total} 条</value></data>
+  <data name="Admin.Pagination.Page" xml:space="preserve"><value>页</value></data>
+
+  <data name="AdminChat.UserStats" xml:space="preserve"><value>用量统计</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="AdminChat.UserStatsTitle" xml:space="preserve"><value>用户用量统计（AdminChat）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="AdminChat.UserStatsTip" xml:space="preserve"><value>仅统计各账号的会话与消息数量，不展示任何会话或消息内容。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="AdminChat.UserStatsCol.User" xml:space="preserve"><value>账号</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="AdminChat.UserStatsCol.Total" xml:space="preserve"><value>会话总数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="AdminChat.UserStatsCol.Active" xml:space="preserve"><value>活跃</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="AdminChat.UserStatsCol.Archived" xml:space="preserve"><value>已归档</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="AdminChat.UserStatsCol.Deleted" xml:space="preserve"><value>已删除</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="AdminChat.UserStatsCol.Messages" xml:space="preserve"><value>消息数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="AdminChat.UserStatsCol.LastActive" xml:space="preserve"><value>最后活跃</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="AdminChat.UserStatsLoadFailed" xml:space="preserve"><value>加载用户用量统计失败</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="AdminChat.SuperAdminOnly" xml:space="preserve"><value>仅超级管理员可以查看各账号的用量统计</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Tenant.AdminUserCount" xml:space="preserve"><value>管理员数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Tenant.DeleteCurrentTenantNotAllowed" xml:space="preserve"><value>不能删除当前正在使用的租户！</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Tenant.DeleteLastTenantNotAllowed" xml:space="preserve"><value>系统必须至少保留一个启用的租户，不能删除最后一个租户！</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Tenant.DeleteHasAdminUsers" xml:space="preserve"><value>租户 {0} 下仍有 {1} 个管理员账号，请先转移或删除相关账号后再删除租户！</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Tenant.DeleteNotFound" xml:space="preserve"><value>租户不存在！</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.Title" xml:space="preserve"><value>PromptRange · 选择提示词</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.Range" xml:space="preserve"><value>全部靶场</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.Tactic" xml:space="preserve"><value>全部靶道</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.Keyword" xml:space="preserve"><value>搜索名称、正文、靶场或版本号</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.Search" xml:space="preserve"><value>搜索</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.Retry" xml:space="preserve"><value>重新加载</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.Empty" xml:space="preserve"><value>没有匹配的提示词，请调整筛选条件。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.Draft" xml:space="preserve"><value>草稿</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.Preview" xml:space="preserve"><value>提示词正文预览</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.SelectHint" xml:space="preserve"><value>选择左侧提示词，预览完整正文。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.InsertHint" xml:space="preserve"><value>插入到光标处（替换选中文字），不会自动发送或执行。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.Cancel" xml:space="preserve"><value>取消</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.Insert" xml:space="preserve"><value>插入提示词</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.LoadFailed" xml:space="preserve"><value>提示词加载失败，请重试。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.AccessDenied" xml:space="preserve"><value>登录已失效或没有访问提示词的权限，请重新登录或联系管理员。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.Unavailable" xml:space="preserve"><value>PromptRange 选择器不可用，请确认模块已安装、启用并更新。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.TargetChanged" xml:space="preserve"><value>输入框已更改或不可编辑，请关闭后重新选择提示词。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.TooLong" xml:space="preserve"><value>插入后的内容超过输入框长度限制，请先缩短内容。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.Sort" xml:space="preserve"><value>排序</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.SortScore" xml:space="preserve"><value>评分（当前分数从高到低）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.SortPromptCode" xml:space="preserve"><value>PromptCode（升序）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.AverageScore" xml:space="preserve"><value>平均分</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.MaxScore" xml:space="preserve"><value>最高分</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.Unrated" xml:space="preserve"><value>未评分</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptSelector.CurrentScore" xml:space="preserve"><value>当前评分</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.Score" xml:space="preserve"><value>打分（0~10）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.View" xml:space="preserve"><value>快速查看提示词</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.Locate" xml:space="preserve"><value>定位引用文本</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.Remove" xml:space="preserve"><value>取消引用标注（保留正文）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.Unrated" xml:space="preserve"><value>未评分</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.Unavailable" xml:space="preserve"><value>PromptRange 不可用或请求失败，请重试。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.InvalidReference" xml:space="preserve"><value>提示词引用已失效，请重新插入。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.InvalidScore" xml:space="preserve"><value>请输入 0~10 的分数，最多一位小数。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.LastScoreWins" xml:space="preserve"><value>最后一次成功评分生效。手动评分与 AI 评分均可覆盖当前分数，所有引用处共享。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.AIConfirm" xml:space="preserve"><value>根据此轮输入、回复及该 PromptCode 的 benchmark 调用 AI 打分，可能产生模型费用；成功后将覆盖当前评分。继续？</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.AIScore" xml:space="preserve"><value>AI 自动打分</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.AIUnavailable" xml:space="preserve"><value>AI 打分需要已配置 benchmark 且存在对应的完整回复。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.Cancel" xml:space="preserve"><value>取消</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.Save" xml:space="preserve"><value>保存手动评分</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.TooMany" xml:space="preserve"><value>每条消息最多标注 32 段提示词，请先移除不需要的引用。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.RangeScores" xml:space="preserve"><value>Range 评分总览</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.ScoringTarget" xml:space="preserve"><value>本次评分对象</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.LocateTarget" xml:space="preserve"><value>定位评分对象</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.DraftHint" xml:space="preserve"><value>拖动仅预览分数和绿色柱子的高度；点击“保存手动评分”后才生效。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.ChartHint" xml:space="preserve"><value>绿色柱为本次评分对象，蓝框为正在查看的版本。点击柱子只查看，不改变评分对象；可横向滚动浏览全部版本。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.PreviewOnly" xml:space="preserve"><value>只读查看 · 不影响本次打分</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.CurrentScore" xml:space="preserve"><value>当前已保存分数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.HumanScore" xml:space="preserve"><value>手动评分</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.RobotScore" xml:space="preserve"><value>AI 评分</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="PromptReference.Retry" xml:space="preserve"><value>重试</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.109" xml:space="preserve"><value>GET（不发送请求体，数据经地址占位符传递）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.110" xml:space="preserve"><value>NeuBell WebHook 设置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.111" xml:space="preserve"><value>POST（默认，携带 JSON 请求体）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.112" xml:space="preserve"><value>PUT（携带请求体）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.113" xml:space="preserve"><value>Provider 过滤</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.114" xml:space="preserve"><value>WebHook 地址</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.115" xml:space="preserve"><value>WebHook 设置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.116" xml:space="preserve"><value>WebHook 请求报文</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.117" xml:space="preserve"><value>例如：运维值班机器人</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.118" xml:space="preserve"><value>创建 NeuBell 时按参数触发的通知、设置页“测试”与后台监测的变更通知，均在此记录请求数据与结果。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.119" xml:space="preserve"><value>动作值 ·</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.120" xml:space="preserve"><value>占位符</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.121" xml:space="preserve"><value>完整默认 JSON 报文</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.122" xml:space="preserve"><value>已配置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.123" xml:space="preserve"><value>报文</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.124" xml:space="preserve"><value>搜索名称、地址或 Provider</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>数量 ·</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.126" xml:space="preserve"><value>新增 WebHook</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.127" xml:space="preserve"><value>新增时通知</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.128" xml:space="preserve"><value>方式</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.129" xml:space="preserve"><value>时间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.130" xml:space="preserve"><value>暂无请求日志。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.131" xml:space="preserve"><value>本次新增/移除标题（以“、”连接）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.132" xml:space="preserve"><value>条目 Id ·</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.133" xml:space="preserve"><value>条目更新时间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.134" xml:space="preserve"><value>条目标题 ·</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.135" xml:space="preserve"><value>条目链接（配置站点根地址时为绝对链接）·</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.136" xml:space="preserve"><value>模板</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.137" xml:space="preserve"><value>清空（保留 50 条）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.138" xml:space="preserve"><value>点击右上角“新增 WebHook”，配置一个外部 WebAPI 通知端点。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.139" xml:space="preserve"><value>留空使用系统默认 JSON 报文；以 { 或 [ 开头按 JSON 处理。例如：{</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.140" xml:space="preserve"><value>留空表示全部 Provider</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.141" xml:space="preserve"><value>租户标识（无租户时为空）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.142" xml:space="preserve"><value>移除</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.143" xml:space="preserve"><value>移除时通知</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.144" xml:space="preserve"><value>签名</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.145" xml:space="preserve"><value>签名密钥</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.146" xml:space="preserve"><value>结果</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.147" xml:space="preserve"><value>耗时</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.148" xml:space="preserve"><value>请求体模板</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.149" xml:space="preserve"><value>请求方式</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.150" xml:space="preserve"><value>请求日志</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.151" xml:space="preserve"><value>还没有 WebHook</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.152" xml:space="preserve"><value>通知时间（ISO 8601）·</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.153" xml:space="preserve"><value>配置后请求携带 X-NeuBell-Signature（HMAC-SHA256）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.154" xml:space="preserve"><value>（与 Workflow 文本模板同格式，</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.155" xml:space="preserve"><value>NeuCharPivot 面板</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.156" xml:space="preserve"><value>Provit Block 列表（可拖动排序）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.157" xml:space="preserve"><value>admin-home（后台首页）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.158" xml:space="preserve"><value>一句话说明</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.159" xml:space="preserve"><value>主题色</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.160" xml:space="preserve"><value>例如：后台首页运维面板</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.161" xml:space="preserve"><value>列数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.162" xml:space="preserve"><value>创建面板</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.163" xml:space="preserve"><value>发送</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.164" xml:space="preserve"><value>块标题</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.165" xml:space="preserve"><value>将面板（Provit Panel）绑定到特定页面（如后台首页 admin-home），组合来自任意 XNCF 模块的 Provit Block，并支持 AI Chat 创建或修改。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.166" xml:space="preserve"><value>已停用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.167" xml:space="preserve"><value>已根据首页缺失块预填引用信息</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.168" xml:space="preserve"><value>搜索面板名称、页面标识</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.169" xml:space="preserve"><value>暂无块，点击“添加块”从任意 XNCF 模块的 Pivot Function 中选择。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.170" xml:space="preserve"><value>模块 UID：</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.171" xml:space="preserve"><value>橙</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.172" xml:space="preserve"><value>添加 Provit Block</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.173" xml:space="preserve"><value>添加块</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.174" xml:space="preserve"><value>灰</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.175" xml:space="preserve"><value>点击右上角“创建面板”，将面板绑定到页面（如 admin-home 绑定后台首页）。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.176" xml:space="preserve"><value>用一句话告诉 AI 你的需求，例如：加入主机监控和待办任务两块，改成三列</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.177" xml:space="preserve"><value>紫</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.178" xml:space="preserve"><value>绿</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.179" xml:space="preserve"><value>蓝</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.180" xml:space="preserve"><value>还没有面板</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.181" xml:space="preserve"><value>选择 Function</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>选择任意 XNCF 模块的 Pivot Function 作为本面板的块。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.183" xml:space="preserve"><value>选择模块</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.184" xml:space="preserve"><value>面板</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.185" xml:space="preserve"><value>面板名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>页面标识</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.187" xml:space="preserve"><value>Function 状态</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.188" xml:space="preserve"><value>Function：全部</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.189" xml:space="preserve"><value>Function：可用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.190" xml:space="preserve"><value>Function：已移除</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.191" xml:space="preserve"><value>LoopTask 状态</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.192" xml:space="preserve"><value>LoopTask：上次失败</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.193" xml:space="preserve"><value>LoopTask：倒计时</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.194" xml:space="preserve"><value>LoopTask：全部</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.195" xml:space="preserve"><value>LoopTask：已停用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.196" xml:space="preserve"><value>LoopTask：待执行</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.197" xml:space="preserve"><value>LoopTask：执行中</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.198" xml:space="preserve"><value>LoopTask：未设置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.199" xml:space="preserve"><value>NeuCharPivot 模块导航</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.200" xml:space="preserve"><value>NeuCharPivot 聚合</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.201" xml:space="preserve"><value>Pivot 执行</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.202" xml:space="preserve"><value>Workflow 关联</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Workflow 触发</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.204" xml:space="preserve"><value>Workflow：全部</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.205" xml:space="preserve"><value>Workflow：已关联</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.206" xml:space="preserve"><value>Workflow：未关联</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.207" xml:space="preserve"><value>上次失败</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.208" xml:space="preserve"><value>可用 / 总数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.209" xml:space="preserve"><value>启用 / 已配置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.210" xml:space="preserve"><value>当前版本已移除</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.211" xml:space="preserve"><value>成功 / 失败</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.212" xml:space="preserve"><value>执行</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.213" xml:space="preserve"><value>执行中 / 倒计时</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.214" xml:space="preserve"><value>执行状态</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.215" xml:space="preserve"><value>搜索模块、Function 或 Workflow</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.216" xml:space="preserve"><value>模块</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.217" xml:space="preserve"><value>模块导航</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.218" xml:space="preserve"><value>模块已关闭</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.219" xml:space="preserve"><value>模块状态</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.220" xml:space="preserve"><value>模块状态：不可用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.221" xml:space="preserve"><value>模块状态：全部</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.222" xml:space="preserve"><value>模块状态：可用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.223" xml:space="preserve"><value>没有匹配的 NeuCharPivot</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.224" xml:space="preserve"><value>聚合</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.225" xml:space="preserve"><value>该模块当前未安装或未开启，Function 仅保留配置，不允许执行。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.226" xml:space="preserve"><value>请调整筛选条件，或先进入任意模块的“设置/执行 → NeuCharPivot”生成操作面板。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.227" xml:space="preserve"><value>重置筛选</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.228" xml:space="preserve"><value>集中查看模块面板、参数化 Function、LoopTask 倒计时和完成后触发的 Workflow。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Function 全局 Provit 访问控制</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Function 已不存在，策略冗余保留</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.231" xml:space="preserve"><value>个 Function 应用“受限”策略。受限模式下，仅绑定的用户 / 角色 / 权限码（任一命中）可访问全局 Provit，请至少绑定一项。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.232" xml:space="preserve"><value>为任意 XNCF 模块的 Function 设置数据库访问策略，绑定用户 / 角色 / 权限码。数据库策略存在时覆盖代码属性（AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes）；模块被清除后策略冗余保留，模块重装后自动继续生效，仅手动清除才会删除。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.233" xml:space="preserve"><value>代码基线</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.234" xml:space="preserve"><value>代码基线（FunctionRenderAttribute）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.235" xml:space="preserve"><value>任意登录管理员</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.236" xml:space="preserve"><value>保存策略</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.237" xml:space="preserve"><value>允许权限码</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.238" xml:space="preserve"><value>允许用户</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.239" xml:space="preserve"><value>允许角色</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.240" xml:space="preserve"><value>受限</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.241" xml:space="preserve"><value>将对选中的</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.242" xml:space="preserve"><value>尚未设置数据库策略，当前按代码基线执行。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.243" xml:space="preserve"><value>已有绑定</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.244" xml:space="preserve"><value>应用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.245" xml:space="preserve"><value>开放</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.246" xml:space="preserve"><value>当前数据库策略</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.247" xml:space="preserve"><value>批量受限</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.248" xml:space="preserve"><value>批量受限设置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.249" xml:space="preserve"><value>批量开放</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.250" xml:space="preserve"><value>批量恢复继承</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.251" xml:space="preserve"><value>批量清除</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.252" xml:space="preserve"><value>批量禁用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.253" xml:space="preserve"><value>搜索模块 / Function</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.254" xml:space="preserve"><value>数据库策略</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.255" xml:space="preserve"><value>未设置（按代码基线）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.256" xml:space="preserve"><value>模块不可用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.257" xml:space="preserve"><value>模块已清除</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.258" xml:space="preserve"><value>模块已清除，无法读取代码基线；策略以数据库记录为准。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.259" xml:space="preserve"><value>模式</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.260" xml:space="preserve"><value>清除</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.261" xml:space="preserve"><value>生效策略</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.262" xml:space="preserve"><value>目标信息</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.263" xml:space="preserve"><value>禁用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.264" xml:space="preserve"><value>策略保存后冗余保留，模块重装后自动生效</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.265" xml:space="preserve"><value>策略模式</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.266" xml:space="preserve"><value>继承代码</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.267" xml:space="preserve"><value>记录本次策略调整的原因，便于后续审计</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.268" xml:space="preserve"><value>设置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.269" xml:space="preserve"><value>设置全局 Provit 访问策略</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.270" xml:space="preserve"><value>访问控制</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.271" xml:space="preserve"><value>输入权限资源码</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.272" xml:space="preserve"><value>输入权限资源码（如 sandbox.execute，任一命中即放行）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.273" xml:space="preserve"><value>选择后台管理员用户</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.274" xml:space="preserve"><value>选择后台管理员用户（任一命中即放行）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.275" xml:space="preserve"><value>选择或输入角色码</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.276" xml:space="preserve"><value>选择或输入角色码（任一命中即放行）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.277" xml:space="preserve"><value>（无）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Chat 修改</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.279" xml:space="preserve"><value>ChatAgent · 当前 XNCF 模块</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.280" xml:space="preserve"><value>ChatAgent 会汇总全部 Function，生成一个声明式快捷操作面板。不会执行 AI 生成的脚本或任意内部方法。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.281" xml:space="preserve"><value>NeuBell 通知</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.282" xml:space="preserve"><value>NeuCharPivot 生成过程已关闭 Function Calling；完整 AdminChat 仍只加载会话显式关联模块公开注册的 FunctionRender。Pivot/Workflow 执行会再次进行服务端白名单和模块状态校验。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.283" xml:space="preserve"><value>不关联</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.284" xml:space="preserve"><value>例如：把高频操作放在第一组，并只暴露必要参数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.285" xml:space="preserve"><value>发送并更新 Pivot</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.286" xml:space="preserve"><value>启用前会再次校验所有必填参数；模块关闭或 Function 被移除时不会执行。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.287" xml:space="preserve"><value>完成后触发 Workflow</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.288" xml:space="preserve"><value>当前引用：</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.289" xml:space="preserve"><value>打开完整 AdminChat</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.290" xml:space="preserve"><value>模块当前未安装或未开启，所有 Pivot Function 和定时任务均已在底层禁用。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.291" xml:space="preserve"><value>生成此模块的 NeuCharPivot</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.292" xml:space="preserve"><value>生成界面</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.293" xml:space="preserve"><value>自动执行</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.294" xml:space="preserve"><value>选择 AI 算力</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.295" xml:space="preserve"><value>间隔（秒）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.296" xml:space="preserve"><value>Workflow 能力当前未开启。列表仍可查看，手机端执行命令不会生效。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.297" xml:space="preserve"><value>个人微信 Bot</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.298" xml:space="preserve"><value>个人微信集成</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.299" xml:space="preserve"><value>个人微信集成当前已停用，手机端命令不会进入 Admin。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.300" xml:space="preserve"><value>创建绑定配置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.301" xml:space="preserve"><value>可用 Workflow</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.302" xml:space="preserve"><value>命令前缀 @Model.PageData.CommandPrefix@(Model.PageData.RequireCommandPrefix ? " · 必填" : " · 可选")</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.303" xml:space="preserve"><value>在微信里完成绑定</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.304" xml:space="preserve"><value>复制</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.305" xml:space="preserve"><value>当前 Admin 用户 Id</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.306" xml:space="preserve"><value>当前管理员没有可用 Workflow。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.307" xml:space="preserve"><value>当前能力</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.308" xml:space="preserve"><value>手机命令</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.309" xml:space="preserve"><value>打开个人微信 Bot</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.310" xml:space="preserve"><value>把当前管理员和微信账号绑定后，可以在手机上查询并执行 Workflow。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.311" xml:space="preserve"><value>把绑定码发给对方</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.312" xml:space="preserve"><value>按当前管理员 Id @Model.PageData.WorkflowUserId 查询。手机发送「获取 Workflow 列表」会得到同一份结果。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.313" xml:space="preserve"><value>搜索编号或名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.314" xml:space="preserve"><value>数据库绑定配置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.315" xml:space="preserve"><value>条启用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.316" xml:space="preserve"><value>系统只保留不可逆哈希。创建或修改成功后，立刻把本次明文绑定码发给对应的微信用户。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.317" xml:space="preserve"><value>让对方发送「绑定微信账号」命令。绑定完成后，发送「获取 Workflow 列表」，即可看到本页同一份列表。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.318" xml:space="preserve"><value>还没有启用中的绑定配置。先到个人微信 Bot 为微信账号创建绑定，手机端才能识别管理员。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.319" xml:space="preserve"><value>集成状态</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.320" xml:space="preserve"><value>首次绑定</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.321" xml:space="preserve"><value>Pivot Block 尚未初始化</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.322" xml:space="preserve"><value>打开模块 NeuCharPivot 设置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.323" xml:space="preserve"><value>打开面板设置并预填代码</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.324" xml:space="preserve"><value>数据库中没有找到该块引用的 Function。先初始化或恢复 Function 后，再回到面板设置重新选择即可。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.325" xml:space="preserve"><value>管理面板</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.326" xml:space="preserve"><value>日本語</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.327" xml:space="preserve"><value>简体中文</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.328" xml:space="preserve"><value>苏州盛派网络科技有限公司</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.329" xml:space="preserve"><value>Function Calling 参数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.330" xml:space="preserve"><value>XNCF 模块</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.331" xml:space="preserve"><value>仅接收常规 input 参数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.332" xml:space="preserve"><value>打开</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.333" xml:space="preserve"><value>搜索 Workflow 名称 / 描述 / 参数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.334" xml:space="preserve"><value>没有可用的已启用 Workflow</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.335" xml:space="preserve"><value>清空选择</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.336" xml:space="preserve"><value>AI 快捷对话</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.337" xml:space="preserve"><value>Admin Chat 快捷对话</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.338" xml:space="preserve"><value>NeuBell 提醒</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.339" xml:space="preserve"><value>仅显示当前页面加载后捕获的浏览器日志，不包含服务器 stdout。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.340" xml:space="preserve"><value>关闭全部</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.341" xml:space="preserve"><value>切换到正式页面</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.342" xml:space="preserve"><value>当前没有模块提供纽铃信息。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.343" xml:space="preserve"><value>暂无日志</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.344" xml:space="preserve"><value>服务器时间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.345" xml:space="preserve"><value>浏览器 Console</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.346" xml:space="preserve"><value>消费</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.347" xml:space="preserve"><value>消费全部</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.348" xml:space="preserve"><value>清空</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.349" xml:space="preserve"><value>选择在 Footer 显示的模块提醒。设置保存在当前账号的浏览器中。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.350" xml:space="preserve"><value>支持普通文本和绝对 http/https 链接的 &lt;a&gt; 标签；其他 HTML 会被编码。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.351" xml:space="preserve"><value>1 小时</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.352" xml:space="preserve"><value>24 小时</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.353" xml:space="preserve"><value>7 天</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.354" xml:space="preserve"><value>AdminChat 命令</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.355" xml:space="preserve"><value>HTML 匿名快照分享</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.356" xml:space="preserve"><value>Harness 任务轨迹</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.357" xml:space="preserve"><value>Workspace PDF 预览</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.358" xml:space="preserve"><value>Workspace 名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.359" xml:space="preserve"><value>Workspace 文件和路径</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.360" xml:space="preserve"><value>Workspace 资产</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.361" xml:space="preserve"><value>上一段</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.362" xml:space="preserve"><value>上传资料</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.363" xml:space="preserve"><value>下一段</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.364" xml:space="preserve"><value>下载 / 另存为</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.365" xml:space="preserve"><value>下载当前目录 (.zip)</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.366" xml:space="preserve"><value>不使用 Workspace</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.367" xml:space="preserve"><value>不引用模块也可以直接开始</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.368" xml:space="preserve"><value>为当前对话添加可调用模块或 Workflow</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.369" xml:space="preserve"><value>为当前对话选择工作区</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.370" xml:space="preserve"><value>仅本轮授权发送压缩图片给视觉模型，可能产生额外 Token。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.371" xml:space="preserve"><value>从本轮移除并删除 Workspace 文件</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.372" xml:space="preserve"><value>任何持有链接的人都能查看此快照。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.373" xml:space="preserve"><value>任务轨迹</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.374" xml:space="preserve"><value>例如：Yield C# 示例项目</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.375" xml:space="preserve"><value>保存文件</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.376" xml:space="preserve"><value>允许</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.377" xml:space="preserve"><value>允许 AI 写入文件</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.378" xml:space="preserve"><value>允许 AI 执行 Python</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.379" xml:space="preserve"><value>关闭资产面板</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.380" xml:space="preserve"><value>分享有效期</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.381" xml:space="preserve"><value>创建只读快照链接</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.382" xml:space="preserve"><value>匿名快照链接</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.383" xml:space="preserve"><value>取消编辑</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.384" xml:space="preserve"><value>可写入</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.385" xml:space="preserve"><value>可执行 CLI</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.386" xml:space="preserve"><value>可选：补充说明或拒绝原因</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.387" xml:space="preserve"><value>在外部浏览器打开（只读）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.388" xml:space="preserve"><value>展开至最大可用宽度</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.389" xml:space="preserve"><value>引用模块</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.390" xml:space="preserve"><value>当前会话</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.391" xml:space="preserve"><value>当前目录为空</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.392" xml:space="preserve"><value>拒绝</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.393" xml:space="preserve"><value>搜索模型</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.394" xml:space="preserve"><value>撤销</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.395" xml:space="preserve"><value>新建 Workspace</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.396" xml:space="preserve"><value>暂无 Harness 轨迹</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.397" xml:space="preserve"><value>未保存</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.398" xml:space="preserve"><value>查看实时执行过程</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.399" xml:space="preserve"><value>检索轨迹、工具或结果</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>正在查找 Workspace…</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.401" xml:space="preserve"><value>此文件类型暂不支持文本预览</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.402" xml:space="preserve"><value>没有匹配的文件或路径</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.403" xml:space="preserve"><value>管理匿名分享</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.404" xml:space="preserve"><value>编辑文件</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.405" xml:space="preserve"><value>视觉</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.406" xml:space="preserve"><value>资产</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.407" xml:space="preserve"><value>跳转</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.408" xml:space="preserve"><value>跳转到行</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.409" xml:space="preserve"><value>默认系统提示词由 PromptRange 管理；当前文本是个人或租户附加偏好。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.410" xml:space="preserve"><value>，@@ 引用文件或路径</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.411" xml:space="preserve"><value>，输入 @@ 引用文件或路径</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.412" xml:space="preserve"><value>支持普通文本和绝对 http/https 链接的 &amp;lt;a&amp;gt; 标签；其他 HTML 会被编码。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.413" xml:space="preserve"><value>分叉</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.414" xml:space="preserve"><value>正在思考</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.415" xml:space="preserve"><value>等待工具确认</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.416" xml:space="preserve"><value>回放事件 #{0} ·</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.417" xml:space="preserve"><value>按 Ctrl + Enter 或 Cmd + Enter 开始</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.418" xml:space="preserve"><value>分叉</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.419" xml:space="preserve"><value>暂无有效分享</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.420" xml:space="preserve"><value>还有 {0} 项</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.421" xml:space="preserve"><value>查看预览</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.422" xml:space="preserve"><value>返回文本</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.423" xml:space="preserve"><value>树状展开</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.424" xml:space="preserve"><value>查看源码</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.425" xml:space="preserve"><value>正在加载预览…</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.426" xml:space="preserve"><value>缺少 Function：</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.427" xml:space="preserve"><value>当前筛选结果全选</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.428" xml:space="preserve"><value>已选 {0} / {1}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.429" xml:space="preserve"><value>NeuBell · WebHook 设置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.430" xml:space="preserve"><value>编辑 WebHook</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.431" xml:space="preserve"><value>新增 WebHook</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.432" xml:space="preserve"><value>个人微信集成</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.433" xml:space="preserve"><value>当前没有匹配的 Workflow</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.434" xml:space="preserve"><value>数据库策略 {0} 条</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.435" xml:space="preserve"><value>孤儿策略 {0} 条</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.436" xml:space="preserve"><value>个可用 Workflow</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.437" xml:space="preserve"><value>个面板</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.438" xml:space="preserve"><value>最多 {0} 个文件</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.439" xml:space="preserve"><value>显示不可用模块（{0}）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.440" xml:space="preserve"><value>模块版本</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.441" xml:space="preserve"><value>最多 {0} 个文件</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.442" xml:space="preserve"><value>共 {0} 条</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.443" xml:space="preserve"><value>{0}条/页</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.444" xml:space="preserve"><value>前往</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.445" xml:space="preserve"><value>页</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.446" xml:space="preserve"><value>10条/页</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.447" xml:space="preserve"><value>20条/页</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.448" xml:space="preserve"><value>30条/页</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.449" xml:space="preserve"><value>40条/页</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.450" xml:space="preserve"><value>命令前缀 {0} · 必填</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.451" xml:space="preserve"><value>命令前缀 {0} · 可选</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.452" xml:space="preserve"><value>Harness 未开启</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.453" xml:space="preserve"><value>绑定微信账号</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.454" xml:space="preserve"><value>获取 Workflow 列表</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.455" xml:space="preserve"><value>当前命令前缀为</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.456" xml:space="preserve"><value>{0} / {1} 条</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.457" xml:space="preserve"><value>输入内容</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.458" xml:space="preserve"><value>{0} 条新消息</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.459" xml:space="preserve"><value>命令前缀</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+
+  <data name="WeixinClaw.Workflow.IntegrationDisabled" xml:space="preserve"><value>Workflow 集成未启用，或宿主未加载 NeuCharWorkflow 模块。</value></data>
+  <data name="WeixinClaw.Workflow.NoAvailable" xml:space="preserve"><value>当前没有可用 Workflow。</value></data>
+  <data name="WeixinClaw.Workflow.ListPrompt" xml:space="preserve"><value>可用 Workflow 列表如下。下一次请发送 /workflow &lt;WorkflowId&gt; &lt;输入&gt; 执行指定 Workflow：</value></data>
+  <data name="WeixinClaw.Workflow.NotFound" xml:space="preserve"><value>Workflow 不存在、未启用，或当前管理员没有访问权限。</value></data>
+  <data name="WeixinClaw.Workflow.Completed" xml:space="preserve"><value>Workflow「{0}」执行完成：
+{1}</value></data>
+  <data name="WeixinClaw.Workflow.Failed" xml:space="preserve"><value>Workflow「{0}」执行失败：{1}</value></data>
+  <data name="WeixinClaw.Workflow.HelpList" xml:space="preserve"><value>{0}workflow - 列出可用 Workflow 和 WorkflowId</value></data>
+  <data name="WeixinClaw.Workflow.HelpExecute" xml:space="preserve"><value>{0}workflow &lt;WorkflowId&gt; &lt;输入&gt; - 执行指定 Workflow</value></data>
+
+  <data name="Frontend.500" xml:space="preserve"><value>NeuCharPivot · 访问控制</value></data>
+
+  <data name="Frontend.501" xml:space="preserve"><value>访问控制</value></data>
+
+  <data name="Frontend.502" xml:space="preserve"><value>Function 全局 Provit 访问控制</value></data>
+
+  <data name="Frontend.503" xml:space="preserve"><value>为任意 XNCF 模块的 Function 设置数据库访问策略，绑定用户 / 角色 / 权限码。数据库策略存在时覆盖代码属性（AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes）；模块被清除后策略冗余保留，模块重装后自动继续生效，仅手动清除才会删除。</value></data>
+
+  <data name="Frontend.504" xml:space="preserve"><value>搜索模块 / Function</value></data>
+
+  <data name="Frontend.505" xml:space="preserve"><value>刷新</value></data>
+
+  <data name="Frontend.506" xml:space="preserve"><value>Function 共 {0} 个</value></data>
+
+  <data name="Frontend.507" xml:space="preserve"><value>数据库策略 {0} 条</value></data>
+
+  <data name="Frontend.508" xml:space="preserve"><value>孤儿策略 {0} 条</value></data>
+
+  <data name="Frontend.509" xml:space="preserve"><value>批量开放</value></data>
+
+  <data name="Frontend.510" xml:space="preserve"><value>批量受限</value></data>
+
+  <data name="Frontend.511" xml:space="preserve"><value>批量禁用</value></data>
+
+  <data name="Frontend.512" xml:space="preserve"><value>批量恢复继承</value></data>
+
+  <data name="Frontend.513" xml:space="preserve"><value>批量清除</value></data>
+
+  <data name="Frontend.514" xml:space="preserve"><value>模块</value></data>
+
+  <data name="Frontend.515" xml:space="preserve"><value>模块已清除</value></data>
+
+  <data name="Frontend.516" xml:space="preserve"><value>模块不可用</value></data>
+
+  <data name="Frontend.517" xml:space="preserve"><value>代码基线</value></data>
+
+  <data name="Frontend.518" xml:space="preserve"><value>允许全局</value></data>
+
+  <data name="Frontend.519" xml:space="preserve"><value>未声明全局</value></data>
+
+  <data name="Frontend.520" xml:space="preserve"><value>任意登录管理员</value></data>
+
+  <data name="Frontend.521" xml:space="preserve"><value>数据库策略</value></data>
+
+  <data name="Frontend.522" xml:space="preserve"><value>来源：数据库策略</value></data>
+
+  <data name="Frontend.523" xml:space="preserve"><value>重装后生效</value></data>
+
+  <data name="Frontend.524" xml:space="preserve"><value>来源：代码属性</value></data>
+
+  <data name="Frontend.525" xml:space="preserve"><value>生效策略</value></data>
+
+  <data name="Frontend.526" xml:space="preserve"><value>操作</value></data>
+
+  <data name="Frontend.527" xml:space="preserve"><value>设置</value></data>
+
+  <data name="Frontend.528" xml:space="preserve"><value>清除</value></data>
+
+  <data name="Frontend.529" xml:space="preserve"><value>设置全局 Provit 访问策略</value></data>
+
+  <data name="Frontend.530" xml:space="preserve"><value>目标信息</value></data>
+
+  <data name="Frontend.531" xml:space="preserve"><value>未知版本</value></data>
+
+  <data name="Frontend.532" xml:space="preserve"><value>策略保存后冗余保留，模块重装后自动生效</value></data>
+
+  <data name="Frontend.533" xml:space="preserve"><value>Function 已不存在，策略冗余保留</value></data>
+
+  <data name="Frontend.534" xml:space="preserve"><value>（无）</value></data>
+
+  <data name="Frontend.535" xml:space="preserve"><value>说明</value></data>
+
+  <data name="Frontend.536" xml:space="preserve"><value>代码基线（FunctionRenderAttribute）</value></data>
+
+  <data name="Frontend.537" xml:space="preserve"><value>允许出现在全局 Provit</value></data>
+
+  <data name="Frontend.538" xml:space="preserve"><value>不允许出现在全局 Provit</value></data>
+
+  <data name="Frontend.539" xml:space="preserve"><value>模块已清除，无法读取代码基线；策略以数据库记录为准。</value></data>
+
+  <data name="Frontend.540" xml:space="preserve"><value>当前数据库策略</value></data>
+
+  <data name="Frontend.541" xml:space="preserve"><value>模式</value></data>
+
+  <data name="Frontend.542" xml:space="preserve"><value>创建时间</value></data>
+
+  <data name="Frontend.543" xml:space="preserve"><value>已有绑定</value></data>
+
+  <data name="Frontend.544" xml:space="preserve"><value>备注</value></data>
+
+  <data name="Frontend.545" xml:space="preserve"><value>尚未设置数据库策略，当前按代码基线执行。</value></data>
+
+  <data name="Frontend.546" xml:space="preserve"><value>策略模式</value></data>
+
+  <data name="Frontend.547" xml:space="preserve"><value>继承代码</value></data>
+
+  <data name="Frontend.548" xml:space="preserve"><value>开放</value></data>
+
+  <data name="Frontend.549" xml:space="preserve"><value>受限</value></data>
+
+  <data name="Frontend.550" xml:space="preserve"><value>禁用</value></data>
+
+  <data name="Frontend.551" xml:space="preserve"><value>选择或输入角色码（任一命中即放行）</value></data>
+
+  <data name="Frontend.552" xml:space="preserve"><value>允许角色</value></data>
+
+  <data name="Frontend.553" xml:space="preserve"><value>允许权限码</value></data>
+
+  <data name="Frontend.554" xml:space="preserve"><value>输入权限资源码（如 sandbox.execute，任一命中即放行）</value></data>
+
+  <data name="Frontend.555" xml:space="preserve"><value>允许用户</value></data>
+
+  <data name="Frontend.556" xml:space="preserve"><value>选择后台管理员用户（任一命中即放行）</value></data>
+
+  <data name="Frontend.557" xml:space="preserve"><value>记录本次策略调整的原因，便于后续审计</value></data>
+
+  <data name="Frontend.558" xml:space="preserve"><value>取消</value></data>
+
+  <data name="Frontend.559" xml:space="preserve"><value>保存策略</value></data>
+
+  <data name="Frontend.560" xml:space="preserve"><value>批量受限设置</value></data>
+
+  <data name="Frontend.561" xml:space="preserve"><value>将对选中的 {0} 个 Function 应用“受限”策略。受限模式下，仅绑定的用户 / 角色 / 权限码（任一命中）可访问全局 Provit，请至少绑定一项。</value></data>
+
+  <data name="Frontend.562" xml:space="preserve"><value>选择或输入角色码</value></data>
+
+  <data name="Frontend.563" xml:space="preserve"><value>输入权限资源码</value></data>
+
+  <data name="Frontend.564" xml:space="preserve"><value>选择后台管理员用户</value></data>
+
+  <data name="Frontend.565" xml:space="preserve"><value>应用</value></data>
+
+  <data name="Frontend.566" xml:space="preserve"><value>未知</value></data>
+
+  <data name="Frontend.567" xml:space="preserve"><value>待重装生效</value></data>
+
+  <data name="Frontend.568" xml:space="preserve"><value>不使用数据库策略，完全按代码属性（AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes）执行。</value></data>
+
+  <data name="Frontend.569" xml:space="preserve"><value>任意已登录后台管理员均可通过全局 Provit 访问该 Function（覆盖代码约束，请谨慎）。</value></data>
+
+  <data name="Frontend.570" xml:space="preserve"><value>仅下方绑定的用户 / 角色 / 权限码（任一命中）可访问，其余账号一律拒绝。</value></data>
+
+  <data name="Frontend.571" xml:space="preserve"><value>显式拒绝所有全局 Provit 访问，即使代码属性声明允许。</value></data>
+
+  <data name="Frontend.572" xml:space="preserve"><value>策略已保存</value></data>
+
+  <data name="Frontend.573" xml:space="preserve"><value>保存失败</value></data>
+
+  <data name="Frontend.574" xml:space="preserve"><value>确定清除 {0} / {1} 的数据库策略？清除后恢复为按代码基线执行。</value></data>
+
+  <data name="Frontend.575" xml:space="preserve"><value>清除策略</value></data>
+
+  <data name="Frontend.576" xml:space="preserve"><value>策略已清除</value></data>
+
+  <data name="Frontend.577" xml:space="preserve"><value>清除失败</value></data>
+
+  <data name="Frontend.578" xml:space="preserve"><value>将选中的 {0} 个 Function 全部“开放”（任意登录管理员可访问）？</value></data>
+
+  <data name="Frontend.579" xml:space="preserve"><value>将选中的 {0} 个 Function 全部“禁用”（全局 Provit 一律拒绝）？</value></data>
+
+  <data name="Frontend.580" xml:space="preserve"><value>将选中的 {0} 个 Function 恢复为“继承代码”（数据库策略不再覆盖代码基线）？</value></data>
+
+  <data name="Frontend.581" xml:space="preserve"><value>清除选中的 {0} 个 Function 的数据库策略（恢复代码基线）？此操作不可恢复。</value></data>
+
+  <data name="Frontend.582" xml:space="preserve"><value>确定执行？</value></data>
+
+  <data name="Frontend.583" xml:space="preserve"><value>批量操作</value></data>
+
+  <data name="Frontend.584" xml:space="preserve"><value>确定</value></data>
+
+  <data name="Frontend.585" xml:space="preserve"><value>批量操作完成，影响 {0} 条策略</value></data>
+
+  <data name="Frontend.586" xml:space="preserve"><value>批量操作失败</value></data>
+
+  <data name="Frontend.600" xml:space="preserve"><value>选择在 Footer 显示的模块提醒。设置保存在当前账号的浏览器中。</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>当前没有模块提供纽铃信息。</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>消费全部</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>消费</value></data>
+  <data name="Frontend.604" xml:space="preserve"><value>NeuBell 提醒</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>关闭全部</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>收起</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>还有 {0} 条，点击展开</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>NeuBell 测试提醒</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>由 Function 发送；可在 Function 中消费本条，或清除当前订阅全部提醒。</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>DesktopBridge 远程连接审核</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>有 {0} 个设备配对请求等待处理。</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>当前没有待处理的设备配对请求。</value></data>
+  <data name="AdminChat.WorkflowCreation.Capabilities.Description" xml:space="preserve"><value>列出 AI 创建工作流可用的安全触发器、节点和 FunctionRender 选项。设计图前请先调用。</value></data>
+  <data name="AdminChat.WorkflowCreation.Validate.Description" xml:space="preserve"><value>校验一个待创建的安全工作流图，不保存。图中必须有一个手动触发节点和一个结束节点。</value></data>
+  <data name="AdminChat.WorkflowCreation.Create.Description" xml:space="preserve"><value>创建并按请求启用已校验的工作流。此操作始终需要管理员明确审批。</value></data>
+  <data name="AdminChat.WorkflowCreation.Name" xml:space="preserve"><value>工作流名称，最多 200 个字符。</value></data>
+  <data name="AdminChat.WorkflowCreation.DescriptionField" xml:space="preserve"><value>可选的工作流说明。</value></data>
+  <data name="AdminChat.WorkflowCreation.Trigger" xml:space="preserve"><value>AI 创建的工作流目前只支持手动触发。</value></data>
+  <data name="AdminChat.WorkflowCreation.Graph" xml:space="preserve"><value>包含 nodes 和 edges 的 JSON 图。请使用 workflow_get_creation_capabilities 返回的节点类型和 FunctionRender 引用。</value></data>
+  <data name="AdminChat.WorkflowCreation.Enabled" xml:space="preserve"><value>创建后是否启用。手动触发工作流仍需管理员运行。</value></data>
+</root>

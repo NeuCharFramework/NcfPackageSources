@@ -1,177 +1,180 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.41.9</Version>
+    <Version>0.41.10</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'TemplateRelease' ">true</GeneratePackageOnBuild>
-    <Description>Senparc.Xncf.XncfBuilder 快速生成 XNCF 模块基础程序代码</Description>
+    <Description>Module description.</Description>
     <Copyright>NeuCharFramework</Copyright>
     <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.XncfBuilder</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Title>XNCF 模块生成器</Title>
+    <Title>XNCF Module Builder</Title>
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>			[2024-08-06] v0.28.6.0-preview1 update Senparc.AI.Kernel
-			[2024-08-13] v0.29.0-preview1 优化 ServiceBase，提供 Mapping&lt;T&gt;(entity) 快捷方法；为 DynamicData 添加根据 Entity 类型自动创建表结构的功能
-			[2024-08-31] v0.30.0-preview1 PromptRange 支持 Markdown 输出格式展示
-			[2024-09-03] v0.30.1-preview1 PromptRange 结果提供“复制”功能
-			[2024-09-03] v0.30.2-preview1 PromptRange 结果提供“复制”功能
-			[2024-09-04] v0.30.3-preview1 PromptRange 完善结果显示样式，添加“复制”功能
-			[2024-09-07] v0.30.4-preview1 XncfBuilder 更新默认 Prompt
-			[2024-09-07] v0.30.4.1-preview1 更新 PromptRange 中代码自动生成的 Prompt
-			[2024-09-07] v0.30.4.2-preview1 PromptRange 优化输出格式
-			[2024-09-07] v0.30.4.3-preview1 PromptRange 修复自动初始化 Prompt 调用过程中的一个 bug
-			[2024-09-07] v0.30.4.4-preview1 更新 XNCF AI 代码生成逻辑
-			[2024-09-07] v0.30.5-preview1 更新 Senparc.AI 基础库，并在 XncfBuilder 使用 AI 生成代码时，优先使用已选中的模型。
-			[2024-09-07] v0.30.5.1-preview1 优化 XncfBuilder AI 代码生成过程中的 AI 模型选用
-			[2024-09-08] v0.30.5.2-preview1 优化 XncfBuilder AI 代码生成过程的模型选用
-			[2024-09-10] v0.30.6-preview1 升级缓存基础库
-			[2024-10-09] v0.30.8-preview1 升级基础库
-			[2024-10-16] v0.30.9-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-			[2024-11-04] v0.31.0-preview1 重构 PromptRange 界面；大幅提升树状 Prompt 检索性能（约20倍）
-			[2024-11-08] v0.31.1-preview1 升级 Senparc.AI
-			[2024-11-15] v0.32.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-			[2024-11-21] v0.33.2-preview1 更新 CO2NET 及缓存基础库
-			[2024-11-28] v0.33.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-			[2024-12-27] v0.33.4-preview1 Add exception log for UseXncfModules() auto progress
-			[2025-01-09] v0.34.0-preview1 reconstruction XncfBuilder for generate XNCF
-			[2025-01-25] v0.34.3-preview1 Update Agents functions, support for function calling
-			[2025-01-28] v0.34.4-preview1 update Senparc.AI
-			[2025-02-06] v0.34.5-preview1 update NeuCharAI model update
-			[2025-04-29] v0.34.7-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.34.8-preview1 Update Installation
-			[2025-05-20] v0.35.0-preview.1 Update AI powered XNCF Builder
-			[2025-05-21] v0.35.0-preview.2 Fix XNCF Builder Function display problem
-			[2025-05-22] v0.35.0-preview.3 XNCF Builder improve CMD command progress
-			[2025-05-22] v0.35.0-preview.3.1 XNCF Builder improve AI code generation
-			[2025-06-26] v0.35.2-preview.9 Finish new AI code generation template
-			[2025-06-27] v0.35.3-preview.9 Add dynamic XNCF Template dynamic generator
-			[2025-06-28] v0.35.3-preview.10 Add dynamic XNCF Template dynamic generator, support for dotnet CLI and Visual Studio together
-			[2025-11-01] update basic libraries, including Senparc.AI
-			[2026-01-07] v0.35.6-preview.1 Add NcfSourcePackage project path to DatabaseMigrationRequest loading method
-			[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
-			[2026-07-02] v0.36.2-preview1 升级 Senparc.AI.AgentKernel 并完成兼容性适配，增强 MCP 工具接入与调用链路兼容能力
-			1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
-			2、增强 MCP 工具接入与调用链路兼容能力
-			3、优化 DatabaseMigrationsAppService，清洗命令输出中的 ANSI 转义字符
-			4、调整 DatabaseMigrationRequest 与迁移执行流程，提高数据库迁移调用稳定性
-			[2026-07-05] v0.36.3-preview2 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
-			1、重构系统配置初始化与更新流程并统一模型处理
-			2、补充配置与工程实现细节
-			[2026-07-05] v0.36.4-preview3 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
-			1、重构系统配置初始化与更新流程并统一模型处理
-			2、补充配置与工程实现细节
-			[2026-07-07] v0.36.5-preview4 Dependency updates from upstream modules
-			1、Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
-			2、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
-			3、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
-			[2026-07-17] v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
-			1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
-			2、更新 FunctionRender 与请求模型文案的资源化解析
-			3、统一模块注册信息、菜单名称与功能描述的本地化输出
-			4、补充并统一多语言资源键及资源文件
-			5、同步 AIKernel 模型 API 版本适配，并完善生成模板的多语言页面
-			6、构建命令改为直接调用进程 API，不再依赖 cmd.exe
-			7、改善构建输出捕获并开放测试所需的内部访问
-			[2026-07-29] v0.37.1-preview6 默认关闭未受保护的 Builder MCP 路由
-			1、保持 Builder MCP 工具关闭，避免在缺少管理员授权策略时发布未认证接口
-			[2026-07-31] v0.38.0-preview7 扩展 XNCF 生成模板的多语言能力
-			1、生成的数据库示例页自动加载模块本地化脚本
-			2、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0
-			[2026-08-04] v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
-			1、新增预览 Host、任务、状态存储与监控页面，完善会话生命周期处理
-			2、为预览实体补齐六类数据库迁移、模型快照与设计时配置
-			3、规范迁移文件和快照布局并修复跨平台命名空间定位
-			4、增强工作区文件服务及预览生成应用服务
-			5、移除废弃的 ReplacePlaceholders 与 CreateNewSenparcEntitiesFile 工具，统一模板生成和数据库迁移流程
-			6、仅在未使用已检入生成代码时加载模板 AdditionalFiles，避免 Release/CI 重复处理 Razor 模板
-			[2026-08-08] v0.39.1-preview9 Dependency updates from upstream projects
-			1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
-			2、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
-			3、Dependency update from Senparc.Xncf.XncfBuilder.Abstractions to 0.1.3-preview4
-			4、Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
-			5、Dependency update from Senparc.Xncf.MCP to 0.4.4-preview7
-			6、Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
-			7、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.4-preview6
-			[2026-08-13] v0.40.0-preview10 增强 XncfBuilder 预览状态持久化与后台初始化
-			1、新增预览状态持久化服务和托管初始化流程
-			2、提升 Agent 模板预览在重启及并发场景下的稳定性
-			[2026-08-15] v0.41.0 增强隔离开发任务与 Sandbox 预览流程
-			1、新增 XncfDevelopmentJob 创建、状态存储、后台服务和管理监控页面
-			2、接入可选 Sandbox 预览契约，限制源码快照和人工合入边界，未配置预览能力时安全失败
-			3、完善工作区文件服务、数据库迁移与模板生成流程
-			4、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
-			5、Dependency update from Senparc.Xncf.MCP to 0.5.1
-			6、Dependency update from Senparc.Xncf.Sandbox.Abstractions to 0.2.0
-			7、统一数据库配置路径并完善开发任务、预览服务和工作区文件管理的兼容处理
-			[2026-08-29] v0.41.1 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10; Dependency update from Senparc.Ncf.XncfBase to 0.26.1
-			1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
-			2、Dependency update from Senparc.Ncf.XncfBase to 0.26.1
-			[2026-09-15] v0.41.2 适配共享 AI 依赖与 Harness 版本
-			1、同步 AgentKernel 及 Microsoft Agents AI Harness 依赖
-			2、保持 XNCF Builder 生成流程与 AI 辅助能力兼容
-			[2026-09-16] v0.41.3 Dependency updates from Senparc.Ncf.XncfBase.Tests to 0.0.14; Senparc.IntegrationSample to 0.0.13; Senparc.Xncf.AIAgentsHub.Tests to 0.0.13; Senparc.Xncf.AgentsManager to 0.17.2; Senparc.Web to 0.39.1; Senparc.Xncf.Installer to 0.5.7
-			[2026-09-17] v0.41.4 适配共享 AgentKernel 预览依赖版本
-			1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
-			2、保持 XNCF Builder 生成流程与 AI 辅助能力兼容
-			[2026-10-05] v0.41.5 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
-			1、Updated Senparc.Xncf.XncfBuilder project behavior and integration for the latest feature and reliability improvements.
-			2、chore: update package versions and dependencies across multiple projects
-			[2026-10-09] v0.41.6 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
-			v0.1.0 创世
-			v0.8.127 使用 .NET Core 命令行创建模板，取代原有的 T4 模板
-			v0.13.3 添加 Oracle 数据库 Migration 支持
-			v0.13.4.1 添加 Oracle 数据库迁移代码
-			v0.13.6 更新 XncfBuilder，适配 .NET 7.0 CLI
-			v0.13.9 数据库 migration 命令中的路径添加引号，防止路径中出现空格
-			v0.13.10 XNCF Builder 自动记录上次填写的内容，并且首次自动探索 .sln 文件
-			V0.14.0 移除对 netstandard2.1 的编译，保留 netcoreapp3.1;net6.0
-			v0.15.0 集成 Senparc.Xncf.PromptRange 项目，使用 AI 自动生成项目
-			v0.16.0 优化 AI 生成过程，添加对 EntityClass、EntityDtoClass、SenparcEntities 的独立生成过程
-			v0.16.2.1024 升级至 1024 特别版，支持 2023.10.24 特别版 Senparc.Xncf.PromptRange
-			v0.17.0 优化 Add-Migration，支持自动选择 XNCF 项目
-			v0.17.1 优化 Add-Migration，支持自动扫描 *SenparcEntities.cs 文件
-			v0.18.0 优化 Add-Migration，可自动更新 Register.cs 版本号
-			v0.19.0 优化项目引用
-			v0.20.0 更新项目引用，支持 .NET 8.0
-			v0.21.0 集成 Senparc.Xncf.AIKernel，可以选择已配置的 AI 模型生成代码
-			v0.24.0 聚焦支持 .NET 8.0，XNCF 取消旧版本支持
-			v0.24.1 升级新版本 Senparc.AI（Senparc.Xncf.AIKernel）
-			[2026-11-03] v0.41.7 适配 Senparc.AI.AgentKernel 0.1.15-preview2
-			1、升级共享 AgentKernel 依赖，保持模块生成与 Agent 调用兼容
-			2、支持租户隔离的模块预览和开发任务状态存储
-			3、兼容平台级租户上下文并补齐开发任务多数据库迁移
-			4、Dependency update from Senparc.Xncf.Sandbox.Abstractions to 0.3.1
-			5、Dependency update from Senparc.Xncf.XncfBuilder.Abstractions to 0.1.5-preview6
-			[2026-11-03] v0.41.8 以中文资源为基准统一整理多语言文案
-			1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
-			2、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
-			3、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
-			4、Dependency update from Senparc.Xncf.MCP to 0.5.12
-			5、Dependency update from Senparc.Xncf.PromptRange to 0.20.14
-			6、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
-			[2026-11-11] v0.41.8 统一模块注册文案，并升级共享 AI 依赖
-			1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
-			2、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17、Microsoft Agent Framework 1.28.0、OpenAI 2.14.0 与 Microsoft.Extensions.AI.OpenAI 10.11.0。
-			[2026-11-12] v0.41.9 统一模块注册显示名称与说明的多语言资源键
-			1、模块注册信息优先使用稳定资源键解析多语言显示文本。
-			2、兼容现有资源与默认文案，避免缺少翻译时影响模块加载。
+    <PackageReleaseNotes>[2024-08-06] v0.28.6.0-preview1 update Senparc.AI.Kernel
+        [2024-08-13] v0.29.0-preview1 Updated module behavior and related support.
+        [2024-08-31] v0.30.0-preview1 Updated module behavior and related support.
+        [2024-09-03] v0.30.1-preview1 Updated module behavior and related support.
+        [2024-09-03] v0.30.2-preview1 Updated module behavior and related support.
+        [2024-09-04] v0.30.3-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.30.4-preview1 XncfBuilder updatedefault Prompt
+        [2024-09-07] v0.30.4.1-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.30.4.2-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.30.4.3-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.30.4.4-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.30.5-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.30.5.1-preview1 Updated module behavior and related support.
+        [2024-09-08] v0.30.5.2-preview1 Updated module behavior and related support.
+        [2024-09-10] v0.30.6-preview1 upgrade the cache foundation libraries
+        [2024-10-09] v0.30.8-preview1 Updated module behavior and related support.
+        [2024-10-16] v0.30.9-preview1 Updated module behavior and related support.
+        [2024-11-04] v0.31.0-preview1 Updated module behavior and related support.
+        [2024-11-08] v0.31.1-preview1 upgrade Senparc.AI
+        [2024-11-15] v0.32.0-preview1 Updated module behavior and related support.
+        [2024-11-21] v0.33.2-preview1 Updated module behavior and related support.
+        [2024-11-28] v0.33.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+        [2024-12-27] v0.33.4-preview1 Add exception log for UseXncfModules() auto progress
+        [2025-01-09] v0.34.0-preview1 reconstruction XncfBuilder for generate XNCF
+        [2025-01-25] v0.34.3-preview1 Update Agents functions, support for function calling
+        [2025-01-28] v0.34.4-preview1 update Senparc.AI
+        [2025-02-06] v0.34.5-preview1 update NeuCharAI model update
+        [2025-04-29] v0.34.7-preview1 Update CO2NET and AIKernel
+        [2025-05-18] v0.34.8-preview1 Update Installation
+        [2025-05-20] v0.35.0-preview.1 Update AI powered XNCF Builder
+        [2025-05-21] v0.35.0-preview.2 Fix XNCF Builder Function display problem
+        [2025-05-22] v0.35.0-preview.3 XNCF Builder improve CMD command progress
+        [2025-05-22] v0.35.0-preview.3.1 XNCF Builder improve AI code generation
+        [2025-06-26] v0.35.2-preview.9 Finish new AI code generation template
+        [2025-06-27] v0.35.3-preview.9 Add dynamic XNCF Template dynamic generator
+        [2025-06-28] v0.35.3-preview.10 Add dynamic XNCF Template dynamic generator, support for dotnet CLI and Visual Studio together
+        [2025-11-01] update basic libraries, including Senparc.AI
+        [2026-01-07] v0.35.6-preview.1 Add NcfSourcePackage project path to DatabaseMigrationRequest loading method
+        [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+        [2026-07-02] v0.36.2-preview1 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        [2026-07-05] v0.36.3-preview2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-05] v0.36.4-preview3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-07] v0.36.5-preview4 Dependency updates from upstream modules
+        1. Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
+        2. Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
+        3. Updated module behavior and related support.
+        [2026-07-17] v0.37.0-preview5 Updated module behavior and related support.
+        1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        6. Updated module behavior and related support.
+        7. Updated module behavior and related support.
+        [2026-07-29] v0.37.1-preview6 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-07-31] v0.38.0-preview7 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-04] v0.39.0-preview8 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        6. Updated module behavior and related support.
+        [2026-08-08] v0.39.1-preview9 Dependency updates from upstream projects
+        1. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+        2. Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+        3. Dependency update from Senparc.Xncf.XncfBuilder.Abstractions to 0.1.3-preview4
+        4. Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
+        5. Dependency update from Senparc.Xncf.MCP to 0.4.4-preview7
+        6. Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
+        7. Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.4-preview6
+        [2026-08-13] v0.40.0-preview10 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-15] v0.41.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Dependency update from Senparc.Xncf.AIKernel to 0.15.4
+        5. Dependency update from Senparc.Xncf.MCP to 0.5.1
+        6. Dependency update from Senparc.Xncf.Sandbox.Abstractions to 0.2.0
+        7. Updated module behavior and related support.
+        [2026-08-29] v0.41.1 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10; Dependency update from Senparc.Ncf.XncfBase to 0.26.1
+        1. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
+        2. Dependency update from Senparc.Ncf.XncfBase to 0.26.1
+        [2026-09-15] v0.41.2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-09-16] v0.41.3 Dependency updates from Senparc.Ncf.XncfBase.Tests to 0.0.14; Senparc.IntegrationSample to 0.0.13; Senparc.Xncf.AIAgentsHub.Tests to 0.0.13; Senparc.Xncf.AgentsManager to 0.17.2; Senparc.Web to 0.39.1; Senparc.Xncf.Installer to 0.5.7
+        [2026-09-17] v0.41.4 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-10-05] v0.41.5 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+        1. Updated Senparc.Xncf.XncfBuilder project behavior and integration for the latest feature and reliability improvements.
+        2. chore: update package versions and dependencies across multiple projects
+        [2026-10-09] v0.41.6 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
+        v0.1.0 initial release
+        v0.8.127 Updated module behavior and related support.
+        v0.13.3 add Oracle database Migration support
+        v0.13.4.1 Updated module behavior and related support.
+        v0.13.6 update XncfBuilder, adapt .NET 7.0 CLI
+        v0.13.9 Updated module behavior and related support.
+        v0.13.10 Updated module behavior and related support.
+        V0.14.0  netstandard2.1 ,  netcoreapp3.1;net6.0
+        v0.15.0 Updated module behavior and related support.
+        v0.16.0 Updated module behavior and related support.
+        v0.16.2.1024 Updated module behavior and related support.
+        v0.17.0 Updated module behavior and related support.
+        v0.17.1 Updated module behavior and related support.
+        v0.18.0 Updated module behavior and related support.
+        v0.19.0 improveprojectreference
+        v0.20.0 updateprojectreference, support .NET 8.0
+        v0.21.0 Updated module behavior and related support.
+        v0.24.0 Updated module behavior and related support.
+        v0.24.1 Updated module behavior and related support.
+        [2026-11-03] v0.41.7 adapt Senparc.AI.AgentKernel 0.1.15-preview2
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Dependency update from Senparc.Xncf.Sandbox.Abstractions to 0.3.1
+        5. Dependency update from Senparc.Xncf.XncfBuilder.Abstractions to 0.1.5-preview6
+        [2026-11-03] v0.41.8 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+        3. Dependency update from Senparc.Xncf.AIKernel to 0.17.2
+        4. Dependency update from Senparc.Xncf.MCP to 0.5.12
+        5. Dependency update from Senparc.Xncf.PromptRange to 0.20.14
+        6. Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
+        [2026-11-11] v0.41.8 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-12] v0.41.9 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-19] v0.41.10 Localized XNCF Builder tools and template surfaces
+        1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+        2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-    <!-- Visual Studio 特定设置 -->
+    <!-- Visual Studio  -->
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
-    <!-- Source Generator 设置 -->
+    <!-- Source Generator  -->
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
-    <!-- Visual Studio Source Generator 兼容性设置 -->
+    <!-- Visual Studio Source Generator compatibility -->
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
@@ -187,7 +190,7 @@
     <DebugType>pdbonly</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <!-- CI/Release 使用仓库内已检入的 Generated 文件，避免 Source Generator 在 Agent 上零输出 -->
+    <!-- CI/Release  Generated file,  Source Generator  Agent output -->
     <UseCheckedInXncfBuilderGeneratedCode>true</UseCheckedInXncfBuilderGeneratedCode>
   </PropertyGroup>
   <ItemGroup>
@@ -201,14 +204,14 @@
     <EmbeddedResource Remove="Generated\**" />
     <None Remove="ACL\**" />
     <None Remove="Generated\**" />
-    <!-- 排除生成的文件，避免重复编译 -->
-    <!-- 仅在 dotnet build 中排除物理文件，Visual Studio 中保留以确保兼容性 -->
+    <!-- generatefile,  -->
+    <!--  dotnet build file, Visual Studio compatibility -->
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <!-- 宿主站点使用 App_Data/Database；模块内配置仅本地开发用，避免 publish 冲突 -->
+    <!-- hostsite App_Data/Database;moduleconfiguration,  publish  -->
     <Content Remove="App_Data\Database\SenparcConfig.config" />
     <None Include="App_Data\Database\SenparcConfig.config" />
   </ItemGroup>
@@ -225,24 +228,27 @@
     <InternalsVisibleTo Include="Senparc.Xncf.XncfBuilder.Tests" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />    <ProjectReference Include="..\Senparc.Xncf.XncfBuilder.Abstractions\Senparc.Xncf.XncfBuilder.Abstractions.csproj" />    <ProjectReference Include="..\..\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />    <ProjectReference Include="..\..\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />    <ProjectReference Include="..\..\Senparc.Xncf.Sandbox.Abstractions\Senparc.Xncf.Sandbox.Abstractions.csproj" />    <ProjectReference Include="..\..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />    <ProjectReference Include="..\..\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.600.100-beta1" />-->
-    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-    <ProjectReference Include="..\Senparc.Xncf.XncfBuilder.Abstractions\Senparc.Xncf.XncfBuilder.Abstractions.csproj" />
-    <ProjectReference Include="..\..\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
-    <ProjectReference Include="..\..\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
+
+
+
+
     <!-- Optional Sandbox module implements the contract at runtime. The Builder only depends on
          the abstraction so production deployments may omit Sandbox and fail closed. -->
-    <ProjectReference Include="..\..\Senparc.Xncf.Sandbox.Abstractions\Senparc.Xncf.Sandbox.Abstractions.csproj" />
-    <ProjectReference Include="..\..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
-    <ProjectReference Include="..\..\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
+
+
+
     <PackageReference Include="System.CodeDom" Version="8.0.0" />
   </ItemGroup>
   <!--<ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>-->
-  <!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->
+  <!--  Npgsql generatedependency, reference -->
   <ItemGroup>
-    <!-- 仅供 dotnet ef 生成和校验多数据库迁移，不传递给引用 XncfBuilder 的项目。 -->
+    <!--  dotnet ef generatevalidationmulti-database migrations, reference XncfBuilder project. -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -252,47 +258,47 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
   </ItemGroup>
-  <!-- 代码模板自动生成：仅在启用自定义 Source Generator 时提供模板输入。
-       Release/CI 使用已检入的 Generated 代码，不应让 Razor Source Generator 处理模板 .cshtml。 -->
+  <!-- generate:  Source Generator provideinput.
+       Release/CI  Generated ,  Razor Source Generator handle .cshtml. -->
   <ItemGroup Condition="'$(UseCheckedInXncfBuilderGeneratedCode)' != 'true'">
     <AdditionalFiles Include="Request.cs" />
     <AdditionalFiles Include="generation-config.json" />
-    <!--后端模板（优先使用仓库内 template1，NcfSimulatedSite 为兼容回退）-->
+    <!--backend( template1, NcfWebAdminBaseline compatiblefallback)-->
     <AdditionalFiles Include="../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs" Condition="Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs')" />
     <AdditionalFiles Include="../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Color.cs" Condition="Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Color.cs')" />
     <AdditionalFiles Include="../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Dto/ColorDto.cs" Condition="Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Dto/ColorDto.cs')" />
     <AdditionalFiles Include="../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Services/ColorService.cs" Condition="Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Services/ColorService.cs')" />
-    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs') AND Exists('../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs')" />
-    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Color.cs" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Color.cs') AND Exists('../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Color.cs')" />
-    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Dto/ColorDto.cs" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Dto/ColorDto.cs') AND Exists('../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Dto/ColorDto.cs')" />
-    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Services/ColorService.cs" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Services/ColorService.cs') AND Exists('../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Services/ColorService.cs')" />
-    <!--前端模板-->
+    <AdditionalFiles Include="../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs') AND Exists('../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs')" />
+    <AdditionalFiles Include="../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Color.cs" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Color.cs') AND Exists('../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Color.cs')" />
+    <AdditionalFiles Include="../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Dto/ColorDto.cs" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Dto/ColorDto.cs') AND Exists('../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Dto/ColorDto.cs')" />
+    <AdditionalFiles Include="../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/Domain/Services/ColorService.cs" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Services/ColorService.cs') AND Exists('../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/Domain/Services/ColorService.cs')" />
+    <!--frontend-->
     <AdditionalFiles Include="../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml" Condition="Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml')" />
     <AdditionalFiles Include="../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs" Condition="Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs')" />
     <AdditionalFiles Include="../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js" Condition="Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js')" />
     <AdditionalFiles Include="../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css" Condition="Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css')" />
-    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml') AND Exists('../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml')" />
-    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs') AND Exists('../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs')" />
-    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js') AND Exists('../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js')" />
-    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css') AND Exists('../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css')" />
+    <AdditionalFiles Include="../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml') AND Exists('../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml')" />
+    <AdditionalFiles Include="../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs') AND Exists('../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs')" />
+    <AdditionalFiles Include="../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js') AND Exists('../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js')" />
+    <AdditionalFiles Include="../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css" Condition="!Exists('../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css') AND Exists('../../../../tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css')" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseCheckedInXncfBuilderGeneratedCode)' != 'true'">
-    <!-- Source Generator 引用 - 混合方式确保在所有环境下都工作 -->
+    <!-- Source Generator reference -  -->
     <!--<ProjectReference Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />-->
     <ProjectReference Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <!-- Visual Studio 使用 DLL 引用确保稳定性 -->
+    <!-- Visual Studio  DLL reference -->
     <Analyzer Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(Configuration)' == 'Release'" Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Release/netstandard2.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
     <Analyzer Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(Configuration)' == 'Debug'" Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Debug/netstandard2.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
     <!-- 
-      核心配置：从编译输入中排除磁盘上的生成文件。
-      这样编译器只会使用 Generator 注入内存的那一份，
-      从而解决“二义性”报错，同时保留磁盘文件供你参考。
+      configuration: inputgeneratefile.
+       Generator , 
+      "", file.
     -->
     <!--<Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />-->
   </ItemGroup>
-  <!-- 清理生成的文件 -->
+  <!-- generatefile -->
   <!--<Target Name="CleanGeneratedFiles" BeforeTargets="Clean">
     <ItemGroup>
       <GeneratedFiles Include="Generated/**/*.*" />
@@ -301,14 +307,14 @@
     <Delete Files="@(GeneratedFiles)" />
     <RemoveDir Directories="Generated" Condition="Exists('Generated')" />
   </Target>-->
-  <!-- 确保 Visual Studio 中 Source Generator 项目先被构建 -->
+  <!--  Visual Studio  Source Generator project -->
   <!--<Target Name="EnsureSourceGeneratorBuilt" BeforeTargets="BeforeBuild" Condition="'$(BuildingInsideVisualStudio)' == 'true'">
-    <Message Text="为 Visual Studio 构建 Source Generator 项目..." Importance="normal" />
+    <Message Text=" Visual Studio  Source Generator project..." Importance="normal" />
     <MSBuild Projects="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
   </Target>-->
-  <!-- 刷新 Source Generator 触发器 -->
+  <!--  Source Generator  -->
   <!--<Target Name="RefreshSourceGenerator" BeforeTargets="Build">
-    <Message Text="刷新 Source Generator..." Importance="normal" />
+    <Message Text=" Source Generator..." Importance="normal" />
     <Touch Files="@(AdditionalFiles)" AlwaysCreate="false" />
   </Target>-->
   <Import Project="$(MSBuildThisFileDirectory)..\..\..\Senparc.AI.AgentKernel.props" />

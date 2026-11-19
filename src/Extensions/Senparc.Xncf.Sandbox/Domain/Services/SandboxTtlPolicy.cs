@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：SandboxTtlPolicy.cs
-    文件功能描述：沙箱 TTL 策略
-    
-    
-    创建标识：Senparc - 20260817
-    
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 新增应用侧 TTL/永久保持解析策略
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Copyright (C) 2026 Senparc
+
+    File name: SandboxTtlPolicy.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20260817
+
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
 ----------------------------------------------------------------*/
 

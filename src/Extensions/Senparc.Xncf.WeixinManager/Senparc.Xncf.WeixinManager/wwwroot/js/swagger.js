@@ -1,6 +1,6 @@
 ﻿'use strict';
 ///    <summary>
-/// 中文转换
+///Legacy comment translated to English.
 ///    </summary>
 var SwaggerTranslator = (function () {
     var cultureCookie = document.cookie.match(/(?:^|;\\s*)\\.AspNetCore\\.Culture=([^;]+)/);
@@ -9,9 +9,9 @@ var SwaggerTranslator = (function () {
     var culture = cultureMatch ? cultureMatch[1] : (navigator.language || 'en');
     var useChinese = culture.toLowerCase().indexOf('zh') === 0;
 
-    //定时执行检测是否转换成中文,最多执行500次  即500*50/1000=25s
+    //Legacy comment translated to English.
     var iexcute = 0,
-        //中文语言包
+        //Legacy comment translated to English.
         _words = useChinese ? {
             "Warning: Deprecated": "警告：已过时",
             "Implementation Notes": "实现备注",
@@ -64,7 +64,7 @@ var SwaggerTranslator = (function () {
             "server returned": "服务器返回"
         } : {},
 
-        //定时执行转换
+        //Legacy comment translated to English.
         _translator2Cn = function () {
             if ($("#resources_container .resource").length > 0) {
                 _tryTranslate();
@@ -76,7 +76,7 @@ var SwaggerTranslator = (function () {
             }
         },
 
-        //设置控制器注释
+        //Legacy comment translated to English.
         _setControllerSummary = function () {
             $.ajax({
                 type: "get",
@@ -100,7 +100,7 @@ var SwaggerTranslator = (function () {
             });
         },
 
-        //尝试将英文转换成中文
+        //Legacy comment translated to English.
         _tryTranslate = function () {
             $('[data-sw-translate]').each(function () {
                 $(this).html(_getLangDesc($(this).html()));
@@ -117,11 +117,11 @@ var SwaggerTranslator = (function () {
             document.title = useChinese ? "API描述文档" : "API Documentation";
             $('body').append('<style type="text/css">.controller-summary{color:#10a54a !important;word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:250px;text-align:right;cursor:default;} </style>');
             $("#logo").html(useChinese ? "接口描述" : "API Description").attr("href", "/Home/Index");
-            //设置控制器描述
+            //Legacy comment translated to English.
             _setControllerSummary();
             if (useChinese) _translator2Cn();
         }
     }
 })();
-//执行转换
+//Legacy comment translated to English.
 SwaggerTranslator.Translator();

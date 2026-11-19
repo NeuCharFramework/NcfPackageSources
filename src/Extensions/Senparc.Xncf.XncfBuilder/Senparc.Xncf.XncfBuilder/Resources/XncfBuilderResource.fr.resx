@@ -463,4 +463,112 @@
     <value>Initialise tous les prompts requis pour la génération de code par IA</value>
   </data>
 
+
+  <data name="Frontend.001" xml:space="preserve"><value>Sessions de prévisualisation du module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Tâches de développement isolé / prévisualisation Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.003" xml:space="preserve"><value>L'IA ne peut écrire que dans le workspace isolé ; l'application des modifications nécessite une phrase de confirmation de l'administrateur.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Hôte arrêté / ExitCode :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Hôte démarré / sain :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Moniteur de prévisualisation XNCF</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Ignorer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Appliquer manuellement</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.009" xml:space="preserve"><value>ID de session :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Nombre total de sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.011" xml:space="preserve"><value>En traitement / en file</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Échec / interrompu</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Démarré / mis à jour</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Étape actuelle</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Ouvrir la prévisualisation Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Module d'extension</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Actions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Sortie récente (jusqu'à 300 lignes)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Solution source de cette compilation :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.021" xml:space="preserve"><value>SHA-256 de la DLL du module :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Mode / étape</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.023" xml:space="preserve"><value>Progression du pipeline</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.024" xml:space="preserve"><value>SHA-256 de la source :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Une fois la génération ou la modification de la source terminée, choisissez Démarrer la prévisualisation isolée XNCF pour rejoindre cette file ; l'empreinte source prouve l'instantané exact utilisé par la compilation.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.026" xml:space="preserve"><value>État et différences</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Environnement :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Actualisation automatique : 2 secondes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Chemin / Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.030" xml:space="preserve"><value>En cours d'exécution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Processus</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.032" xml:space="preserve"><value>La persistance de la tâche de développement isolé n'est pas prête</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Pipeline de prévisualisation isolée</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.034" xml:space="preserve"><value>La persistance de l'état de prévisualisation n'est pas prête</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Moniteur de prévisualisation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.036" xml:space="preserve"><value>Répertoire de déploiement (publication) de la prévisualisation :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.037" xml:space="preserve"><value>La prévisualisation a été arrêtée par l'utilisateur.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Le processus de prévisualisation s'est arrêté de manière inattendue.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.039" xml:space="preserve"><value>La tâche de prévisualisation a échoué.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Sessions de prévisualisation du module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Aucune tâche de développement isolé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Dernière mise à jour : {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.043" xml:space="preserve"><value>Chaque tâche valide les références de l'hôte, effectue une compilation isolée, démarre une nouvelle prévisualisation, exécute un contrôle de santé et remplace la prévisualisation de manière atomique. La prévisualisation actuelle reste disponible jusqu'à ce que la nouvelle réussisse ses contrôles.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Ouvrir</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Arrêter</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>Tâches de développement isolé / prévisualisation Sandbox</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>L'IA ne peut écrire que dans l'espace isolé ; l'application des modifications nécessite une phrase de confirmation de l'administrateur.</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>Aucune tâche de développement isolé</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Module</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Mode / étape</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>État et différences</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Le résumé des différences n'est pas encore généré</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Chemin / Sandbox</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Cible :</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Isolé :</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Sandbox :</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Ouvrir la prévisualisation Sandbox</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Actions</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Appliquer manuellement</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Abandonner</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>Après la génération ou la modification de la source, utilisez « Démarrer la prévisualisation XNCF isolée » pour rejoindre cette file ; l'empreinte de la source prouve l'instantané exact utilisé par la compilation.</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>Échec de la lecture de l'état.</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Aucune sortie.</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>Échec de la lecture des journaux.</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Arrêter la prévisualisation</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Échec de l'arrêt de la prévisualisation.</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Appliquer manuellement le module XNCF</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Appliquer</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>La phrase de confirmation doit correspondre exactement : {0}</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>Échec de l'application.</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>Abandonner la tâche de développement isolé</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Échec de l'abandon.</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Nouveau module</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Modifier le module existant</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Instantané en cours</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Modifiable</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Validation en cours</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Prévisualisation Sandbox</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>En attente de révision</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>En attente d'une application manuelle</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>Appliqué</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Abandonné</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Échec</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Inconnu</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Non créé</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Lecture de la sortie récente…</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>Arrêter la tâche de prévisualisation de {0} ?</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Vérifiez d'abord l'espace isolé, les différences et la prévisualisation Sandbox. Saisissez {0} pour écrire les différences contrôlées dans la source cible.</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>La prévisualisation Sandbox associée sera arrêtée et l'espace isolé supprimé, sans modifier la source cible. Abandonner {0} ?</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value> Motif : </value></data>
+  <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>Créer une tâche de développement XNCF isolée</value></data>
+  <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>Crée un instantané du code dans un espace isolé. Les nouveaux modules utilisent le modèle local installé ; les modules existants sont copiés avant modification. Le code cible n’est jamais écrit.</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>Lire un fichier XNCF isolé</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Description" xml:space="preserve"><value>Lit un fichier texte et son SHA-256 depuis un module de l’espace isolé ; le code cible et les chemins externes sont inaccessibles.</value></data>
+  <data name="Function.XncfBuilder.Development.Write.Name" xml:space="preserve"><value>Écrire un fichier XNCF isolé</value></data>
+  <data name="Function.XncfBuilder.Development.Write.Description" xml:space="preserve"><value>Écrit atomiquement un fichier de code dans l’espace isolé. Les fichiers de projet, NuGet, MSBuild et de configuration ne peuvent pas être modifiés.</value></data>
+  <data name="Function.XncfBuilder.Development.Validate.Name" xml:space="preserve"><value>Valider la tâche de développement XNCF isolée</value></data>
+  <data name="Function.XncfBuilder.Development.Validate.Description" xml:space="preserve"><value>Valide le chemin du module isolé et la référence directe de Senparc.Web au projet source, puis génère un résumé contrôlé des différences.</value></data>
+  <data name="Function.XncfBuilder.Development.StartPreview.Name" xml:space="preserve"><value>Démarrer l’aperçu XNCF Sandbox</value></data>
+  <data name="Function.XncfBuilder.Development.StartPreview.Description" xml:space="preserve"><value>Transmet la copie nettoyée de l’espace isolé à Sandbox pour compilation et exécution ; échoue sans revenir au processus principal si Sandbox est indisponible.</value></data>
+  <data name="Function.XncfBuilder.Development.Status.Name" xml:space="preserve"><value>Obtenir la tâche de développement XNCF isolée</value></data>
+  <data name="Function.XncfBuilder.Development.Status.Description" xml:space="preserve"><value>Renvoie l’espace isolé, les différences, la validation, l’aperçu Sandbox et l’état d’approbation humaine.</value></data>
+  <data name="Function.XncfBuilder.Development.RequestMerge.Name" xml:space="preserve"><value>Demander l’approbation humaine de fusion</value></data>
+  <data name="Function.XncfBuilder.Development.RequestMerge.Description" xml:space="preserve"><value>Fige les différences de l’espace isolé et demande l’approbation de l’administrateur. Le code cible n’est pas écrit.</value></data>
+  <data name="Function.XncfBuilder.Development.Discard.Name" xml:space="preserve"><value>Abandonner la tâche de développement XNCF isolée</value></data>
+  <data name="Function.XncfBuilder.Development.Discard.Description" xml:space="preserve"><value>Arrête l’aperçu Sandbox associé et récupère l’espace isolé sans modifier le code cible.</value></data>
 </root>

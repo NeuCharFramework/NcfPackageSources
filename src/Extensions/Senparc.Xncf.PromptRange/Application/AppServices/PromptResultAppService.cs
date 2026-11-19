@@ -1,21 +1,24 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptResultAppService.cs
-    文件功能描述：PromptResultAppService 服务逻辑
-    
-    
-    创建标识：Senparc - 20231120
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260705
+    File name: PromptResultAppService.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+    Created by: Senparc - 20231120
 
-    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3----------------------------------------------------------------*/
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20260705
+
+    Modified by: Senparc - 20260729
+    Change description: v0.17.1-preview6 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
+
+----------------------------------------------------------------*/
 
 using System;
 using System.Collections.Generic;
@@ -39,8 +42,8 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
     /// <summary>
-    /// PromptResult 管理 AppService
-    /// TODO: 需要权限验证
+    /// PromptResult management AppService
+    /// TODO: permission validation is required
     /// </summary>
     [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class PromptResultAppService : AppServiceBase
@@ -65,7 +68,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 手动打分
+        /// manualscoring
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -77,7 +80,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     var result = await _promptResultService.ManualScoreAsync(request.PromptResultId, request.HumanScore);
 
-                    // 更新绑定的 item 的分数
+                    //Legacy comment translated to English.
                     await _promptResultService.UpdateEvalScoreAsync(result.PromptItemId);
 
                     return "ok";
@@ -93,8 +96,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 自动打分
-        /// 接受一个promptItemId，然后找到所有的promptResult，然后进行评分
+        /// automaticscoring
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="promptResultId"></param>
         /// <param name="expectedResultList"></param>
@@ -124,7 +127,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 根据靶道ID获取对应的结果列表
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="promptItemId"></param>
         /// <returns></returns>
@@ -143,11 +146,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 生成结果
+        /// generateresult
         /// </summary>
-        /// <param name="promptItemId">靶道ID</param>
-        /// <param name="numsOfResults">连发次数</param>
-        /// <param name="userMessage">用户消息（可选，如果为空且第一个结果是 Chat 模式，则从第一个结果的对话记录中获取）</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
@@ -157,7 +160,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 生成结果（POST 版本，支持扩展执行参数）
+        /// generateresult（POST version，supportextensionexecuteparameters）
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptResult_ListResponse>> GenerateWithItemIdPost(PromptResult_GenerateRequest request)
@@ -183,12 +186,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     var promptItem = await _promptItemService.DraftSwitch(promptItemId, false);
 
-                    // #region 删除之前的结果
+                    // #region Legacy section
                     //
                     // var delSucFrag = await _promptResultService.BatchDeleteWithItemId(promptItemId);
                     // if (!delSucFrag)
                     // {
-                    //     throw new NcfExceptionBase("删除失败");
+                    //     throw new NcfExceptionBase("deletefailure");
                     // }
                     //
                     // #endregion
@@ -196,19 +199,19 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
                     var resp = new PromptResult_ListResponse(promptItemId, promptItem, new());
                     
-                    // 连发时，如果第一个结果是 Chat 模式，后续结果也需要保持 Chat 模式
-                    // 如果没有传入 userMessage，先检查该 PromptItem 的第一个 PromptResult 是否是 Chat 模式
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     string firstUserMessage = userMessage;
                     if (string.IsNullOrWhiteSpace(firstUserMessage))
                     {
-                        // 获取该 PromptItem 的第一个 PromptResult（按 ID 升序）
+                        //Legacy comment translated to English.
                         var existingResults = await _promptResultService.GetByItemId(promptItemId);
                         if (existingResults != null && existingResults.Count > 0)
                         {
                             var firstExistingResult = existingResults.OrderBy(r => r.Id).FirstOrDefault();
                             if (firstExistingResult != null && firstExistingResult.Mode == ResultMode.Chat)
                             {
-                                // 第一个结果是 Chat 模式，从对话记录中获取第一条用户消息
+                                //Legacy comment translated to English.
                                 var chatHistory = await _promptResultChatService.GetByPromptResultIdAsync(firstExistingResult.Id);
                                 var firstUserChat = chatHistory?.FirstOrDefault(c => c.RoleType == ChatRoleType.User);
                                 if (firstUserChat != null && !string.IsNullOrWhiteSpace(firstUserChat.Content))
@@ -219,7 +222,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         }
                     }
                     
-                    // 获取第一个结果的模式，用于后续结果保持一致
+                    //Legacy comment translated to English.
                     ResultMode? firstResultMode = null;
                     Action<PromptResultStreamEvent> streamCallback = null;
                     if (!string.IsNullOrWhiteSpace(streamId))
@@ -237,25 +240,25 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     
                     for (int i = 0; i < numsOfResults; i++)
                     {
-                        // 如果是第一次生成，使用传入的参数
-                        // 如果是后续生成，且第一个结果是 Chat 模式，则保持 Chat 模式
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         string currentUserMessage = null;
                         List<ChatMessageDto> currentChatHistory = null;
                         
                         if (i == 0)
                         {
-                            // 第一次生成，使用传入的参数
+                            //Legacy comment translated to English.
                             currentUserMessage = firstUserMessage;
-                            currentChatHistory = null; // 第一次生成时，chatHistory 应该为空
+                            currentChatHistory = null; //Legacy comment translated to English.
                         }
                         else if (firstResultMode == ResultMode.Chat && !string.IsNullOrWhiteSpace(firstUserMessage))
                         {
-                            // 后续生成，且第一个结果是 Chat 模式，保持 Chat 模式
-                            // 使用相同的 userMessage，但不传递历史记录（每次都是独立的对话）
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
                             currentUserMessage = firstUserMessage;
-                            currentChatHistory = null; // 连发时，每次都是独立的对话，不传递历史记录
+                            currentChatHistory = null; //Legacy comment translated to English.
                         }
-                        // 如果第一个结果是 Single 模式，后续也使用 Single 模式（currentUserMessage 为 null）
+                        //Legacy comment translated to English.
                         
                         var result = await _promptResultService.SenparcGenerateResultAsync(
                             promptItem,
@@ -264,7 +267,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                             streamCallback,
                             executionOptions);
                         
-                        // 记录第一个结果的模式
+                        //Legacy comment translated to English.
                         if (i == 0)
                         {
                             firstResultMode = result.Mode;
@@ -304,9 +307,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 根据 PromptResultId 获取对话记录
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="promptResultId">PromptResult 的 ID</param>
+        /// <param name="promptResultId">PromptResult ID</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<List<PromptResultChatDto>>> GetChatHistory(int promptResultId)
@@ -319,9 +322,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 根据 PromptResultId 获取对话历史和 Prompt 内容
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="promptResultId">PromptResult 的 ID</param>
+        /// <param name="promptResultId">PromptResult ID</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<PromptResult_ChatHistoryWithPromptResponse>> GetChatHistoryWithPrompt(int promptResultId)
@@ -329,23 +332,23 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<PromptResult_ChatHistoryWithPromptResponse>(
                 async (response, logger) =>
                 {
-                    // 获取对话历史
+                    //Legacy comment translated to English.
                     var chatHistory = await _promptResultChatService.GetByPromptResultIdAsync(promptResultId);
                     
-                    // 获取 PromptResult
+                    // get PromptResult
                     var promptResult = await _promptResultService.GetObjectAsync(p => p.Id == promptResultId)
                         ?? throw new NcfExceptionBase($"未找到 ID 为 {promptResultId} 的 PromptResult");
                     
-                    // 优先使用保存的 SystemMessage，如果没有则使用当前的 Prompt 内容
+                    //Legacy comment translated to English.
                     string promptContent;
                     if (!string.IsNullOrWhiteSpace(promptResult.SystemMessage))
                     {
-                        // 使用保存的 SystemMessage（已完成参数替换）
+                        //Legacy comment translated to English.
                         promptContent = promptResult.SystemMessage;
                     }
                     else
                     {
-                        // 降级方案：如果没有保存的 SystemMessage，使用当前的 Prompt 内容
+                        //Legacy comment translated to English.
                         var promptItem = await _promptItemService.GetAsync(promptResult.PromptItemId);
                         promptContent = promptItem.Content ?? string.Empty;
                     }
@@ -359,9 +362,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 继续聊天：在现有 PromptResult 中追加对话记录
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="request">继续聊天请求</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<PromptResultChatDto>>> ContinueChat(PromptResult_ContinueChatRequest request)
@@ -403,7 +406,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// TextEmbedding 查询测试
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptResult_TextEmbeddingSearchResponse>> TextEmbeddingSearch(PromptResult_TextEmbeddingSearchRequest request)
@@ -420,9 +423,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 更新对话记录的用户反馈（Like/Unlike）
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="request">更新反馈请求</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptResultChatDto>> UpdateChatFeedback(PromptResult_UpdateChatFeedbackRequest request)

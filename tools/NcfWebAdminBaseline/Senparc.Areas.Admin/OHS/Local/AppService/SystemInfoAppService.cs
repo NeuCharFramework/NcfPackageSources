@@ -1,0 +1,406 @@
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: SystemInfoAppService.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20260705
+    Change description: v0.0.3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260705
+    Change description: v0.0.4 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260724
+    Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
+
+    Modified by: Senparc - 20260729
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
+
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
+----------------------------------------------------------------*/
+
+using Senparc.Areas.Admin.Domain.Dto;
+using Senparc.CO2NET;
+using Senparc.CO2NET.Cache;
+using Senparc.CO2NET.Extensions;
+using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Cache;
+using Senparc.Ncf.Core.Cache.Extensions;
+using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Utility;
+using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
+using Senparc.Areas.Admin.Domain.Services;
+using Senparc.Areas.Admin.OHS.PL;
+using Senparc.Areas.Admin;
+using Microsoft.Extensions.Localization;
+using Senparc.Xncf.SystemManager.Domain.Service;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
+using System;
+using System.Collections.Generic;
+using System.DirectoryServices.Protocols;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Senparc.Areas.Admin.OHS.Local.AppService
+{
+    [BackendJwtAuthorize(BackendJwtAuthorizeAttribute.SuperAdminPolicyName)]
+    public class SystemInfoAppService : LocalAppServiceBase
+    {
+        private readonly SystemConfigService _systemConfigService;
+        private readonly AdminAuthConfigService _adminAuthConfigService;
+        private readonly IBaseObjectCacheStrategy _cacheStrategy;
+        private readonly IStringLocalizer<AdminResource> _localizer;
+        private readonly NeuBellTestProvider _neuBellTestProvider;
+        private readonly INeuBellPublisher _neuBellPublisher;
+        private readonly NeuBellWebHookDispatcher _neuBellWebHookDispatcher;
+
+        public SystemInfoAppService(
+            IServiceProvider serviceProvider,
+            SystemConfigService systemConfigService,
+            AdminAuthConfigService adminAuthConfigService,
+            IBaseObjectCacheStrategy cacheStrategy,
+            IStringLocalizer<AdminResource> localizer,
+            NeuBellTestProvider neuBellTestProvider,
+            INeuBellPublisher neuBellPublisher,
+            NeuBellWebHookDispatcher neuBellWebHookDispatcher) : base(serviceProvider)
+        {
+            _systemConfigService = systemConfigService;
+            _adminAuthConfigService = adminAuthConfigService;
+            this._cacheStrategy = cacheStrategy;
+            _localizer = localizer;
+            _neuBellTestProvider = neuBellTestProvider;
+            _neuBellPublisher = neuBellPublisher;
+            _neuBellWebHookDispatcher = neuBellWebHookDispatcher;
+        }
+
+
+        /// <summary>
+        ///Legacy comment translated to English.
+        /// </summary>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<List<SystemConfigDto>>> GetListAsync()
+        {
+            var response = await this.GetResponseAsync<AppResponseBase<List<SystemConfigDto>>, List<SystemConfigDto>>(async (response, logger) =>
+            {
+                var list = await _systemConfigService.GetFullListAsync(z => true);
+                var dtoList = list.Select(z => _systemConfigService.Mapper.Map<SystemConfigDto>(z)).ToList();
+                return dtoList;
+            });
+            return response;
+        }
+
+
+        /// <summary>
+        ///Legacy comment translated to English.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
+        //[Permission(Codes = new string[] { "code" })]
+        //[Ncf.Core.Authorization.Permission("role.add,role.update")]
+        public async Task<AppResponseBase<SystemConfigDto>> CreateOrUpdateAsync(SystemConfig_CreateOrUpdateDto request)
+        {
+            var response = await this.GetResponseAsync<AppResponseBase<SystemConfigDto>, SystemConfigDto>(async (response, logger) =>
+            {
+                var systemConfig = await _systemConfigService.GetObjectAsync(z => z.Id == request.Id);
+
+                if (systemConfig == null)
+                {
+                    throw new NcfExceptionBase(_localizer["SystemConfig.ConfigNotFound"].Value);
+                }
+
+                systemConfig.Update(request.SystemName, request.MchId, request.MchKey, request.TenPayAppId, systemConfig.HideModuleManager);
+
+                await _systemConfigService.SaveObjectAsync(systemConfig);
+
+                var systemConfigDto = _systemConfigService.Mapper.Map<SystemConfigDto>(systemConfig);
+
+                return systemConfigDto;
+            });
+            return response;
+        }
+
+        /// <summary>
+        ///Legacy comment translated to English.
+        /// </summary>
+        /// <param name="id"></param>
+        ///Legacy comment translated to English.
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
+        //[Permission(Codes = new string[] { "code" })]
+        //[Ncf.Core.Authorization.Permission("role.add,role.update")]
+        public async Task<AppResponseBase<SystemConfigDto>> HideManagerAsync(int id, bool hide)
+        {
+            var response = await this.GetResponseAsync<AppResponseBase<SystemConfigDto>, SystemConfigDto>(async (response, logger) =>
+            {
+                var seh = new SenparcExpressionHelper<SystemConfig>();
+                seh.ValueCompare.AndAlso(id > 0, z => z.Id == id);
+                var sehWhere = seh.BuildWhereExpression();
+
+                var systemConfig = await _systemConfigService.GetObjectAsync(sehWhere);
+
+                if (systemConfig == null)
+                {
+                    throw new NcfExceptionBase(_localizer["SystemConfig.ConfigNotFound"].Value);
+                }
+
+                systemConfig.Update(systemConfig.SystemName, systemConfig.MchId, systemConfig.MchKey, systemConfig.TenPayAppId, hide);
+
+                await _systemConfigService.SaveObjectAsync(systemConfig);
+
+                var systemConfigDto = _systemConfigService.Mapper.Map<SystemConfigDto>(systemConfig);
+
+                return systemConfigDto;
+            });
+            return response;
+        }
+
+        [FunctionRender("查看登录过期配置", "查看 Admin 模块中的网页登录过期与 JWT 过期配置", typeof(Register))]
+        public async Task<StringAppResponse> GetAuthExpireSettings()
+        {
+            var response = await this.GetStringResponseAsync(async (_, logger) =>
+            {
+                var settings = _adminAuthConfigService.GetEffectiveExpireSettings();
+                logger.Append($"网页登录持续时间：{settings.AdminWebLoginExpireMinutes} 分钟");
+                logger.Append($"JWT 过期时间：{settings.BackendJwtExpireMinutes} 分钟");
+                logger.Append($"配置来源：{settings.Source}");
+                logger.Append(settings.UsingDefault
+                    ? "当前使用默认值（可能是配置记录不存在，或配置表尚未完成数据库升级）。"
+                    : "当前使用数据库配置值。");
+
+                await Task.CompletedTask;
+                return logger.GetLogs();
+            }, saveLogAfterFinished: true, saveLogName: "查看登录过期配置");
+
+            return response;
+        }
+
+        [FunctionRender("设置登录过期配置", "设置网页登录持续时间与 JWT 过期时间（分钟）", typeof(Register))]
+        public async Task<StringAppResponse> SetAuthExpireSettings(AdminAuthConfig_SetExpireSettingsRequest request)
+        {
+            var response = await this.GetStringResponseAsync(async (_, logger) =>
+            {
+                var result = await _adminAuthConfigService.TrySaveExpireSettingsAsync(
+                    request.AdminWebLoginExpireMinutes,
+                    request.BackendJwtExpireMinutes).ConfigureAwait(false);
+
+                logger.Append(result.Message);
+                logger.Append($"当前生效：网页登录持续时间={result.Settings.AdminWebLoginExpireMinutes} 分钟，JWT 过期时间={result.Settings.BackendJwtExpireMinutes} 分钟。");
+                logger.Append(result.Settings.UsingDefault
+                    ? "当前仍为默认值回退。"
+                    : "当前已写入数据库配置。");
+
+                return logger.GetLogs();
+            }, saveLogAfterFinished: true, saveLogName: "设置登录过期配置");
+
+            return response;
+        }
+
+        [FunctionRender("纽铃可见提醒测试", "发送或消费可在 Admin Footer 弹窗与徽标中看到的纽铃测试提醒；发送提醒时可配置 WebHook 地址、请求方式和多行 Body 模板，创建成功后异步请求并记录请求数据与结果", typeof(Register))]
+        public async Task<StringAppResponse> TriggerNeuBellTest(NeuBellTest_Request request)
+        {
+            return await this.GetStringResponseAsync(async (_, logger) =>
+            {
+                void QueueWebHook(NeuBellWebHookOperation operation)
+                {
+                    var webHookUrl = (request?.WebHookUrl ?? string.Empty).Trim();
+                    if (webHookUrl.Length == 0)
+                    {
+                        return;
+                    }
+
+                    var notifyTask = _neuBellWebHookDispatcher.NotifyOperationAsync(
+                        webHookUrl,
+                        NeuBellWebHook.NormalizeHttpMethod(request.WebHookMethod),
+                        operation,
+                        GetCurrentAdminUserInfoId(),
+                        request.WebHookBody);
+                    notifyTask.ContinueWith(
+                        antecedent => antecedent.Exception,
+                        CancellationToken.None);
+                    logger.Append("已加入 WebHook 发送队列（异步请求，不阻塞当前操作）；请求数据与结果可在页脚“纽铃”抽屉 → “WebHook 设置”的“请求日志”列表中查看。");
+                }
+
+                if (string.Equals(request?.Action, NeuBellTest_Request.SendAction, StringComparison.OrdinalIgnoreCase))
+                {
+                    var neuBellItem = _neuBellTestProvider.SendAndGetItem();
+                    await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
+                    logger.Append($"已发送 NeuBell 测试提醒，当前待消费数量：{_neuBellTestProvider.PendingCount}。请观察 Admin Footer 的弹窗和徽标。");
+
+                    QueueWebHook(new NeuBellWebHookOperation
+                    {
+                        EventKind = NeuBellWebHookDispatcher.EventKindItemCreated,
+                        Action = NeuBellTest_Request.SendAction,
+                        ActionName = "发送提醒",
+                        ActionStatus = "success",
+                        ProviderId = NeuBellTestProvider.ProviderIdValue,
+                        ProviderName = NeuBellTestProvider.ItemTitle,
+                        ModuleUid = Register.ModuleUid,
+                        Added = new[] { neuBellItem }
+                    });
+                }
+                else if (string.Equals(request?.Action, NeuBellTest_Request.ConsumeOneAction, StringComparison.OrdinalIgnoreCase))
+                {
+                    var consumedItem = _neuBellTestProvider.ConsumeLatestAndGetItem();
+                    var consumedCount = consumedItem == null ? 0 : 1;
+                    await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
+                    logger.Append(consumedCount > 0
+                        ? "已消费最新 1 条 NeuBell 测试提醒，Footer 徽标将减少。"
+                        : "当前没有可消费的 NeuBell 测试提醒。" );
+                    QueueWebHook(new NeuBellWebHookOperation
+                    {
+                        EventKind = NeuBellWebHookDispatcher.EventKindItemsChanged,
+                        Action = NeuBellTest_Request.ConsumeOneAction,
+                        ActionName = "消费最新一条",
+                        ActionStatus = consumedCount > 0 ? "success" : "empty",
+                        ProviderId = NeuBellTestProvider.ProviderIdValue,
+                        ProviderName = NeuBellTestProvider.ItemTitle,
+                        ModuleUid = Register.ModuleUid,
+                        Removed = consumedItem == null
+                            ? Array.Empty<NeuBellItem>()
+                            : new[] { consumedItem }
+                    });
+                }
+                else if (string.Equals(request?.Action, NeuBellTest_Request.ConsumeAllAction, StringComparison.OrdinalIgnoreCase))
+                {
+                    var consumedItems = _neuBellTestProvider.ConsumeAllAndGetItems();
+                    var consumedCount = consumedItems.Count;
+                    await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
+                    logger.Append($"已消费 {consumedCount} 条 NeuBell 测试提醒，Footer 弹窗和徽标将被清除。");
+                    QueueWebHook(new NeuBellWebHookOperation
+                    {
+                        EventKind = NeuBellWebHookDispatcher.EventKindItemsChanged,
+                        Action = NeuBellTest_Request.ConsumeAllAction,
+                        ActionName = "消费全部提醒",
+                        ActionStatus = consumedCount > 0 ? "success" : "empty",
+                        ProviderId = NeuBellTestProvider.ProviderIdValue,
+                        ProviderName = NeuBellTestProvider.ItemTitle,
+                        ModuleUid = Register.ModuleUid,
+                        Removed = consumedItems
+                    });
+                }
+                else
+                {
+                    logger.Append("不支持的操作，请选择“发送提醒”、“消费最新一条”或“消费全部提醒”。");
+                }
+
+                return logger.GetLogs();
+            }, saveLogAfterFinished: true, saveLogName: "纽铃可见提醒测试");
+        }
+
+        [FunctionRender("缓存测试", "测试当前缓存类型及分布式锁", typeof(Register))]
+        public async Task<StringAppResponse> CacheTest()
+        {
+            var response = await this.GetStringResponseAsync(async (response, logger) =>
+            {
+                logger.Append("当前缓存：" + _cacheStrategy.GetType().Name);
+                var key = "NCF.CacheTest";
+                var dt1 = SystemTime.Now;
+
+
+                await _cacheStrategy.SetAsync(key, Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting, TimeSpan.FromSeconds(1));
+                var dt2 = SystemTime.Now;
+                logger.Append($"写入耗时：{(dt2 - dt1).TotalMilliseconds}ms");
+
+                var settingFromCache = await _cacheStrategy.GetAsync<SenparcCoreSetting>(key);
+                var dt3 = SystemTime.Now;
+                logger.Append($"写入耗时：{(dt3 - dt2).TotalMilliseconds}ms");
+
+                Thread.Sleep(2000);
+                var settingFromCache2 = await _cacheStrategy.GetAsync<SenparcCoreSetting>(key);
+                logger.Append($"缓存自动过期：{settingFromCache2 == null}");
+                var index = 0;
+                logger.Append($"缓存锁测试开始");
+
+                //Legacy comment translated to English.
+                await _cacheStrategy.RemoveFromCacheAsync("NcfLockTest");
+
+                Parallel.For(0, 10, async i =>
+                    {
+
+                        using (var cacheLock = await _cacheStrategy.BeginCacheLockAsync("SystemInfoAppService", "CacheTest", 100, TimeSpan.FromMilliseconds(100)))
+                        {
+
+                            var cacheObjects = await _cacheStrategy.GetAsync<List<LockCacheTest>>("NcfLockTest");
+                            if (cacheObjects == null)
+                            {
+                                cacheObjects = new List<LockCacheTest>();
+                            }
+
+                            cacheObjects.Add(new LockCacheTest(index, SystemTime.Now.DateTime, i));
+
+                            await _cacheStrategy.SetAsync("NcfLockTest", cacheObjects, TimeSpan.FromMinutes(10));
+                            logger.Append($"缓存已写入，i:{i}, index:{index}");
+                            //Thread.Sleep(1500);
+                            index++;
+                        }
+                    });
+                var cacheObjects = await _cacheStrategy.GetAsync<List<LockCacheTest>>("NcfLockTest");
+                logger.Append($"缓存锁测试结束，lastLockCache:{cacheObjects.ToJson(true)}");
+
+                //Legacy comment translated to English.
+                for (int i = 0; i < 10; i++)
+                {
+                    var cacheKey = $"NcfLockTestLevels:{i}";
+                    await _cacheStrategy.RemoveFromCacheAsync(cacheKey);
+                    await _cacheStrategy.SetAsync(cacheKey, i, TimeSpan.FromMinutes(10));
+                }
+                var cacheObjectLevels = await _cacheStrategy.GetAllByPrefixAsync<dynamic>("NcfLockTestLevels");
+                logger.Append($"分层索引，NcfLockTestLevels:{cacheObjectLevels.ToJson(true)}");
+
+                logger.SaveLogs("缓存测试");
+                return logger.GetLogs();
+            });
+            return response;
+        }
+
+        class LockCacheTest
+        {
+            public LockCacheTest(int index, DateTime dateTime, int i)
+            {
+                Index = index;
+                DateTime = dateTime;
+                I = i;
+            }
+
+            public int Index { get; set; }
+            public DateTime DateTime { get; set; }
+            public int I { get; set; }
+        }
+    }
+}

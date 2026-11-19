@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：20260802164259_Add_XncfPreview.Designer.cs
-    文件功能描述：定义 Entity Framework 数据库迁移元数据。
+    File name: 20260802164259_Add_XncfPreview.Designer.cs
+    File description: Entity Framework database migration metadata definition.
 
+    Created by: Senparc - 20231021
 
-    创建标识：Senparc - 20231021
-
-    修改标识：Senparc - 20260804
-    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+    Modified by: Senparc - 20260804
+    Change description: v0.39.0-preview8 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

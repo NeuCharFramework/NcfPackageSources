@@ -1,10 +1,11 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：SenparcDbContextFactoryConfig.cs
-    文件功能描述：统一解析多数据库迁移使用的站点配置目录
+    File name: SenparcDbContextFactoryConfig.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 
 ----------------------------------------------------------------*/
 
@@ -16,8 +17,8 @@ using System.Linq;
 namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
 {
     /// <summary>
-    /// 设计时工厂共享配置。仅选择实际包含 SenparcConfig.config 的站点目录，
-    /// 同时兼容源码仓库、传统相邻项目和发布目录结构。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     internal static class SenparcDbContextFactoryConfig
     {
@@ -37,7 +38,7 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
 
             for (var directory = new DirectoryInfo(projectPath); directory != null; directory = directory.Parent)
             {
-                candidates.Add(Path.Combine(directory.FullName, "tools", "NcfSimulatedSite", "Senparc.Web"));
+                candidates.Add(Path.Combine(directory.FullName, "tools", "NcfWebAdminBaseline", "Senparc.Web"));
                 candidates.Add(Path.Combine(directory.FullName, "src", "back-end", "Senparc.Web"));
             }
 

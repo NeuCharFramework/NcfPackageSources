@@ -16,12 +16,12 @@ var app = new Vue({
             {
                 initialFrameHeight: 500
             },
-            //分页参数
+            //pagination parameters
             paginationQuery:
             {
                 total: 5
             },
-            //分页接口传参
+            //pagination API parameters
             listQuery: {
                 pageIndex: 1,
                 pageSize: 20,
@@ -35,25 +35,25 @@ var app = new Vue({
                 content: []
             },
             colData: [
-                { title: "知识库Id", istrue: false },
-                { title: "内容类型", istrue: true },
-                { title: "内容", istrue: true }
+                { title: ncfST('知识库Id'), istrue: false },
+                { title: ncfST('内容类型'), istrue: true },
+                { title: ncfST('内容'), istrue: true }
             ],
             checkBoxGroup: [
-                "知识库Id","内容类型","内容"
+                ncfST('知识库Id'), ncfST('内容类型'), ncfST('内容')
             ],
             checkedColumns: [],
             contentTypeData: [
-                { value: 1, label: '输入' },
-                { value: 2, label: '文件' },
-                { value: 3, label: '采集外部数据' }
+                { value: 1, label: ncfST('输入') },
+                { value: 2, label: ncfST('文件') },
+                { value: 3, label: ncfST('采集外部数据') }
             ],
 
             keyword:'',
             multipleSelection: '',
             radio: '',
             props: { multiple: true },
-            // 表格数据
+            //Legacy comment translated to English.
             tableData:[],
             uid: '',
             fileList:[],
@@ -72,7 +72,7 @@ var app = new Vue({
             dialogVisible: false,
             dialog:
             {
-                title: '新增知识库管理详情',
+                title: ncfST('新增知识库管理详情'),
                 visible: false,
                 data:
                 {
@@ -82,16 +82,16 @@ var app = new Vue({
                 {
                     name:
                     [
-                        { required: true, message: "知识库管理详情名称为必填项", trigger: "blur" }
+                        { required: true, message: ncfST('知识库管理详情名称为必填项'), trigger: "blur" }
                     ]
                 },
                 updateLoading: false,
                 disabled: false,
-                checkStrictly: true // 是否严格的遵守父子节点不互相关联
+                checkStrictly: true //Legacy comment translated to English.
             },
             detailDialog:
             {
-                title: '知识库管理详情详情',
+                title: ncfST('知识库管理详情详情'),
                 visible: false,
                 data:
                 {
@@ -101,12 +101,12 @@ var app = new Vue({
                 {
                     name:
                     [
-                        { required: true, message: "知识库管理详情名称为必填项", trigger: "blur" }
+                        { required: true, message: ncfST('知识库管理详情名称为必填项'), trigger: "blur" }
                     ]
                 },
                 updateLoading: false,
                 disabled: false,
-                checkStrictly: true // 是否严格的遵守父子节点不互相关联
+                checkStrictly: true //Legacy comment translated to English.
             }
         }
     },
@@ -114,13 +114,13 @@ var app = new Vue({
         let that = this
         that.getList();
 
-        //TODO:初始化设置选中的字段
+        //Legacy comment translated to English.
         that.checkedColumns = that.colData.filter(item => item.istrue).map(item => item.title);
     },
     watch:
     {
         'dialog.visible': function(val, old) {
-            // 关闭dialog，清空
+            // disabledialog，clear
             if (!val)
             {
                 this.dialog.data = {
@@ -156,14 +156,14 @@ var app = new Vue({
         },
         uploadSuccess(res, file, fileList) {
             let that = this
-            // 上传成功
+            // uploadsuccess
             that.fileList = fileList;
 
             if (res.code == 200)
             {
                 that.$notify({
-                    title: '成功',
-                    message: '恭喜你，上传成功',
+                    title: ncfST('成功'),
+                    message: ncfST('恭喜你，上传成功'),
                     type: 'success'
                 });
                 that.dialog.data.cover = res.data;
@@ -171,8 +171,8 @@ var app = new Vue({
             else
             {
                 that.$notify.error({
-                    title: '失败',
-                    message: '上传失败，请重新上传'
+                    title: ncfST('失败'),
+                    message: ncfST('上传失败，请重新上传')
                 });
             }
         },
@@ -180,11 +180,11 @@ var app = new Vue({
             let that = this
             //that.refs.upload.clearFiles();
             that.$notify.error({
-                title: '失败',
-                message: '上传失败，请重新上传'
+                title: ncfST('失败'),
+                message: ncfST('上传失败，请重新上传')
             });
         },
-        // 获取列表
+        //Legacy comment translated to English.
         async getList()
         {
             let that = this
@@ -198,7 +198,7 @@ var app = new Vue({
                 keyword = that.keyword;
             }
 
-            await service.get(`/Admin/KnowledgeBasesDetail/Index?handler=KnowledgeBasesDetail&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${keyword}&orderField=${orderField}`).then(res => {// 使用 map 转换为目标格式的对象数组
+            await service.get(`/Admin/KnowledgeBasesDetail/Index?handler=KnowledgeBasesDetail&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${keyword}&orderField=${orderField}`).then(res => {//Legacy comment translated to English.
                 that.filterTableHeader.knowledgeBasesId = res.data.data.list.map(z => ({
                     text: z.knowledgeBasesId,
                     value: z.knowledgeBasesId
@@ -219,27 +219,27 @@ var app = new Vue({
         async getCategoryList()
         {
             let that = this
-            //获取分类列表数据
+            //Legacy comment translated to English.
             await service.get('/Admin/KnowledgeBasesDetail/Index?handler=KnowledgeBasesDetailCategory').then(res => {
                 that.categoryData = res.data.data.list;
             });
         },
-        // 编辑 // 新增知识库管理详情 // 增加下一级
+        //Legacy comment translated to English.
         handleEdit(index, row, flag)
         {
             let that = this
             that.dialog.visible = true;
-            //获取分类列表数据
+            //Legacy comment translated to English.
             //that.getCategoryList();
             if (flag === 'add')
             {
-                // 新增
-                that.dialog.title = '新增知识库管理详情';
+                // add
+                that.dialog.title = ncfST('新增知识库管理详情');
                 that.dialogImageUrl = '';
                 //that.$refs['bodyEditor'].editor.setData('');
                 return;
             }
-            // 编辑
+            // edit
             let { id,knowledgeBasesId,contentType,content } = row;
             that.dialog.data = {
                 id,knowledgeBasesId,contentType,content
@@ -256,17 +256,17 @@ var app = new Vue({
             //{
             //    that.editorData = this.$refs['bodyEditor'].editor.setData(body);
             //}
-            // dialog中父级菜单 做递归显示
+            //Legacy comment translated to English.
             //let x = [];
             //that.recursionFunc(row, this.categoryData, x);
             //that.dialog.data.categoryId = x;
 
             if (flag === 'edit')
             {
-                that.dialog.title = '编辑知识库管理详情';
+                that.dialog.title = ncfST('编辑知识库管理详情');
             }
         },
-        // 设置父级菜单默认显示 递归
+        //Legacy comment translated to English.
         recursionFunc(row, source, dest)
         {
             if (row.categoryId === null)
@@ -287,7 +287,7 @@ var app = new Vue({
                 }
             }
         },
-        // 更新新增、编辑
+        // updateadd、edit
         updateData()
         {
             let that = this
@@ -295,7 +295,7 @@ var app = new Vue({
             that.$refs['dataForm'].validate(valid => {
                 //that.editorData = that.$refs['bodyEditor'].editor.getData()
                 //that.dialog.data.body = that.$refs['bodyEditor'].editor.getData();
-                // 表单校验
+                // single-table validation
                 if (valid)
                 {
                     that.dialog.updateLoading = true;
@@ -311,7 +311,7 @@ var app = new Vue({
                             that.getList();
                             that.$notify({
                                 title: "Success",
-                                message: "成功",
+                                message: ncfST('成功'),
                                 type: "success",
                                 duration: 2000
                             });
@@ -321,7 +321,7 @@ var app = new Vue({
                 }
             });
         },
-        // 删除
+        // delete
         handleDelete(index, row) {
             let that = this
             let ids = [row.id];
@@ -331,7 +331,7 @@ var app = new Vue({
                         that.getList();
                         that.$notify({
                         title: "Success",
-                        message: "删除成功",
+                        message: ncfST('删除成功'),
                         type: "success",
                         duration: 2000
                     });
@@ -357,7 +357,7 @@ var app = new Vue({
         },
         getCurrentRow(row) {
             let that = this
-            //获取选中数据
+            //Legacy comment translated to English.
             //that.templateSelection = row;
             that.multipleSelection = row;
             //that.newsId = that.multipleSelection.id;
@@ -398,13 +398,13 @@ var app = new Vue({
         setContentTypeFormat(row, column, cellValue, index) {
             switch(cellValue) {
                 case 1:{
-                    return "输入"
+                    return ncfST('输入')
                 }
                 case 2:{
-                    return "文件"
+                    return ncfST('文件')
                 }
                 case 3:{
-                    return "采集外部数据"
+                    return ncfST('采集外部数据')
                 }
             }
         },

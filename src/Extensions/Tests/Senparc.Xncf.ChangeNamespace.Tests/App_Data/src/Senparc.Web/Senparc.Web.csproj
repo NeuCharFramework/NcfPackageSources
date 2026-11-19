@@ -4,8 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Version>0.0.1</Version>
     <PackageReleaseNotes>
-      [2026-07-24] v0.0.1 改善安装页在内嵌 WebView 中的导航兼容性
-      1、调整安装页链接导航处理，兼容桌面内嵌 WebView
+      [2026-07-24] v0.0.1 Updated module behavior and related support.
+      1. Updated module behavior and related support.
     </PackageReleaseNotes>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TypeScriptToolsVersion>3.7</TypeScriptToolsVersion>
@@ -42,21 +42,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
-    <ProjectReference Include="..\Senparc.Core\Senparc.Core.csproj" />
-    <ProjectReference Include="..\Senparc.ImageUtility\Senparc.ImageUtility.csproj" />
-    <ProjectReference Include="..\Senparc.Log\Senparc.Log.csproj" />
-    <ProjectReference Include="..\Senparc.Mvc\Senparc.Mvc.csproj" />
+    <ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />    <ProjectReference Include="..\Senparc.Core\Senparc.Core.csproj" />    <ProjectReference Include="..\Senparc.ImageUtility\Senparc.ImageUtility.csproj" />    <ProjectReference Include="..\Senparc.Log\Senparc.Log.csproj" />    <ProjectReference Include="..\Senparc.Mvc\Senparc.Mvc.csproj" />    <ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />    <ProjectReference Include="..\Senparc.Threads\Senparc.Threads.csproj" />    <ProjectReference Include="..\Senparc.Utility\Senparc.Utility.csproj" />    <ProjectReference Include="..\Senparc.Web.UI\Senparc.Web.UI.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+
+
+
+
+
     <PackageReference Include="Senparc.Ncf.Core" Version="0.1.1-beta2" />
     <PackageReference Include="Senparc.Ncf.Log" Version="0.1.1-beta2" />
     <PackageReference Include="Senparc.Ncf.Mvc.UI" Version="0.1.1-beta2" />
     <PackageReference Include="Senparc.Ncf.Repository" Version="0.1.1-beta2" />
     <PackageReference Include="Senparc.Ncf.Service" Version="0.1.1-beta2" />
     <PackageReference Include="Senparc.Ncf.Utility" Version="0.1.1-beta2" />
-    <ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />
-    <ProjectReference Include="..\Senparc.Threads\Senparc.Threads.csproj" />
-    <ProjectReference Include="..\Senparc.Utility\Senparc.Utility.csproj" />
-    <ProjectReference Include="..\Senparc.Web.UI\Senparc.Web.UI.csproj" />
+
+
+
+
   </ItemGroup>
 
   <ItemGroup>

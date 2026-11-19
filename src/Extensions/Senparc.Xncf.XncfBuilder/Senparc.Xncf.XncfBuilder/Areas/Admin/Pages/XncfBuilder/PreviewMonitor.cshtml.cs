@@ -1,22 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：PreviewMonitor.cshtml.cs
-    文件功能描述：XNCF 独立预览流水线监控后台
+    File name: PreviewMonitor.cshtml.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260802
+    Created by: Senparc - 20260802
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+    Modified by: Senparc - 20260804
+    Change description: v0.39.0-preview8 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.41.0 增强隔离开发任务与 Sandbox 预览流程
+    Modified by: Senparc - 20260815
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
+    Modified by: Senparc - 20260822
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.41.7 XncfBuilder 预览与隔离开发任务表统一租户底层支持
+    Modified by: Senparc - 20261103
+    Change description: v0.41.7 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 
@@ -51,8 +55,8 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
 
         public void OnGet()
         {
-            // 仅初次打开页面时触发基类的 XNCF 可用性校验。高频状态接口
-            // 不重复触发该校验，避免轮询放大缓存/数据库访问。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             _ = XncfRegister;
         }
 

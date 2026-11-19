@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：WorkflowInterchange.cs
-    文件功能描述：工作流 JSON/YAML 导入导出
-    
-    
-    创建标识：Senparc - 20261014
-    
-    修改标识：Senparc - 20261021
-    修改描述：v0.4.4 实现工作流 JSON/YAML 导入导出与脱敏校验
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.4 enhance fine-tuning functionality with artifact tracking and import/export capabilities
+    Copyright (C) 2026 Senparc
+
+    File name: WorkflowInterchange.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20261014
+
+    Modified by: Senparc - 20261021
+    Change description: v0.4.4 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.4.4 enhance fine-tuning functionality with artifact tracking and import/export capabilities
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -192,11 +195,11 @@ public static class WorkflowInterchangeCodec
         }
 
         var actualFormat = format ?? DetectFormat(content);
-        JsonNode root = actualFormat == WorkflowInterchangeFormat.Json
+        JsonNode? root = actualFormat == WorkflowInterchangeFormat.Json
             ? ParseJson(content)
             : ParseYaml(content);
 
-        var definition = ParseDefinition(root);
+        var definition = ParseDefinition(root!);
         ValidateDefinition(definition);
         return new WorkflowInterchangeDocument(definition, actualFormat);
     }
@@ -335,7 +338,7 @@ public static class WorkflowInterchangeCodec
             : WorkflowInterchangeFormat.Yaml;
     }
 
-    private static JsonNode ParseYaml(string content)
+    private static JsonNode? ParseYaml(string content)
     {
         try
         {
@@ -359,7 +362,7 @@ public static class WorkflowInterchangeCodec
         }
     }
 
-    private static JsonNode ConvertYamlNode(YamlNode node)
+    private static JsonNode? ConvertYamlNode(YamlNode node)
     {
         if (node is YamlMappingNode mapping)
         {

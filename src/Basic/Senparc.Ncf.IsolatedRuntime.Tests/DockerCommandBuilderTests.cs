@@ -105,6 +105,22 @@ public sealed class DockerCommandBuilderTests
     }
 
     [TestMethod]
+    public async Task DockerProvider_IsUnavailableWhenExecutableIsMissing()
+    {
+        var missingExecutable = Path.Combine(
+            Path.GetTempPath(),
+            "ncf-missing-docker-" + Guid.NewGuid().ToString("N"));
+        var provider = new DockerIsolatedRuntimeProvider(
+            Options.Create(new DockerIsolatedRuntimeOptions
+            {
+                Executable = missingExecutable
+            }),
+            NullLogger<DockerIsolatedRuntimeProvider>.Instance);
+
+        Assert.IsFalse(await provider.IsAvailableAsync());
+    }
+
+    [TestMethod]
     [TestCategory("Docker")]
     public async Task DockerProvider_RunsHardenedOneShotContainer()
     {

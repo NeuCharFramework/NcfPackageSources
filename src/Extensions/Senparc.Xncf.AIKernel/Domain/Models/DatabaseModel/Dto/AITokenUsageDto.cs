@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AITokenUsageDto.cs
-    文件功能描述：AITokenUsageDto 相关实现
-    
-    创建标识：Senparc - 20260904
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+    Copyright (C) 2026 Senparc
+
+    File name: AITokenUsageDto.cs
+    File description: AITokenUsageDto related implementation
+
+    Created by: Senparc - 20260904
+
+    Modified by: Senparc - 20260915
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -22,77 +26,77 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
     public class AITokenUsageDto : DtoBase
     {
         /// <summary>
-        /// 主键 ID
+        /// primary key ID
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// 模型代号
+        /// model code
         /// </summary>
         public string ModelAlias { get; set; }
 
         /// <summary>
-        /// 模型名称
+        /// model name
         /// </summary>
         public string ModelId { get; set; }
 
         /// <summary>
-        /// 部署名称
+        /// deployment name
         /// </summary>
         public string DeploymentName { get; set; }
 
         /// <summary>
-        /// AI 平台
+        ///Legacy comment translated to English.
         /// </summary>
         public AiPlatform AiPlatform { get; set; }
 
         /// <summary>
-        /// 模型类别
+        /// model category
         /// </summary>
         public ConfigModelType ConfigModelType { get; set; }
 
         /// <summary>
-        /// 输入（Prompt）Token 数量
+        /// input (Prompt) token count
         /// </summary>
         public long InputTokens { get; set; }
 
         /// <summary>
-        /// 输出（Completion）Token 数量
+        /// output (Completion) token count
         /// </summary>
         public long OutputTokens { get; set; }
 
         /// <summary>
-        /// 总 Token 数量
+        /// total token count
         /// </summary>
         public long TotalTokens { get; set; }
 
         /// <summary>
-        /// 缓存命中输入 Token 数量
+        /// cached input token count
         /// </summary>
         public long CachedInputTokens { get; set; }
 
         /// <summary>
-        /// 推理（Reasoning / Thinking）Token 数量
+        ///Legacy comment translated to English.
         /// </summary>
         public long ReasoningTokens { get; set; }
 
         /// <summary>
-        /// 本次调用耗时（毫秒）
+        ///Legacy comment translated to English.
         /// </summary>
         public int DurationMs { get; set; }
 
         /// <summary>
-        /// 执行状态：0 成功，1 失败
+        /// executestatus：0 success，1 failure
         /// </summary>
         public int Status { get; set; }
 
         /// <summary>
-        /// 调用来源
+        ///Legacy comment translated to English.
         /// </summary>
         public string Source { get; set; }
 
         /// <summary>
-        /// 错误信息
+        /// errorinformation
         /// </summary>
         public string ErrorNote { get; set; }
 

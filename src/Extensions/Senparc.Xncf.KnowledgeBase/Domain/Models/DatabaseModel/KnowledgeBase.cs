@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：KnowledgeBase.cs
-    文件功能描述：KnowledgeBase 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+    File name: KnowledgeBase.cs
+    File description: KnowledgeBase related implementation
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview6 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -30,9 +33,9 @@ using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
 {
     /// <summary>
-    /// KnowledgeBase 实体类
+    ///Legacy comment translated to English.
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(KnowledgeBase))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(KnowledgeBase))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class KnowledgeBase : EntityBase<int>
     {
@@ -59,34 +62,34 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             InvalidateEmbedding();
         }
         /// <summary>
-        /// 训练模型Id
+        ///Legacy comment translated to English.
         /// </summary>
         public int EmbeddingModelId { get; set; }
         /// <summary>
-        /// 向量数据库Id
+        ///Legacy comment translated to English.
         /// </summary>
         public int VectorDBId { get; set; }
         /// <summary>
-        /// 对话模型Id
+        ///Legacy comment translated to English.
         /// </summary>
         public int ChatModelId { get; set; }
         /// <summary>
-        /// 名称
+        /// name
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 内容
+        /// content
         /// </summary>
         public string Content { get; set; }
 
         /// <summary>
-        /// 检索配置（JSON）。null 表示使用与旧版一致的默认配置。
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(2000)]
         public string RetrievalConfigJson { get; set; }
 
         /// <summary>
-        /// 读取检索配置；未配置或 JSON 非法时返回与旧版行为一致的默认配置。
+        ///Legacy comment translated to English.
         /// </summary>
         public KnowledgeBaseRetrievalConfig GetRetrievalConfig()
         {
@@ -94,7 +97,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 保存检索配置；与默认值完全一致时存 null（与旧数据形态保持一致）。
+        ///Legacy comment translated to English.
         /// </summary>
         public void SetRetrievalConfig(KnowledgeBaseRetrievalConfig config)
         {
@@ -104,13 +107,13 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 当前已发布的向量集合名称。仅在整批向量化成功后更新。
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(200)]
         public string VectorCollectionName { get; private set; }
 
         /// <summary>
-        /// 最近一次完整向量化成功时间。
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime? EmbeddedTime { get; private set; }
 

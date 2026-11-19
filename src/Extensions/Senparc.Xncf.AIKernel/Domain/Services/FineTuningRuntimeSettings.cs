@@ -1,11 +1,14 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：FineTuningRuntimeSettings.cs
-    文件功能描述：在 NCF 启动后调整微调总开关和主机允许列表
+    File name: FineTuningRuntimeSettings.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20261106
 
-    创建标识：Senparc - 20261106
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 

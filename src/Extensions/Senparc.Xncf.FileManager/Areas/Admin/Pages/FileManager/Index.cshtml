@@ -1,19 +1,19 @@
 @page
 @model Senparc.Xncf.FileManager.Areas.FileManager.Pages.Index
 @{
-    ViewData["Title"] = "文件资源管理";
+    ViewData["Title"] = FileManagerResource.Get("Area.FileManager.Files", "File resource management");
     Layout = "_Layout_Vue";
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>文件资源管理</el-breadcrumb-item>
+    <el-breadcrumb-item>@FileManagerResource.Get("Area.Extensions", "Extensions")</el-breadcrumb-item>
+    <el-breadcrumb-item>@FileManagerResource.Get("Area.FileManager.Files", "File resource management")</el-breadcrumb-item>
 }
 
 @section Style {
     <link rel="stylesheet" href="~/css/Admin/FileManager/index.css" asp-append-version="true" />
     <style>
-        /* ========== 清除父级对布局节点的控制 ========== */
+        /* ========== Clear parent layout constraints ========== */
         .el-main.admin-content:has(.file-manager-layout),
         .admin-content:has(.file-manager-layout) {
             all: unset;
@@ -38,7 +38,7 @@
             overflow: hidden !important;
         }
 
-        /* ========== 根布局：横向 flex ========== */
+        /* ========== Root layout: horizontal flex ========== */
         .file-manager-layout {
             display: flex !important;
             flex-direction: row !important;
@@ -56,7 +56,7 @@
             position: relative !important;
         }
 
-        /* ========== 左栏 / 主区域 ========== */
+        /* ========== Left panel / main area ========== */
         .file-manager-layout-left,
         .file-manager-layout-main {
             box-sizing: border-box !important;
@@ -85,7 +85,7 @@
             flex-direction: column !important;
         }
 
-        /* 文件浏览：主区域内再分 树 + 表 */
+        /* File browser: split the main area into tree + table */
         .file-manager-layout-main .file-manager-browser {
             display: flex;
             flex-direction: row;
@@ -116,7 +116,7 @@
             background: #fff;
         }
 
-        /* ========== 左栏：导航 ========== */
+        /* ========== Left panel: navigation ========== */
         .file-manager-layout-left .file-manager-nav-panel {
             box-sizing: border-box;
             width: 100%;
@@ -173,7 +173,7 @@
             pointer-events: none;
         }
 
-        /* ========== 中栏：目录树 ========== */
+        /* ========== Center panel: directory tree ========== */
         .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-panel {
             display: flex;
             flex-direction: column;
@@ -275,7 +275,7 @@
             height: 32px;
         }
 
-        /* ========== 右栏：文件表 ========== */
+        /* ========== Right panel: file table ========== */
         .file-manager-layout-main .file-manager-main-panel {
             display: flex;
             flex-direction: column;
@@ -433,7 +433,7 @@
             cursor: pointer;
         }
 
-        /* ========== 文件在线预览 ========== */
+        /* ========== Online file preview ========== */
         .file-preview-dialog .el-dialog__body {
             padding: 0;
             height: calc(100vh - 110px);
@@ -583,7 +583,7 @@
             white-space: nowrap;
         }
 
-        /* ========== 数据面板：占满 file-manager-layout-main ========== */
+        /* ========== Data dashboard: fill file-manager-layout-main ========== */
         .file-manager-layout-main .file-manager-dashboard-panel {
             box-sizing: border-box;
             flex: 1 1 auto;
@@ -734,7 +734,7 @@
             margin-top: 10px;
         }
 
-        /* ========== 上传对话框（图1样式） ========== */
+        /* ========== Upload dialog ========== */
         .file-manager-upload-dialog .el-dialog__header {
             padding: 14px 20px;
             border-bottom: 1px solid #ebeef5;
@@ -828,7 +828,7 @@
             line-height: 1.9;
         }
 
-        /* ========== 设置：占满 file-manager-layout-main ========== */
+        /* ========== Settings: fill file-manager-layout-main ========== */
         .file-manager-layout-main .file-manager-settings-panel {
             box-sizing: border-box;
             flex: 1 1 auto;
@@ -878,7 +878,7 @@
             gap: 12px;
         }
 
-        /* ========== 标签管理：占满 file-manager-layout-main ========== */
+        /* ========== Tag management: fill file-manager-layout-main ========== */
         .file-manager-layout-main .file-manager-tags-panel {
             box-sizing: border-box;
             flex: 1 1 auto;
@@ -991,7 +991,7 @@
             border: none;
         }
 
-        /* ========== 回收站：占满 file-manager-layout-main ========== */
+        /* ========== Recycle bin: fill file-manager-layout-main ========== */
         .file-manager-layout-main .file-manager-recycle-panel {
             box-sizing: border-box;
             flex: 1 1 auto;
@@ -1080,7 +1080,7 @@
             border-top: 1px solid #f0f2f5;
         }
 
-        /* ========== 收藏：占满 file-manager-layout-main ========== */
+        /* ========== Favorites: fill file-manager-layout-main ========== */
         .file-manager-layout-main .file-manager-favorite-panel {
             box-sizing: border-box;
             flex: 1 1 auto;
@@ -1146,7 +1146,7 @@
             border-top: 1px solid #f0f2f5;
         }
 
-        /* ========== 首页：占满 file-manager-layout-main ========== */
+        /* ========== Home: fill file-manager-layout-main ========== */
         .file-manager-layout-main .file-manager-home-panel {
             box-sizing: border-box;
             flex: 1 1 auto;
@@ -1317,7 +1317,7 @@
             color: #909399;
         }
 
-        /* ========== 新增分类 / 新增标签 对话框 ========== */
+        /* ========== Add category / add tag dialogs ========== */
         .tag-manage-dialog .el-dialog__body {
             padding: 16px 24px 8px;
         }
@@ -1379,7 +1379,7 @@
             color: #303133;
         }
 
-        /* 文件行「标签管理」对话框 */
+        /* File-row tag management dialog */
         .file-tag-dialog .file-tag-dialog-toolbar {
             display: flex;
             align-items: center;
@@ -1463,40 +1463,40 @@
 <div class="file-manager-layout">
     @Html.AntiForgeryToken()
 
-    @* 左栏 15%：分类导航 *@
+    @* Left panel 15%: category navigation *@
     <div class="file-manager-layout-left">
         <nav class="file-manager-nav-panel">
             <ul class="file-manager-nav-list">
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'home' }" @@click="onNavClick({ key: 'home', label: '首页' })">
-                    <i class="el-icon-s-home"></i><span>首页</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'home' }" @@click="onNavClick({ key: 'home', label: ncfST('Frontend.029') })">
+                    <i class="el-icon-s-home"></i><span>{{ ncfST('Frontend.029') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'favorite' }" @@click="onNavClick({ key: 'favorite', label: '收藏' })">
-                    <i :class="activeNavKey === 'favorite' ? 'el-icon-star-on' : 'el-icon-star-off'"></i><span>收藏</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'favorite' }" @@click="onNavClick({ key: 'favorite', label: ncfST('Frontend.119') })">
+                    <i :class="activeNavKey === 'favorite' ? 'el-icon-star-on' : 'el-icon-star-off'"></i><span>{{ ncfST('Frontend.119') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'enterprise' }" @@click="onNavClick({ key: 'enterprise', label: '企业文档', scope: 100 })">
-                    <i class="el-icon-folder"></i><span>企业文档</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'enterprise' }" @@click="onNavClick({ key: 'enterprise', label: ncfST('Frontend.072'), scope: 100 })">
+                    <i class="el-icon-folder"></i><span>{{ ncfST('Frontend.072') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'fine-tuning' }" @@click="onNavClick({ key: 'fine-tuning', label: '微调产物', scope: 300 })">
-                    <i class="el-icon-s-data"></i><span>微调产物</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'fine-tuning' }" @@click="onNavClick({ key: 'fine-tuning', label: ncfST('Frontend.106'), scope: 300 })">
+                    <i class="el-icon-s-data"></i><span>{{ ncfST('Frontend.106') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'recycle' }" @@click="onNavClick({ key: 'recycle', label: '回收站' })">
-                    <i class="el-icon-delete"></i><span>回收站</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'recycle' }" @@click="onNavClick({ key: 'recycle', label: ncfST('Frontend.096') })">
+                    <i class="el-icon-delete"></i><span>{{ ncfST('Frontend.096') }}</span>
                 </li>
                 <li class="file-manager-nav-item is-divider"></li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'dashboard' }" @@click="onNavClick({ key: 'dashboard', label: '数据面板' })">
-                    <i class="el-icon-data-line"></i><span>数据面板</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'dashboard' }" @@click="onNavClick({ key: 'dashboard', label: ncfST('Frontend.120') })">
+                    <i class="el-icon-data-line"></i><span>{{ ncfST('Frontend.120') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'tags' }" @@click="onNavClick({ key: 'tags', label: '标签管理' })">
-                    <i class="el-icon-price-tag"></i><span>标签管理</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'tags' }" @@click="onNavClick({ key: 'tags', label: ncfST('Frontend.143') })">
+                    <i class="el-icon-price-tag"></i><span>{{ ncfST('Frontend.143') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'settings' }" @@click="onNavClick({ key: 'settings', label: '设置' })">
-                    <i class="el-icon-setting"></i><span>设置</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'settings' }" @@click="onNavClick({ key: 'settings', label: ncfST('Frontend.157') })">
+                    <i class="el-icon-setting"></i><span>{{ ncfST('Frontend.157') }}</span>
                 </li>
             </ul>
         </nav>
     </div>
 
-    @* 主区域 85%：文件浏览（树+表）或数据面板 *@
+    @* Main area 85%: file browser (tree + table) or data dashboard *@
     <div class="file-manager-layout-main">
         <div class="file-manager-browser" v-if="activeNavKey !== 'dashboard' && activeNavKey !== 'tags' && activeNavKey !== 'recycle' && activeNavKey !== 'favorite' && activeNavKey !== 'home' && activeNavKey !== 'settings'">
             <div class="file-manager-tree-wrap">
@@ -1509,7 +1509,7 @@
                         <el-input
                             v-model="treeFilter"
                             size="small"
-                            placeholder="搜索目录"
+                            :placeholder="ncfST('Frontend.117')"
                             prefix-icon="el-icon-search"
                             clearable>
                         </el-input>
@@ -1553,28 +1553,28 @@
                             <el-input
                                 v-model="fileSearchKeyword"
                                 size="small"
-                                placeholder="搜索文件/文件夹"
+                                :placeholder="ncfST('Frontend.115')"
                                 prefix-icon="el-icon-search"
                                 clearable>
                             </el-input>
                         </div>
                         <div class="file-manager-top-actions">
-                            <el-button size="small" icon="el-icon-refresh" @@click="reloadFolderTree" title="刷新"></el-button>
+                            <el-button size="small" icon="el-icon-refresh" @@click="reloadFolderTree" :title="ncfST('Frontend.087')"></el-button>
                             <el-dropdown trigger="click" @@command="handleCreateCommand">
                                 <el-button size="small">
-                                    新建<i class="el-icon-arrow-down el-icon--right"></i>
+                                    {{ ncfST('Frontend.021') }}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </el-button>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="folder">新建文件夹</el-dropdown-item>
+                                    <el-dropdown-item command="folder">{{ ncfST('Frontend.185') }}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                             <el-dropdown trigger="click" @@command="handleUploadCommand">
                                 <el-button type="primary" size="small">
-                                    上传<i class="el-icon-arrow-down el-icon--right"></i>
+                                    {{ ncfST('Frontend.016') }}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </el-button>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="files">上传文件</el-dropdown-item>
-                                    <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
+                                    <el-dropdown-item command="files">{{ ncfST('Frontend.002') }}</el-dropdown-item>
+                                    <el-dropdown-item command="folder">{{ ncfST('Frontend.066') }}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -1585,7 +1585,7 @@
                             v-if="canGoParent"
                             class="file-manager-back-link"
                             href="javascript:void(0)"
-                            @@click="enterParentFolder">返回上一级</a>
+                            @@click="enterParentFolder">{{ ncfST('Frontend.170') }}</a>
                         <span v-if="canGoParent" class="file-manager-nav-divider">|</span>
                         <el-breadcrumb separator="/">
                             <el-breadcrumb-item><a href="javascript:void(0)" @@click="enterFolder(null)">{{ rootFolderName }}</a></el-breadcrumb-item>
@@ -1601,12 +1601,12 @@
                             <template slot="empty">
                                 <div class="file-manager-empty">
                                     <i class="el-icon-document"></i>
-                                    <strong>暂无文档</strong>
-                                    <el-button type="primary" size="mini" @@click="showUploadDialog">上传文件</el-button>
+                                    <strong>{{ ncfST('Frontend.133') }}</strong>
+                                    <el-button type="primary" size="mini" @@click="showUploadDialog">{{ ncfST('Frontend.002') }}</el-button>
                                 </div>
                             </template>
                             <el-table-column type="selection" width="48"></el-table-column>
-                            <el-table-column label="文件名" min-width="260">
+                            <el-table-column :label="ncfST('Frontend.122')" min-width="260">
                                 <template slot-scope="scope">
                                     <div class="file-manager-file-name-cell">
                                         <div class="file-manager-file-name-main">
@@ -1614,7 +1614,7 @@
                                             <i
                                                 class="file-manager-favorite-star"
                                                 :class="isFileFavorited(scope.row) ? 'el-icon-star-on is-on' : 'el-icon-star-off'"
-                                                :title="isFileFavorited(scope.row) ? '取消收藏' : '收藏'"
+                                                :title="isFileFavorited(scope.row) ? ncfST('Frontend.090') : ncfST('Frontend.119')"
                                                 @@click.stop="toggleFavorite(scope.row)">
                                             </i>
                                         </div>
@@ -1629,30 +1629,33 @@
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="更新者" width="120" show-overflow-tooltip>
+                            <el-table-column :label="ncfST('Frontend.136')" width="120" show-overflow-tooltip>
                                 <template slot-scope="scope">{{ updatedByLabel(scope.row) }}</template>
                             </el-table-column>
-                            <el-table-column prop="fileSize" label="大小" width="110">
+                            <el-table-column prop="fileSize" :label="ncfST('Frontend.014')" width="110">
                                 <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
                             </el-table-column>
-                            <el-table-column prop="uploadTime" label="更新时间" width="170">
+                            <el-table-column prop="uploadTime" :label="ncfST('Frontend.135')" width="170">
                                 <template slot-scope="scope">{{ dateFormatter(scope.row.uploadTime) }}</template>
                             </el-table-column>
-                            <el-table-column label="操作" width="120" fixed="right">
+                            <el-table-column :label="ncfST('Frontend.016')" width="90" fixed="right" class-name="ncf-table-actions-column">
                                 <template slot-scope="scope">
+                                    <el-tooltip :content="ncfST('Frontend.134')" placement="top" :open-delay="180">
                                     <el-dropdown trigger="click" @@command="handleRowCommand($event, scope.row)">
-                                        <el-button type="text" size="mini">更多<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+                                        <el-button type="text" size="mini" icon="el-icon-more"
+                                            class="ncf-table-action-more" :title="ncfST('Frontend.134')" :aria-label="ncfST('Frontend.134')"></el-button>
                                         <el-dropdown-menu slot="dropdown">
-                                            <el-dropdown-item command="download">下载</el-dropdown-item>
-                                            <el-dropdown-item command="preview" icon="el-icon-view">在线预览</el-dropdown-item>
-                                            <el-dropdown-item v-if="isSiteAsset" command="togglePublish">{{ scope.row.accessLevel === 100 ? '取消公开' : '公开' }}</el-dropdown-item>
-                                            <el-dropdown-item v-if="isSiteAsset && scope.row.publicUrl" command="copyUrl">复制 URL</el-dropdown-item>
-                                            <el-dropdown-item command="editNote">编辑备注</el-dropdown-item>
+                                            <el-dropdown-item command="download" icon="el-icon-download">{{ ncfST('Frontend.004') }}</el-dropdown-item>
+                                            <el-dropdown-item command="preview" icon="el-icon-view">{{ ncfST('Frontend.098') }}</el-dropdown-item>
+                                            <el-dropdown-item v-if="isSiteAsset" command="togglePublish" icon="el-icon-s-promotion">{{ scope.row.accessLevel === 100 ? ncfST('Frontend.241') : ncfST('Frontend.240') }}</el-dropdown-item>
+                                            <el-dropdown-item v-if="isSiteAsset && scope.row.publicUrl" command="copyUrl" icon="el-icon-document-copy">{{ ncfST('Frontend.099') }}</el-dropdown-item>
+                                            <el-dropdown-item command="editNote" icon="el-icon-edit">{{ ncfST('Frontend.156') }}</el-dropdown-item>
                                             <el-dropdown-item command="toggleQuickAccess" icon="el-icon-s-opportunity">
-                                                {{ isInQuickAccess(scope.row) ? '从快速访问移除' : '添加至快速访问' }}
+                                                {{ isInQuickAccess(scope.row) ? ncfST('Frontend.071') : ncfST('Frontend.147') }}
                                             </el-dropdown-item>
-                                            <el-dropdown-item command="manageTags" icon="el-icon-price-tag">标签管理</el-dropdown-item>
-                                            <el-dropdown-item command="delete" divided icon="el-icon-delete">删除</el-dropdown-item>
+                                            <el-dropdown-item command="manageTags" icon="el-icon-price-tag">{{ ncfST('Frontend.143') }}</el-dropdown-item>
+                                            <el-dropdown-item command="delete" divided icon="el-icon-delete"
+                                                class="ncf-table-action-danger">{{ ncfST('Frontend.007') }}</el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </template>
@@ -1679,14 +1682,14 @@
             <div class="file-manager-dashboard-grid">
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
-                        <span>文件库容量统计</span>
-                        <i class="el-icon-question" title="仅统计企业文档：展示文件数量与总大小随时间变化"></i>
+                        <span>{{ ncfST('Frontend.124') }}</span>
+                        <i class="el-icon-question" :title="ncfST('Frontend.070')"></i>
                     </div>
                     <div class="file-manager-dash-toolbar">
                         <el-radio-group v-model="dashboard.capacityRange" size="mini" @@change="onDashboardRangeChange">
-                            <el-radio-button label="7d">过去7天</el-radio-button>
-                            <el-radio-button label="30d">过去一个月</el-radio-button>
-                            <el-radio-button label="365d">过去一年</el-radio-button>
+                            <el-radio-button label="7d">{{ ncfST('Frontend.167') }}</el-radio-button>
+                            <el-radio-button label="30d">{{ ncfST('Frontend.168') }}</el-radio-button>
+                            <el-radio-button label="365d">{{ ncfST('Frontend.169') }}</el-radio-button>
                         </el-radio-group>
                         <el-date-picker
                             v-model="dashboard.capacityDates"
@@ -1694,8 +1697,8 @@
                             size="mini"
                             value-format="yyyy-MM-dd"
                             range-separator="~"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
+                            :start-placeholder="ncfST('Frontend.105')"
+                            :end-placeholder="ncfST('Frontend.154')"
                             style="width: 240px;"
                             @@change="loadDashboardStats">
                         </el-date-picker>
@@ -1705,17 +1708,17 @@
 
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
-                        <span>企业文档容量统计</span>
-                        <i class="el-icon-question" title="展示企业文档库当前已使用空间"></i>
+                        <span>{{ ncfST('Frontend.073') }}</span>
+                        <i class="el-icon-question" :title="ncfST('Frontend.102')"></i>
                     </div>
                     <div class="file-manager-dash-meta">
-                        <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
-                        <span class="file-manager-dash-used-tag">企业文档已使用：{{ dashboard.enterpriseUsed }}</span>
+                        <span>{{ ncfST('Frontend.178') }}：{{ dashboard.statsCutoff }}</span>
+                        <span class="file-manager-dash-used-tag">{{ ncfST('Frontend.179') }} {{ dashboard.enterpriseUsed }}</span>
                     </div>
                     <div class="file-manager-dash-org-list">
                         <div class="file-manager-dash-org-head">
-                            <span>租户/组织名称</span>
-                            <span>已用空间</span>
+                            <span>{{ ncfST('Frontend.151') }}</span>
+                            <span>{{ ncfST('Frontend.104') }}</span>
                         </div>
                         <div class="file-manager-dash-org-row" v-for="org in dashboard.orgUsages" :key="org.name">
                             <span class="file-manager-dash-org-name"><i class="el-icon-office-building"></i>{{ org.name }}</span>
@@ -1726,22 +1729,22 @@
 
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
-                        <span>文件大小统计</span>
-                        <i class="el-icon-question" title="按文件类型统计占用容量占比"></i>
+                        <span>{{ ncfST('Frontend.123') }}</span>
+                        <i class="el-icon-question" :title="ncfST('Frontend.111')"></i>
                     </div>
                     <div class="file-manager-dash-meta">
-                        <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
+                        <span>{{ ncfST('Frontend.178') }}：{{ dashboard.statsCutoff }}</span>
                     </div>
                     <div ref="sizeChart" class="file-manager-dash-chart"></div>
                 </section>
 
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
-                        <span>文件个数统计</span>
-                        <i class="el-icon-question" title="按文件类型统计文件数量占比"></i>
+                        <span>{{ ncfST('Frontend.121') }}</span>
+                        <i class="el-icon-question" :title="ncfST('Frontend.112')"></i>
                     </div>
                     <div class="file-manager-dash-meta">
-                        <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
+                        <span>{{ ncfST('Frontend.178') }}：{{ dashboard.statsCutoff }}</span>
                     </div>
                     <div ref="countChart" class="file-manager-dash-chart"></div>
                 </section>
@@ -1749,19 +1752,19 @@
         </div>
 
         <div class="file-manager-settings-panel" v-if="activeNavKey === 'settings' && uploadSettings">
-            <h2 class="file-manager-settings-title">上传设置<ncf-doc-help topic="files.uploads"></ncf-doc-help></h2>
-            <p class="file-manager-settings-desc">配置文件上传的允许类型、大小上限以及需要拦截的扩展名。保存后立即对后续上传生效（本机浏览器记忆）。</p>
+            <h2 class="file-manager-settings-title">{{ ncfST('Frontend.067') }}<ncf-doc-help topic="files.uploads"></ncf-doc-help></h2>
+            <p class="file-manager-settings-desc">{{ ncfST('Frontend.172') }}</p>
             <el-form class="file-manager-settings-form" label-position="top" size="small">
-                <el-form-item label="允许上传的文件类型">
+                <el-form-item :label="ncfST('Frontend.077')">
                     <el-input
                         type="textarea"
                         :rows="8"
                         v-model="uploadSettings.allowedTypesText"
-                        placeholder="每行一个扩展名，例如：.docx&#10;.xlsx&#10;.pdf">
+                        :placeholder="ncfST('Frontend.144')">
                     </el-input>
-                    <div class="file-manager-settings-hint">支持每行一个扩展名，也可使用逗号分隔。建议带点号（如 .docx）。留空表示不限制允许列表（仍受下方过滤类型约束）。</div>
+                    <div class="file-manager-settings-hint">{{ ncfST('Frontend.118') }}</div>
                 </el-form-item>
-                <el-form-item label="单文件上传大小上限（MB）">
+                <el-form-item :label="ncfST('Frontend.088')">
                     <el-input-number
                         v-model="uploadSettings.maxSizeMb"
                         :min="1"
@@ -1769,20 +1772,20 @@
                         :step="1"
                         controls-position="right">
                     </el-input-number>
-                    <div class="file-manager-settings-hint">默认 50 MB；超过此大小的文件将在上传前被拦截。</div>
+                    <div class="file-manager-settings-hint">{{ ncfST('Frontend.176') }}</div>
                 </el-form-item>
-                <el-form-item label="需要过滤的文件类型">
+                <el-form-item :label="ncfST('Frontend.174')">
                     <el-input
                         type="textarea"
                         :rows="6"
                         v-model="uploadSettings.blockedTypesText"
-                        placeholder="每行一个扩展名，例如：.exe&#10;.bat&#10;.js">
+                        :placeholder="ncfST('Frontend.145')">
                     </el-input>
-                    <div class="file-manager-settings-hint">黑名单扩展名，命中后禁止上传（优先级高于允许列表）。</div>
+                    <div class="file-manager-settings-hint">{{ ncfST('Frontend.175') }}</div>
                 </el-form-item>
                 <div class="file-manager-settings-actions">
-                    <el-button type="primary" @@click="saveUploadSettings">保存设置</el-button>
-                    <el-button @@click="resetUploadSettings">恢复默认</el-button>
+                    <el-button type="primary" @@click="saveUploadSettings">{{ ncfST('Frontend.075') }}</el-button>
+                    <el-button @@click="resetUploadSettings">{{ ncfST('Frontend.173') }}</el-button>
                 </div>
             </el-form>
         </div>
@@ -1790,19 +1793,19 @@
         <div class="file-manager-tags-panel" v-if="activeNavKey === 'tags' && tagManager">
             <div class="file-manager-tags-filter">
                 <div class="file-manager-tags-filter-item">
-                    <span>搜索</span>
+                    <span>{{ ncfST('Frontend.114') }}</span>
                     <el-input
                         v-model="tagManager.keyword"
                         size="small"
-                        placeholder="搜索标签名称"
+                        :placeholder="ncfST('Frontend.116')"
                         prefix-icon="el-icon-search"
                         clearable
                         @@keyup.enter.native="searchTags">
                     </el-input>
                 </div>
                 <div class="file-manager-tags-filter-item">
-                    <span>分类</span>
-                    <el-select v-model="tagManager.category" size="small" placeholder="选择分类" clearable>
+                    <span>{{ ncfST('Frontend.081') }}</span>
+                    <el-select v-model="tagManager.category" size="small" :placeholder="ncfST('Frontend.171')" clearable>
                         <el-option
                             v-for="item in tagManager.categoryOptions"
                             :key="item.value"
@@ -1812,29 +1815,29 @@
                     </el-select>
                 </div>
                 <div class="file-manager-tags-filter-item">
-                    <span>状态</span>
-                    <el-select v-model="tagManager.status" size="small" placeholder="全部" clearable>
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="启用" value="enabled"></el-option>
-                        <el-option label="停用" value="disabled"></el-option>
+                    <span>{{ ncfST('Frontend.148') }}</span>
+                    <el-select v-model="tagManager.status" size="small" :placeholder="ncfST('Frontend.079')" clearable>
+                        <el-option :label="ncfST('Frontend.079')" value=""></el-option>
+                        <el-option :label="ncfST('Frontend.095')" value="enabled"></el-option>
+                        <el-option :label="ncfST('Frontend.076')" value="disabled"></el-option>
                     </el-select>
                 </div>
                 <div class="file-manager-tags-filter-actions">
                     <el-button type="primary" size="small" icon="el-icon-search" @@click="searchTags"></el-button>
-                    <el-button type="text" size="small" @@click="resetTagFilters">重置</el-button>
+                    <el-button type="text" size="small" @@click="resetTagFilters">{{ ncfST('Frontend.173') }}</el-button>
                 </div>
             </div>
 
             <div class="file-manager-tags-toolbar">
-                <el-button type="primary" size="small" @@click="createTag">新增标签</el-button>
-                <el-button size="small" @@click="createTagCategory">新增分类</el-button>
+                <el-button type="primary" size="small" @@click="createTag">{{ ncfST('Frontend.129') }}</el-button>
+                <el-button size="small" @@click="createTagCategory">{{ ncfST('Frontend.128') }}</el-button>
                 <el-button size="small" @@click="expandTagRows">
-                    {{ tagManager.treeExpanded ? '收起' : '展开' }}<i class="el-icon-arrow-down el-icon--right"></i>
+                    {{ tagManager.treeExpanded ? ncfST('Frontend.191') : ncfST('Frontend.192') }}<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
-                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="enableSelectedTags">启用</el-button>
-                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="disableSelectedTags">停用</el-button>
-                <el-button size="small" @@click="importTags">导入</el-button>
-                <el-button size="small" @@click="exportTags">导出</el-button>
+                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="enableSelectedTags">{{ ncfST('Frontend.095') }}</el-button>
+                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="disableSelectedTags">{{ ncfST('Frontend.076') }}</el-button>
+                <el-button size="small" @@click="importTags">{{ ncfST('Frontend.100') }}</el-button>
+                <el-button size="small" @@click="exportTags">{{ ncfST('Frontend.101') }}</el-button>
             </div>
 
             <div class="file-manager-tags-table-wrap">
@@ -1852,31 +1855,31 @@
                     <template slot="empty">
                         <div class="file-manager-tags-empty">
                             <i class="el-icon-document"></i>
-                            <strong>暂无数据</strong>
+                            <strong>{{ ncfST('Frontend.132') }}</strong>
                         </div>
                     </template>
                     <el-table-column type="expand" width="44">
                         <template slot-scope="scope">
                             <div class="tag-row-actions">
-                                <el-button size="mini" @@click="editTagRow(scope.row)">编辑</el-button>
-                                <el-button size="mini" @@click="deleteTagRow(scope.row)">删除</el-button>
+                                <el-button size="mini" @@click="editTagRow(scope.row)">{{ ncfST('Frontend.155') }}</el-button>
+                                <el-button size="mini" @@click="deleteTagRow(scope.row)">{{ ncfST('Frontend.007') }}</el-button>
                                 <el-button size="mini" @@click="toggleTagRowStatus(scope.row)">
-                                    {{ isTagRowEnabled(scope.row) ? '停用' : '启用' }}
+                                    {{ isTagRowEnabled(scope.row) ? ncfST('Frontend.076') : ncfST('Frontend.095') }}
                                 </el-button>
                                 <el-button
                                     v-if="isTagCategoryRow(scope.row)"
                                     size="mini"
-                                    @@click="createTagUnder(scope.row)">新增标签</el-button>
+                                    @@click="createTagUnder(scope.row)">{{ ncfST('Frontend.189') }}</el-button>
                                 <el-button
                                     v-if="isTagCategoryRow(scope.row)"
                                     size="mini"
-                                    @@click="createTagCategoryUnder(scope.row)">新增分类</el-button>
+                                    @@click="createTagCategoryUnder(scope.row)">{{ ncfST('Frontend.187') }}</el-button>
                             </div>
                         </template>
                     </el-table-column>
                     <el-table-column type="selection" width="48"></el-table-column>
-                    <el-table-column prop="name" label="名称" min-width="200" show-overflow-tooltip></el-table-column>
-                    <el-table-column prop="type" label="类型" width="120">
+                            <el-table-column prop="name" :label="ncfST('Frontend.122')" min-width="200" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="type" :label="ncfST('Frontend.025')" width="120">
                         <template slot-scope="scope">
                             <el-tag
                                 class="file-manager-tags-type-tag"
@@ -1885,28 +1888,28 @@
                                 effect="plain">{{ scope.row.type }}</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="status" label="状态" width="100">
+                            <el-table-column prop="status" :label="ncfST('Frontend.148')" width="100">
                         <template slot-scope="scope">
                             <el-tag :type="isTagRowEnabled(scope.row) ? 'success' : 'info'" size="mini">
-                                {{ isTagRowEnabled(scope.row) ? '启用' : '已停用' }}
+                                {{ isTagRowEnabled(scope.row) ? ncfST('Frontend.095') : ncfST('Frontend.076') }}
                             </el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="tagCount" label="标签数量" width="110">
+                            <el-table-column prop="tagCount" :label="ncfST('Frontend.142')" width="110">
                         <template slot-scope="scope">
                             {{ scope.row.nodeType === 'tag' ? '-' : (scope.row.tagCount || 0) }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="updatedAt" label="最后更新时间" width="170"></el-table-column>
-                    <el-table-column prop="updatedBy" label="最后更新人" width="120" show-overflow-tooltip></el-table-column>
-                    <el-table-column prop="admin" label="管理员" width="120" show-overflow-tooltip>
+                            <el-table-column prop="updatedAt" :label="ncfST('Frontend.138')" width="170"></el-table-column>
+                            <el-table-column prop="updatedBy" :label="ncfST('Frontend.137')" width="120" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="admin" :label="ncfST('Frontend.153')" width="120" show-overflow-tooltip>
                         <template slot-scope="scope">
                             {{ scope.row.nodeType === 'tag' ? '-' : (scope.row.admin || '-') }}
                         </template>
                     </el-table-column>
                     <el-table-column width="48" align="center">
                         <template slot="header">
-                            <i class="el-icon-s-operation" title="列设置"></i>
+                            <i class="el-icon-s-operation" :title="ncfST('Frontend.122')"></i>
                         </template>
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-more" size="mini" @@click="openTagRowMenu(scope.row)"></el-button>
@@ -1923,7 +1926,7 @@
                     size="small"
                     icon="el-icon-delete"
                     :loading="!!recycleBin.emptying"
-                    @@click.stop.prevent="emptyRecycleBin">一键清空</el-button>
+                    @@click.stop.prevent="emptyRecycleBin">{{ ncfST('Frontend.064') }}</el-button>
             </div>
             <div class="file-manager-recycle-table-wrap">
                 <el-table
@@ -1935,11 +1938,11 @@
                     <template slot="empty">
                         <div class="file-manager-recycle-empty">
                             <i class="el-icon-document"></i>
-                            <strong>暂无文档</strong>
+                            <strong>{{ ncfST('Frontend.133') }}</strong>
                         </div>
                     </template>
                     <el-table-column type="selection" width="48"></el-table-column>
-                    <el-table-column label="文件名称" min-width="280">
+                    <el-table-column :label="ncfST('Frontend.122')" min-width="280">
                         <template slot-scope="scope">
                             <div class="file-manager-favorite-name-cell">
                                 <span class="file-manager-favorite-name" :title="scope.row.fileName">{{ scope.row.fileName }}</span>
@@ -1947,13 +1950,13 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip>
+                    <el-table-column prop="updatedBy" :label="ncfST('Frontend.136')" width="120" show-overflow-tooltip>
                         <template slot-scope="scope">{{ scope.row.updatedBy || updatedByLabel(scope.row) }}</template>
                     </el-table-column>
-                    <el-table-column prop="fileSize" label="大小" width="110">
+                    <el-table-column prop="fileSize" :label="ncfST('Frontend.014')" width="110">
                         <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
                     </el-table-column>
-                    <el-table-column prop="deletedAt" label="删除时间" width="180">
+                    <el-table-column prop="deletedAt" :label="ncfST('Frontend.086')" width="180">
                         <template slot-scope="scope">{{ dateFormatter(scope.row.deletedAt) }}</template>
                     </el-table-column>
                 </el-table>
@@ -1977,7 +1980,7 @@
                     <el-input
                         v-model="favoriteList.keyword"
                         size="small"
-                        placeholder="搜索文件/文件夹"
+                        :placeholder="ncfST('Frontend.115')"
                         prefix-icon="el-icon-search"
                         clearable
                         @@input="searchFavorites"
@@ -1995,17 +1998,17 @@
                     <template slot="empty">
                         <div class="file-manager-favorite-empty">
                             <i class="el-icon-document"></i>
-                            <strong>暂无文档</strong>
+                            <strong>{{ ncfST('Frontend.133') }}</strong>
                         </div>
                     </template>
-                    <el-table-column label="文件名称" min-width="280">
+                    <el-table-column :label="ncfST('Frontend.122')" min-width="280">
                         <template slot-scope="scope">
                             <div class="file-manager-favorite-name-cell">
                                 <div class="file-manager-file-name-main">
                                     <span class="file-manager-favorite-name" :title="scope.row.fileName">{{ scope.row.fileName }}</span>
                                     <i
                                         class="file-manager-favorite-star is-on el-icon-star-on"
-                                        title="取消收藏"
+                                        :title="ncfST('Frontend.090')"
                                         @@click.stop="toggleFavorite(scope.row)">
                                     </i>
                                 </div>
@@ -2013,13 +2016,13 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip>
+                    <el-table-column prop="updatedBy" :label="ncfST('Frontend.136')" width="120" show-overflow-tooltip>
                         <template slot-scope="scope">{{ scope.row.updatedBy || updatedByLabel(scope.row) }}</template>
                     </el-table-column>
-                    <el-table-column prop="fileSize" label="大小" width="110">
+                    <el-table-column prop="fileSize" :label="ncfST('Frontend.014')" width="110">
                         <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
                     </el-table-column>
-                    <el-table-column label="更新时间" width="180">
+                    <el-table-column :label="ncfST('Frontend.135')" width="180">
                         <template slot-scope="scope">{{ dateFormatter(scope.row.updatedAt || scope.row.uploadTime) }}</template>
                     </el-table-column>
                 </el-table>
@@ -2043,7 +2046,7 @@
                     <el-input
                         v-model="homePage.keyword"
                         size="small"
-                        placeholder="搜索文件/文件夹"
+                        :placeholder="ncfST('Frontend.115')"
                         prefix-icon="el-icon-search"
                         clearable
                         @@input="searchHomeRecent"
@@ -2053,19 +2056,19 @@
                 <div class="file-manager-home-actions">
                     <el-dropdown trigger="click" @@command="handleCreateCommand">
                         <el-button size="small">
-                            新建<i class="el-icon-arrow-down el-icon--right"></i>
+                            {{ ncfST('Frontend.021') }}<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="folder">新建文件夹</el-dropdown-item>
+                            <el-dropdown-item command="folder">{{ ncfST('Frontend.185') }}</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                     <el-dropdown trigger="click" @@command="handleUploadCommand">
                         <el-button type="primary" size="small">
-                            上传<i class="el-icon-arrow-down el-icon--right"></i>
+                            {{ ncfST('Frontend.016') }}<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="files">上传文件</el-dropdown-item>
-                            <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
+                            <el-dropdown-item command="files">{{ ncfST('Frontend.002') }}</el-dropdown-item>
+                            <el-dropdown-item command="folder">{{ ncfST('Frontend.066') }}</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
@@ -2073,22 +2076,22 @@
 
             <div class="file-manager-home-banner" v-if="!(homePage.quickAccess && homePage.quickAccess.length)">
                 <div class="file-manager-home-banner-text">
-                    <h3>灵活使用快速访问，畅享高效工作!</h3>
-                    <p>可将常用的文件和文件夹添加至「快速访问」，方便查找和使用。点击列表“更多”即可手动添加或移除快速访问</p>
+                    <h3>{{ ncfST('Frontend.147') }}</h3>
+                    <p>{{ ncfST('Frontend.091') }}</p>
                 </div>
                 <div class="file-manager-home-banner-art" aria-hidden="true"></div>
             </div>
 
             <div class="file-manager-home-quick-access" v-else>
-                <div class="file-manager-home-quick-title">快速访问</div>
+                <div class="file-manager-home-quick-title">{{ ncfST('Frontend.107') }}</div>
                 <div class="file-manager-home-quick-list">
-                    <div class="file-manager-home-quick-card" v-for="item in homePage.quickAccess" :key="item.id" @@dblclick.native="previewFile(item)" title="双击预览">
+                    <div class="file-manager-home-quick-card" v-for="item in homePage.quickAccess" :key="item.id" @@dblclick.native="previewFile(item)" :title="ncfST('Frontend.089')">
                         <span class="file-manager-home-quick-icon"><i class="el-icon-document"></i></span>
                         <span class="file-manager-home-quick-name" :title="item.fileName">{{ item.fileName }}</span>
                         <el-dropdown trigger="click" @@command="handleQuickAccessCommand($event, item)">
                             <el-button type="text" class="file-manager-home-quick-more" icon="el-icon-more"></el-button>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="remove">从快速访问移除</el-dropdown-item>
+                                <el-dropdown-item command="remove">{{ ncfST('Frontend.071') }}</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -2097,8 +2100,8 @@
 
             <div class="file-manager-home-recent">
                 <div class="file-manager-home-recent-title">
-                    <span>最近访问</span>
-                    <i class="el-icon-sort" title="排序"></i>
+                    <span>{{ ncfST('Frontend.139') }}</span>
+                    <i class="el-icon-sort" :title="ncfST('Frontend.113')"></i>
                 </div>
                 <div class="file-manager-home-table-wrap">
                     <el-table
@@ -2110,18 +2113,18 @@
                         <template slot="empty">
                             <div class="file-manager-home-empty">
                                 <i class="el-icon-document"></i>
-                                <strong>暂无文档</strong>
+                                <strong>{{ ncfST('Frontend.133') }}</strong>
                             </div>
                         </template>
-                        <el-table-column prop="fileName" label="文件名称" min-width="200" show-overflow-tooltip sortable></el-table-column>
-                        <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="fileSize" label="大小" width="110">
+                        <el-table-column prop="fileName" :label="ncfST('Frontend.122')" min-width="200" show-overflow-tooltip sortable></el-table-column>
+                        <el-table-column prop="updatedBy" :label="ncfST('Frontend.136')" width="120" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="fileSize" :label="ncfST('Frontend.014')" width="110">
                             <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
                         </el-table-column>
-                        <el-table-column prop="updatedAt" label="更新时间" width="170">
+                        <el-table-column prop="updatedAt" :label="ncfST('Frontend.135')" width="170">
                             <template slot-scope="scope">{{ dateFormatter(scope.row.updatedAt) }}</template>
                         </el-table-column>
-                        <el-table-column prop="accessedAt" label="访问时间" width="170">
+                        <el-table-column prop="accessedAt" :label="ncfST('Frontend.158')" width="170">
                             <template slot-scope="scope">{{ dateFormatter(scope.row.accessedAt) }}</template>
                         </el-table-column>
                     </el-table>
@@ -2141,14 +2144,14 @@
     <div class="file-manager-upload-toolbar">
         <el-dropdown trigger="click" @@command="handleUploadPickerCommand">
             <el-button size="small">
-                上传文件<i class="el-icon-arrow-down el-icon--right"></i>
+                {{ ncfST('Frontend.002') }}<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="files">上传文件</el-dropdown-item>
-                <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
+                <el-dropdown-item command="files">{{ ncfST('Frontend.002') }}</el-dropdown-item>
+                <el-dropdown-item command="folder">{{ ncfST('Frontend.066') }}</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
-        <el-button type="text" size="small" @@click="clearUploadList">清空列表</el-button>
+        <el-button type="text" size="small" @@click="clearUploadList">{{ ncfST('Frontend.146') }}</el-button>
     </div>
 
     <el-upload
@@ -2162,19 +2165,19 @@
         :on-change="handleFileChange"
         :before-upload="beforeUpload"
         :file-list="uploadDialog.fileList">
-        <div class="file-manager-upload-drop-hint">请将需要上传的文件/文件夹拖到此处</div>
+        <div class="file-manager-upload-drop-hint">{{ ncfST('Frontend.160') }}</div>
     </el-upload>
     <input ref="folderUploadInput" class="file-manager-folder-input" type="file" webkitdirectory directory multiple @@change="handleFolderSelection" />
 
     <div v-if="uploadDialog.fileList.length" class="file-manager-upload-filelist">
         <el-table :data="uploadDialog.fileList" size="mini" border max-height="180">
-            <el-table-column prop="name" label="文件名" min-width="220" show-overflow-tooltip></el-table-column>
-            <el-table-column label="大小" width="100">
+            <el-table-column prop="name" :label="ncfST('Frontend.122')" min-width="220" show-overflow-tooltip></el-table-column>
+            <el-table-column :label="ncfST('Frontend.014')" width="100">
                 <template slot-scope="scope">{{ formatFileSize(scope.row.size || (scope.row.raw && scope.row.raw.size) || 0) }}</template>
             </el-table-column>
-            <el-table-column label="备注" min-width="160">
+            <el-table-column :label="ncfST('Frontend.012')" min-width="160">
                 <template slot-scope="scope">
-                    <el-input v-model="scope.row.description" size="mini" placeholder="可选备注"></el-input>
+                    <el-input v-model="scope.row.description" size="mini" :placeholder="ncfST('Frontend.093')"></el-input>
                 </template>
             </el-table-column>
         </el-table>
@@ -2188,7 +2191,7 @@
         show-icon
         :title="uploadFolderSummary">
     </el-alert>
-    <div class="file-manager-upload-tip">{{ uploadExtensionHint }}。选择文件夹后会保留完整层级结构；每批最多 20 个文件，系统会自动分批上传。</div>
+    <div class="file-manager-upload-tip">{{ uploadExtensionHint }}。{{ ncfST('Frontend.219') }}</div>
     <el-progress v-if="uploadDialog.uploading" :percentage="uploadDialog.progress" :stroke-width="10" status="success" style="margin-top: 10px;"></el-progress>
 
     <span slot="footer" class="dialog-footer">
@@ -2197,27 +2200,27 @@
             size="small"
             @@click="submitUpload"
             :loading="uploadDialog.uploading">
-            开始上传
+            {{ ncfST('Frontend.182') }}
         </el-button>
     </span>
 </el-dialog>
 
-<el-dialog :title="folderDialog.editing ? '编辑文件夹' : '新建文件夹'" :visible.sync="folderDialog.visible" width="420px" append-to-body>
+<el-dialog :title="folderDialog.editing ? ncfST('Frontend.184') : ncfST('Frontend.185')" :visible.sync="folderDialog.visible" width="420px" append-to-body>
     <el-form :model="folderDialog.form" label-width="80px">
-        <el-form-item label="名称"><el-input v-model="folderDialog.form.name" placeholder="请输入文件夹名称"></el-input></el-form-item>
-        <el-form-item label="备注"><el-input type="textarea" v-model="folderDialog.form.description" placeholder="可选" rows="3"></el-input></el-form-item>
+        <el-form-item :label="ncfST('Frontend.011')"><el-input v-model="folderDialog.form.name" :placeholder="ncfST('Frontend.027')"></el-input></el-form-item>
+        <el-form-item :label="ncfST('Frontend.012')"><el-input type="textarea" v-model="folderDialog.form.description" :placeholder="ncfST('Frontend.092')" rows="3"></el-input></el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="folderDialog.visible=false">取消</el-button>
-        <el-button type="primary" @@click="submitFolder" :loading="folderDialog.loading">确定</el-button>
+        <el-button @@click="folderDialog.visible=false">{{ ncfST('Frontend.009') }}</el-button>
+        <el-button type="primary" @@click="submitFolder" :loading="folderDialog.loading">{{ ncfST('Frontend.024') }}</el-button>
     </span>
 </el-dialog>
 
-<el-dialog title="编辑备注" :visible.sync="noteDialog.visible" width="420px" append-to-body>
-    <el-input type="textarea" v-model="noteDialog.note" rows="4" placeholder="请输入文件备注"></el-input>
+<el-dialog :title="ncfST('Frontend.156')" :visible.sync="noteDialog.visible" width="420px" append-to-body>
+    <el-input type="textarea" v-model="noteDialog.note" rows="4" :placeholder="ncfST('Frontend.162')"></el-input>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="noteDialog.visible=false">取消</el-button>
-        <el-button type="primary" @@click="submitNote" :loading="noteDialog.loading">保存</el-button>
+        <el-button @@click="noteDialog.visible=false">{{ ncfST('Frontend.009') }}</el-button>
+        <el-button type="primary" @@click="submitNote" :loading="noteDialog.loading">{{ ncfST('Frontend.074') }}</el-button>
     </span>
 </el-dialog>
 
@@ -2232,27 +2235,27 @@
     <div class="file-manager-recycle-empty-body">
         <i class="el-icon-warning"></i>
         <div class="file-manager-recycle-empty-text">
-            <strong>文件清空后将彻底删除，无法恢复？</strong>
-            <p>确定继续吗？</p>
+            <strong>{{ ncfST('Frontend.125') }}</strong>
+            <p>{{ ncfST('Frontend.150') }}</p>
         </div>
     </div>
     <span slot="footer" class="dialog-footer">
-        <el-button :disabled="!!(recycleBin && recycleBin.emptying)" @@click.stop="cancelEmptyRecycleBin">取消</el-button>
-        <el-button type="danger" :loading="!!(recycleBin && recycleBin.emptying)" @@click.stop="confirmEmptyRecycleBin">确定</el-button>
+        <el-button :disabled="!!(recycleBin && recycleBin.emptying)" @@click.stop="cancelEmptyRecycleBin">{{ ncfST('Frontend.009') }}</el-button>
+        <el-button type="danger" :loading="!!(recycleBin && recycleBin.emptying)" @@click.stop="confirmEmptyRecycleBin">{{ ncfST('Frontend.024') }}</el-button>
     </span>
 </el-dialog>
 
 <el-dialog
-    title="标签管理"
+    :title="ncfST('Frontend.143')"
     :visible.sync="fileTagDialog.visible"
     width="520px"
     custom-class="file-tag-dialog"
     append-to-body
     @@closed="onFileTagDialogClosed">
     <div class="file-tag-dialog-toolbar">
-        <span class="file-tag-dialog-label">为文件设置标签</span>
+        <span class="file-tag-dialog-label">{{ ncfST('Frontend.069') }}</span>
     </div>
-    <p class="file-tag-dialog-hint">可选标签来自「标签管理」中已维护的数据；选择后将写入当前文件的标识字段。</p>
+    <p class="file-tag-dialog-hint">{{ ncfST('Frontend.094') }}</p>
     <el-select
         class="file-tag-dialog-select"
         v-model="fileTagDialog.selectedIds"
@@ -2260,7 +2263,7 @@
         filterable
         clearable
         collapse-tags
-        placeholder="请选择标签（来自标签管理）"
+        :placeholder="ncfST('Frontend.165')"
         :disabled="!(fileTagCatalogOptions && fileTagCatalogOptions.length)">
         <el-option-group
             v-for="group in fileTagCatalogGroups"
@@ -2285,48 +2288,48 @@
                 @@close="removeSelectedFileTag(item.id)">{{ item.name }}</el-tag>
         </template>
         <div v-else class="file-tag-dialog-empty">
-            <template v-if="fileTagCatalogOptions && fileTagCatalogOptions.length">请从上方选择标签</template>
-            <template v-else>暂无可用标签，请先在左侧「标签管理」中新增标签</template>
+            <template v-if="fileTagCatalogOptions && fileTagCatalogOptions.length">{{ ncfST('Frontend.159') }}</template>
+            <template v-else>{{ ncfST('Frontend.130') }}</template>
         </div>
     </div>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="fileTagDialog.visible=false">取消</el-button>
-        <el-button type="primary" @@click="submitFileTags" :loading="fileTagDialog.loading">确定</el-button>
+        <el-button @@click="fileTagDialog.visible=false">{{ ncfST('Frontend.009') }}</el-button>
+        <el-button type="primary" @@click="submitFileTags" :loading="fileTagDialog.loading">{{ ncfST('Frontend.024') }}</el-button>
     </span>
 </el-dialog>
 
 <el-dialog
-    :title="tagCategoryDialog.editing ? '编辑分类' : '新增分类'"
+    :title="tagCategoryDialog.editing ? ncfST('Frontend.186') : ncfST('Frontend.187')"
     :visible.sync="tagCategoryDialog.visible"
     width="520px"
     custom-class="tag-manage-dialog"
     append-to-body
     @@closed="onTagCategoryDialogClosed">
     <el-form ref="tagCategoryForm" :model="tagCategoryDialog.form" :rules="tagCategoryRules" label-width="100px" size="small">
-        <el-form-item label="分类名称" prop="name">
+        <el-form-item :label="ncfST('Frontend.082')" prop="name">
             <div class="tag-manage-name-field">
                 <el-input
                     v-model="tagCategoryDialog.form.name"
                     maxlength="50"
-                    placeholder="请输入分类名称，最多50个字符">
+                    :placeholder="ncfST('Frontend.161')">
                 </el-input>
                 <span class="tag-manage-lang-badge">CN</span>
             </div>
         </el-form-item>
-        <el-form-item label="分类描述" prop="description">
+        <el-form-item :label="ncfST('Frontend.083')" prop="description">
             <el-input
                 type="textarea"
                 v-model="tagCategoryDialog.form.description"
                 :rows="3"
                 maxlength="200"
                 show-word-limit
-                placeholder="分类描述">
+                :placeholder="ncfST('Frontend.083')">
             </el-input>
         </el-form-item>
-        <el-form-item label="所属分类" prop="parentId">
+        <el-form-item :label="ncfST('Frontend.081')" prop="parentId">
             <el-select
                 v-model="tagCategoryDialog.form.parentId"
-                placeholder="选择分类"
+                :placeholder="ncfST('Frontend.171')"
                 clearable
                 filterable
                 style="width: 100%;">
@@ -2338,10 +2341,10 @@
                 </el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="分类管理员" prop="admin">
+        <el-form-item :label="ncfST('Frontend.084')" prop="admin">
             <el-select
                 v-model="tagCategoryDialog.form.admin"
-                placeholder="请选择管理员"
+                :placeholder="ncfST('Frontend.166')"
                 clearable
                 filterable
                 allow-create
@@ -2357,43 +2360,43 @@
         </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="tagCategoryDialog.visible = false">取消</el-button>
-        <el-button type="primary" :loading="tagCategoryDialog.loading" @@click="submitTagCategory">保存</el-button>
+        <el-button @@click="tagCategoryDialog.visible = false">{{ ncfST('Frontend.009') }}</el-button>
+        <el-button type="primary" :loading="tagCategoryDialog.loading" @@click="submitTagCategory">{{ ncfST('Frontend.074') }}</el-button>
     </span>
 </el-dialog>
 
 <el-dialog
-    :title="tagCreateDialog.editing ? '编辑标签' : '新增标签'"
+    :title="tagCreateDialog.editing ? ncfST('Frontend.188') : ncfST('Frontend.189')"
     :visible.sync="tagCreateDialog.visible"
     width="520px"
     custom-class="tag-manage-dialog"
     append-to-body
     @@closed="onTagCreateDialogClosed">
     <el-form ref="tagCreateForm" :model="tagCreateDialog.form" :rules="tagCreateRules" label-width="100px" size="small">
-        <el-form-item label="标签名称" prop="name">
+        <el-form-item :label="ncfST('Frontend.140')" prop="name">
             <div class="tag-manage-name-field">
                 <el-input
                     v-model="tagCreateDialog.form.name"
                     maxlength="30"
-                    placeholder="请输入标签名称，最多30个字符">
+                    :placeholder="ncfST('Frontend.163')">
                 </el-input>
                 <span class="tag-manage-lang-badge">CN</span>
             </div>
         </el-form-item>
-        <el-form-item label="标签描述" prop="description">
+        <el-form-item :label="ncfST('Frontend.141')" prop="description">
             <el-input
                 type="textarea"
                 v-model="tagCreateDialog.form.description"
                 :rows="3"
                 maxlength="100"
                 show-word-limit
-                placeholder="请输入标签描述">
+                :placeholder="ncfST('Frontend.164')">
             </el-input>
         </el-form-item>
-        <el-form-item label="所属分类" prop="categoryId">
+        <el-form-item :label="ncfST('Frontend.081')" prop="categoryId">
             <el-select
                 v-model="tagCreateDialog.form.categoryId"
-                placeholder="选择分类"
+                :placeholder="ncfST('Frontend.171')"
                 clearable
                 filterable
                 style="width: 100%;">
@@ -2407,13 +2410,13 @@
         </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="tagCreateDialog.visible = false">取消</el-button>
-        <el-button type="primary" :loading="tagCreateDialog.loading" @@click="submitTagCreate">保存</el-button>
+        <el-button @@click="tagCreateDialog.visible = false">{{ ncfST('Frontend.009') }}</el-button>
+        <el-button type="primary" :loading="tagCreateDialog.loading" @@click="submitTagCreate">{{ ncfST('Frontend.074') }}</el-button>
     </span>
 </el-dialog>
 
 <el-dialog
-    :title="filePreviewDialog.fileName || '文件预览'"
+    :title="filePreviewDialog.fileName || ncfST('Frontend.190')"
     :visible.sync="filePreviewDialog.visible"
     width="92%"
     top="4vh"
@@ -2422,7 +2425,7 @@
     @@closed="onFilePreviewClosed">
     <div class="file-preview-toolbar">
         <span class="file-preview-toolbar-name">{{ filePreviewDialog.fileName }}</span>
-        <el-button size="mini" icon="el-icon-download" @@click="downloadFile(filePreviewDialog.row)" v-if="filePreviewDialog.row">下载</el-button>
+        <el-button size="mini" icon="el-icon-download" @@click="downloadFile(filePreviewDialog.row)" v-if="filePreviewDialog.row">{{ ncfST('Frontend.004') }}</el-button>
     </div>
     <div class="file-preview-body" v-loading="filePreviewDialog.loading">
         <iframe v-if="filePreviewDialog.mode === 'pdf'" class="file-preview-frame" :src="filePreviewDialog.url"></iframe>
@@ -2433,30 +2436,30 @@
         <div v-else-if="filePreviewDialog.mode === 'excel'" class="file-preview-excel" v-html="filePreviewDialog.html"></div>
         <div v-else-if="filePreviewDialog.mode === 'slides'" class="file-preview-slides">
             <div class="file-preview-slide" v-for="(slide, index) in filePreviewDialog.slides" :key="'slide-' + index">
-                <p class="file-preview-slide-title">幻灯片 {{ index + 1 }}</p>
+                <p class="file-preview-slide-title">{{ ncfST('Frontend.183') }} {{ index + 1 }}</p>
                 <pre class="file-preview-text">{{ slide }}</pre>
             </div>
         </div>
         <div v-else-if="filePreviewDialog.error" class="file-preview-error">{{ filePreviewDialog.error }}</div>
-        <div v-else class="file-preview-empty">暂无可预览内容</div>
+        <div v-else class="file-preview-empty">{{ ncfST('Frontend.194') }}</div>
     </div>
 </el-dialog>
 
-<el-dialog title="文件资源管理使用说明" :visible.sync="guideDialogVisible" width="520px" append-to-body>
+<el-dialog :title="ncfST('Frontend.127')" :visible.sync="guideDialogVisible" width="520px" append-to-body>
     <ol class="file-manager-guide">
-        <li><strong>先选用途：</strong>左侧「企业文档」用于管理知识库资料；站点静态资源可通过地址栏 scope 参数切换。</li>
-        <li><strong>再放位置：</strong>在中间目录树选择或新建文件夹；刷新页面后，当前用途和文件夹会保留在地址栏中。</li>
-        <li v-if="!isSiteAsset"><strong>知识库资料：</strong>上传后到“知识库管理 → 配置”关联资料，保存后点击“向量化”。</li>
-        <li v-else><strong>站点资源：</strong>上传默认私有；确认无误后点“公开”，再复制生成的 URL 到站点内容中。</li>
+        <li><strong>{{ ncfST('Frontend.078') }}</strong>{{ ncfST('Frontend.103') }}</li>
+        <li><strong>{{ ncfST('Frontend.080') }}</strong>{{ ncfST('Frontend.097') }}</li>
+        <li v-if="!isSiteAsset"><strong>{{ ncfST('Frontend.072') }}</strong>{{ ncfST('Frontend.065') }}</li>
+        <li v-else><strong>{{ ncfST('Frontend.072') }}</strong>{{ ncfST('Frontend.194') }}</li>
     </ol>
-    <span slot="footer" class="dialog-footer"><el-button type="primary" @@click="guideDialogVisible = false">我知道了</el-button></span>
+    <span slot="footer" class="dialog-footer"><el-button type="primary" @@click="guideDialogVisible = false">{{ ncfST('Frontend.109') }}</el-button></span>
 </el-dialog>
 
 @section scripts {
-    <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
+    @await Html.PartialAsync("_LocalizationScripts")
     <script src="~/lib/echarts/dist/echarts.js"></script>
     <script>
-        // 嵌入的 index.js 未重编时，模板已引用 fileTagDialog / isFileFavorited，必须在 new Vue 之前注入
+        // When the embedded index.js is stale, inject the referenced fileTagDialog / isFileFavorited fields before creating Vue.
         (function ensureFileTagDialogBeforeVue() {
             if (!window.Vue || window.Vue.__ncfFileTagDialogMixin) return;
             window.Vue.__ncfFileTagDialogMixin = true;
@@ -2520,7 +2523,7 @@
                             blockedTypesText: ''
                         },
                         tagManagerStorageKey: 'ncf.fileManager.tagManager',
-                        tagAdminOptions: ['管理员', '当前用户'],
+                        tagAdminOptions: [ncfST('Frontend.153'), ncfST('Frontend.226')],
                         tagCategoryDialog: {
                             visible: false,
                             loading: false,
@@ -2535,17 +2538,17 @@
                         },
                         tagCategoryRules: {
                             name: [
-                                { required: true, message: '请输入分类名称', trigger: 'blur' },
-                                { max: 50, message: '分类名称最多50个字符', trigger: 'blur' }
+                                { required: true, message: ncfST('Frontend.161'), trigger: 'blur' },
+                                { max: 50, message: ncfST('Frontend.281'), trigger: 'blur' }
                             ]
                         },
                         tagCreateRules: {
                             name: [
-                                { required: true, message: '请输入标签名称', trigger: 'blur' },
-                                { max: 30, message: '标签名称最多30个字符', trigger: 'blur' }
+                                { required: true, message: ncfST('Frontend.163'), trigger: 'blur' },
+                                { max: 30, message: ncfST('Frontend.282'), trigger: 'blur' }
                             ],
                             categoryId: [
-                                { required: true, message: '请选择所属分类', trigger: 'change' }
+                                { required: true, message: ncfST('Frontend.171'), trigger: 'change' }
                             ]
                         }
                     };
@@ -2574,7 +2577,7 @@
                         categories.forEach(function (cat) { known[cat.id] = true; });
                         var orphanTags = tags.filter(function (tag) { return !tag.categoryId || !known[tag.categoryId]; });
                         if (orphanTags.length) {
-                            groups.push({ id: '__other__', name: '未分类', tags: orphanTags });
+                            groups.push({ id: '__other__', name: ncfST('Frontend.220'), tags: orphanTags });
                         }
                         return groups;
                     },
@@ -2652,9 +2655,9 @@
                                     blockedTypesText: this.uploadSettings.blockedTypesText || ''
                                 })
                             );
-                            this.$message.success('上传设置已保存');
+                            this.$message.success(ncfST('Frontend.075'));
                         } catch (e) {
-                            this.$message.error('保存失败，请检查浏览器本地存储是否可用');
+                            this.$message.error(ncfST('Frontend.271'));
                         }
                     },
                     resetUploadSettings: function () {
@@ -2668,9 +2671,9 @@
                                     blockedTypesText: this.uploadSettings.blockedTypesText || ''
                                 })
                             );
-                            this.$message.success('已恢复默认上传设置');
+                            this.$message.success(ncfST('Frontend.108'));
                         } catch (e) {
-                            this.$message.error('恢复默认失败');
+                            this.$message.error(ncfST('Frontend.273'));
                         }
                     },
                     getMaxUploadSizeBytes: function () {
@@ -2683,15 +2686,15 @@
                         var ext = extMatch ? extMatch[0].toLowerCase() : '';
                         var blocked = this.parseExtensionList((this.uploadSettings && this.uploadSettings.blockedTypesText) || '');
                         if (ext && blocked.indexOf(ext) !== -1) {
-                            return '文件“' + name + '”类型 ' + ext + ' 已被过滤，无法上传。';
+                            return ncfST('Frontend.216', name, ext);
                         }
                         var allowed = this.parseExtensionList((this.uploadSettings && this.uploadSettings.allowedTypesText) || '');
                         if (allowed.length && (!ext || allowed.indexOf(ext) === -1)) {
-                            return '文件“' + name + '”类型不在允许上传列表中。';
+                            return ncfST('Frontend.217', name);
                         }
                         var maxBytes = this.getMaxUploadSizeBytes();
                         if (fileSize > maxBytes) {
-                            return '文件“' + name + '”超过 ' + Math.round(maxBytes / 1024 / 1024) + ' MB，无法上传。';
+                            return ncfST('Frontend.218', name, Math.round(maxBytes / 1024 / 1024));
                         }
                         return '';
                     },
@@ -2734,7 +2737,7 @@
                         }
                         if (index >= 0) {
                             list.splice(index, 1);
-                            this.$message.success('已从快速访问移除');
+                            this.$message.success(ncfST('Frontend.071'));
                         } else {
                             list.unshift({
                                 id: row.id,
@@ -2744,7 +2747,7 @@
                                 folderPathText: typeof this.buildFavoritePathText === 'function' ? this.buildFavoritePathText() : '',
                                 resourceScope: this.resourceScope
                             });
-                            this.$message.success('已添加至快速访问');
+                            this.$message.success(ncfST('Frontend.119'));
                         }
                         this.saveQuickAccessToStorage();
                     },
@@ -2796,7 +2799,7 @@
                     createTag: function () {
                         if (typeof this.loadTagManagerFromStorage === 'function') this.loadTagManagerFromStorage();
                         if (!(this.tagManager && this.tagManager.list && this.tagManager.list.length)) {
-                            this.$message.warning('请先新增分类后再创建标签');
+                            this.$message.warning(ncfST('Frontend.269'));
                             return;
                         }
                         this.tagCreateDialog = {
@@ -2846,7 +2849,7 @@
                             var editing = !!self.tagCategoryDialog.editing;
                             var currentId = form.id || '';
                             if (!name) {
-                                self.$message.warning('请输入分类名称');
+                                self.$message.warning(ncfST('Frontend.161'));
                                 return;
                             }
                             if (!self.tagManager) {
@@ -2857,7 +2860,7 @@
                                 });
                             }
                             if (form.parentId && form.parentId === currentId) {
-                                self.$message.warning('所属分类不能选择自己');
+                                self.$message.warning(ncfST('Frontend.260'));
                                 return;
                             }
                             var exists = (self.tagManager.list || []).some(function (row) {
@@ -2865,7 +2868,7 @@
                                 return String(row.name || '').toLowerCase() === name.toLowerCase();
                             });
                             if (exists) {
-                                self.$message.warning('分类名称已存在');
+                                self.$message.warning(ncfST('Frontend.274'));
                                 return;
                             }
                             self.tagCategoryDialog.loading = true;
@@ -2873,28 +2876,28 @@
                                 var now = self.formatTagDateTime(new Date());
                                 if (editing) {
                                     var target = (self.tagManager.list || []).find(function (row) { return row.id === currentId; });
-                                    if (!target) { self.$message.error('分类不存在'); return; }
+                                    if (!target) { self.$message.error(ncfST('Frontend.261')); return; }
                                     target.name = name;
                                     target.description = (form.description || '').trim();
                                     target.parentId = form.parentId || '';
                                     target.admin = form.admin || '-';
                                     target.updatedAt = now;
-                                    target.updatedBy = '当前用户';
-                                    self.$message.success('分类已更新');
+                            target.updatedBy = ncfST('Frontend.226');
+                                    self.$message.success(ncfST('Frontend.275'));
                                 } else {
                                     self.tagManager.list.unshift({
                                         id: 'cat-' + Date.now(),
                                         name: name,
                                         description: (form.description || '').trim(),
                                         parentId: form.parentId || '',
-                                        type: '分类',
+                                        type: ncfST('Frontend.081'),
                                         status: '启用',
                                         tagCount: 0,
                                         updatedAt: now,
-                                        updatedBy: '当前用户',
+                                        updatedBy: ncfST('Frontend.226'),
                                         admin: form.admin || '-'
                                     });
-                                    self.$message.success('分类已创建');
+                                    self.$message.success(ncfST('Frontend.276'));
                                 }
                                 self.syncTagCategoryOptions();
                                 self.saveTagManagerToStorage();
@@ -2917,16 +2920,16 @@
                             var editing = !!self.tagCreateDialog.editing;
                             var currentId = form.id || '';
                             if (!name) {
-                                self.$message.warning('请输入标签名称');
+                                self.$message.warning(ncfST('Frontend.163'));
                                 return;
                             }
                             if (!categoryId) {
-                                self.$message.warning('请选择所属分类');
+                                self.$message.warning(ncfST('Frontend.171'));
                                 return;
                             }
                             var category = (self.tagManager.list || []).find(function (row) { return row.id === categoryId; });
                             if (!category) {
-                                self.$message.warning('所属分类不存在，请重新选择');
+                                self.$message.warning(ncfST('Frontend.262'));
                                 return;
                             }
                             if (!Array.isArray(self.tagManager.tags)) self.tagManager.tags = [];
@@ -2936,7 +2939,7 @@
                                     && String(tag.name || '').toLowerCase() === name.toLowerCase();
                             });
                             if (dup) {
-                                self.$message.warning('该分类下已存在同名标签');
+                                self.$message.warning(ncfST('Frontend.277'));
                                 return;
                             }
                             self.tagCreateDialog.loading = true;
@@ -2944,20 +2947,20 @@
                                 var now = self.formatTagDateTime(new Date());
                                 if (editing) {
                                     var target = self.tagManager.tags.find(function (tag) { return tag.id === currentId; });
-                                    if (!target) { self.$message.error('标签不存在'); return; }
+                                    if (!target) { self.$message.error(ncfST('Frontend.263')); return; }
                                     var oldCategoryId = target.categoryId;
                                     target.name = name;
                                     target.description = (form.description || '').trim();
                                     target.categoryId = categoryId;
                                     target.categoryName = category.name;
                                     target.updatedAt = now;
-                                    target.updatedBy = '当前用户';
+                                    target.updatedBy = ncfST('Frontend.226');
                                     if (oldCategoryId !== categoryId) {
                                         var oldCat = (self.tagManager.list || []).find(function (row) { return row.id === oldCategoryId; });
                                         if (oldCat) oldCat.tagCount = Math.max(0, (oldCat.tagCount || 0) - 1);
                                         category.tagCount = (category.tagCount || 0) + 1;
                                     }
-                                    self.$message.success('标签已更新');
+                                    self.$message.success(ncfST('Frontend.278'));
                                 } else {
                                     self.tagManager.tags.unshift({
                                         id: 'tag-' + Date.now(),
@@ -2967,12 +2970,12 @@
                                         categoryName: category.name,
                                         status: '启用',
                                         updatedAt: now,
-                                        updatedBy: '当前用户'
+                                        updatedBy: ncfST('Frontend.226')
                                     });
                                     category.tagCount = (category.tagCount || 0) + 1;
                                     category.updatedAt = now;
-                                    category.updatedBy = '当前用户';
-                                    self.$message.success('标签已创建');
+                                    category.updatedBy = ncfST('Frontend.226');
+                                    self.$message.success(ncfST('Frontend.279'));
                                 }
                                 self.saveTagManagerToStorage();
                                 if (typeof self.searchTags === 'function') self.searchTags();
@@ -2987,7 +2990,7 @@
                         if (typeof this.loadFileTagMapFromStorage === 'function') this.loadFileTagMapFromStorage();
                         var catalog = (this.tagManager && this.tagManager.tags) || [];
                         if (!catalog.length) {
-                            this.$message.warning('请先在「标签管理」中维护标签后再设置');
+                            this.$message.warning(ncfST('Frontend.130'));
                         }
                         var existingItems = this.getFileTagItems(row);
                         var selectedIds = existingItems.map(function (item) { return item.id; }).filter(Boolean);
@@ -3091,7 +3094,7 @@
                             this.$set(row, 'tags', items.map(function (item) { return item.name; }));
                             this.$set(row, 'tagIds', items.map(function (item) { return item.id; }));
                             this.fileTagDialog.visible = false;
-                            this.$message.success(items.length ? '文件标签已更新' : '已清空文件标签');
+                            this.$message.success(items.length ? ncfST('Frontend.227') : ncfST('Frontend.228'));
                         } finally {
                             this.fileTagDialog.loading = false;
                         }
@@ -3101,7 +3104,7 @@
                         return (this.favoriteList.list || []).some(function (item) { return item.id === row.id; });
                     },
                     buildFavoritePathText: function () {
-                        var segments = [this.rootFolderName || '企业文档', this.orgName || ''].concat(
+                        var segments = [this.rootFolderName || ncfST('Frontend.289'), this.orgName || ''].concat(
                             (this.folderPath || []).map(function (item) { return item.name; })
                         ).filter(function (name) { return !!name; });
                         return segments.join(' > ');
@@ -3144,7 +3147,7 @@
                         if (index >= 0) {
                             list.splice(index, 1);
                             this.$set(row, 'isFavorite', false);
-                            this.$message.success('已取消收藏');
+                            this.$message.success(ncfST('Frontend.177'));
                         } else {
                             list.unshift({
                                 id: row.id,
@@ -3158,7 +3161,7 @@
                                 isFavorite: true
                             });
                             this.$set(row, 'isFavorite', true);
-                            this.$message.success('已加入收藏');
+                            this.$message.success(ncfST('Frontend.119'));
                         }
                         this.favoriteList.list = list;
                         this.saveFavoritesToStorage();
@@ -3168,7 +3171,7 @@
                     emptyRecycleBin: function () {
                         var list = (this.recycleBin && (this.recycleBin.list || this.recycleBin.displayList)) || [];
                         if (!list.length) {
-                            this.$message.info('回收站暂无文档');
+                            this.$message.info(ncfST('Frontend.133'));
                             return;
                         }
                         if (!this.recycleEmptyDialog) {
@@ -3189,7 +3192,7 @@
                             : (this.recycleBin.displayList || [])).slice();
                         if (!items.length) {
                             if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
-                            this.$message.info('回收站暂无文档');
+                            this.$message.info(ncfST('Frontend.133'));
                             return;
                         }
                         this.$set(this.recycleBin, 'emptying', true);
@@ -3218,13 +3221,13 @@
                                 localStorage.setItem(this.recycleStorageKey || 'ncf.fileManager.recycleBin', JSON.stringify(remaining));
                             } catch (e) { /* ignore */ }
                             if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
-                            if (remaining.length === 0) this.$message.success((result && result.message) || '一键清空成功');
-                            else if (remaining.length < items.length) this.$message.warning((result && result.message) || ('部分删除失败，仍有 ' + remaining.length + ' 个'));
-                            else this.$message.error((result && result.message) || '一键清空失败');
+                            if (remaining.length === 0) this.$message.success((result && result.message) || ncfST('Frontend.229'));
+                            else if (remaining.length < items.length) this.$message.warning((result && result.message) || ncfST('Frontend.231', remaining.length));
+                            else this.$message.error((result && result.message) || ncfST('Frontend.232'));
                         } catch (error) {
                             var data = error && error.response && error.response.data;
-                            var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title || data.msg)) || (error && error.message) || '请求失败';
-                            this.$message.error('一键清空失败：' + message);
+                            var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title || data.msg)) || (error && error.message) || ncfST('Frontend.280');
+                            this.$message.error(ncfST('Frontend.233', message));
                         } finally {
                             this.$set(this.recycleBin, 'emptying', false);
                         }
@@ -3238,7 +3241,7 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="~/js/Admin/FileManager/index.js" asp-append-version="true"></script>
     <script>
-        // 嵌入资源未重编时，仍保证「数据面板」可切换并渲染图表
+        // Keep the data dashboard switchable and render charts when embedded assets are stale.
         (function ensureFileManagerDashboard() {
             function pad(n) { return String(n).padStart(2, '0'); }
             function fmtDate(d) {
@@ -3272,18 +3275,18 @@
                         sizeTotalLabel: '0B',
                         countTotalLabel: '0',
                         sizeSlices: [
-                            { name: '文档', value: 0, color: '#95de64' },
-                            { name: '图片', value: 0, color: '#597ef7' },
-                            { name: '视频', value: 0, color: '#ffd666' },
-                            { name: '音频', value: 0, color: '#ff9c6e' },
-                            { name: '其他', value: 0, color: '#91d5ff' }
+                            { name: ncfST('Frontend.206'), value: 0, color: '#95de64' },
+                            { name: ncfST('Frontend.207'), value: 0, color: '#597ef7' },
+                            { name: ncfST('Frontend.208'), value: 0, color: '#ffd666' },
+                            { name: ncfST('Frontend.209'), value: 0, color: '#ff9c6e' },
+                            { name: ncfST('Frontend.210'), value: 0, color: '#91d5ff' }
                         ],
                         countSlices: [
-                            { name: '文档', value: 0, color: '#95de64' },
-                            { name: '图片', value: 0, color: '#597ef7' },
-                            { name: '视频', value: 0, color: '#ffd666' },
-                            { name: '音频', value: 0, color: '#ff9c6e' },
-                            { name: '其他', value: 0, color: '#91d5ff' }
+                            { name: ncfST('Frontend.206'), value: 0, color: '#95de64' },
+                            { name: ncfST('Frontend.207'), value: 0, color: '#597ef7' },
+                            { name: ncfST('Frontend.208'), value: 0, color: '#ffd666' },
+                            { name: ncfST('Frontend.209'), value: 0, color: '#ff9c6e' },
+                            { name: ncfST('Frontend.210'), value: 0, color: '#91d5ff' }
                         ]
                     });
                 } else if (!vm.dashboard.capacityTrend) {
@@ -3384,7 +3387,7 @@
                     if (typeof originalOnNavClick === 'function') return originalOnNavClick(item);
                 };
 
-                // 标签树形列表 + 行扩展操作（覆盖旧版扁平列表实现）
+                // Tag tree list and row expansion actions, replacing the legacy flat list.
                 if (!vm.tagManager) {
                     Vue.set(vm, 'tagManager', {
                         keyword: '', category: '', status: '', selectedIds: [],
@@ -3412,7 +3415,7 @@
                 } else if (vm.tagCreateDialog.editing == null) {
                     Vue.set(vm.tagCreateDialog, 'editing', false);
                 }
-                if (!vm.tagAdminOptions) Vue.set(vm, 'tagAdminOptions', ['管理员', '当前用户']);
+                if (!vm.tagAdminOptions) Vue.set(vm, 'tagAdminOptions', [ncfST('Frontend.153'), ncfST('Frontend.226')]);
                 if (!vm.tagManagerStorageKey) Vue.set(vm, 'tagManagerStorageKey', 'ncf.fileManager.tagManager');
 
                 vm.isTagRowEnabled = function (row) { return !!(row && row.status === '启用'); };
@@ -3437,7 +3440,7 @@
                     });
                     categories.forEach(function (cat) {
                         var hasParent = !!(cat.parentId && categoryMap[cat.parentId]);
-                        cat.type = hasParent ? '二级分类' : '一级分类';
+                        cat.type = hasParent ? ncfST('Frontend.222') : ncfST('Frontend.223');
                         cat.level = hasParent ? 2 : 1;
                         if (hasParent) {
                             categoryMap[cat.parentId].children.push(cat);
@@ -3446,7 +3449,7 @@
                     });
                     (this.tagManager.tags || []).forEach(function (row) {
                         var tag = Object.assign({}, row, {
-                            nodeType: 'tag', type: '标签', tagCount: '-', admin: '-', children: []
+                            nodeType: 'tag', type: ncfST('Frontend.224'), tagCount: '-', admin: '-', children: []
                         });
                         if (tag.categoryId && categoryMap[tag.categoryId]) {
                             categoryMap[tag.categoryId].children.push(tag);
@@ -3517,9 +3520,9 @@
                     if (!row) return;
                     var self = this;
                     var tip = row.nodeType === 'tag'
-                        ? '确定删除标签「' + row.name + '」吗？'
-                        : '确定删除分类「' + row.name + '」及其下属标签吗？';
-                    this.$confirm(tip, '提示', { type: 'warning' }).then(function () {
+                        ? ncfST('Frontend.257', row.name)
+                        : ncfST('Frontend.258', row.name);
+                    this.$confirm(tip, ncfST('Frontend.259'), { type: 'warning' }).then(function () {
                         if (row.nodeType === 'tag') {
                             self.tagManager.tags = (self.tagManager.tags || []).filter(function (item) { return item.id !== row.id; });
                             var category = (self.tagManager.list || []).find(function (item) { return item.id === row.categoryId; });
@@ -3536,7 +3539,7 @@
                         if (typeof self.syncTagCategoryOptions === 'function') self.syncTagCategoryOptions();
                         if (typeof self.saveTagManagerToStorage === 'function') self.saveTagManagerToStorage();
                         self.searchTags();
-                        self.$message.success('已删除');
+                        self.$message.success(ncfST('Frontend.039'));
                     }).catch(function () { /* cancel */ });
                 };
                 vm.toggleTagRowStatus = function (row) {
@@ -3557,11 +3560,11 @@
                     }
                     if (typeof this.saveTagManagerToStorage === 'function') this.saveTagManagerToStorage();
                     this.searchTags();
-                    this.$message.success(enabled ? '已停用' : '已启用');
+                    this.$message.success(enabled ? ncfST('Frontend.225') : ncfST('Frontend.095'));
                 };
                 vm.setSelectedTagStatus = function (enabled) {
                     var ids = (this.tagManager && this.tagManager.selectedIds) || [];
-                    if (!ids.length) { this.$message.warning('请先选择数据'); return; }
+                    if (!ids.length) { this.$message.warning(ncfST('Frontend.283')); return; }
                     var idMap = {};
                     ids.forEach(function (id) { idMap[id] = true; });
                     var nextStatus = enabled ? '启用' : '已停用';
@@ -3574,7 +3577,7 @@
                     });
                     if (typeof this.saveTagManagerToStorage === 'function') this.saveTagManagerToStorage();
                     this.searchTags();
-                    this.$message.success(enabled ? '已启用所选项目' : '已停用所选项目');
+                    this.$message.success(enabled ? ncfST('Frontend.095') : ncfST('Frontend.225'));
                 };
                 vm.enableSelectedTags = function () { this.setSelectedTagStatus(true); };
                 vm.disableSelectedTags = function () { this.setSelectedTagStatus(false); };
@@ -3582,7 +3585,7 @@
                 vm.createTag = function (presetCategoryId) {
                     if (typeof this.loadTagManagerFromStorage === 'function') this.loadTagManagerFromStorage();
                     if (!(this.tagManager && this.tagManager.list && this.tagManager.list.length)) {
-                        this.$message.warning('请先新增分类后再创建标签');
+                        this.$message.warning(ncfST('Frontend.269'));
                         return;
                     }
                     this.tagCreateDialog = {
@@ -3711,7 +3714,7 @@
                 vm.emptyRecycleBin = function () {
                     var list = (this.recycleBin && (this.recycleBin.list || this.recycleBin.displayList)) || [];
                     if (!list.length) {
-                        this.$message.info('回收站暂无文档');
+                        this.$message.info(ncfST('Frontend.133'));
                         return;
                     }
                     if (!this.recycleEmptyDialog) {
@@ -3732,7 +3735,7 @@
                         : (this.recycleBin.displayList || [])).slice();
                     if (!items.length) {
                         if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
-                        this.$message.info('回收站暂无文档');
+                        this.$message.info(ncfST('Frontend.133'));
                         return;
                     }
                     this.$set(this.recycleBin, 'emptying', true);
@@ -3774,8 +3777,8 @@
                                 deletedCount: successFallback,
                                 failedIds: remainingFallback.map(function (x) { return x.id; }),
                                 message: remainingFallback.length === 0
-                                    ? '一键清空成功'
-                                    : ('已删除 ' + successFallback + ' 个，失败 ' + remainingFallback.length + ' 个' + (lastError ? '：' + lastError : ''))
+                                    ? ncfST('Frontend.229')
+                                    : ncfST('Frontend.230', successFallback, remainingFallback.length, lastError || '-')
                             };
                         }
                         var failedIds = (result && result.failedIds) || [];
@@ -3790,16 +3793,16 @@
                         this.loadRecycleBin();
                         if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
                         if (remaining.length === 0) {
-                            this.$message.success((result && result.message) || '一键清空成功');
+                            this.$message.success((result && result.message) || ncfST('Frontend.229'));
                         } else if (remaining.length < items.length) {
-                            this.$message.warning((result && result.message) || ('部分文件删除失败，仍有 ' + remaining.length + ' 个留在回收站'));
+                            this.$message.warning((result && result.message) || ncfST('Frontend.231', remaining.length));
                         } else {
-                            this.$message.error((result && result.message) || '一键清空失败，文件未能彻底删除');
+                            this.$message.error((result && result.message) || ncfST('Frontend.232'));
                         }
                     } catch (error) {
                         var errData = error && error.response && error.response.data;
-                        var message = typeof errData === 'string' ? errData : (errData && (errData.errorMessage || errData.message || errData.title || errData.msg)) || (error && error.message) || '请求失败';
-                        this.$message.error('一键清空失败：' + message);
+                        var message = typeof errData === 'string' ? errData : (errData && (errData.errorMessage || errData.message || errData.title || errData.msg)) || (error && error.message) || ncfST('Frontend.280');
+                        this.$message.error(ncfST('Frontend.233', message));
                     } finally {
                         this.$set(this.recycleBin, 'emptying', false);
                     }
@@ -3808,17 +3811,17 @@
                     try {
                         var shortName = String(row.fileName || '').replace(/\.[^.]+$/, '') || row.fileName;
                         await this.$confirm(
-                            '此操作将文件放至回收站，是否继续？',
-                            '是否删除: ' + shortName,
-                            { type: 'warning', confirmButtonText: '确定', cancelButtonText: '取消' }
+                            ncfST('Frontend.236'),
+                            ncfST('Frontend.237', shortName),
+                            { type: 'warning', confirmButtonText: ncfST('Frontend.024'), cancelButtonText: ncfST('Frontend.038') }
                         );
                         this.moveFileToRecycleBin(row);
-                        this.$message.success('已移至回收站');
+                        this.$message.success(ncfST('Frontend.238'));
                     } catch (error) {
                         if (error !== 'cancel') {
                             var data = error && error.response && error.response.data;
                             var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
-                            this.$message.error('删除失败：' + (message || (error && error.message) || '请求失败'));
+                            this.$message.error(ncfST('Frontend.239', message || (error && error.message) || ncfST('Frontend.280')));
                         }
                     }
                 };
@@ -3865,7 +3868,7 @@
                     } catch (e) { /* ignore */ }
                 };
                 vm.buildFavoritePathText = function () {
-                    var segments = [this.rootFolderName || '企业文档', this.orgName || ''].concat(
+                    var segments = [this.rootFolderName || ncfST('Frontend.289'), this.orgName || ''].concat(
                         (this.folderPath || []).map(function (item) { return item.name; })
                     ).filter(function (name) { return !!name; });
                     return segments.join(' > ');
@@ -3893,7 +3896,7 @@
                     if (index >= 0) {
                         list.splice(index, 1);
                         this.$set(row, 'isFavorite', false);
-                        this.$message.success('已取消收藏');
+                        this.$message.success(ncfST('Frontend.177'));
                     } else {
                         list.unshift({
                             id: row.id,
@@ -3907,7 +3910,7 @@
                             isFavorite: true
                         });
                         this.$set(row, 'isFavorite', true);
-                        this.$message.success('已加入收藏');
+                        this.$message.success(ncfST('Frontend.119'));
                     }
                     this.favoriteList.list = list;
                     this.saveFavoritesToStorage();
@@ -3993,7 +3996,7 @@
                     }
                     if (index >= 0) {
                         list.splice(index, 1);
-                        this.$message.success('已从快速访问移除');
+                        this.$message.success(ncfST('Frontend.071'));
                     } else {
                         list.unshift({
                             id: row.id,
@@ -4003,7 +4006,7 @@
                             folderPathText: typeof this.buildFavoritePathText === 'function' ? this.buildFavoritePathText() : '',
                             resourceScope: this.resourceScope
                         });
-                        this.$message.success('已添加至快速访问');
+                        this.$message.success(ncfST('Frontend.119'));
                     }
                     this.saveQuickAccessToStorage();
                 };
@@ -4070,8 +4073,8 @@
                         this.uploadSettings = defaults;
                     }
                 };
-                // el-button 的 click 会用按钮实例调用监听函数。Vue 初始化时会把 methods 绑到页面实例，
-                // 这里在 new Vue 之后覆盖方法，必须重新 bind，否则 this 指向按钮，getDefaultUploadSettings 不存在。
+                // el-button invokes the listener with the button instance. Vue normally binds methods to the page instance;
+                // rebind methods after creating Vue so this does not point to the button.
                 vm.saveUploadSettings = function () {
                     if (!this.uploadSettings) this.uploadSettings = this.getDefaultUploadSettings();
                     var maxSizeMb = Number(this.uploadSettings.maxSizeMb);
@@ -4087,9 +4090,9 @@
                                 blockedTypesText: this.uploadSettings.blockedTypesText || ''
                             })
                         );
-                        this.$message.success('上传设置已保存');
+                            this.$message.success(ncfST('Frontend.270'));
                     } catch (e) {
-                        this.$message.error('保存失败，请检查浏览器本地存储是否可用');
+                            this.$message.error(ncfST('Frontend.271'));
                     }
                 }.bind(vm);
                 vm.resetUploadSettings = function () {
@@ -4103,9 +4106,9 @@
                                 blockedTypesText: this.uploadSettings.blockedTypesText || ''
                             })
                         );
-                        this.$message.success('已恢复默认上传设置');
+                            this.$message.success(ncfST('Frontend.272'));
                     } catch (e) {
-                        this.$message.error('恢复默认失败');
+                            this.$message.error(ncfST('Frontend.273'));
                     }
                 }.bind(vm);
                 vm.getMaxUploadSizeBytes = function () {
@@ -4118,15 +4121,15 @@
                     var ext = extMatch ? extMatch[0].toLowerCase() : '';
                     var blocked = this.parseExtensionList((this.uploadSettings && this.uploadSettings.blockedTypesText) || '');
                     if (ext && blocked.indexOf(ext) !== -1) {
-                        return '文件“' + name + '”类型 ' + ext + ' 已被过滤，无法上传。';
+                        return ncfST('Frontend.216', name, ext);
                     }
                     var allowed = this.parseExtensionList((this.uploadSettings && this.uploadSettings.allowedTypesText) || '');
                     if (allowed.length && (!ext || allowed.indexOf(ext) === -1)) {
-                        return '文件“' + name + '”类型不在允许上传列表中。';
+                        return ncfST('Frontend.217', name);
                     }
                     var maxBytes = this.getMaxUploadSizeBytes();
                     if (fileSize > maxBytes) {
-                        return '文件“' + name + '”超过 ' + Math.round(maxBytes / 1024 / 1024) + ' MB，无法上传。';
+                        return ncfST('Frontend.218', name, Math.round(maxBytes / 1024 / 1024));
                     }
                     return '';
                 };
@@ -4135,7 +4138,7 @@
                     vm.loadUploadSettingsFromStorage();
                 }
 
-                // 未重编 index.js 时，仍用设置校验上传
+                // Validate uploads with the settings even when index.js is stale.
                 if (typeof vm.createUploadBatches === 'function' && !vm.__uploadSettingsBatchPatched) {
                     vm.__uploadSettingsBatchPatched = true;
                     var originalCreateUploadBatches = vm.createUploadBatches.bind(vm);
@@ -4152,12 +4155,12 @@
                         var batchBytes = 0;
                         (fileList || []).forEach(function (file) {
                             var rawFile = file.raw || file;
-                            if (!rawFile || !rawFile.size) throw new Error('存在无法读取的文件，请重新选择。');
+                            if (!rawFile || !rawFile.size) throw new Error(ncfST('Frontend.248'));
                             if (typeof self.validateUploadFile === 'function') {
                                 var reason = self.validateUploadFile(file.name || rawFile.name, rawFile.size);
                                 if (reason) throw new Error(reason);
                             } else if (rawFile.size > maxBytes) {
-                                throw new Error('文件“' + file.name + '”超过 ' + maxMb + ' MB，无法上传。');
+                                throw new Error(ncfST('Frontend.218', file.name, maxMb));
                             }
                             if (batch.length && (batch.length >= maxFilesPerUpload || batchBytes + rawFile.size > maxTotalUploadBytes)) {
                                 batches.push(batch);
@@ -4188,8 +4191,8 @@
                 if (!vm.$options.computed) vm.$options.computed = {};
                 if (typeof vm.getUploadDialogTitle !== 'function') {
                     vm.getUploadDialogTitle = function () {
-                        var segments = [this.rootFolderName || '根目录'].concat((this.folderPath || []).map(function (item) { return item.name; }));
-                        return '上传文件到 【/' + segments.join('/') + '】 --支持断点续传';
+                        var segments = [this.rootFolderName || ncfST('Frontend.023')].concat((this.folderPath || []).map(function (item) { return item.name; }));
+                        return ncfST('Frontend.234', segments.join('/'));
                     };
                 }
 
@@ -4325,22 +4328,22 @@
                                     if (!params || !params.length) return '';
                                     var lines = [params[0].axisValue];
                                     params.forEach(function (p) {
-                                        var unit = p.seriesName === '文件数量' ? ' 个' : ' MB';
+                                        var unit = p.seriesName === ncfST('Frontend.284') ? ' ' + ncfST('Frontend.288') : ' MB';
                                         lines.push(p.marker + p.seriesName + '：' + p.data + unit);
                                     });
                                     return lines.join('<br/>');
                                 }
                             },
-                            legend: { bottom: 0, data: ['文件数量', '总大小'] },
+                            legend: { bottom: 0, data: [ncfST('Frontend.284'), ncfST('Frontend.285')] },
                             grid: { left: 48, right: 56, top: 28, bottom: 48 },
                             xAxis: { type: 'category', boundaryGap: false, data: labels },
                             yAxis: [
-                                { type: 'value', name: '数量', minInterval: 1, axisLabel: { formatter: '{value}' }, splitLine: { lineStyle: { type: 'dashed' } } },
-                                { type: 'value', name: '大小', axisLabel: { formatter: '{value}MB' }, splitLine: { show: false } }
+                                { type: 'value', name: ncfST('Frontend.286'), minInterval: 1, axisLabel: { formatter: '{value}' }, splitLine: { lineStyle: { type: 'dashed' } } },
+                                { type: 'value', name: ncfST('Frontend.287'), axisLabel: { formatter: '{value}MB' }, splitLine: { show: false } }
                             ],
                             series: [
-                                { name: '文件数量', type: 'line', smooth: true, yAxisIndex: 0, data: fileCounts, areaStyle: { opacity: 0.08 } },
-                                { name: '总大小', type: 'line', smooth: true, yAxisIndex: 1, data: sizeMb }
+                                { name: ncfST('Frontend.284'), type: 'line', smooth: true, yAxisIndex: 0, data: fileCounts, areaStyle: { opacity: 0.08 } },
+                                { name: ncfST('Frontend.285'), type: 'line', smooth: true, yAxisIndex: 1, data: sizeMb }
                             ]
                         }, true);
                     }
@@ -4364,11 +4367,11 @@
                     var countChart = this.getOrCreateChart(this.$refs.countChart);
                     if (countChart) {
                         countChart.setOption({
-                            tooltip: { trigger: 'item', formatter: '{b}: {c} 个 ({d}%)' },
+                            tooltip: { trigger: 'item', formatter: '{b}: {c} ' + ncfST('Frontend.288') + ' ({d}%)' },
                             legend: { bottom: 0 },
                             series: [{
                                 type: 'pie', radius: ['48%', '68%'], center: ['50%', '46%'],
-                                label: { formatter: '{b}\n{c}个' },
+                                label: { formatter: '{b}\n{c}' + ncfST('Frontend.288') },
                                 data: (countSlices.length ? countSlices : this.dashboard.countSlices).map(function (x) {
                                     return { name: x.name, value: Number(x.value || 0), itemStyle: { color: x.color } };
                                 })
@@ -4379,7 +4382,7 @@
                     [capacityChart, sizeChart, countChart].forEach(function (c) { if (c) c.resize(); });
                 };
 
-                // 修复列表解析：PagedList 序列化为数组时，原先取 result.data/items 会得到空表
+                // Handle list parsing when PagedList serializes as an array instead of result.data/items.
                 vm.getList = async function () {
                     var pageUrlLocal = window.location.pathname || '/Admin/FileManager/Index';
                     this.tableLoading = true;
@@ -4401,7 +4404,7 @@
                     } catch (error) {
                         var data = error && error.response && error.response.data;
                         var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
-                        this.$message.error('获取文件列表失败：' + (message || (error && error.message) || '请求失败'));
+                        this.$message.error(ncfST('Frontend.030') + ': ' + (message || (error && error.message) || ncfST('Frontend.280')));
                     } finally {
                         this.tableLoading = false;
                     }
@@ -4488,7 +4491,7 @@
                     this.loadFileTagMapFromStorage();
                     var catalog = (this.tagManager && this.tagManager.tags) || [];
                     if (!catalog.length) {
-                        this.$message.warning('请先在「标签管理」中维护标签后再设置');
+                        this.$message.warning(ncfST('Frontend.130'));
                     }
                     var existingItems = this.getFileTagItems(row);
                     var selectedIds = existingItems.map(function (item) { return item.id; }).filter(Boolean);
@@ -4528,7 +4531,7 @@
                         this.$set(row, 'tags', items.map(function (item) { return item.name; }));
                         this.$set(row, 'tagIds', items.map(function (item) { return item.id; }));
                         this.fileTagDialog.visible = false;
-                        this.$message.success(items.length ? '文件标签已更新' : '已清空文件标签');
+                        this.$message.success(items.length ? ncfST('Frontend.227') : ncfST('Frontend.228'));
                     } finally {
                         this.fileTagDialog.loading = false;
                     }
@@ -4609,10 +4612,10 @@
                     };
                     vm.previewFile = async function (row) {
                         if (!row || row.id == null) {
-                            this.$message.warning('当前项无法预览');
+                            this.$message.warning(ncfST('Frontend.131'));
                             return;
                         }
-                        var fileName = row.fileName || row.name || '未命名文件';
+                        var fileName = row.fileName || row.name || ncfST('Frontend.235');
                         var kind = this.getPreviewKind(fileName);
                         var pageUrl = window.location.pathname || '/Admin/FileManager/Index';
                         var previewUrl = this.buildPreviewUrl(row.id);
@@ -4635,12 +4638,12 @@
                             }
                             if (kind === 'legacy-office') {
                                 this.filePreviewDialog.mode = 'error';
-                                this.filePreviewDialog.error = '旧版 Office 格式（.doc/.xls/.ppt）暂不支持在线预览，请下载后查看。';
+                                this.filePreviewDialog.error = ncfST('Frontend.200');
                                 return;
                             }
                             if (kind === 'unsupported') {
                                 this.filePreviewDialog.mode = 'error';
-                                this.filePreviewDialog.error = '该文件类型暂不支持在线预览，请尝试下载后查看。';
+                                this.filePreviewDialog.error = ncfST('Frontend.201');
                                 return;
                             }
                             var response = await axios.get(previewUrl, { responseType: 'arraybuffer' });
@@ -4648,7 +4651,7 @@
                             if (kind === 'docx' && typeof mammoth !== 'undefined') {
                                 var docResult = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
                                 this.filePreviewDialog.mode = 'html';
-                                this.filePreviewDialog.html = docResult.value || '<p>文档为空</p>';
+                                this.filePreviewDialog.html = docResult.value || `<p>${ncfST('Frontend.202')}</p>`;
                                 return;
                             }
                             if (kind === 'xlsx' && typeof XLSX !== 'undefined') {
@@ -4656,7 +4659,7 @@
                                 var sheetName = workbook.SheetNames && workbook.SheetNames[0];
                                 if (!sheetName) {
                                     this.filePreviewDialog.mode = 'error';
-                                    this.filePreviewDialog.error = 'Excel 文件中没有可预览的工作表。';
+                            this.filePreviewDialog.error = ncfST('Frontend.203');
                                     return;
                                 }
                                 this.filePreviewDialog.mode = 'excel';
@@ -4685,12 +4688,12 @@
                                 return;
                             }
                             this.filePreviewDialog.mode = 'error';
-                            this.filePreviewDialog.error = '暂不支持该文件类型的在线预览。';
+                            this.filePreviewDialog.error = ncfST('Frontend.204');
                         } catch (error) {
                             this.filePreviewDialog.mode = 'error';
                             var data = error && error.response && error.response.data;
                             var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
-                            this.filePreviewDialog.error = '预览失败：' + (message || (error && error.message) || '请求失败');
+                            this.filePreviewDialog.error = ncfST('Frontend.205', message || (error && error.message) || ncfST('Frontend.280'));
                         } finally {
                             this.filePreviewDialog.loading = false;
                         }

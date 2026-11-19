@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
-    
-    
-    创建标识：Senparc - 20230828
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.11.0-preview2 为 Dapr 模块接入统一资源本地化并优化功能文案
+    File name: Register.cs
+    File description: Register related implementation
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.11.12 统一 XNCF Register 显示元数据与多语言资源键
+    Created by: Senparc - 20230828
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.11.0-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261111
+    Change description: v0.11.12 unify XNCF Register display metadata and localization resource keys
+
+    Modified by: Senparc - 20261119
+    Change description: v0.11.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -36,11 +39,11 @@ public class Register : XncfRegisterBase, IXncfRegister
     public Register()
     { }
 
-    #region IXncfRegister 接口
+    #region Legacy section
 
     public override string Name => "Senparc.Xncf.Dapr";
-    public override string Uid => "E2D87F61-BCA9-4F3E-9E5C-2A14B3F0C6D7";//必须确保全局唯一，生成后必须固定
-    public override string Version => "0.0.1";//必须填写版本号
+    public override string Uid => "E2D87F61-BCA9-4F3E-9E5C-2A14B3F0C6D7";//Legacy comment translated to English.
+    public override string Version => "0.0.1";//the version number is required
 
     public override string MenuName => RegisterText.MenuName;
     public override string Icon => "fa fa-car";

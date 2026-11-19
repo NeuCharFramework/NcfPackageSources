@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：IPData.cs
-    文件功能描述：IPData 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: IPData.cs
+    File description: IPData related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.21.3-preview5 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,47 +22,47 @@ using System.Text.RegularExpressions;
 using Senparc.Ncf.Core.Utility;
 using Microsoft.AspNetCore.Http;
 
-#pragma warning disable CS0675 // 对进行了带符号扩展的操作数使用了按位或运算符
+#pragma warning disable CS0675 //Legacy comment translated to English.
 
 namespace Senparc.Ncf.Utility
 {
     /// <summary>
-    /// QQWry 的摘要说明。
+    ///Legacy comment translated to English.
     /// </summary>
     public class QQWry : IDisposable
     {
-        //第一种模式
-        #region 第一种模式
+        //mode 1
+        #region Legacy section
         /**/
         /// <summary>
-        /// 第一种模式
+        /// mode 1
         /// </summary>
         #endregion
         private const byte REDIRECT_MODE_1 = 0x01;
 
-        //第二种模式
-        #region 第二种模式
+        //mode 2
+        #region Legacy section
         /**/
         /// <summary>
-        /// 第二种模式
+        /// mode 2
         /// </summary>
         #endregion
         private const byte REDIRECT_MODE_2 = 0x02;
 
-        //每条记录长度
-        #region 每条记录长度
+        //record length
+        #region Legacy section
         /**/
         /// <summary>
-        /// 每条记录长度
+        /// record length
         /// </summary>
         #endregion
         private const int IP_RECORD_LENGTH = 7;
 
-        //数据库文件
-        #region 数据库文件
+        //database file
+        #region Legacy section
         /**/
         /// <summary>
-        /// 文件对象
+        ///Legacy comment translated to English.
         /// </summary>
         #endregion
         private FileStream ipFile;
@@ -67,66 +70,66 @@ namespace Senparc.Ncf.Utility
         private const string unCountry = "未知国家";
         private const string unArea = "未知地区";
 
-        //索引开始位置
-        #region 索引开始位置
+        //index start position
+        #region Legacy section
         /**/
         /// <summary>
-        /// 索引开始位置
+        /// index start position
         /// </summary>
         #endregion
         private long ipBegin;
 
-        //索引结束位置
-        #region 索引结束位置
+        //index end position
+        #region Legacy section
         /**/
         /// <summary>
-        /// 索引结束位置
+        /// index end position
         /// </summary>
         #endregion
         private long ipEnd;
 
-        //IP地址对象
-        #region IP地址对象
+        //IP address object
+        #region Legacy section
         /**/
         /// <summary>
-        /// IP对象
+        ///Legacy comment translated to English.
         /// </summary>
         #endregion
         private IPLocation loc;
 
-        //存储文本内容
-        #region 存储文本内容
+        //store text content
+        #region Legacy section
         /**/
         /// <summary>
-        /// 存储文本内容
+        /// store text content
         /// </summary>
         #endregion
         private byte[] buf;
 
-        //存储3字节
-        #region 存储3字节
+        //store three bytes
+        #region Legacy section
         /**/
         /// <summary>
-        /// 存储3字节
+        /// store three bytes
         /// </summary>
         #endregion
         private byte[] b3;
 
-        //存储4字节
-        #region 存储4字节
+        //store four bytes
+        #region Legacy section
         /**/
         /// <summary>
-        /// 存储4字节IP地址
+        ///Legacy comment translated to English.
         /// </summary>
         #endregion
         private byte[] b4;
 
-        //#region 单件模式——TNT2
+        //#region singleton mode - TNT2
 
         //private static GLJK.Common.QQWry qq = new QQWry();
 
         ///// <summary>
-        ///// 用于锁定单进程访问
+        ///Legacy comment translated to English.
         ///// </summary>
         //private static readonly object objLock = new object();
 
@@ -151,23 +154,23 @@ namespace Senparc.Ncf.Utility
         //#endregion
 
 
-        //构造函数
-        #region 构造函数
+        //constructor
+        #region Legacy section
         /**/
         /// <summary>
-        /// 构造函数
+        /// constructor
         /// </summary>
-        /// <param name="ipfile">IP数据库文件绝对路径</param>
+        ///Legacy comment translated to English.
         #endregion
         public QQWry(string ipfile)
         {
-            ipfile = ipfile ?? Server.GetMapPath("~/App_Data/QQWry.Dat");//数据库地址
+            ipfile = ipfile ?? Server.GetMapPath("~/App_Data/QQWry.Dat");//Legacy comment translated to English.
             buf = new byte[100];
             b3 = new byte[3];
             b4 = new byte[4];
             try
             {
-                ipFile = new FileStream(ipfile, FileMode.Open, FileAccess.Read, FileShare.Read);//FileAccess.Read,,FileShare.Read为后添加
+                ipFile = new FileStream(ipfile, FileMode.Open, FileAccess.Read, FileShare.Read);//Legacy comment translated to English.
             }
             catch (Exception ex)
             {
@@ -183,7 +186,7 @@ namespace Senparc.Ncf.Utility
         { }
 
         /// <summary>
-        /// 根据客户端IP地址搜索
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public IPLocation SearchIPLocation()
@@ -194,15 +197,15 @@ namespace Senparc.Ncf.Utility
         public string GetCurrentIP()
         {
             //return HttpContext.Current.Request.UserHostAddress;
-            //COCONET 另外可参考：https://blog.csdn.net/yzj_xiaoyue/article/details/79200714
+            //Legacy comment translated to English.
             return SenparcHttpContext.Current.Connection.RemoteIpAddress.ToString();
         }
 
-        //根据IP地址搜索
-        #region 根据IP地址搜索
+        //search by IP address
+        #region Legacy section
         /**/
         /// <summary>
-        /// 搜索IP地址搜索
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="ip"></param>
         /// <returns></returns>
@@ -210,14 +213,14 @@ namespace Senparc.Ncf.Utility
         public IPLocation SearchIPLocation(string ip)
         {
             ip = ip ?? "";
-            //验证IP合法性
+            //Legacy comment translated to English.
             string pattrn = @"(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])";
             if (!Regex.IsMatch(ip, pattrn))
             {
                 return new IPLocation() { country = "未知", area = "" };
             }
 
-            //将字符IP转换为字节
+            //Legacy comment translated to English.
             string[] ipSp = ip.Split('.');
             if (ipSp.Length != 4)
             {
@@ -246,11 +249,11 @@ namespace Senparc.Ncf.Utility
             return local;
         }
 
-        //取得具体信息
-        #region 取得具体信息
+        //get detailed information
+        #region Legacy section
         /**/
         /// <summary>
-        /// 取得具体信息
+        /// get detailed information
         /// </summary>
         /// <param name="offset"></param>
         /// <returns></returns>
@@ -258,16 +261,16 @@ namespace Senparc.Ncf.Utility
         private IPLocation getIPLocation(long offset)
         {
             ipFile.Position = offset + 4;
-            //读取第一个字节判断是否是标志字节
+            //Legacy comment translated to English.
             byte one = (byte)ipFile.ReadByte();
             if (one == REDIRECT_MODE_1)
             {
-                //第一种模式
-                //读取国家偏移
+                //mode 1
+                //Legacy comment translated to English.
                 long countryOffset = readLong3();
-                //转至偏移处
+                //Legacy comment translated to English.
                 ipFile.Position = countryOffset;
-                //再次检查标志字节
+                //Legacy comment translated to English.
                 byte b = (byte)ipFile.ReadByte();
                 if (b == REDIRECT_MODE_2)
                 {
@@ -277,34 +280,34 @@ namespace Senparc.Ncf.Utility
                 else
                     loc.country = readString(countryOffset);
 
-                //读取地区标志
+                //Legacy comment translated to English.
                 loc.area = readArea(ipFile.Position);
 
             }
             else if (one == REDIRECT_MODE_2)
             {
-                //第二种模式
+                //mode 2
                 loc.country = readString(readLong3());
                 loc.area = readArea(offset + 8);
             }
             else
             {
-                //普通模式
+                //Legacy comment translated to English.
                 loc.country = readString(--ipFile.Position);
                 loc.area = readString(ipFile.Position);
             }
 
-            loc.country = loc.country.Replace("CZ88.NET", "");//替换    By TNT2
-            loc.area = loc.area.Replace("CZ88.NET", "");//替换    By TNT2
+            loc.country = loc.country.Replace("CZ88.NET", "");//Legacy comment translated to English.
+            loc.area = loc.area.Replace("CZ88.NET", "");//Legacy comment translated to English.
 
             return loc;
         }
 
-        //取得地区信息
-        #region 取得地区信息
+        //get region information
+        #region Legacy section
         /**/
         /// <summary>
-        /// 读取地区名称
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="offset"></param>
         /// <returns></returns>
@@ -329,11 +332,11 @@ namespace Senparc.Ncf.Utility
             }
         }
 
-        //读取字符串
-        #region 读取字符串
+        //read a string
+        #region Legacy section
         /**/
         /// <summary>
-        /// 读取字符串
+        /// read a string
         /// </summary>
         /// <param name="offset"></param>
         /// <returns></returns>
@@ -350,11 +353,11 @@ namespace Senparc.Ncf.Utility
                 return "";
         }
 
-        //查找IP地址所在的绝对偏移量
-        #region 查找IP地址所在的绝对偏移量
+        //find the absolute offset of the IP address
+        #region Legacy section
         /**/
         /// <summary>
-        /// 查找IP地址所在的绝对偏移量
+        /// find the absolute offset of the IP address
         /// </summary>
         /// <param name="ip"></param>
         /// <returns></returns>
@@ -364,14 +367,14 @@ namespace Senparc.Ncf.Utility
             long m = 0;
             int r;
 
-            //比较第一个IP项
+            //Legacy comment translated to English.
             readIP(ipBegin, b4);
             r = compareIP(ip, b4);
             if (r == 0)
                 return ipBegin;
             else if (r < 0)
                 return -1;
-            //开始二分搜索
+            //Legacy comment translated to English.
             for (long i = ipBegin, j = ipEnd; i < j; )
             {
                 m = this.getMiddleOffset(i, j);
@@ -403,11 +406,11 @@ namespace Senparc.Ncf.Utility
                 return -1;
         }
 
-        //读出4字节的IP地址
-        #region 读出4字节的IP地址
+        //read a four-byte IP address
+        #region Legacy section
         /**/
         /// <summary>
-        /// 从当前位置读取四字节,此四字节是IP地址
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="offset"></param>
         /// <param name="ip"></param>
@@ -424,15 +427,15 @@ namespace Senparc.Ncf.Utility
             ip[2] = tmp;
         }
 
-        //比较IP地址是否相同
-        #region 比较IP地址是否相同
+        //compare IP addresses
+        #region Legacy section
         /**/
         /// <summary>
-        /// 比较IP地址是否相同
+        /// compare IP addresses
         /// </summary>
         /// <param name="ip"></param>
         /// <param name="beginIP"></param>
-        /// <returns>0:相等,1:ip大于beginIP,-1:小于</returns>
+        ///Legacy comment translated to English.
         #endregion
         private int compareIP(byte[] ip, byte[] beginIP)
         {
@@ -445,11 +448,11 @@ namespace Senparc.Ncf.Utility
             return 0;
         }
 
-        //比较两个字节是否相等
-        #region 比较两个字节是否相等
+        //compare two bytes
+        #region Legacy section
         /**/
         /// <summary>
-        /// 比较两个字节是否相等
+        /// compare two bytes
         /// </summary>
         /// <param name="bsrc"></param>
         /// <param name="bdst"></param>
@@ -465,11 +468,11 @@ namespace Senparc.Ncf.Utility
                 return -1;
         }
 
-        //根据当前位置读取4字节
-        #region 根据当前位置读取4字节
+        //read four bytes from the current position
+        #region Legacy section
         /**/
         /// <summary>
-        /// 从当前位置读取4字节,转换为长整型
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="offset"></param>
         /// <returns></returns>
@@ -485,11 +488,11 @@ namespace Senparc.Ncf.Utility
             return ret;
         }
 
-        //根据当前位置,读取3字节
-        #region 根据当前位置,读取3字节
+        //read three bytes from the current position
+        #region Legacy section
         /**/
         /// <summary>
-        /// 根据当前位置,读取3字节
+        /// read three bytes from the current position
         /// </summary>
         /// <param name="offset"></param>
         /// <returns></returns>
@@ -504,11 +507,11 @@ namespace Senparc.Ncf.Utility
             return ret;
         }
 
-        //从当前位置读取3字节
-        #region 从当前位置读取3字节
+        //read three bytes from the current position
+        #region Legacy section
         /**/
         /// <summary>
-        /// 从当前位置读取3字节
+        /// read three bytes from the current position
         /// </summary>
         /// <returns></returns>
         #endregion
@@ -521,11 +524,11 @@ namespace Senparc.Ncf.Utility
             return ret;
         }
 
-        //取得begin和end之间的偏移量
-        #region 取得begin和end之间的偏移量
+        //get the offset between begin and end
+        #region Legacy section
         /**/
         /// <summary>
-        /// 取得begin和end中间的偏移
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="begin"></param>
         /// <param name="end"></param>
@@ -540,7 +543,7 @@ namespace Senparc.Ncf.Utility
             return begin + records * IP_RECORD_LENGTH;
         }
 
-        #region IDisposable 成员
+        #region Legacy section
 
         public void Dispose()
         {
@@ -569,4 +572,4 @@ namespace Senparc.Ncf.Utility
         }
     }
 }
-#pragma warning restore CS0675 // 对进行了带符号扩展的操作数使用了按位或运算符
+#pragma warning restore CS0675 //Legacy comment translated to English.

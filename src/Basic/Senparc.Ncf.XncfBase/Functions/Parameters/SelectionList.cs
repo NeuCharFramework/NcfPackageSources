@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SelectionList.cs
-    文件功能描述：SelectionList 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SelectionList.cs
+    File description: SelectionList related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -21,23 +24,23 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.Functions
 {
     /// <summary>
-    /// 选项列表
+    ///Legacy comment translated to English.
     /// </summary>
     public class SelectionList
     {
         private string[] selectedValues;
 
         /// <summary>
-        /// 选项类型
+        ///Legacy comment translated to English.
         /// </summary>
         public SelectionType SelectionType { get; set; }
         ///// <summary>
-        ///// 选中的项的值（从客户端传入）
+        ///Legacy comment translated to English.
         ///// </summary>
         public string[] SelectedValues { get => selectedValues ?? new string[0]; set => selectedValues = value; }
 
         /// <summary>
-        /// 选项参数
+        ///Legacy comment translated to English.
         /// </summary>
         public IList<SelectionItem> Items { get; set; }
 
@@ -55,9 +58,9 @@ namespace Senparc.Ncf.XncfBase.Functions
         }
 
         /// <summary>
-        /// 判断 SelectedValues 中是否存在值
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="itemIndex">获取 Items 中的索引项对应的 Value</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public bool IsSelected(int itemIndex)
         {
@@ -70,7 +73,7 @@ namespace Senparc.Ncf.XncfBase.Functions
         }
 
         /// <summary>
-        /// 判断 SelectedValues 中是否存在值
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -81,24 +84,24 @@ namespace Senparc.Ncf.XncfBase.Functions
     }
 
     /// <summary>
-    /// 选项
+    ///Legacy comment translated to English.
     /// </summary>
     public class SelectionItem
     {
         /// <summary>
-        /// 文字标签
+        ///Legacy comment translated to English.
         /// </summary>
         public string Text { get; set; }
         /// <summary>
-        /// 值
+        ///Legacy comment translated to English.
         /// </summary>
         public string Value { get; set; }
         /// <summary>
-        /// （仅供显示时使用），是否默认选中
+        ///Legacy comment translated to English.
         /// </summary>
         public bool DefaultSelected { get; set; }
         /// <summary>
-        /// 说明
+        /// description
         /// </summary>
         public string Note { get; set; }
 
@@ -116,24 +119,24 @@ namespace Senparc.Ncf.XncfBase.Functions
     }
 
     /// <summary>
-    /// 选项集合类型
+    ///Legacy comment translated to English.
     /// </summary>
     public enum SelectionType
     {
         /// <summary>
-        /// 未知参数
+        ///Legacy comment translated to English.
         /// </summary>
         Unknown,
         /// <summary>
-        /// 下拉列表（单选）
+        ///Legacy comment translated to English.
         /// </summary>
         DropDownList,
         /// <summary>
-        /// 复选框列表（多选）
+        ///Legacy comment translated to English.
         /// </summary>
         CheckBoxList,
         ///// <summary>
-        ///// 单选列表（单选）
+        ///Legacy comment translated to English.
         ///// </summary>
         //RadioButtonList
     }

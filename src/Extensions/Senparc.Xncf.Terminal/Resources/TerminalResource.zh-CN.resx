@@ -25,4 +25,7 @@
     <value>&gt; 命令||命令行，例如：dir /?</value>
   </data>
 
+
+  <data name="Function.Terminal.Command.Name" xml:space="preserve"><value>命令提示符</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.Terminal.Command.Description" xml:space="preserve"><value>执行服务器终端命令并返回结果。请注意：命令将在服务器系统中执行！</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
 </root>

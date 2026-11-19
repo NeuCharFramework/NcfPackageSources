@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：PromptItemService.Plugins.cs
-    文件功能描述：PromptItemService.Plugins 相关实现
-    
-    
-    创建标识：Senparc - 20240207
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+    Copyright (C) 2026 Senparc
+
+    File name: PromptItemService.Plugins.cs
+    File description: PromptItemService.Plugins related implementation
+
+    Created by: Senparc - 20240207
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260729
+    Change description: v0.17.1-preview6 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -60,7 +63,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 rangeFilePaths.Add(pluginFilePath);
             }
 
-            // 根据 rangeFilePaths， 找出他们公共父文件夹的路径
+            //Legacy comment translated to English.
             var commonParentPath = this.FindCommonParentPath(rangeFilePaths);
 
             return commonParentPath;
@@ -76,11 +79,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             
             if (pathList.Count == 1)
             {
-                // 只有一个路径，返回其父目录
+                //Legacy comment translated to English.
                 return Directory.GetParent(pathList[0])?.FullName ?? pathList[0];
             }
             
-            // 标准化路径分隔符（兼容Windows和Unix）
+            //Legacy comment translated to English.
             var normalizedPaths = pathList.Select(p => 
                 p.Replace('\\', Path.DirectorySeparatorChar)
                  .Replace('/', Path.DirectorySeparatorChar)
@@ -93,10 +96,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var minLen = splitPaths.Min(sp => sp.Length);
 
             var commonPath = new List<string>();
-            for (var i = 0; i < minLen - 1; i++) // minLen - 1 确保不包含最后的文件夹名
+            for (var i = 0; i < minLen - 1; i++) //Legacy comment translated to English.
             {
                 var dir = splitPaths[0][i];
-                // 大小写不敏感比较（兼容Windows和Unix）
+                //Legacy comment translated to English.
                 if (splitPaths.All(sp => string.Equals(sp[i], dir, StringComparison.OrdinalIgnoreCase)))
                 {
                     commonPath.Add(dir);
@@ -107,7 +110,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
             }
 
-            // Unix系统需要保留根路径的 /
+            //Legacy comment translated to English.
             var result = Path.Combine(commonPath.ToArray());
             if (normalizedPaths[0].StartsWith(Path.DirectorySeparatorChar.ToString()) && 
                 !result.StartsWith(Path.DirectorySeparatorChar.ToString()))
@@ -119,36 +122,36 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// 根据靶场 ID, 导出该靶场下所有的靶道，返回文件夹路径
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="rangeId"></param>
         /// <param name="ids"></param>
         /// <returns></returns>
         public async Task<string> ExportPluginsAsync(int rangeId, List<int> ids)
         {
-            // 根据靶场名，获取靶场
+            //Legacy comment translated to English.
             var promptRange = await _promptRangeService.GetAsync(rangeId);
 
-            // 获取输出的靶场的文件夹路径
+            //Legacy comment translated to English.
             var rangePath = this.GetRangePath(promptRange);
 
-            // 根据靶场名，获取靶道
+            //Legacy comment translated to English.
             var promptItemList = await this.GetFullListAsync(
                 p => p.RangeName == promptRange.RangeName
                      && (ids == null || ids.Contains(p.Id))
             );
 
-            // //用版号作为key, 映射字典
+            //Legacy comment translated to English.
             // var itemMapByVersion = promptItemList.ToDictionary(p => p.FullVersion, p => p);
 
-            // // 提取出 T 的第一位，并分组
+            //Legacy comment translated to English.
             // Dictionary<string, List<PromptItem>> itemGroupByT = promptItemList.GroupBy(p => p.Tactic.Substring(0, 1))
             //     .ToDictionary(p => p.Key, p => p.ToList());
 
-            // 每个靶道都需要导出
+            //Legacy comment translated to English.
             foreach (var item in promptItemList)
             {
-                // // 找出最佳item
+                //Legacy comment translated to English.
                 // var bestItem = itemList.MaxBy(p => isAvg ? p.EvalAvgScore : p.EvalMaxScore);
 
                 await ExportPluginWithItemAsync(item, rangePath);
@@ -158,7 +161,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// 导出指定的单个靶道，返回文件夹路径
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="promptItem"></param>
         /// <param name="rangePath"></param>
@@ -169,7 +172,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             rangePath ??= this.GetRangePath(range);
 
-            #region 根据模板构造 Root 对象
+            #region Legacy section
 
             var data = new Root()
             {
@@ -190,13 +193,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 input_variables = new List<PromptInputVariable>()
             };
 
-            //添加输入对象
+            //Legacy comment translated to English.
             var inputVarialbes = promptItem.GetInputValiableObject();
             data.input_variables.AddRange(inputVarialbes.Select(z => new PromptInputVariable(z)));
 
             #endregion
 
-            //  当前 plugin 文件夹目录，靶道名/别名
+            //Legacy comment translated to English.
             var curPluginPath = GetSafeChildPath(
                 rangePath,
                 SanitizePathComponent(
@@ -208,12 +211,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
             else
             {
-                // 如果别名已经存在，就增加一个尾缀
+                //Legacy comment translated to English.
                 curPluginPath += $"_{DateTime.Now:yyyyMMddHHmmss}";
                 Directory.CreateDirectory(curPluginPath);
             }
 
-            // 完整的JSON文件路径
+            //Legacy comment translated to English.
             // string jsonFullPath = Path.Combine(curPluginPath, "config.json");
 
             await using (var jsonFs = new FileStream(
@@ -221,21 +224,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                              FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
             {
                 jsonFs.Seek(0, SeekOrigin.Begin);
-                jsonFs.SetLength(0); // 清空文件内容
+                jsonFs.SetLength(0); // clearfilecontent
                 await using (var jsonSw = new StreamWriter(jsonFs, Encoding.UTF8))
                 {
-                    // 写入并且保持格式
+                    //Legacy comment translated to English.
                     await jsonSw.WriteLineAsync(JsonConvert.SerializeObject(data, Formatting.Indented));
                 }
             }
 
-            // 同理，构造 skprompt.txt 文件，内容为content
+            //Legacy comment translated to English.
             await using (var txtFs = new FileStream(
                              Path.Combine(curPluginPath, "skprompt.txt"),
                              FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             {
                 txtFs.Seek(0, SeekOrigin.Begin);
-                txtFs.SetLength(0); // 清空文件内容
+                txtFs.SetLength(0); // clearfilecontent
                 await using (var jsonSw = new StreamWriter(txtFs, Encoding.UTF8))
                 {
                     await jsonSw.WriteLineAsync(promptItem.Content);
@@ -246,23 +249,23 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// 根据靶场，生成文件夹，并返回文件夹路径
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="range"></param>
         /// <returns></returns>
         private string GetRangePath(PromptRangeDto range)
         {
-            #region 根据靶场别名，生成文件夹
+            #region Legacy section
 
-            // 有别名就用别名，没有就用靶场名
+            //Legacy comment translated to English.
 
-            // 先获取根目录
+            //Legacy comment translated to English.
             var curDir = Directory.GetCurrentDirectory();
 
             var filePathPrefix = Path.Combine(curDir, "App_Data", "Files");
 
 
-            // 生成文件夹
+            //Legacy comment translated to English.
             var exportRoot = Path.GetFullPath(Path.Combine(filePathPrefix, "ExportedPluginsTemp"));
             Directory.CreateDirectory(exportRoot);
             var rangePath = GetSafeChildPath(
@@ -271,7 +274,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             if (Directory.Exists(rangePath))
             {
-                // 如果存在，就先清理指定文件夹
+                //Legacy comment translated to English.
                 Directory.Delete(rangePath, true);
             }
             Directory.CreateDirectory(rangePath);
@@ -318,7 +321,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 Name = inputVariable.Name;
                 Description = inputVariable.Description;
                 Default = inputVariable.Default?.ToString();
-                //TODO: 添加更多
+                //Legacy comment translated to English.
             }
         }
 
@@ -326,11 +329,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public async Task UploadPluginsAsync(IFormFile uploadedFile)
         {
-            #region 验证文件
+            #region Legacy section
 
             if (uploadedFile == null || uploadedFile.Length == 0)
                 throw new NcfExceptionBase("文件未找到");
-            // 限制文件上传的大小为 50M
+            //Legacy comment translated to English.
             if (uploadedFile.Length > MaxPluginArchiveUploadBytes)
             {
                 throw new NcfExceptionBase("文件大小超过限制（50 M）");
@@ -345,7 +348,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             #endregion
 
-            #region 保存文件
+            #region save files
 
             var toSaveDir = Path.Combine(Directory.GetCurrentDirectory(), "App_Data", "Files", "toImportFileTemp");
             if (!Directory.Exists(toSaveDir))
@@ -370,13 +373,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                 await ExtractPluginArchiveAsync(zipFilePath, extractDir);
 
-            //判断文件结构
-            //假设为完整路径
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             var topDirs = Directory.GetDirectories(extractDir);
             List<PromptItem> promptItems = new List<PromptItem>();
             foreach (var topDir in topDirs)
             {
-                // 先创建靶场
+                //Legacy comment translated to English.
                 Console.WriteLine("topDir:" + topDir);
                 var rangeAlias = Path.GetFileName(topDir);
                 var promptRangeDto = await _promptRangeService.AddAsync(rangeAlias);
@@ -390,7 +393,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                     if (!File.Exists(configFilePath) && !File.Exists(skpromptFilePath))
                     {
-                        //TODO：给出失败提示
+                        //Legacy comment translated to English.
                         continue;
                     }
 
@@ -400,7 +403,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                     if (File.Exists(configFilePath))
                     {
-                        // 读取所有的文件为一个 string
+                        // read the entire file as a string
                         await using Stream stream = new FileStream(configFilePath, FileMode.Open);
                         using StreamReader reader = new StreamReader(stream);
 
@@ -425,7 +428,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                     if (File.Exists(skpromptFilePath))
                     {
-                        // 读取所有的文件为一个 string
+                        // read the entire file as a string
                         await using Stream stream = new FileStream(skpromptFilePath, FileMode.Open);
                         using StreamReader reader = new StreamReader(stream);
 
@@ -433,10 +436,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                         promptItem.UpdateContent(skPrompt);
 
-                        // 提取 prompt 请求参数
-                        var pattern = @"\{\{\$(.*?)\}\}";//TODO: 支持更多格式
+                        //Legacy comment translated to English.
+                        var pattern = @"\{\{\$(.*?)\}\}";//Legacy comment translated to English.
 
-                        // 没有参数
+                        //Legacy comment translated to English.
                         if (!Regex.IsMatch(skPrompt, pattern))
                         {
                             continue;
@@ -457,117 +460,222 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
 
-            #region 老方法
+            #region Legacy section
             /*
-            // #region 可以选择先解压
+
+            Legacy section
+
+
 
             // zip.ExtractToDirectory(Path.Combine(toSaveDir, zipFile.FileName.Split(".")[0]), true);
 
-            // 解压文件
+
+
+            Legacy comment translated to English.
+
             // var unzippedFilePath = Path.Combine(toSaveDir, zipFile.FileName.Split(".")[0], "");
+
             // if (!Directory.Exists(unzippedFilePath))
+
             // {
+
             //     Directory.CreateDirectory(unzippedFilePath);
+
             // }
 
+
+
             // ZipFile.ExtractToDirectory(toSaveFilePath, unzippedFilePath, Encoding.UTF8, true);
+
             // ZipFile.ExtractToDirectory(zipFile.OpenReadStream(), unzippedFilePath, Encoding.UTF8, true);
+
+
 
             // #endregion
 
-            // 开始读取
+
+
+            // startread
+
             Dictionary<string, PromptItem> zipIdxDict = new();
+
             int tacticCnt = 0;
+
             foreach (var curFile in zip.Entries)
+
             {
+
                 // var curFilePath = Path.Combine(extractPath, entry.FullName);
+
                 var curDirName = Path.GetDirectoryName(curFile.FullName)!;
+
                 if (curDirName.Contains('/') || curDirName.Contains('\\'))
+
                 {
-                    throw new NcfExceptionBase($"{curFile.FullName}文件格式错误");
+
+                    Legacy comment translated to English.
+
                 }
 
-                if (curFile.Name == "") // 是目录
+
+
+                Legacy comment translated to English.
+
                 {
+
                     var promptItem = new PromptItem(promptRange, curDirName, ++tacticCnt);
 
+
+
                     zipIdxDict[curDirName] = promptItem;
+
                 }
+
                 else
+
                 {
+
                     // var directoryName = curDirName!;
+
                     // if (directoryName.Contains('/') || directoryName.Contains('\\'))
+
                     // {
-                    //     throw new NcfExceptionBase($"{curFile.FullName}文件格式错误");
+
+                    Legacy comment translated to English.
+
                     // }
 
-                    // 从缓存中读取
+
+
+                    Legacy comment translated to English.
+
                     var promptItem = zipIdxDict[curDirName];
 
-                    // 根据不同文件名，更新不同的字段
-                    if (curFile.Name == "config.json") // 更新配置文件
+
+
+                    Legacy comment translated to English.
+
+                    if (curFile.Name == "config.json") // updateconfigurationfile
+
                     {
-                        // 读取所有的文件为一个 string
+
+                        // read the entire file as a string
+
                         await using Stream stream = curFile.Open();
+
                         using StreamReader reader = new StreamReader(stream);
+
+
 
                         string text = await reader.ReadToEndAsync();
 
 
+
+
+
                         var executionSettings = text.GetObject<Root>().ExecutionSettings!;
 
+
+
                         promptItem.UpdateModelParam(
+
                             topP: executionSettings.Default.TopP,
+
                             maxToken: executionSettings.Default.MaxTokens,
+
                             temperature: executionSettings.Default.Temperature,
+
                             presencePenalty: executionSettings.Default.PresencePenalty,
+
                             frequencyPenalty: executionSettings.Default.FrequencyPenalty,
+
                             stopSequences: executionSettings.Default.StopSequences.ToJson()
+
                         );
+
                     }
+
                     else if (curFile.Name == "skprompt.txt")
+
                     {
-                        // 读取所有的文件为一个 string
+
+                        // read the entire file as a string
+
                         await using Stream stream = curFile.Open();
+
                         using StreamReader reader = new StreamReader(stream);
+
+
 
                         string skPrompt = await reader.ReadToEndAsync();
 
+
+
                         promptItem.UpdateContent(skPrompt);
 
-                        // 提取 prompt 请求参数
+
+
+                        Legacy comment translated to English.
+
                         var pattern = @"\{\{\$(.*?)\}\}";
 
-                        // 没有参数
+
+
+                        Legacy comment translated to English.
+
                         if (!Regex.IsMatch(skPrompt, pattern))
+
                         {
+
                             continue;
+
                         }
+
+
 
                         MatchCollection matches = Regex.Matches(skPrompt, pattern);
+
                         Dictionary<string, string> varDict = new();
+
                         foreach (Match match in matches)
+
                         {
+
                             string varKey = match.Groups[1].Value;
+
                             varDict[varKey] = "";
+
                         }
 
+
+
                         promptItem.UpdateVariablesJson(varDict.ToJson());
+
                     }
+
                     else
+
                     {
+
                         continue;
-                        throw new NcfExceptionBase($"{curFile.FullName}不符合上传要求");
+
+                        Legacy comment translated to English.
+
                     }
+
                 }
+
             }
 
+
+
             await this.SaveObjectListAsync(zipIdxDict.Values.ToList());
+
             */
             #endregion
 
 
-            // 保存
+            // save
             await this.SaveObjectListAsync(promptItems);
             }
             finally

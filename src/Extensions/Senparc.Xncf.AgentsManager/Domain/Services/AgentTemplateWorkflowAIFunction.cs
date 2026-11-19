@@ -1,19 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AgentTemplateWorkflowAIFunction.cs
-    文件功能描述：AgentTemplateWorkflowAIFunction.cs 相关实现
+    File name: AgentTemplateWorkflowAIFunction.cs
+    File description: AgentTemplateWorkflowAIFunction.cs related implementation
 
+    Created by: Senparc - 20260822
 
-    创建标识：Senparc - 20260822
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
+using Senparc.Xncf.AgentsManager;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -47,8 +51,15 @@ internal sealed class AgentTemplateWorkflowAIFunction : AIFunction
 
     public override string Description =>
         string.IsNullOrWhiteSpace(_workflow.Description)
-            ? $"执行工作流“{_workflow.Name}”。"
-            : $"执行工作流“{_workflow.Name}”：{_workflow.Description}";
+            ? AgentsManagerResource.Format(
+                "Function.Workflow.Execute.Description",
+                "Execute workflow \"{0}\".",
+                _workflow.Name)
+            : AgentsManagerResource.Format(
+                "Function.Workflow.Execute.WithDescription",
+                "Execute workflow \"{0}\": {1}",
+                _workflow.Name,
+                _workflow.Description);
 
     public override JsonElement JsonSchema => _jsonSchema;
 
@@ -64,7 +75,9 @@ internal sealed class AgentTemplateWorkflowAIFunction : AIFunction
             : null);
         if (string.IsNullOrWhiteSpace(input))
         {
-            return "Workflow 调用失败：input 参数不能为空。";
+            return AgentsManagerResource.Get(
+                "Error.Workflow.InputRequired",
+                "Workflow invocation failed: the input parameter cannot be empty.");
         }
 
         var parameters = arguments
@@ -79,7 +92,12 @@ internal sealed class AgentTemplateWorkflowAIFunction : AIFunction
 
         return result.Success
             ? result.Output ?? string.Empty
-            : $"Workflow 调用失败：{result.ErrorMessage ?? "未知错误"}";
+            : AgentsManagerResource.Format(
+                "Error.Workflow.InvocationFailed",
+                "Workflow invocation failed: {0}",
+                result.ErrorMessage ?? AgentsManagerResource.Get(
+                    "Error.Workflow.Unknown",
+                    "Unknown error"));
     }
 
     private static JsonElement BuildJsonSchema(WorkflowFunctionCallingDescriptor workflow)
@@ -89,7 +107,9 @@ internal sealed class AgentTemplateWorkflowAIFunction : AIFunction
             ["input"] = new
             {
                 type = "string",
-                description = "传给工作流的常规输入内容。"
+                description = AgentsManagerResource.Get(
+                    "Function.Workflow.Input.Description",
+                    "General input passed to the workflow.")
             }
         };
 
@@ -106,8 +126,13 @@ internal sealed class AgentTemplateWorkflowAIFunction : AIFunction
             {
                 type = "string",
                 description = string.IsNullOrWhiteSpace(parameter.Description)
-                    ? $"工作流参数“{parameter.Name}”（可选）。"
-                    : $"{parameter.Description}（可选）"
+                    ? AgentsManagerResource.Format(
+                        "Function.Workflow.Parameter.Optional",
+                        "Workflow parameter \"{0}\" (optional).",
+                        parameter.Name)
+                    : $"{parameter.Description}{AgentsManagerResource.Get(
+                        "Function.Workflow.Parameter.OptionalSuffix",
+                        " (optional)")}"
             };
         }
 

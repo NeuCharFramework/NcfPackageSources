@@ -1,0 +1,163 @@
+@page
+@model Senparc.Areas.Admin.Areas.Admin.Pages.MenuIndexModel
+@{
+    ViewData["Title"] = AR["Menu.管理"]; Layout = "_Layout_Vue";
+}
+@section Style{
+    <link href="~/css/Admin/Menu/Menu.css" rel="stylesheet" />
+}
+@section breadcrumbs {
+    <el-breadcrumb-item>@AR["Common.系统管理"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Menu.列表"]</el-breadcrumb-item>
+}
+<div>
+    <div class="admin-role">
+        <div class="filter-container">
+            <el-button class="filter-item" type="primary" icon="el-icon-plus" @@click="handleEdit('','','add')">@AR["Menu.增加菜单"]</el-button>
+            <el-button class="filter-item" :type="configMode ? 'warning' : 'default'" icon="el-icon-rank" @@click="toggleConfigMode">
+                {{ configMode ? ncfT('Menu.ConfigModeExit') : ncfT('Menu.ConfigMode') }}
+            </el-button>
+        </div>
+        <div v-if="configMode" class="menu-config-mode">
+            <div class="menu-config-mode-header">
+                <span class="menu-config-mode-title"><i class="el-icon-rank"></i> {{ ncfT('Menu.ConfigModeTip') }}</span>
+                <span>
+                    <el-button size="mini" plain @@click="toggleConfigMode">{{ ncfT('Common.取消') }}</el-button>
+                    <el-button size="mini" type="primary" :loading="configSaving" @@click="saveConfigOrder">{{ ncfT('Menu.ConfigSave') }}</el-button>
+                </span>
+            </div>
+            <div class="menu-config-body" v-if="configMenus.length">
+                <ul class="menu-config-list">
+                    <li v-for="menu in configMenus"
+                        :key="menu.id"
+                        class="menu-config-item"
+                        :class="{ 'is-dragging': dragId === menu.id, 'is-drag-over': dragOverId === menu.id }"
+                        :style="{ paddingLeft: (10 + menu.level * 26) + 'px' }"
+                        draggable="true"
+                        @@dragstart="onConfigDragStart(menu.id, $event)"
+                        @@dragover.prevent="onConfigDragOver(menu.id)"
+                        @@drop.prevent="onConfigDrop(menu.id)"
+                        @@dragend="onConfigDragEnd">
+                        <i class="el-icon-rank menu-config-drag-handle"></i>
+                        <i v-if="menu.icon" :class="menu.icon" class="menu-config-icon"></i>
+                        <span class="menu-config-name" :title="menu.url || menu.menuName">{{ menu.menuName }}</span>
+                        <input type="number" class="menu-config-sort-input" v-model.number="menu.sort"
+                               :title="ncfT('Common.排序')"
+                               @@change="applyNumber(menu.id)"
+                               @@keyup.enter="$event.target.blur()" />
+                        <span class="menu-config-actions">
+                            <el-button type="text" size="mini" icon="el-icon-top" :disabled="!canMoveUp(menu)" @@click="moveConfigItem(menu, -1)"></el-button>
+                            <el-button type="text" size="mini" icon="el-icon-bottom" :disabled="!canMoveDown(menu)" @@click="moveConfigItem(menu, 1)"></el-button>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div v-else class="menu-config-empty">{{ ncfT('Menu.ConfigEmpty') }}</div>
+        </div>
+        <el-table :data="tableData"
+                  style="width: 100%;margin-bottom: 20px;"
+                  row-key="id"
+                  border
+                  default-expand-all
+                  :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+            <el-table-column prop="menuName" align="left"
+                             label="@AR["Menu.名称"]">
+            </el-table-column>
+            <el-table-column prop="sort" align="center"
+                             label="@AR["Common.排序"]"
+                             sortable>
+            </el-table-column>
+            <el-table-column prop="adminRemark" align="center"
+                             label="@AR["Common.备注"]">
+            </el-table-column>
+            <el-table-column prop="remark" align="center"
+                             label="@AR["Common.说明"]">
+            </el-table-column>
+            <el-table-column align="center"
+                             label="@AR["Common.添加时间"]">
+                <template slot-scope="scope">
+                    {{formaTableTime(scope.row.addTime)}}
+                </template>
+            </el-table-column>
+            <el-table-column label="@AR["Common.操作"]" align="center" class-name="ncf-table-actions-column">
+                <template slot-scope="scope">
+                    <el-button size="mini"
+                               type="primary"
+                               icon="el-icon-edit"
+                               @@click="handleEdit(scope.$index, scope.row,'edit')">@AR["Common.编辑"]</el-button>
+                    <el-button size="mini"
+                               type="info"
+                               icon="el-icon-plus"
+                               v-if="scope.row.children"
+                               @@click="handleEdit(scope.$index, scope.row,'addNext')">@AR["Menu.增加下级"]</el-button>
+                    <el-popconfirm placement="top" title="@AR["Menu.确认删除"]" @@on-confirm="handleDelete(scope.$index, scope.row)">
+                        <el-button size="mini" type="danger" icon="el-icon-delete" slot="reference">@AR["Common.删除"]</el-button>
+                    </el-popconfirm>
+                </template>
+            </el-table-column>
+        </el-table>
+        <!--编辑、新增 -->
+        <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
+            <el-form ref="dataForm"
+                     :rules="dialog.rules"
+                     :model="dialog.data"
+                     :disabled="dialog.disabled"
+                     label-position="left"
+                     label-width="100px"
+                     style="max-width: 400px; margin-left:50px;">
+                <el-form-item label="@AR["Menu.名称"]" prop="menuName">
+                    <el-input v-model="dialog.data.menuName" clearable placeholder="" />
+                </el-form-item>
+                <el-form-item label="@AR["Menu.父级"]">
+                    <el-cascader v-model="dialog.data.parentId"
+                                 :options="tableData"
+                                 clearable
+                                 :props="{ checkStrictly: dialog.checkStrictly,label: 'menuName',value:'id'}">
+                    </el-cascader>
+                </el-form-item>
+                <el-form-item label="@AR["Common.排序"]">
+                    <el-input type="number" v-model="dialog.data.sort" clearable placeholder="" />
+                </el-form-item>
+                <el-form-item label="@AR["Menu.类型"]" prop="menuType">
+                    <el-radio-group v-model="dialog.data.menuType">
+                        <el-radio :label="1">@AR["Menu.菜单"]</el-radio>
+                        <el-radio :label="2">@AR["Menu.页面"]</el-radio>
+                        <el-radio :label="3">@AR["Menu.按钮"]</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="@AR["Menu.路径"]">
+                    <el-input v-model="dialog.data.url" clearable placeholder="" />
+                </el-form-item>
+                <el-form-item label="@AR["Menu.操作代码"]" prop="resourceCode">
+                    <el-input v-model="dialog.data.resourceCode" clearable placeholder="" />
+                </el-form-item>
+                <el-form-item label="@AR["Menu.是否锁定"]">
+                    <el-switch v-model="dialog.data.isLocked"></el-switch>
+                </el-form-item>
+                <el-form-item label="@AR["Menu.是否显示"]">
+                    <el-switch v-model="dialog.data.visible"></el-switch>
+                </el-form-item>
+                <el-form-item label="@AR["Menu.图标"]">
+                    <i v-if="dialog.data.icon" :class="'fa '+dialog.data.icon"></i>
+                    <el-button @@click="dialogIcon.visible=true" plain style="margin-left:15px;">@AR["Menu.选择图标"]</el-button>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @@click="dialog.visible = false">@AR["Common.取消"]</el-button>
+                <el-button :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">@AR["Common.确认"]</el-button>
+            </div>
+        </el-dialog>
+        <!--选择图标-->
+        <el-dialog title="@AR["Menu.图标列表"]" :visible.sync="dialogIcon.visible">
+            <div class="menu-icons-grid">
+                <div v-for="item in dialogIcon.elementIcons" class="menu-icon-item" @@click="pickIcon(item)">
+                    <i :class="'fa ' + item"></i>
+                    <span>{{item}}</span>
+                </div>
+            </div>
+        </el-dialog>
+    </div>
+</div>
+@section scripts{
+    <script src="~/js/Admin/Pages/Menu/Index.js"></script>
+}

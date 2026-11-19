@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：GridViewActionExtension.cs
-    文件功能描述：GridViewActionExtension 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: GridViewActionExtension.cs
+    File description: GridViewActionExtension related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.22.9-preview13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -58,11 +61,11 @@ namespace System.Web.Mvc
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="helper"></param>
-        /// <param name="dataSource">数据源</param>
-        /// <param name="htmlAttributes">Table的属性</param>
-        /// <param name="emptyTemplete">没有数据时显示。没有数据时，Footer不显示</param>
-        /// <param name="htmlCodeFormat">HTML代码换行（供调试状态下使用）。如果为false，自动生成的代码将不换行</param>
-        /// <param name="itemTempletes">模板数据</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static string GridViewAction<T>(this HtmlHelper helper, IEnumerable<T> dataSource,
             object htmlAttributes, string emptyTemplete, bool htmlCodeFormat, params GridViewActionItemTemplateModel<T>[] itemTempletes)

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SenparcExpressionModifier.cs
-    文件功能描述：SenparcExpressionModifier 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SenparcExpressionModifier.cs
+    File description: SenparcExpressionModifier related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.21.3-preview5 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -62,7 +65,7 @@ namespace Senparc.Ncf.Utility
             }
             else
             {
-                //默认为添加And
+                //Legacy comment translated to English.
                 BE = Expression.MakeBinary(ExpressionType.AndAlso, BE, b);
             }
 

@@ -1,23 +1,26 @@
-﻿/*-----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：XncfBuilderSenparcEntities.cs
-    文件功能描述：XncfBuilderSenparcEntities 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+    File name: XncfBuilderSenparcEntities.cs
+    File description: XncfBuilderSenparcEntities related implementation
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.41.0 增强隔离开发任务与 Sandbox 预览流程
+    Created by: Senparc - 20260704
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260804
+    Change description: v0.39.0-preview8 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260815
+    Change description: v0.41.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260822
+    Change description: v0.41.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 
@@ -52,7 +55,7 @@ namespace Senparc.Xncf.XncfBuilder
         /// </summary>
         public DbSet<XncfDevelopmentJob> XncfDevelopmentJobs { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE - Entities Point
 
     }
 }

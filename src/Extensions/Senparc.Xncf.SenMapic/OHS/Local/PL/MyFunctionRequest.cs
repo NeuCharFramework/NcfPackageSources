@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：MyFunctionRequest.cs
-    文件功能描述：MyFunctionRequest 相关实现
-    
-    
-    创建标识：Senparc - 20250113
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.3.0-preview2 为 SenMapic 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+    File name: MyFunctionRequest.cs
+    File description: MyFunctionRequest related implementation
+
+    Created by: Senparc - 20250113
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.3.0-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -55,7 +58,7 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.PL
         [LocalizedDescription(typeof(SenMapicResource), "Parameter.Sample.Number2")]
         public int Number2 { get; set; }
 
-        [LocalizedDescription(typeof(SenMapicResource), "Parameter.Sample.OperatorRestricted")]//下拉列表
+        [LocalizedDescription(typeof(SenMapicResource), "Parameter.Sample.OperatorRestricted")]//Legacy comment translated to English.
         [FunctionParameterUi(ParameterType.DropDownList, nameof(OperatorOptions))]
         public string Operator { get; set; }
 
@@ -67,7 +70,7 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.PL
                  new SelectionItem("÷", SenMapicResource.Get("Parameter.Operator.Divide"), SenMapicResource.Get("Parameter.Operator.Divide.Help"), false)
             });
 
-        [LocalizedDescription(typeof(SenMapicResource), "Parameter.Sample.PowerRestricted")]//多选框
+        [LocalizedDescription(typeof(SenMapicResource), "Parameter.Sample.PowerRestricted")]//Legacy comment translated to English.
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(PowerOptions))]
         public string[] Power { get; set; }
 

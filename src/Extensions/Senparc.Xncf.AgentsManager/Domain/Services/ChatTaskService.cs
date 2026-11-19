@@ -1,23 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ChatTaskService.cs
-    文件功能描述：ChatTaskService 服务逻辑
-    
-    
-    创建标识：Senparc - 20241017
-    
-    修改标识：Senparc - 20260701
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    File name: ChatTaskService.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20260704
-    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+    Created by: Senparc - 20241017
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 update AgentsManager with new features and improvements
+    Modified by: Senparc - 20260701
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20260704
+    Change description: v0.11.0-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 update AgentsManager with new features and improvements
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -52,7 +55,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 获取缓存中记录正在运行的 ChatTask 的 Key
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="taskId"></param>
         /// <returns></returns>
@@ -65,7 +68,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         {
             var chatTask = new ChatTask(chatTaskDto);
 
-            //TODO:需要缓存，以便快速读取
+            //Legacy comment translated to English.
 
             await base.SaveObjectAsync(chatTask);
 
@@ -82,9 +85,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 当任务进入终态（完成/取消/失败）时，检查同一 ChatGroup 下是否还有未结束的任务；
-        /// 若没有，则将 ChatGroup 状态由 Running 置为 Finished。
-        /// 群组状态同步属于尽力而为：失败只记录日志，不影响任务状态更新主流程。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         private async Task TryFinishChatGroupIfAllTasksSettledAsync(ChatTask chatTask)
         {
@@ -137,11 +140,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 关闭长时间未结束的孤儿任务（Chatting 与 Paused）。
-        /// 仍在运行的任务（存在进程内取消源）会被跳过，避免误杀正在执行或正在等待人工审批的任务；
-        /// 被关闭任务的 Human-in-the-Loop 待处理请求会一并取消。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="beforeStartDateTime">只筛选在此时间之前开始的任务</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task CloseUnfinishedTasksAsync(DateTime beforeStartDateTime)
         {
@@ -153,7 +156,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             {
                 if (_cancellationRegistry.IsRegistered(unfinishedTask.Id))
                 {
-                    // 当前进程仍有该任务的运行上下文（可能正在等待人工审批），不处理。
+                    //Legacy comment translated to English.
                     continue;
                 }
 

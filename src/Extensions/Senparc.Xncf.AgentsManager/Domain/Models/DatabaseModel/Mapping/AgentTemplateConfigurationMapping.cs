@@ -1,23 +1,26 @@
-﻿/*-----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AgentTemplateConfigurationMapping.cs
-    文件功能描述：AgentTemplateConfigurationMapping 相关实现
-    
-    
-    创建标识：Senparc - 20240616
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+    File name: AgentTemplateConfigurationMapping.cs
+    File description: AgentTemplateConfigurationMapping related implementation
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 为 AiModelId 增加索引以支持模型绑定
+    Created by: Senparc - 20240616
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260804
+    Change description: v0.14.0-preview9 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 

@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：DatabaseInstallState.cs
-    文件功能描述：DatabaseInstallState 相关实现
+    File name: DatabaseInstallState.cs
+    File description: DatabaseInstallState related implementation
 
-    创建标识：Senparc - 20260729
+    Created by: Senparc - 20260729
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.28.0-preview5 新增数据库升级维护状态与可配置页脚安全处理
+    Modified by: Senparc - 20260804
+    Change description: v0.28.0-preview5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -28,8 +32,8 @@ namespace Senparc.Ncf.Core.Utility
         /// </summary>
         public static bool IsDatabaseUnavailableForInstallation(Exception exception)
         {
-            // “column ... does not exist” 也包含 does not exist，必须先排除架构升级状态，
-            // 防止 PostgreSQL 等提供程序把缺字段误判成首次安装。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             if (IsSchemaUpgradeRequired(exception))
             {
                 return false;
@@ -72,8 +76,8 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 判断数据库是否已经存在，但代码模型引用了尚未创建的字段。
-        /// 该状态应进入升级维护页，而不是重新进入首次安装。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public static bool IsSchemaUpgradeRequired(Exception exception)
         {

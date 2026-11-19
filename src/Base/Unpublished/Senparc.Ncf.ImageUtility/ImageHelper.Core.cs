@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ImageHelper.Core.cs
-    文件功能描述：ImageHelper.Core 相关实现
-    
-    
-    创建标识：Senparc - 20211124
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: ImageHelper.Core.cs
+    File description: ImageHelper.Core related implementation
+
+    Created by: Senparc - 20211124
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -114,9 +117,9 @@ namespace Senparc.ImageUtility
         //    string outputFilePath;
         //    if (!File.Exists(sourceFilePath))
         //    {
-        //        throw new IOException(string.Format("文件{0}不存在!", sourceFilePath));
+        //        throw new IOException(string.Format("File {0} does not exist!", sourceFilePath));
         //    }
-        //    //如果是文件夹路径
+        //    //if it is a folder path
         //    string Path = HttpContext.Current.Server.MapPath(outputPath);
         //    Path = System.IO.Path.GetDirectoryName(Path);
         //    string filename = System.IO.Path.GetFileNameWithoutExtension(sourceFilePath);
@@ -168,30 +171,30 @@ namespace Senparc.ImageUtility
         //}
 
         ///// <summary>
-        ///// 缩略图片 
+        ///// Thumbnail image 
         ///// </summary>
-        ///// <param name="sourcePath">源文件物理路径+文件名</param>
-        ///// <param name="width">缩放到的宽度</param>
-        ///// <param name="height">缩放到的高度</param>
-        ///// <param name="locked">是否保持原始宽高比例</param>
-        ///// <param name="outputPath">存放文件夹+文件名</param>
-        ///// <param name="isDel">是否删除源文件</param>
-        ///// <returns>文件物理路径</returns>
+        /////<param name="sourcePath">Source file physical path + file name</param>
+        /////<param name="width">Scale to width</param>
+        /////<param name="height">Height to scale to</param>
+        /////<param name="locked">whether to keep the original aspect ratio</param>
+        /////<param name="outputPath">Store folder + file name</param>
+        /////<param name="isDel">whether to delete source file</param>
+        /////<returns>file physical path</returns>
         //public static string GetThumbnail(string sourceFilePath, int width, int height, bool isLocked, string outputPath, bool isDelOriginalFile)
         //{
         //    string outputFilePath;
         //    if (!File.Exists(sourceFilePath))
         //    {
-        //        throw new IOException(string.Format("文件{0}不存在!", sourceFilePath));
+        //        throw new IOException(string.Format("File {0} does not exist!", sourceFilePath));
         //    }
-        //    //如果是文件夹路径
+        //    //if it is a folder path
         //    //string Path = HttpContext.Current.Server.MapPath(outputPath);
         //    //Path = System.IO.Path.GetDirectoryName(Path);
         //    //string filename = System.IO.Path.GetFileName(sourceFilePath);
         //    //outputFilePath = System.IO.Path.Combine(Path, filename);
 
-        //    outputFilePath = (outputPath.StartsWith("~/")) ? HttpContext.Current.Server.MapPath(outputPath) : outputPath;//如果是应用程序相对路径，则
-        //    //转换为物理路径
+        //    outputFilePath = (outputPath.StartsWith("~/")) ? HttpContext.Current.Server.MapPath(outputPath) : outputPath;//if it is the relative path of the application program, then
+        //    // Convert for physical path
         //    int outputWidth, outputHeight;
         //    using (Image sourceImg = Image.FromFile(sourceFilePath))
         //    {
@@ -263,7 +266,7 @@ namespace Senparc.ImageUtility
         //}
 
         /// <summary>
-        /// 取随机文件名
+        /// Get a random file name
         /// </summary>
         /// <returns></returns>
         public static string GetRndFileName()
@@ -278,10 +281,10 @@ namespace Senparc.ImageUtility
         //    File.Move(sourceFileName, HttpContext.Current.Server.MapPath(newFileName));
         //}
 
-        #region 私有方法
+        #region Private Method
 
         /// <summary>
-        /// 是否是文件路径
+        /// whether it is a filepath
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -298,7 +301,7 @@ namespace Senparc.ImageUtility
         }
 
         /// <summary>
-        /// 删除文件
+        /// deletefile
         /// </summary>
         /// <param name="filePath"></param>
         private static void DeleteFile(string filePath)

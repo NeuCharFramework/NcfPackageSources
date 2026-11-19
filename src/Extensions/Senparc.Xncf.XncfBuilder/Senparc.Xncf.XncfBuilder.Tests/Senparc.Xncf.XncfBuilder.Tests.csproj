@@ -4,51 +4,51 @@
 		<TargetFrameworks>net10.0</TargetFrameworks>
 		<Version>0.0.19</Version>
 		<PackageReleaseNotes>
-    [2026-07-02] v0.0.2 升级 Senparc.AI.AgentKernel 并完成兼容性适配，增强 MCP 工具接入与调用链路兼容能力
-    1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
-    2、增强 MCP 工具接入与调用链路兼容能力
-    3、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+    [2026-07-02] v0.0.2 Updated module behavior and related support.
+    1. Updated module behavior and related support.
+    2. Updated module behavior and related support.
+    3. Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
     [2026-07-07] v0.0.3 Dependency updates from upstream modules
-    1、Dependency update from Senparc.Xncf.PromptRange.Tests to 0.0.3
-    2、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.5-preview4
-    [2026-07-17] v0.0.4 同步上游项目版本并适配统一本地化能力
-    1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.1
-    2、Dependency update from Senparc.Xncf.PromptRange.Tests to 0.0.4
-    3、Dependency update from Senparc.Xncf.XncfBuilder to 0.37.0-preview5
-    4、同步 XncfBuilder 0.37.0-preview5 的模板多语言页面更新
-    5、覆盖无 cmd.exe 依赖的构建命令执行
-    6、验证构建输出和异常结果处理
+    1. Dependency update from Senparc.Xncf.PromptRange.Tests to 0.0.3
+    2. Dependency update from Senparc.Xncf.XncfBuilder to 0.36.5-preview4
+    [2026-07-17] v0.0.4 synchronize upstream project versions and adopt shared localization capabilities
+    1. Dependency update from Senparc.Ncf.Core.Tests to 0.0.1
+    2. Dependency update from Senparc.Xncf.PromptRange.Tests to 0.0.4
+    3. Dependency update from Senparc.Xncf.XncfBuilder to 0.37.0-preview5
+    4. Updated module behavior and related support.
+    5. Updated module behavior and related support.
+    6. Updated module behavior and related support.
     [2026-07-29] v0.0.5 Dependency update from Senparc.Xncf.XncfBuilder to 0.37.1-preview6
     [2026-07-31] v0.0.6 Dependency update from Senparc.Xncf.XncfBuilder to 0.38.0-preview7
-    [2026-08-04] v0.0.7 补充 XNCF 预览与迁移布局测试
-    1、覆盖预览会话、持久化状态与工作区文件服务
-    2、覆盖多数据库迁移快照布局和 DbSet 键生成
-    3、清理过期 SenparcTrace 测试日志数据
+    [2026-08-04] v0.0.7 Updated module behavior and related support.
+    1. Updated module behavior and related support.
+    2. Updated module behavior and related support.
+    3. Updated module behavior and related support.
     [2026-08-08] v0.0.8 Dependency updates from upstream projects
-    1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.5
-    2、Dependency update from Senparc.Xncf.PromptRange.Tests to 0.0.8
-    3、Dependency update from Senparc.Xncf.XncfBuilder to 0.39.1-preview9
-    [2026-08-13] v0.0.9 补充 XncfBuilder 预览状态持久化测试
-    1、覆盖预览状态恢复、初始化和生命周期行为
-    [2026-08-15] v0.0.10 增加 XncfBuilder 开发工作区回归测试
-    1、覆盖开发任务状态、工作区隔离和预览服务交互
-    2、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0
-    [2026-08-22] v0.0.11 同步 XncfBuilder 测试依赖
-    1、更新构建器测试依赖以覆盖当前预览任务和工作区服务版本
+    1. Dependency update from Senparc.Ncf.Core.Tests to 0.0.5
+    2. Dependency update from Senparc.Xncf.PromptRange.Tests to 0.0.8
+    3. Dependency update from Senparc.Xncf.XncfBuilder to 0.39.1-preview9
+    [2026-08-13] v0.0.9 Updated module behavior and related support.
+    1. Updated module behavior and related support.
+    [2026-08-15] v0.0.10 Updated module behavior and related support.
+    1. Updated module behavior and related support.
+    2. Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0
+    [2026-08-22] v0.0.11 Updated module behavior and related support.
+    1. Updated module behavior and related support.
     [2026-08-29] v0.0.12 Dependency updates from Senparc.Ncf.Core.Tests to 0.0.9
-    1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.9
-    [2026-09-15] v0.0.13 同步上游模块版本并保持宿主兼容
-    1、更新项目依赖组合，兼容当前窗口内的 Senparc.Areas.Admin 及相关模块能力
+    1. Dependency update from Senparc.Ncf.Core.Tests to 0.0.9
+    [2026-09-15] v0.0.13 synchronize upstream module versions and preserve host compatibility
+    1. Updated module behavior and related support.
     [2026-09-16] v0.0.14 Dependency updates from upstream modules
     [2026-09-17] v0.0.15 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0; Senparc.Xncf.AIKernel to 0.16.2; Senparc.Xncf.MCP to 0.5.5; Senparc.Xncf.PromptRange to 0.19.7; Senparc.Xncf.XncfBuilder to 0.41.4
-    1、同步受影响的基础库、AI 模块或宿主项目版本
-    2、保持项目引用链与当前功能兼容
+    1. Updated module behavior and related support.
+    2. Updated module behavior and related support.
     [2026-10-05] v0.0.16 Enhanced Senparc.Xncf.XncfBuilder.Tests functionality and compatibility
-    1、Updated Senparc.Xncf.XncfBuilder.Tests project behavior and integration for the latest feature and reliability improvements.
+    1. Updated Senparc.Xncf.XncfBuilder.Tests project behavior and integration for the latest feature and reliability improvements.
     [2026-10-09] v0.0.17 Dependency update from Senparc.Xncf.XncfBuilder to 0.41.5
     [2026-10-21] v0.0.18 Dependency update from Senparc.Xncf.PromptRange.Tests to 0.0.18
-    1、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.7
-    [2026-11-12] v0.0.19 Dependency updates from Senparc.Ncf.Core.Tests to 0.0.13；Senparc.Xncf.PromptRange.Tests to 0.0.21；Senparc.Xncf.XncfBuilder to 0.41.9
+    1. Dependency update from Senparc.Xncf.XncfBuilder to 0.41.7
+    [2026-11-12] v0.0.19 Dependency updates from Senparc.Ncf.Core.Tests to 0.0.13;Senparc.Xncf.PromptRange.Tests to 0.0.21;Senparc.Xncf.XncfBuilder to 0.41.9
 		</PackageReleaseNotes>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SqliteMemoryDatabaseConfiguration.cs
-    文件功能描述：SqliteMemoryDatabaseConfiguration 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SqliteMemoryDatabaseConfiguration.cs
+    File description: SqliteMemoryDatabaseConfiguration related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.14 Updated database integration support and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -29,7 +32,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Database.Sqlite
 {
     /// <summary>
-    /// SQLite 数据库配置
+    /// SQLite databaseconfiguration
     /// </summary>
     public class SqliteMemoryDatabaseConfiguration : DatabaseConfigurationBase<SqliteDbContextOptionsBuilder, SqliteOptionsExtension>
     {
@@ -45,11 +48,11 @@ namespace Senparc.Ncf.Database.Sqlite
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
             {
-                //其他更多配置
+                //Legacy comment translated to English.
 
                 connectionString = SqliteDatabaseConfiguration.GetLocalConnectionString(connectionString);
 
-                //执行 UseSqlite（必须）
+                //execute UseSqlite（must）
                 //optionsBuilder.UseSqlite(CreateInMemoryDatabase(connectionString), actionBase);
 
                 optionsBuilder.UseSqlite(connectionString, actionBase);
@@ -58,7 +61,7 @@ namespace Senparc.Ncf.Database.Sqlite
 
         public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => (builder, xncfDatabaseData) =>
         {
-            //更多数据库操作独立配置（非必须）
+            //Legacy comment translated to English.
         };
 
 

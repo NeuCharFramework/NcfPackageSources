@@ -1,17 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：20261003081902_Add_FineTuningWorkers.cs
-    文件功能描述：20261003081902_Add_FineTuningWorkers 相关实现
+    File name: 20261003081902_Add_FineTuningWorkers.cs
+    File description: 20261003081902_Add_FineTuningWorkers related implementation
 
+    Created by: Senparc - 20220818
 
-    创建标识：Senparc - 20220818
+    Modified by: Senparc - 20261009
+    Change description: v0.16.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
-
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 支持 Add_FineTuningWorkers 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

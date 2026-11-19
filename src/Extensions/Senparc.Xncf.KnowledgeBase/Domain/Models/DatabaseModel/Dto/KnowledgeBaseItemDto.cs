@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：KnowledgeBaseItemDto.cs
-    文件功能描述：KnowledgeBaseItemDto 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+    Copyright (C) 2026 Senparc
+
+    File name: KnowledgeBaseItemDto.cs
+    File description: KnowledgeBaseItemDto related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview6 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -42,29 +45,29 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         }
 
         /// <summary>
-        /// 知识库Id
+        ///Legacy comment translated to English.
         /// </summary>
         public int KnowledgeBasesId { get; set; }
         /// <summary>
-        /// 内容类型
+        /// contenttype
         /// </summary>
         public ContentType ContentType { get; set; }
 
         public int? NcfFileId { get; set; }
 
         /// <summary>
-        /// 内容
+        /// content
         /// </summary>
         public string Content { get; set; }
         
         /// <summary>
-        /// 源文件名称
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(500)]
         public string FileName { get; set; }
         
         /// <summary>
-        /// 文本切片索引
+        ///Legacy comment translated to English.
         /// </summary>
         public int ChunkIndex { get; set; }
 

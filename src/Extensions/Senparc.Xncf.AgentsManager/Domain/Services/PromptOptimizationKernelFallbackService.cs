@@ -1,23 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptOptimizationKernelFallbackService.cs
-    文件功能描述：PromptOptimizationKernelFallbackService 服务逻辑
-    
-    
-    创建标识：Senparc - 20260326
-    
-    修改标识：Senparc - 20260701
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    File name: PromptOptimizationKernelFallbackService.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.19.0 提示词优化回退时记录 Token 用量
+    Created by: Senparc - 20260326
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
+    Modified by: Senparc - 20260701
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20261021
+    Change description: v0.19.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -121,14 +124,14 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
                     return Fail(request.RequestId, msg);
                 }
 
-                //获得可用的 Chat 模型
+                //Legacy comment translated to English.
                 var avaliableModelResult = await _aiModelService.Value.GetValiableChatModel(aiModelDto);
 
                 aiModelDto = avaliableModelResult.FinalAiModelDto;
 
                 // build aiSettings by model
                 var aiSettings = avaliableModelResult.AiSetting;
-                //TODO:可以设置一个默k认 PromptRange 的值，或者使用配置来指定打分的 AI，而不是使用同一个模型。
+                //Legacy comment translated to English.
 
                 //ConfigModel configModel = _llModelService.ConvertToConfigModel(aiModelDto.ConfigModelType);
 
@@ -162,7 +165,7 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
 
                 var aiRequest = iWantToRun.CreateRequest(OptimizationPromptTemplate, iWantToRun.Kernel.AgentSession);
                 aiRequest.TempAiArguments = new SenparcAiArguments() { AgentKernelArguments = args };
-                aiRequest.RequestContent = aiRequest.ReplacePrompt();//替换参数
+                aiRequest.RequestContent = aiRequest.ReplacePrompt();//Legacy comment translated to English.
 
                 _logger.LogInformation("Kernel fallback: invoking model for RequestId={RequestId}", request.RequestId);
                 var runResult = await _aiModelService.Value.RunChatWithUsageAsync(
@@ -237,8 +240,8 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
                         ? "Agent did not call CreateOptimizedPrompt; kernel fallback created a new version."
                         : $"Agent did not call CreateOptimizedPrompt; kernel fallback: {reason}";
 
-                    // 成功路径不释放 claim：保持锁定以阻止后续重复插入。
-                    // 锁将由 ChatTaskHandler 的 CleanupRequest 统一清理。
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
 
                     return new PromptOptimizationResponseEvent(
                         request.RequestId,

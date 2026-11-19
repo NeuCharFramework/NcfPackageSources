@@ -1,0 +1,1561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Esperando más contenido o confirmación para guardar. No se guardaron cambios en Memory en este turno.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>No se identificó intención de actualizar ahora la memoria a largo plazo. No se guardó nada en este turno.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Este lote incluye información del asistente y no está guardado. Revise y guarde cada entrada; sus afirmaciones pueden ser inexactas.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>El contexto reciente no identifica qué recordar. Envíe «Remember: …» con el hecho completo en un solo mensaje; compruebe el PromptCode si es necesario.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>Ha revisado y guardado este grupo de propuestas.</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Revisar propuesta</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>Esta propuesta del contexto aún no está guardada. Revise contenido y ámbito y guarde la entrada. Las eliminaciones requieren confirmación. La IA no modifica entradas manuales fijadas.</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>Termine el borrador y cierre los ajustes antes de revisar una propuesta.</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>Texto original (sin verificar)</value></data>
+  <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>Expandir el panel de conversaciones</value></data>
+  <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>Contraer el panel de conversaciones</value></data>
+  <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>Ajustar ancho del panel (flechas izquierda/derecha)</value></data>
+  <data name="AdminChat.Sidebar.Reorder" xml:space="preserve"><value>Arrastrar dentro del grupo, o Alt + Arriba/Abajo</value></data>
+  <data name="AdminChat.Sidebar.Running" xml:space="preserve"><value>En curso</value></data>
+  <data name="AdminChat.Sidebar.Stopping" xml:space="preserve"><value>Deteniendo</value></data>
+  <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>Orden guardado para esta cuenta en todos los dispositivos</value></data>
+  <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>No se pudo guardar el orden. Inténtelo de nuevo.</value></data>
+  <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>No se pudieron leer o guardar las preferencias del panel. Este diseño solo se aplica a esta página.</value></data>
+  <data name="AdminChat.Sidebar.Archive" xml:space="preserve"><value>Archivar y marcar como terminada</value></data>
+  <data name="AdminChat.Sidebar.ArchiveRunning" xml:space="preserve"><value>Esta conversación sigue en curso. Archívela al terminar.</value></data>
+  <data name="AdminChat.Archive.Menu" xml:space="preserve"><value>Archivadas</value></data>
+  <data name="AdminChat.Archive.Empty" xml:space="preserve"><value>No hay conversaciones archivadas</value></data>
+  <data name="AdminChat.Archive.Open" xml:space="preserve"><value>Abrir conversación archivada: {0}</value></data>
+  <data name="AdminChat.Archive.Delete" xml:space="preserve"><value>Eliminar conversación archivada: {0}</value></data>
+  <data name="AdminChat.Archive.Action" xml:space="preserve"><value>Archivar</value></data>
+  <data name="AdminChat.Archive.Restore" xml:space="preserve"><value>Restaurar</value></data>
+  <data name="AdminChat.Archive.RestoreLabel" xml:space="preserve"><value>Restaurar conversación archivada: {0}</value></data>
+  <data name="AdminChat.Archive.RestoreSuccess" xml:space="preserve"><value>Restaurada en la lista activa</value></data>
+  <data name="AdminChat.Archive.RestoreFailed" xml:space="preserve"><value>No se pudo restaurar la conversación. Inténtelo de nuevo.</value></data>
+  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>Archivada. Revísela, restáurela o elimínela desde el menú Más, junto a Nueva conversación.</value></data>
+  <data name="AdminChat.Sidebar.Tools" xml:space="preserve"><value>Más</value></data>
+  <data name="AdminChat.Sidebar.Unread" xml:space="preserve"><value>No leído</value></data>
+  <data name="AdminChat.Archive.Failed" xml:space="preserve"><value>No se pudo archivar la conversación. Inténtelo de nuevo.</value></data>
+  <data name="AdminChat.Archive.Tag" xml:space="preserve"><value>Archivada</value></data>
+  <data name="AdminChat.Archive.LoadFailed" xml:space="preserve"><value>No se pudieron cargar las conversaciones archivadas</value></data>
+  <data name="AdminChat.ArchiveSessionSuccess" xml:space="preserve"><value>Conversación archivada</value></data>
+  <data name="AdminChat.Rail.Label" xml:space="preserve"><value>Mis mensajes</value></data>
+  <data name="AdminChat.Rail.Jump" xml:space="preserve"><value>Ir a este mensaje</value></data>
+  <data name="AdminChat.Rail.EmptyMessage" xml:space="preserve"><value>(Mensaje vacío)</value></data>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AdminChat.Memory.Subtitle" xml:space="preserve"><value>Gestione preferencias duraderas para conversaciones más personales</value></data>
+  <data name="AdminChat.Memory.Private" xml:space="preserve"><value>Memoria privada</value></data>
+  <data name="AdminChat.Memory.SaveChanges" xml:space="preserve"><value>Guardar cambios</value></data>
+  <data name="AdminChat.Memory.ClearDraft" xml:space="preserve"><value>Vaciar el borrador</value></data>
+  <data name="AdminChat.Memory.EntriesHint" xml:space="preserve"><value>Sus memorias globales y del Workspace actual en un solo lugar</value></data>
+  <data name="AdminChat.Memory.Guide" xml:space="preserve"><value>Ámbitos, reglas de aprendizaje y almacenamiento</value></data>
+  <data name="AdminChat.Memory.FormatGuide" xml:space="preserve"><value>Formato Markdown y reglas de guardado</value></data>
+  <data name="AdminChat.Memory.SaveEntry" xml:space="preserve"><value>Guardar entrada</value></data>
+  <data name="AdminChat.Memory.EmptyEntries" xml:space="preserve"><value>Aún no hay entradas de Memory. Añada su primera preferencia para empezar.</value></data>
+  <data name="AdminChat.Memory.EmptyLoaded" xml:space="preserve"><value>Aún no hay informe de carga. Active Memory y envíe un mensaje para verlo aquí.</value></data>
+  <data name="AdminChat.Memory.Settings" xml:space="preserve"><value>Ajustes de Memory / Chat</value></data>
+  <data name="AdminChat.Memory.UpdateSaved" xml:space="preserve"><value>Memory guardada: {0} cambios globales y {1} del Workspace actual (almacenamiento privado en base de datos, no se creó ningún archivo).</value></data>
+  <data name="AdminChat.Memory.UpdateReason.mode-off" xml:space="preserve"><value>La Memory a largo plazo no se guardó: Memory está desactivada para este chat. La confirmación del asistente no es prueba de persistencia.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.read-only" xml:space="preserve"><value>La Memory a largo plazo no se guardó: este chat es de solo lectura. Cambie a Learn o edite las entradas manualmente.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.input-not-eligible" xml:space="preserve"><value>Memory no se actualizó: la entrada no cumplió los disparadores de aprendizaje o superó el límite de longitud.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-candidates" xml:space="preserve"><value>Memory no se actualizó: el extractor no devolvió memorias a largo plazo. Añada una entrada manualmente o revise el PromptCode de este turno. Que el asistente diga que lo recuerda no confirma el guardado.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pinned" xml:space="preserve"><value>Memory no se actualizó: la entrada correspondiente está fijada para impedir cambios o eliminación por la IA. Edítela manualmente.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-difference" xml:space="preserve"><value>Memory sin cambios: el contenido devuelto ya existe, o no había una entrada coincidente para eliminar.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.revision-conflict" xml:space="preserve"><value>Memory no se guardó: cambió durante este turno. Se conservó la versión más reciente; revísela antes de reintentar.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.timeout" xml:space="preserve"><value>Memory no se guardó: la extracción agotó el tiempo. Reintente o añada la entrada manualmente.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.invalid-change" xml:space="preserve"><value>Memory no se guardó: la validación de evidencia, seguridad, ámbito o campos rechazó todo el lote.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.capacity" xml:space="preserve"><value>Memory no se guardó: se alcanzó el límite de 80 entradas. Elimine primero las entradas que no use.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.invalid-json" xml:space="preserve"><value>Memory no se guardó: el extractor no devolvió un JSON válido en el formato requerido. Revise el prompt.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending" xml:space="preserve"><value>No se ha confirmado ningún guardado de Memory. No tome la promesa del asistente como prueba de persistencia.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.update-failed" xml:space="preserve"><value>Error al actualizar Memory; el guardado no se confirmó. Revise la configuración del prompt, el modelo o la base de datos. Las memorias existentes se conservaron.</value></data>
+  <data name="AdminChat.Memory.StorageNotice" xml:space="preserve"><value>Las memorias viven en su base de datos privada, no en archivos de Workspace. Un Memory.md de Workspace es un archivo ordinario y no se crea ni se importa automáticamente. Gestione las entradas aquí; confíe en el resultado de actualización del sistema, no en la confirmación textual de un asistente.</value></data>
+  <data name="AdminChat.Memory.Use" xml:space="preserve"><value>Usar mi Memory global</value></data>
+  <data name="AdminChat.Memory.Notice" xml:space="preserve"><value>Off: sin recuperación ni aprendizaje. Read-only: solo recuperación. Learn: se actualiza ante preferencias explícitas o señales de recordar o corregir. Ámbitos privados de usuario global y del Workspace actual; se excluyen las entradas expiradas o de archivo. Presupuesto: 1000 tokens, Core hasta 300; los modelos desconocidos usan una estimación conservadora. Nunca guarde secretos ni información sensible.</value></data>
+  <data name="AdminChat.Memory.ModeOff" xml:space="preserve"><value>Cerrar</value></data>
+  <data name="AdminChat.Memory.ModeReadOnly" xml:space="preserve"><value>Solo lectura</value></data>
+  <data name="AdminChat.Memory.ModeLearn" xml:space="preserve"><value>Aprender</value></data>
+  <data name="AdminChat.Memory.Entries" xml:space="preserve"><value>Entradas</value></data>
+  <data name="AdminChat.Memory.ScopeNotice" xml:space="preserve"><value>Solo se muestran sus memorias globales y las del Workspace del chat actual. Editar el Workspace requiere un chat vinculado a ese Workspace. Los hechos del Workspace tienen prioridad sobre los hechos globales con la misma clave.</value></data>
+  <data name="AdminChat.Memory.Add" xml:space="preserve"><value>Agregar entrada</value></data>
+  <data name="AdminChat.Memory.Text" xml:space="preserve"><value>Contenido</value></data>
+  <data name="AdminChat.Memory.Scope" xml:space="preserve"><value>Ámbito</value></data>
+  <data name="AdminChat.Memory.ScopeGlobal" xml:space="preserve"><value>Mi global</value></data>
+  <data name="AdminChat.Memory.Tier" xml:space="preserve"><value>Nivel de carga</value></data>
+  <data name="AdminChat.Memory.Kind" xml:space="preserve"><value>Tipo</value></data>
+  <data name="AdminChat.Memory.Topic" xml:space="preserve"><value>Tema (obligatorio para el nivel de tema)</value></data>
+  <data name="AdminChat.Memory.Expires" xml:space="preserve"><value>Caduca (opcional)</value></data>
+  <data name="AdminChat.Memory.Pinned" xml:space="preserve"><value>Fijar: impedir cambios o eliminación por la IA</value></data>
+  <data name="AdminChat.Memory.DeleteNotice" xml:space="preserve"><value>¿Eliminar la entrada y borrar su contenido histórico? Los mensajes de chat originales no se eliminan.</value></data>
+  <data name="AdminChat.Memory.Delete" xml:space="preserve"><value>Eliminar</value></data>
+  <data name="AdminChat.Memory.Source" xml:space="preserve"><value>chat de origen / mensaje</value></data>
+  <data name="AdminChat.Memory.Loaded" xml:space="preserve"><value>Cargado en este turno</value></data>
+  <data name="AdminChat.Memory.LoadedNotice" xml:space="preserve"><value>Memorias suministradas al modelo en el último turno de esta página; no prueban que el modelo las usara. Los recuentos incluyen el texto de límite de Memory y excluyen SystemMessage, el historial y la sobrecarga del protocolo. Este informe no se conserva después de actualizar.</value></data>
+  <data name="AdminChat.Memory.Reason" xml:space="preserve"><value>Motivo de la selección</value></data>
+  <data name="AdminChat.Memory.History" xml:space="preserve"><value>Historial de cambios</value></data>
+  <data name="AdminChat.Memory.Time" xml:space="preserve"><value>Hora</value></data>
+  <data name="AdminChat.Memory.MarkdownScope" xml:space="preserve"><value>Memory.md solo edita o exporta sus memorias globales. Use la edición de entradas para las memorias de Workspace; vaciar Markdown no las elimina.</value></data>
+  <data name="AdminChat.Memory.UnsavedMarkdown" xml:space="preserve"><value>Guarde el borrador Markdown antes de editar entradas individuales.</value></data>
+  <data name="AdminChat.Memory.Preview" xml:space="preserve"><value>Vista previa de Memory.md</value></data>
+  <data name="AdminChat.Memory.Edit" xml:space="preserve"><value>Editar / Niveles</value></data>
+  <data name="AdminChat.Memory.Format" xml:space="preserve"><value>Use los encabezados ## Core, ## Topic: name y ## Archive con entradas '- ': hasta 300 caracteres cada una, 80 entradas en total. Los guardados manuales fijan todas las entradas contra el reemplazo por la IA. Vacíe el editor y guarde para eliminar todas las memorias. Publique y puntúe una nueva versión en el rango AdminChat.Memory de PromptRange; el prompt publicado con la media más alta sustituye al predeterminado.</value></data>
+  <data name="AdminChat.Memory.SystemMessage" xml:space="preserve"><value>SystemMessage</value></data>
+  <data name="AdminChat.Memory.SystemNotice" xml:space="preserve"><value>Se aplica a todos mis chats desde el siguiente turno, incluso con Memory desactivada. No concede permisos de herramientas. Hasta 2000 caracteres.</value></data>
+  <data name="AdminChat.Memory.GlobalSystem" xml:space="preserve"><value>SystemMessage de todo el inquilino (superadministrador)</value></data>
+  <data name="AdminChat.Memory.GlobalNotice" xml:space="preserve"><value>Se aplica a los chats de todos los usuarios de este inquilino o a todo el sitio en modo de un solo inquilino. Excluye tareas internas de generación, como títulos y la extracción de Memory.</value></data>
+  <data name="AdminChat.Memory.SaveGlobal" xml:space="preserve"><value>Guardar SystemMessage global</value></data>
+  <data name="AdminChat.Memory.Download" xml:space="preserve"><value>Descargar Memory.md</value></data>
+  <data name="AdminChat.Memory.Clear" xml:space="preserve"><value>Borrar borrador (guardar para eliminar)</value></data>
+  <data name="AdminChat.Memory.Save" xml:space="preserve"><value>Guardar mi Memory / ajustes</value></data>
+  <data name="AdminChat.Memory.Saved" xml:space="preserve"><value>Guardado.</value></data>
+  <data name="AdminChat.Memory.Failed" xml:space="preserve"><value>La operación de Memory falló. Recargue antes de reintentar.</value></data>
+  <data name="AdminChat.Memory.UpdateWarning" xml:space="preserve"><value>Memory no se actualizó en este turno; las memorias existentes se conservaron. Revise PromptRange o vuelva a abrir los ajustes de Memory.</value></data>
+  <data name="Admin.Title" xml:space="preserve">
+    <value>System Admin Panel</value>
+  </data>
+  <data name="Admin.Nav.Home" xml:space="preserve">
+    <value>Inicio</value>
+  </data>
+  <data name="Admin.Tabs.List" xml:space="preserve">
+    <value>Páginas abiertas</value>
+  </data>
+  <data name="Admin.Tabs.Close" xml:space="preserve">
+    <value>Cerrar pestaña</value>
+  </data>
+  <data name="Admin.Tabs.Untitled" xml:space="preserve">
+    <value>Página sin título</value>
+  </data>
+  <data name="Admin.Tabs.BackToSource" xml:space="preserve"><value>Volver al origen:</value></data>
+  <data name="Admin.Tabs.CurrentPage" xml:space="preserve"><value>Página actual</value></data>
+  <data name="Admin.Tabs.ScrollLeft" xml:space="preserve">
+    <value>Desplazar pestañas a la izquierda</value>
+  </data>
+  <data name="Admin.Tabs.ScrollRight" xml:space="preserve">
+    <value>Desplazar pestañas a la derecha</value>
+  </data>
+  <data name="Admin.Nav.Search" xml:space="preserve">
+    <value>Buscar menú</value>
+  </data>
+  <data name="Admin.Nav.SearchPlaceholder" xml:space="preserve">
+    <value>Escriba un término para filtrar el menú</value>
+  </data>
+  <data name="Admin.Nav.SearchEmpty" xml:space="preserve">
+    <value>No se encontró ningún menú</value>
+  </data>
+  <data name="Admin.Nav.ConfigTitle" xml:space="preserve">
+    <value>Configuración de menú</value>
+  </data>
+  <data name="Admin.Nav.ConfigHint" xml:space="preserve">
+    <value>Arrastre los menús de primer nivel para reordenar; guardar actualiza los valores de orden</value>
+  </data>
+  <data name="Admin.Nav.ConfigSave" xml:space="preserve">
+    <value>Guardar orden</value>
+  </data>
+  <data name="Admin.Nav.ConfigSaved" xml:space="preserve">
+    <value>Orden del menú guardado</value>
+  </data>
+  <data name="Admin.Layout.Welcome" xml:space="preserve">
+    <value>Bienvenido,</value>
+  </data>
+  <data name="Admin.Layout.LogoAlt" xml:space="preserve">
+    <value>Logotipo de NeuCharFramework</value>
+  </data>
+  <data name="Admin.Logout.Title" xml:space="preserve">
+    <value>Cerrar sesión</value>
+  </data>
+  <data name="Admin.Logout.Confirm" xml:space="preserve">
+    <value>¿Está seguro de que desea cerrar sesión?</value>
+  </data>
+  <data name="Admin.Logout.Yes" xml:space="preserve">
+    <value>Cerrar sesión</value>
+  </data>
+  <data name="Admin.Logout.No" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Admin.Login.Title" xml:space="preserve">
+    <value>Inicio de sesión</value>
+  </data>
+  <data name="Admin.Login.Username" xml:space="preserve">
+    <value>Nombre de usuario</value>
+  </data>
+  <data name="Admin.Login.Password" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="Admin.Login.Tenant" xml:space="preserve">
+    <value>Nombre del inquilino</value>
+  </data>
+  <data name="Admin.Login.Submit" xml:space="preserve">
+    <value>Iniciar sesión</value>
+  </data>
+  <data name="Admin.Login.UsernamePlaceholder" xml:space="preserve">
+    <value>Ingrese el nombre de usuario</value>
+  </data>
+  <data name="Admin.Login.PasswordPlaceholder" xml:space="preserve">
+    <value>Ingrese la contraseña</value>
+  </data>
+  <data name="Admin.Login.TenantPlaceholder" xml:space="preserve">
+    <value>Ingrese el nombre del inquilino</value>
+  </data>
+  <data name="Admin.Login.Error.UsernameRequired" xml:space="preserve">
+    <value>El nombre de usuario es requerido</value>
+  </data>
+  <data name="Admin.Login.Error.PasswordRequired" xml:space="preserve">
+    <value>Se requiere contraseña</value>
+  </data>
+  <data name="Admin.Language.SelectLanguage" xml:space="preserve">
+    <value>Seleccionar idioma</value>
+  </data>
+  <data name="Admin.Login.Error.InvalidCredentials" xml:space="preserve"><value>Nombre de usuario o contraseña no válidos.</value></data>
+  <data name="Common.系统管理" xml:space="preserve"><value>Administración del sistema</value></data>
+  <data name="Common.增加" xml:space="preserve"><value>Agregar</value></data>
+  <data name="Common.排序" xml:space="preserve"><value>Ordenar</value></data>
+  <data name="Common.备注" xml:space="preserve"><value>Notas</value></data>
+  <data name="Common.说明" xml:space="preserve"><value>Descripción</value></data>
+  <data name="Common.添加时间" xml:space="preserve"><value>Fecha de creación</value></data>
+  <data name="Common.操作" xml:space="preserve"><value>Acciones</value></data>
+  <data name="Common.编辑" xml:space="preserve"><value>Editar</value></data>
+  <data name="Common.删除" xml:space="preserve"><value>Eliminar</value></data>
+  <data name="Common.取消" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="Common.确认" xml:space="preserve"><value>Confirmar</value></data>
+  <data name="Common.请输入说明" xml:space="preserve"><value>Ingrese una descripción</value></data>
+  <data name="Common.请输入备注" xml:space="preserve"><value>Ingrese notas</value></data>
+  <data name="Common.返回" xml:space="preserve"><value>Volver</value></data>
+  <data name="Common.保存" xml:space="preserve"><value>Guardar</value></data>
+  <data name="Menu.管理" xml:space="preserve"><value>Gestión de menús</value></data>
+  <data name="Menu.列表" xml:space="preserve"><value>Lista de menús</value></data>
+  <data name="Menu.增加菜单" xml:space="preserve"><value>Agregar menú</value></data>
+  <data name="Menu.名称" xml:space="preserve"><value>Nombre del menú</value></data>
+  <data name="Menu.增加下级" xml:space="preserve"><value>Agregar submenú</value></data>
+  <data name="Menu.确认删除" xml:space="preserve"><value>¿Eliminar este menú?</value></data>
+  <data name="Menu.父级" xml:space="preserve"><value>Menú principal</value></data>
+  <data name="Menu.类型" xml:space="preserve"><value>Tipo</value></data>
+  <data name="Menu.菜单" xml:space="preserve"><value>Menú</value></data>
+  <data name="Menu.页面" xml:space="preserve"><value>Página</value></data>
+  <data name="Menu.按钮" xml:space="preserve"><value>Botón</value></data>
+  <data name="Menu.路径" xml:space="preserve"><value>Ruta</value></data>
+  <data name="Menu.操作代码" xml:space="preserve"><value>Código de acción</value></data>
+  <data name="Menu.是否锁定" xml:space="preserve"><value>Bloqueado</value></data>
+  <data name="Menu.是否显示" xml:space="preserve"><value>Visible</value></data>
+  <data name="Menu.图标" xml:space="preserve"><value>Icono</value></data>
+  <data name="Menu.选择图标" xml:space="preserve"><value>Seleccionar icono</value></data>
+  <data name="Menu.图标列表" xml:space="preserve"><value>Lista de iconos</value></data>
+  <data name="Role.管理" xml:space="preserve"><value>Gestión de roles</value></data>
+  <data name="Role.列表" xml:space="preserve"><value>Lista de roles</value></data>
+  <data name="Role.名称" xml:space="preserve"><value>Nombre del rol</value></data>
+  <data name="Role.代码" xml:space="preserve"><value>Código del rol</value></data>
+  <data name="Role.权限" xml:space="preserve"><value>Permisos</value></data>
+  <data name="Role.确认删除" xml:space="preserve"><value>¿Eliminar este rol?</value></data>
+  <data name="Role.请输入名称" xml:space="preserve"><value>Ingrese el nombre del rol</value></data>
+  <data name="Role.请输入代码" xml:space="preserve"><value>Ingrese el código del rol</value></data>
+  <data name="Role.是否启用" xml:space="preserve"><value>Habilitado</value></data>
+  <data name="Role.为角色授权" xml:space="preserve"><value>Asignar permisos al rol</value></data>
+  <data name="Trace.日志" xml:space="preserve"><value>Registros de SenparcTrace</value></data>
+  <data name="Trace.编号" xml:space="preserve"><value>N.º</value></data>
+  <data name="Trace.日期" xml:space="preserve"><value>Fecha</value></data>
+  <data name="AdminUserInfo.角色授予" xml:space="preserve"><value>Asignación de roles</value></data>
+  <data name="AdminUserInfo.管理员管理" xml:space="preserve"><value>Gestión de administradores</value></data>
+  <data name="Tenant.NameExists" xml:space="preserve"><value>El nombre del inquilino {0} ya existe</value></data>
+  <data name="Tenant.KeyExists" xml:space="preserve"><value>La regla de coincidencia del inquilino {0} ya existe</value></data>
+  <data name="Tenant.SaveSuccess.Edit" xml:space="preserve"><value>Inquilino actualizado correctamente</value></data>
+  <data name="Tenant.SaveSuccess.Create" xml:space="preserve"><value>Inquilino creado correctamente</value></data>
+  <data name="Tenant.PlatformAdminOnly" xml:space="preserve"><value>¡En modo multiinquilino, solo el administrador de la plataforma puede gestionar la información de los inquilinos!</value></data>
+  <data name="Tenant.NotFound" xml:space="preserve"><value>Inquilino no encontrado</value></data>
+  <data name="Tenant.SetInfoFailed" xml:space="preserve"><value>No se pudo establecer la información del inquilino</value></data>
+  <data name="Tenant.InitializeSuccess" xml:space="preserve"><value>Inicialización completada correctamente</value></data>
+  <data name="Xncf.ModuleNotAdded" xml:space="preserve"><value>El módulo no ha sido agregado.</value></data>
+  <data name="Xncf.StateChangedSuccess" xml:space="preserve"><value>Estado cambiado correctamente.</value></data>
+  <data name="Xncf.ModuleNotRegistered" xml:space="preserve"><value>El módulo no está registrado.</value></data>
+  <data name="Xncf.ModuleNotInstalled" xml:space="preserve"><value>El módulo actual no está instalado.</value></data>
+  <data name="Xncf.InvalidModuleState" xml:space="preserve"><value>El estado actual del módulo es [{0}]. Solo los módulos en estado [Abierto] pueden ejecutar esta acción.\r\nSi fuerza esta acción, el sistema seguirá ejecutando un ensamblado no verificado porque la versión instalada anteriormente puede haber sido reemplazada por una compilación más nueva.</value></data>
+  <data name="Xncf.FunctionNotMatched" xml:space="preserve"><value>No se encontró un método coincidente.</value></data>
+  <data name="Xncf.FunctionSingleParameterOnly" xml:space="preserve"><value>Los métodos FunctionRender solo pueden declarar un parámetro de entrada.</value></data>
+  <data name="Xncf.LogFileNotFoundOrDownloaded" xml:space="preserve"><value>El archivo de registro no existe o ya fue descargado.</value></data>
+  <data name="Xncf.ModuleIdNotProvided" xml:space="preserve"><value>No se proporcionó el identificador del módulo.</value></data>
+  <data name="Xncf.ModuleMissingOrNotLoaded" xml:space="preserve"><value>Falta el módulo o no se ha cargado ({0}).</value></data>
+  <data name="Xncf.FunctionLoadError" xml:space="preserve"><value>Error al cargar {0}. Revise los registros. Si acaba de agregar una migración de base de datos, complete primero la actualización del módulo.</value></data>
+  <data name="Xncf.Install.PublishModeEnabled" xml:space="preserve"><value>El modo de publicación está habilitado, por lo que esta acción no está disponible.</value></data>
+  <data name="Xncf.Install.ModuleNotFound" xml:space="preserve"><value>No se encontró el módulo de destino y no se puede instalar.</value></data>
+  <data name="Xncf.Install.Success" xml:space="preserve"><value>La instalación se completó correctamente.</value></data>
+  <data name="Xncf.Install.Failed" xml:space="preserve"><value>Error de instalación: {0}</value></data>
+  <data name="Admin.Register.MenuName" xml:space="preserve"><value>System Admin Panel</value></data>
+  <data name="Admin.Register.Description" xml:space="preserve"><value>Este es el módulo de administración del sistema NCF para la autogestión del backend. No elimine este módulo. Si realmente necesita hacerlo, haga una copia de seguridad de sus datos primero.</value></data>
+  <data name="Admin.Area.MenuManagement" xml:space="preserve"><value>Gestión de menús</value></data>
+  <data name="Admin.Area.TraceLog" xml:space="preserve"><value>Registros de SenparcTrace</value></data>
+  <data name="AdminChat.UserNotLoggedIn" xml:space="preserve"><value>El usuario no ha iniciado sesión</value></data>
+  <data name="AdminChat.NewConversation" xml:space="preserve"><value>Nueva conversación</value></data>
+  <data name="AdminChat.SessionNotFoundOrForbidden" xml:space="preserve"><value>La sesión no existe o el acceso está denegado</value></data>
+  <data name="AdminChat.SessionNotFoundOrNoDeletePermission" xml:space="preserve"><value>La sesión no existe o no puede eliminarse</value></data>
+  <data name="AdminChat.DeleteSessionSuccess" xml:space="preserve"><value>Eliminado correctamente</value></data>
+  <data name="AdminChat.MessageNotFound" xml:space="preserve"><value>Mensaje no encontrado</value></data>
+  <data name="AdminChat.SetFeedbackSuccess" xml:space="preserve"><value>Comentarios enviados correctamente</value></data>
+  <data name="AdminChat.SelectAtLeastOneMessage" xml:space="preserve"><value>Seleccione al menos un mensaje</value></data>
+  <data name="AdminChat.SelectAtLeastOneModule" xml:space="preserve"><value>Seleccione al menos un módulo XNCF</value></data>
+  <data name="AdminChat.DeleteMessagesSuccess" xml:space="preserve"><value>Eliminado correctamente. Se quitaron {0} mensajes</value></data>
+  <data name="AdminChat.AddModulesSuccess" xml:space="preserve"><value>Módulos agregados correctamente</value></data>
+  <data name="Admin.Layout.Account" xml:space="preserve"><value>Mi cuenta</value></data>
+  <data name="Admin.Layout.CurrentAccount" xml:space="preserve"><value>Cuenta actual: {0}</value></data>
+  <data name="Admin.Layout.PoweredBy" xml:space="preserve"><value>Desarrollado por</value></data>
+  <data name="Admin.Footer.NeuBellLabel" xml:space="preserve"><value>NeuBell</value></data>
+  <data name="Admin.Session.Title" xml:space="preserve"><value>La sesión está a punto de caducar</value></data>
+  <data name="Admin.Session.Message" xml:space="preserve"><value>La sesión está a punto de caducar. Puede mantener la sesión iniciada o cerrar sesión ahora.</value></data>
+  <data name="Admin.Session.KeepLogin" xml:space="preserve"><value>Mantener la sesión</value></data>
+  <data name="Admin.Session.LogoutNow" xml:space="preserve"><value>Cerrar sesión ahora</value></data>
+  <data name="Admin.Session.KeepLoginSuccess" xml:space="preserve"><value>La sesión se mantuvo iniciada y se renovó correctamente.</value></data>
+  <data name="Admin.Common.NoTime" xml:space="preserve"><value>Sin hora</value></data>
+  <data name="Admin.Common.CopySuccess" xml:space="preserve"><value>Copiado correctamente. Use Ctrl+V para pegar.</value></data>
+  <data name="Admin.Home.Header" xml:space="preserve"><value>Panel de administración de NeuCharFramework</value></data>
+  <data name="Admin.Home.HostMetrics" xml:space="preserve"><value>Monitor de recursos del host</value></data>
+  <data name="Admin.Home.HostMetricsRealtime" xml:space="preserve"><value>En vivo · se actualiza cada 2 segundos</value></data>
+  <data name="Admin.Home.HostCpu" xml:space="preserve"><value>CPU del host (total)</value></data>
+  <data name="Admin.Home.HostCpuDetail" xml:space="preserve"><value>Uso total del host</value></data>
+  <data name="Admin.Home.HostScope" xml:space="preserve"><value>Host</value></data>
+  <data name="Admin.Home.WebScope" xml:space="preserve"><value>Web</value></data>
+  <data name="Admin.Home.HostMemory" xml:space="preserve"><value>Memoria física</value></data>
+  <data name="Admin.Home.HostMemoryAvailable" xml:space="preserve"><value>Disponible</value></data>
+  <data name="Admin.Home.HostNetwork" xml:space="preserve"><value>Tráfico de red en vivo</value></data>
+  <data name="Admin.Home.HostNetworkTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Admin.Home.HostInterfaces" xml:space="preserve"><value>interfaces activas</value></data>
+  <data name="Admin.Home.HostProcess" xml:space="preserve"><value>Proceso web actual</value></data>
+  <data name="Admin.Home.HostProcessCpu" xml:space="preserve"><value>CPU del proceso web</value></data>
+  <data name="Admin.Home.HostProcessWorkingSet" xml:space="preserve"><value>Memoria del conjunto de trabajo</value></data>
+  <data name="Admin.Home.HostProcessUptime" xml:space="preserve"><value>Tiempo activo</value></data>
+  <data name="Admin.Home.HostMetricsChart" xml:space="preserve"><value>Tendencias de recursos</value></data>
+  <data name="Admin.Home.HostNetworkReceive" xml:space="preserve"><value>Recepción</value></data>
+  <data name="Admin.Home.HostNetworkSend" xml:space="preserve"><value>Envío</value></data>
+  <data name="Admin.Home.HostMetricsInvalidResponse" xml:space="preserve"><value>La API de métricas del host devolvió datos no válidos</value></data>
+  <data name="Admin.Home.HostMetricsUnavailable" xml:space="preserve"><value>Las métricas del host no están disponibles temporalmente</value></data>
+  <data name="Admin.Home.WebProcessMemory" xml:space="preserve"><value>Memoria del proceso web</value></data>
+  <data name="Admin.Home.ResourceMonitor" xml:space="preserve"><value>Monitor de recursos (últimas 24 horas)</value></data>
+  <data name="Admin.Home.ResourceMonitorRealtime" xml:space="preserve"><value>Grabado cada 10 s en segundo plano · caché de hasta 24 h</value></data>
+  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>Arrastre o use la rueda para ampliar; haga doble clic para restablecer</value></data>
+  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>Restablecer rango</value></data>
+  <data name="Admin.Home.ResourceMonitorRange" xml:space="preserve"><value>Intervalo de tiempo</value></data>
+  <data name="Admin.Home.ResourceMonitor5Minutes" xml:space="preserve"><value>5 min</value></data>
+  <data name="Admin.Home.ResourceMonitor30Minutes" xml:space="preserve"><value>30 min</value></data>
+  <data name="Admin.Home.ResourceMonitor6Hours" xml:space="preserve"><value>6 h</value></data>
+  <data name="Admin.Home.ResourceMonitor24Hours" xml:space="preserve"><value>24 h</value></data>
+  <data name="Admin.Home.ResourceMonitorReturnLive" xml:space="preserve"><value>Volver al directo</value></data>
+  <data name="Admin.Home.ResourceMonitorFollowing" xml:space="preserve"><value>Siguiendo en directo</value></data>
+  <data name="Admin.Home.ResourceMonitorPaused" xml:space="preserve"><value>Vista pausada (la grabación continúa)</value></data>
+  <data name="Admin.Home.ResourceMonitorEmpty" xml:space="preserve"><value>El grabador se está iniciando (~10 s) o no hay datos en este rango</value></data>
+  <data name="Admin.Home.ResourceMonitorUnavailable" xml:space="preserve"><value>No se pueden obtener los datos del monitor de recursos</value></data>
+  <data name="Admin.Home.ResourceMonitorNow" xml:space="preserve"><value>ahora</value></data>
+  <data name="Admin.Home.InstalledModules" xml:space="preserve"><value>Módulos instalados</value></data>
+  <data name="Admin.Home.PendingUpdates" xml:space="preserve"><value>Módulos pendientes de actualización</value></data>
+  <data name="Admin.Home.NewModules" xml:space="preserve"><value>Nuevos módulos encontrados</value></data>
+  <data name="Admin.Home.ModuleErrors" xml:space="preserve"><value>Errores de módulo</value></data>
+  <data name="Admin.Home.AiTitle" xml:space="preserve"><value>Asistente de IA</value></data>
+  <data name="Admin.Home.AiSubtitle" xml:space="preserve"><value>Hazme una pregunta y te ayudaré a gestionar el sistema de forma más eficiente.</value></data>
+  <data name="Admin.Home.AiPlaceholder" xml:space="preserve"><value>Escriba su pregunta, por ejemplo: ¿Cómo configuro los parámetros del sistema?&#10;&#10;Consejo: pulse Ctrl+Enter o Cmd+Enter para enviar.</value></data>
+  <data name="Admin.Home.StartConversation" xml:space="preserve"><value>Iniciar conversación</value></data>
+  <data name="Admin.Home.SupportMultiTurn" xml:space="preserve"><value>Conversaciones de varios turnos</value></data>
+  <data name="Admin.Home.AddModulesContext" xml:space="preserve"><value>Agregar módulos como contexto</value></data>
+  <data name="Admin.Home.SaveHistory" xml:space="preserve"><value>Guardar el historial automáticamente</value></data>
+  <data name="Admin.Home.ReferenceModules" xml:space="preserve"><value>Módulos de referencia (opcional)</value></data>
+  <data name="Admin.Home.AddReferenceModule" xml:space="preserve"><value>Agregar módulo de referencia</value></data>
+  <data name="Admin.Home.Clear" xml:space="preserve"><value>Limpiar</value></data>
+  <data name="Admin.Home.EmptyReference" xml:space="preserve"><value>Haga clic en «Agregar módulo de referencia» para seleccionar el contexto</value></data>
+  <data name="Admin.Home.FeatureModules" xml:space="preserve"><value>Módulos funcionales</value></data>
+  <data name="Admin.Home.CurrentVersion" xml:space="preserve"><value>Versión actual: v{0}</value></data>
+  <data name="Admin.Home.UpdateVersion" xml:space="preserve"><value>Actualización disponible: v{0}</value></data>
+  <data name="Admin.Home.MenuName" xml:space="preserve"><value>Nombre del menú</value></data>
+  <data name="Admin.Home.NoDescription" xml:space="preserve"><value>Sin descripción</value></data>
+  <data name="Admin.Home.LogStats" xml:space="preserve"><value>Estadísticas de registros</value></data>
+  <data name="Admin.Home.Last14Days" xml:space="preserve"><value>Últimos 14 días</value></data>
+  <data name="Admin.Home.NormalLogs" xml:space="preserve"><value>Registros normales</value></data>
+  <data name="Admin.Home.ErrorLogs" xml:space="preserve"><value>Registros de error</value></data>
+  <data name="Admin.Home.TodayLogStats" xml:space="preserve"><value>Estadísticas de hoy</value></data>
+  <data name="Admin.Home.DynamicData" xml:space="preserve"><value>Datos dinámicos</value></data>
+  <data name="Admin.Home.LogType" xml:space="preserve"><value>Tipo de registro</value></data>
+  <data name="Admin.Home.LogCountUnit" xml:space="preserve"><value>elementos</value></data>
+  <data name="AdminUserInfo.Title" xml:space="preserve"><value>Gestión de administradores</value></data>
+  <data name="AdminUserInfo.List" xml:space="preserve"><value>Lista de administradores</value></data>
+  <data name="AdminUserInfo.AddTitle" xml:space="preserve"><value>Agregar administrador</value></data>
+  <data name="AdminUserInfo.EditTitle" xml:space="preserve"><value>Editar administrador</value></data>
+  <data name="AdminUserInfo.EditUsernameTip" xml:space="preserve"><value>No se recomienda cambiar el nombre de usuario.</value></data>
+  <data name="AdminUserInfo.Username" xml:space="preserve"><value>Nombre de usuario</value></data>
+  <data name="AdminUserInfo.Note" xml:space="preserve"><value>Notas</value></data>
+  <data name="AdminUserInfo.AddTime" xml:space="preserve"><value>Fecha de creación</value></data>
+  <data name="AdminUserInfo.Actions" xml:space="preserve"><value>Acciones</value></data>
+  <data name="AdminUserInfo.SetRole" xml:space="preserve"><value>Asignar roles</value></data>
+  <data name="AdminUserInfo.DeleteConfirm" xml:space="preserve"><value>¿Eliminar este administrador?</value></data>
+  <data name="AdminUserInfo.ConfirmPassword" xml:space="preserve"><value>Confirmar contraseña</value></data>
+  <data name="AdminUserInfo.RealName" xml:space="preserve"><value>Nombre real</value></data>
+  <data name="AdminUserInfo.Phone" xml:space="preserve"><value>Número de teléfono</value></data>
+  <data name="AdminUserInfo.NotePlaceholder" xml:space="preserve"><value>Introduzca las notas</value></data>
+  <data name="AdminUserInfo.Success" xml:space="preserve"><value>Correcto</value></data>
+  <data name="AdminUserInfo.PasswordRequired" xml:space="preserve"><value>Introduzca una contraseña</value></data>
+  <data name="AdminUserInfo.PasswordConfirmRequired" xml:space="preserve"><value>Introduzca la contraseña de nuevo</value></data>
+  <data name="AdminUserInfo.PasswordMismatch" xml:space="preserve"><value>Introduzca contraseñas iguales</value></data>
+  <data name="AdminUserInfo.RoleTitle" xml:space="preserve"><value>Asignar roles</value></data>
+  <data name="SystemConfig.Title" xml:space="preserve"><value>Información del sistema</value></data>
+  <data name="SystemConfig.BasicInfo" xml:space="preserve"><value>Información básica</value></data>
+  <data name="SystemConfig.SystemName" xml:space="preserve"><value>Nombre del sistema</value></data>
+  <data name="SystemConfig.PublishMode" xml:space="preserve"><value>Modo de publicación de módulos</value></data>
+  <data name="SystemConfig.NameRequired" xml:space="preserve"><value>El nombre del sistema es obligatorio</value></data>
+  <data name="SystemConfig.Updated" xml:space="preserve"><value>Actualizado correctamente.</value></data>
+  <data name="SystemConfig.UpdateFailed" xml:space="preserve"><value>Error de actualización: </value></data>
+  <data name="Admin.Common.Error" xml:space="preserve"><value>Error</value></data>
+  <data name="AdminChat.Conversation" xml:space="preserve"><value>Conversación</value></data>
+  <data name="AdminChat.History" xml:space="preserve"><value>Historial de conversaciones</value></data>
+  <data name="AdminChat.Search.Open" xml:space="preserve"><value>Buscar conversaciones</value></data>
+  <data name="AdminChat.Search.Placeholder" xml:space="preserve"><value>Buscar conversaciones no archivadas</value></data>
+  <data name="AdminChat.Search.ChatTab" xml:space="preserve"><value>Conversaciones</value></data>
+  <data name="AdminChat.Search.ToolTab" xml:space="preserve"><value>Llamadas</value></data>
+  <data name="AdminChat.Search.ToolPlaceholder" xml:space="preserve"><value>Buscar nombre de método</value></data>
+  <data name="AdminChat.Search.ToolCall" xml:space="preserve"><value>Llamada de método</value></data>
+  <data name="AdminChat.Search.Empty" xml:space="preserve"><value>No hay conversaciones no archivadas coincidentes</value></data>
+  <data name="AdminChat.Search.Hint" xml:space="preserve"><value>Solo busca conversaciones no archivadas, hasta 10 resultados</value></data>
+  <data name="AdminChat.Search.ToolHint" xml:space="preserve"><value>Busca nombres de métodos realmente invocados por Harness en conversaciones no archivadas, hasta 10 resultados</value></data>
+  <data name="AdminChat.Search.Failed" xml:space="preserve"><value>Error de búsqueda</value></data>
+  <data name="AdminChat.Search.TitleMatch" xml:space="preserve"><value>Coincidencia de título</value></data>
+  <data name="AdminChat.EmptyHistory" xml:space="preserve"><value>No hay historial de conversaciones</value></data>
+  <data name="AdminChat.SelectModel" xml:space="preserve"><value>Seleccionar modelo de IA</value></data>
+  <data name="AdminChat.Manage" xml:space="preserve"><value>Gestionar</value></data>
+  <data name="AdminChat.Done" xml:space="preserve"><value>Listo</value></data>
+  <data name="AdminChat.MenuHierarchy" xml:space="preserve"><value>Jerarquía de menús</value></data>
+  <data name="AdminChat.NoPreview" xml:space="preserve"><value>Este módulo no tiene detalles para previsualizar</value></data>
+  <data name="AdminChat.SelectedCount" xml:space="preserve"><value>{0} seleccionados</value></data>
+  <data name="AdminChat.Copy" xml:space="preserve"><value>Copiar</value></data>
+  <data name="AdminChat.ClearSelection" xml:space="preserve"><value>Limpiar selección</value></data>
+  <data name="AdminChat.StartPrompt" xml:space="preserve"><value>Comience su conversación</value></data>
+  <data name="AdminChat.InputPlaceholder" xml:space="preserve"><value>Introduzca su pregunta...</value></data>
+  <data name="AdminChat.SendHint" xml:space="preserve"><value>Pulse Ctrl + Enter o Cmd + Enter para enviar</value></data>
+  <data name="AdminChat.Send" xml:space="preserve"><value>Enviar</value></data>
+  <data name="AdminChat.Thinking" xml:space="preserve"><value>Pensando...</value></data>
+  <data name="AdminChat.ModeSimple" xml:space="preserve"><value>Chat</value></data>
+  <data name="AdminChat.ModeHarness" xml:space="preserve"><value>Arnés</value></data>
+  <data name="AdminChat.HarnessSteps" xml:space="preserve"><value>Pasos del arnés</value></data>
+  <data name="AdminChat.TrajectoryNotFound" xml:space="preserve"><value>No se encontró la trayectoria.</value></data>
+  <data name="AdminChat.NewSessionDescription" xml:space="preserve"><value>Introduzca una pregunta y seleccione módulos de referencia para iniciar una conversación</value></data>
+  <data name="AdminChat.ComputePower" xml:space="preserve"><value>Modelo de IA</value></data>
+  <data name="AdminChat.DeleteConfirm" xml:space="preserve"><value>¿Eliminar esta conversación?</value></data>
+  <data name="AdminChat.DeleteConfirmTitle" xml:space="preserve"><value>Confirmar eliminación</value></data>
+  <data name="AdminChat.RoleMe" xml:space="preserve"><value>Yo</value></data>
+  <data name="AdminChat.RoleAssistant" xml:space="preserve"><value>Asistente de IA</value></data>
+  <data name="AdminChat.RoleSystem" xml:space="preserve"><value>Sistema</value></data>
+  <data name="AdminChat.RoleUnknown" xml:space="preserve"><value>Desconocido</value></data>
+  <data name="AdminChat.FallbackModelName" xml:space="preserve"><value>SenparcAiSetting del sistema</value></data>
+  <data name="AdminChat.FallbackModelDescription" xml:space="preserve"><value>Usar la configuración Chat predeterminada activa en appsettings.json</value></data>
+  <data name="AdminChat.LoadSessionFailed" xml:space="preserve"><value>Error al cargar las conversaciones</value></data>
+  <data name="AdminChat.LoadDetailFailed" xml:space="preserve"><value>Error al cargar los detalles</value></data>
+  <data name="AdminChat.InputRequired" xml:space="preserve"><value>Introduzca un mensaje</value></data>
+  <data name="AdminChat.SessionRequired" xml:space="preserve"><value>Seleccione o cree una conversación primero</value></data>
+  <data name="AdminChat.SendFailed" xml:space="preserve"><value>Error al enviar el mensaje</value></data>
+  <data name="AdminChat.SendFailedRetry" xml:space="preserve"><value>Error al enviar. Inténtelo de nuevo más tarde.</value></data>
+  <data name="AdminChat.FeedbackFailed" xml:space="preserve"><value>Error en los comentarios</value></data>
+  <data name="AdminChat.CopyCount" xml:space="preserve"><value>{0} mensajes copiados</value></data>
+  <data name="AdminChat.CopyFailed" xml:space="preserve"><value>Error al copiar. Copie manualmente.</value></data>
+  <data name="AdminChat.SelectMessages" xml:space="preserve"><value>Seleccione primero los mensajes que desea gestionar</value></data>
+  <data name="AdminChat.DeleteMessagesConfirm" xml:space="preserve"><value>¿Eliminar los {0} mensajes seleccionados? Esta acción no se puede deshacer.</value></data>
+  <data name="AdminChat.DeleteFailed" xml:space="preserve"><value>Error al eliminar</value></data>
+  <data name="AdminChat.DeleteFailedRetry" xml:space="preserve"><value>Error al eliminar. Inténtelo de nuevo más tarde.</value></data>
+  <data name="AdminChat.Functions" xml:space="preserve"><value>Funciones</value></data>
+  <data name="AdminChat.SelectAll" xml:space="preserve"><value>Seleccionar todo</value></data>
+  <data name="AdminChat.JustNow" xml:space="preserve"><value>Ahora mismo</value></data>
+  <data name="AdminChat.MinutesAgo" xml:space="preserve"><value>Hace {0} minutos</value></data>
+  <data name="AdminChat.HoursAgo" xml:space="preserve"><value>Hace {0} horas</value></data>
+  <data name="AdminChat.DaysAgo" xml:space="preserve"><value>Hace {0} días</value></data>
+  <data name="AdminChat.UnknownModule" xml:space="preserve"><value>Módulo sin nombre</value></data>
+  <data name="Menu.ButtonRequired" xml:space="preserve"><value>Este campo es obligatorio para los botones</value></data>
+  <data name="Menu.NameRequired" xml:space="preserve"><value>El nombre del menú es obligatorio</value></data>
+  <data name="Menu.TypeRequired" xml:space="preserve"><value>El tipo es obligatorio</value></data>
+  <data name="Menu.AddTitle" xml:space="preserve"><value>Agregar menú</value></data>
+  <data name="Menu.EditTitle" xml:space="preserve"><value>Editar menú</value></data>
+  <data name="Menu.AddChildTitle" xml:space="preserve"><value>Agregar submenú</value></data>
+  <data name="Menu.AuthorizationSuccess" xml:space="preserve"><value>Autorización correcta</value></data>
+  <data name="Role.NameRequired" xml:space="preserve"><value>El nombre del rol es obligatorio</value></data>
+  <data name="Role.CodeRequired" xml:space="preserve"><value>El código del rol es obligatorio</value></data>
+  <data name="Role.AddTitle" xml:space="preserve"><value>Agregar rol</value></data>
+  <data name="Role.EditTitle" xml:space="preserve"><value>Editar rol</value></data>
+  <data name="Role.AuthorizationSuccess" xml:space="preserve"><value>Autorización correcta</value></data>
+  <data name="Xncf.ModuleReadFailed" xml:space="preserve"><value>No se pudo leer el módulo. Actualícelo y vuelva a cargar la página. Módulo: {0}</value></data>
+  <data name="Tenant.Title" xml:space="preserve"><value>Información multiinquilino</value></data>
+  <data name="Tenant.CurrentInfo" xml:space="preserve"><value>Inquilino actual</value></data>
+  <data name="Tenant.Disabled" xml:space="preserve"><value>El modo multiinquilino está deshabilitado</value></data>
+  <data name="Tenant.MatchRule" xml:space="preserve"><value>Regla de coincidencia actual:</value></data>
+  <data name="Tenant.Name" xml:space="preserve"><value>Nombre</value></data>
+  <data name="Tenant.MatchKeyword" xml:space="preserve"><value>Palabra clave de coincidencia</value></data>
+  <data name="Tenant.MatchTime" xml:space="preserve"><value>Hora de coincidencia</value></data>
+  <data name="Tenant.ListTitle" xml:space="preserve"><value>Información de inquilinos</value></data>
+  <data name="Tenant.Add" xml:space="preserve"><value>Agregar inquilino</value></data>
+  <data name="Tenant.Id" xml:space="preserve"><value>ID</value></data>
+  <data name="Tenant.Rule" xml:space="preserve"><value>Regla de coincidencia</value></data>
+  <data name="Tenant.AdminNote" xml:space="preserve"><value>Nota del administrador</value></data>
+  <data name="Tenant.Enabled" xml:space="preserve"><value>Habilitado</value></data>
+  <data name="Tenant.Actions" xml:space="preserve"><value>Acciones</value></data>
+  <data name="Tenant.Edit" xml:space="preserve"><value>Editar</value></data>
+  <data name="Tenant.Initialize" xml:space="preserve"><value>Inicializar</value></data>
+  <data name="Tenant.DeleteConfirm" xml:space="preserve"><value>¿Eliminar este inquilino? Toda su información quedará huérfana. Proceda con cuidado.</value></data>
+  <data name="Tenant.Delete" xml:space="preserve"><value>Eliminar</value></data>
+  <data name="Tenant.NamePlaceholder" xml:space="preserve"><value>Introduzca el nombre del inquilino</value></data>
+  <data name="Tenant.KeyPlaceholder" xml:space="preserve"><value>Introduzca la palabra clave de coincidencia</value></data>
+  <data name="Tenant.NotePlaceholder" xml:space="preserve"><value>Introduzca una nota del administrador</value></data>
+  <data name="Tenant.EnableQuestion" xml:space="preserve"><value>Habilitado</value></data>
+  <data name="Tenant.InitializeTitle" xml:space="preserve"><value>Inicialización del inquilino</value></data>
+  <data name="Tenant.SystemName" xml:space="preserve"><value>Nombre del sistema</value></data>
+  <data name="Tenant.AdminAccount" xml:space="preserve"><value>Cuenta de administrador predeterminada</value></data>
+  <data name="Tenant.SystemNamePlaceholder" xml:space="preserve"><value>Introduzca el nombre del sistema</value></data>
+  <data name="Tenant.AdminAccountPlaceholder" xml:space="preserve"><value>Introduzca la cuenta de administrador predeterminada</value></data>
+  <data name="Tenant.ResultTitle" xml:space="preserve"><value>Resultado de la inicialización</value></data>
+  <data name="Tenant.KeepSecret" xml:space="preserve"><value>Guarde esta información en un lugar seguro. La contraseña no se podrá volver a consultar.</value></data>
+  <data name="Tenant.TenantInfo" xml:space="preserve"><value>Información del inquilino</value></data>
+  <data name="Tenant.AdminInfo" xml:space="preserve"><value>Cuenta de administrador</value></data>
+  <data name="Tenant.Username" xml:space="preserve"><value>Nombre de usuario</value></data>
+  <data name="Tenant.Password" xml:space="preserve"><value>Contraseña</value></data>
+  <data name="Tenant.RecordClose" xml:space="preserve"><value>Lo he anotado; cerrar</value></data>
+  <data name="Tenant.CreateTitle" xml:space="preserve"><value>Agregar inquilino</value></data>
+  <data name="Tenant.EditTitle" xml:space="preserve"><value>Editar inquilino</value></data>
+  <data name="Tenant.NameRequired" xml:space="preserve"><value>El nombre del inquilino es obligatorio</value></data>
+  <data name="Tenant.KeyRequired" xml:space="preserve"><value>La regla de coincidencia es obligatoria</value></data>
+  <data name="Tenant.SystemNameRequired" xml:space="preserve"><value>El nombre del sistema es obligatorio</value></data>
+  <data name="Tenant.AdminAccountRequired" xml:space="preserve"><value>La cuenta de administrador predeterminada es obligatoria</value></data>
+  <data name="Tenant.DeleteSuccess" xml:space="preserve"><value>Eliminado correctamente</value></data>
+  <data name="Tenant.InitializeFailed" xml:space="preserve"><value>La inicialización falló</value></data>
+  <data name="Xncf.Title" xml:space="preserve"><value>Gestión de módulos</value></data>
+  <data name="Xncf.ExtensionModules" xml:space="preserve"><value>Módulos de extensión</value></data>
+  <data name="Xncf.NewModules" xml:space="preserve"><value>Módulos nuevos</value></data>
+  <data name="Xncf.InstalledModules" xml:space="preserve"><value>Módulos instalados</value></data>
+  <data name="Xncf.PendingUpdates" xml:space="preserve"><value>Módulos pendientes de actualización</value></data>
+  <data name="Xncf.BatchUpdateAndEnable" xml:space="preserve"><value>Actualizar y habilitar seleccionados</value></data>
+  <data name="Xncf.BatchUpdate.SelectedCount" xml:space="preserve"><value>{0} módulos seleccionados</value></data>
+  <data name="Xncf.BatchUpdate.SelectAtLeastOne" xml:space="preserve"><value>Seleccione al menos un módulo pendiente de actualización.</value></data>
+  <data name="Xncf.BatchUpdate.Confirm" xml:space="preserve"><value>¿Actualizar y habilitar los {0} módulos seleccionados?</value></data>
+  <data name="Xncf.BatchUpdate.Title" xml:space="preserve"><value>Actualización por lotes</value></data>
+  <data name="Xncf.BatchUpdateResult" xml:space="preserve"><value>Estado de la operación por lotes</value></data>
+  <data name="Xncf.BatchUpdate.Summary" xml:space="preserve"><value>Se procesaron {0} módulos: {1} correctos y {2} fallidos.</value></data>
+  <data name="Xncf.BatchUpdate.VersionResult" xml:space="preserve"><value>Cambio de versión</value></data>
+  <data name="Xncf.BatchUpdate.TargetVersion" xml:space="preserve"><value>Versión objetivo: {0}</value></data>
+  <data name="Xncf.BatchUpdate.UpdateStatus" xml:space="preserve"><value>Actualización</value></data>
+  <data name="Xncf.BatchUpdate.EnableStatus" xml:space="preserve"><value>Habilitación</value></data>
+  <data name="Xncf.BatchUpdate.FinalState" xml:space="preserve"><value>Estado final</value></data>
+  <data name="Xncf.BatchUpdate.Details" xml:space="preserve"><value>Detalles</value></data>
+  <data name="Xncf.BatchUpdate.Success" xml:space="preserve"><value>Correcto</value></data>
+  <data name="Xncf.BatchUpdate.Failed" xml:space="preserve"><value>Fallido</value></data>
+  <data name="Xncf.BatchUpdate.NoResult" xml:space="preserve"><value>No se recibió el resultado de la operación por lotes.</value></data>
+  <data name="Xncf.BatchUpdate.RefreshFailed" xml:space="preserve"><value>La operación terminó, pero no se pudo actualizar el estado. Actualice la página manualmente.</value></data>
+  <data name="Xncf.BatchUpdate.RequestFailed" xml:space="preserve"><value>Falló la solicitud de actualización y habilitación por lotes.</value></data>
+  <data name="Xncf.BatchUpdate.UnknownModule" xml:space="preserve"><value>Módulo desconocido</value></data>
+  <data name="Xncf.BatchUpdate.ModuleUnavailable" xml:space="preserve"><value>El módulo no existe, se ignora o no está cargado.</value></data>
+  <data name="Xncf.BatchUpdate.UpdateNotApplied" xml:space="preserve"><value>No se aplicó la actualización del módulo.</value></data>
+  <data name="Xncf.BatchUpdate.EnableNotApplied" xml:space="preserve"><value>El módulo no cambió al estado habilitado.</value></data>
+  <data name="Xncf.BatchUpdate.VersionMismatch" xml:space="preserve"><value>La versión objetivo es {0}, pero la versión real es {1}.</value></data>
+  <data name="Xncf.BatchUpdate.UpdateAndEnableSuccess" xml:space="preserve"><value>Actualizado y habilitado correctamente.</value></data>
+  <data name="Xncf.BatchUpdate.EnableFailed" xml:space="preserve"><value>La actualización se completó, pero falló la habilitación: {0}</value></data>
+  <data name="Xncf.BatchUpdate.UpdateFailed" xml:space="preserve"><value>Error de actualización: {0}</value></data>
+  <data name="Xncf.ModuleName" xml:space="preserve"><value>Nombre del módulo</value></data>
+  <data name="Xncf.MenuName" xml:space="preserve"><value>Nombre del menú (nombre mostrado)</value></data>
+  <data name="Xncf.Version" xml:space="preserve"><value>Versión</value></data>
+  <data name="Xncf.UniqueCode" xml:space="preserve"><value>Código único (globalmente único)</value></data>
+  <data name="Xncf.MenuAndVersion" xml:space="preserve"><value>Nombre del menú / versión</value></data>
+  <data name="Xncf.ModuleAndCode" xml:space="preserve"><value>Nombre del módulo / código único (globalmente único)</value></data>
+  <data name="Xncf.Search" xml:space="preserve"><value>Introduzca palabras clave</value></data>
+  <data name="Xncf.Install" xml:space="preserve"><value>Instalar</value></data>
+  <data name="Xncf.Status" xml:space="preserve"><value>Estado</value></data>
+  <data name="Xncf.Actions" xml:space="preserve"><value>Действия</value></data>
+  <data name="Xncf.Home" xml:space="preserve"><value>Inicio</value></data>
+  <data name="Xncf.Missing" xml:space="preserve"><value>Este módulo no está desplegado o falta su ensamblado</value></data>
+  <data name="Xncf.Module" xml:space="preserve"><value>Módulo</value></data>
+  <data name="Xncf.DeleteConfirm" xml:space="preserve"><value>¿Eliminar este módulo? También se eliminarán sus datos relacionados. Haga una copia de seguridad.</value></data>
+  <data name="Xncf.Delete" xml:space="preserve"><value>Eliminar</value></data>
+  <data name="Xncf.NewVersion" xml:space="preserve"><value>Nueva versión disponible: v{0}</value></data>
+  <data name="Xncf.UpdateNow" xml:space="preserve"><value>Actualizar ahora</value></data>
+  <data name="Xncf.UniqueNumber" xml:space="preserve"><value>Identificador único</value></data>
+  <data name="Xncf.Features" xml:space="preserve"><value>Características</value></data>
+  <data name="Xncf.View" xml:space="preserve"><value>Ver</value></data>
+  <data name="Xncf.ExecuteMethod" xml:space="preserve"><value>Métodos ejecutables</value></data>
+  <data name="Xncf.Open" xml:space="preserve"><value>Activar</value></data>
+  <data name="Xncf.Close" xml:space="preserve"><value>Desactivar</value></data>
+  <data name="Xncf.DisabledTip" xml:space="preserve"><value>Los módulos deshabilitados no pueden ejecutar funciones</value></data>
+  <data name="Xncf.Description" xml:space="preserve"><value>Descripción</value></data>
+  <data name="Xncf.UpdateLog" xml:space="preserve"><value>Registro de actualizaciones</value></data>
+  <data name="Xncf.EnterModuleHome" xml:space="preserve"><value>Ir al inicio de {0}</value></data>
+  <data name="Xncf.EnterHome" xml:space="preserve"><value>Ir al inicio</value></data>
+  <data name="Xncf.Address" xml:space="preserve"><value>Dirección</value></data>
+  <data name="Xncf.PageOverview" xml:space="preserve"><value>Vista de la página</value></data>
+  <data name="Xncf.PageOverviewTip" xml:space="preserve"><value>Nota: este módulo proporciona una interfaz interactiva, por lo que esta entrada está disponible.</value></data>
+  <data name="Xncf.Execute" xml:space="preserve"><value>Ejecutar</value></data>
+  <data name="Xncf.ParameterOverview" xml:space="preserve"><value>Vista de parámetros</value></data>
+  <data name="Xncf.ParameterName" xml:space="preserve"><value>Nombre</value></data>
+  <data name="Xncf.ParameterDescription" xml:space="preserve"><value>Descripción</value></data>
+  <data name="Xncf.ParameterType" xml:space="preserve"><value>Tipo</value></data>
+  <data name="Xncf.Required" xml:space="preserve"><value>Obligatorio</value></data>
+  <data name="Xncf.Yes" xml:space="preserve"><value>Sí</value></data>
+  <data name="Xncf.No" xml:space="preserve"><value>No</value></data>
+  <data name="Xncf.NoInputData" xml:space="preserve"><value>No se requieren datos</value></data>
+  <data name="Xncf.Executing" xml:space="preserve"><value>Ejecutando</value></data>
+  <data name="Xncf.DownloadLog" xml:space="preserve"><value>Descargar registro (válido una vez en 5 minutos)</value></data>
+  <data name="Xncf.DownloadLogTip" xml:space="preserve"><value>Descargar registro</value></data>
+  <data name="Xncf.CloseDialog" xml:space="preserve"><value>Cerrar</value></data>
+  <data name="Xncf.ThreadDetails" xml:space="preserve"><value>Ver hilos</value></data>
+  <data name="Xncf.ThreadName" xml:space="preserve"><value>Nombre</value></data>
+  <data name="Xncf.ThreadActivity" xml:space="preserve"><value>Actividad / segundo plano</value></data>
+  <data name="Xncf.ThreadState" xml:space="preserve"><value>Estado del hilo</value></data>
+  <data name="Xncf.ThreadStory" xml:space="preserve"><value>Actividad reciente</value></data>
+  <data name="Xncf.Prompt" xml:space="preserve"><value>Aviso</value></data>
+  <data name="Xncf.EnableFirst" xml:space="preserve"><value>Active el módulo antes de ejecutar</value></data>
+  <data name="Xncf.SourcePathRequired" xml:space="preserve"><value>Introduzca la ruta física del código fuente</value></data>
+  <data name="Xncf.RequiredOption" xml:space="preserve"><value>{0} es obligatorio</value></data>
+  <data name="Xncf.RequiredField" xml:space="preserve"><value>{0} es obligatorio</value></data>
+  <data name="Xncf.RunError" xml:space="preserve"><value>Error</value></data>
+  <data name="Xncf.ErrorInfo" xml:space="preserve"><value>Detalles del error</value></data>
+  <data name="Xncf.RunSuccess" xml:space="preserve"><value>Ejecución correcta</value></data>
+  <data name="Xncf.UrlResultTip" xml:space="preserve"><value>Se recibió una URL. Haga clic abajo para abrirla.&lt;br /&gt;(Este enlace lo proporciona un tercero; tenga cuidado):</value></data>
+  <data name="Xncf.ReturnInfo" xml:space="preserve"><value>Información devuelta</value></data>
+  <data name="Xncf.ExecutionError" xml:space="preserve"><value>Se produjo un error durante la ejecución</value></data>
+  <data name="Xncf.RunFailed" xml:space="preserve"><value>La ejecución falló</value></data>
+  <data name="Xncf.EnableManager" xml:space="preserve"><value>Activar el modo de gestión de módulos de extensión</value></data>
+  <data name="Xncf.HideManager" xml:space="preserve"><value>Cambiar al modo de publicación y ocultar el gestor de módulos de extensión</value></data>
+  <data name="Xncf.EnableManagerConfirm" xml:space="preserve"><value>Después de activar la gestión, todos los módulos aparecerán en el submenú Módulos de extensión. ¿Continuar?</value></data>
+  <data name="Xncf.HideManagerConfirm" xml:space="preserve"><value>Después de ocultarlo, todos los módulos aparecerán en el nivel superior. Para volver a abrirlo, visite [/Admin/XncfModule]. ¿Ocultar?</value></data>
+  <data name="Xncf.AreaFeature" xml:space="preserve"><value>Web</value></data>
+  <data name="Xncf.DatabaseFeature" xml:space="preserve"><value>Base de datos</value></data>
+  <data name="Xncf.MiddlewareFeature" xml:space="preserve"><value>Middleware</value></data>
+  <data name="Xncf.ThreadFeature" xml:space="preserve"><value>Hilo</value></data>
+  <data name="Xncf.TypeText" xml:space="preserve"><value>Texto</value></data>
+  <data name="Xncf.TypeNumber" xml:space="preserve"><value>Número</value></data>
+  <data name="Xncf.TypeDate" xml:space="preserve"><value>Fecha</value></data>
+  <data name="Xncf.TypeOption" xml:space="preserve"><value>Opciones</value></data>
+  <data name="Xncf.TypeBoolean" xml:space="preserve"><value>Booleano</value></data>
+  <data name="Admin.Common.Success" xml:space="preserve"><value>Éxito</value></data>
+  <data name="AdminChat.StreamInputRequired" xml:space="preserve"><value>Introduzca una sesión y un mensaje válidos.</value></data>
+  <data name="AdminChat.StreamSessionForbidden" xml:space="preserve"><value>La sesión no existe o el acceso está denegado.</value></data>
+  <data name="AdminChat.AgentReplyFailed" xml:space="preserve"><value>La respuesta del agente falló.</value></data>
+  <data name="AdminChat.LoadModulesFailedRetry" xml:space="preserve"><value>No se pudieron cargar los módulos. Inténtelo de nuevo más tarde.</value></data>
+  <data name="AdminChat.CreateSessionFailed" xml:space="preserve"><value>No se pudo crear la sesión</value></data>
+  <data name="AdminChat.CreateSessionFailedRetry" xml:space="preserve"><value>No se pudo crear la sesión. Inténtelo de nuevo más tarde.</value></data>
+  <data name="Admin.Login.Error.LoginFailed" xml:space="preserve"><value>Error de inicio de sesión</value></data>
+  <data name="Admin.Login.Error.LoginRetry" xml:space="preserve"><value>Error de inicio de sesión, inténtelo de nuevo</value></data>
+  <data name="Admin.Login.CaptchaPlaceholder" xml:space="preserve"><value>Introduzca el código de verificación</value></data>
+  <data name="Admin.Login.CaptchaRequired" xml:space="preserve"><value>Introduzca el código de verificación de la imagen</value></data>
+  <data name="Admin.Login.CaptchaRefresh" xml:space="preserve"><value>Haga clic en la imagen para actualizar</value></data>
+  <data name="Admin.Login.Error.CaptchaInvalid" xml:space="preserve"><value>Código de verificación incorrecto, inténtelo de nuevo</value></data>
+  <data name="Admin.Login.Support" xml:space="preserve"><value>Asistencia técnica:</value></data>
+  <data name="Admin.Login.VisitWebsite" xml:space="preserve"><value>Visitar el sitio web oficial</value></data>
+  <data name="Admin.Session.InvalidUser" xml:space="preserve"><value>La identidad del usuario no es válida y no se puede renovar el JWT. Inicie sesión de nuevo.</value></data>
+  <data name="SystemConfig.RequestEmpty" xml:space="preserve"><value>Los parámetros de la solicitud no pueden estar vacíos</value></data>
+  <data name="SystemConfig.NameEmpty" xml:space="preserve"><value>El nombre del sistema no puede estar vacío</value></data>
+  <data name="SystemConfig.ConfigNotFound" xml:space="preserve"><value>No se encontró la configuración del sistema</value></data>
+  <data name="Role.PermissionManagement" xml:space="preserve"><value>Gestión de permisos de roles</value></data>
+  <data name="Role.PermissionSettings" xml:space="preserve"><value>Configuración de permisos</value></data>
+  <data name="AdminUserInfo.UsernamePlaceholder" xml:space="preserve"><value>Introduce un nombre de usuario</value></data>
+  <data name="AdminUserInfo.PasswordConfirmPlaceholder" xml:space="preserve"><value>Vuelve a introducir la contraseña</value></data>
+  <data name="AdminUserInfo.RealNamePlaceholder" xml:space="preserve"><value>Introduce el nombre real</value></data>
+  <data name="AdminUserInfo.PhonePlaceholder" xml:space="preserve"><value>Introduce un número de teléfono</value></data>
+  <data name="Admin.Common.Submit" xml:space="preserve"><value>Enviar</value></data>
+  <data name="Xncf.SettingsAndExecute" xml:space="preserve"><value>Configuración / Ejecutar</value></data>
+  <data name="Admin.Session.ExpiredRedirect" xml:space="preserve"><value>La sesión ha caducado. Redirigiendo a la página de inicio de sesión.</value></data>
+  <data name="Admin.Session.AccessDenied" xml:space="preserve"><value>No tienes permiso para acceder a este recurso.</value></data>
+  <data name="Trace.Today" xml:space="preserve"><value>Hoy</value></data>
+  <data name="Trace.LastHour" xml:space="preserve"><value>Última hora</value></data>
+  <data name="Trace.ShowAll" xml:space="preserve"><value>Mostrar todos los resultados completos</value></data>
+  <data name="Trace.ShowExceptions" xml:space="preserve"><value>Mostrar solo excepciones</value></data>
+  <data name="Trace.ExceptionInfo" xml:space="preserve"><value>Información de la excepción</value></data>
+  <data name="Trace.KeywordPlaceholder" xml:space="preserve"><value>Introduce una palabra clave</value></data>
+  <data name="Trace.To" xml:space="preserve"><value>a</value></data>
+  <data name="Trace.StartTime" xml:space="preserve"><value>Hora de inicio</value></data>
+  <data name="Trace.EndTime" xml:space="preserve"><value>Hora de fin</value></data>
+  <data name="Trace.SelectThread" xml:space="preserve"><value>Selecciona un hilo</value></data>
+  <data name="Trace.SelectType" xml:space="preserve"><value>Selecciona un tipo</value></data>
+  <data name="Trace.ExceptionStatus" xml:space="preserve"><value>Estado de excepción</value></data>
+  <data name="Trace.All" xml:space="preserve"><value>Todo</value></data>
+  <data name="Trace.NumberAndLine" xml:space="preserve"><value>Número / Línea</value></data>
+  <data name="Trace.Time" xml:space="preserve"><value>Hora</value></data>
+  <data name="Trace.Thread" xml:space="preserve"><value>Hilo</value></data>
+  <data name="Trace.Type" xml:space="preserve"><value>Tipo</value></data>
+  <data name="Trace.IsException" xml:space="preserve"><value>Excepción</value></data>
+  <data name="Trace.Title" xml:space="preserve"><value>Título</value></data>
+  <data name="Trace.Content" xml:space="preserve"><value>Contenido</value></data>
+  <data name="Trace.ReturnResult" xml:space="preserve"><value>Resultado devuelto</value></data>
+  <data name="Trace.PostData" xml:space="preserve"><value>Datos POST</value></data>
+  <data name="AdminChat.AddReferenceModule" xml:space="preserve"><value>Añadir módulos de referencia</value></data>
+  <data name="AdminChat.SearchModulePlaceholder" xml:space="preserve"><value>Buscar nombre / descripción / UID</value></data>
+  <data name="AdminChat.SelectFiltered" xml:space="preserve"><value>Seleccionar todos los resultados filtrados</value></data>
+  <data name="AdminChat.Selected" xml:space="preserve"><value>Seleccionados</value></data>
+  <data name="AdminChat.QuickOpen" xml:space="preserve"><value>Abrir</value></data>
+  <data name="AdminChat.NoMenu" xml:space="preserve"><value>Sin menú</value></data>
+  <data name="AdminChat.NoMenuOrFunctions" xml:space="preserve"><value>Este módulo no tiene menús ni funciones disponibles.</value></data>
+  <data name="AdminChat.NoMatchingModules" xml:space="preserve"><value>No hay módulos coincidentes</value></data>
+  <data name="AdminChat.ConfirmAdd" xml:space="preserve"><value>Confirmar adición</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Módulos de extensión</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Inicio</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Ejemplo de base de datos</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Agregar</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Agregar</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Editar</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Eliminar</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Confirmar</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Confirmar</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Guardar</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Cerrar</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Volver</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Buscar</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Buscar</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Restablecer</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Actualizar</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Acciones</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Nombre</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Tipo</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Estado</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Notas</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>Descripción</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>Detalles</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Configurar</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Gestionar</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Lista</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Subir</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Descargar</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Importar</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Exportar</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Habilitado</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Deshabilitados</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>Todo</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Sin datos</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>Sin contenido</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Seleccione</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Complete el campo</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Introduzca</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Fecha de alta</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Hora de inicio</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Hora de finalización</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>Creado</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Fecha de actualización</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Nombre de archivo</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>Tamaño del archivo</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>Hora de subida</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>Eliminar seleccionados</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Agregar archivo</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Seleccionar archivo</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>Anterior</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Siguiente</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Correcto</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Fallido</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Éxito</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Error</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Error al cargar</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Módulos agregados correctamente</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Error al agregar</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Actualizado correctamente</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>Error al editar</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>Eliminado correctamente</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Error al eliminar</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>Subido correctamente</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Error al subir</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Copiado correctamente</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Error al copiar</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Aviso</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Advertencia</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Error</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>Sí</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>No</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Habilitado</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Desconocido</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>No establecido</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Sin registros</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Introduce una palabra clave</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Selecciona un tipo</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Seleccionar estado</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Crear</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>Enviar</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>Ver</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Establecer como predeterminado</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Prueba</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Conectado correctamente</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Error de conexión</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>La contraseña es obligatoria!</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>{0} está duplicado.</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Los administradores no pueden eliminarse a sí mismos!</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>El administrador no existe!</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value>¡Eliminado correctamente!</value></data>
+  <data name="Frontend.092" xml:space="preserve"><value>El archivo de registro de WeChat no existe:</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>¡{0} debe tener más de 16 caracteres!</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>La sesión actual no está asociada a ningún Módulo XNCF.</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>No se encontró un Módulo coincidente: "{0}". Llame primero a GetSessionModuleList para confirmar los módulos de la sesión actual.</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>Módulo no encontrado: "{0}". Llame primero a GetSessionModuleList para confirmar los módulos disponibles.</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>No se encontró el registro en tiempo de ejecución del Módulo {0}, por lo que no se puede leer la información de la base de datos.</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>No hay ningún módulo registrado en el sistema.</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>No se leyó SenparcAiSetting. Compruebe la configuración de appsettings.json.</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>SenparcAiSetting.AiPlatform sigue siendo UnSet. Defina primero una plataforma disponible en appsettings.json.</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>El Módulo AIKernel no está instalado o no está habilitado, así que el sistema no puede cambiar al modelo de IA indicado.</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>No se pudo resolver AIModelService, por lo que no se puede cargar el modelo de IA especificado.</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>El modelo de IA seleccionado no existe: {0}</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>El modelo de IA seleccionado no es de tipo Chat: {0}</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>El usuario actual no ha iniciado sesión, por lo que no se puede renovar.</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>La información del usuario no existe!</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>¡El nombre de usuario no existe o la contraseña es incorrecta: {0}!</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>¡El nombre de usuario no existe o la contraseña es incorrecta!</value></data>
+  <data name="Admin.Home.AgentsOverview" xml:space="preserve"><value>Resumen operativo de Agents</value></data>
+  <data name="Admin.Home.AgentsOverviewLive" xml:space="preserve"><value>En tiempo real</value></data>
+  <data name="Admin.Home.AgentsManage" xml:space="preserve"><value>Administrar Agents</value></data>
+  <data name="Admin.Home.AgentsTotal" xml:space="preserve"><value>Total de Agents</value></data>
+  <data name="Admin.Home.AgentsLocal" xml:space="preserve"><value>Locales</value></data>
+  <data name="Admin.Home.AgentsRemoteA2A" xml:space="preserve"><value>A2A conectados</value></data>
+  <data name="Admin.Home.AgentsEnabled" xml:space="preserve"><value>Habilitados</value></data>
+  <data name="Admin.Home.AgentsDisabled" xml:space="preserve"><value>Deshabilitados</value></data>
+  <data name="Admin.Home.AgentsPublishedA2A" xml:space="preserve"><value>A2A publicados</value></data>
+  <data name="Admin.Home.AgentsConfigured" xml:space="preserve"><value>Configurados</value></data>
+  <data name="Admin.Home.AgentsActive" xml:space="preserve"><value>Activos</value></data>
+  <data name="Admin.Home.AgentsGroups" xml:space="preserve"><value>Grupos de colaboración</value></data>
+  <data name="Admin.Home.AgentsChatting" xml:space="preserve"><value>En conversación</value></data>
+  <data name="Admin.Home.AgentsActiveTasks" xml:space="preserve"><value>Tareas activas</value></data>
+  <data name="Admin.Home.AgentsWaitingOrPaused" xml:space="preserve"><value>En espera / pausadas</value></data>
+  <data name="Admin.Home.AiQuickDescription" xml:space="preserve"><value>Use el chat rápido de IA del Footer para abrir la conversación completa y seleccionar el contexto cuando lo necesite.</value></data>
+  <data name="Admin.Home.AiQuickDialog" xml:space="preserve"><value>Abrir chat rápido</value></data>
+  <data name="Menu.ConfigMode" xml:space="preserve">
+    <value>Modo de configuración</value>
+  </data>
+  <data name="Menu.ConfigModeExit" xml:space="preserve">
+    <value>Salir del modo de configuración</value>
+  </data>
+  <data name="Menu.ConfigModeTip" xml:space="preserve">
+    <value>Todos los menús/páginas aparecen abajo por jerarquía (los botones no se ordenan). Arrastre elementos del mismo nivel para reordenarlos, o escriba un número en la casilla Orden y pulse Enter para saltar a esa posición. Al guardar se actualizan de verdad los valores Sort y se refresca el menú izquierdo.</value>
+  </data>
+  <data name="Menu.ConfigSave" xml:space="preserve">
+    <value>Guardar orden</value>
+  </data>
+  <data name="Menu.ConfigSaveSuccess" xml:space="preserve">
+    <value>El orden de los menús se ha guardado</value>
+  </data>
+  <data name="Menu.ConfigEmpty" xml:space="preserve">
+    <value>No hay menús o páginas para ordenar</value>
+  </data>
+  <data name="Admin.Footer.NeuBellWebHookSettings" xml:space="preserve"><value>Configuración de WebHook</value></data>
+  <data name="DocHelp.Help" xml:space="preserve"><value>Ayuda</value></data>
+  <data name="DocHelp.Title" xml:space="preserve"><value>Documentación de la función</value></data>
+  <data name="DocHelp.OpenWindow" xml:space="preserve"><value>Abrir en una ventana nueva</value></data>
+  <data name="DocHelp.Close" xml:space="preserve"><value>Cerrar</value></data>
+  <data name="DocHelp.Loading" xml:space="preserve"><value>Cargando documentación...</value></data>
+  <data name="DocHelp.Notice" xml:space="preserve"><value>Si el documento está vacío o bloqueado, ábralo en una ventana nueva.</value></data>
+  <data name="DocHelp.LoadFailed" xml:space="preserve"><value>Error o tiempo de carga agotado. Reintente o abra una ventana nueva.</value></data>
+  <data name="DocHelp.Retry" xml:space="preserve"><value>Reintentar</value></data>
+  <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>La configuración de la documentación no es válida. Contacte con su administrador.</value></data>
+
+  <data name="SystemMenu.AdministratorManagement" xml:space="preserve"><value>Administrator management</value></data>
+  <data name="SystemMenu.RoleManagement" xml:space="preserve"><value>Role management</value></data>
+  <data name="SystemMenu.SystemInfo" xml:space="preserve"><value>System information</value></data>
+  <data name="SystemMenu.TenantInfo" xml:space="preserve"><value>Tenant information</value></data>
+  <data name="SystemMenu.ExtensionModules" xml:space="preserve"><value>Extension modules</value></data>
+  <data name="SystemMenu.ModuleManagement" xml:space="preserve"><value>Module management</value></data>
+  <data name="Xncf.ModuleFunctionCatalog" xml:space="preserve"><value>Catálogo de Functions del módulo y puntos de ejecución</value></data>
+  <data name="Xncf.ModuleFunctionAccessControl" xml:space="preserve"><value>Gestionar el control de acceso en una pestaña iframe de NeuCharPivot</value></data>
+  <data name="Xncf.Capabilities" xml:space="preserve"><value>Capacidades</value></data>
+  <data name="Xncf.ModuleCapabilities" xml:space="preserve"><value>Capacidades del módulo</value></data>
+  <data name="Xncf.Refresh" xml:space="preserve"><value>Actualizar</value></data>
+  <data name="Xncf.NoAdditionalInterfaces" xml:space="preserve"><value>No se declararon interfaces adicionales</value></data>
+  <data name="Xncf.RuntimeDataCapabilities" xml:space="preserve"><value>Capacidades de ejecución y datos</value></data>
+  <data name="Xncf.RegisteredThreads" xml:space="preserve"><value>Hilos registrados</value></data>
+  <data name="Xncf.DedicatedDatabase" xml:space="preserve"><value>Base de datos dedicada</value></data>
+  <data name="Xncf.DatabasePrefix" xml:space="preserve"><value>Prefijo de base de datos</value></data>
+  <data name="Xncf.DatabaseContext" xml:space="preserve"><value>Contexto de base de datos</value></data>
+  <data name="Xncf.DataTables" xml:space="preserve"><value>Tablas de datos</value></data>
+  <data name="Xncf.DataTablesAndMigrations" xml:space="preserve"><value>Tablas de datos y migraciones</value></data>
+  <data name="Xncf.DatabaseReauthenticationRequired" xml:space="preserve"><value>Esta área contiene el esquema y las estadísticas de la base de datos. Vuelve a introducir la contraseña del administrador actual para continuar.</value></data>
+  <data name="Xncf.CurrentAdministratorPassword" xml:space="preserve"><value>Contraseña del administrador actual</value></data>
+  <data name="Xncf.VerifyAndView" xml:space="preserve"><value>Verificar y mostrar</value></data>
+  <data name="Xncf.EntityCount" xml:space="preserve"><value>Número de entidades</value></data>
+  <data name="Xncf.TablePrefix" xml:space="preserve"><value>Prefijo de tabla</value></data>
+  <data name="Xncf.AppliedMigrations" xml:space="preserve"><value>Migraciones aplicadas</value></data>
+  <data name="Xncf.PendingMigrations" xml:space="preserve"><value>Migraciones pendientes</value></data>
+  <data name="Xncf.Table" xml:space="preserve"><value>Tabla</value></data>
+  <data name="Xncf.Entity" xml:space="preserve"><value>Entidad</value></data>
+  <data name="Xncf.CurrentRowCount" xml:space="preserve"><value>Número actual de filas</value></data>
+  <data name="Xncf.Columns" xml:space="preserve"><value>Columnas</value></data>
+  <data name="Xncf.MigrationHistory" xml:space="preserve"><value>Historial de migraciones</value></data>
+  <data name="Xncf.LoadCapabilitiesFailed" xml:space="preserve"><value>No se pudieron cargar las capacidades del módulo.</value></data>
+  <data name="Xncf.EnterCurrentAdministratorPassword" xml:space="preserve"><value>Introduce la contraseña del administrador actual.</value></data>
+  <data name="Xncf.PasswordVerificationFailed" xml:space="preserve"><value>La verificación de la contraseña falló.</value></data>
+  <data name="Xncf.LoadDataTablesFailed" xml:space="preserve"><value>No se pudo cargar la información de las tablas de datos.</value></data>
+  <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - Control de acceso</value></data>
+  <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>El módulo no está cargado.</value></data>
+  <data name="Xncf.PasswordRequired" xml:space="preserve"><value>Introduce la contraseña.</value></data>
+  <data name="Xncf.Function" xml:space="preserve"><value>Function</value></data>
+  <data name="Xncf.Key" xml:space="preserve"><value>Clave</value></data>
+  <data name="Xncf.NeuCharPivot" xml:space="preserve"><value>NeuCharPivot</value></data>
+  <data name="Admin.Pagination.Goto" xml:space="preserve"><value>Ir a</value></data>
+  <data name="Admin.Pagination.PageSize" xml:space="preserve"><value>por página</value></data>
+  <data name="Admin.Pagination.Total" xml:space="preserve"><value>{total} en total</value></data>
+  <data name="Admin.Pagination.Page" xml:space="preserve"><value>Página</value></data>
+
+  <data name="AdminChat.Settings.Title" xml:space="preserve"><value>Chat settings</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.ModeLabel" xml:space="preserve"><value>Mode</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.ModeTitle" xml:space="preserve"><value>Choose execution mode</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.ModeCaption" xml:space="preserve"><value>Strategy used by the next request in this conversation.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.LauncherModeCaption" xml:space="preserve"><value>This mode applies only to the next request; Plan and Execute use MAF Harness.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.HarnessAdvanced" xml:space="preserve"><value>Harness advanced settings</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.MaxIterations" xml:space="preserve"><value>Max iterations</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.MaxOutputTokens" xml:space="preserve"><value>Max output tokens</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.CapabilityNotice" xml:space="preserve"><value>FileMemory can only be changed with /harness file-memory on|off; Agent Skills and Hosted Web Search are off by default. Enabling them changes privacy, tool, and external-access boundaries.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.Close" xml:space="preserve"><value>Close chat settings</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.Stop" xml:space="preserve"><value>Stop</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.Simple" xml:space="preserve"><value>Chat</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.SimpleDescription" xml:space="preserve"><value>One response without the MAF long-running task loop.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.Plan" xml:space="preserve"><value>Plan</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.PlanDescription" xml:space="preserve"><value>Plan first, then call tools as needed and wait for approval.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.Execute" xml:space="preserve"><value>Execute</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.ExecuteDescription" xml:space="preserve"><value>Enter MAF execution mode directly for well-defined tasks.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.Mode" xml:space="preserve"><value>Switch execution mode</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.Help" xml:space="preserve"><value>Show available commands</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.MaxToken" xml:space="preserve"><value>Set output limit</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.MaxIterations" xml:space="preserve"><value>Set Harness max iterations</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.Harness" xml:space="preserve"><value>Set Harness capabilities</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStats" xml:space="preserve"><value>Usage Stats</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsTitle" xml:space="preserve"><value>User Usage Statistics (AdminChat)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsTip" xml:space="preserve"><value>Only the per-account session/message counts are shown. No session or message content is exposed.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.User" xml:space="preserve"><value>Account</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Total" xml:space="preserve"><value>Sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Active" xml:space="preserve"><value>Active</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Archived" xml:space="preserve"><value>Archived</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Deleted" xml:space="preserve"><value>Deleted</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Messages" xml:space="preserve"><value>Messages</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.LastActive" xml:space="preserve"><value>Last Active</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsLoadFailed" xml:space="preserve"><value>Failed to load user usage statistics</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.SuperAdminOnly" xml:space="preserve"><value>Only super administrators can view per-account usage statistics</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.AdminUserCount" xml:space="preserve"><value>Admins</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.DeleteCurrentTenantNotAllowed" xml:space="preserve"><value>You cannot delete the tenant currently in use!</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.DeleteLastTenantNotAllowed" xml:space="preserve"><value>The system must keep at least one enabled tenant; the last tenant cannot be deleted!</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.DeleteHasAdminUsers" xml:space="preserve"><value>Tenant {0} still has {1} admin account(s). Reassign or delete them before deleting the tenant!</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.DeleteNotFound" xml:space="preserve"><value>Tenant not found!</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Title" xml:space="preserve"><value>PromptRange · Select a prompt</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Range" xml:space="preserve"><value>All ranges</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Tactic" xml:space="preserve"><value>All lanes</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Keyword" xml:space="preserve"><value>Search name, content, range or version</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Search" xml:space="preserve"><value>Search</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Retry" xml:space="preserve"><value>Reload</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Empty" xml:space="preserve"><value>No matching prompts. Try different filters.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Draft" xml:space="preserve"><value>Draft</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Preview" xml:space="preserve"><value>Prompt preview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.SelectHint" xml:space="preserve"><value>Select a prompt on the left to preview its full content.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.InsertHint" xml:space="preserve"><value>Insert at the cursor (replace selected text), without sending or executing.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Cancel" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Insert" xml:space="preserve"><value>Insert prompt</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.LoadFailed" xml:space="preserve"><value>Unable to load prompts. Please retry.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.AccessDenied" xml:space="preserve"><value>Your session expired or access was denied. Sign in again or contact an administrator.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Unavailable" xml:space="preserve"><value>PromptRange selector is unavailable. Check that the module is installed, enabled and updated.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.TargetChanged" xml:space="preserve"><value>The input changed or is no longer editable. Close the picker and select again.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.TooLong" xml:space="preserve"><value>The inserted content would exceed the input length limit. Shorten it first.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Sort" xml:space="preserve"><value>Sort by</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.SortScore" xml:space="preserve"><value>Score (current, high to low)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.SortPromptCode" xml:space="preserve"><value>PromptCode (ascending)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.AverageScore" xml:space="preserve"><value>Average score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.MaxScore" xml:space="preserve"><value>Highest score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Unrated" xml:space="preserve"><value>Not rated</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.CurrentScore" xml:space="preserve"><value>Current score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Score" xml:space="preserve"><value>Rate (0–10)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.View" xml:space="preserve"><value>View prompt</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Locate" xml:space="preserve"><value>Locate referenced text</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Remove" xml:space="preserve"><value>Remove reference (keep text)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Unrated" xml:space="preserve"><value>Not rated</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Unavailable" xml:space="preserve"><value>PromptRange is unavailable or the request failed. Please retry.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.InvalidReference" xml:space="preserve"><value>The prompt reference is invalid. Insert the prompt again.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.InvalidScore" xml:space="preserve"><value>Enter a score from 0 to 10 with at most one decimal place.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.LastScoreWins" xml:space="preserve"><value>The last successful rating wins, whether manual or AI. All references share the current score.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.AIConfirm" xml:space="preserve"><value>Evaluate this input and reply against the PromptCode benchmark using AI? Model charges may apply. A successful rating replaces the current score.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.AIScore" xml:space="preserve"><value>Rate with AI</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.AIUnavailable" xml:space="preserve"><value>AI rating requires a benchmark and a corresponding completed reply.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Cancel" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Save" xml:space="preserve"><value>Save manual score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.TooMany" xml:space="preserve"><value>At most 32 prompt references are allowed per message. Remove unused references first.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.RangeScores" xml:space="preserve"><value>Range score overview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.ScoringTarget" xml:space="preserve"><value>Rating this PromptCode</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.LocateTarget" xml:space="preserve"><value>Locate rating target</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.DraftHint" xml:space="preserve"><value>Dragging only previews the score and green bar height. Changes take effect after saving the manual score.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.ChartHint" xml:space="preserve"><value>Green marks the rating target; a blue outline marks the preview. Clicking only previews a version and never changes the rating target. Scroll horizontally to browse all versions.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.PreviewOnly" xml:space="preserve"><value>Read-only preview · does not affect your rating</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.CurrentScore" xml:space="preserve"><value>Current saved score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.HumanScore" xml:space="preserve"><value>Manual score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.RobotScore" xml:space="preserve"><value>AI score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Retry" xml:space="preserve"><value>Retry</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.109" xml:space="preserve"><value>GET (no body; data is passed through URL placeholders)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.110" xml:space="preserve"><value>NeuBell WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.111" xml:space="preserve"><value>POST (default, with a JSON body)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.112" xml:space="preserve"><value>PUT (with a request body)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.113" xml:space="preserve"><value>Provider filter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.114" xml:space="preserve"><value>WebHook URL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.115" xml:space="preserve"><value>WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.116" xml:space="preserve"><value>WebHook request payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.117" xml:space="preserve"><value>For example: operations duty bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.118" xml:space="preserve"><value>This records request data and results for parameter-triggered NeuBell notifications, settings-page tests, and monitored change notifications.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.119" xml:space="preserve"><value>Action value ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.120" xml:space="preserve"><value>Placeholders</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.121" xml:space="preserve"><value>Complete default JSON payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.122" xml:space="preserve"><value>Configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.123" xml:space="preserve"><value>Payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.124" xml:space="preserve"><value>Search name, URL, or Provider</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>Count ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.126" xml:space="preserve"><value>Add WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.127" xml:space="preserve"><value>Notify on added</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.128" xml:space="preserve"><value>Method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.129" xml:space="preserve"><value>Time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.130" xml:space="preserve"><value>No request logs yet.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.131" xml:space="preserve"><value>Titles added/removed in this event (joined with 、)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.132" xml:space="preserve"><value>Item ID ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.133" xml:space="preserve"><value>Item updated at</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.134" xml:space="preserve"><value>Item title ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.135" xml:space="preserve"><value>Item link (absolute when a site root is configured) ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.136" xml:space="preserve"><value>Template</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.137" xml:space="preserve"><value>Clear (keep 50)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.138" xml:space="preserve"><value>Choose Add WebHook in the upper right to configure an external WebAPI notification endpoint.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.139" xml:space="preserve"><value>Leave empty to use the default JSON payload; values starting with { or [ are treated as JSON. For example: {</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.140" xml:space="preserve"><value>Leave empty for all Providers</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.141" xml:space="preserve"><value>Tenant identifier (empty without a tenant)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.142" xml:space="preserve"><value>Removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.143" xml:space="preserve"><value>Notify on removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.144" xml:space="preserve"><value>Signature</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.145" xml:space="preserve"><value>Signing secret</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.146" xml:space="preserve"><value>Result</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.147" xml:space="preserve"><value>Duration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.148" xml:space="preserve"><value>Request body template</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.149" xml:space="preserve"><value>Request method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.150" xml:space="preserve"><value>Registros de solicitudes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.151" xml:space="preserve"><value>Aún no hay WebHooks</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.152" xml:space="preserve"><value>Hora de notificación (ISO 8601) ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.153" xml:space="preserve"><value>Las solicitudes configuradas incluyen X-NeuBell-Signature (HMAC-SHA256)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.154" xml:space="preserve"><value>(mismo formato que las plantillas de texto de Workflow,</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.155" xml:space="preserve"><value>Panel de NeuCharPivot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.156" xml:space="preserve"><value>Lista de Provit Block (arrastra para ordenar)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.157" xml:space="preserve"><value>admin-home (inicio de Admin)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.158" xml:space="preserve"><value>Descripción en una línea</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.159" xml:space="preserve"><value>Color del tema</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.160" xml:space="preserve"><value>Por ejemplo: panel de operaciones del inicio de Admin</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.161" xml:space="preserve"><value>Número de columnas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.162" xml:space="preserve"><value>Crear panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.163" xml:space="preserve"><value>Enviar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.164" xml:space="preserve"><value>Título del bloque</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.165" xml:space="preserve"><value>Vincula un panel (Provit Panel) a una página como admin-home, combina Provit Blocks de cualquier módulo XNCF y permite crearlos o modificarlos mediante AI Chat.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.166" xml:space="preserve"><value>Desactivado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.167" xml:space="preserve"><value>Referencias rellenadas a partir de bloques ausentes en la página de inicio</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.168" xml:space="preserve"><value>Buscar nombre del panel o identificador de página</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.169" xml:space="preserve"><value>Aún no hay bloques. Haz clic en «Añadir bloque» para elegir una Pivot Function de cualquier módulo XNCF.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.170" xml:space="preserve"><value>UID del módulo:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.171" xml:space="preserve"><value>Naranja</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.172" xml:space="preserve"><value>Añadir Provit Block</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.173" xml:space="preserve"><value>Añadir bloque</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.174" xml:space="preserve"><value>Gris</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.175" xml:space="preserve"><value>Haz clic en «Crear panel» arriba a la derecha para vincular el panel a una página como admin-home.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.176" xml:space="preserve"><value>Describe a tu IA la necesidad en una frase, por ejemplo: añade monitorización del host y tareas pendientes en tres columnas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.177" xml:space="preserve"><value>Morado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.178" xml:space="preserve"><value>Verde</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.179" xml:space="preserve"><value>Azul</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.180" xml:space="preserve"><value>Aún no hay paneles</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.181" xml:space="preserve"><value>Seleccionar Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>Elige una Pivot Function de cualquier módulo XNCF para este panel.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.183" xml:space="preserve"><value>Seleccionar módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.184" xml:space="preserve"><value>Panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.185" xml:space="preserve"><value>Nombre del panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>Identificador de página</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.187" xml:space="preserve"><value>Estado de Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.188" xml:space="preserve"><value>Function: todas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.189" xml:space="preserve"><value>Function: disponibles</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.190" xml:space="preserve"><value>Function: eliminadas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.191" xml:space="preserve"><value>Estado de LoopTask</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.192" xml:space="preserve"><value>LoopTask: último fallo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.193" xml:space="preserve"><value>LoopTask: cuenta atrás</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.194" xml:space="preserve"><value>LoopTask: todos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.195" xml:space="preserve"><value>LoopTask: desactivados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.196" xml:space="preserve"><value>LoopTask: pendientes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.197" xml:space="preserve"><value>LoopTask: en ejecución</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.198" xml:space="preserve"><value>LoopTask: sin configurar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.199" xml:space="preserve"><value>Navegación del módulo NeuCharPivot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.200" xml:space="preserve"><value>Agregación de NeuCharPivot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.201" xml:space="preserve"><value>Ejecución de Pivot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.202" xml:space="preserve"><value>Vínculos de Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Activador de Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.204" xml:space="preserve"><value>Workflow: todos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.205" xml:space="preserve"><value>Workflow: vinculados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.206" xml:space="preserve"><value>Workflow: no vinculados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.207" xml:space="preserve"><value>Último fallo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.208" xml:space="preserve"><value>Disponibles / total</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.209" xml:space="preserve"><value>Activados / configurados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.210" xml:space="preserve"><value>Eliminado en la versión actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.211" xml:space="preserve"><value>Correctos / fallidos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.212" xml:space="preserve"><value>Ejecutar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.213" xml:space="preserve"><value>En ejecución / cuenta atrás</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.214" xml:space="preserve"><value>Estado de ejecución</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.215" xml:space="preserve"><value>Buscar módulos, Functions o Workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.216" xml:space="preserve"><value>Módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.217" xml:space="preserve"><value>Navegación de módulos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.218" xml:space="preserve"><value>Módulo cerrado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.219" xml:space="preserve"><value>Estado del módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Estado del módulo: no disponible</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.221" xml:space="preserve"><value>Estado del módulo: todos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.222" xml:space="preserve"><value>Estado del módulo: disponible</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.223" xml:space="preserve"><value>No hay NeuCharPivot coincidente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Agregación</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.225" xml:space="preserve"><value>Este módulo no está instalado o activado; las Functions conservan la configuración, pero no se pueden ejecutar.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Ajusta los filtros o entra en «Configuración / Ejecutar → NeuCharPivot» de cualquier módulo para generar primero un panel de acciones.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.227" xml:space="preserve"><value>Restablecer filtros</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Consulta en un solo lugar los paneles de módulos, las Functions parametrizadas, las cuentas atrás de LoopTask y los Workflows activados tras completarse.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Control de acceso global a Provit para Functions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.230" xml:space="preserve"><value>La Function ya no existe; la política se conserva como redundante</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.231" xml:space="preserve"><value>Aplica la política «restringida» a las Functions. En este modo, solo los usuarios, roles o códigos de permiso vinculados pueden acceder a Provit global; vincula al menos uno.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.232" xml:space="preserve"><value>Configura políticas de acceso de base de datos para Functions de cualquier módulo XNCF vinculando usuarios, roles o códigos de permiso. La política de base de datos anula los atributos del código; tras eliminar un módulo queda como redundante y vuelve a aplicarse al reinstalarlo hasta que se borre manualmente.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.233" xml:space="preserve"><value>Base del código</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.234" xml:space="preserve"><value>Base del código (FunctionRenderAttribute)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.235" xml:space="preserve"><value>Cualquier administrador autenticado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.236" xml:space="preserve"><value>Guardar política</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.237" xml:space="preserve"><value>Códigos de permiso permitidos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.238" xml:space="preserve"><value>Usuarios permitidos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.239" xml:space="preserve"><value>Roles permitidos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.240" xml:space="preserve"><value>Restringido</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.241" xml:space="preserve"><value>Aplicar a los seleccionados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.242" xml:space="preserve"><value>No hay una política de base de datos configurada; actualmente se aplica la base del código.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.243" xml:space="preserve"><value>Vinculaciones existentes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.244" xml:space="preserve"><value>Aplicar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.245" xml:space="preserve"><value>Abierto</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.246" xml:space="preserve"><value>Política de base de datos actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.247" xml:space="preserve"><value>Restringido masivo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.248" xml:space="preserve"><value>Configuración restringida masiva</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.249" xml:space="preserve"><value>Apertura masiva</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.250" xml:space="preserve"><value>Restaurar herencia en lote</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.251" xml:space="preserve"><value>Limpiar en lote</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.252" xml:space="preserve"><value>Deshabilitar en lote</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.253" xml:space="preserve"><value>Buscar módulo / Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.254" xml:space="preserve"><value>Política de base de datos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.255" xml:space="preserve"><value>No configurado (base del código)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.256" xml:space="preserve"><value>Módulo no disponible</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.257" xml:space="preserve"><value>Módulo eliminado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.258" xml:space="preserve"><value>Módulo eliminado; no se puede leer la base del código y la política de la base de datos es la autoridad.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.259" xml:space="preserve"><value>Modo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.260" xml:space="preserve"><value>Limpiar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.261" xml:space="preserve"><value>Política efectiva</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.262" xml:space="preserve"><value>Información del objetivo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.263" xml:space="preserve"><value>Deshabilitado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.264" xml:space="preserve"><value>Se conserva como redundante tras guardar y se aplica automáticamente al reinstalar el módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.265" xml:space="preserve"><value>Modo de política</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.266" xml:space="preserve"><value>Heredar código</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.267" xml:space="preserve"><value>Registra el motivo de este cambio de política para auditorías posteriores</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.268" xml:space="preserve"><value>Configuración</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.269" xml:space="preserve"><value>Configurar la política de acceso global a Provit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.270" xml:space="preserve"><value>Control de acceso</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.271" xml:space="preserve"><value>Introduce códigos de recursos de permisos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.272" xml:space="preserve"><value>Introduce códigos de recursos (por ejemplo sandbox.execute; cualquier coincidencia concede acceso)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.273" xml:space="preserve"><value>Selecciona usuarios administradores</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.274" xml:space="preserve"><value>Selecciona usuarios administradores (cualquier coincidencia concede acceso)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.275" xml:space="preserve"><value>Selecciona o introduce códigos de rol</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.276" xml:space="preserve"><value>Selecciona o introduce códigos de rol (cualquier coincidencia concede acceso)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.277" xml:space="preserve"><value>(Ninguno)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Edición de Chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.279" xml:space="preserve"><value>ChatAgent · módulo XNCF actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.280" xml:space="preserve"><value>ChatAgent resume todas las Functions en un panel declarativo de acciones rápidas. No ejecuta scripts generados por IA ni métodos internos arbitrarios.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.281" xml:space="preserve"><value>Notificación de NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.282" xml:space="preserve"><value>Function Calling está desactivado durante la generación de NeuCharPivot; AdminChat completo solo carga las FunctionRender registradas públicamente por módulos asociados explícitamente a la sesión. La ejecución de Pivot/Workflow vuelve a comprobar la lista permitida y el estado del módulo en el servidor.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.283" xml:space="preserve"><value>No vinculado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.284" xml:space="preserve"><value>Por ejemplo: coloca las acciones frecuentes en el primer grupo y expón solo los parámetros necesarios</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.285" xml:space="preserve"><value>Enviar y actualizar Pivot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.286" xml:space="preserve"><value>Todos los parámetros obligatorios se vuelven a comprobar antes de activar; no se ejecuta nada si el módulo está desactivado o la Function se ha eliminado.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.287" xml:space="preserve"><value>Activar Workflow al finalizar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.288" xml:space="preserve"><value>Referencia actual:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.289" xml:space="preserve"><value>Abrir AdminChat completo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.290" xml:space="preserve"><value>El módulo no está instalado o activado; todas las Pivot Function y tareas programadas están desactivadas en la base.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.291" xml:space="preserve"><value>Generar NeuCharPivot para este módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.292" xml:space="preserve"><value>Generar interfaz</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.293" xml:space="preserve"><value>Ejecución automática</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.294" xml:space="preserve"><value>Seleccionar capacidad de IA</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.295" xml:space="preserve"><value>Intervalo (segundos)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.296" xml:space="preserve"><value>La capacidad de Workflow no está activada. La lista sigue visible, pero los comandos móviles no tendrán efecto.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.297" xml:space="preserve"><value>Bot de WeChat personal</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.298" xml:space="preserve"><value>Integración de WeChat personal</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.299" xml:space="preserve"><value>La integración de WeChat personal está desactivada; los comandos móviles no llegarán a Admin.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.300" xml:space="preserve"><value>Crear configuración de vinculación</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.301" xml:space="preserve"><value>Workflows disponibles</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.302" xml:space="preserve"><value>Prefijo de comando @Model.PageData.CommandPrefix@(Model.PageData.RequireCommandPrefix ? " · obligatorio" : " · opcional")</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.303" xml:space="preserve"><value>Completar la vinculación en WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.304" xml:space="preserve"><value>Copiar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.305" xml:space="preserve"><value>ID del usuario Admin actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.306" xml:space="preserve"><value>El administrador actual no tiene ningún Workflow disponible.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.307" xml:space="preserve"><value>Capacidades actuales</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.308" xml:space="preserve"><value>Comandos móviles</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.309" xml:space="preserve"><value>Abrir el Bot de WeChat personal</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.310" xml:space="preserve"><value>Vincula al administrador actual con una cuenta de WeChat para consultar y ejecutar Workflows desde el teléfono.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.311" xml:space="preserve"><value>Envía el código de vinculación a la otra persona</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.312" xml:space="preserve"><value>Consulta por el ID del administrador actual @Model.PageData.WorkflowUserId. En el teléfono, enviar «Obtener lista de Workflow» devuelve el mismo resultado.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.313" xml:space="preserve"><value>Buscar ID o nombre</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.314" xml:space="preserve"><value>Configuración de vinculación de base de datos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.315" xml:space="preserve"><value>activados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.316" xml:space="preserve"><value>El sistema solo conserva un hash irreversible. Tras crear o modificar correctamente, envía de inmediato el código de vinculación en texto plano al usuario de WeChat correspondiente.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.317" xml:space="preserve"><value>Pide a la otra persona que envíe «Vincular cuenta de WeChat». Tras vincularla, envía «Obtener lista de Workflow» para ver la misma lista que en esta página.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.318" xml:space="preserve"><value>No hay una configuración de vinculación activada. Primero crea una vinculación para la cuenta de WeChat en el Bot de WeChat personal para que el teléfono identifique al administrador.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.319" xml:space="preserve"><value>Estado de integración</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.320" xml:space="preserve"><value>Primera vinculación</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.321" xml:space="preserve"><value>Pivot Block no está inicializado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.322" xml:space="preserve"><value>Abrir la configuración de NeuCharPivot del módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.323" xml:space="preserve"><value>Abrir la configuración del panel y rellenar el código</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.324" xml:space="preserve"><value>No se encontró en la base de datos la Function referenciada por este bloque. Inicialízala o restáurala y vuelve a la configuración del panel para seleccionarla de nuevo.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.325" xml:space="preserve"><value>Gestionar paneles</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.326" xml:space="preserve"><value>日本語</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.327" xml:space="preserve"><value>Chino simplificado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.328" xml:space="preserve"><value>Suzhou Senparc Network Technology Co., Ltd.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.329" xml:space="preserve"><value>Parámetros de Function Calling</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.330" xml:space="preserve"><value>Módulo XNCF</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.331" xml:space="preserve"><value>Solo acepta parámetros input normales</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.332" xml:space="preserve"><value>Abrir</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.333" xml:space="preserve"><value>Buscar nombre / descripción / parámetros de Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.334" xml:space="preserve"><value>No hay ningún Workflow activado disponible</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.335" xml:space="preserve"><value>Borrar selección</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.336" xml:space="preserve"><value>Chat rápido de IA</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.337" xml:space="preserve"><value>Chat rápido de Admin Chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.338" xml:space="preserve"><value>Recordatorio de NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.339" xml:space="preserve"><value>Muestra solo los registros del navegador capturados después de cargar esta página; no incluye stdout del servidor.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.340" xml:space="preserve"><value>Cerrar todo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.341" xml:space="preserve"><value>Cambiar a la página completa</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.342" xml:space="preserve"><value>Ningún módulo proporciona información de NeuBell.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.343" xml:space="preserve"><value>No hay registros</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.344" xml:space="preserve"><value>Hora del servidor</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.345" xml:space="preserve"><value>Consola del navegador</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.346" xml:space="preserve"><value>Consumir</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.347" xml:space="preserve"><value>Consumir todo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.348" xml:space="preserve"><value>Borrar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.349" xml:space="preserve"><value>Elige los recordatorios de módulos que se muestran en el Footer. La configuración se guarda en el navegador de esta cuenta.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.350" xml:space="preserve"><value>Admite texto normal y etiquetas &lt;a&gt; con enlaces http/https absolutos; el resto del HTML se codifica.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.351" xml:space="preserve"><value>1 hora</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.352" xml:space="preserve"><value>24 horas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.353" xml:space="preserve"><value>7 días</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.354" xml:space="preserve"><value>Comando de AdminChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.355" xml:space="preserve"><value>Compartir instantánea HTML anónima</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.356" xml:space="preserve"><value>Traza de tareas de Harness</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.357" xml:space="preserve"><value>Vista previa de PDF de Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.358" xml:space="preserve"><value>Nombre del Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.359" xml:space="preserve"><value>Archivos y rutas de Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.360" xml:space="preserve"><value>Activos de Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.361" xml:space="preserve"><value>Sección anterior</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.362" xml:space="preserve"><value>Subir materiales</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.363" xml:space="preserve"><value>Sección siguiente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.364" xml:space="preserve"><value>Descargar / guardar como</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.365" xml:space="preserve"><value>Descargar el directorio actual (.zip)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.366" xml:space="preserve"><value>No usar Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.367" xml:space="preserve"><value>Comenzar directamente sin referenciar módulos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.368" xml:space="preserve"><value>Añadir módulos o Workflows invocables a la conversación actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.369" xml:space="preserve"><value>Seleccionar un Workspace para la conversación actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.370" xml:space="preserve"><value>Autorizar el envío de una imagen comprimida al modelo visual solo en este turno; puede consumir tokens adicionales.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.371" xml:space="preserve"><value>Quitar de este turno y eliminar los archivos de Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.372" xml:space="preserve"><value>Cualquiera que tenga el enlace puede ver esta instantánea.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.373" xml:space="preserve"><value>Traza de tareas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.374" xml:space="preserve"><value>Por ejemplo: proyecto de ejemplo Yield C#</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.375" xml:space="preserve"><value>Guardar archivo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.376" xml:space="preserve"><value>Permitir</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.377" xml:space="preserve"><value>Permitir que la IA escriba archivos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.378" xml:space="preserve"><value>Permitir que la IA ejecute Python</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.379" xml:space="preserve"><value>Cerrar panel de activos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.380" xml:space="preserve"><value>Caducidad del uso compartido</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.381" xml:space="preserve"><value>Crear enlace de instantánea de solo lectura</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.382" xml:space="preserve"><value>Enlace de instantánea anónima</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.383" xml:space="preserve"><value>Cancelar edición</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.384" xml:space="preserve"><value>Escribible</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.385" xml:space="preserve"><value>CLI ejecutable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.386" xml:space="preserve"><value>Opcional: añade una nota o el motivo del rechazo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.387" xml:space="preserve"><value>Abrir en navegador externo (solo lectura)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.388" xml:space="preserve"><value>Expandir al ancho máximo disponible</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.389" xml:space="preserve"><value>Módulos referenciados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.390" xml:space="preserve"><value>Sesión actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.391" xml:space="preserve"><value>El directorio actual está vacío</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.392" xml:space="preserve"><value>Rechazar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.393" xml:space="preserve"><value>Buscar modelos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.394" xml:space="preserve"><value>Deshacer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.395" xml:space="preserve"><value>Crear Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.396" xml:space="preserve"><value>No hay trazas de Harness</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.397" xml:space="preserve"><value>Sin guardar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.398" xml:space="preserve"><value>Ver la ejecución en tiempo real</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.399" xml:space="preserve"><value>Buscar trazas, herramientas o resultados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>Buscando Workspace…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.401" xml:space="preserve"><value>La vista previa de texto no admite este tipo de archivo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.402" xml:space="preserve"><value>No hay archivos o rutas coincidentes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.403" xml:space="preserve"><value>Gestionar uso compartido anónimo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.404" xml:space="preserve"><value>Editar archivo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.405" xml:space="preserve"><value>Visión</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.406" xml:space="preserve"><value>Activos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.407" xml:space="preserve"><value>Ir a</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.408" xml:space="preserve"><value>Ir a la línea</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.409" xml:space="preserve"><value>PromptRange gestiona el prompt de sistema predeterminado; el texto actual contiene preferencias personales o del inquilino.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.410" xml:space="preserve"><value>, referencia un archivo o ruta con @@</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.411" xml:space="preserve"><value>, introduce @@ para referenciar un archivo o ruta</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.412" xml:space="preserve"><value>Admite texto normal y etiquetas &lt;a&gt; con enlaces http/https absolutos; el resto del HTML se codifica.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.413" xml:space="preserve"><value>Bifurcar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.414" xml:space="preserve"><value>Pensando</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.415" xml:space="preserve"><value>Esperando la confirmación de la herramienta</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.416" xml:space="preserve"><value>Evento de reproducción #{0} ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.417" xml:space="preserve"><value>Pulsa Ctrl + Enter o Cmd + Enter para comenzar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.418" xml:space="preserve"><value>Bifurcar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.419" xml:space="preserve"><value>No hay recursos compartidos válidos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.420" xml:space="preserve"><value>Quedan {0} elementos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.421" xml:space="preserve"><value>Ver vista previa</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.422" xml:space="preserve"><value>Volver al texto</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.423" xml:space="preserve"><value>Vista de árbol</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.424" xml:space="preserve"><value>Ver código fuente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.425" xml:space="preserve"><value>Cargando vista previa…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.426" xml:space="preserve"><value>Falta la Function:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.427" xml:space="preserve"><value>Seleccionar todos los resultados filtrados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.428" xml:space="preserve"><value>Seleccionados {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.429" xml:space="preserve"><value>NeuBell · configuración de WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.430" xml:space="preserve"><value>Editar WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.431" xml:space="preserve"><value>Añadir WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.432" xml:space="preserve"><value>Integración de WeChat personal</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.433" xml:space="preserve"><value>No hay ningún Workflow coincidente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.434" xml:space="preserve"><value>Políticas de base de datos: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.435" xml:space="preserve"><value>Políticas huérfanas: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.436" xml:space="preserve"><value>Workflows disponibles</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.437" xml:space="preserve"><value>paneles</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.438" xml:space="preserve"><value>Hasta {0} archivos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.439" xml:space="preserve"><value>Mostrar módulos no disponibles ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.440" xml:space="preserve"><value>Versión del módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.441" xml:space="preserve"><value>Hasta {0} archivos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.442" xml:space="preserve"><value>Total: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.443" xml:space="preserve"><value>{0} por página</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.444" xml:space="preserve"><value>Ir a</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.445" xml:space="preserve"><value>Página</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.446" xml:space="preserve"><value>10 por página</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.447" xml:space="preserve"><value>20 por página</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.448" xml:space="preserve"><value>30 por página</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.449" xml:space="preserve"><value>40 por página</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.450" xml:space="preserve"><value>Prefijo de comando {0} · obligatorio</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.451" xml:space="preserve"><value>Prefijo de comando {0} · opcional</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.452" xml:space="preserve"><value>Harness desactivado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.453" xml:space="preserve"><value>Vincular cuenta de WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.454" xml:space="preserve"><value>Obtener lista de Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.455" xml:space="preserve"><value>El prefijo de comando actual es</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.456" xml:space="preserve"><value>{0} / {1} elementos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.457" xml:space="preserve"><value>Entrada</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.458" xml:space="preserve"><value>{0} mensajes nuevos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.459" xml:space="preserve"><value>Prefijo de comando</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="WeixinClaw.Workflow.IntegrationDisabled" xml:space="preserve"><value>Workflow integration is disabled or the host has not loaded the NeuCharWorkflow module.</value></data>
+  <data name="WeixinClaw.Workflow.NoAvailable" xml:space="preserve"><value>No Workflows are currently available.</value></data>
+  <data name="WeixinClaw.Workflow.ListPrompt" xml:space="preserve"><value>Available Workflows are listed below. Send /workflow &lt;WorkflowId&gt; &lt;input&gt; next time to run a specific Workflow:</value></data>
+  <data name="WeixinClaw.Workflow.NotFound" xml:space="preserve"><value>The Workflow does not exist, is disabled, or the current administrator has no access.</value></data>
+  <data name="WeixinClaw.Workflow.Completed" xml:space="preserve"><value>Workflow "{0}" completed:
+{1}</value></data>
+  <data name="WeixinClaw.Workflow.Failed" xml:space="preserve"><value>Workflow "{0}" failed: {1}</value></data>
+  <data name="WeixinClaw.Workflow.HelpList" xml:space="preserve"><value>{0}workflow - List available Workflows and Workflow IDs</value></data>
+  <data name="WeixinClaw.Workflow.HelpExecute" xml:space="preserve"><value>{0}workflow &lt;WorkflowId&gt; &lt;input&gt; - Execute the specified Workflow</value></data>
+
+  <data name="Frontend.500" xml:space="preserve"><value>NeuCharPivot · Control de acceso</value></data>
+
+  <data name="Frontend.501" xml:space="preserve"><value>Control de acceso</value></data>
+
+  <data name="Frontend.502" xml:space="preserve"><value>Control de acceso global a Provit para Functions</value></data>
+
+  <data name="Frontend.503" xml:space="preserve"><value>Configura políticas de acceso para Functions de cualquier módulo XNCF vinculando usuarios, roles o códigos. Las políticas de base de datos anulan los atributos del código; tras limpiar un módulo se conservan y vuelven a aplicarse al reinstalarlo hasta que se borren manualmente.</value></data>
+
+  <data name="Frontend.504" xml:space="preserve"><value>Buscar módulo / Function</value></data>
+
+  <data name="Frontend.505" xml:space="preserve"><value>Actualizar</value></data>
+
+  <data name="Frontend.506" xml:space="preserve"><value>{0} Functions</value></data>
+
+  <data name="Frontend.507" xml:space="preserve"><value>Políticas de base de datos: {0}</value></data>
+
+  <data name="Frontend.508" xml:space="preserve"><value>Políticas huérfanas: {0}</value></data>
+
+  <data name="Frontend.509" xml:space="preserve"><value>Apertura masiva</value></data>
+
+  <data name="Frontend.510" xml:space="preserve"><value>Restringido masivo</value></data>
+
+  <data name="Frontend.511" xml:space="preserve"><value>Deshabilitar en lote</value></data>
+
+  <data name="Frontend.512" xml:space="preserve"><value>Restaurar herencia en lote</value></data>
+
+  <data name="Frontend.513" xml:space="preserve"><value>Limpiar en lote</value></data>
+
+  <data name="Frontend.514" xml:space="preserve"><value>Módulo</value></data>
+
+  <data name="Frontend.515" xml:space="preserve"><value>Módulo eliminado</value></data>
+
+  <data name="Frontend.516" xml:space="preserve"><value>Módulo no disponible</value></data>
+
+  <data name="Frontend.517" xml:space="preserve"><value>Base del código</value></data>
+
+  <data name="Frontend.518" xml:space="preserve"><value>Acceso global permitido</value></data>
+
+  <data name="Frontend.519" xml:space="preserve"><value>Acceso global no declarado</value></data>
+
+  <data name="Frontend.520" xml:space="preserve"><value>Cualquier administrador autenticado</value></data>
+
+  <data name="Frontend.521" xml:space="preserve"><value>Política de base de datos</value></data>
+
+  <data name="Frontend.522" xml:space="preserve"><value>Origen: política de base de datos</value></data>
+
+  <data name="Frontend.523" xml:space="preserve"><value>Se aplica después de reinstalar</value></data>
+
+  <data name="Frontend.524" xml:space="preserve"><value>Origen: atributos del código</value></data>
+
+  <data name="Frontend.525" xml:space="preserve"><value>Política efectiva</value></data>
+
+  <data name="Frontend.526" xml:space="preserve"><value>Acciones</value></data>
+
+  <data name="Frontend.527" xml:space="preserve"><value>Configuración</value></data>
+
+  <data name="Frontend.528" xml:space="preserve"><value>Limpiar</value></data>
+
+  <data name="Frontend.529" xml:space="preserve"><value>Configurar la política de acceso global a Provit</value></data>
+
+  <data name="Frontend.530" xml:space="preserve"><value>Información del objetivo</value></data>
+
+  <data name="Frontend.531" xml:space="preserve"><value>Versión desconocida</value></data>
+
+  <data name="Frontend.532" xml:space="preserve"><value>Se conserva como huérfana tras guardar y se aplica al reinstalar el módulo</value></data>
+
+  <data name="Frontend.533" xml:space="preserve"><value>La Function ya no existe; la política se conserva como huérfana</value></data>
+
+  <data name="Frontend.534" xml:space="preserve"><value>(Ninguno)</value></data>
+
+  <data name="Frontend.535" xml:space="preserve"><value>Descripción</value></data>
+
+  <data name="Frontend.536" xml:space="preserve"><value>Base del código (FunctionRenderAttribute)</value></data>
+
+  <data name="Frontend.537" xml:space="preserve"><value>Permitido en Provit global</value></data>
+
+  <data name="Frontend.538" xml:space="preserve"><value>No permitido en Provit global</value></data>
+
+  <data name="Frontend.539" xml:space="preserve"><value>El módulo se eliminó y no se puede leer la base del código; la política de base de datos es la autoridad.</value></data>
+
+  <data name="Frontend.540" xml:space="preserve"><value>Política de base de datos actual</value></data>
+
+  <data name="Frontend.541" xml:space="preserve"><value>Modo</value></data>
+
+  <data name="Frontend.542" xml:space="preserve"><value>Fecha de creación</value></data>
+
+  <data name="Frontend.543" xml:space="preserve"><value>Vinculaciones existentes</value></data>
+
+  <data name="Frontend.544" xml:space="preserve"><value>Notas</value></data>
+
+  <data name="Frontend.545" xml:space="preserve"><value>No hay una política de base de datos configurada; actualmente se aplica la base del código.</value></data>
+
+  <data name="Frontend.546" xml:space="preserve"><value>Modo de política</value></data>
+
+  <data name="Frontend.547" xml:space="preserve"><value>Heredar código</value></data>
+
+  <data name="Frontend.548" xml:space="preserve"><value>Abierto</value></data>
+
+  <data name="Frontend.549" xml:space="preserve"><value>Restringido</value></data>
+
+  <data name="Frontend.550" xml:space="preserve"><value>Deshabilitado</value></data>
+
+  <data name="Frontend.551" xml:space="preserve"><value>Selecciona o introduce códigos de rol (cualquier coincidencia concede acceso)</value></data>
+
+  <data name="Frontend.552" xml:space="preserve"><value>Roles permitidos</value></data>
+
+  <data name="Frontend.553" xml:space="preserve"><value>Códigos de permiso permitidos</value></data>
+
+  <data name="Frontend.554" xml:space="preserve"><value>Introduce códigos de permisos (por ejemplo sandbox.execute; cualquier coincidencia concede acceso)</value></data>
+
+  <data name="Frontend.555" xml:space="preserve"><value>Usuarios permitidos</value></data>
+
+  <data name="Frontend.556" xml:space="preserve"><value>Selecciona usuarios administradores (cualquier coincidencia concede acceso)</value></data>
+
+  <data name="Frontend.557" xml:space="preserve"><value>Registra el motivo de este cambio de política para auditorías posteriores</value></data>
+
+  <data name="Frontend.558" xml:space="preserve"><value>Cancelar</value></data>
+
+  <data name="Frontend.559" xml:space="preserve"><value>Guardar política</value></data>
+
+  <data name="Frontend.560" xml:space="preserve"><value>Configuración restringida masiva</value></data>
+
+  <data name="Frontend.561" xml:space="preserve"><value>Aplicar la política «restringida» a las {0} Functions seleccionadas. En este modo, solo los usuarios, roles o códigos de permiso vinculados (cualquiera coincide) pueden acceder a Provit global; vincula al menos uno.</value></data>
+
+  <data name="Frontend.562" xml:space="preserve"><value>Selecciona o introduce códigos de rol</value></data>
+
+  <data name="Frontend.563" xml:space="preserve"><value>Introduce códigos de recursos de permisos</value></data>
+
+  <data name="Frontend.564" xml:space="preserve"><value>Selecciona usuarios administradores</value></data>
+
+  <data name="Frontend.565" xml:space="preserve"><value>Aplicar</value></data>
+
+  <data name="Frontend.566" xml:space="preserve"><value>Desconocido</value></data>
+
+  <data name="Frontend.567" xml:space="preserve"><value>Se aplicará después de reinstalar</value></data>
+
+  <data name="Frontend.568" xml:space="preserve"><value>No uses políticas de base de datos; sigue únicamente los atributos del código (AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes).</value></data>
+
+  <data name="Frontend.569" xml:space="preserve"><value>Cualquier administrador autenticado puede acceder a esta Function mediante Provit global (anula las restricciones del código; úsalo con cuidado).</value></data>
+
+  <data name="Frontend.570" xml:space="preserve"><value>Solo los usuarios, roles o códigos de permiso vinculados abajo (cualquiera coincide) pueden acceder; las demás cuentas se rechazan.</value></data>
+
+  <data name="Frontend.571" xml:space="preserve"><value>Denegar explícitamente todo el acceso global a Provit, incluso cuando los atributos del código lo permiten.</value></data>
+
+  <data name="Frontend.572" xml:space="preserve"><value>Política guardada</value></data>
+
+  <data name="Frontend.573" xml:space="preserve"><value>Error al guardar</value></data>
+
+  <data name="Frontend.574" xml:space="preserve"><value>¿Borrar la política de base de datos de {0} / {1}? Tras borrarla se volverá a aplicar la base del código.</value></data>
+
+  <data name="Frontend.575" xml:space="preserve"><value>Borrar política</value></data>
+
+  <data name="Frontend.576" xml:space="preserve"><value>Política borrada</value></data>
+
+  <data name="Frontend.577" xml:space="preserve"><value>Error al borrar</value></data>
+
+  <data name="Frontend.578" xml:space="preserve"><value>¿Abrir las {0} Functions seleccionadas (cualquier administrador autenticado podrá acceder)?</value></data>
+
+  <data name="Frontend.579" xml:space="preserve"><value>¿Deshabilitar las {0} Functions seleccionadas (el acceso global a Provit siempre será rechazado)?</value></data>
+
+  <data name="Frontend.580" xml:space="preserve"><value>¿Restaurar las {0} Functions seleccionadas a «heredar código» (las políticas de base de datos ya no anularán la base del código)?</value></data>
+
+  <data name="Frontend.581" xml:space="preserve"><value>¿Borrar las políticas de base de datos de las {0} Functions seleccionadas (restaurar la base del código)? Esta acción no se puede deshacer.</value></data>
+
+  <data name="Frontend.582" xml:space="preserve"><value>¿Confirmar la operación?</value></data>
+
+  <data name="Frontend.583" xml:space="preserve"><value>Operación masiva</value></data>
+
+  <data name="Frontend.584" xml:space="preserve"><value>Confirmar</value></data>
+
+  <data name="Frontend.585" xml:space="preserve"><value>Operación masiva completada; políticas afectadas: {0}</value></data>
+
+  <data name="Frontend.586" xml:space="preserve"><value>Error en la operación masiva</value></data>
+
+  <data name="Frontend.600" xml:space="preserve"><value>Elige qué recordatorios de módulos aparecen en el Footer. La configuración se guarda en el navegador de esta cuenta.</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>Ningún módulo proporciona información de NeuBell.</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>Consumir todo</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>Consumir</value></data>
+  <data name="Frontend.604" xml:space="preserve"><value>Recordatorios de NeuBell</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>Cerrar todo</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>Contraer</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>Quedan {0}; haz clic para expandir</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>Recordatorio de prueba de NeuBell</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>Enviado por una Function; puedes consumirlo en Function o borrar todos los recordatorios de la suscripción actual.</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>Revisión de conexiones remotas de DesktopBridge</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>Hay {0} solicitudes de emparejamiento de dispositivos pendientes de revisión.</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>No hay solicitudes de emparejamiento de dispositivos pendientes.</value></data>
+  <data name="AdminChat.WorkflowCreation.Capabilities.Description" xml:space="preserve"><value>Enumera los activadores, nodos y FunctionRender seguros disponibles para crear flujos de trabajo con IA. Llámalo antes de diseñar el grafo.</value></data>
+  <data name="AdminChat.WorkflowCreation.Validate.Description" xml:space="preserve"><value>Valida un grafo de flujo seguro sin guardarlo. El grafo debe contener un activador manual y un nodo final.</value></data>
+  <data name="AdminChat.WorkflowCreation.Create.Description" xml:space="preserve"><value>Crea y puede activar un flujo de trabajo validado. Esta operación siempre requiere aprobación explícita del administrador.</value></data>
+  <data name="AdminChat.WorkflowCreation.Name" xml:space="preserve"><value>Nombre del flujo de trabajo, como máximo 200 caracteres.</value></data>
+  <data name="AdminChat.WorkflowCreation.DescriptionField" xml:space="preserve"><value>Descripción opcional del flujo de trabajo.</value></data>
+  <data name="AdminChat.WorkflowCreation.Trigger" xml:space="preserve"><value>Los flujos creados por IA solo admiten actualmente un activador manual.</value></data>
+  <data name="AdminChat.WorkflowCreation.Graph" xml:space="preserve"><value>Grafo JSON con nodes y edges. Usa los tipos de nodo y referencias FunctionRender devueltos por workflow_get_creation_capabilities.</value></data>
+  <data name="AdminChat.WorkflowCreation.Enabled" xml:space="preserve"><value>Activar después de crear. Los flujos manuales siguen requiriendo ejecución por parte de un operador.</value></data>
+</root>

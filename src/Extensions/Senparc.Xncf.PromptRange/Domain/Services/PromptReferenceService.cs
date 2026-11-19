@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：PromptReferenceService.cs
-    文件功能描述：PromptCode 引用校验、查询与评分服务
+    File name: PromptReferenceService.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20261104
 
-    创建标识：Senparc - 20261104
+    Modified by: Senparc - 20261105
+    Change description: v0.20.14 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.20.14 提供 PromptCode 引用校验、查询与评分
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 using System;

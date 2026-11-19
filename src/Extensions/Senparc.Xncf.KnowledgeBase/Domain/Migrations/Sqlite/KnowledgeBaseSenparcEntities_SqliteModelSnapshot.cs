@@ -1,17 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：KnowledgeBaseSenparcEntities_SqliteModelSnapshot.cs
-    文件功能描述：维护 Entity Framework 数据模型快照。
+    File name: KnowledgeBaseSenparcEntities_SqliteModelSnapshot.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20200724
 
-    创建标识：Senparc - 20200724
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
-
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.0 更新数据库迁移模型快照
+    Modified by: Senparc - 20261103
+    Change description: v0.8.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

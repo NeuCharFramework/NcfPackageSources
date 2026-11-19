@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Tasks.cshtml.cs
-    文件功能描述：增强工作流编排、回放、Webhook 与并行执行能力
 
+    File name: Tasks.cshtml.cs
+    File description: Workflow orchestration, replay, Webhook, and parallel execution
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 improve workflow orchestration, replay, Webhook, and parallel execution
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 improve workflow function calls, task control, and replay management
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.3.0 新增工作流分析查询与管理端可视化
+    Modified by: Senparc - 20260829
+    Change description: v0.3.0 add workflow analytics queries and Admin visualization
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -29,7 +32,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.NeuCharWorkflow.Areas.NeuCharWorkflow.Pages;
 
 /// <summary>
-/// Workflow 任务列表页面。历史任务来自执行日志，仍在执行的任务由运行协调器补充实时状态。
+/// Workflow task list page. Historical tasks come from execution logs, while
+/// the run coordinator supplies live state for tasks still in progress.
 /// </summary>
 public class TasksModel(
     Lazy<XncfModuleService> xncfModuleService,

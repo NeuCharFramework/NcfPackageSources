@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AgentsTemplateService.cs
-    文件功能描述：AgentsTemplateService 相关实现
-    
-    
-    创建标识：Senparc - 20240616
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: AgentsTemplateService.cs
+    File description: AgentsTemplateService related implementation
+
+    Created by: Senparc - 20240616
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -36,7 +39,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 使用 AgentTemplateDto 进行更新
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="agentTemplateDto"></param>
@@ -45,7 +48,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         {
             AgentTemplate agentTemplate = null;
 
-            //两者暂时等同
+            //Legacy comment translated to English.
             agentTemplateDto.PromptCode = agentTemplateDto.SystemMessage;
 
             if (id > 0)

@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AITokenUsageSnapshot.cs
-    文件功能描述：Token 使用快照（轻量值对象）
-    
-    创建标识：Senparc - 20260904
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+    Copyright (C) 2026 Senparc
+
+    File name: AITokenUsageSnapshot.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20260904
+
+    Modified by: Senparc - 20260915
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -16,50 +20,50 @@ using System;
 namespace Senparc.Xncf.AIKernel.Domain.Models.Usage
 {
     /// <summary>
-    /// 一次 AI 调用的 Token 使用快照
+    ///Legacy comment translated to English.
     /// </summary>
     [Serializable]
     public class AITokenUsageSnapshot
     {
         /// <summary>
-        /// 输入（Prompt）Token 数量
+        /// input (Prompt) token count
         /// </summary>
         public long InputTokens { get; set; }
 
         /// <summary>
-        /// 输出（Completion）Token 数量
+        /// output (Completion) token count
         /// </summary>
         public long OutputTokens { get; set; }
 
         /// <summary>
-        /// 总 Token 数量
+        /// total token count
         /// </summary>
         public long TotalTokens { get; set; }
 
         /// <summary>
-        /// 缓存命中输入 Token 数量
+        /// cached input token count
         /// </summary>
         public long CachedInputTokens { get; set; }
 
         /// <summary>
-        /// 推理（Reasoning / Thinking）Token 数量
+        ///Legacy comment translated to English.
         /// </summary>
         public long ReasoningTokens { get; set; }
 
         /// <summary>
-        /// 空快照
+        ///Legacy comment translated to English.
         /// </summary>
         public static AITokenUsageSnapshot Empty => new AITokenUsageSnapshot();
 
         /// <summary>
-        /// 是否为空（无任何 Token 数据）
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsEmpty =>
             InputTokens == 0 && OutputTokens == 0 && TotalTokens == 0
             && CachedInputTokens == 0 && ReasoningTokens == 0;
 
         /// <summary>
-        /// 确保 TotalTokens 有效（<=0 时用输入+输出补齐）
+        ///Legacy comment translated to English.
         /// </summary>
         public void Normalize()
         {

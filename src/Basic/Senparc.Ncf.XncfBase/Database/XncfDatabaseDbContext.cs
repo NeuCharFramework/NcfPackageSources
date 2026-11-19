@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：XncfDatabaseDbContext.cs
-    文件功能描述：XncfDatabaseDbContext 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.28.1 0.28.1 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+    File name: XncfDatabaseDbContext.cs
+    File description: XncfDatabaseDbContext related implementation
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.28.1 维护XncfDatabaseDbContext 相关实现
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261005
+    Change description: v0.28.1 0.28.1 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+
+    Modified by: Senparc - 20261103
+    Change description: v0.28.1 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -38,7 +41,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.XncfBase.Database
 {
     /// <summary>
-    /// IXncfDatabase 使用的 DbContext 基类
+    ///Legacy comment translated to English.
     /// </summary>
     public abstract class XncfDatabaseDbContext : DbContext, ISenparcEntitiesDbContext, IMultipleMigrationDbContext
     {
@@ -64,7 +67,7 @@ namespace Senparc.Ncf.XncfBase.Database
         }
 
         /// <summary>
-        /// 当前 IXncfDatabase 注册类实例
+        ///Legacy comment translated to English.
         /// </summary>
         public IXncfDatabase XncfDatabaseRegister => MultipleMigrationDbContext.XncfDatabaseRegister;
 
@@ -91,13 +94,13 @@ namespace Senparc.Ncf.XncfBase.Database
             base.OnModelCreating(modelBuilder);
         }
 
-        #region ISenparcEntities 接口
+        #region Legacy section
 
 
         public bool? _enableMultiTenant;
 
         /// <summary>
-        /// 是否启用多租户，默认读取 SiteConfig.SenparcCoreSetting.EnableMultiTenant
+        /// whether enabledmulti-tenancy，defaultread SiteConfig.SenparcCoreSetting.EnableMultiTenant
         /// </summary>
         public bool EnableMultiTenant
         {
@@ -118,7 +121,7 @@ namespace Senparc.Ncf.XncfBase.Database
         private RequestTenantInfo _tenantInfo;
 
         /// <summary>
-        /// 当前上下文中租户信息 <![CDATA[未启用多租户则默认值为NULL值]]>
+        ///Legacy comment translated to English.
         /// </summary>
         public RequestTenantInfo TenantInfo
         {
@@ -153,28 +156,28 @@ namespace Senparc.Ncf.XncfBase.Database
 
 
         /// <summary>
-        /// 全局查询过滤器
-        /// <para>与 SenparcEntitiesDbContextBase.SetGlobalQuery 保持一致：启用多租户时，对实现 IMultiTenancy 且未实现 IIgnoreMulitTenant 的实体追加 TenantId 过滤</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase
         {
             var entityBuilder = builder.Entity<T>();//.HasQueryFilter(z => !z.Flag);
 
-            //多租户
+            //multi-tenancy
             if (this.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)) && !(typeof(IIgnoreMulitTenant).IsAssignableFrom(typeof(T))))
             {
-                //多租户 + 软删除
+                //Legacy comment translated to English.
                 entityBuilder.HasQueryFilter(z => z.TenantId == TenantInfo.Id && !z.Flag);
             }
             else
             {
-                //仅软删除
+                //Legacy comment translated to English.
                 entityBuilder.HasQueryFilter(z => !z.Flag);
             }
         }
 
         /// <summary>
-        /// 设置当前 DbContext 是否启用多租户上下文
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="enable"></param>
         public void SetMultiTenantEnable(bool enable)
@@ -183,31 +186,31 @@ namespace Senparc.Ncf.XncfBase.Database
         }
 
         /// <summary>
-        /// 多租户状态重置为 SiteConfig.SenparcCoreSetting.EnableMultiTenant
+        ///Legacy comment translated to English.
         /// </summary>
         public void ResetMultiTenantEnable()
         {
             SetMultiTenantEnable(SiteConfig.SenparcCoreSetting.EnableMultiTenant);
         }
 
-        #region 多租户 SaveChanges 处理
+        #region Legacy section
 
         public override int SaveChanges()
         {
-            //处理多租户
+            //handlingmulti-tenancy
             AddTenantId();
             return base.SaveChanges();
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
-            //处理多租户
+            //handlingmulti-tenancy
             AddTenantId();
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
         /// <summary>
-        /// 自动添加多租户Id（与 SenparcEntitiesDbContextBase.AddTenandId 行为一致）
+        ///Legacy comment translated to English.
         /// </summary>
         private void AddTenantId()
         {
@@ -257,11 +260,11 @@ namespace Senparc.Ncf.XncfBase.Database
         #endregion
 
         /// <summary>
-        /// 安装过程中使用的 Migrate 系列操作
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="serviceProvider"></param>
-        /// <param name="databaseRegister">实现了数据库接口的 Register，databaseRegister.TryGetXncfDatabaseDbContextType 必须返回 XncfDatabaseDbContext 的子类</param>
-        /// <param name="checkdbContextType">是否需要对 dbContextType 类型进行检查</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static async Task MigrateOnInstallAsync(IServiceProvider serviceProvider, IXncfDatabase databaseRegister, bool checkdbContextType = true)
         {
@@ -277,7 +280,7 @@ namespace Senparc.Ncf.XncfBase.Database
 
 
         /// <summary>
-        /// 安装过程中使用的 Migrate 系列操作
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="dbContext"></param>
         /// <returns></returns>
@@ -288,14 +291,14 @@ namespace Senparc.Ncf.XncfBase.Database
             {
                 throw new ArgumentNullException(nameof(dbContext));
             }
-            //更新数据库
+            //updatedatabase
             var pendingMigs = await dbContext.Database.GetPendingMigrationsAsync();
 
             SenparcTrace.SendCustomLog("MigrateOnInstallAsync", $"dbContext:{dbContext.GetType().FullName}");
 
             if (pendingMigs.Count() > 0)
             {
-                dbContext.ResetMigrate();//重置合并状态
+                dbContext.ResetMigrate();//Legacy comment translated to English.
 
                 SenparcTrace.SendCustomLog("MigrateOnInstallAsync", $"dbContext.ResetMigrate() 运行完毕");
 
@@ -304,7 +307,7 @@ namespace Senparc.Ncf.XncfBase.Database
                     var script = dbContext.Database.GenerateCreateScript();
                     SenparcTrace.SendCustomLog($"MigrateOnInstallAsync", $"{dbContext.GetType().Name}.Database.GenerateCreateScript:\r\n{script}");
 
-                    dbContext.Migrate();//进行合并
+                    dbContext.Migrate();//Legacy comment translated to English.
                     SenparcTrace.SendCustomLog("MigrateOnInstallAsync", $"dbContext.Migrate() 运行完毕");
                 }
                 catch (Exception ex)

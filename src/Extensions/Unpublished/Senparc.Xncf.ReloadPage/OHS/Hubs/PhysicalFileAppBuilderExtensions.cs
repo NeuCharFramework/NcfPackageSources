@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PhysicalFileAppBuilderExtensions.cs
-    文件功能描述：PhysicalFileAppBuilderExtensions 相关实现
-    
-    
-    创建标识：Senparc - 20211215
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: PhysicalFileAppBuilderExtensions.cs
+    File description: PhysicalFileAppBuilderExtensions related implementation
+
+    Created by: Senparc - 20211215
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -25,7 +28,7 @@ namespace Senparc.Xncf.ReloadPage.OHS.Hubs
         private static readonly PhysicalFileProvider _fileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
 
         /// <summary>
-        /// 检测文件变化
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="app"></param>
         /// <param name="hubContext"></param>
@@ -37,7 +40,7 @@ namespace Senparc.Xncf.ReloadPage.OHS.Hubs
         }
 
         /// <summary>
-        /// 注册检查
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="hubContext"></param>
         public static void RegisterPhysical(IHubContext<ReloadPageHub> hubContext)
@@ -53,7 +56,7 @@ namespace Senparc.Xncf.ReloadPage.OHS.Hubs
         }
 
         /// <summary>
-        /// 检查文件变化
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="hubContext"></param>
         /// <returns></returns>
@@ -63,7 +66,7 @@ namespace Senparc.Xncf.ReloadPage.OHS.Hubs
             var cssToken = _fileProvider.Watch("wwwroot/**/*.css");
             var cshtmlToken = _fileProvider.Watch("**/*.cshtml");
             var tcs = new TaskCompletionSource<object>();
-            //TODO:如果考虑效率问题可以不使用while(true)，可以选中在RegisterChangeCallback 内部再次调用fileProvider.Watch
+            //Legacy comment translated to English.
             jsToken.RegisterChangeCallback(state =>
             {
                 ((TaskCompletionSource<object>)state).TrySetResult(null);

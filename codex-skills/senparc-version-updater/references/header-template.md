@@ -1,36 +1,35 @@
-# C# 文件头模板
+# C# File Header Template
 
-在目标文件顶部使用以下格式：
+Use the following format at the top of a target file:
 
 ```csharp
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
-  
-    文件名：<实际文件名>
-    文件功能描述：<一句话描述文件职责>
-    
-    
-    创建标识：<作者> - <YYYYMMDD>
-    
-    修改标识：<作者> - <YYYYMMDD>
-    修改描述：v<版本号> <本次修改说明>
+
+    File name: <actual file name>
+    File description: <one-sentence description of the file responsibility>
+
+    Created by: <author> - <YYYYMMDD>
+
+    Modified by: <author> - <YYYYMMDD>
+    Change description: v<version> <summary of this change>
 
 ----------------------------------------------------------------*/
 ```
 
-## 字段规则
+## Field Rules
 
-1. `文件名`：始终与当前文件名一致。
-2. `文件功能描述`：首次确定后保持不变；后续修改不得覆盖该字段。
-3. `创建标识`：优先使用 Git 首次提交日期，格式 `YYYYMMDD`。
-4. `修改标识` + `修改描述`：成对出现。
-5. 每组修改记录之间必须且仅允许保留一个空行（不能多于一个空行）。
-6. 作者默认 `Senparc`，除非用户显式指定其他作者。
-7. `*.Generated.cs` 文件永远不添加该注释块。
-8. 如果 `*.Generated.cs` 只有时间戳变化（重新生成但无实质内容变化），不要将其视为修改文件。
-9. 模块 `Domain/Migrations/<数据库名称>/` 下的自动生成迁移文件（迁移类、`*.Designer.cs`、`*ModelSnapshot.cs`）不添加该注释块，因为下次生成会覆盖它。这些文件仍属于变更范围，必须把功能变化写入所属非测试项目的 `<PackageReleaseNotes>`。
+1. `File name` must always match the current file name.
+2. Set `File description` once and keep it stable; do not overwrite it in later changes.
+3. Prefer the Git first-commit date for `Created by`, formatted as `YYYYMMDD`.
+4. `Modified by` and `Change description` must always appear as a pair.
+5. Keep exactly one blank line between modification groups.
+6. The default author is `Senparc` unless the user explicitly provides another author.
+7. Never add this header block to `*.Generated.cs` files.
+8. If a `*.Generated.cs` file only changes timestamp-like text after regeneration and has no substantive content change, do not treat it as a changed file.
+9. Do not add this header block to auto-generated migration files under `Domain/Migrations/<database-name>/` (migration classes, `*.Designer.cs`, and `*ModelSnapshot.cs`) because regeneration can overwrite them. These files remain in the change scope; record their functional changes in the containing non-test project's `<PackageReleaseNotes>`.
 
-## 追加规则
+## Append Rules
 
-1. 如果文件已有该注释块，只追加新的“修改标识 + 修改描述”组。
-2. 如果文件没有该注释块，在文件顶部插入完整模板后再写入本次修改组。
+1. If the file already has this header block, append only a new `Modified by` and `Change description` group.
+2. If the file has no header block, insert the complete template at the top and then add the current modification group.

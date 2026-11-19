@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceAgentConnection.cs
-    文件功能描述：Workspace Agent 持久 stdio 协议连接
+    File name: WorkspaceAgentConnection.cs
+    File description: persistent stdio protocol connection for the Workspace Agent
 
-    创建标识：Senparc - 20261024
+    Created by: Senparc - 20261024
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.2 implement connection manager and workspace file system provider
+    Modified by: Senparc - 20261103
+    Change description: v0.2.2 implement connection manager and workspace file system provider
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.2.7 完善 Workspace Agent、文件存储与模块注册兼容
+    Modified by: Senparc - 20261111
+    Change description: v0.2.7 improve Workspace Agent, file storage, and module registration compatibility
+
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
 
 ----------------------------------------------------------------*/
 

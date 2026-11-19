@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Constants.cs
-    文件功能描述：Constants 相关实现
-    
-    
-    创建标识：Senparc - 20231113
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: Constants.cs
+    File description: Constants related implementation
+
+    Created by: Senparc - 20231113
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -22,11 +25,11 @@ using Senparc.AI;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto
 {
     /// <summary>
-    /// 全局常量配置
+    ///Legacy comment translated to English.
     /// </summary>
     public static class Constants
     {
-        // Azure OpenAI API版本列表
+        //Legacy comment translated to English.
         public static readonly List<string> ApiVersionList = new()
         {
             "2022-12-01", "2023-03-15-preview", "2023-05-15",

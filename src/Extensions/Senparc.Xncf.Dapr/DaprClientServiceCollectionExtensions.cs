@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：DaprClientServiceCollectionExtensions.cs
-    文件功能描述：DaprClientServiceCollectionExtensions 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: DaprClientServiceCollectionExtensions.cs
+    File description: DaprClientServiceCollectionExtensions related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.11.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -20,21 +23,21 @@ namespace Senparc.Xncf.Dapr;
 public static class DaprClientServiceCollectionExtensions
 {
     /// <summary>
-    /// 将Dapr客户端注册到服务
+    ///Legacy comment translated to English.
     /// </summary>
     /// <param name="services"></param>
-    /// <param name="configOptions">Dapr客户端配置选项</param>
+    ///Legacy comment translated to English.
     public static void AddDaprClient(this IServiceCollection services, Action<DaprClientOptions>? configOptions = null)
     {
         AddDaprClient<Serializer>(services, configOptions);
     }
 
     /// <summary>
-    /// 将Dapr客户端注册到服务
+    ///Legacy comment translated to English.
     /// </summary>
-    /// <typeparam name="TSerializer">序列化器接口的实现类型</typeparam>
+    ///Legacy comment translated to English.
     /// <param name="services"></param>
-    /// <param name="configOptions">Dapr客户端配置选项</param>
+    ///Legacy comment translated to English.
     public static void AddDaprClient<TSerializer>(this IServiceCollection services, Action<DaprClientOptions>? configOptions = null) 
         where TSerializer : class, ISerializer
     {

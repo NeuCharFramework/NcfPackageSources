@@ -1,0 +1,632 @@
+window.ChatLauncherMixin = {
+  data() {
+    return {
+      moduleStorageKey: 'ncf.admin.chat.selectedModuleUids',
+      workflowStorageKey: 'ncf.admin.chat.selectedWorkflowIds',
+      aiModelStorageKey: 'ncf.admin.chat.sessionAiModelMap',
+      modeStorageKey: 'ncf.admin.chat.sessionModeMap',
+      chatInputText: '',
+      launcherAiModelId: 0,
+      launcherChatMode: 'plan',
+      launcherUseMemory: false,
+      launcherMemoryMode: 0,
+      sessionAiModelMap: {},
+      sessionModeMap: {},
+      selectedModules: [],
+      moduleSelectorVisible: false,
+      moduleSelectorTab: 'modules',
+      moduleSearchKeyword: '',
+      workflowSearchKeyword: '',
+      activePreviewModuleUid: '',
+      activePreviewWorkflowId: 0,
+      availableModules: [],
+      selectedModuleUids: [],
+      availableWorkflows: [],
+      availableWorkspaces: [],
+      selectedWorkspaceId: '',
+      workspaceWriteEnabled: false,
+      workspaceCliEnabled: false,
+      loadingWorkspaceOptions: false,
+      createWorkspaceDialogVisible: false,
+      createWorkspaceName: '',
+      creatingWorkspace: false,
+      selectedWorkflowIds: [],
+      selectedWorkflows: [],
+      loadingModuleOptions: false,
+      loadingWorkflowOptions: false,
+      isCreatingSession: false
+    };
+  },
+  computed: {
+    filteredAvailableModules() {
+      const keyword = (this.moduleSearchKeyword || '').trim().toLowerCase();
+      if (!keyword) {
+        return this.availableModules;
+      }
+
+      return this.availableModules.filter((item) => {
+        return (
+          (item.name || '').toLowerCase().includes(keyword) ||
+          (item.description || '').toLowerCase().includes(keyword) ||
+          (item.uid || '').toLowerCase().includes(keyword)
+        );
+      });
+    },
+    sortedFilteredAvailableModules() {
+      const selectedUidSet = new Set(this.selectedModuleUids);
+      return this.filteredAvailableModules.slice().sort((a, b) => {
+        const aSelected = selectedUidSet.has(a.uid) ? 0 : 1;
+        const bSelected = selectedUidSet.has(b.uid) ? 0 : 1;
+        if (aSelected !== bSelected) {
+          return aSelected - bSelected;
+        }
+
+        return (a.name || '').localeCompare(b.name || '', 'zh-Hans-CN');
+      });
+    },
+    previewModule() {
+      if (!this.activePreviewModuleUid) {
+        return null;
+      }
+
+      return this.availableModules.find((item) => item.uid === this.activePreviewModuleUid) || null;
+    },
+    isAllFilteredSelected() {
+      if (this.filteredAvailableModules.length === 0) {
+        return false;
+      }
+
+      return this.filteredAvailableModules.every((item) => this.selectedModuleUids.includes(item.uid));
+    },
+    moduleSelectionIndeterminate() {
+      if (this.filteredAvailableModules.length === 0) {
+        return false;
+      }
+
+      const selectedCount = this.filteredAvailableModules.filter((item) => this.selectedModuleUids.includes(item.uid)).length;
+      return selectedCount > 0 && selectedCount < this.filteredAvailableModules.length;
+    },
+    filteredAvailableWorkflows() {
+      const keyword = (this.workflowSearchKeyword || '').trim().toLowerCase();
+      if (!keyword) {
+        return this.availableWorkflows;
+      }
+
+      return this.availableWorkflows.filter((item) => {
+        return (
+          (item.name || '').toLowerCase().includes(keyword) ||
+          (item.description || '').toLowerCase().includes(keyword) ||
+          (item.parameters || []).some((parameter) =>
+            (parameter.name || '').toLowerCase().includes(keyword) ||
+            (parameter.description || '').toLowerCase().includes(keyword))
+        );
+      });
+    },
+    sortedFilteredAvailableWorkflows() {
+      const selectedIdSet = new Set(this.selectedWorkflowIds);
+      return this.filteredAvailableWorkflows.slice().sort((a, b) => {
+        const aSelected = selectedIdSet.has(a.id) ? 0 : 1;
+        const bSelected = selectedIdSet.has(b.id) ? 0 : 1;
+        if (aSelected !== bSelected) {
+          return aSelected - bSelected;
+        }
+        return (a.name || '').localeCompare(b.name || '', 'zh-Hans-CN');
+      });
+    },
+    previewWorkflow() {
+      if (!this.activePreviewWorkflowId) {
+        return null;
+      }
+      return this.availableWorkflows.find((item) => item.id === this.activePreviewWorkflowId) || null;
+    },
+    isAllFilteredWorkflowsSelected() {
+      if (this.filteredAvailableWorkflows.length === 0) {
+        return false;
+      }
+      return this.filteredAvailableWorkflows.every((item) => this.selectedWorkflowIds.includes(item.id));
+    },
+    workflowSelectionIndeterminate() {
+      if (this.filteredAvailableWorkflows.length === 0) {
+        return false;
+      }
+      const selectedCount = this.filteredAvailableWorkflows
+        .filter((item) => this.selectedWorkflowIds.includes(item.id))
+        .length;
+      return selectedCount > 0 && selectedCount < this.filteredAvailableWorkflows.length;
+    },
+    referenceSelectionCount() {
+      return (this.selectedModules || []).length + (this.selectedWorkflows || []).length;
+    },
+    selectedWorkspaceLabel() {
+      if (!this.selectedWorkspaceId) {
+        return '添加 Workspace';
+      }
+
+      const workspace = (this.availableWorkspaces || []).find(item => String(item.id) === String(this.selectedWorkspaceId));
+      return workspace ? workspace.name : '已选择 Workspace';
+    }
+  },
+  mounted() {
+    this.restoreSelectedModuleUids();
+    this.restoreSelectedWorkflowIds();
+    this.restoreSessionAiModelMap();
+    this.restoreSessionModeMap();
+    this.ensureModuleOptionsLoaded(false);
+  },
+  watch: {
+    selectedModules: {
+      deep: true,
+      handler(value) {
+        const selectedUids = (value || []).map((item) => item.uid);
+        this.persistSelectedModuleUids(selectedUids);
+      }
+    },
+    selectedWorkflows: {
+      deep: true,
+      handler(value) {
+        this.persistSelectedWorkflowIds((value || []).map((item) => item.id));
+      }
+    },
+    sortedFilteredAvailableModules: {
+      deep: true,
+      handler() {
+        this.ensurePreviewModule();
+      }
+    },
+    sortedFilteredAvailableWorkflows: {
+      deep: true,
+      handler() {
+        this.ensurePreviewWorkflow();
+      }
+    }
+  },
+  methods: {
+    persistSelectedModuleUids(uids) {
+      try {
+        localStorage.setItem(this.moduleStorageKey, JSON.stringify(uids || []));
+      } catch (error) {
+        console.warn('保存已选模块失败:', error);
+      }
+    },
+
+    restoreSelectedModuleUids() {
+      try {
+        const raw = localStorage.getItem(this.moduleStorageKey);
+        if (!raw) {
+          return;
+        }
+
+        const uids = JSON.parse(raw);
+        if (!Array.isArray(uids)) {
+          return;
+        }
+
+        this.selectedModuleUids = uids.filter((uid) => typeof uid === 'string' && uid.length > 0);
+      } catch (error) {
+        console.warn('读取已选模块失败:', error);
+      }
+    },
+
+    persistSelectedWorkflowIds(ids) {
+      try {
+        localStorage.setItem(this.workflowStorageKey, JSON.stringify(ids || []));
+      } catch (error) {
+        console.warn('保存已选 Workflow 失败:', error);
+      }
+    },
+
+    restoreSelectedWorkflowIds() {
+      try {
+        const raw = localStorage.getItem(this.workflowStorageKey);
+        if (!raw) {
+          return;
+        }
+        const ids = JSON.parse(raw);
+        if (!Array.isArray(ids)) {
+          return;
+        }
+        this.selectedWorkflowIds = ids
+          .map((id) => Number.parseInt(id, 10))
+          .filter((id) => Number.isInteger(id) && id > 0);
+      } catch (error) {
+        console.warn('读取已选 Workflow 失败:', error);
+      }
+    },
+
+    normalizeAiModelId(value) {
+      const parsedValue = Number.parseInt(value, 10);
+      return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : 0;
+    },
+
+    persistSessionAiModelMap() {
+      try {
+        localStorage.setItem(this.aiModelStorageKey, JSON.stringify(this.sessionAiModelMap || {}));
+      } catch (error) {
+        console.warn('保存会话 AI 模型失败:', error);
+      }
+    },
+
+    restoreSessionAiModelMap() {
+      try {
+        const raw = localStorage.getItem(this.aiModelStorageKey);
+        if (!raw) {
+          return;
+        }
+
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+          return;
+        }
+
+        this.sessionAiModelMap = Object.keys(parsed).reduce((result, key) => {
+          result[key] = this.normalizeAiModelId(parsed[key]);
+          return result;
+        }, {});
+      } catch (error) {
+        console.warn('读取会话 AI 模型失败:', error);
+      }
+    },
+
+    setSessionAiModelId(sessionId, aiModelId) {
+      if (!sessionId) {
+        return;
+      }
+
+      this.$set(this.sessionAiModelMap, String(sessionId), this.normalizeAiModelId(aiModelId));
+      this.persistSessionAiModelMap();
+    },
+
+    getSessionAiModelId(sessionId) {
+      if (!sessionId) {
+        return 0;
+      }
+
+      return this.normalizeAiModelId(this.sessionAiModelMap[String(sessionId)]);
+    },
+
+    persistSessionModeMap() {
+      try {
+        localStorage.setItem(this.modeStorageKey, JSON.stringify(this.sessionModeMap || {}));
+      } catch (error) {
+        console.warn('保存会话模式失败:', error);
+      }
+    },
+
+    restoreSessionModeMap() {
+      try {
+        const raw = localStorage.getItem(this.modeStorageKey);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return;
+        this.sessionModeMap = Object.keys(parsed).reduce((result, key) => {
+          result[key] = Number(parsed[key]) === 2 ? 2 : Number(parsed[key]) === 1 ? 1 : 0;
+          return result;
+        }, {});
+      } catch (error) {
+        console.warn('读取会话模式失败:', error);
+      }
+    },
+
+    setSessionMode(sessionId, mode) {
+      if (!sessionId) return;
+      const value = Number(mode) === 2 ? 2 : Number(mode) === 1 ? 1 : 0;
+      this.$set(this.sessionModeMap, String(sessionId), value);
+      this.persistSessionModeMap();
+    },
+
+    getSessionMode(sessionId) {
+      if (!sessionId) return 0;
+      const value = this.sessionModeMap[String(sessionId)];
+      return Number(value) === 2 ? 2 : Number(value) === 1 ? 1 : 0;
+    },
+
+    syncSelectedModulesFromUids() {
+      const uidSet = new Set(this.selectedModuleUids);
+      this.selectedModules = this.availableModules.filter((item) => uidSet.has(item.uid));
+    },
+
+    syncSelectedWorkflowsFromIds() {
+      const idSet = new Set(this.selectedWorkflowIds);
+      this.selectedWorkflows = this.availableWorkflows.filter((item) => idSet.has(item.id));
+    },
+
+    setPreviewModule(uid) {
+      this.activePreviewModuleUid = uid;
+    },
+
+    ensurePreviewModule() {
+      if (this.sortedFilteredAvailableModules.length === 0) {
+        this.activePreviewModuleUid = '';
+        return;
+      }
+
+      const exists = this.sortedFilteredAvailableModules.some((item) => item.uid === this.activePreviewModuleUid);
+      if (!exists) {
+        this.activePreviewModuleUid = this.sortedFilteredAvailableModules[0].uid;
+      }
+    },
+
+    setPreviewWorkflow(id) {
+      this.activePreviewWorkflowId = id;
+    },
+
+    ensurePreviewWorkflow() {
+      if (this.sortedFilteredAvailableWorkflows.length === 0) {
+        this.activePreviewWorkflowId = 0;
+        return;
+      }
+      const exists = this.sortedFilteredAvailableWorkflows.some((item) => item.id === this.activePreviewWorkflowId);
+      if (!exists) {
+        this.activePreviewWorkflowId = this.sortedFilteredAvailableWorkflows[0].id;
+      }
+    },
+
+    handleLauncherInputKeydown(event) {
+      if (typeof this.handleSlashCommandKeydown === 'function'
+        && this.handleSlashCommandKeydown(event, 'chatInputText')) return;
+      if (typeof this.handleWorkspaceMentionKeydown === 'function'
+        && this.handleWorkspaceMentionKeydown(event, 'chatInputText')) return;
+      if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        this.startChatSession();
+      }
+    },
+
+    normalizeModuleItem(item) {
+      return {
+        uid: item.uid,
+        name: item.menuName || item.name || ncfT('AdminChat.UnknownModule'),
+        icon: item.icon || 'fa fa-cube',
+        description: item.description || ncfT('Admin.Home.NoDescription'),
+        version: item.version || '',
+        menus: item.menus || [],
+        functions: item.functions || []
+      };
+    },
+
+    normalizeWorkflowItem(item) {
+      return {
+        id: Number.parseInt(item.id, 10),
+        name: item.name || `Workflow #${item.id}`,
+        description: item.description || '',
+        parameters: item.parameters || []
+      };
+    },
+
+    async ensureModuleOptionsLoaded(forceReload) {
+      if (!forceReload && this.availableModules.length > 0) {
+        return;
+      }
+
+      this.loadingModuleOptions = true;
+      this.loadingWorkflowOptions = true;
+      try {
+        const [moduleResult, workflowResult] = await Promise.all([
+          service.get('/Admin/Index?handler=XncfOpening'),
+          service.get('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetAvailableWorkflowsAsync')
+        ]);
+        const moduleList = (moduleResult.data && moduleResult.data.data) ? moduleResult.data.data : [];
+        this.availableModules = moduleList.map((item) => this.normalizeModuleItem(item));
+        const workflowList = workflowResult.data && workflowResult.data.success && workflowResult.data.data
+          ? workflowResult.data.data.workflows || []
+          : [];
+        this.availableWorkflows = workflowList.map((item) => this.normalizeWorkflowItem(item));
+        this.syncSelectedModulesFromUids();
+        this.syncSelectedWorkflowsFromIds();
+        this.ensurePreviewModule();
+        this.ensurePreviewWorkflow();
+      } catch (error) {
+        console.error('加载模块列表失败:', error);
+        this.$message.error(ncfT('AdminChat.LoadModulesFailedRetry'));
+      } finally {
+        this.loadingModuleOptions = false;
+        this.loadingWorkflowOptions = false;
+      }
+    },
+
+    async ensureWorkspaceOptionsLoaded() {
+      if (!this.isSuperAdmin || this.availableWorkspaces.length > 0) {
+        return;
+      }
+
+      this.loadingWorkspaceOptions = true;
+      try {
+        const response = await service.get('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetWorkspaceOptionsAsync');
+        this.availableWorkspaces = response.data && response.data.success && response.data.data
+          ? response.data.data.workspaces || []
+          : [];
+      } catch (error) {
+        console.error('加载 Workspace 列表失败:', error);
+        this.$message.error('加载 Workspace 列表失败。');
+      } finally {
+        this.loadingWorkspaceOptions = false;
+      }
+    },
+
+    async createWorkspace() {
+      if (!this.isSuperAdmin) {
+        return;
+      }
+
+      this.createWorkspaceName = '';
+      this.createWorkspaceDialogVisible = true;
+    },
+
+    async submitCreateWorkspace() {
+      if (!this.isSuperAdmin || !this.createWorkspaceName || !this.createWorkspaceName.trim()) {
+        this.$message.warning('请输入 Workspace 名称。');
+        return;
+      }
+
+      this.creatingWorkspace = true;
+      try {
+        const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.CreateWorkspaceAsync', { name: this.createWorkspaceName.trim() });
+        if (response.data && response.data.success && response.data.data) {
+          this.availableWorkspaces.unshift(response.data.data);
+          this.selectedWorkspaceId = response.data.data.id;
+          this.createWorkspaceDialogVisible = false;
+          this.$message.success('Workspace 创建成功。');
+        } else {
+          this.$message.error((response.data && response.data.errorMessage) || '创建 Workspace 失败。');
+        }
+      } catch (error) {
+        console.error('创建 Workspace 失败:', error);
+        this.$message.error('创建 Workspace 失败。');
+      } finally {
+        this.creatingWorkspace = false;
+      }
+    },
+
+    async openModuleSelector() {
+      await this.ensureModuleOptionsLoaded(false);
+      this.selectedModuleUids = this.selectedModules.map((item) => item.uid);
+      this.selectedWorkflowIds = this.selectedWorkflows.map((item) => item.id);
+      this.moduleSelectorTab = 'modules';
+      this.ensurePreviewModule();
+      this.ensurePreviewWorkflow();
+      this.moduleSelectorVisible = true;
+    },
+
+    toggleModuleSelection(uid) {
+      const index = this.selectedModuleUids.indexOf(uid);
+      if (index >= 0) {
+        this.selectedModuleUids.splice(index, 1);
+      } else {
+        this.selectedModuleUids.push(uid);
+      }
+    },
+
+    handleSelectAllFiltered(checked) {
+      const filteredUids = this.filteredAvailableModules.map((item) => item.uid);
+      if (checked) {
+        const merged = new Set(this.selectedModuleUids.concat(filteredUids));
+        this.selectedModuleUids = Array.from(merged);
+      } else {
+        this.selectedModuleUids = this.selectedModuleUids.filter((uid) => !filteredUids.includes(uid));
+      }
+    },
+
+    toggleWorkflowSelection(id) {
+      const index = this.selectedWorkflowIds.indexOf(id);
+      if (index >= 0) {
+        this.selectedWorkflowIds.splice(index, 1);
+      } else {
+        this.selectedWorkflowIds.push(id);
+      }
+    },
+
+    handleSelectAllFilteredWorkflows(checked) {
+      const filteredIds = this.filteredAvailableWorkflows.map((item) => item.id);
+      if (checked) {
+        this.selectedWorkflowIds = Array.from(new Set(this.selectedWorkflowIds.concat(filteredIds)));
+      } else {
+        this.selectedWorkflowIds = this.selectedWorkflowIds.filter((id) => !filteredIds.includes(id));
+      }
+    },
+
+    applyModuleSelection() {
+      const uidSet = new Set(this.selectedModuleUids);
+      this.selectedModules = this.availableModules.filter((item) => uidSet.has(item.uid));
+      const idSet = new Set(this.selectedWorkflowIds);
+      this.selectedWorkflows = this.availableWorkflows.filter((item) => idSet.has(item.id));
+      this.moduleSelectorVisible = false;
+    },
+
+    clearModuleSelectionInDialog() {
+      this.selectedModuleUids = [];
+      this.selectedWorkflowIds = [];
+    },
+
+    removeModule(uid) {
+      this.selectedModules = this.selectedModules.filter((item) => item.uid !== uid);
+    },
+
+    removeWorkflow(id) {
+      this.selectedWorkflows = this.selectedWorkflows.filter((item) => item.id !== id);
+    },
+
+    clearSelectedModules() {
+      this.selectedModules = [];
+      this.selectedWorkflows = [];
+    },
+
+    launcherSessionRequest(title) {
+      return {
+        initialMessage: '', title,
+        aiModelId: this.normalizeAiModelId(this.launcherAiModelId),
+        moduleUids: this.selectedModules.map(item => item.uid),
+        workflowIds: this.selectedWorkflows.map(item => item.id),
+        mode: typeof this.chatModeValue === 'function'
+          ? this.chatModeValue(this.launcherChatMode)
+          : this.launcherChatMode === 'execute' ? 2 : this.launcherChatMode === 'plan' || this.launcherChatMode === 'harness' ? 1 : 0,
+        maxOutputTokens: this.chatMaxOutputTokens || 2000,
+        harnessOptions: typeof this.buildHarnessOptions === 'function'
+          ? this.buildHarnessOptions()
+          : {
+            maxIterations: 32,
+            maxOutputTokens: this.chatMaxOutputTokens || 2000,
+            disableTodoProvider: false,
+            disableCompaction: false,
+            enableFileMemory: false,
+            enableAgentSkillsProvider: false,
+            enableWebSearch: false
+          },
+        useMemory: !!this.launcherUseMemory,
+        memoryMode: this.launcherMemoryMode,
+        workspaceId: this.isSuperAdmin ? this.selectedWorkspaceId || null : null,
+        workspaceWriteEnabled: this.isSuperAdmin && !!this.selectedWorkspaceId && this.workspaceWriteEnabled,
+        workspaceCliEnabled: this.isSuperAdmin && !!this.selectedWorkspaceId && this.workspaceCliEnabled
+      };
+    },
+
+    async startChatSession() {
+      if (typeof this.closeWorkspaceMention === 'function') this.closeWorkspaceMention();
+      if ((!this.chatInputText || this.chatInputText.trim().length === 0)
+        && (!this.pendingAttachments || this.pendingAttachments.length === 0)) {
+        this.$message.warning(ncfT('AdminChat.InputRequired'));
+        return;
+      }
+
+      this.isCreatingSession = true;
+      try {
+        const references = typeof this.capturePromptReferences === 'function'
+          ? this.capturePromptReferences('promptLauncherInput') : [];
+        const initialMessage = references.length ? this.chatInputText : this.chatInputText.trim();
+        const requestData = this.launcherSessionRequest(initialMessage);
+
+        const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.CreateSessionAsync', requestData);
+        if (response.data && response.data.success && response.data.data) {
+          const sessionId = response.data.data.sessionId;
+          const responseMode = response.data.data.mode;
+          this.setSessionAiModelId(sessionId, this.launcherAiModelId);
+          this.setSessionMode(sessionId, responseMode);
+          const pendingMessage = references.length ? initialMessage : response.data.data.initialMessage || initialMessage;
+          if (typeof this.openCreatedChatSession === 'function') {
+            sessionStorage.removeItem(`ncf.admin.chat.initialMessage.${sessionId}`);
+            await this.openCreatedChatSession(sessionId, pendingMessage, references, responseMode);
+            return;
+          }
+          sessionStorage.setItem(`ncf.admin.chat.initialMessage.${sessionId}`, pendingMessage);
+          if (references.length) {
+            sessionStorage.setItem(`ncf.admin.chat.initialReferences.${sessionId}`, JSON.stringify(references));
+          }
+          window.location.href = '/Admin/AdminChat/Chat?sessionId=' + sessionId
+            + '&mode=' + String(Number.isInteger(responseMode)
+              ? responseMode
+              : (typeof this.chatModeValue === 'function'
+                ? this.chatModeValue(this.launcherChatMode)
+                : this.launcherChatMode === 'execute' ? '2' : this.launcherChatMode === 'plan' || this.launcherChatMode === 'harness' ? '1' : '0'))
+            + '#session-' + sessionId;
+          return;
+        }
+
+        this.$message.error((response.data && response.data.errorMessage) || ncfT('AdminChat.CreateSessionFailed'));
+      } catch (error) {
+        console.error('创建会话失败:', error);
+        this.$message.error(ncfT('AdminChat.CreateSessionFailedRetry'));
+      } finally {
+        this.isCreatingSession = false;
+      }
+    }
+  }
+};

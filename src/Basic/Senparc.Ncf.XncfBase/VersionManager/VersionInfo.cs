@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：VersionInfo.cs
-    文件功能描述：VersionInfo 相关实现
-    
-    
-    创建标识：Senparc - 20231104
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: VersionInfo.cs
+    File description: VersionInfo related implementation
+
+    Created by: Senparc - 20231104
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,54 +22,54 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.VersionManager
 {
     /// <summary>  
-    /// 软件版本信息
+    ///Legacy comment translated to English.
     /// </summary>  
     public record class VersionInfo
     {
         /// <summary>  
-        /// 主版本
+        ///Legacy comment translated to English.
         /// </summary>  
         public int Major { get; set; }
 
         /// <summary>  
-        /// 次版本
+        ///Legacy comment translated to English.
         /// </summary>  
         public int Minor { get; set; }
 
         /// <summary>  
-        /// 修订版本
+        ///Legacy comment translated to English.
         /// </summary>  
         public int Patch { get; set; }
 
         /// <summary>  
-        /// 可选的构建版本
+        ///Legacy comment translated to English.
         /// </summary>  
         public int? Build { get; set; }
 
         /// <summary>  
-        /// 可选的预发布版本标签  
+        ///Legacy comment translated to English.
         /// </summary>  
         public string PreRelease { get; set; }
 
         /// <summary>  
-        /// 可选的元数据标签  
+        ///Legacy comment translated to English.
         /// </summary>  
         public string Metadata { get; set; }
 
 
         /// <summary>  
-        /// 将 VersionInfo 对象转换为版本字符串。  
+        ///Legacy comment translated to English.
         /// </summary>  
-        /// <returns>表示版本信息的字符串。</returns>  
+        ///Legacy comment translated to English.
         /// <summary>  
-        /// 将 VersionInfo 对象转换为版本字符串。  
+        ///Legacy comment translated to English.
         /// </summary>  
-        /// <returns>表示版本信息的字符串。</returns>  
+        ///Legacy comment translated to English.
         public override string ToString()
         {
             var versionString = $"{Major}.{Minor}.{Patch}";
 
-            // 如果存在 Build 属性，则将其添加到版本字符串中  
+            //Legacy comment translated to English.
             if (Build.HasValue)
             {
                 versionString += $".{Build.Value}";

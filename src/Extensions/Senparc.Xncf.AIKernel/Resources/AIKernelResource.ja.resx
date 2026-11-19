@@ -164,19 +164,19 @@
   <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Token 出力速度</value></data>
   <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>ユーザー満足度</value></data>
   <data name="Dashboard.TotalMessages" xml:space="preserve"><value>全メッセージ数</value></data>
-  <data name="Frontend.001" xml:space="preserve"><value>このエンティティは削除されたか存在しません！||このエンティティは削除されたか存在しません！</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>エラー：このシステムには NeuChar 開発者アカウントが設定されていません。【システム管理】モジュールの設定ページで、【NeuChar クラウドアカウント情報を更新】を使い、NeuChar 開発者アカウントを紐付けてください！||エラー：このシステムには NeuChar 開発者アカウントが設定されていません。【システム管理】モジュールの設定ページで、【NeuChar クラウドアカウント情報を更新】を使い、NeuChar 開発者アカウントを紐付けてください！</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>AppKey または AppSecret が正しくありません！設定し直してください！||AppKey または AppSecret が正しくありません！設定し直してください！</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>指定された DeveloperId が、システムに設定された AppKey と一致しません。確認または更新してから再試行してください！||指定された DeveloperId が、システムに設定された AppKey と一致しません。確認または更新してから再試行してください！</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>更新しました。||更新しました。</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>エンティティが見つかりません！||エンティティが見つかりません！</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>未対応：BuildSenparcAiSetting での {0} モデルの処理||未対応：BuildSenparcAiSetting での {0} モデルの処理</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>Senparc.Xncf.AIKernel は、現在 {0} タイプに対応していません||Senparc.Xncf.AIKernel は、現在 {0} タイプに対応していません</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>SenparcAiSetting は空にできません||SenparcAiSetting は空にできません</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>モデルデータが存在しません。デプロイ済みか、権限があるかを確認してください！||モデルデータが存在しません。デプロイ済みか、権限があるかを確認してください！</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>モデルを {0} 件追加し、{1} 件のモデル情報を更新しました。||モデルを {0} 件追加し、{1} 件のモデル情報を更新しました。</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>PromptRange は、現在 {0} タイプに対応していません||PromptRange は、現在 {0} タイプに対応していません</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>自動採点には、Chat タイプのモデルを少なくとも 1 つ設定する必要があります（AIKernel モジュール内）||自動採点には、Chat タイプのモデルを少なくとも 1 つ設定する必要があります（AIKernel モジュール内）</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>このエンティティは削除されたか存在しません！</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>エラー：このシステムには NeuChar 開発者アカウントが設定されていません。【システム管理】モジュールの設定ページで、【NeuChar クラウドアカウント情報を更新】を使い、NeuChar 開発者アカウントを紐付けてください！</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>AppKey または AppSecret が正しくありません！設定し直してください！</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>指定された DeveloperId が、システムに設定された AppKey と一致しません。確認または更新してから再試行してください！</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>更新しました。</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>エンティティが見つかりません！</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>未対応：BuildSenparcAiSetting での {0} モデルの処理</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Senparc.Xncf.AIKernel は、現在 {0} タイプに対応していません</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>SenparcAiSetting は空にできません</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>モデルデータが存在しません。デプロイ済みか、権限があるかを確認してください！</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>モデルを {0} 件追加し、{1} 件のモデル情報を更新しました。</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>PromptRange は、現在 {0} タイプに対応していません</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>自動採点には、Chat タイプのモデルを少なくとも 1 つ設定する必要があります（AIKernel モジュール内）</value></data>
   <data name="Area.AIKernel.TokenMonitor" xml:space="preserve"><value>Token モニター</value></data>
   <data name="TokenMonitor.Title" xml:space="preserve"><value>Token モニター</value></data>
   <data name="TokenMonitor.TotalTokens" xml:space="preserve"><value>合計 Token</value></data>
@@ -329,7 +329,7 @@
   <data name="FineTuning.Tip.maxSequenceLength" xml:space="preserve"><value>例あたりの Token 上限（32–32,768）。長い例は切り詰められることがあります。上限を大きくすると、より多くのメモリが必要です。</value></data>
   <data name="FineTuning.Parameter.loraRank" xml:space="preserve"><value>LoRA ランク</value></data>
   <data name="FineTuning.Tip.loraRank" xml:space="preserve"><value>低ランクアダプターの次元（1–256）。ランクを大きくすると、学習可能なパラメータとメモリ使用量が増えます。</value></data>
-  <data name="FineTuning.Parameter.loraAlpha" xml:space="preserve"><value>LoRA alpha</value></data>
+  <data name="FineTuning.Parameter.loraAlpha" xml:space="preserve"><value>LoRAアルファ</value></data>
   <data name="FineTuning.Tip.loraAlpha" xml:space="preserve"><value>Adapter のスケーリング係数（1–1,024）。通常は LoRA のランクとの関係で考えます。</value></data>
   <data name="FineTuning.Parameter.loraDropout" xml:space="preserve"><value>LoRA ドロップアウト</value></data>
   <data name="FineTuning.Tip.loraDropout" xml:space="preserve"><value>Adapter のドロップアウト確率（0–0.9）。バックエンド対応は worker が検証します。</value></data>
@@ -505,4 +505,47 @@
   <data name="FineTuning.TokensPerSampleUnit" xml:space="preserve"><value>tokens/サンプル</value></data>
   <data name="FineTuning.TruncatedSamples" xml:space="preserve"><value>切り詰め済み</value></data>
 
+
+  <data name="FineTuning.RuntimeEnabled" xml:space="preserve"><value>ローカルファインチューニングを有効化</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.RuntimeEnabledHelp" xml:space="preserve"><value>有効化後にNCFがworkerへ接続します。サイトの再起動は不要です。無効化の状態は保存され、次回起動時にも維持されます。</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.ManagedWorker" xml:space="preserve"><value>NCFから起動</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.ManagedWorkerHelp" xml:space="preserve"><value>NCFはローカルPythonでworkerを起動し、サイト停止時に停止します。workerごとに異なるポートとデータディレクトリを使用してください。</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.BindHost" xml:space="preserve"><value>バインドアドレス</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.WorkerPort" xml:space="preserve"><value>Port</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="FineTuning.ModelsRoot" xml:space="preserve"><value>モデルディレクトリ</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.ModelsRootHelp" xml:space="preserve"><value>絶対パス（例：~/AIModels）。複数のworkerでモデルディレクトリを共有できます。</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.DataRoot" xml:space="preserve"><value>データディレクトリ</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.DataRootHelp" xml:space="preserve"><value>空欄にするとサイトのApp_Data配下に専用ディレクトリを使用します。モデルディレクトリや他のworkerのデータディレクトリと重複させないでください。</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.PythonPath" xml:space="preserve"><value>Pythonパス</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.WorkerProjectPath" xml:space="preserve"><value>Workerプロジェクトパス</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.AutoStart" xml:space="preserve"><value>サイト起動後に開始</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.GenerateSecret" xml:space="preserve"><value>キーファイルを生成</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.StartWorker" xml:space="preserve"><value>Workerを開始</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.StopWorker" xml:space="preserve"><value>Workerを停止</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.RefreshWorkerStatus" xml:space="preserve"><value>状態を更新</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.WorkerProcess" xml:space="preserve"><value>プロセス</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.WorkerLogs" xml:space="preserve"><value>最近のログ</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.LaunchCommand" xml:space="preserve"><value>開始コマンド</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.WorkerStarted" xml:space="preserve"><value>Workerを開始しました。</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.WorkerStopped" xml:space="preserve"><value>Workerを停止しました。</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.SecretGenerated" xml:space="preserve"><value>キーファイルを作成しました。キーはこのページに表示されません。</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>キーファイルは既に存在するため、変更していません。</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>先に保存し、キーを生成してからworkerを開始してください。</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.Optional" xml:space="preserve"><value>任意</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>NeuChar AIからインポート（DevId: {0}）</value><comment>この言語向けに翻訳済み。</comment></data>
+
+  <data name="Frontend.100" xml:space="preserve"><value>ファインチューニングタスクを作成</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>承認済みのローカルモデル、データセット、学習パラメーターを使用してファインチューニングタスクを作成します。Worker、モデル、データセットは自動的に読み込まれ、学習パラメーターには既定値が設定されます。Workflowはその値で実行できます。</value></data>
+  <data name="Function.FineTuning.CheckWorker.Name" xml:space="preserve"><value>ファインチューニング Worker を確認</value></data>
+  <data name="Function.FineTuning.CheckWorker.Description" xml:space="preserve"><value>指定したファインチューニング Worker の状態、能力、キューを確認します。利用可能な Worker が 1 つだけの場合は自動選択します。</value></data>
+  <data name="Function.FineTuning.CheckEnvironment.Name" xml:space="preserve"><value>ファインチューニング環境を確認</value></data>
+  <data name="Function.FineTuning.CheckEnvironment.Description" xml:space="preserve"><value>インストールやコマンド実行を行わず、ファインチューニングの有効化、シークレット、Worker、モデルディレクトリ、FileManager の状態を確認します。</value></data>
+  <data name="Function.FineTuning.UploadDatasetFile.Name" xml:space="preserve"><value>ファインチューニングデータセットファイルをアップロード</value></data>
+  <data name="Function.FineTuning.UploadDatasetFile.Description" xml:space="preserve"><value>大きな JSONL ファイルに対応するため、ファインチューニングデータセットをストリームで保存してアップロードします。</value></data>
+  <data name="Function.FineTuning.CreateDataset.Name" xml:space="preserve"><value>ファインチューニングデータセットを作成</value></data>
+  <data name="Function.FineTuning.CreateDataset.Description" xml:space="preserve"><value>Worker の検証済み JSONL データセットを保存します。Worker が自動で読み込み、Workflow からの小規模 JSONL 送信に適しています。</value></data>
+  <data name="Function.FineTuning.StartJob.Name" xml:space="preserve"><value>ファインチューニングタスクを作成</value></data>
+  <data name="Function.FineTuning.StartJob.Description" xml:space="preserve"><value>承認済みのローカルモデル、データセット、学習パラメーターでファインチューニングタスクを作成します。Worker、モデル、データセットは自動で読み込まれます。</value></data>
+  <data name="Function.FineTuning.ValidateAdapter.Name" xml:space="preserve"><value>ファインチューニングアダプターを検証</value></data>
+  <data name="Function.FineTuning.ValidateAdapter.Description" xml:space="preserve"><value>成功したファインチューニングタスクに対し、選択した CPU、CUDA、MLX バックエンドで制限付きオフラインテストを実行します。タスク記録と異なる場合は明示的に確認します。</value></data>
 </root>

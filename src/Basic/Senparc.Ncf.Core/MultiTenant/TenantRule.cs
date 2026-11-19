@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：TenantRule.cs
-    文件功能描述：TenantRule 相关实现
-    
-    
-    创建标识：Senparc - 20210212
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: TenantRule.cs
+    File description: TenantRule related implementation
+
+    Created by: Senparc - 20210212
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,24 +22,24 @@ using System.Text;
 namespace Senparc.Ncf.Core.MultiTenant
 {
     /// <summary>
-    /// 租户规则
+    ///Legacy comment translated to English.
     /// </summary>
     public enum TenantRule
     {
         /// <summary>
-        /// 以域名区分
+        ///Legacy comment translated to English.
         /// </summary>
         DomainName = 0,
         /// <summary>
-        /// Request 请求中的 Header 信息
+        ///Legacy comment translated to English.
         /// </summary>
         RequestHeader = 1,
         /// <summary>
-        /// 以登录输入的租户名称区分
+        ///Legacy comment translated to English.
         /// </summary>
         LoginInput = 2,
         /// <summary>
-        /// 默认
+        /// default
         /// </summary>
         Default = LoginInput
     }

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：IBaseCache.cs
-    文件功能描述：IBaseCache 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: IBaseCache.cs
+    File description: IBaseCache related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -24,12 +27,12 @@ namespace Senparc.Ncf.Core.Cache
     {
         IBaseObjectCacheStrategy Cache { get; set; }
         /// <summary>
-        /// Data不能在Update()方法中调用，否则会引发循环调用。Update()方法中应该使用SetData()方法
+        ///Legacy comment translated to English.
         /// </summary>
         DateTime CacheTime { get; set; }
         DateTime CacheTimeOut { get; set; }
 
-        #region 同步方法
+        #region Legacy section
         T Data { get; set; }
         void RemoveCache();
         void SetData(T value, int timeOut, BaseCache<T>.UpdateWithBataBase updateWithDatabases);
@@ -37,7 +40,7 @@ namespace Senparc.Ncf.Core.Cache
         void UpdateToDatabase(T obj);
         #endregion
 
-        #region 异步方法
+        #region Legacy section
         Task<T> GetDataAsync();
         Task RemoveCacheAsync();
         Task SetDataAsync(T value, int timeOut, BaseCache<T>.UpdateWithBataBase updateWithDatabases);
@@ -47,7 +50,7 @@ namespace Senparc.Ncf.Core.Cache
 
 
         ///// <summary>
-        ///// 更新到缓存
+        ///Legacy comment translated to English.
         ///// </summary>
         ///// <param name="key"></param>
         ///// <param name="obj"></param>

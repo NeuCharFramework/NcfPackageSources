@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopBridgeNeuBellProvider.cs
-    文件功能描述：DesktopBridge 待审批配对的纽铃 Provider
+    File name: DesktopBridgeNeuBellProvider.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0-preview3 新增桌面端同步提供程序
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0-preview3 将同步提供程序统一更名为 NeuBell/纽铃
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0-preview3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -30,7 +34,7 @@ public sealed class DesktopBridgeNeuBellProvider : INeuBellProvider
 
     public string ProviderId => ProviderIdValue;
 
-    // Admin Footer 使用此 UID 校验 DesktopBridge 是否已安装且处于开放状态。
+    //Legacy comment translated to English.
     public string ModuleUid => Register.ModuleUid;
 
     public ValueTask<NeuBellSnapshot> GetSnapshotAsync(
@@ -43,8 +47,8 @@ public sealed class DesktopBridgeNeuBellProvider : INeuBellProvider
         [
             new NeuBellItem(
                 "pending-pairings",
-                "DesktopBridge 远程连接审核",
-                pendingCount > 0 ? $"有 {pendingCount} 个设备配对请求等待处理。" : "当前没有待处理的设备配对请求。",
+                "DesktopBridge remote connection approval",
+                pendingCount > 0 ? $"{pendingCount} device pairing requests are waiting for review." : "There are no pending device pairing requests.",
                 pendingCount,
                 pendingCount > 0 ? "warning" : "info",
                 $"/Admin/DesktopBridge/Index?uid={Register.ModuleUid}",

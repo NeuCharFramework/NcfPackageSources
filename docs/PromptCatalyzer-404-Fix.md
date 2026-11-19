@@ -76,7 +76,7 @@ dotnet build src/Extensions/Senparc.Xncf.AgentsManager/Senparc.Xncf.AgentsManage
    ```
 3. **重新启动应用**:
    ```bash
-   dotnet run --project tools/NcfSimulatedSite/Senparc.Web/Senparc.Web.csproj
+   dotnet run --project tools/NcfWebAdminBaseline/Senparc.Web/Senparc.Web.csproj
    ```
 4. **刷新浏览器页面** (Ctrl+Shift+R / Cmd+Shift+R)
 5. **测试"优化"按钮**

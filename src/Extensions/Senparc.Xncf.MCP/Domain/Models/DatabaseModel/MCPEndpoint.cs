@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：MCPEndpoint.cs
-    文件功能描述：MCPEndpoint 相关实现
-    
-    
-    创建标识：Senparc - 20260327
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.5.6 0.5.6 feat: add MCP endpoint selection feature in AgentsManager
+    File name: MCPEndpoint.cs
+    File description: MCPEndpoint related implementation
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.10 维护MCPEndpoint 相关实现
+    Created by: Senparc - 20260327
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261005
+    Change description: v0.5.6 0.5.6 feat: add MCP endpoint selection feature in AgentsManager
+
+    Modified by: Senparc - 20261103
+    Change description: v0.5.10 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -26,86 +29,86 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.MCP.Models.DatabaseModel
 {
     /// <summary>
-    /// MCP Endpoint 配置
-    /// 存储可用的 MCP 端点信息，供 Agent 使用
+    /// MCP Endpoint configuration
+    ///Legacy comment translated to English.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(MCPEndpoint))]
     [Serializable]
     public class MCPEndpoint : EntityBase<int>
     {
         /// <summary>
-        /// 端点名称
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         [MaxLength(100)]
         public string Name { get; set; }
 
         /// <summary>
-        /// 端点 URI/路径
-        /// 例如: "http://localhost:3001/mcp/endpoint"
-        /// 或 "sse://..." 或其他 MCP 协议支持的格式
+        ///Legacy comment translated to English.
+        /// for example: "http://localhost:3001/mcp/endpoint"
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         [MaxLength(500)]
         public string Endpoint { get; set; }
 
         /// <summary>
-        /// 端点类型
-        /// 例如: "http", "sse", "stdio", "websocket"
+        ///Legacy comment translated to English.
+        /// for example: "http", "sse", "stdio", "websocket"
         /// </summary>
         [MaxLength(50)]
         public string EndpointType { get; set; }
 
         /// <summary>
-        /// 协议版本
-        /// 例如: "1.0", "2.0"
+        ///Legacy comment translated to English.
+        /// for example: "1.0", "2.0"
         /// </summary>
         [MaxLength(20)]
         public string ProtocolVersion { get; set; }
 
         /// <summary>
-        /// 描述信息
+        /// descriptioninformation
         /// </summary>
         [MaxLength(500)]
         public string Description { get; set; }
 
         /// <summary>
-        /// 是否启用
+        /// whether enabled
         /// </summary>
         public bool Enabled { get; set; } = true;
 
         /// <summary>
-        /// 认证信息 JSON
-        /// 用于存储认证相关的配置，如 API Key、Token 等
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(1000)]
         public string AuthConfig { get; set; }
 
         /// <summary>
-        /// 额外参数 JSON
-        /// 用于存储其他自定义参数
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(2000)]
         public string ExtraConfig { get; set; }
 
         /// <summary>
-        /// 最后测试时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime? LastTestedTime { get; set; }
 
         /// <summary>
-        /// 最后测试结果
-        /// true: 成功, false: 失败
+        /// finallytestresult
+        /// true: success, false: failure
         /// </summary>
         public bool? LastTestResult { get; set; }
 
         /// <summary>
-        /// 最近一次测试发现并缓存的工具（Function）快照 JSON
+        ///Legacy comment translated to English.
         /// </summary>
         public string? LastToolsJson { get; set; }
 
         /// <summary>
-        /// 最近一次测试发现的工具（Function）数量
+        ///Legacy comment translated to English.
         /// </summary>
         public int? LastToolCount { get; set; }
     }

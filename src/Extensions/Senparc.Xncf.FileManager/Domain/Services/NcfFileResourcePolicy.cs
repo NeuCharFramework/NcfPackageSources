@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：NcfFileResourcePolicy.cs
-    文件功能描述：领域服务与业务流程实现
 
+    File name: NcfFileResourcePolicy.cs
+    File description: domain services and business-process implementation
 
-    创建标识：Senparc - 20260813
+    Created by: Senparc - 20260813
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
+    Modified by: Senparc - 20260813
+    Change description: v0.6.0-preview1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.8.0 按 FineTuning 资源类型校验访问
+    Modified by: Senparc - 20261021
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.1 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+    Modified by: Senparc - 20261103
+    Change description: v0.8.1 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.5 Localized file management and upload surfaces
 
 ----------------------------------------------------------------*/
 

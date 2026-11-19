@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PicHelper.Core.cs
-    文件功能描述：PicHelper.Core 相关实现
-    
-    
-    创建标识：Senparc - 20211124
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: PicHelper.Core.cs
+    File description: PicHelper.Core related implementation
+
+    Created by: Senparc - 20211124
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -21,27 +24,27 @@ namespace Senparc.ImageUtility
         //    string filepath = System.Web.HttpContext.Current.Server.MapPath(picPath);
 
         //    System.Drawing.Image myimage = System.Drawing.Image.FromFile(filepath);
-        //    //创建Image对象
+        //    //createImage object
         //    Bitmap mybitmap = new Bitmap(myimage,/* 200, 200);*/myimage.Width, myimage.Height);
-        //    //创建Bitmap对象
+        //    //createBitmap object
 
         //    Graphics g = Graphics.FromImage(mybitmap);
-        //    //创建了Graphics对象
+        //    // Create a Graphics object
 
-        //    //float fontsize = 8.0f;//字体大小
-        //    float fongwidth = fontsize * (fontsize * 4);//23;//字体一共的宽度
-        //    float fontheight = fontsize + 100;//字体的高度
-        //    Font myfont = new Font("宋体", fontsize, FontStyle.Bold);
-        //    //定义一个Font 文字的式样，可以再下面写上去
+        //    //float fontsize = 8.0f;//Font size
+        //    float fongwidth = fontsize * (fontsize * 4);//23;//Total width of the font
+        //    float fontheight = fontsize + 100;// Font height
+        //    Font myfont = new Font("SimSun", fontsize, FontStyle.Bold);
+        //    // Define a Font text style, can be written below
 
         //    RectangleF Rf = new RectangleF(floatX, floatY, fongwidth, fontheight);
 
-        //    //创建了一组个矩行框,注意这里的RectangleF，这里是的F 表示存储一组Float的数据，如果是整数就直接用Rectangel就可以了
+        //    // Create a group of rectangles. Note the RectangleF here. The F table here indicates that it stores a group of Float data. If it is an integer, you can directly use Rectangle.
         //    Brush thisbrush = new SolidBrush(color);
-        //    //定义一个Brush笔刷，和笔刷的式样为SolidBrush,还有刷出来的颜色为 #ff00cc
+        //    // Define a Brush, and the style of the brush is SolidBrush, and the color of the brush is #ff00cc.
 
         //    g.DrawString(markText, myfont, thisbrush, Rf);
-        //    //画上了
+        //    //Drawn
         //    g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
 
         //    //MemoryStream ms = new MemoryStream();

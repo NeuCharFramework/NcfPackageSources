@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：Register.Area.cs
-    文件功能描述：Workspace 管理页面注册
+    File name: Register.Area.cs
+    File description: Workspace admin page registration
 
-    创建标识：Senparc - 20261024
+    Created by: Senparc - 20261024
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.2 implement connection manager and workspace file system provider
+    Modified by: Senparc - 20261103
+    Change description: v0.2.2 implement connection manager and workspace file system provider
+
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -25,7 +29,7 @@ public sealed partial class Register : IAreaRegister, IXncfRazorRuntimeCompilati
 
     public List<AreaPageMenuItem> AreaPageMenuItems =>
     [
-        new AreaPageMenuItem(GetAreaHomeUrl(), "工作区与远程编辑", "fa fa-code")
+        new AreaPageMenuItem(GetAreaHomeUrl(), WorkspaceResource.Get("Area.Menu.Admin", "Workspace and remote editing"), "fa fa-code")
     ];
 
     public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

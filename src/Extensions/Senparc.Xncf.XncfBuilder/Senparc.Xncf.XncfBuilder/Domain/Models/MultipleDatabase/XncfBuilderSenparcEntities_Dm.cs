@@ -13,7 +13,7 @@ using System.Text;
 namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
 {
     /// <summary>
-    /// 用于生成达梦数据库 Migration 信息的类，请勿修改
+    ///Legacy comment translated to English.
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.Dm, typeof(Register))]
     public class XncfBuilderSenparcEntities_Dm : XncfBuilderSenparcEntities, IMultipleMigrationDbContext
@@ -26,22 +26,22 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
         {
             base.OnModelCreating(modelBuilder);
 
-            // 达梦默认的 NVARCHAR2(32767) 小于预览输出上限，使用 CLOB 避免持久化中断。
+            //Legacy comment translated to English.
             modelBuilder.Entity<XncfPreviewTask>().Property(task => task.ErrorMessage).HasColumnType("CLOB");
             modelBuilder.Entity<XncfPreviewTask>().Property(task => task.RecentOutput).HasColumnType("CLOB");
         }
     }
 
     /// <summary>
-    /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
-    /// <para>1、切换至 Debug 模式</para>
-    /// <para>2、运行：PM> add-migration [更新名称] -C XncfBuilderSenparcEntities_Dm -o Domain/Migrations/Migrations.Dm </para>
+    /// design-time DbContext creation (used only to create Code-First database migrations during development; not executed in production)
+    /// <para>1、switch to Debug mode</para>
+    /// <para>2、run：PM> add-migration [updatename] -C XncfBuilderSenparcEntities_Dm -o Domain/Migrations/Migrations.Dm </para>
     /// </summary>
     public class SenparcDbContextFactory_Dm : SenparcDesignTimeDbContextFactoryBase<XncfBuilderSenparcEntities_Dm, Register>
     {
         protected override Action<IApplicationBuilder> AppAction => app =>
         {
-            //指定其他数据库
+            //specify another database
             app.UseNcfDatabase("Senparc.Ncf.Database.Dm", "Senparc.Ncf.Database.Dm", "DmDatabaseConfiguration");
         };
 

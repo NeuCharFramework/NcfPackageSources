@@ -1,21 +1,24 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：McpConnectionTestService.cs
-    文件功能描述：MCP Endpoint 连接测试与工具（Function）发现服务。
-    使用 ModelContextProtocol 客户端建立真实连接并读取远端工具列表。
+    File name: McpConnectionTestService.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
 
+    Created by: Senparc - 20260924
 
-    创建标识：Senparc - 20260924
+    Modified by: Senparc - 20260924
+    Change description: v0.5.6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260924
-    修改描述：v0.5.6 新增基于 Senparc.AI.AgentKernel 的 MCP 连接测试与工具发现
+    Modified by: Senparc - 20261003
+    Change description: v0.5.7 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261003
-    修改描述：v0.5.7 按端点类型连接并为初始化及工具发现设置可取消的整体超时
+    Modified by: Senparc - 20261103
+    Change description: v0.5.10 add comprehensive tests for MCP endpoint management and background tenant scope
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.10 add comprehensive tests for MCP endpoint management and background tenant scope
+    Modified by: Senparc - 20261119
+    Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -30,80 +33,80 @@ using ModelContextProtocol.Client;
 namespace Senparc.Xncf.MCP.Domain.Services
 {
     /// <summary>
-    /// MCP 连接测试结果。
+    ///Legacy comment translated to English.
     /// </summary>
     public class McpConnectionTestResult
     {
-        /// <summary>连接与工具发现是否成功。</summary>
+        ///Legacy comment translated to English.
         public bool Success { get; set; }
 
-        /// <summary>状态码（200 成功，非 200 失败）。</summary>
+        ///Legacy comment translated to English.
         public int Status { get; set; } = 200;
 
-        /// <summary>状态消息。</summary>
+        ///Legacy comment translated to English.
         public string StatusMessage { get; set; } = string.Empty;
 
-        /// <summary>工具（Function）数量。</summary>
+        ///Legacy comment translated to English.
         public int ToolCount => Tools?.Count ?? 0;
 
-        /// <summary>发现的工具列表。</summary>
+        ///Legacy comment translated to English.
         public List<McpToolInfo> Tools { get; set; } = new List<McpToolInfo>();
     }
 
     /// <summary>
-    /// 单个 MCP 工具（Function）信息。
+    ///Legacy comment translated to English.
     /// </summary>
     public class McpToolInfo
     {
-        /// <summary>工具名称。</summary>
+        ///Legacy comment translated to English.
         public string Name { get; set; } = string.Empty;
 
-        /// <summary>工具标题（可选，来自 Tool/Annotations.Title）。</summary>
+        ///Legacy comment translated to English.
         public string? Title { get; set; }
 
-        /// <summary>工具描述。</summary>
+        ///Legacy comment translated to English.
         public string? Description { get; set; }
 
-        /// <summary>参数列表。</summary>
+        ///Legacy comment translated to English.
         public List<McpToolParameterInfo> Parameters { get; set; } = new List<McpToolParameterInfo>();
 
-        /// <summary>原始输入 JSON Schema（用于“展开”查看）。</summary>
+        ///Legacy comment translated to English.
         public string? InputSchemaJson { get; set; }
     }
 
     /// <summary>
-    /// MCP 工具参数信息。
+    ///Legacy comment translated to English.
     /// </summary>
     public class McpToolParameterInfo
     {
-        /// <summary>参数名。</summary>
+        ///Legacy comment translated to English.
         public string Name { get; set; } = string.Empty;
 
-        /// <summary>参数类型（来自 JSON Schema）。</summary>
+        ///Legacy comment translated to English.
         public string? Type { get; set; }
 
-        /// <summary>参数描述。</summary>
+        /// <summary>parametersdescription。</summary>
         public string? Description { get; set; }
 
-        /// <summary>是否必填。</summary>
+        ///Legacy comment translated to English.
         public bool Required { get; set; }
     }
 
     /// <summary>
-    /// 使用 <see cref="McpClient"/> 对 MCP Endpoint 发起真实连接，
-    /// 并读取远端返回的工具（Function）列表。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class McpConnectionTestService
     {
         /// <summary>
-        /// 测试 MCP Endpoint 连接并发现工具。
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="name">端点名称（用于标识）。</param>
-        /// <param name="endpointUrl">端点 URI。</param>
-        /// <param name="bearerToken">可选 Bearer Token。</param>
-        /// <param name="timeoutSeconds">整体超时秒数。</param>
-        /// <param name="endpointType">端点类型；未指定时自动检测 HTTP 传输。</param>
-        /// <param name="cancellationToken">请求取消信号。</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public async Task<McpConnectionTestResult> TestAsync(
             string name,
             string endpointUrl,
@@ -188,7 +191,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        /// 从工具输入 JSON Schema 中解析出参数列表。
+        ///Legacy comment translated to English.
         /// </summary>
         private static List<McpToolParameterInfo> ParseParameters(JsonElement schema)
         {

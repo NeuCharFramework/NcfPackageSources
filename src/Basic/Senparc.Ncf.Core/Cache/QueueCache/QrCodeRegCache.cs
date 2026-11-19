@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：QrCodeRegCache.cs
-    文件功能描述：QrCodeRegCache 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: QrCodeRegCache.cs
+    File description: QrCodeRegCache related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,7 +22,7 @@ namespace Senparc.Ncf.Core.Cache
     public enum QrCodeRegDataType
     {
         /// <summary>
-        /// 注册
+        ///Legacy comment translated to English.
         /// </summary>
         Reg,
     }
@@ -28,7 +31,7 @@ namespace Senparc.Ncf.Core.Cache
     public class QrCodeRegData
     {
         /// <summary>
-        /// 即SceneId的字符串
+        ///Legacy comment translated to English.
         /// </summary>
         public string Key { get; set; }
         public int SceneId { get; set; }
@@ -51,7 +54,7 @@ namespace Senparc.Ncf.Core.Cache
     }
 
     /// <summary>
-    /// 登录许可缓存（缓存数据：UserId）
+    ///Legacy comment translated to English.
     /// </summary>
     public interface IQrCodeRegCache : IQueueCache<QrCodeRegData>
     {

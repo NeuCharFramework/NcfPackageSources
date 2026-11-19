@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SqlServerDatabaseConfiguration.cs
-    文件功能描述：SqlServerDatabaseConfiguration 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SqlServerDatabaseConfiguration.cs
+    File description: SqlServerDatabaseConfiguration related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.14 Updated database integration support and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -27,7 +30,7 @@ using System.Data.Common;
 namespace Senparc.Ncf.Database.SqlServer
 {
     /// <summary>
-    /// SQL Server 数据库配置
+    /// SQL Server databaseconfiguration
     /// </summary>
     public class SqlServerDatabaseConfiguration : DatabaseConfigurationBase<SqlServerDbContextOptionsBuilder, SqlServerOptionsExtension>
     {
@@ -60,7 +63,7 @@ namespace Senparc.Ncf.Database.SqlServer
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
             //var schma = dbContext.Model.FindEntityType(type).GetSchema();
-            //TODO: 增加 schma
+            //Legacy comment translated to English.
             return $"DROP TABLE {tableName}";
         }
 

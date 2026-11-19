@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：XncfDatabaseDbContextPool.cs
-    文件功能描述：XncfDatabaseDbContextPool 相关实现
-    
-    
-    创建标识：Senparc - 20201010
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: XncfDatabaseDbContextPool.cs
+    File description: XncfDatabaseDbContextPool related implementation
+
+    Created by: Senparc - 20201010
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.21.14 Updated database integration support and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -24,17 +27,17 @@ using System.Text;
 namespace Senparc.Ncf.Database
 {
     /// <summary>
-    /// 以 IXncfDatabase Register 类型为 Key 的多数据库上下文（DbContext）配置池
+    ///Legacy comment translated to English.
     /// </summary>
     public class XncfDatabaseDbContextPool :
-        /*Concurrent*/Dictionary<Type/* IXncfDatabase Register 类型 */, Dictionary<MultipleDatabaseType, Type/* 数据库 XncfDatabaseDbContext 类型 */>>
+        /*Concurrent*/Dictionary<Type/* IXncfDatabase Register type */, Dictionary<MultipleDatabaseType, Type/* database XncfDatabaseDbContext type */>>
     {
-        #region 单例
+        #region Legacy section
 
         XncfDatabaseDbContextPool() { }
 
         /// <summary>
-        /// DatabaseConfigurationFactory 的全局单例
+        ///Legacy comment translated to English.
         /// </summary>
         public static XncfDatabaseDbContextPool Instance
         {
@@ -54,19 +57,19 @@ namespace Senparc.Ncf.Database
         #endregion
 
         /// <summary>
-        /// 添加配置
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="multiDbContextAttr"></param>
         /// <param name="xncfDatabaseDbContextType"></param>
         public void TryAdd(MultipleMigrationDbContextAttribute multiDbContextAttr, Type xncfDatabaseDbContextType)
         {
-            //查看是否已经包含 IDatabaseRegister 
+            //Legacy comment translated to English.
             if (!this.ContainsKey(multiDbContextAttr.XncfDatabaseRegisterType))
             {
-                //添加 MultipleDatabaseType 对应集合
+                //Legacy comment translated to English.
                 this[multiDbContextAttr.XncfDatabaseRegisterType] = new Dictionary<MultipleDatabaseType, Type>();
             }
-            //加入配置
+            //Legacy comment translated to English.
             this[multiDbContextAttr.XncfDatabaseRegisterType][multiDbContextAttr.MultipleDatabaseType] = xncfDatabaseDbContextType;
         }
     }

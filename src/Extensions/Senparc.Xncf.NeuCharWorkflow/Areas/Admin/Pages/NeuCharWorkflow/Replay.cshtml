@@ -24,39 +24,39 @@
     <template v-else-if="replay">
         <header class="workflow-replay-header">
             <div>
-                <div class="workflow-replay-eyebrow">只读运行回看 · #{{ replay.executionLogId }}</div>
+                <div class="workflow-replay-eyebrow">{{ncfST('Frontend.085', replay.executionLogId)}}</div>
                 <h2>{{ replay.workflowName }}</h2>
-                <p>运行于 {{ formatDate(replay.startedAt) }}，{{ statusText(replay.status) }}。画布为当时的运行快照，不会影响最新工作流。</p>
+                <p>{{ncfST('Frontend.086', formatDate(replay.startedAt), statusText(replay.status))}}</p>
             </div>
             <div class="workflow-replay-actions">
-                <el-button icon="el-icon-back" @@click="backToTasks">返回任务列表</el-button>
-                <el-button icon="el-icon-tickets" @@click="openWorkflowTasks">查看此工作流任务</el-button>
-                <el-button icon="el-icon-data-analysis" @@click="openWorkflowAnalytics">查看统计</el-button>
-                <el-button type="primary" plain icon="el-icon-copy-document" :loading="copying" @@click="copyReplay">复制当前工作流并编辑</el-button>
-                <el-button type="primary" icon="el-icon-edit-outline" @@click="openLatestWorkflow">查看最新工作流</el-button>
+                <el-button icon="el-icon-back" @@click="backToTasks">{{ncfST('Frontend.022')}}</el-button>
+                <el-button icon="el-icon-tickets" @@click="openWorkflowTasks">{{ncfST('Frontend.023')}}</el-button>
+                <el-button icon="el-icon-data-analysis" @@click="openWorkflowAnalytics">{{ncfST('Frontend.024')}}</el-button>
+                <el-button type="primary" plain icon="el-icon-copy-document" :loading="copying" @@click="copyReplay">{{ncfST('Frontend.125')}}</el-button>
+                <el-button type="primary" icon="el-icon-edit-outline" @@click="openLatestWorkflow">{{ncfST('Frontend.126')}}</el-button>
             </div>
         </header>
 
-        <section class="workflow-replay-controls" aria-label="运行回放控制">
+        <section class="workflow-replay-controls" :aria-label="ncfST('Frontend.087')">
             <div class="workflow-replay-step-summary">
                 <strong>{{ stepLabel }}</strong>
-                <span>{{ replay.events.length ? `共 ${replay.events.length} 个节点事件` : '该运行没有节点事件' }}</span>
+                <span>{{ replay.events.length ? ncfST('Frontend.088', replay.events.length) : ncfST('Frontend.089') }}</span>
             </div>
             <div class="workflow-replay-buttons">
-                <el-button size="small" icon="el-icon-d-arrow-left" :disabled="stepIndex < 0" @@click="resetPlayback">开头</el-button>
-                <el-button size="small" icon="el-icon-arrow-left" :disabled="stepIndex <= 0" @@click="previousStep">上一步</el-button>
-                <el-button size="small" type="primary" :icon="playing ? 'el-icon-video-pause' : 'el-icon-video-play'" :disabled="!replay.events.length" @@click="togglePlayback">{{ playing ? '暂停' : '播放' }}</el-button>
-                <el-button size="small" icon="el-icon-arrow-right" :disabled="stepIndex >= replay.events.length - 1" @@click="nextStep">下一步</el-button>
-                <el-button size="small" icon="el-icon-d-arrow-right" :disabled="stepIndex >= replay.events.length - 1" @@click="finishPlayback">结尾</el-button>
+                <el-button size="small" icon="el-icon-d-arrow-left" :disabled="stepIndex < 0" @@click="resetPlayback">{{ncfST('Frontend.123')}}</el-button>
+                <el-button size="small" icon="el-icon-arrow-left" :disabled="stepIndex <= 0" @@click="previousStep">{{ncfST('Frontend.121')}}</el-button>
+                <el-button size="small" type="primary" :icon="playing ? 'el-icon-video-pause' : 'el-icon-video-play'" :disabled="!replay.events.length" @@click="togglePlayback">{{ playing ? ncfST('Frontend.606') : ncfST('Frontend.607') }}</el-button>
+                <el-button size="small" icon="el-icon-arrow-right" :disabled="stepIndex >= replay.events.length - 1" @@click="nextStep">{{ncfST('Frontend.122')}}</el-button>
+                <el-button size="small" icon="el-icon-d-arrow-right" :disabled="stepIndex >= replay.events.length - 1" @@click="finishPlayback">{{ncfST('Frontend.124')}}</el-button>
             </div>
         </section>
 
         <div class="workflow-replay-layout">
             <aside class="workflow-replay-timeline">
-                <h3>执行步骤</h3>
+                <h3>{{ncfST('Frontend.025')}}</h3>
                 <div class="workflow-replay-timeline-list">
                     <button type="button" :class="['workflow-replay-timeline-item',{active:stepIndex===-1}]" @@click="resetPlayback">
-                        <span class="workflow-replay-timeline-dot"></span><span><strong>开始</strong><small>加载运行快照</small></span>
+                        <span class="workflow-replay-timeline-dot"></span><span><strong>{{ncfST('Frontend.090')}}</strong><small>{{ncfST('Frontend.091')}}</small></span>
                     </button>
                     <button v-for="(item,index) in visibleTimelineEvents" :key="item.sequence"
                             type="button" :class="['workflow-replay-timeline-item',{active:stepIndex===index,passed:index<=stepIndex,failed:item.status==='failed'}]"
@@ -69,7 +69,7 @@
                                type="text"
                                size="mini"
                                @@click="loadMoreTimelineEvents">
-                        显示更多步骤（{{ visibleTimelineEvents.length }} / {{ replay.events.length }}）
+                        {{ncfST('Frontend.092', visibleTimelineEvents.length, replay.events.length)}}
                     </el-button>
                 </div>
             </aside>
@@ -90,19 +90,19 @@
             </main>
 
             <aside class="workflow-replay-detail">
-                <h3>{{ currentEvent ? '当前步骤' : '运行概览' }}</h3>
+                <h3>{{ currentEvent ? ncfST('Frontend.028') : ncfST('Frontend.029') }}</h3>
                 <template v-if="currentEvent">
                     <el-tag size="mini" :type="eventType(currentEvent.status)">{{ eventStatusText(currentEvent.status) }}</el-tag>
                     <h4>{{ currentEvent.nodeName }}</h4>
-                    <p>{{ currentEvent.message || '节点状态已更新。' }}</p>
+                    <p>{{ currentEvent.message || ncfST('Frontend.093') }}</p>
                     <time>{{ formatDate(currentEvent.timestamp) }}</time>
                     <section class="workflow-replay-value">
-                        <h5>输入参数</h5>
+                        <h5>{{ncfST('Frontend.026')}}</h5>
                         <pre v-if="currentEvent.input" class="workflow-replay-input">{{ currentEvent.input }}</pre>
-                        <p v-else class="workflow-replay-missing-input">该历史步骤未保存输入记录。</p>
+                        <p v-else class="workflow-replay-missing-input">{{ncfST('Frontend.094')}}</p>
                     </section>
                     <section v-if="currentEvent.output" class="workflow-replay-value">
-                        <h5>输出结果</h5>
+                        <h5>{{ncfST('Frontend.027')}}</h5>
                         <pre class="workflow-replay-output">{{ currentEvent.output }}</pre>
                     </section>
                     <el-button v-if="hasAgentGroupConversation(currentEvent)"
@@ -110,12 +110,12 @@
                                type="primary"
                                plain
                                icon="el-icon-chat-dot-round"
-                               @@click="openAgentGroupConversation(currentEvent.objectReference)">查看 Agent Group 对话</el-button>
+                               @@click="openAgentGroupConversation(currentEvent.objectReference)">{{ncfST('Frontend.095')}}</el-button>
                 </template>
                 <template v-else>
                     <el-tag size="mini" :type="replay.succeeded ? 'success' : 'danger'">{{ statusText(replay.status) }}</el-tag>
-                    <p>{{ replay.succeeded ? (replay.resultSummary || '运行完成。') : (replay.errorMessage || '运行失败。') }}</p>
-                    <p class="workflow-replay-detail-note">点击左侧步骤，或使用播放控件逐步还原节点执行状态。</p>
+                    <p>{{ replay.succeeded ? (replay.resultSummary || ncfST('Frontend.096')) : (replay.errorMessage || ncfST('Frontend.097')) }}</p>
+                    <p class="workflow-replay-detail-note">{{ncfST('Frontend.098')}}</p>
                 </template>
             </aside>
         </div>
@@ -123,6 +123,7 @@
 </div>
 
 @section scripts {
+    @await Html.PartialAsync("_LocalizationScripts")
     <script src="~/js/NeuCharWorkflow/common.js" asp-append-version="true"></script>
     <script src="~/js/NeuCharWorkflow/Replay.js" asp-append-version="true"></script>
 }

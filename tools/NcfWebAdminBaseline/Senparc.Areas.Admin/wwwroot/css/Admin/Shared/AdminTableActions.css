@@ -1,0 +1,66 @@
+/*
+ * Shared Admin table action rules.
+ * Keep row actions compact, semantic, keyboard-friendly, and stable at narrow widths.
+ */
+.ncf-table-actions-column .cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+    overflow: visible;
+    white-space: nowrap;
+}
+
+.ncf-table-actions-column .el-button,
+.ncf-table-actions-column form {
+    margin-left: 0;
+}
+
+.ncf-table-actions-column form {
+    display: inline-flex;
+    align-items: center;
+}
+
+.ncf-table-action-more {
+    width: 28px;
+    min-width: 28px;
+    height: 28px;
+    padding: 0;
+    margin-left: 2px !important;
+    border: 0;
+    color: #606266;
+    font-size: 18px;
+    line-height: 28px;
+}
+
+.ncf-table-action-more:focus,
+.ncf-table-action-more:hover {
+    color: #2a82e4;
+    background-color: #eef6ff;
+}
+
+.el-dropdown-menu .ncf-table-action-danger,
+.el-dropdown-menu .ncf-table-action-danger:hover {
+    color: #f56c6c;
+}
+
+.el-dropdown-menu .ncf-table-action-danger:hover {
+    background-color: #fff1f0;
+}
+
+.ncf-table-actions-column .el-button--text {
+    padding-right: 4px;
+    padding-left: 4px;
+}
+
+.ncf-table-actions-column .el-button [class*="el-icon-"],
+.ncf-table-actions-column .el-button [class*="fa-"] {
+    margin-right: 3px;
+}
+
+@media (max-width: 720px) {
+    .ncf-table-actions-column .cell {
+        justify-content: flex-start;
+    }
+}

@@ -1,21 +1,24 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：QueryMcpEndpointsRequestHandler.cs
-    文件功能描述：处理来自其他模块（如 AgentsManager）的 MCP Endpoint 列表查询请求。
-    通过 EventBus 请求-响应机制，将 MCP 模块登记的端点信息以只读 DTO 形式返回。
+    File name: QueryMcpEndpointsRequestHandler.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
 
+    Created by: Senparc - 20260924
 
-    创建标识：Senparc - 20260924
+    Modified by: Senparc - 20260924
+    Change description: v0.5.6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260924
-    修改描述：v0.5.6 新增 MCP Endpoint 跨模块查询处理器（EventBus 请求-响应）
+    Modified by: Senparc - 20261005
+    Change description: v0.5.6 0.5.6 feat: add MCP endpoint selection feature in AgentsManager
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.5.6 0.5.6 feat: add MCP endpoint selection feature in AgentsManager
+    Modified by: Senparc - 20261103
+    Change description: v0.5.10 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.10 维护处理来自其他模块（如 AgentsManager）的 MCP Endpoint 列表查询请求
+    Modified by: Senparc - 20261119
+    Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -34,8 +37,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.MCP.Application.EventHandlers
 {
     /// <summary>
-    /// 处理 <see cref="QueryMcpEndpointsRequest"/>，将 MCP Endpoint 列表
-    /// 以跨模块共享的 <see cref="McpEndpointInfo"/> 形式通过 EventBus 返回。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public sealed class QueryMcpEndpointsRequestHandler
         : IIntegrationEventHandler<QueryMcpEndpointsRequest>

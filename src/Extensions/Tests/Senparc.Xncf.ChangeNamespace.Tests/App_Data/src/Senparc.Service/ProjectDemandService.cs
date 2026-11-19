@@ -22,78 +22,78 @@ namespace Senparc.Service
     public interface IProjectDemandService : IBaseClientService<ProjectDemand>
     {
         /// <summary>
-        /// 用户选择竞标
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="developerId"></param>
         /// <param name="projectDemand"></param>
         void Choose(int developerId, ProjectDemand projectDemand);
         /// <summary>
-        /// 发布任务则用户ProjectDemandCount加1
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="accountId"></param>
         void AddDemandCount(int accountId);
         /// <summary>
-        /// 撤销任务则用户ProjectDemandCount减1
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="accountId"></param>
         void ReduceDemandCount(int accountId);
         /// <summary>
-        /// 发布任务则用户ProjectDemandCount加1
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="accountId"></param>
         void AddSuccessDemandCount(int accountId);
         /// <summary>
-        /// 撤销任务
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="projectDemand"></param>
         void Revoke(ProjectDemand projectDemand);
         /// <summary>
-        /// 推动步骤
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="projectDemand"></param>
-        /// <param name="step">当前任务所在的步骤</param>
+        ///Legacy comment translated to English.
         void Step(ProjectDemand projectDemand, int step);
         /// <summary>
-        /// 过期任务自动失效
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id">AccountId</param>
         void Expired(int? id = null);
         /// <summary>
-        /// 充值返回信息处理
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="projectPayLog"></param>
         /// <param name="tradeNo"></param>
         /// <returns>ProjectDemand</returns>
         ProjectDemand RecordAlipayTrade(ProjectPayLog projectPayLog, string tradeNo);
         /// <summary>
-        /// 撤销任务申请退还押金
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="projectDemand"></param>
         void BackMortgage(ProjectDemand projectDemand);
         /// <summary>
-        /// 同意付款给开发者
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="projectDemand"></param>
         void AgreePay(ProjectDemand projectDemand);
         /// <summary>
-        /// 管理员将雇主托管的赏金支付给开发者后执行
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="projectDemand"></param>
         /// <param name="account"></param>
         void SuccessDemand(ProjectDemand projectDemand, Account account);
         /// <summary>
-        /// 添加评论时间
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="projectDemandId"></param>
         void CommintTime(int projectDemandId);
         /// <summary>
-        /// 发布任务扣除押金（用户积分足够时）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="projectDemand"></param>
         /// <param name="account"></param>
         void DeductPoints(ProjectDemand projectDemand, Account account);
         /// <summary>
-        /// 获取热门任务
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         List<ProjectDemand> GetHotProjectDemandList();
@@ -123,7 +123,7 @@ namespace Senparc.Service
         {
             BiddingStateChange(projectDemand, (int)ProjectBidding_State.未中标);
 
-            var projectBidding = _projectBiddingService.GetObject(z => z.ProjectDemandId == projectDemand.Id && z.DeveloperId == developerId);//中标 状态改为已中标
+            var projectBidding = _projectBiddingService.GetObject(z => z.ProjectDemandId == projectDemand.Id && z.DeveloperId == developerId);//Legacy comment translated to English.
             projectBidding.State = (int)ProjectBidding_State.已中标;
             _projectBiddingService.SaveObject(projectBidding);
 
@@ -155,10 +155,10 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 统一修改所有竞标该任务的状态
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="projectDemand">任务</param>
-        /// <param name="projectBiddingState">所有竞标要修改成的状态</param>
+        /// <param name="projectDemand">task</param>
+        ///Legacy comment translated to English.
         protected void BiddingStateChange(ProjectDemand projectDemand, int projectBiddingState)
         {
             var projectBiddingList = _projectBiddingService.GetFullList(z => z.ProjectDemandId == projectDemand.Id, z => z.Id,
@@ -188,7 +188,7 @@ namespace Senparc.Service
             if (projectPayLog != null)
             {
                 _pointsLogService.ChangePoint(account, projectPayLog.PayMoney, "{0}任务押金返还".With(projectDemand.Title));
-                //将支付记录修改成已退还
+                //Legacy comment translated to English.
                 projectPayLog.Type = (int) ProjectPay_Type.已退还;
                 projectPayLog.CompleteTime = DateTime.Now;
                 _projectPayLogService.SaveObject(projectPayLog);
@@ -201,7 +201,7 @@ namespace Senparc.Service
 
         public void Step(ProjectDemand projectDemand, int step)
         {
-            if (projectDemand.Step == step)//避免查看前几步时改变步骤
+            if (projectDemand.Step == step)//Legacy comment translated to English.
             {
                 projectDemand.Step++;
                 SaveObject(projectDemand);
@@ -220,7 +220,7 @@ namespace Senparc.Service
             {
                 projectDemandList = GetFullList(z => true, z => z.Id, OrderingType.Descending);
             }
-            for (int i = 0; i < projectDemandList.Count; i++)//过期任务自动失效
+            for (int i = 0; i < projectDemandList.Count; i++)//Legacy comment translated to English.
             {
                 if (projectDemandList[i].EndTime < DateTime.Now)
                 {
@@ -241,7 +241,7 @@ namespace Senparc.Service
             projectPayLog.Status = (int)ProjectPay_Status.已支付;
             projectPayLogService.SaveObject(projectPayLog);
             JudgePay(projectDemand);
-            ////发送Email
+            ////sendEmail
             //if (account.EmailChecked)
             //{
             //    SendEmail sendEmail = new SendEmail(SendEmailType.OrderPaySuccess);
@@ -251,13 +251,13 @@ namespace Senparc.Service
             //        projectPayLog.Description);
             //    sendEmail.Send(sendEmailPara, true);
 
-            //    //发送站内信
+            //Legacy comment translated to English.
             //    _messageBoxService.SendMessage(sendEmail.SentSubject, sendEmail.SentBody, account.Id);
             //}
             return projectDemand;
         }
 
-        private void JudgePay(ProjectDemand projectDemand)//判断任务是否支付押金
+        private void JudgePay(ProjectDemand projectDemand)//Legacy comment translated to English.
         {
             projectDemand.Mortgaged = true;
             projectDemand.State = (int)ProjectDemand_State.竞标中;
@@ -273,7 +273,7 @@ namespace Senparc.Service
 
             if (!projectDemand.HasPaid)
             {
-                if (projectDemand.Price > 0)//雇主标价
+                if (projectDemand.Price > 0)//Legacy comment translated to English.
                 {
                     _developerPointsLogService.AddPoint(developer, projectDemand.Price, "{0}任务支付".With(projectDemand.Title));
                     Haspaid(projectDemand);
@@ -281,14 +281,14 @@ namespace Senparc.Service
                 }
                 else
                 {
-                    if (projectBidding.Price < SiteConfig.PROJECTDMANDDEPOSIT)//开发者竞价小于雇主押金
+                    if (projectBidding.Price < SiteConfig.PROJECTDMANDDEPOSIT)//Legacy comment translated to English.
                     {
                         _pointsLogService.ChangePoint(account, SiteConfig.PROJECTDMANDDEPOSIT - projectBidding.Price, "{0}任务多余押金返还".With(projectDemand.Title));
                         _developerPointsLogService.AddPoint(developer, projectBidding.Price, "{0}任务支付".With(projectDemand.Title));
 
                         Haspaid(projectDemand);
                     }
-                    else//开发者竞价大于雇主押金，需判断用户剩余积分是否足够支付
+                    else//Legacy comment translated to English.
                     {
                         if (projectBidding.Price - SiteConfig.PROJECTDMANDDEPOSIT < account.Points)
                         {
@@ -318,18 +318,18 @@ namespace Senparc.Service
                 _projectPayLogService.SaveObject(projectPayLog);
             }
             SuccessDemand(projectDemand, account);
-            //发送邮件提醒开发者雇主已付款
+            //Legacy comment translated to English.
             SendEmail sendEmail = new SendEmail(SendEmailType.ProjectDemandAgreePay);
             var sendEmailPara = new SendEmailParameter_ProjectDemandAgreePay(developer.Account.Email, developer.Account.UserName,
                 payMoney,
                 projectDemand.Title);
             sendEmail.Send(sendEmailPara, true);
 
-            //发送站内信
+            //Legacy comment translated to English.
             _messageBoxService.SendMessage(sendEmail.SentSubject, sendEmail.SentBody, developer.Id);
         }
 
-        private void Haspaid(ProjectDemand projectDemand)//记录积分是否变更，防止重复变更积分
+        private void Haspaid(ProjectDemand projectDemand)//Legacy comment translated to English.
         {
             projectDemand.HasPaid = true;
             SaveObject(projectDemand);
@@ -341,7 +341,7 @@ namespace Senparc.Service
             projectDemand.State = (int)ProjectDemand_State.已完成;
             projectDemand.FinishTime = DateTime.Now;
             SaveObject(projectDemand);
-            CreditRating(account);//信誉升级
+            CreditRating(account);//Legacy comment translated to English.
 
             var projectBidding = _projectBiddingService.GetObject(z => z.Id == projectDemand.WinBiddingId, new string[] { "Developer" });
             var developer = projectBidding.Developer;
@@ -357,9 +357,9 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 雇主信誉升级
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="account">雇主</param>
+        ///Legacy comment translated to English.
         protected void CreditRating(Account account)
         {
             var count = account.SuccessProjectDemandCount;

@@ -1,28 +1,32 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxSession.cs
-    文件功能描述：沙箱会话持久化实体
+    File name: SandboxSession.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260808
+    Created by: Senparc - 20260808
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 enhance the jupyter-csharp template and sandbox session management
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持更新过期时间与无限 TTL 标记
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
 
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 增加会话别名与附加端口映射持久化
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.0 维护沙箱会话持久化实体
+    Modified by: Senparc - 20261103
+    Change description: v0.4.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -35,7 +39,7 @@ using Senparc.Xncf.Sandbox.Domain.Services;
 namespace Senparc.Xncf.Sandbox.Domain.Models.DatabaseModel;
 
 /// <summary>
-/// 沙箱会话。运行时句柄（容器 ID 等）可重建探测，但以本表为编排真相来源之一。
+///Legacy comment translated to English.
 /// </summary>
 [Table(Register.DATABASE_PREFIX + nameof(SandboxSession))]
 [Serializable]

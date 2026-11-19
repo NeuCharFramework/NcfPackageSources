@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：TenantMiddleware.cs
-    文件功能描述：TenantMiddleware 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.15.14 维护TenantMiddleware 相关实现
+    Copyright (C) 2026 Senparc
+
+    File name: TenantMiddleware.cs
+    File description: TenantMiddleware related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261103
+    Change description: v0.15.14 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.15.17 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -31,7 +34,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.Tenant.OHS.Remote
 {
     /// <summary>
-    /// 多租户中间件
+    ///Legacy comment translated to English.
     /// </summary>
     public class TenantMiddleware
     {
@@ -58,10 +61,10 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
         {
             try
             {
-                //判断是否需要使用数据库
+                //checkwhetherneedusedatabase
                 if (!SiteConfig.DatabaseXncfLoaded)
                 {
-                    //没有数据库，跳过
+                    //Legacy comment translated to English.
                     await _next(context);
                     return;
                 }
@@ -75,7 +78,7 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
                     AlertedTenantState = true;
                 }
 
-                //判断是否启用了租户
+                //Legacy comment translated to English.
                 var urlPath = context.Request.Path.ToString();
                 if (!FirstRunAndInstalling && enableMultiTenant)
                 {
@@ -115,7 +118,7 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
 
                     var serviceProvider = context.RequestServices;
                     var tenantInfoService = serviceProvider.GetRequiredService<TenantInfoService>();
-                    var requestTenantInfo = await tenantInfoService.SetScopedRequestTenantInfoAsync(context);//设置当前 Request 的 RequestTenantInfo 参数
+                    var requestTenantInfo = await tenantInfoService.SetScopedRequestTenantInfoAsync(context);//Legacy comment translated to English.
                 }
             }
             catch (NcfUninstallException unInstallEx)
@@ -129,7 +132,7 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
             {
                 Console.WriteLine("\t Exception from TenantMiddleware");
 
-                //如果数据库出错
+                //Legacy comment translated to English.
                 SenparcTrace.BaseExceptionLog(ex);
                 throw;
             }

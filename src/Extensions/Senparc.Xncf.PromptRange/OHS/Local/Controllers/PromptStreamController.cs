@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：PromptStreamController.cs
-    文件功能描述：PromptStreamController 控制器逻辑
-    
-    
-    创建标识：Senparc - 20260626
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+    Copyright (C) 2026 Senparc
+
+    File name: PromptStreamController.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20260626
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20260729
+    Change description: v0.17.1-preview6 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -53,7 +56,7 @@ public class PromptStreamController : ControllerBase
         Response.Headers.Connection = "keep-alive";
         Response.Headers.ContentType = "text/event-stream";
 
-        // 立即 flush，让 EventSource 收到 200 并触发 onopen
+        //Legacy comment translated to English.
         await Response.WriteAsync(": connected\n\n", cancellationToken);
         await Response.Body.FlushAsync(cancellationToken);
 

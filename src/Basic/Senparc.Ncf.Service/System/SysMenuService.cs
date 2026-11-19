@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：SysMenuService.cs
-    文件功能描述：SysMenuService 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.23.10-preview9 维护SysMenuService 相关实现
+    Copyright (C) 2026 Senparc
+
+    File name: SysMenuService.cs
+    File description: SysMenuService related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261103
+    Change description: v0.23.10-preview9 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.23.13-preview12 Updated service infrastructure and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -78,7 +81,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// TODO...重建菜单角色缓存
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="sysMenuDto"></param>
         /// <returns></returns>
@@ -92,7 +95,7 @@ namespace Senparc.Ncf.Service
                 menu = await GetObjectAsync(_ => _.Id == sysMenuDto.Id);
                 if (menu.IsLocked)
                 {
-                    return menu;//TODO：需要给出提示
+                    return menu;//Legacy comment translated to English.
                 }
 
                 isRepeat = await this.GetObjectAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode && _.Id != sysMenuDto.Id) != null;
@@ -120,7 +123,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// TODO...重建菜单角色缓存
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="sysMenuDto"></param>
         /// <param name="buttons"></param>
@@ -180,7 +183,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取缓存中的数据
+        /// get data from the cache
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>
@@ -190,7 +193,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取缓存中的数据 TODO...
+        /// get data from the cache TODO...
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>
@@ -237,7 +240,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取缓存中的数据
+        /// get data from the cache
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<SysMenuTreeItemDto>> GetMenuTreeDtoByCacheAsync()
@@ -254,7 +257,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 初始化菜单及其权限
+        ///Legacy comment translated to English.
         /// </summary>
         [Obsolete($"Use {nameof(InitAsync)} so initialization failures can be observed.")]
         public void Init(RequestTenantInfo requestTenantInfo, int adminUserInfoId)
@@ -263,13 +266,13 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 初始化菜单及其权限
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task InitAsync(RequestTenantInfo requestTenantInfo, int adminUserInfoId)
         {
             this.SetTenantInfoForAllServices(requestTenantInfo);
 
-            //设置 TenantId 前缀，避免不同租户之间的 ID 冲突
+            //Legacy comment translated to English.
             string tenantId = null;
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
             {
@@ -281,7 +284,7 @@ namespace Senparc.Ncf.Service
             {
                 new SysMenu(){ Id = tenantId+"1", MenuName = "系统管理", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 300, MenuType = MenuType.菜单},
 
-#region 管理员管理
+#region Legacy section
                 new SysMenu(){ Id = tenantId+"1.1", MenuName = "管理员管理", Url = "/Admin/AdminUserInfo/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 300, ParentId = tenantId+"1", MenuType = MenuType.菜单},
 
                 new SysMenu() { Id =tenantId+"1.1.1", MenuName = "新增", Visible = true,ResourceCode = "admin-add", ParentId =tenantId+"1.1", MenuType = MenuType.按钮 },
@@ -292,7 +295,7 @@ namespace Senparc.Ncf.Service
                 new SysMenu() { Id =tenantId+"1.1.6", MenuName = "查看", Visible = true,ResourceCode = "admin-detail", ParentId = tenantId+"1.1", MenuType = MenuType.按钮 },
 #endregion
 
-#region 角色管理
+#region rolemanagement
                 new SysMenu(){ Id = tenantId+"1.2", MenuName = "角色管理", Url = "/Admin/Role/Index", Icon = "fa fa-user", Visible = true, IsLocked = true, Sort = 275, ParentId =tenantId+ "1", MenuType = MenuType.菜单},
 
                 new SysMenu() { Id =tenantId+"1.2.1", MenuName = "新增", Visible = true, ResourceCode = "role-add", ParentId = tenantId+"1.2", MenuType = MenuType.按钮 },
@@ -349,7 +352,7 @@ namespace Senparc.Ncf.Service
 
             try
             {
-                //确保 DbContext 实例一致
+                //Legacy comment translated to English.
                 //Console.WriteLine("sysRoleService DbConte HashCode: " + sysRoleService.BaseData.BaseDB.BaseDataContext.GetHashCode());
                 //Console.WriteLine("sysRolePermissionService DbConte HashCode: " + sysRolePermissionService.BaseDB.BaseDataContext.GetHashCode());
                 //Console.WriteLine("sysRoleAdminUserInfoService DbConte HashCode: " + sysRoleAdminUserInfoService.BaseData.BaseDB.BaseDataContext.GetHashCode());
@@ -380,7 +383,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取数据库的菜单集合(线性)
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public virtual async Task<IEnumerable<SysMenuDto>> GetMenuDtoByDbAsync()

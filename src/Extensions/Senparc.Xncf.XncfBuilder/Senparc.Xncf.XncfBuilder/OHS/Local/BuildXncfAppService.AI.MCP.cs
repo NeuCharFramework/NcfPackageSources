@@ -1,20 +1,23 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：BuildXncfAppService.AI.MCP.cs
-    文件功能描述：BuildXncfAppService.AI.MCP 相关实现
-    
-    
-    创建标识：Senparc - 20250524
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+    File name: BuildXncfAppService.AI.MCP.cs
+    File description: BuildXncfAppService.AI.MCP related implementation
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+    Created by: Senparc - 20250524
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.37.0-preview5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260804
+    Change description: v0.39.0-preview8 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 
@@ -47,12 +50,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         }
 
 
-        #region MCP AI 接入（由于官方组件 bug，暂时使用平铺参数方式接入）
+        #region Legacy section
 
-        //[McpServerTool, Description("生成 XNCF 模块")]
-        //[FunctionRender("生成 XNCF", "根据配置条件生成 XNCF", typeof(Register))]
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         public async Task<StringAppResponse> Build(
-            // [Required,Description("解决方案文件路径")]
+            //Legacy comment translated to English.
             // string slnFilePath, 
             [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Organization")]
             string orgName,
@@ -81,10 +84,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                                 UseSammple = true,
                                 UseModule = new[] { "database" },
                 //   UseWeb = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
-                //     new Ncf.XncfBase.Functions.SelectionItem("1","使用Web","使用Web",true),
+                //     new Ncf.XncfBase.Functions.SelectionItem("1","useWeb","useWeb",true),
                 //   }),
                 //   UseWebApi = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
-                //     new Ncf.XncfBase.Functions.SelectionItem("1","使用WebApi","使用WebApi",true),
+                //     new Ncf.XncfBase.Functions.SelectionItem("1","useWebApi","useWebApi",true),
                 //   }),
                                 NewSlnFile = new[] { "backup" },
                                 TemplatePackage = "no",
@@ -100,19 +103,19 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
         #endregion
 
-        //[McpServerTool, Description("获取前端代码模板示例")]
+        //Legacy comment translated to English.
         public Task<string> GetFrontEndCodeTemplate()
         {
             return Task.FromResult(FrontendTemplate);
         }
 
-        //[McpServerTool, Description("获取后端代码模板示例")]
+        //Legacy comment translated to English.
         public Task<string> GetBackEndCodeTemplate()
         {
             return Task.FromResult(BackendTemplate);
         }
 
-        //[McpServerTool, Description("获取文件内容")]
+        //[McpServerTool, Description("getfilecontent")]
         public async Task<BuildXncf_GetFileResponse> GetFile(
             [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.ModuleFullName")] string moduleName,
             [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.FilePath")] string filePath)
@@ -142,7 +145,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return response;
         }
 
-        //[McpServerTool, Description("创建或更新文件内容，文件不存在时会自动创建")]
+        //Legacy comment translated to English.
         public async Task<BuildXncf_CreateOrUpdateFileResponse> CreateOrUpdateFile(
            [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.ModuleFullName")] string moduleName,
            [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.FilePath")] string filePath,

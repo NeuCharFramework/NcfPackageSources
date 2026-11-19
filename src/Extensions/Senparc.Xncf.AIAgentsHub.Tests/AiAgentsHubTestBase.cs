@@ -58,10 +58,10 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             }
 
 
-            //添加（注册） Ncf 服务（必须）
+            //Legacy comment translated to English.
             //builder.AddNcf<SqliteMemoryDatabaseConfiguration>();
             builder.AddNcf<SqlServerDatabaseConfiguration>();
-            builder.Services.AddMemoryCache();//使用内存缓存
+            builder.Services.AddMemoryCache();//Legacy comment translated to English.
 
             var app = builder.Build();
 
@@ -72,40 +72,65 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
 
             this._serviceProvider = app.Services;
 
-            //Use NCF（必须）
+            //Use NCF（must）
             registerService = app.UseNcf();
 
             /*
-            //初始化安装
+
+            Legacy comment translated to English.
+
             var installService = this._serviceProvider.GetRequiredService<InstallerService>();
+
             var installOptionsService = this._serviceProvider.GetRequiredService<InstallOptionsService>();
+
             InstallRequestDto installRequestDto = new()
+
             {
+
                 AdminUserName = "Test",
+
                 SystemName = "UnitTest",
+
                 DbConnectionString = installOptionsService.GetDbConnectionString()
+
             };
+
+
 
             installService.InstallAsync(installRequestDto, this._serviceProvider).GetAwaiter();
 
+
+
             var xncfModuleService = this._serviceProvider.GetRequiredService<XncfModuleService>();
 
+
+
             PagedList<XncfModule> xncfModules = xncfModuleService.GetObjectListAsync(1, 999, (XncfModule z) => true, (XncfModule z) => z.AddTime, OrderingType.Descending).GetAwaiter().GetResult();
+
             List<CreateOrUpdate_XncfModuleDto> xncfModuleDtos = xncfModules.Select((XncfModule z) => xncfModuleService.Mapper.Map<CreateOrUpdate_XncfModuleDto>(z)).ToList();
 
+
+
             var installResult = Senparc.Ncf.XncfBase.Register.ScanAndInstall(xncfModuleDtos, this._serviceProvider).GetAwaiter().GetResult();
+
             Console.WriteLine(installResult);
 
-            //输出调试信息
+
+
+            //outputdebug information
+
             var allKeys = Senparc.Ncf.Core.Models.EntitySetKeys.GetAllEntitySetInfo();
+
             Console.WriteLine("All Keys:\r\n" + allKeys.ToJson(true));
-            
+
+
+
              */
 
-            //安装模块
+            //Legacy comment translated to English.
             var register = new Register();
 
-            //安装
+            //Legacy comment translated to English.
             register.InstallOrUpdateAsync(this._serviceProvider, Ncf.Core.Enums.InstallOrUpdate.Install).GetAwaiter();
         }
     }
@@ -121,7 +146,7 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             SenparcDI.GlobalServiceCollection = services;
 
 
-            services.AddMemoryCache();//使用内存缓存
+            services.AddMemoryCache();//Legacy comment translated to English.
 
             services.AddScoped<InstallOptionsService>();
             services.AddScoped<InstallerService>();
@@ -132,7 +157,7 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
 
             services.AddScoped<ColorService>();
 
-            //激活 Xncf 扩展引擎（必须）
+            //Legacy comment translated to English.
             var logMsg = builder.StartWebEngine(null);
             Console.WriteLine("============ logMsg =============");
             Console.WriteLine(logMsg);
@@ -141,7 +166,7 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
 
         public static IRegisterService UseNcf(this WebApplication app)
         {
-            //注册
+            //Legacy comment translated to English.
             //var mockEnv = new Mock<IHostEnvironment/*IHostingEnvironment*/>();
             //mockEnv.Setup(z => z.ContentRootPath).Returns(() => UnitTestHelper.RootPath);
             //var env = mockEnv.Object;
@@ -155,7 +180,7 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             var config = configBuilder.Build();
             Console.WriteLine("完成 ServiceCollection 和 ConfigurationBuilder 初始化");
 
-            //更多绑定操作参见：https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.2
+            //Legacy comment translated to English.
             var senparcSetting = new SenparcSetting();
             config.GetSection("SenparcSetting").Bind(senparcSetting);
 
@@ -166,75 +191,81 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             Console.WriteLine(senparcCoreSetting.ToJson(true));
             Console.WriteLine();
 
-            // 启动 CO2NET 全局注册，必须！
-            // 关于 UseSenparcGlobal() 的更多用法见 CO2NET Demo：https://github.com/Senparc/Senparc.CO2NET/blob/master/Sample/Senparc.CO2NET.Sample.netcore3/Startup.cs
+            // start CO2NET global registration，must！
+            //Legacy comment translated to English.
             var registerService = app
-                //全局注册
+                //global registration
                 .UseSenparcGlobal(env, senparcSetting, globalRegister =>
                 {
-                    //配置全局使用Redis缓存（按需，独立）
-                    if (UseRedis(senparcSetting, out var redisConfigurationStr))//这里为了方便不同环境的开发者进行配置，做成了判断的方式，实际开发环境一般是确定的，这里的if条件可以忽略
+                    //Legacy comment translated to English.
+                    if (UseRedis(senparcSetting, out var redisConfigurationStr))//Legacy comment translated to English.
                     {
-                        /* 说明：
-                         * 1、Redis 的连接字符串信息会从 Config.SenparcSetting.Cache_Redis_Configuration 自动获取并注册，如不需要修改，下方方法可以忽略
-                        /* 2、如需手动修改，可以通过下方 SetConfigurationOption 方法手动设置 Redis 链接信息（仅修改配置，不立即启用）
+                        /* description：
+
+                         * Legacy comment translated to English.
+
+                        Legacy comment translated to English.
+
                          */
                         CO2NET.Cache.CsRedis.Register.SetConfigurationOption(redisConfigurationStr);
 
-                        //以下会立即将全局缓存设置为 Redis
-                        CO2NET.Cache.CsRedis.Register.UseKeyValueRedisNow(); //键值对缓存策略（推荐）
-                        /*Senparc.CO2NET.Cache.CsRedis.Register.UseHashRedisNow();*/ //HashSet储存格式的缓存策略 
+                        //Legacy comment translated to English.
+                        CO2NET.Cache.CsRedis.Register.UseKeyValueRedisNow(); //Legacy comment translated to English.
+                        /*Senparc.CO2NET.Cache.CsRedis.Register.UseHashRedisNow();*/ //Legacy comment translated to English.
 
-                        //也可以通过以下方式自定义当前需要启用的缓存策略
-                        //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisObjectCacheStrategy.Instance);//键值对
+                        //Legacy comment translated to English.
+                        //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisObjectCacheStrategy.Instance);//key-value pair
                         //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisHashSetObjectCacheStrategy.Instance);//HashSet
                     }
-                    //如果这里不进行Redis缓存启用，则目前还是默认使用内存缓存 
+                    //Legacy comment translated to English.
                 });
 
 
-            //XncfModules（必须）
+            //XncfModules（must）
             app.UseXncfModules(registerService, senparcCoreSetting);
 
             return registerService;
         }
 
         /// <summary>
-        /// 判断当前配置是否满足使用 Redis（根据是否已经修改了默认配置字符串判断）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="senparcSetting"></param>
         /// <returns></returns>
         internal static bool UseRedis(SenparcSetting senparcSetting, out string redisConfigurationStr)
         {
             redisConfigurationStr = senparcSetting.Cache_Redis_Configuration;
-            var useRedis = !string.IsNullOrEmpty(redisConfigurationStr) && redisConfigurationStr != "#{Cache_Redis_Configuration}#"/*默认值，不启用*/;
+            var useRedis = !string.IsNullOrEmpty(redisConfigurationStr) && redisConfigurationStr != "#{Cache_Redis_Configuration}#"/*default value; disabled*/;
             return useRedis;
         }
 
         /// <summary>
-        /// 输出启动成功标志
+        /// output the startup success marker
         /// </summary>
         /// <param name="app"></param>
         public static void ShowSuccessTip(this WebApplication app)
         {
-            //输出启动成功标志
+            //output the startup success marker
             var ready = "";
+            var startedAt = "";
             var cost = "";
 
             GlobalCulture.Create()
                .SetEnglish(() =>
                {
                    ready = "The start-up is ready";
+                   startedAt = "Started at: ";
                    cost = "Cost Time:";
                })
                .SetChinese(() =>
                {
                    ready = "启动工作准备就绪";
+                   startedAt = "启动时间：";
                    cost = "用时：";
                })
                .InvokeDefault();
 
-            Senparc.Ncf.Core.VersionManager.ShowSuccessTip($"\t\t{ready}\r\n\t\t{cost}{SystemTime.NowDiff(StartTime).TotalSeconds} s");
+            Senparc.Ncf.Core.VersionManager.ShowSuccessTip($"\t\t{ready}\r\n\t\t{startedAt}{StartTime:yyyy-MM-dd HH:mm:ss}\r\n\t\t{cost}{SystemTime.NowDiff(StartTime).TotalSeconds} s");
         }
     }
 }

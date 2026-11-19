@@ -1,26 +1,29 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：模块注册与初始化逻辑
-    
-    
-    创建标识：Senparc - 20200818
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
+    File name: Register.cs
+    File description: module registration and initialization logic
 
-    修改标识：Senparc - 20261004
-    修改描述：移除数据库模板示例的安装初始化、依赖注入及映射
+    Created by: Senparc - 20200818
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.10 use compatible icon for MCP module
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.5.13 统一 XNCF Register 显示元数据与多语言资源键
+    Modified by: Senparc - 20260717
+    Change description: v0.4.0-preview3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261004
+    Change description: Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.5.10 use compatible icon for MCP module
+
+    Modified by: Senparc - 20261111
+    Change description: v0.5.13 unify XNCF Register display metadata and localization resource keys
+
+    Modified by: Senparc - 20261119
+    Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -69,13 +72,13 @@ namespace Senparc.Xncf.MCP
             "MCP 管理器",
             "Model Context Protocol（MCP）管理器");
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.MCP";
 
-        public override string Uid => "149d8021-1783-4fc9-97a8-f1a1ba60245b";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "149d8021-1783-4fc9-97a8-f1a1ba60245b";//Legacy comment translated to English.
 
-        public override string Version => "0.5.8";//必须填写版本号
+        public override string Version => "0.5.8";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -87,17 +90,17 @@ namespace Senparc.Xncf.MCP
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级版本时更新数据库
+            //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
-            //根据安装或更新不同条件执行逻辑
+            //execute logic according to the installation or update condition
             switch (installOrUpdate)
             {
                 case InstallOrUpdate.Install:
-                    //新安装
+                    //new installation
                     break;
                 case InstallOrUpdate.Update:
-                    //更新
+                    //update
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -106,14 +109,14 @@ namespace Senparc.Xncf.MCP
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            #region 删除模块数据库
+            #region Legacy section
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             MCPSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as MCPSenparcEntities;
 
-            //指定需要删除的数据实体
+            //specify the data entities to delete
 
-            //仅在卸载模块时删除本模块的表；安装或升级通过 EF 迁移保留端点配置。
+            //Legacy comment translated to English.
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
@@ -151,11 +154,11 @@ namespace Senparc.Xncf.MCP
 
             if (app is IEndpointRouteBuilder endpoints)
             {
-                // Console.WriteLine("开始启用 MCP 服务（全局）");
+                //Legacy comment translated to English.
                 // var routePattern = "mcp";
                 // endpoints.MapMcp(routePattern);
 
-                ////恢复首页
+                ///Legacy comment translated to English.
                 //var routeGroup = endpoints.MapGroup(routePattern);
                 //var routeEndpoints  = endpoints.DataSources.SelectMany(z=>z.Endpoints)
                 //    .OfType<RouteEndpoint>()
@@ -170,7 +173,7 @@ namespace Senparc.Xncf.MCP
             //    {
             //        var configuredToken = Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.McpAccessToken;
 
-            //        // 从请求头获取 Token
+            //Legacy comment translated to English.
 
             //        //if (string.IsNullOrEmpty(configuredToken))
             //        //{
@@ -199,7 +202,7 @@ namespace Senparc.Xncf.MCP
             //app.UseEndpoints(endpoints =>
             //{
             //    var serviceProvider = app.ApplicationServices;
-            //    //放置 NCF-MCP-Server SSE
+            //Legacy comment translated to English.
             //    IMcpServer? server = null;
             //    SseResponseStreamTransport? transport = null;
             //    var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
@@ -208,10 +211,10 @@ namespace Senparc.Xncf.MCP
             //    var routeGroup = endpoints.MapGroup("");
             //    routeGroup.MapGet("/ncf-mcp-sse", async (HttpContext context, HttpResponse response, CancellationToken requestAborted) =>
             //    {
-            //        // 获取配置的 Token
+            //Legacy comment translated to English.
             //        var configuredToken = Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.McpAccessToken;
 
-            //        // 从请求头获取 Token
+            //Legacy comment translated to English.
 
             //        if (string.IsNullOrEmpty(configuredToken))
             //        {

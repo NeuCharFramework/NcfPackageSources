@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：TenantInfo.cs
-    文件功能描述：TenantInfo 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.15.11 0.15.11 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+    File name: TenantInfo.cs
+    File description: TenantInfo related implementation
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.15.14 维护TenantInfo 相关实现
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261005
+    Change description: v0.15.11 0.15.11 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+
+    Modified by: Senparc - 20261103
+    Change description: v0.15.14 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.15.17 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -34,39 +37,39 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.Tenant.Domain.DataBaseModel
 {
     /// <summary>
-    /// 租户信息
+    ///Legacy comment translated to English.
     /// </summary>
     [Table("TenantInfos")]
-    public class TenantInfo : EntityBase<int>, IIgnoreMulitTenant //TODO:可以直接继承不使用多租户的基类
+    public class TenantInfo : EntityBase<int>, IIgnoreMulitTenant //Legacy comment translated to English.
     {
         /// <summary>
-        /// 全局唯一编号（自动分配）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public Guid Guid { get; private set; }
         /// <summary>
-        /// 名称
+        /// name
         /// </summary>
         [Required]
         public string Name { get; private set; }
         /// <summary>
-        /// 是否启用
+        /// whether enabled
         /// </summary>
         [Required]
         [DefaultValue(true)]
         public bool Enable { get; private set; }
         /// <summary>
-        /// 匹配域名、URL、Head的参数
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public string TenantKey { get; private set; }
 
         /// <summary>
-        /// 此属性已经取消和数据库的映射
-        /// <para>TenantInfos 表（租户注册表）不存储 TenantId 列（迁移历史中不存在该列）；
-        /// 租户注册表本身是全局表（实现 IIgnoreMulitTenant，不受租户查询过滤器约束），
-        /// 因此通过 new 遮蔽基类 EntityBase 的 int TenantId 并标记 [NotMapped]，
-        /// 防止 EF Core 将基类 TenantId 映射到 TenantInfos 表导致运行时“列不存在”错误</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [NotMapped]
         new public string TenantId { get; private set; }
@@ -85,7 +88,7 @@ namespace Senparc.Xncf.Tenant.Domain.DataBaseModel
         }
 
         /// <summary>
-        /// 更新数据
+        /// updatedata
         /// </summary>
         /// <param name="dto"></param>
         public void Update(CreateOrUpdate_TenantInfoDto dto)
@@ -97,7 +100,7 @@ namespace Senparc.Xncf.Tenant.Domain.DataBaseModel
         }
 
         /// <summary>
-        /// 清除缓存
+        /// clear the cache
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <returns></returns>

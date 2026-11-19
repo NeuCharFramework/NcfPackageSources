@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Enums.cs
-    文件功能描述：Enums 相关实现
-    
-    
-    创建标识：Senparc - 20231105
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: Enums.cs
+    File description: Enums related implementation
+
+    Created by: Senparc - 20231105
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,7 +22,7 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// 版本更新类型
+    /// versionupdatetype
     /// </summary>
     public enum UpdateVersionType
     {

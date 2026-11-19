@@ -30,7 +30,7 @@ The module records prompts, model usage, scores, and generated output. Apply ten
 
 Admin's shared `v-prompt-range` directive provides an on-demand picker for text inputs,
 including both AdminChat composers and the Footer's embedded chat. See the
-[integration guide](../../../tools/NcfSimulatedSite/Senparc.Areas.Admin/readme.md#promptrange-可复用提示词选择器).
+[integration guide](../../../tools/NcfWebAdminBaseline/Senparc.Areas.Admin/readme.md#promptrange-可复用提示词选择器).
 
 The following GET methods on `PromptItemAppService` use the existing AdminOnly policy
 and preserve tenant/soft-delete filters on both ranges and items:
@@ -49,6 +49,19 @@ and preserve tenant/soft-delete filters on both ranges and items:
 - `GetSelectorRangeScoresAsync(id)`: resolves an accessible PromptCode and returns lightweight
   ID/code/range/lane/current-score entries for all accessible versions in its range, ordered by
   PromptCode and ID. It contains no prompt text and is not limited to the picker's current page.
+
+AdminChat's default system prompt is also stored through the PromptRange provider under the
+`AdminChat.SystemMessage` range alias. The range is created on first use when PromptRange is
+installed. Published versions with a current score (`FinalScore`, or the legacy average score
+before shared scoring exists) are ordered by score; when no published version has a score, the
+first published version is used. AdminChat links directly to the PromptRange editor so versions
+can be edited, published and scored without changing source code.
+
+The AdminChat SystemMessage settings button first calls the AdminChat initialization endpoint,
+then opens `/Admin/PromptRange/Prompt?alias=AdminChat.SystemMessage`. This makes the range visible
+even before the first AI request is sent. To test it, open AdminChat → Memory / 对话设置 →
+SystemMessage → 在 PromptRange 中编辑和评分, create or edit a Prompt version, publish it, and
+score two versions; the next AdminChat request uses the highest current score.
   Admin's independent score-chart component uses this read-only endpoint, loading content and
   AI/manual score details only when a bar is clicked. It does not create a range-level rating.
 

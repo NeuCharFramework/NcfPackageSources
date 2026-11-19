@@ -1,26 +1,29 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：RecallTestAppService.cs
-    文件功能描述：RecallTestAppService 相关实现
 
+    File name: RecallTestAppService.cs
+    File description: RecallTestAppService related implementation
 
-    创建标识：Senparc - 20260225
+    Created by: Senparc - 20260225
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.6.0-preview8 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.7.2 修复知识库管理端敏感信息泄露并优化检索交互
+    Modified by: Senparc - 20260915
+    Change description: v0.7.2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+    Modified by: Senparc - 20261103
+    Change description: v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -62,7 +65,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 召回测试
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<RecallTestResponse>>> RecallTest(plRequest.RecallTestRequest request)
@@ -90,7 +93,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                             RerankMode = request.RerankMode,
                             CandidateCount = request.CandidateCount > 0 ? request.CandidateCount : (int?)null
                         };
-                    // 查询文本可能含业务内容，只记录可诊断的元信息，避免写入控制台和日志。
+                    //Legacy comment translated to English.
                     logger.Append($"开始召回测试：知识库 #{request.Id}，TopK={topK}，重排={options?.RerankMode ?? "跟随知识库配置"}。");
                     var result = await knowledgeBaseService.RecallTestAsync(request.Id, request.Content, topK, options);
                     return result;

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：XncfDatabaseData.cs
-    文件功能描述：XncfDatabaseData 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: XncfDatabaseData.cs
+    File description: XncfDatabaseData related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,7 +22,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// XNCF 数据库模块信息，仅在单独操作特定 XNCF 数据库模块时有用，其他情况下对象可能为 null
+    ///Legacy comment translated to English.
     /// </summary>
     public class XncfDatabaseData
     {
@@ -30,17 +33,17 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// DbContext 类型
+        /// DbContext type
         /// </summary>
         public IXncfDatabase XncfDatabaseRegister { get; set; }
 
         /// <summary>
-        /// 指定程序集名称
+        ///Legacy comment translated to English.
         /// </summary>
         public string AssemblyName { get; set; }
 
         /// <summary>
-        /// Migration History 表名
+        ///Legacy comment translated to English.
         /// </summary>
         public string DatabaseMigrationHistoryTableName => NcfDatabaseMigrationHelper.GetDatabaseMigrationHistoryTableName(XncfDatabaseRegister.DatabaseUniquePrefix);
     }

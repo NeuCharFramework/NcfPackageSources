@@ -1,19 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopBridgeCredentialStore.cs
-    文件功能描述：DesktopBridge 配对请求和短期会话凭据存储
+    File name: DesktopBridgeCredentialStore.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260801
+    Created by: Senparc - 20260801
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0-preview3 新增桌面端同步提供程序
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0-preview3 将同步提供程序统一更名为 NeuBell/纽铃
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.8 维护DesktopBridge 配对请求和短期会话凭据存储
+    Modified by: Senparc - 20261103
+    Change description: v0.4.8 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -73,7 +77,7 @@ public sealed class DesktopBridgeCredentialStore
         string? remoteAddress)
     {
         var now = DateTimeOffset.UtcNow;
-        var normalizedAddress = Normalize(remoteAddress, "未知地址", 128);
+        var normalizedAddress = Normalize(remoteAddress, "Unknown address", 128);
         var normalizedClientName = Normalize(clientName, "NcfDesktopApp GUI", 80);
 
         lock (_gate)
@@ -133,7 +137,7 @@ public sealed class DesktopBridgeCredentialStore
             {
                 _pendingPairings.Remove(requestId);
                 CleanupExpiredLocked(now);
-                return new DesktopBridgePairingPollResult("expired", null, null, "配对请求已过期，请重新发起。");
+                return new DesktopBridgePairingPollResult("expired", null, null, "The pairing request has expired. Start a new request.");
             }
 
             CleanupExpiredLocked(now);
@@ -144,7 +148,7 @@ public sealed class DesktopBridgeCredentialStore
                     "denied",
                     null,
                     null,
-                    "管理员已拒绝本次配对请求。"),
+                    "The administrator denied this pairing request."),
                 PairingStatus.Approved when !string.IsNullOrEmpty(pairing.SessionTokenDelivery) =>
                     new DesktopBridgePairingPollResult(
                         "approved",
@@ -176,7 +180,7 @@ public sealed class DesktopBridgeCredentialStore
                 sessionId,
                 pairing.ClientName,
                 pairing.RemoteAddress,
-                Normalize(approvedBy, "NCF 管理员", 80),
+                Normalize(approvedBy, "NCF administrator", 80),
                 HashToken(sessionToken),
                 now,
                 sessionExpiresAt);
@@ -457,7 +461,7 @@ public sealed record DesktopBridgePairingPollResult(
 public sealed class DesktopBridgePairingRateLimitException : Exception
 {
     public DesktopBridgePairingRateLimitException()
-        : base("配对请求过于频繁，请稍后重试。")
+        : base("Pairing requests are being sent too frequently. Try again later.")
     {
     }
 }

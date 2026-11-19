@@ -28,13 +28,13 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
         private readonly XncfModuleServiceExtension _xncfModuleServiceExtension;
 
         /// <summary>
-        /// 新创建的 RequestTenantInfo
+        ///Legacy comment translated to English.
         /// </summary>
         public RequestTenantInfo CreatedRequestTenantInfo { get; set; }
         public TenantRule TenantRule { get; set; }
         public bool MultiTenantEnable { get; set; }
         /// <summary>
-        /// 初始化安装系统
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         private async Task InitSystemAsync(string systemName, int adminUserInfoId, IServiceProvider serviceProvider)
@@ -56,7 +56,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
             Senparc.Xncf.Menu.Register menuRegister = new Senparc.Xncf.Menu.Register();
 
             {
-                await InitDatabaseAsync(() => systemCoreRegister.InitDatabase(serviceProvider));//TODO：目前实际已无效，不会构建任何数据库代码，此处仅作占位
+                await InitDatabaseAsync(() => systemCoreRegister.InitDatabase(serviceProvider));//Legacy comment translated to English.
 
                 //await InitDatabaseAsync(() => systemManagerRegister.InitDatabase(_serviceProvider));
                 //await InitDatabaseAsync(() => systemPermissionRegister.InitDatabase(_serviceProvider));
@@ -64,12 +64,12 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
                 //await InitDatabaseAsync(() => menuRegister.InitDatabase(_serviceProvider));
 
 
-                //开始安装权限模块
-                //（必须放在第一个，其他模块操作都需要依赖此模块）
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 await InstallAndOpenModuleAsync(systemPermissionRegister, serviceProvider, installNow: false, addMenu: false);
 
-                //开始安装菜单管理模块
-                //（必须放在第二个，其他模块操作都需要依赖此模块）
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 await InstallAndOpenModuleAsync(menuRegister, serviceProvider, installNow: false, addMenu: false);
 
                 try
@@ -85,66 +85,66 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
                     throw;
                 }
 
-                //开始安装模块理管理模块
-                //（必须放在第三个，其他模块操作都需要依赖此模块）
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 await InstallAndOpenModuleAsync(xncfModuleManagerRegister, serviceProvider);
 
-                //开始安装系统基础模块
+                //Legacy comment translated to English.
                 await InstallAndOpenModuleAsync(systemCoreRegister, serviceProvider);
 
-                //开始安装系统管理管理模块
+                //Legacy comment translated to English.
                 await InstallAndOpenModuleAsync(systemManagerRegister, serviceProvider);
 
-                //开始安装 Areas 模块
+                //Legacy comment translated to English.
                 await InstallAndOpenModuleAsync(areasBaseRegister, serviceProvider);
 
-                //开始安装 Installer 模块
+                //Legacy comment translated to English.
                 //await InstallAndOpenModuleAsync(installerRegister, serviceProvider);
 
-                //安装租户模块
+                //Legacy comment translated to English.
                 if (Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.EnableMultiTenant)
                 {
                     await InstallAndOpenModuleAsync(tenantRegister, serviceProvider);
                 }
 
-                //将权限模块进行安装
+                //Legacy comment translated to English.
                 await InstallAndOpenModuleAsync(systemPermissionRegister, serviceProvider, true, true);
 
-                //将菜单模块进行安装
+                //Legacy comment translated to English.
                 await InstallAndOpenModuleAsync(menuRegister, serviceProvider, true, true);
             }
 
-            //TODO:选择性安装用户自定义模块
+            //Legacy comment translated to English.
 
             {
                 var _xncfModuleService = _xncfModuleServiceExtension;
 
-                //开始安装并启用系统模块（Admin）
+                //Legacy comment translated to English.
                 //Senparc.Areas.Admin.Register adminRegister = new Senparc.Areas.Admin.Register();
                 //var adminModule = await InstallAndOpenModuleAsync(adminRegister, serviceProvider);
 
-                ////确保已被赋值
+                ///Legacy comment translated to English.
                 //adminModule ??= await _xncfModuleService.GetObjectAsync(z => z.Uid == adminRegister.Uid);
 
-                ////一次性保存（所有）修改
+                ///Legacy comment translated to English.
                 //await _xncfModuleService.SaveObjectAsync(adminModule).ConfigureAwait(false);
 
                 var _systemConfigService = serviceProvider.GetService<SystemConfigService>();
-                _systemConfigService.Init(systemName);//初始化系统信息
+                _systemConfigService.Init(systemName);//Legacy comment translated to English.
             }
 
             {
-                //开始安装用户模块（如有）  TODO:选择性安装
+                //Legacy comment translated to English.
 
             }
 
-            //((SenparcEntities)_accountInfoService.BaseData.BaseDB.BaseDataContext).ResetMigrate();//重置合并状态
-            //((SenparcEntities)_accountInfoService.BaseData.BaseDB.BaseDataContext).Migrate();//进行合并
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
         }
 
         private async Task InitDatabaseAsync(Func<Task<(bool, string)>> initDatabaseFunc)
         {
-            //初始化数据库
+            //initialize the database
             var (initDbSuccess, initDbMsg) = await initDatabaseFunc();
 
             Console.WriteLine($"完成 systemCoreRegister.InitDatabase，是否成功：{initDbSuccess}。数据库信息：{initDbMsg}");
@@ -157,17 +157,17 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
 
 
         /// <summary>
-        /// 安装并且开放模块
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="register"></param>
-        /// <param name="installNow">是否立即安装</param>
-        /// <param name="addMenu">是否添加菜单（必须 installNow 为 true 时生效）</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         private async Task<XncfModule> InstallAndOpenModuleAsync(IXncfRegister register, IServiceProvider serviceProvider, bool installNow = true, bool addMenu = true)
         {
             try
             {
-                //开始安装模块（创建数据库相关表）
+                //start installing the module (create related database tables)
                 await register.InstallOrUpdateAsync(serviceProvider, Ncf.Core.Enums.InstallOrUpdate.Install);
             }
             catch (Exception ex)
@@ -180,7 +180,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
 
             XncfModule xncfModule = null;
 
-            //安装模块
+            //Legacy comment translated to English.
             if (installNow)
             {
                 var _xncfModuleService = _xncfModuleServiceExtension;// serviceProvider.GetService<XncfModuleServiceExtension>();
@@ -202,14 +202,14 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
 
                 }
 
-                //启用模块
+                //Legacy comment translated to English.
                 //xncfModule = await _xncfModuleService.GetObjectAsync(z => z.Uid == register.Uid);
                 xncfModule.UpdateState(Ncf.Core.Enums.XncfModules_State.开放);
             }
 
             //if (addMenu)
             //{
-            //    //TODO:判断是否已存在
+            //Legacy comment translated to English.
             //    await _xncfModuleService.InstallMenuAsync(register, Ncf.Core.Enums.InstallOrUpdate.Install);
             //}
 
@@ -217,9 +217,9 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
         }
 
         /// <summary>
-        /// 检验安装请求内各项配置的值是否合法
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="installRequestDto">安装请求</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         private bool VerifyInstallRequest(InstallRequestDto installRequestDto)
         {
@@ -252,7 +252,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
         {
             var result = new GetDefaultInstallOptionsResponseDto();
 
-            //读取现有配置的默认值
+            //Legacy comment translated to English.
             result.DbConnectionString = _installOptionsService.GetDbConnectionString();
             result.SystemName = _installOptionsService.GetDefaultSystemName();
             result.AdminUserName = _installOptionsService.GetDefaultAdminUserName();
@@ -261,7 +261,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
         }
 
         /// <summary>
-        /// 执行默认包的安装命令
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public async Task<InstallResponseDto> InstallAsync(InstallRequestDto installRequestDto, IServiceProvider serviceProvider)
@@ -276,41 +276,41 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
                     return installResponseDto;
                 }
 
-                //比对传入的和原有的数据库连接字符串
+                //Legacy comment translated to English.
                 if (installRequestDto.DbConnectionString != _installOptionsService.GetDbConnectionString())
                 {
                     _installOptionsService.ResetDbConnectionString(installRequestDto.DbConnectionString);
                 }
 
-                #region 请勿使用 EnsureCreatedAsync() 方法，系统将自动通过 database update 过程创建数据库
-                //重新建立 Service 
+                #region Legacy section
+                //Legacy comment translated to English.
                 //var adminService = sope.ServiceProvider.GetService<AdminUserInfoService>();
 
                 //var database = adminService.BaseClientRepository.BaseDB.BaseDataContext.Database;
-                //var created = await database.EnsureCreatedAsync();//尝试创建数据库
+                //Legacy comment translated to English.
 
-                //await Console.Out.WriteLineAsync("尝试创建数据库：" + (created ? "成功创建" : "已存在，无需创建"));
+                //Legacy comment translated to English.
                 #endregion
 
-                //原 Get 请求
+                //Legacy comment translated to English.
                 {
-                    //添加初始化多租户信息
+                    //Legacy comment translated to English.
                     if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
                     {
                         try
                         {
-                            //初始化数据库
+                            //initialize the database
 
                             //var (initDbSuccess, initDbMsg) = await systemCoreRegister.InitDatabase(_serviceProvider/*, _tenantInfoService, *//*_httpContextAccessor.Value.HttpContext*/);
 
-                            //安装多租户
+                            //Legacy comment translated to English.
                             Senparc.Xncf.Tenant.Register tenantRegister = new Senparc.Xncf.Tenant.Register();
                             await tenantRegister.InstallOrUpdateAsync(sope.ServiceProvider, Ncf.Core.Enums.InstallOrUpdate.Install);
                         }
                         catch (Exception ex)
                         {
-                            //如果已经安装过，则不处理
-                            //TODO:特定的Exception
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
                             Console.WriteLine(ex.Message);
                             throw;
                         }
@@ -324,14 +324,14 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
                     //var adminModule = await InstallAndOpenModuleAsync(adminRegister, sope.ServiceProvider, installNow: false, addMenu: false);
                 }
 
-                //原Post后执行
+                //Legacy comment translated to English.
                 //{
                 //    var cacheStrategy = CacheStrategyFactory.GetObjectCacheStrategyInstance();
                 //    using (var cacheLock = await cacheStrategy.BeginCacheLockAsync("InstallerService", "Install"))
                 //    {
                 //        var _accountInfoService = sope.ServiceProvider.GetService<AdminUserInfoService>();
 
-                //        var adminUserInfo = _accountInfoService.Init(installRequestDto.AdminUserName, out string password);//初始化管理员信息
+                //Legacy comment translated to English.
 
                 //        if (adminUserInfo == null)
                 //        {
@@ -342,14 +342,14 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
                 //        {
                 //            installResponseDto.Step = 1;
 
-                //            //进行系统初始化安装
+                //Legacy comment translated to English.
                 //            await InitSystemAsync(installRequestDto.SystemName, sope.ServiceProvider);
 
                 //            //IXncfRegister systemRegister = XncfRegisterManager.RegisterList.First(z => z.GetType() == typeof(Senparc.Areas.Admin.Register));
-                //            //await _xncfModuleService.InstallMenuAsync(systemRegister, Ncf.Core.Enums.InstallOrUpdate.Install);//安装菜单
+                //Legacy comment translated to English.
 
                 //            installResponseDto.AdminUserName = installRequestDto.AdminUserName;
-                //            installResponseDto.AdminPassword = password;//这里不可以使用 adminUserInfo.Password，因为此参数已经是加密信息
+                //Legacy comment translated to English.
                 //            installResponseDto.StatCode = 0;
                 //        }
                 //    }

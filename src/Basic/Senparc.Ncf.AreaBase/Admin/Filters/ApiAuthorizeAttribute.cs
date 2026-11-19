@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ApiAuthorizeAttribute.cs
-    文件功能描述：ApiAuthorizeAttribute 相关实现
-    
-    
-    创建标识：Senparc - 20260324
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    File name: ApiAuthorizeAttribute.cs
+    File description: ApiAuthorizeAttribute related implementation
+
+    Created by: Senparc - 20260324
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20261119
+    Change description: v0.23.12 Improved administration page and authorization support
 
 ----------------------------------------------------------------*/
 
@@ -19,30 +22,30 @@ using System;
 namespace Senparc.Xncf.AreaBase.Admin.Filters
 {
     /// <summary>
-    /// API 权限验证特性
-    /// 支持多种认证方案：Cookie (AdminAuthorize) 和 JWT (Bearer)
+    /// API Permission Validation Feature
+    /// Supports multiple authentication schemes: Cookie (AdminAuthorize) and JWT (Bearer)
     /// </summary>
     public class ApiAuthorizeAttribute : AuthorizeAttribute
     {
         /// <summary>
-        /// 与 Admin 后台 JWT 注册方案一致（Register.cs 中 AddJwtBearer("Bearer_Backend")）
+        /// and Admin backend JWT registration scheme are consistent (AddJwtBearer("Bearer_Backend") in Register.cs)
         /// </summary>
         public const string JwtBearerScheme = "Bearer_Backend";
 
         /// <summary>
-        /// 默认构造函数，支持 Cookie 和 JWT 两种认证方式
+        /// defaultconstructor, supports two authentication methods: Cookie and JWT
         /// </summary>
         public ApiAuthorizeAttribute()
         {
-            // 支持多种认证方案：Admin Cookie 认证 和 JWT Bearer 认证
-            // 只要任一方案通过，即可访问
+            // Supports multiple authentication methods: Admin Cookie Authentication and JWT Bearer Authentication
+            // Accessible as long as any plan is approved
             base.AuthenticationSchemes = $"{AdminAuthorizeAttribute.AuthenticationScheme},{JwtBearerScheme}";
         }
 
         /// <summary>
-        /// 带策略的构造函数
+        /// Constructor with strategy
         /// </summary>
-        /// <param name="policy">授权策略名称（如 "AdminOnly"）</param>
+        /// <param name="policy">Authorization policy name (e.g., "AdminOnly")</param>
         public ApiAuthorizeAttribute(string policy) : this()
         {
             this.Policy = policy;

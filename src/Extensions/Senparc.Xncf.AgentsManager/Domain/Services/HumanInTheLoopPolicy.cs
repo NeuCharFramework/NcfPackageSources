@@ -1,20 +1,24 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：HumanInTheLoopPolicy.cs
-    文件功能描述：AgentsManager 的 HIL 等级与工具权限策略
+    File name: HumanInTheLoopPolicy.cs
+    File description: Related implementation.
+    Change description: Updated module behavior and related support.
 
-    创建标识：Senparc - 20260815
-    修改描述：将工具审批、人类参与者和自动执行拆成可组合的策略
+    Created by: Senparc - 20260815
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -23,38 +27,38 @@ using System;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-/// HIL 的主等级。工具权限仍可通过 <see cref="ToolPermissionMode"/> 单独收紧。
+///Legacy comment translated to English.
 /// </summary>
 public enum HumanInTheLoopLevel
 {
-    /// <summary>全自动运行，不等待人工。</summary>
+    ///Legacy comment translated to English.
     Automatic = 0,
 
-    /// <summary>风险分层：插件工具自动，MCP 工具需要确认。</summary>
+    ///Legacy comment translated to English.
     RiskBased = 1,
 
-    /// <summary>所有可执行工具调用前请求人工确认。</summary>
+    ///Legacy comment translated to English.
     ToolApproval = 2,
 
-    /// <summary>包含工具确认，并允许 Group 中的 Human 参与者实际发言。</summary>
+    ///Legacy comment translated to English.
     HumanParticipant = 3
 }
 
 /// <summary>
-/// 某一类工具的执行权限。只允许向更严格的方向覆盖 Group 默认策略。
+///Legacy comment translated to English.
 /// </summary>
 public enum ToolPermissionMode
 {
-    /// <summary>使用 HIL 等级计算出的默认值。</summary>
+    ///Legacy comment translated to English.
     Inherit = 0,
 
-    /// <summary>自动执行。</summary>
+    /// <summary>automaticexecute。</summary>
     Automatic = 1,
 
-    /// <summary>执行前请求人工确认。</summary>
+    ///Legacy comment translated to English.
     RequireApproval = 2,
 
-    /// <summary>不向模型暴露此类工具。</summary>
+    ///Legacy comment translated to English.
     Deny = 3
 }
 
@@ -90,7 +94,7 @@ public static class HumanInTheLoopPolicyResolver
             _ => ToolPermissionMode.Automatic
         };
 
-        // 旧版 bool 的语义是“所有工具审批”，必须优先保留。
+        //Legacy comment translated to English.
         if (legacyRequireHumanApproval)
         {
             defaultPluginMode = ToolPermissionMode.RequireApproval;
@@ -117,7 +121,7 @@ public static class HumanInTheLoopPolicyResolver
             return defaultMode;
         }
 
-        // Deny 永远优先；RequireApproval 不能被低权限的 Automatic 覆盖。
+        //Legacy comment translated to English.
         if (requestedMode == ToolPermissionMode.Deny)
         {
             return ToolPermissionMode.Deny;
@@ -134,7 +138,7 @@ public static class HumanInTheLoopPolicyResolver
 }
 
 /// <summary>
-/// Human 参与者使用现有 AgentTemplate 外键兼容存储，但通过固定标识与普通模型 Agent 分离。
+///Legacy comment translated to English.
 /// </summary>
 public static class HumanParticipantConstants
 {

@@ -3,7 +3,7 @@
 namespace Senparc.Web.Hubs
 {
     /// <summary>
-    /// 刷新页面
+    /// refreshpage
     /// </summary>
     public class ReloadPageHub : Hub
     {

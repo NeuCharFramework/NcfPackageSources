@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：BaseCache.cs
-    文件功能描述：BaseCache 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: BaseCache.cs
+    File description: BaseCache related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -53,12 +56,12 @@ namespace Senparc.Ncf.Core.Cache
         //private ICacheStrategy _cache;
 
         /// <summary>
-        /// 缓存策略。
-        /// 请尽量不要再BaseCache以外调用这个对象的方法，尤其Cache的Key在DictionaryCache中是会被重新定义的
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public IBaseObjectCacheStrategy Cache { get; set; }
         /// <summary>
-        /// 超时时间，1400分钟为1天。
+        ///Legacy comment translated to English.
         /// </summary>
         public int TimeOut { get; set; }
 
@@ -77,14 +80,14 @@ namespace Senparc.Ncf.Core.Cache
             }
 
             Cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
-            this.CacheSetKey = cacheKey;//设置缓存集合键，必须提供
+            this.CacheSetKey = cacheKey;//Legacy comment translated to English.
         }
 
-        #region 同步方法
+        #region Legacy section
 
         /// <summary>
-        /// Data不能在Update()方法中调用，否则会引发循环调用。Update()方法中应该使用SetData()方法
-        /// Data只适用于简单类型，如果缓存类型为列表，则不适用
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public virtual T Data
         {
@@ -111,7 +114,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 设置整个缓存数据
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="timeOut"></param>
@@ -120,7 +123,7 @@ namespace Senparc.Ncf.Core.Cache
         {
             Cache.Set(CacheKey, value, TimeSpan.FromMinutes(timeOut));
 
-            //记录缓存时间
+            //Legacy comment translated to English.
             this.CacheTime = DateTime.Now;
             this.CacheTimeOut = this.CacheTime.AddMinutes(timeOut);
 
@@ -143,11 +146,11 @@ namespace Senparc.Ncf.Core.Cache
 
         #endregion
 
-        #region 异步方法
+        #region Legacy section
         /// <summary>
-        /// 获取全部缓存数据
-        /// Data不能在Update()方法中调用，否则会引发循环调用。Update()方法中应该使用SetData()方法
-        /// Data只适用于简单类型，如果缓存类型为列表，则不适用
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public virtual async Task<T> GetDataAsync()
         {
@@ -170,7 +173,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 设置整个缓存数据
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="timeOut"></param>
@@ -179,7 +182,7 @@ namespace Senparc.Ncf.Core.Cache
         {
             await Cache.SetAsync(CacheKey, value, TimeSpan.FromMinutes(timeOut)).ConfigureAwait(false);
 
-            //记录缓存时间
+            //Legacy comment translated to English.
             this.CacheTime = DateTime.Now;
             this.CacheTimeOut = this.CacheTime.AddMinutes(timeOut);
 

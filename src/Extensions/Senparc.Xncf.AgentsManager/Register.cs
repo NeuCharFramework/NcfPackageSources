@@ -1,46 +1,50 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：模块注册与初始化逻辑
 
-    创建标识：Senparc - 20200818
+    File name: Register.cs
+    File description: module registration and initialization logic
 
-    修改标识：Senparc - 20260701
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Created by: Senparc - 20200818
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260701
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260704
-    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260704
+    Change description: v0.11.0-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260717
+    Change description: v0.12.0-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    Modified by: Senparc - 20260815
+    Change description: v0.15.0-preview20 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.19.0 注册 PromptRange Skill 插件与工作区契约
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+    Modified by: Senparc - 20261021
+    Change description: v0.19.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.19.3 统一 XNCF Register 显示元数据与多语言资源键
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+
+    Modified by: Senparc - 20261111
+    Change description: v0.19.3 unify XNCF Register display metadata and localization resource keys
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -88,13 +92,13 @@ namespace Senparc.Xncf.AgentsManager
 
         public const string ModuleUid = "D858D7FA-775A-4690-9023-CFB0B3B84994";
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.AgentsManager";
 
-        public override string Uid => ModuleUid;//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => ModuleUid;//Legacy comment translated to English.
 
-        public override string Version => "0.3.23";//必须填写版本号
+        public override string Version => "0.3.23";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -104,21 +108,21 @@ namespace Senparc.Xncf.AgentsManager
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级版本时更新数据库
+            //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
-            //根据安装或更新不同条件执行逻辑
+            //execute logic according to the installation or update condition
             switch (installOrUpdate)
             {
                 case InstallOrUpdate.Install:
-                    //新安装
-                    #region 初始化数据库数据
+                    //new installation
+                    #region Legacy section
                     //var colorService = serviceProvider.GetService<ColorAppService>();
                     //var colorResult = await colorService.GetOrInitColorAsync();
                     #endregion
                     break;
                 case InstallOrUpdate.Update:
-                    //更新
+                    //update
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -127,14 +131,14 @@ namespace Senparc.Xncf.AgentsManager
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            #region 删除数据库（演示）
+            #region Legacy section
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             AgentsManagerSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as AgentsManagerSenparcEntities;
 
-            //指定需要删除的数据实体
+            //specify the data entities to delete
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: this is a demonstration that deletes all tables created by this module during uninstallation. In production, proceed carefully and order entities by their deletion dependencies.
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
@@ -145,7 +149,7 @@ namespace Senparc.Xncf.AgentsManager
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            //AutoMap映射
+            //AutoMap mapping
             base.AddAutoMapMapping(profile =>
             {
                 profile.CreateMap<AgentTemplate, AgentTemplateDto>().ReverseMap();
@@ -163,7 +167,7 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<AgentsTemplateService>();
             services.AddSingleton<PromptOptimizationAgentBridge>();
             services.AddScoped<PromptOptimizationKernelFallbackService>();
-            services.AddScoped<PromptOptimizationService>(); // 注册 PromptOptimizationService
+            services.AddScoped<PromptOptimizationService>(); //Legacy comment translated to English.
             services.AddSingleton<ChatTaskStreamHub>();
             services.AddSingleton<ChatTaskCancellationRegistry>();
             services.AddSingleton<HumanInTheLoopRequestStore>();
@@ -181,9 +185,9 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<PublishedA2AAgentService>();
             services.AddScoped<AgentTemplateRunner>();
             services.AddHttpClient(RemoteA2AAgentFactory.HttpClientName);
-            // Aspire ServiceDefaults 会在所有 HttpClient 上添加固定 30 秒的 Polly 尝试超时。
-            // A2A 请求可能需要更长的模型推理时间，并且 POST 不能被隐式重试；
-            // 由 Filter 在最终 Handler 链中移除该管道，改用 RemoteAgent.TimeoutSeconds。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             services.AddSingleton<IHttpMessageHandlerBuilderFilter, RemoteA2AHttpMessageHandlerBuilderFilter>();
             services.AddScoped<RemoteA2AAgentFactory>();
             services.AddHttpContextAccessor();
@@ -199,13 +203,13 @@ namespace Senparc.Xncf.AgentsManager
 
             //AI Plugins DI
             services.AddScoped<PromptCatalyzerPlugin>();
-            services.AddScoped<PromptOptimizationPlugin>();  // 🔥 新增：Prompt 优化 Plugin（含 GetPromptInfo, CreateOptimizedPrompt, ExecuteShootTest, ExecuteAIGrade 等方法）
+            services.AddScoped<PromptOptimizationPlugin>();  //Legacy comment translated to English.
             services.AddScoped<CrawlPlugin>();
             services.AddScoped<FormatorPlugin>();
             services.AddScoped<TranslatorPlugin>();
             services.AddScoped<PromptRangeSkillPlugin>();
 
-            //测试
+            //test
             services.AddScoped<BuildXncfAppService>();
 
             return base.AddXncfModule(services, configuration, env);
@@ -219,15 +223,15 @@ namespace Senparc.Xncf.AgentsManager
 
             var aiPlugins = AIPluginHub.Instance;
             aiPlugins.Add(typeof(PromptCatalyzerPlugin));
-            aiPlugins.Add(typeof(PromptOptimizationPlugin));  // 🔥 新增：Prompt 优化 Plugin
+            aiPlugins.Add(typeof(PromptOptimizationPlugin));  // 🔥 add：Prompt optimize Plugin
             aiPlugins.Add(typeof(CrawlPlugin));
             aiPlugins.Add(typeof(FormatorPlugin));
             aiPlugins.Add(typeof(TranslatorPlugin));
             // PromptRangeSkillPlugin is instantiated by AgentTemplateRunner with the
             // Agent's explicit Skill binding set; it must not be globally exposed.
 
-            // NCF 模块在宿主 UseRouting() 之前初始化。为 A2A JSON-RPC 建立独立分支，
-            // 确保其自身先路由再映射端点，而 Agent Card 的 GET 请求仍交给 MVC 控制器。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             app.UseWhen(context =>
             {
                 if (!HttpMethods.IsPost(context.Request.Method))

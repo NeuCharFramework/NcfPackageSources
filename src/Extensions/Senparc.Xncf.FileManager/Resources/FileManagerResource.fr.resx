@@ -97,193 +97,193 @@
     <value>Aléatoire</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>Téléverser vers :||Téléverser vers :</value>
+    <value>Téléverser vers :</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>Téléverser un fichier||Téléverser un fichier</value>
+    <value>Téléverser un fichier</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Heure de téléversement||Heure de téléversement</value>
+    <value>Heure de téléversement</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Télécharger||Télécharger</value>
+    <value>Télécharger</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Code||Code</value>
+    <value>Code</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Autre||Autre</value>
+    <value>Autre</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Supprimer||Supprimer</value>
+    <value>Supprimer</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Actualiser les dossiers||Actualiser les dossiers</value>
+    <value>Actualiser les dossiers</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>Annuler||Annuler</value>
+    <value>Annuler</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>Vous pouvez téléverser plusieurs fichiers à la fois||Vous pouvez téléverser plusieurs fichiers à la fois</value>
+    <value>Vous pouvez téléverser plusieurs fichiers à la fois</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>Nom||Nom</value>
+    <value>Nom</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>Notes||Notes</value>
+    <value>Notes</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>Notes (facultatif)||Notes (facultatif)</value>
+    <value>Notes (facultatif)</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>Taille||Taille</value>
+    <value>Taille</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>Modules d’extension||Modules d’extension</value>
+    <value>Modules d’extension</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Actions||Actions</value>
+    <value>Actions</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Nom de fichier||Nom de fichier</value>
+    <value>Nom de fichier</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>Dossier||Dossier</value>
+    <value>Dossier</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>Gestionnaire de fichiers||Gestionnaire de fichiers</value>
+    <value>Gestionnaire de fichiers</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Texte||Texte</value>
+    <value>Texte</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Nouveau||Nouveau</value>
+    <value>Nouveau</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>Nouveau dossier||Nouveau dossier</value>
+    <value>Nouveau dossier</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>Racine||Racine</value>
+    <value>Racine</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>OK||OK</value>
+    <value>OK</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Type||Type</value>
+    <value>Type</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Id de table||Id de table</value>
+    <value>Id de table</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>Saisissez le nom du dossier||Saisissez le nom du dossier</value>
+    <value>Saisissez le nom du dossier</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>Sélectionner un fichier||Sélectionner un fichier</value>
+    <value>Sélectionner un fichier</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>Accueil||Accueil</value>
+    <value>Accueil</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>Échec du chargement de la liste||Échec du chargement de la liste</value>
+    <value>Échec du chargement de la liste</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Téléversé||Téléversé</value>
+    <value>Téléversé</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Échec du téléversement||Échec du téléversement</value>
+    <value>Échec du téléversement</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>Modifié||Modifié</value>
+    <value>Modifié</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>Échec de la modification||Échec de la modification</value>
+    <value>Échec de la modification</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>Confirmer la suppression de ce fichier ?||Confirmer la suppression de ce fichier ?</value>
+    <value>Confirmer la suppression de ce fichier ?</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>Information||Information</value>
+    <value>Information</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Confirmer||Confirmer</value>
+    <value>Confirmer</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Annuler||Annuler</value>
+    <value>Annuler</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Suppression réussie||Suppression réussie</value>
+    <value>Suppression réussie</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>Échec de la suppression||Échec de la suppression</value>
+    <value>Échec de la suppression</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Création réussie||Création réussie</value>
+    <value>Création réussie</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Échec de la création||Échec de la création</value>
+    <value>Échec de la création</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Échec du téléversement : {0}||Échec du téléversement : {0}</value>
+    <value>Échec du téléversement : {0}</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Saisissez les notes pour {0}||Saisissez les notes pour {0}</value>
+    <value>Saisissez les notes pour {0}</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>Accueil FileManager||Accueil FileManager</value>
+    <value>Accueil FileManager</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Dossier #{0}||Dossier #{0}</value>
+    <value>Dossier #{0}</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Saisissez les notes pour {0}||Saisissez les notes pour {0}</value>
+    <value>Saisissez les notes pour {0}</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>Mis à jour||Mis à jour</value>
+    <value>Mis à jour</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Échec de la mise à jour||Échec de la mise à jour</value>
+    <value>Échec de la mise à jour</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Supprimer ce fichier ?||Supprimer ce fichier ?</value>
+    <value>Supprimer ce fichier ?</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>Sélectionnez un fichier à téléverser||Sélectionnez un fichier à téléverser</value>
+    <value>Sélectionnez un fichier à téléverser</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>Échec du téléversement :||Échec du téléversement :</value>
+    <value>Échec du téléversement :</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>Test de levée d'exception, paramètres transmis : {0} {1}||Test de levée d'exception, paramètres transmis : {0} {1}</value>
+    <value>Test de levée d'exception, paramètres transmis : {0} {1}</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Le diviseur ne peut pas être 0 !||Le diviseur ne peut pas être 0 !</value>
+    <value>Le diviseur ne peut pas être 0 !</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>Opérateur inconnu : {0}||Opérateur inconnu : {0}</value>
+    <value>Opérateur inconnu : {0}</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Vous pouvez téléverser au plus {0} fichiers à la fois.||Vous pouvez téléverser au plus {0} fichiers à la fois.</value>
+    <value>Vous pouvez téléverser au plus {0} fichiers à la fois.</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>La taille totale d'un envoi ne peut pas dépasser {0} MB.||La taille totale d'un envoi ne peut pas dépasser {0} MB.</value>
+    <value>La taille totale d'un envoi ne peut pas dépasser {0} MB.</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Le fichier téléversé ne peut pas être vide.||Le fichier téléversé ne peut pas être vide.</value>
+    <value>Le fichier téléversé ne peut pas être vide.</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Un fichier seul ne peut pas dépasser {0} MB.||Un fichier seul ne peut pas dépasser {0} MB.</value>
+    <value>Un fichier seul ne peut pas dépasser {0} MB.</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Ce type de fichier n'est pas autorisé. Seuls les formats courants de document, d'image, de texte et d'archive sont pris en charge.||Ce type de fichier n'est pas autorisé. Seuls les formats courants de document, d'image, de texte et d'archive sont pris en charge.</value>
+    <value>Ce type de fichier n'est pas autorisé. Seuls les formats courants de document, d'image, de texte et d'archive sont pris en charge.</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>Le fichier n'existe pas !||Le fichier n'existe pas !</value>
+    <value>Le fichier n'existe pas !</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Les informations du chemin physique du fichier sont invalides.||Les informations du chemin physique du fichier sont invalides.</value>
+    <value>Les informations du chemin physique du fichier sont invalides.</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>Le chemin physique du fichier est hors limites.||Le chemin physique du fichier est hors limites.</value>
+    <value>Le chemin physique du fichier est hors limites.</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>Fonction d’exemple</value>
@@ -292,4 +292,234 @@
     <value>Illustre les paramètres et retours FunctionRender</value>
   </data>
 
+
+  <data name="Frontend.064" xml:space="preserve"><value>Tout vider</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Après le téléversement, associez la ressource dans Gestion de la base de connaissances → Configuration, enregistrez, puis choisissez Vectoriser.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Dossier de téléversement</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Paramètres de téléversement</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Les téléversements sont privés par défaut. Après vérification du contenu, choisissez Public et copiez l'URL générée dans le contenu du site.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Définir les balises du fichier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Documents d'entreprise uniquement : afficher le nombre de fichiers et la taille totale dans le temps</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.071" xml:space="preserve"><value>Retirer de l'accès rapide</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.072" xml:space="preserve"><value>Documents d'entreprise</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Capacité des documents d'entreprise</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Enregistrer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Enregistrer les paramètres</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Désactiver</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Types de fichiers autorisés au téléversement</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Choisissez d'abord un périmètre :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Tous</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Choisissez ensuite un emplacement :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.081" xml:space="preserve"><value>Catégorie</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.082" xml:space="preserve"><value>Nom de la catégorie</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Description de la catégorie</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Administrateurs de la catégorie</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Paramètres des colonnes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Supprimé le</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Actualiser</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.088" xml:space="preserve"><value>Taille maximale de téléversement d'un fichier (Mo)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Double-cliquez pour prévisualiser</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Retirer des favoris</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.091" xml:space="preserve"><value>Ajoutez les fichiers et dossiers fréquemment utilisés à l'accès rapide. Choisissez Plus dans la liste pour ajouter ou retirer des éléments.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.092" xml:space="preserve"><value>Facultatif</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.093" xml:space="preserve"><value>Note facultative</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.094" xml:space="preserve"><value>Les balises facultatives proviennent de la Gestion des balises ; les balises sélectionnées sont écrites dans les métadonnées du fichier actuel.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.095" xml:space="preserve"><value>Activer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.096" xml:space="preserve"><value>Corbeille</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.097" xml:space="preserve"><value>Sélectionnez ou créez un dossier dans l'arborescence ; après actualisation, le périmètre et le dossier actuels restent dans la barre d'adresse.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.098" xml:space="preserve"><value>Prévisualisation en ligne</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.099" xml:space="preserve"><value>Copier l'URL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.100" xml:space="preserve"><value>Importer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.101" xml:space="preserve"><value>Exporter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.102" xml:space="preserve"><value>Afficher l'espace actuellement utilisé par la bibliothèque de documents d'entreprise</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.103" xml:space="preserve"><value>Utilisez Documents d'entreprise à gauche pour gérer les ressources de la base de connaissances ; les ressources statiques du site peuvent être changées avec le paramètre scope de la barre d'adresse.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.104" xml:space="preserve"><value>Espace utilisé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.105" xml:space="preserve"><value>Date de début</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.106" xml:space="preserve"><value>Artefacts de réglage fin</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.107" xml:space="preserve"><value>Accès rapide</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.108" xml:space="preserve"><value>Rétablir les valeurs par défaut</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.109" xml:space="preserve"><value>Compris</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.110" xml:space="preserve"><value>Catégorie</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.111" xml:space="preserve"><value>Répartition de la capacité par type de fichier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.112" xml:space="preserve"><value>Répartition du nombre de fichiers par type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.113" xml:space="preserve"><value>Trier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.114" xml:space="preserve"><value>Rechercher</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.115" xml:space="preserve"><value>Rechercher des fichiers/dossiers</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.116" xml:space="preserve"><value>Rechercher des noms de balises</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.117" xml:space="preserve"><value>Rechercher des répertoires</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.118" xml:space="preserve"><value>Utilisez une extension par ligne ou séparez-les par des virgules. Le point initial est recommandé, par exemple .docx. Laissez vide pour ne pas limiter la liste autorisée ; le filtre ci-dessous s'applique tout de même.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.119" xml:space="preserve"><value>Favori</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.120" xml:space="preserve"><value>Tableau de données</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.121" xml:space="preserve"><value>Statistiques du nombre de fichiers</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.122" xml:space="preserve"><value>Nom du fichier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.123" xml:space="preserve"><value>Statistiques de taille des fichiers</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.124" xml:space="preserve"><value>Capacité de la bibliothèque de fichiers</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>Vider les fichiers les supprimera définitivement et cette action est irréversible. Continuer ?</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.126" xml:space="preserve"><value>Gestion des ressources de fichiers</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.127" xml:space="preserve"><value>Guide de gestion des ressources de fichiers</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.128" xml:space="preserve"><value>Ajouter une catégorie</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.129" xml:space="preserve"><value>Ajouter une balise</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.130" xml:space="preserve"><value>Aucune balise disponible. Ajoutez d'abord une balise dans la Gestion des balises à gauche.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.131" xml:space="preserve"><value>Aucun contenu prévisualisable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.132" xml:space="preserve"><value>Aucune donnée</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.133" xml:space="preserve"><value>Aucun document</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.134" xml:space="preserve"><value>Plus</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.135" xml:space="preserve"><value>Mis à jour le</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.136" xml:space="preserve"><value>Mis à jour par</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.137" xml:space="preserve"><value>Dernière mise à jour par</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.138" xml:space="preserve"><value>Dernière mise à jour le</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.139" xml:space="preserve"><value>Dernier accès</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.140" xml:space="preserve"><value>Nom de la balise</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.141" xml:space="preserve"><value>Description de la balise</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.142" xml:space="preserve"><value>Nombre de balises</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.143" xml:space="preserve"><value>Gestion des balises</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.144" xml:space="preserve"><value>Une extension par ligne, par exemple : .docx
+.xlsx
+.pdf</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.145" xml:space="preserve"><value>Une extension par ligne, par exemple : .exe
+.bat
+.js</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.146" xml:space="preserve"><value>Vider la liste</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.147" xml:space="preserve"><value>Utilisez l'accès rapide avec souplesse pour travailler plus vite.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.148" xml:space="preserve"><value>État</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.149" xml:space="preserve"><value>Ressources de la base de connaissances :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.150" xml:space="preserve"><value>Continuer ?</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.151" xml:space="preserve"><value>Nom du tenant/de l'organisation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.152" xml:space="preserve"><value>Ressources du site :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.153" xml:space="preserve"><value>Administrateur</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.154" xml:space="preserve"><value>Date de fin</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.155" xml:space="preserve"><value>Modifier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.156" xml:space="preserve"><value>Modifier la note</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.157" xml:space="preserve"><value>Paramètres</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.158" xml:space="preserve"><value>Heure d'accès</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.159" xml:space="preserve"><value>Sélectionnez une balise ci-dessus</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.160" xml:space="preserve"><value>Faites glisser les fichiers/dossiers ici pour les téléverser</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.161" xml:space="preserve"><value>Saisissez un nom de catégorie, jusqu'à 50 caractères</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.162" xml:space="preserve"><value>Saisissez une note de fichier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.163" xml:space="preserve"><value>Saisissez un nom de balise, jusqu'à 30 caractères</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.164" xml:space="preserve"><value>Saisissez une description de balise</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.165" xml:space="preserve"><value>Sélectionner des balises (depuis la Gestion des balises)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.166" xml:space="preserve"><value>Sélectionner des administrateurs</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.167" xml:space="preserve"><value>7 derniers jours</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.168" xml:space="preserve"><value>Dernier mois</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.169" xml:space="preserve"><value>Dernière année</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.170" xml:space="preserve"><value>Retour au parent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.171" xml:space="preserve"><value>Sélectionner une catégorie</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.172" xml:space="preserve"><value>Configurez les types autorisés, les limites de taille et les extensions bloquées pour les téléversements. Les paramètres enregistrés s'appliquent aux téléversements suivants et sont mémorisés par ce navigateur.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.173" xml:space="preserve"><value>Réinitialiser</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.174" xml:space="preserve"><value>Types de fichiers à filtrer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.175" xml:space="preserve"><value>Extensions bloquées ; les fichiers correspondants ne peuvent pas être téléversés et cette règle est prioritaire sur la liste autorisée.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.176" xml:space="preserve"><value>La valeur par défaut est de 50 Mo ; les fichiers plus volumineux sont bloqués avant le téléversement.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.177" xml:space="preserve"><value>Retirer des favoris</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.178" xml:space="preserve"><value>Heure limite des statistiques</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.179" xml:space="preserve"><value>Documents d'entreprise utilisés :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.180" xml:space="preserve"><value>Une extension par ligne, par exemple : .docx .xlsx .pdf</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.181" xml:space="preserve"><value>Une extension par ligne, par exemple : .exe .bat .js</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>Démarrer le téléversement</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.183" xml:space="preserve"><value>Diapositives</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.184" xml:space="preserve"><value>Modifier le dossier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.185" xml:space="preserve"><value>Nouveau dossier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>Modifier la catégorie</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.187" xml:space="preserve"><value>Ajouter une catégorie</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.188" xml:space="preserve"><value>Modifier la balise</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.189" xml:space="preserve"><value>Ajouter une balise</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.190" xml:space="preserve"><value>Prévisualisation du fichier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Script.RequestRejected" xml:space="preserve"><value>Le serveur a rejeté la requête. Actualisez la page et réessayez.</value></data>
+  <data name="Script.RequestFailed" xml:space="preserve"><value>La requête a échoué.</value></data>
+  <data name="Script.CsrfMissing" xml:space="preserve"><value>Le jeton antifalsification de la page est manquant. Actualisez la page et réessayez.</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>Réduire</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>Développer</value></data>
+  <data name="Frontend.196" xml:space="preserve"><value>Prend en charge {0}.</value></data>
+  <data name="Frontend.197" xml:space="preserve"><value>Prend en charge JSONL, JSON, ZIP et les autres artefacts privés générés par l'entraînement.</value></data>
+  <data name="Frontend.198" xml:space="preserve"><value>Prend en charge JPG, PNG, GIF, WebP, AVIF, ICO, les fichiers audio/vidéo et les polices.</value></data>
+  <data name="Frontend.199" xml:space="preserve"><value>Prend en charge le texte, JSON/XML/YAML, le code, DOCX, XLSX et PPTX.</value></data>
+  <data name="Frontend.200" xml:space="preserve"><value>Les anciens formats Office (.doc/.xls/.ppt) ne peuvent pas être prévisualisés en ligne. Téléchargez le fichier pour le consulter.</value></data>
+  <data name="Frontend.201" xml:space="preserve"><value>Ce type de fichier ne peut pas être prévisualisé en ligne. Essayez de le télécharger.</value></data>
+  <data name="Frontend.202" xml:space="preserve"><value>Le document est vide.</value></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Le fichier Excel ne contient aucune feuille prévisualisable.</value></data>
+  <data name="Frontend.204" xml:space="preserve"><value>Ce type de fichier ne prend pas en charge la prévisualisation en ligne.</value></data>
+  <data name="Frontend.205" xml:space="preserve"><value>Échec de la prévisualisation : {0}</value></data>
+  <data name="Frontend.193" xml:space="preserve"><value>Les artefacts de réglage fin sont toujours privés. Ils sont disponibles uniquement pour les tâches d'entraînement, les administrateurs et les endpoints de téléchargement autorisés ; aucune URL publique n'est générée.</value></data>
+  <data name="Frontend.194" xml:space="preserve"><value>Les ressources statiques du site sont privées par défaut. Après publication, une URL /assets/ avec empreinte SHA-256 est générée. HTML, SVG, JavaScript et archives sont refusés pour prévenir l'injection de scripts de même origine.</value></data>
+  <data name="Frontend.195" xml:space="preserve"><value>Les fichiers source de la base de connaissances doivent être du texte extractible en toute sécurité ou des fichiers Office Open XML. Ils ne génèrent pas d'URL publiques et ne peuvent pas être publiés ici.</value></data>
+  <data name="Frontend.206" xml:space="preserve"><value>Documents</value></data>
+  <data name="Frontend.207" xml:space="preserve"><value>Images</value></data>
+  <data name="Frontend.208" xml:space="preserve"><value>Vidéos</value></data>
+  <data name="Frontend.209" xml:space="preserve"><value>Audio</value></data>
+  <data name="Frontend.210" xml:space="preserve"><value>Autres</value></data>
+  <data name="Frontend.211" xml:space="preserve"><value>Sélectionnez les fichiers à téléverser.</value></data>
+  <data name="Frontend.212" xml:space="preserve"><value>Le téléversement du dossier est terminé ; la structure de répertoires d'origine a été conservée.</value></data>
+  <data name="Frontend.213" xml:space="preserve"><value>Téléversement réussi ; les ressources statiques du site doivent encore être publiées explicitement avant de pouvoir être utilisées par le site.</value></data>
+  <data name="Frontend.214" xml:space="preserve"><value>Échec du téléversement : {0}</value></data>
+  <data name="Frontend.215" xml:space="preserve"><value>Le dossier cible n'est pas disponible. Retour au dossier racine.</value></data>
+  <data name="Frontend.216" xml:space="preserve"><value>Le fichier « {0} » de type {1} a été filtré et ne peut pas être envoyé.</value></data>
+  <data name="Frontend.217" xml:space="preserve"><value>Le type du fichier « {0} » ne figure pas dans la liste autorisée.</value></data>
+  <data name="Frontend.218" xml:space="preserve"><value>Le fichier « {0} » dépasse {1} Mo et ne peut pas être envoyé.</value></data>
+  <data name="Frontend.219" xml:space="preserve"><value>Dossier « {0} » sélectionné avec {1} fichiers ; l’arborescence d’origine sera restaurée dans l’arbre de fichiers après l’envoi.</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Sans catégorie</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>La fonctionnalité « {0} » sera bientôt disponible</value></data>
+  <data name="Frontend.222" xml:space="preserve"><value>Sous-catégorie</value></data>
+  <data name="Frontend.223" xml:space="preserve"><value>Catégorie</value></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Étiquette</value></data>
+  <data name="Frontend.225" xml:space="preserve"><value>Désactivé</value></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Utilisateur actuel</value></data>
+  <data name="Frontend.227" xml:space="preserve"><value>Étiquettes du fichier mises à jour</value></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Étiquettes du fichier effacées</value></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Corbeille vidée avec succès</value></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Supprimés : {0} ; échecs : {1} : {2}</value></data>
+  <data name="Frontend.231" xml:space="preserve"><value>Certains fichiers n’ont pas pu être supprimés ; {0} restent dans la corbeille</value></data>
+  <data name="Frontend.232" xml:space="preserve"><value>Impossible de vider complètement la corbeille</value></data>
+  <data name="Frontend.233" xml:space="preserve"><value>Impossible de vider la corbeille : {0}</value></data>
+  <data name="Frontend.234" xml:space="preserve"><value>Envoyer des fichiers vers [/{0}] -- reprise de l’envoi prise en charge</value></data>
+  <data name="Frontend.235" xml:space="preserve"><value>Fichier sans nom</value></data>
+  <data name="Frontend.236" xml:space="preserve"><value>Le fichier sera déplacé vers la corbeille. Continuer ?</value></data>
+  <data name="Frontend.237" xml:space="preserve"><value>Supprimer : {0}</value></data>
+  <data name="Frontend.238" xml:space="preserve"><value>Déplacé vers la corbeille</value></data>
+  <data name="Frontend.239" xml:space="preserve"><value>Échec de la suppression : {0}</value></data>
+  <data name="Frontend.240" xml:space="preserve"><value>Ressource publiée</value></data>
+  <data name="Frontend.241" xml:space="preserve"><value>Ressource rendue privée</value></data>
+  <data name="Frontend.242" xml:space="preserve"><value>Impossible de mettre à jour l’état de publication : {0}</value></data>
+  <data name="Frontend.243" xml:space="preserve"><value>URL publique copiée</value></data>
+  <data name="Frontend.244" xml:space="preserve"><value>Copiez l’URL publique suivante</value></data>
+  <data name="Frontend.245" xml:space="preserve"><value>URL publique</value></data>
+  <data name="Frontend.246" xml:space="preserve"><value>Ce navigateur ne prend pas en charge la sélection de dossiers. Utilisez la dernière version de Chrome, Edge ou Safari.</value></data>
+  <data name="Frontend.247" xml:space="preserve"><value>Le navigateur n’a pas fourni un chemin relatif complet. Sélectionnez à nouveau un dossier.</value></data>
+  <data name="Frontend.248" xml:space="preserve"><value>Certains fichiers sont illisibles. Sélectionnez-les à nouveau.</value></data>
+  <data name="Frontend.249" xml:space="preserve"><value>Saisissez un nom de dossier</value></data>
+  <data name="Frontend.250" xml:space="preserve"><value>Dossier mis à jour</value></data>
+  <data name="Frontend.251" xml:space="preserve"><value>Dossier créé</value></data>
+  <data name="Frontend.252" xml:space="preserve"><value>Impossible d’enregistrer le dossier : {0}</value></data>
+  <data name="Frontend.253" xml:space="preserve"><value>Seuls les dossiers vides peuvent être supprimés. Supprimer « {0} » ?</value></data>
+  <data name="Frontend.254" xml:space="preserve"><value>Confirmer la suppression</value></data>
+  <data name="Frontend.255" xml:space="preserve"><value>Dossier supprimé</value></data>
+  <data name="Frontend.256" xml:space="preserve"><value>Impossible de supprimer le dossier : {0}</value></data>
+  <data name="Frontend.257" xml:space="preserve"><value>Supprimer l’étiquette « {0} » ?</value></data>
+  <data name="Frontend.258" xml:space="preserve"><value>Supprimer la catégorie « {0} » et ses étiquettes enfants ?</value></data>
+  <data name="Frontend.259" xml:space="preserve"><value>Information</value></data>
+  <data name="Frontend.260" xml:space="preserve"><value>Une catégorie ne peut pas se sélectionner elle-même</value></data>
+  <data name="Frontend.261" xml:space="preserve"><value>La catégorie n’existe pas</value></data>
+  <data name="Frontend.262" xml:space="preserve"><value>La catégorie sélectionnée n’existe pas. Sélectionnez-en une autre.</value></data>
+  <data name="Frontend.263" xml:space="preserve"><value>L’étiquette n’existe pas</value></data>
+  <data name="Frontend.269" xml:space="preserve"><value>Créez une catégorie avant de créer une étiquette</value></data>
+  <data name="Frontend.270" xml:space="preserve"><value>Paramètres d’importation enregistrés</value></data>
+  <data name="Frontend.271" xml:space="preserve"><value>Échec de l’enregistrement. Vérifiez le stockage local du navigateur</value></data>
+  <data name="Frontend.272" xml:space="preserve"><value>Paramètres d’importation par défaut restaurés</value></data>
+  <data name="Frontend.273" xml:space="preserve"><value>Échec de la restauration des valeurs par défaut</value></data>
+  <data name="Frontend.274" xml:space="preserve"><value>Le nom de catégorie existe déjà</value></data>
+  <data name="Frontend.275" xml:space="preserve"><value>Catégorie mise à jour</value></data>
+  <data name="Frontend.276" xml:space="preserve"><value>Catégorie créée</value></data>
+  <data name="Frontend.277" xml:space="preserve"><value>Une étiquette portant le même nom existe déjà dans cette catégorie</value></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Étiquette mise à jour</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>Étiquette créée</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>Échec de la requête</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>Le nom de catégorie doit comporter au plus 50 caractères</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>Le nom d'étiquette doit comporter au plus 30 caractères</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>Sélectionnez d'abord des données</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>Nombre de fichiers</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>Taille totale</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>Quantité</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>Taille</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>éléments</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>Documents d'entreprise</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>{0} fichiers terminés</value></data>
 </root>

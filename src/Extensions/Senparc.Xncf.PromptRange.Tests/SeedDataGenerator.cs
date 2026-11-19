@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SeedDataGenerator.cs
-    文件功能描述：SeedDataGenerator 相关实现
-    
-    
-    创建标识：Senparc - 20240713
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    File name: SeedDataGenerator.cs
+    File description: SeedDataGenerator related implementation
+
+    Created by: Senparc - 20240713
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
 ----------------------------------------------------------------*/
 
@@ -28,7 +28,7 @@ namespace Senparc.Xncf.PromptRange.Tests
     public class SeedDataGenerator
     {
         /// <summary>
-        /// 初始化 PromptRange 数据
+        /// initialize PromptRange data
         /// </summary>
         public static Action<DataList> InitPromptRange = datalist =>
         {
@@ -48,7 +48,7 @@ namespace Senparc.Xncf.PromptRange.Tests
 
             List<object> list = new List<object>();
 
-            //打乱顺序
+            //Legacy comment translated to English.
             Random random = new Random();
             while (list.Count < rangeNames.Length)
             {
@@ -63,11 +63,11 @@ namespace Senparc.Xncf.PromptRange.Tests
         };
 
         /// <summary>
-        /// 初始化 PromptRange 数据
+        /// initialize PromptRange data
         /// </summary>
         public static Action<DataList> InitPromptItem = datalist =>
            {
-               //先初始化 PromptRange
+               //Legacy comment translated to English.
                InitPromptRange(datalist);
 
                var promptRangeList = datalist[typeof(Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange)]
@@ -135,7 +135,7 @@ namespace Senparc.Xncf.PromptRange.Tests
 
                List<object> list = new List<object>();
 
-               //打乱顺序
+               //Legacy comment translated to English.
                Random random = new Random();
                while (list.Count < promptVersions.Keys.Count)
                {

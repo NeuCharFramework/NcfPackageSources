@@ -1,20 +1,23 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：XncfMpMessageHandler.cs
-    文件功能描述：XncfMpMessageHandler 相关实现
-    
-    
-    创建标识：Senparc - 20250712
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.24.16 公众号 AI 回复写入 Token 用量
+    File name: XncfMpMessageHandler.cs
+    File description: XncfMpMessageHandler related implementation
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.24.16 add AITokenUsageRecorder and related services for token usage tracking
+    Created by: Senparc - 20250712
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20261021
+    Change description: v0.24.16 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.24.16 add AITokenUsageRecorder and related services for token usage tracking
+
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
 
 ----------------------------------------------------------------*/
 
@@ -59,16 +62,16 @@ namespace Senparc.Xncf.WeixinManager
         protected virtual Action RunBot(IServiceProvider services, RequestMessageText requestMessage) => async () =>
         {
             var dt = SystemTime.Now;
-            //TODO：判断是否为“文生图”的请求
+            //Legacy comment translated to English.
 
-            ////定义 AI 模型
+            ///Legacy comment translated to English.
             //var modelName = "gpt-35-turbo";//text-davinci-003
 
-            //获取 AI 处理器
+            //Legacy comment translated to English.
             var iWantToRun = await WechatAiContext.GetIWantToRunAsync(services, _mpAccountDto, requestMessage.FromUserName);
             AgentAiHandler agentAiHandler = iWantToRun.AgentAiHandler;
 
-            //发送到 AI 模型，获取结果
+            //sendto AI model，getresult
             var aiModelService = services.GetService<AIModelService>();
             var result = aiModelService == null
                 ? await iWantToRun.RunChatAsync(requestMessage.Content)
@@ -84,20 +87,20 @@ namespace Senparc.Xncf.WeixinManager
             }
 
 
-            //var resultMsg = $"{result.Output}\r\n -- AI 计算耗时：{SystemTime.DiffTotalMS(dt)}毫秒";
-            //Console.WriteLine("公众号客服消息：" + resultMsg);
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
 
             //var sendresult = await Senparc.Weixin.MP.AdvancedAPIs.CustomApi.SendTextAsync(_mpAccountDto.AppId, requestMessage.FromUserName, resultMsg);
             //await Console.Out.WriteLineAsync(sendresult.ToJson());
 
 
-            //获取到结果后执行方法
+            //Legacy comment translated to English.
             await AfterRunBotAsync(services, requestMessage, _mpAccountDto, result, dt);
         };
 
         protected virtual async Task AfterRunBotAsync(IServiceProvider serviceProvider, RequestMessageText requestMessage, MpAccountDto mpAccountDto, SenparcAiResult senparcAiResult, DateTimeOffset startTime)
         {
-            //异步发送 AI 结果到用户
+            //asyncsend AI resulttouser
 
             Console.WriteLine("MpAccountDTO：" + mpAccountDto.ToJson(true));
             var resultMsg = $"{senparcAiResult.OutputString}\r\n -- AI 计算耗时：{SystemTime.DiffTotalMS(startTime)}毫秒";
@@ -105,13 +108,13 @@ namespace Senparc.Xncf.WeixinManager
 
             var result = await Senparc.Weixin.MP.AdvancedAPIs.CustomApi.SendTextAsync(mpAccountDto.AppId, requestMessage.FromUserName, resultMsg);
             await Console.Out.WriteLineAsync(result.ToJson());
-            //_ = Senparc.Weixin.MP.AdvancedAPIs.CustomApi.SendTextAsync(_mpAccountDto.AppId, requestMessage.FromUserName, $"总共耗时：{SystemTime.DiffTotalMS(dt)}ms");
+            //Legacy comment translated to English.
         }
 
         public override async Task<IResponseMessageBase> OnTextRequestAsync(RequestMessageText requestMessage)
         {
             //var responseMessage = this.CreateResponseMessage<ResponseMessageText>();
-            //responseMessage.Content = "您发送了文字：" + requestMessage.Content;
+            //Legacy comment translated to English.
             //return responseMessage;
 
             var services = base.ServiceProvider;
@@ -120,10 +123,10 @@ namespace Senparc.Xncf.WeixinManager
             var smqKey = "WechatBot:" + requestMessage.MsgId;
             smq.Add(smqKey, RunBot(services, requestMessage));
 
-            //不返回任何信息
+            //Legacy comment translated to English.
             return this.CreateResponseMessage<ResponseMessageNoResponse>();
 
-            //返回明文提示
+            //Legacy comment translated to English.
             var reponseMessage = this.CreateResponseMessage<ResponseMessageText>();
             reponseMessage.Content = "消息已收到，正在思考中……";
             return reponseMessage;

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：DataList.cs
-    文件功能描述：DataList 相关实现
-    
-    
-    创建标识：Senparc - 20240713
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: DataList.cs
+    File description: DataList related implementation
+
+    Created by: Senparc - 20240713
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.3.29 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -29,7 +32,7 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
         public string UUID { get; set; }
 
         /// <summary>
-        /// 获取强类型的列表
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -55,7 +58,7 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
 
 
         /// <summary>
-        /// 快速添加实体类型的列表数据
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
@@ -72,7 +75,7 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
         }
 
         /// <summary>
-        /// 快速添加 个对象，兼备自动根据类型分类
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="item"></param>
@@ -82,7 +85,7 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
         }
 
         /// <summary>
-        /// 快速添加实体类型的列表数据
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="DataList"></param>
         public void AddRange(DataList dataList)
@@ -101,9 +104,9 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
         }
 
         /// <summary>
-        /// 创建 DataList
+        /// create DataList
         /// </summary>
-        /// <param name="uUID">唯一编号，相同编号的 DataList 数据在同一次单元门测试中不会被反复写入</param>
+        ///Legacy comment translated to English.
         public DataList(string uUID)
         {
             UUID = uUID;

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：DmDatabaseConfiguration.cs
-    文件功能描述：DmDatabaseConfiguration 相关实现
-    
-    
-    创建标识：Senparc - 20240703
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: DmDatabaseConfiguration.cs
+    File description: DmDatabaseConfiguration related implementation
+
+    Created by: Senparc - 20240703
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.7.14 Updated database integration support and related localization metadata
 
 ----------------------------------------------------------------*/
 

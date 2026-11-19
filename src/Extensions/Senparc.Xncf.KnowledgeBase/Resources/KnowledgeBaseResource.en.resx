@@ -79,268 +79,268 @@
     <value>Cube the result above</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>+ Add property||+ Add property</value>
+    <value>+ Add property</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>+ Add tag||+ Add tag</value>
+    <value>+ Add tag</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Upload file||Upload file</value>
+    <value>Upload file</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Upload time||Upload time</value>
+    <value>Upload time</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>recalled passages||recalled passages</value>
+    <value>recalled passages</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Learn more about retrieval methods.||Learn more about retrieval methods.</value>
+    <value>Learn more about retrieval methods.</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Save||Save</value>
+    <value>Save</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Inverted index||Inverted index</value>
+    <value>Inverted index</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>An inverted index is a structure for efficient retrieval. It is organized by term, and each term points to the documents or web pages that contain it.||An inverted index is a structure for efficient retrieval. It is organized by term, and each term points to the documents or web pages that contain it.</value>
+    <value>An inverted index is a structure for efficient retrieval. It is organized by term, and each term points to the documents or web pages that contain it.</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>Keywords||Keywords</value>
+    <value>Keywords</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>Close||Close</value>
+    <value>Close</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>Content||Content</value>
+    <value>Content</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>Content type||Content type</value>
+    <value>Content type</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>Delete||Delete</value>
+    <value>Delete</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>Cancel||Cancel</value>
+    <value>Cancel</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Recall test||Recall test</value>
+    <value>Recall test</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Recall rate||Recall rate</value>
+    <value>Recall rate</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>Name||Name</value>
+    <value>Name</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>Vectorize||Vectorize</value>
+    <value>Vectorize</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Vectorization result||Vectorization result</value>
+    <value>Vectorization result</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Vectorization progress||Vectorization progress</value>
+    <value>Vectorization progress</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>characters||characters</value>
+    <value>characters</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>Property name||Property name</value>
+    <value>Property name</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Property management||Property management</value>
+    <value>Property management</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Selected:||Selected:</value>
+    <value>Selected:</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>{0} rows selected||{0} rows selected</value>
+    <value>{0} rows selected</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>Open||Open</value>
+    <value>Open</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>Extension Modules||Extension Modules</value>
+    <value>Extension Modules</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>Delete selected||Delete selected</value>
+    <value>Delete selected</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>Search||Search</value>
+    <value>Search</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Actions||Actions</value>
+    <value>Actions</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Data source||Data source</value>
+    <value>Data source</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>File list||File list</value>
+    <value>File list</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>File name||File name</value>
+    <value>File name</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>File name||File name</value>
+    <value>File name</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>File size||File size</value>
+    <value>File size</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Add||Add</value>
+    <value>Add</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>New file||New file</value>
+    <value>New file</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Time ↓||Time ↓</value>
+    <value>Time ↓</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>No recall results yet. Select a knowledge base, enter source text, and click "Test".||No recall results yet. Select a knowledge base, enter source text, and click "Test".</value>
+    <value>No recall results yet. Select a knowledge base, enter source text, and click "Test".</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Search||Search</value>
+    <value>Search</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Query content||Query content</value>
+    <value>Query content</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Tag name||Tag name</value>
+    <value>Tag name</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Tag management||Tag management</value>
+    <value>Tag management</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>Test knowledge recall with the given query text.||Test knowledge recall with the given query text.</value>
+    <value>Test knowledge recall with the given query text.</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Retrieval method||Retrieval method</value>
+    <value>Retrieval method</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Retrieval settings||Retrieval settings</value>
+    <value>Retrieval settings</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>Passage details||Passage details</value>
+    <value>Passage details</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Test||Test</value>
+    <value>Test</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Added time||Added time</value>
+    <value>Added time</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>Source text||Source text</value>
+    <value>Source text</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>Knowledge base||Knowledge base</value>
+    <value>Knowledge base</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>Knowledge base management||Knowledge base management</value>
+    <value>Knowledge base management</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Knowledge base list||Knowledge base list</value>
+    <value>Knowledge base list</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>Knowledge base management||Knowledge base management</value>
+    <value>Knowledge base management</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Confirm||Confirm</value>
+    <value>Confirm</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Confirm||Confirm</value>
+    <value>Confirm</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Delete this knowledge base?||Delete this knowledge base?</value>
+    <value>Delete this knowledge base?</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Filter columns||Filter columns</value>
+    <value>Filter columns</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Edit||Edit</value>
+    <value>Edit</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>records||records</value>
+    <value>records</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Please fill in||Please fill in</value>
+    <value>Please fill in</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>Enter a keyword||Enter a keyword</value>
+    <value>Enter a keyword</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>Enter text||Enter text</value>
+    <value>Enter text</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>Enter a name||Enter a name</value>
+    <value>Enter a name</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>Enter query text||Enter query text</value>
+    <value>Enter query text</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>Select content type||Select content type</value>
+    <value>Select content type</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>Enter keywords to search and select a knowledge base||Enter keywords to search and select a knowledge base</value>
+    <value>Enter keywords to search and select a knowledge base</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>Select an Embedding model||Select an Embedding model</value>
+    <value>Select an Embedding model</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>Select vector database||Select vector database</value>
+    <value>Select vector database</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>Select chat model||Select chat model</value>
+    <value>Select chat model</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>Select file||Select file</value>
+    <value>Select file</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>Selected files are uploaded to file management. Check them in the list below to link them to the current knowledge base.||Selected files are uploaded to file management. Check them in the list below to link them to the current knowledge base.</value>
+    <value>Selected files are uploaded to file management. Check them in the list below to link them to the current knowledge base.</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>Configure||Configure</value>
+    <value>Configure</value>
   </data>
   <data name="Frontend.075" xml:space="preserve">
-    <value>Reset||Reset</value>
+    <value>Reset</value>
   </data>
   <data name="Frontend.076" xml:space="preserve">
-    <value>Failed to load the list||Failed to load the list</value>
+    <value>Failed to load the list</value>
   </data>
   <data name="Frontend.077" xml:space="preserve">
-    <value>Modules added successfully||Modules added successfully</value>
+    <value>Modules added successfully</value>
   </data>
   <data name="Frontend.078" xml:space="preserve">
-    <value>Add failed||Add failed</value>
+    <value>Add failed</value>
   </data>
   <data name="Frontend.079" xml:space="preserve">
-    <value>Updated successfully||Updated successfully</value>
+    <value>Updated successfully</value>
   </data>
   <data name="Frontend.080" xml:space="preserve">
-    <value>Update failed||Update failed</value>
+    <value>Update failed</value>
   </data>
   <data name="Frontend.081" xml:space="preserve">
-    <value>Deleted successfully||Deleted successfully</value>
+    <value>Deleted successfully</value>
   </data>
   <data name="Frontend.082" xml:space="preserve">
-    <value>Delete failed||Delete failed</value>
+    <value>Delete failed</value>
   </data>
   <data name="Frontend.083" xml:space="preserve">
-    <value>Uploaded successfully||Uploaded successfully</value>
+    <value>Uploaded successfully</value>
   </data>
   <data name="Frontend.084" xml:space="preserve">
-    <value>Upload failed||Upload failed</value>
+    <value>Upload failed</value>
   </data>
   <data name="Frontend.085" xml:space="preserve">
-    <value>Vectorization failed||Vectorization failed</value>
+    <value>Vectorization failed</value>
   </data>
   <data name="Frontend.086" xml:space="preserve">
-    <value>Failed to load||Failed to load</value>
+    <value>Failed to load</value>
   </data>
   <data name="Frontend.087" xml:space="preserve">
-    <value>No Data||No Data</value>
+    <value>No Data</value>
   </data>
   <data name="Frontend.088" xml:space="preserve">
-    <value>Notice||Notice</value>
+    <value>Notice</value>
   </data>
   <data name="Page.EditKnowledgeBase" xml:space="preserve">
     <value>Edit Knowledge Base</value>
@@ -349,262 +349,262 @@
     <value>Create Knowledge Base</value>
   </data>
   <data name="Frontend.089" xml:space="preserve">
-    <value>Kind||Kind</value>
+    <value>Kind</value>
   </data>
   <data name="Frontend.090" xml:space="preserve">
-    <value>Source||Source</value>
+    <value>Source</value>
   </data>
   <data name="Frontend.091" xml:space="preserve">
-    <value>Important||Important</value>
+    <value>Important</value>
   </data>
   <data name="Frontend.092" xml:space="preserve">
-    <value>Pending Review||Pending Review</value>
+    <value>Pending Review</value>
   </data>
   <data name="Frontend.093" xml:space="preserve">
-    <value>Demo||Demo</value>
+    <value>Demo</value>
   </data>
   <data name="Frontend.094" xml:space="preserve">
-    <value>Segment-{0}||Segment-{0}</value>
+    <value>Segment-{0}</value>
   </data>
   <data name="Frontend.095" xml:space="preserve">
-    <value>Knowledge base-{0}||Knowledge base-{0}</value>
+    <value>Knowledge base-{0}</value>
   </data>
   <data name="Frontend.096" xml:space="preserve">
-    <value>Retrieval settings saved||Retrieval settings saved</value>
+    <value>Retrieval settings saved</value>
   </data>
   <data name="Frontend.097" xml:space="preserve">
-    <value>Enter an attribute name||Enter an attribute name</value>
+    <value>Enter an attribute name</value>
   </data>
   <data name="Frontend.098" xml:space="preserve">
-    <value>Saved successfully||Saved successfully</value>
+    <value>Saved successfully</value>
   </data>
   <data name="Frontend.099" xml:space="preserve">
-    <value>Delete this property?||Delete this property?</value>
+    <value>Delete this property?</value>
   </data>
   <data name="Frontend.100" xml:space="preserve">
-    <value>Deleted||Deleted</value>
+    <value>Deleted</value>
   </data>
   <data name="Frontend.101" xml:space="preserve">
-    <value>Enter a tag name||Enter a tag name</value>
+    <value>Enter a tag name</value>
   </data>
   <data name="Frontend.102" xml:space="preserve">
-    <value>Delete this tag?||Delete this tag?</value>
+    <value>Delete this tag?</value>
   </data>
   <data name="Frontend.103" xml:space="preserve">
-    <value>Select a knowledge base first||Select a knowledge base first</value>
+    <value>Select a knowledge base first</value>
   </data>
   <data name="Frontend.104" xml:space="preserve">
-    <value>[Retrieval example 1]||[Retrieval example 1]</value>
+    <value>[Retrieval example 1]</value>
   </data>
   <data name="Frontend.105" xml:space="preserve">
-    <value>Offline evaluation retrieval completed||Offline evaluation retrieval completed</value>
+    <value>Offline evaluation retrieval completed</value>
   </data>
   <data name="Frontend.106" xml:space="preserve">
-    <value>Online evaluation retrieval completed||Online evaluation retrieval completed</value>
+    <value>Online evaluation retrieval completed</value>
   </data>
   <data name="Frontend.107" xml:space="preserve">
-    <value>Error||Error</value>
+    <value>Error</value>
   </data>
   <data name="Frontend.108" xml:space="preserve">
-    <value>Vectorization failed. Please check the configuration.||Vectorization failed. Please check the configuration.</value>
+    <value>Vectorization failed. Please check the configuration.</value>
   </data>
   <data name="Frontend.109" xml:space="preserve">
-    <value>Home||Home</value>
+    <value>Home</value>
   </data>
   <data name="Frontend.110" xml:space="preserve">
-    <value>Knowledge base list page||Knowledge base list page</value>
+    <value>Knowledge base list page</value>
   </data>
   <data name="Frontend.111" xml:space="preserve">
-    <value>Embedding model Id||Embedding model Id</value>
+    <value>Embedding model Id</value>
   </data>
   <data name="Frontend.112" xml:space="preserve">
-    <value>Vector database Id||Vector database Id</value>
+    <value>Vector database Id</value>
   </data>
   <data name="Frontend.113" xml:space="preserve">
-    <value>Chat model Id||Chat model Id</value>
+    <value>Chat model Id</value>
   </data>
   <data name="Frontend.114" xml:space="preserve">
-    <value>Enter the Embedding model Id||Enter the Embedding model Id</value>
+    <value>Enter the Embedding model Id</value>
   </data>
   <data name="Frontend.115" xml:space="preserve">
-    <value>Enter vector database Id||Enter vector database Id</value>
+    <value>Enter vector database Id</value>
   </data>
   <data name="Frontend.116" xml:space="preserve">
-    <value>Enter chat model Id||Enter chat model Id</value>
+    <value>Enter chat model Id</value>
   </data>
   <data name="Frontend.117" xml:space="preserve">
-    <value>Edit knowledge base association||Edit knowledge base association</value>
+    <value>Edit knowledge base association</value>
   </data>
   <data name="Frontend.118" xml:space="preserve">
-    <value>Add knowledge base association||Add knowledge base association</value>
+    <value>Add knowledge base association</value>
   </data>
   <data name="Frontend.119" xml:space="preserve">
-    <value>{0} rows selected||{0} rows selected</value>
+    <value>{0} rows selected</value>
   </data>
   <data name="Frontend.120" xml:space="preserve">
-    <value>Open||Open</value>
+    <value>Open</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
-    <value>Number of retrieved segments||Number of retrieved segments</value>
+    <value>Number of retrieved segments</value>
   </data>
   <data name="Frontend.122" xml:space="preserve">
-    <value>Knowledge base Id||Knowledge base Id</value>
+    <value>Knowledge base Id</value>
   </data>
   <data name="Frontend.123" xml:space="preserve">
-    <value>Input||Input</value>
+    <value>Input</value>
   </data>
   <data name="Frontend.124" xml:space="preserve">
-    <value>File||File</value>
+    <value>File</value>
   </data>
   <data name="Frontend.125" xml:space="preserve">
-    <value>Collect external data||Collect external data</value>
+    <value>Collect external data</value>
   </data>
   <data name="Frontend.126" xml:space="preserve">
-    <value>Add knowledge base details||Add knowledge base details</value>
+    <value>Add knowledge base details</value>
   </data>
   <data name="Frontend.127" xml:space="preserve">
-    <value>Knowledge base management detail name is required||Knowledge base management detail name is required</value>
+    <value>Knowledge base management detail name is required</value>
   </data>
   <data name="Frontend.128" xml:space="preserve">
-    <value>Knowledge base details record||Knowledge base details record</value>
+    <value>Knowledge base details record</value>
   </data>
   <data name="Frontend.129" xml:space="preserve">
-    <value>Success||Success</value>
+    <value>Success</value>
   </data>
   <data name="Frontend.130" xml:space="preserve">
-    <value>Congratulations, upload succeeded||Congratulations, upload succeeded</value>
+    <value>Congratulations, upload succeeded</value>
   </data>
   <data name="Frontend.131" xml:space="preserve">
-    <value>Failed||Failed</value>
+    <value>Failed</value>
   </data>
   <data name="Frontend.132" xml:space="preserve">
-    <value>Upload failed, please upload again||Upload failed, please upload again</value>
+    <value>Upload failed, please upload again</value>
   </data>
   <data name="Frontend.133" xml:space="preserve">
-    <value>Edit knowledge base details||Edit knowledge base details</value>
+    <value>Edit knowledge base details</value>
   </data>
   <data name="Frontend.134" xml:space="preserve">
-    <value>Preparing...||Preparing...</value>
+    <value>Preparing...</value>
   </data>
   <data name="Frontend.135" xml:space="preserve">
-    <value>Add knowledge base||Add knowledge base</value>
+    <value>Add knowledge base</value>
   </data>
   <data name="Frontend.136" xml:space="preserve">
-    <value>Knowledge base name is required||Knowledge base name is required</value>
+    <value>Knowledge base name is required</value>
   </data>
   <data name="Frontend.137" xml:space="preserve">
-    <value>Knowledge base details||Knowledge base details</value>
+    <value>Knowledge base details</value>
   </data>
   <data name="Frontend.138" xml:space="preserve">
-    <value>Select||Select</value>
+    <value>Select</value>
   </data>
   <data name="Frontend.139" xml:space="preserve">
-    <value>File uploaded to file management||File uploaded to file management</value>
+    <value>File uploaded to file management</value>
   </data>
   <data name="Frontend.140" xml:space="preserve">
-    <value>Upload failed, please try again||Upload failed, please try again</value>
+    <value>Upload failed, please try again</value>
   </data>
   <data name="Frontend.141" xml:space="preserve">
-    <value>Edit knowledge base||Edit knowledge base</value>
+    <value>Edit knowledge base</value>
   </data>
   <data name="Frontend.142" xml:space="preserve">
-    <value>Select at least one file before saving||Select at least one file before saving</value>
+    <value>Select at least one file before saving</value>
   </data>
   <data name="Frontend.143" xml:space="preserve">
-    <value>The file is linked to the knowledge base and an entry was written||The file is linked to the knowledge base and an entry was written</value>
+    <value>The file is linked to the knowledge base and an entry was written</value>
   </data>
   <data name="Frontend.144" xml:space="preserve">
-    <value>File import failed||File import failed</value>
+    <value>File import failed</value>
   </data>
   <data name="Frontend.145" xml:space="preserve">
-    <value>File import failed:||File import failed:</value>
+    <value>File import failed:</value>
   </data>
   <data name="Frontend.146" xml:space="preserve">
-    <value>Saved||Saved</value>
+    <value>Saved</value>
   </data>
   <data name="Frontend.147" xml:space="preserve">
-    <value>Knowledge base saved successfully||Knowledge base saved successfully</value>
+    <value>Knowledge base saved successfully</value>
   </data>
   <data name="Frontend.148" xml:space="preserve">
-    <value>Save failed, please check the data||Save failed, please check the data</value>
+    <value>Save failed, please check the data</value>
   </data>
   <data name="Frontend.149" xml:space="preserve">
-    <value>Error while saving:||Error while saving:</value>
+    <value>Error while saving:</value>
   </data>
   <data name="Frontend.150" xml:space="preserve">
-    <value>Delete file "{0}"? The database record and the physical file will both be removed.||Delete file "{0}"? The database record and the physical file will both be removed.</value>
+    <value>Delete file "{0}"? The database record and the physical file will both be removed.</value>
   </data>
   <data name="Frontend.151" xml:space="preserve">
-    <value>Delete confirmation||Delete confirmation</value>
+    <value>Delete confirmation</value>
   </data>
   <data name="Frontend.152" xml:space="preserve">
-    <value>Select the files to delete first||Select the files to delete first</value>
+    <value>Select the files to delete first</value>
   </data>
   <data name="Frontend.153" xml:space="preserve">
-    <value>Delete the {0} selected files? The database records and the physical files will both be removed.||Delete the {0} selected files? The database records and the physical files will both be removed.</value>
+    <value>Delete the {0} selected files? The database records and the physical files will both be removed.</value>
   </data>
   <data name="Frontend.154" xml:space="preserve">
-    <value>Confirm bulk deletion||Confirm bulk deletion</value>
+    <value>Confirm bulk deletion</value>
   </data>
   <data name="Frontend.155" xml:space="preserve">
-    <value>Partially completed||Partially completed</value>
+    <value>Partially completed</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
-    <value>Deleted {0}/{1} files||Deleted {0}/{1} files</value>
+    <value>Deleted {0}/{1} files</value>
   </data>
   <data name="Frontend.157" xml:space="preserve">
-    <value>File deleted||File deleted</value>
+    <value>File deleted</value>
   </data>
   <data name="Frontend.158" xml:space="preserve">
-    <value>Deletion failed:||Deletion failed:</value>
+    <value>Deletion failed:</value>
   </data>
   <data name="Frontend.159" xml:space="preserve">
-    <value>Confirm vectorization||Confirm vectorization</value>
+    <value>Confirm vectorization</value>
   </data>
   <data name="Frontend.160" xml:space="preserve">
-    <value>Vectorizing...||Vectorizing...</value>
+    <value>Vectorizing...</value>
   </data>
   <data name="Frontend.161" xml:space="preserve">
-    <value>Vectorization completed||Vectorization completed</value>
+    <value>Vectorization completed</value>
   </data>
   <data name="Frontend.162" xml:space="preserve">
-    <value>Vectorization of knowledge base "{0}" is complete.||Vectorization of knowledge base "{0}" is complete.</value>
+    <value>Vectorization of knowledge base "{0}" is complete.</value>
   </data>
   <data name="Frontend.163" xml:space="preserve">
-    <value>Processing error:||Processing error:</value>
+    <value>Processing error:</value>
   </data>
   <data name="Frontend.164" xml:space="preserve">
-    <value>Close now?||Close now?</value>
+    <value>Close now?</value>
   </data>
   <data name="Frontend.165" xml:space="preserve">
-    <value>Exception-throw test, parameters passed: {0} {1}||Exception-throw test, parameters passed: {0} {1}</value>
+    <value>Exception-throw test, parameters passed: {0} {1}</value>
   </data>
   <data name="Frontend.166" xml:space="preserve">
-    <value>Divisor cannot be 0!||Divisor cannot be 0!</value>
+    <value>Divisor cannot be 0!</value>
   </data>
   <data name="Frontend.167" xml:space="preserve">
-    <value>Unknown operator: {0}||Unknown operator: {0}</value>
+    <value>Unknown operator: {0}</value>
   </data>
   <data name="Frontend.168" xml:space="preserve">
-    <value>Knowledge base '{0}' has no Embedding model configured. Select a model in 'Configuration' first.||Knowledge base '{0}' has no Embedding model configured. Select a model in 'Configuration' first.</value>
+    <value>Knowledge base '{0}' has no Embedding model configured. Select a model in 'Configuration' first.</value>
   </data>
   <data name="Frontend.169" xml:space="preserve">
-    <value>Embedding model ID {0} does not exist.||Embedding model ID {0} does not exist.</value>
+    <value>Embedding model ID {0} does not exist.</value>
   </data>
   <data name="Frontend.170" xml:space="preserve">
-    <value>Embedding vector store ID {0} does not exist.||Embedding vector store ID {0} does not exist.</value>
+    <value>Embedding vector store ID {0} does not exist.</value>
   </data>
   <data name="Frontend.171" xml:space="preserve">
-    <value>Embedding model AIKernel model was not found: {0}.||Embedding model AIKernel model was not found: {0}.</value>
+    <value>Embedding model AIKernel model was not found: {0}.</value>
   </data>
   <data name="Frontend.172" xml:space="preserve">
-    <value>Knowledge base '{0}' vectorization is complete!||Knowledge base '{0}' vectorization is complete!</value>
+    <value>Knowledge base '{0}' vectorization is complete!</value>
   </data>
   <data name="Frontend.173" xml:space="preserve">
-    <value>No data||No data</value>
+    <value>No data</value>
   </data>
   <data name="Frontend.174" xml:space="preserve">
-    <value>Saved successfully||Saved successfully</value>
+    <value>Saved successfully</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>Sample function</value>
@@ -613,4 +613,132 @@
     <value>Demonstrates FunctionRender parameters and return values</value>
   </data>
 
+
+  <data name="Frontend.175" xml:space="preserve"><value>* Changes to chunking strategy / size / overlap take effect after saving the content or materials and vectorizing again; reranking changes take effect immediately and do not alter built vectors.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.176" xml:space="preserve"><value>* Vector stores support Redis / Qdrant only; Memory cannot persist across requests. After saving, associate materials under Configuration and vectorize them.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.177" xml:space="preserve"><value>Embedding model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.178" xml:space="preserve"><value>LLM reranking</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.179" xml:space="preserve"><value>LLM reranking (using a chat model)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.180" xml:space="preserve"><value>Upload knowledge-base materials</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.181" xml:space="preserve"><value>candidates (retrieve candidates first, then rerank to Top K)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>Only safely extractable text and Office files are supported. Uploaded files are selected automatically; choose Confirm in the current drawer to associate them with the knowledge base.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.183" xml:space="preserve"><value>User guide</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.184" xml:space="preserve"><value>Steps: select a vectorized knowledge base → enter a realistic user question → inspect sources and similarity → return to Configuration to adjust materials and vectorize again if needed.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.185" xml:space="preserve"><value>Example: How do I create a new knowledge base?</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>After saving material associations, built vectors become invalid; return to the list, choose Vectorize, and then run the recall test.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.187" xml:space="preserve"><value>Start at 5. Increase it when results are too few or lower it when results are too broad; this affects later tests on this page only.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.188" xml:space="preserve"><value>Off (default)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.189" xml:space="preserve"><value>Open Recall Test on the left, select this knowledge base, and enter a realistic question to verify sources and similarity.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.190" xml:space="preserve"><value>Chunk size / overlap</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.191" xml:space="preserve"><value>Chunking strategy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.192" xml:space="preserve"><value>Refresh</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.193" xml:space="preserve"><value>Run a test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.194" xml:space="preserve"><value>Clear selection</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.195" xml:space="preserve"><value>Retrieved fragment details</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.196" xml:space="preserve"><value>Available materials</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.197" xml:space="preserve"><value>Vectorization status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.198" xml:space="preserve"><value>Vector database</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.199" xml:space="preserve"><value>Fixed length (default)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.200" xml:space="preserve"><value>Choose Configuration in the list to associate text or upload/select material files, then confirm the association.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.201" xml:space="preserve"><value>Characters · overlap</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.202" xml:space="preserve"><value>Done</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Chat model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.204" xml:space="preserve"><value>Enter a complete question a real user might ask instead of a single keyword.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.205" xml:space="preserve"><value>Vectorized</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.206" xml:space="preserve"><value>Selected materials:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.207" xml:space="preserve"><value>Start test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.208" xml:space="preserve"><value>No persistent vector store is available. Configure Redis or Qdrant in AIKernel first; Memory cannot be used for knowledge bases.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.209" xml:space="preserve"><value>Open source</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.210" xml:space="preserve"><value>Search by file name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.211" xml:space="preserve"><value>By paragraph</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.212" xml:space="preserve"><value>Tip: changing material associations invalidates built vectors; be sure to vectorize again.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.213" xml:space="preserve"><value>Search and select a vectorized knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.214" xml:space="preserve"><value>Search knowledge-base name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.215" xml:space="preserve"><value>New knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.216" xml:space="preserve"><value>Getting started: create a knowledge base and configure Embedding and a vector store → associate materials in Configuration → choose Vectorize → verify results in Recall Test.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.217" xml:space="preserve"><value>No knowledge bases yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.218" xml:space="preserve"><value>More</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.219" xml:space="preserve"><value>Highest similarity</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Not vectorized</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.221" xml:space="preserve"><value>Test records on this page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.222" xml:space="preserve"><value>View full text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.223" xml:space="preserve"><value>Retrieval and chunking</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Retrieval method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.225" xml:space="preserve"><value>Test time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Test result</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.227" xml:space="preserve"><value>Test question</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Clear selection</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Choose Vectorize and wait for completion; the status changes to Vectorized when successful.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Choose New knowledge base, enter a name, and select an Embedding model, vector database, and chat model.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.231" xml:space="preserve"><value>Use a realistic question to inspect returned material fragments. Similarity scores help with ranking and are not recall percentages.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.232" xml:space="preserve"><value>Leave empty to use this knowledge base's chat model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.233" xml:space="preserve"><value>Knowledge-base guide</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.234" xml:space="preserve"><value>Knowledge bases</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.235" xml:space="preserve"><value>Manage knowledge-base materials</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.236" xml:space="preserve"><value>The system vectorizes questions and material fragments, then ranks them by semantic similarity. Score ranges vary by model and store, so they are not fixed percentages or recall rates.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.237" xml:space="preserve"><value>If results are poor, return to Configuration, adjust materials, vectorize again, and retest.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.238" xml:space="preserve"><value>Lexical weight</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.239" xml:space="preserve"><value>Lexical hybrid</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.240" xml:space="preserve"><value>Lexical hybrid (no extra model call)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.241" xml:space="preserve"><value>Semantic vector retrieval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.242" xml:space="preserve"><value>Enter content (optional)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.243" xml:space="preserve"><value>Enter a knowledge-base name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.244" xml:space="preserve"><value>Select an Embedding model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.245" xml:space="preserve"><value>Select a Redis or Qdrant vector store</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.246" xml:space="preserve"><value>Select a chunking strategy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.247" xml:space="preserve"><value>Select a chat model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.248" xml:space="preserve"><value>Select a reranking mode</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.249" xml:space="preserve"><value>Follow knowledge-base settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.250" xml:space="preserve"><value>Returned fragments</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.251" xml:space="preserve"><value>Returned fragment count (Top K)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.252" xml:space="preserve"><value>No test results yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.253" xml:space="preserve"><value>Results appear here after selecting a knowledge base and entering a question.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.254" xml:space="preserve"><value>Select knowledge-base materials</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.255" xml:space="preserve"><value>Select material files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.256" xml:space="preserve"><value>Recursive structure (recommended for long documents)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.257" xml:space="preserve"><value>Reranking candidate count</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.258" xml:space="preserve"><value>Reranking model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.259" xml:space="preserve"><value>Reranking</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.260" xml:space="preserve"><value>Reranking (this test)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.261" xml:space="preserve"><value>Return up to {0} segments</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.262" xml:space="preserve"><value>{0} segments</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.263" xml:space="preserve"><value>Duration: {0} ms</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.264" xml:space="preserve"><value>Item {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.265" xml:space="preserve"><value>Reranking score</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.266" xml:space="preserve"><value>Original rank #{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.267" xml:space="preserve"><value>Source:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.268" xml:space="preserve"><value>Lexical score share of the fused score</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.269" xml:space="preserve"><value>{0} materials selected</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.270" xml:space="preserve"><value>Processed {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.271" xml:space="preserve"><value>Failed {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.272" xml:space="preserve"><value>Processing {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.273" xml:space="preserve"><value>Your request for [{1}] was started at {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.274" xml:space="preserve"><value>Processed {0}; succeeded {1}; failed {2}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.275" xml:space="preserve"><value>Current knowledge-base configuration:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.276" xml:space="preserve"><value>Item {0} · Similarity</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.277" xml:space="preserve"><value>· Original rerank position {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>The request did not complete. Check the knowledge base and model configuration.</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>Failed to load the knowledge base list: {0}</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>This knowledge base has not been vectorized. Return to the knowledge base management page and run vectorization first.</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>Enter the question to test</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>The service did not return valid recall results.</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>Recall test completed. Check the sources and content.</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>Test completed, but no matching passages were returned.</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>Recall did not complete</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>No materials are selected</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>This only cancels the unsaved association for the current knowledge base; files will not be deleted. Continue?</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>Clear selection</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>Close without saving?</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>External collection requires separate crawler, permission and cleaning configuration; this version will not fake a successful save.</value></data>
+  <data name="Frontend.291" xml:space="preserve"><value>Option</value></data>
+  <data name="Frontend.292" xml:space="preserve"><value>The knowledge base could not be found. It may have been deleted or you may not have permission to access it.</value></data>
+  <data name="Frontend.293" xml:space="preserve"><value>Failed to load the resource list. Please try again later.</value></data>
+  <data name="Frontend.294" xml:space="preserve"><value>Error</value></data>
+  <data name="Frontend.295" xml:space="preserve"><value>Knowledge base saved successfully</value></data>
+  <data name="Frontend.296" xml:space="preserve"><value>Save failed. Please check the data.</value></data>
+  <data name="Frontend.297" xml:space="preserve"><value>Save error</value></data>
+  <data name="Frontend.298" xml:space="preserve"><value>Could not save. Please try again later.</value></data>
+  <data name="Frontend.299" xml:space="preserve"><value>Success</value></data>
+  <data name="Frontend.300" xml:space="preserve"><value>Deleted successfully</value></data>
+  <data name="Frontend.301" xml:space="preserve"><value>Vectorize knowledge base “{0}”?</value></data>
 </root>

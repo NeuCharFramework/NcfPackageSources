@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SysRoleAdminUserInfoService.cs
-    文件功能描述：SysRoleAdminUserInfoService 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SysRoleAdminUserInfoService.cs
+    File description: SysRoleAdminUserInfoService related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.23.13-preview12 Updated service infrastructure and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -34,7 +37,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 添加角色信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="roleId"></param>
         /// <param name="accountId"></param>

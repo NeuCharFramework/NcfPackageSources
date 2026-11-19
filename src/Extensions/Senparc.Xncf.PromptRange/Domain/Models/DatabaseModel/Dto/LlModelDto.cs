@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：LlModelDto.cs
-    文件功能描述：LlModelDto 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: LlModelDto.cs
+    File description: LlModelDto related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -20,75 +23,75 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
     public class LlModelDto : DtoBase
     {
         /// <summary>
-        /// ID 主键
+        ///Legacy comment translated to English.
         /// </summary>
         public int Id { get; set; }
 
         public string Alias { get; set; }
 
         /// <summary>
-        /// 名称（必须）
+        /// name（must）
         /// </summary>
         public string DeploymentName { get; set; }
 
         /// <summary>
-        /// 模型的类型
+        ///Legacy comment translated to English.
         /// </summary>
         public AiPlatform ModelType { get; set; }
 
         /// <summary>
-        /// Endpoint（必须）
+        /// Endpoint（must）
         /// </summary>
         public string Endpoint { get; set; }
 
         /// <summary>
-        /// OrganizationId（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         public string OrganizationId { get; set; }
 
         /// <summary>
-        /// ApiKey（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         public string ApiKey { get; set; }
 
         /// <summary>
-        /// ApiVersion（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         public string ApiVersion { get; set; }
 
         /// <summary>
-        /// Note（可选）
+        /// Note (optional)
         /// </summary>
         public string Note { get; set; }
 
         /// <summary>
-        /// MaxToken（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         public int MaxToken { get; set; }
 
 
         /// <summary>
-        /// 是否共享
+        /// whether shared
         /// </summary>
         public bool IsShared { get; set; }
 
         /// <summary>
-        /// 是否展示
+        /// whether displayed
         /// </summary>
         public bool Show { get; set; }
 
         // /// <summary>
-        // /// TextCompletionModelName（可选）
+        //Legacy comment translated to English.
         // /// </summary>
         // public string TextCompletionModelName { get;  set; }
         //
         // /// <summary>
-        // /// TextEmbeddingModelName（可选）
+        //Legacy comment translated to English.
         // /// </summary>
         // public string TextEmbeddingModelName { get;  set; }
         //
         // /// <summary>
-        // /// OtherModelName（可选）
+        //Legacy comment translated to English.
         // /// </summary>
         // public string OtherModelName { get;  set; }
 

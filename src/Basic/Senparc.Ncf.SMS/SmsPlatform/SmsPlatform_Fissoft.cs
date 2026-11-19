@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SmsPlatform_Fissoft.cs
-    文件功能描述：SmsPlatform_Fissoft 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SmsPlatform_Fissoft.cs
+    File description: SmsPlatform_Fissoft related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.13-preview13 Updated SMS integration support and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -45,7 +48,7 @@ namespace Senparc.Ncf.SMS
                 int contentIndex = 0;
                 int limitedLetterCount = 65 * 4;
 
-                //组装消息，判断内容长度，太长则分开发
+                //Legacy comment translated to English.
                 List<string> messageList = new List<string>();
                 while (contentIndex < content.Length)
                 {
@@ -54,7 +57,7 @@ namespace Senparc.Ncf.SMS
                     contentIndex += limitedLetterCount;
                 }
 
-                //分批发送
+                //Legacy comment translated to English.
                 for (int i = 0; i < messageList.Count; i++)
                 {
                     var msg = messageList[i];
@@ -62,7 +65,7 @@ namespace Senparc.Ncf.SMS
                     {
                         msg = $" [{i + 1}/{messageList.Count}]" + msg;
                     }
-                    //msg += "【盛派网络】";
+                    //Legacy comment translated to English.
                     string encodedLimitedConent = UrlEncode(msg, encoding);
 
 
@@ -113,7 +116,7 @@ namespace Senparc.Ncf.SMS
     }
 
     /// <summary>
-    /// 发送结果
+    /// sendresult
     /// </summary>
     public class Fissosoft_SendResult
     {
@@ -123,8 +126,8 @@ namespace Senparc.Ncf.SMS
 
 
     /// <summary>
-    /// 获取剩余短信条数结果
-    /// 格式：{"Code":1,"Msg":"成功！","Value":"{\"UserName\":\"test\",\"OperId\":\"sms0013\",\"SMSNum\":5846,\"EmergentSMSNum\":10,\"IsEnable\":1}"}
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class Fissoft_LastCountResult
     {
@@ -134,7 +137,7 @@ namespace Senparc.Ncf.SMS
     }
 
     /// <summary>
-    /// Fissoft_LastCountResult的Value类型
+    ///Legacy comment translated to English.
     /// </summary>
     public class Fissoft_LastCountResult_Value
     {

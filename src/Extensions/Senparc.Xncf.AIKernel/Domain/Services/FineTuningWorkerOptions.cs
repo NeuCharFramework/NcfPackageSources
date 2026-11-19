@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：FineTuningWorkerOptions.cs
-    文件功能描述：微调 Worker 配置选项
+    File name: FineTuningWorkerOptions.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20261009
 
-    创建标识：Senparc - 20261009
+    Modified by: Senparc - 20261009
+    Change description: v0.16.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 enhance Agent Studio, group configuration, and task management interactions
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 enhance Agent Studio, group configuration, and task management interactions
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261106
-    修改描述：允许本机回环地址在启动后接入微调 Worker，密钥仍可来自环境变量
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 

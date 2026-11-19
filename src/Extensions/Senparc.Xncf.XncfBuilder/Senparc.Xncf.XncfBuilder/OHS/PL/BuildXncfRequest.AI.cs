@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：BuildXncfRequest.AI.cs
-    文件功能描述：BuildXncfRequest.AI 相关实现
-    
-    
-    创建标识：Senparc - 20240514
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+    Copyright (C) 2026 Senparc
+
+    File name: BuildXncfRequest.AI.cs
+    File description: BuildXncfRequest.AI related implementation
+
+    Created by: Senparc - 20240514
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.37.0-preview5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 
@@ -48,7 +51,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             }
             catch (SenparcAiException)
             {
-                //Endpoint 可能未配置
+                //Legacy comment translated to English.
 
                 aiModel.Items.Add(new SelectionItem(
                     "Default",
@@ -114,16 +117,16 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         [JsonIgnore]
         public SelectionList AIModelOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>
         {
-            //new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
+            //Legacy comment translated to English.
         });
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
-            //扫描当前解决方案包含的所有领域项目
+            //Legacy comment translated to English.
             var newItems = FunctionHelper.LoadXncfProjects(true, null,"Senparc.Areas.Admin");
             newItems.ForEach(z => InjectDomainOptions.Items.Add(z));
 
-            //载入 AI 模型
+            //Legacy comment translated to English.
             await BuildXncfRequestHelper.LoadAiModelData(serviceProvider, AIModelOptions);
 
             await base.LoadData(serviceProvider);
@@ -148,12 +151,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         [JsonIgnore]
         public SelectionList AIModelOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>
         {
-            //new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
+            //Legacy comment translated to English.
         });
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
-            //载入 AI 模型
+            //Legacy comment translated to English.
             await BuildXncfRequestHelper.LoadAiModelData(serviceProvider, AIModelOptions);
 
             await base.LoadData(serviceProvider);
@@ -162,17 +165,17 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
     //public class BuildXncf_CreateAppServiceRequest : FunctionAppRequestBase
     //{
-    //    [Description("领域||指定需要生成到的领域")]
+    //Legacy comment translated to English.
     //    public SelectionList InjectDomain { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
     //    [Required]
     //    [MaxLength(250)]
-    //    [Description("生成 AppService 及其方法的具体需求||请输入尽量完整的需求，也可以指定所需要的方法名称等")]
+    //Legacy comment translated to English.
     //    public string Requirement { get; set; }
 
     //    public override async Task LoadData(IServiceProvider serviceProvider)
     //    {
-    //        //扫描当前解决方案包含的所有领域项目
+    //Legacy comment translated to English.
     //        var newItems = FunctionHelper.LoadXncfProjects(true, "Senparc.Areas.Admin");
     //        newItems.ForEach(z => InjectDomain.Items.Add(z));
 

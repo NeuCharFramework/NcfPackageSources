@@ -1,0 +1,865 @@
+﻿var app = new Vue({
+    el: "#app",
+    data() {
+        return {
+            data: [], // data
+            tooltip: {
+                "IAreaRegister": ncfT('Xncf.AreaFeature'),
+                "IXncfDatabase": ncfT('Xncf.DatabaseFeature'),
+                "IXncfMiddleware": ncfT('Xncf.MiddlewareFeature'),
+                "IXncfRazorRuntimeCompilation": ncfT('Xncf.ThreadFeature')
+            },
+            state: {
+                'String': ncfT('Xncf.TypeText'),
+                'Int32': ncfT('Xncf.TypeNumber'),
+                'Int64': ncfT('Xncf.TypeNumber'),
+                'DateTime': ncfT('Xncf.TypeDate'),
+                'String[]': ncfT('Xncf.TypeOption'),
+                'Boolean': ncfT('Xncf.TypeBoolean')
+            },
+            xNcfModules_State: {
+                0: ncfT('Xncf.Close'),
+                1: ncfT('Xncf.Open'),
+                2: ncfT('Xncf.NewModules'),
+                3: ncfT('Xncf.PendingUpdates')
+            },
+            //Legacy comment translated to English.
+            run: {
+                data: {},
+                visible: false,
+                loading: false
+            },
+            runData: {
+                //Legacy comment translated to English.
+            },
+            runResult: {
+                visible: false,
+                tit: '',
+                tip: '',
+                msg: '',
+                url: '',
+                tempId: '',
+                hasLog: false
+            },
+            //Legacy comment translated to English.
+            thread: {
+                visible: false
+            },
+            activeModuleTab: 'function',
+            requestedFunctionKey: '',
+            requestedFunctionAction: '',
+            highlightedFunctionKey: '',
+            functionNavigationApplied: false,
+            updateLogVisible: false,
+            pivot: {
+                loading: false,
+                requirement: 'Generate a concise and clean operation panel for all Functions.',
+                aiModelId: 0,
+                aiModels: [],
+                configuration: null,
+                functions: [],
+                layout: { title: 'NeuCharPivot', description: '', columns: 2, panels: [] },
+                inputs: {},
+                moduleAvailable: false,
+                moduleState: 'missing',
+                activePanel: 'shortcuts',
+                functionStateFilter: '',
+                loopStatusFilter: '',
+                workflowFilter: '',
+                workflowOptions: [],
+                summary: {},
+                now: new Date(),
+                clockTimer: null
+            },
+            chat: {
+                visible: false,
+                message: ''
+            },
+            loop: {
+                visible: false,
+                saving: false,
+                function: null,
+                enabled: false,
+                intervalSeconds: 300,
+                useNeuBell: false,
+                workflowId: null
+            },
+            insights: {
+                capabilities: null,
+                capabilitiesLoading: false,
+                entities: null,
+                entitiesLoading: false,
+                entitiesAuthorized: false,
+                password: ''
+            }
+        };
+    },
+    created() {
+        this.readFunctionNavigation();
+        this.getList();
+        if (window && window.setInterval) {
+            this.pivot.clockTimer = window.setInterval(() => {
+                this.pivot.now = new Date();
+            }, 1000);
+        }
+    },
+    beforeDestroy() {
+        if (this.pivot.clockTimer && window && window.clearInterval) {
+            window.clearInterval(this.pivot.clockTimer);
+        }
+    },
+    methods: {
+        safeHtml(value) {
+            return typeof DOMPurify === 'undefined' ? '' : DOMPurify.sanitize(String(value || ''));
+        },
+        decodeFunctionResult(value) {
+            if (typeof document === 'undefined') {
+                return '';
+            }
+
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            const decoder = document.createElement('textarea');
+            decoder.innerHTML = String(value || '');
+            return decoder.value.replace(/\\r\\n|\\n|\\r/g, '\n');
+        },
+        safeFunctionResultHtml(value) {
+            if (typeof DOMPurify === 'undefined') {
+                return '';
+            }
+
+            return DOMPurify.sanitize(this.decodeFunctionResult(value), {
+                ALLOWED_TAGS: [
+                    'a', 'b', 'blockquote', 'br', 'code', 'div', 'em',
+                    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i',
+                    'li', 'mark', 'ol', 'p', 'pre', 'small', 'span',
+                    'strong', 'sub', 'sup', 'table', 'tbody', 'td',
+                    'th', 'thead', 'tr', 'u', 'ul'
+                ],
+                ALLOWED_ATTR: ['href', 'title'],
+                ALLOW_ARIA_ATTR: false,
+                ALLOW_DATA_ATTR: false,
+                ALLOWED_URI_REGEXP: /^https?:\/\/[^\s<>"']+$/i
+            });
+        },
+        normalizeMultiValue(value) {
+            if (Array.isArray(value)) {
+                return value;
+            }
+
+            if (typeof value !== 'string' || value.length === 0) {
+                return [];
+            }
+
+            return value
+                .split(/[;,，；\n\r|]+/)
+                .map(item => item.trim())
+                .filter(item => item.length > 0);
+        },
+        formatFileSize(value) {
+            const bytes = Number(value || 0);
+            if (bytes < 1024) return `${bytes} B`;
+            if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+            if (bytes < 1024 * 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+            return `${(bytes / 1024 / 1024 / 1024).toFixed(1)} GB`;
+        },
+        async uploadFunctionFiles(fileList, maxFiles) {
+            const files = Array.from(fileList || []);
+            if (!files.length) {
+                return [];
+            }
+            if (maxFiles && files.length > Number(maxFiles)) {
+                throw new Error(`一次最多选择 ${maxFiles} 个文件。`);
+            }
+            const form = new FormData();
+            files.forEach(file => form.append('files', file, file.name));
+            const response = await service.post(
+                '/api/Senparc.Areas.Admin/FunctionFiles/upload',
+                form,
+                { customAlert: true });
+            const uploaded = response && response.data && response.data.files;
+            if (!Array.isArray(uploaded) || uploaded.length !== files.length) {
+                throw new Error('文件上传响应无效。');
+            }
+            return uploaded;
+        },
+        async handleRunFileSelection(event, item) {
+            const entry = this.runData[item.name];
+            if (!entry) return;
+            const selectedFiles = event && event.target ? event.target.files : [];
+            if (!selectedFiles.length) return;
+            this.run.loading = true;
+            try {
+                const uploaded = await this.uploadFunctionFiles(selectedFiles, item.maxFiles);
+                const references = item.allowMultiple ? uploaded : uploaded.slice(0, 1);
+                this.$set(entry, 'files', references);
+                this.$set(entry, 'value', item.allowMultiple
+                    ? references.map(file => file.fileId)
+                    : (references[0] ? references[0].fileId : ''));
+            } catch (error) {
+                this.$notify({
+                    title: '文件上传失败',
+                    message: error && error.message ? error.message : '文件上传失败。',
+                    type: 'error'
+                });
+            } finally {
+                this.run.loading = false;
+                if (event && event.target) event.target.value = '';
+            }
+        },
+        async handlePivotFileSelection(event, fn, parameter) {
+            if (!fn || !parameter || !this.pivot.inputs[fn.id]) return;
+            const selectedFiles = event && event.target ? event.target.files : [];
+            if (!selectedFiles.length) return;
+            this.pivot.loading = true;
+            try {
+                const uploaded = await this.uploadFunctionFiles(selectedFiles, parameter.maxFiles);
+                const references = parameter.allowMultiple ? uploaded : uploaded.slice(0, 1);
+                this.$set(this.pivot.inputs[fn.id], parameter.name,
+                    parameter.allowMultiple
+                        ? references.map(file => file.fileId)
+                        : (references[0] ? references[0].fileId : ''));
+                this.$set(this.pivot.inputs[fn.id], parameter.name + '__files', references);
+            } catch (error) {
+                this.$notify({
+                    title: '文件上传失败',
+                    message: error && error.message ? error.message : '文件上传失败。',
+                    type: 'error'
+                });
+            } finally {
+                this.pivot.loading = false;
+                if (event && event.target) event.target.value = '';
+            }
+        },
+        async  getList() {
+            const uid = resizeUrl().uid;
+            const res = await service.get(`/Admin/XncfModule/Start?handler=Detail&uid=${uid}`);
+            this.data = res.data.data;
+            this.data.xncfRegister.interfaces = this.data.xncfRegister.interfaces.splice(1);
+            window.document.title = this.data.xncfModule.menuName;
+            await Promise.all([this.loadPivot(), this.loadAiModels()]);
+            await this.loadCapabilities();
+            this.applyFunctionNavigation();
+        },
+        async loadCapabilities() {
+            const uid = resizeUrl().uid;
+            this.insights.capabilitiesLoading = true;
+            try {
+                const response = await service.get(`/Admin/XncfModule/Start?handler=Capabilities&uid=${encodeURIComponent(uid)}`);
+                this.insights.capabilities = this.unwrapResponse(response);
+            } catch (error) {
+                this.$message.error(ncfT('Xncf.LoadCapabilitiesFailed'));
+            } finally {
+                this.insights.capabilitiesLoading = false;
+            }
+        },
+        async loadEntities() {
+            const uid = resizeUrl().uid;
+            if (!this.insights.password) {
+                this.$message.warning(ncfT('Xncf.EnterCurrentAdministratorPassword'));
+                return;
+            }
+            this.insights.entitiesLoading = true;
+            try {
+                const response = await service.post('/Admin/XncfModule/Start?handler=Entities', {
+                    uid,
+                    password: this.insights.password
+                }, { customAlert: false });
+                this.insights.entities = this.unwrapResponse(response);
+                this.insights.entitiesAuthorized = true;
+                this.insights.password = '';
+            } catch (error) {
+                this.insights.entitiesAuthorized = false;
+                this.$message.error(error && error.response && error.response.status === 401
+                    ? ncfT('Xncf.PasswordVerificationFailed')
+                    : ncfT('Xncf.LoadDataTablesFailed'));
+            } finally {
+                this.insights.entitiesLoading = false;
+            }
+        },
+        openAccessControl() {
+            const uid = resizeUrl().uid;
+            const url = `/Admin/NeuCharPivot/Access?moduleUid=${encodeURIComponent(uid)}`;
+            if (window.ncfOpenAdminPage) {
+                window.ncfOpenAdminPage(url, ncfT('Xncf.NeuCharPivotAccessControl'));
+            } else {
+                window.open(url, '_blank');
+            }
+        },
+
+        readFunctionNavigation() {
+            if (typeof window === 'undefined' || typeof URLSearchParams === 'undefined') {
+                return;
+            }
+            const params = new URLSearchParams(window.location.search || '');
+            this.requestedFunctionKey = String(params.get('functionKey') || '').trim();
+            this.requestedFunctionAction = String(params.get('action') || 'settings').trim().toLowerCase();
+        },
+        functionKey(item) {
+            return String(item && item.key && (item.key.functionKey || item.key.name) || '').trim();
+        },
+        functionKeyMatches(item, requestedKey) {
+            const key = this.functionKey(item);
+            const requested = String(requestedKey || '').trim();
+            if (!key || !requested) {
+                return false;
+            }
+
+            if (key.toLowerCase() === requested.toLowerCase()) {
+                return true;
+            }
+
+            const separatorIndex = key.lastIndexOf('-');
+            return separatorIndex >= 0 &&
+                key.slice(separatorIndex + 1).toLowerCase() === requested.toLowerCase();
+        },
+        functionAnchorId(item) {
+            const key = this.functionKey(item);
+            return key ? `function-${encodeURIComponent(key)}` : '';
+        },
+        isFocusedFunction(item) {
+            return !!this.highlightedFunctionKey &&
+                this.functionKey(item).toLowerCase() === this.highlightedFunctionKey.toLowerCase();
+        },
+        applyFunctionNavigation() {
+            if (this.functionNavigationApplied || !this.requestedFunctionKey) {
+                return;
+            }
+            this.functionNavigationApplied = true;
+            const items = (this.data && this.data.functionParameterInfoCollection) || [];
+            const item = items.find(candidate =>
+                this.functionKeyMatches(candidate, this.requestedFunctionKey));
+            if (!item) {
+                if (this.$notify) {
+                    this.$notify({
+                        title: ncfT('Xncf.Prompt'),
+                        message: '目标 Function 已被移除或在模块更新后发生变化。',
+                        type: 'warning'
+                    });
+                }
+                return;
+            }
+
+            this.highlightedFunctionKey = this.functionKey(item);
+            this.$nextTick(() => {
+                const target = document.getElementById(this.functionAnchorId(item));
+                if (target && typeof target.scrollIntoView === 'function') {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                if (this.requestedFunctionAction === 'run') {
+                    this.openRun(item, this.data.xncfModule.state);
+                }
+                window.setTimeout(() => { this.highlightedFunctionKey = ''; }, 2600);
+            });
+        },
+
+        unwrapResponse(response) {
+            if (!response || !response.data) {
+                return null;
+            }
+            return Object.prototype.hasOwnProperty.call(response.data, 'data')
+                ? response.data.data
+                : response.data;
+        },
+        parseJson(value, fallback) {
+            try {
+                return value ? JSON.parse(value) : fallback;
+            } catch (error) {
+                console.warn('NeuCharPivot JSON 解析失败：', error);
+                return fallback;
+            }
+        },
+        async loadAiModels() {
+            try {
+                const response = await service.get('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetAiModelOptionsAsync');
+                const payload = this.unwrapResponse(response) || {};
+                this.pivot.aiModels = payload.models || [{ id: 0, name: '系统默认模型' }];
+                if (!this.pivot.aiModels.some(model => Number(model.id) === Number(this.pivot.aiModelId))) {
+                    this.pivot.aiModelId = Number(this.pivot.aiModels[0].id || 0);
+                }
+            } catch (error) {
+                console.warn('加载 AI 模型失败：', error);
+                this.pivot.aiModels = [{ id: 0, name: '系统默认模型' }];
+            }
+        },
+        async loadPivot() {
+            const uid = resizeUrl().uid;
+            if (!uid) {
+                return;
+            }
+            this.pivot.loading = true;
+            try {
+                const response = await service.get(`/Admin/XncfModule/Start?handler=NeuCharPivot&uid=${encodeURIComponent(uid)}`);
+                this.applyPivotSnapshot(this.unwrapResponse(response));
+            } catch (error) {
+                console.error('加载 NeuCharPivot 失败：', error);
+            } finally {
+                this.pivot.loading = false;
+            }
+        },
+        applyPivotSnapshot(snapshot) {
+            if (!snapshot) {
+                this.pivot.configuration = null;
+                this.pivot.functions = [];
+                this.pivot.inputs = {};
+                this.pivot.workflowOptions = [];
+                this.pivot.summary = {};
+                this.pivot.moduleAvailable = this.data.xncfModule && Number(this.data.xncfModule.state) === 1;
+                return;
+            }
+            this.pivot.configuration = snapshot.configuration || null;
+            this.pivot.functions = snapshot.functions || [];
+            this.pivot.moduleAvailable = !!snapshot.moduleAvailable;
+            this.pivot.moduleState = snapshot.moduleState || 'missing';
+            this.pivot.workflowOptions = snapshot.workflowOptions || [];
+            this.pivot.summary = snapshot.summary || {};
+            this.pivot.layout = NeuCharPivotUi.normalizeLayout(this.parseJson(
+                snapshot.configuration && snapshot.configuration.layoutSchemaJson,
+                { title: 'NeuCharPivot', description: '', columns: 2, panels: [] }));
+            if (!this.pivot.layout.panels.some(panel => panel.key === this.pivot.activePanel)) {
+                this.pivot.activePanel = this.pivot.layout.panels[0] && this.pivot.layout.panels[0].key || 'shortcuts';
+            }
+            this.pivot.requirement = (snapshot.configuration && snapshot.configuration.userRequirement) || this.pivot.requirement;
+            this.pivot.aiModelId = Number((snapshot.configuration && snapshot.configuration.aiModelId) || this.pivot.aiModelId || 0);
+            const nextInputs = {};
+            this.pivot.functions.forEach(fn => {
+                const defaults = this.parseJson(fn.defaultParametersJson, {});
+                const schema = this.getPivotParameters(fn);
+                nextInputs[fn.id] = {};
+                schema.forEach(parameter => {
+                    let value = Object.prototype.hasOwnProperty.call(defaults, parameter.name)
+                        ? defaults[parameter.name]
+                        : parameter.defaultValue;
+                    if (parameter.parameterType === 2 && !Array.isArray(value)) {
+                        value = this.normalizeMultiValue(value);
+                    } else if (parameter.parameterType === 4) {
+                        value = value === true || value === 'true' || value === 'True';
+                    } else if (parameter.parameterType === 6) {
+                        value = parameter.allowMultiple ? [] : '';
+                    } else if (value === null || typeof value === 'undefined') {
+                        value = '';
+                    }
+                    nextInputs[fn.id][parameter.name] = value;
+                });
+            });
+            this.pivot.inputs = nextInputs;
+        },
+        resetPivotFilters() {
+            this.pivot.functionStateFilter = '';
+            this.pivot.loopStatusFilter = '';
+            this.pivot.workflowFilter = '';
+        },
+        matchesPivotFunction(fn) {
+            if (!fn) return false;
+            if (this.pivot.functionStateFilter === 'available' && !fn.available) return false;
+            if (this.pivot.functionStateFilter === 'unavailable' && fn.available) return false;
+            const status = NeuCharPivotUi.loopStatus(fn.loopTask);
+            if (this.pivot.loopStatusFilter && status !== this.pivot.loopStatusFilter) return false;
+            if (this.pivot.workflowFilter === 'linked' && !(fn.loopTask && fn.loopTask.workflowId)) return false;
+            if (this.pivot.workflowFilter === 'unlinked' && fn.loopTask && fn.loopTask.workflowId) return false;
+            if (this.pivot.workflowFilter && this.pivot.workflowFilter !== 'linked' && this.pivot.workflowFilter !== 'unlinked' &&
+                String(fn.loopTask && fn.loopTask.workflowId || '') !== this.pivot.workflowFilter) return false;
+            return true;
+        },
+        visiblePivotFunctions(section) {
+            return (section.functions || [])
+                .map(item => this.getPivotFunction(item.functionKey))
+                .filter(fn => this.matchesPivotFunction(fn));
+        },
+        pivotLoopStatusText(fn) {
+            return NeuCharPivotUi.loopStatusText(NeuCharPivotUi.loopStatus(fn && fn.loopTask));
+        },
+        pivotLoopCountdown(fn) {
+            return NeuCharPivotUi.formatCountdown(fn && fn.loopTask && fn.loopTask.nextRunAt, this.pivot.now);
+        },
+        workflowName(workflowId) {
+            const workflow = this.pivot.workflowOptions.find(option => Number(option.id) === Number(workflowId));
+            return workflow ? workflow.name : `Workflow #${workflowId}`;
+        },
+        getPivotFunction(functionKey) {
+            return this.pivot.functions.find(fn => String(fn.functionKey).toLowerCase() === String(functionKey).toLowerCase());
+        },
+        getPivotParameters(fn) {
+            return fn ? this.parseJson(fn.parameterSchemaJson, []) : [];
+        },
+        getPivotParameterJson(fn) {
+            return JSON.stringify((fn && this.pivot.inputs[fn.id]) || {});
+        },
+        validatePivotRequired(fn) {
+            const values = (fn && this.pivot.inputs[fn.id]) || {};
+            const missing = this.getPivotParameters(fn).find(parameter => {
+                if (!parameter.required) {
+                    return false;
+                }
+                const value = values[parameter.name];
+                return value === null || typeof value === 'undefined' || value === '' || (Array.isArray(value) && value.length === 0);
+            });
+            if (missing) {
+                this.$notify({
+                    title: '必填参数',
+                    message: `请先填写“${missing.title || missing.name}”。`,
+                    type: 'warning'
+                });
+                return false;
+            }
+            return true;
+        },
+        async requestPivot(requirement) {
+            if (!String(requirement || '').trim()) {
+                this.$notify({ title: '提示', message: '请先输入生成或修改要求。', type: 'warning' });
+                return;
+            }
+            this.pivot.loading = true;
+            try {
+                const response = await service.post('/Admin/XncfModule/Start?handler=GenerateNeuCharPivot', {
+                    xncfUid: this.data.xncfModule.uid,
+                    userRequirement: String(requirement).trim(),
+                    aiModelId: Number(this.pivot.aiModelId || 0)
+                }, { customAlert: true });
+                this.applyPivotSnapshot(this.unwrapResponse(response));
+                this.chat.message = '';
+                this.$notify({ title: 'NeuCharPivot', message: '界面已生成并保存。', type: 'success' });
+            } catch (error) {
+                console.error('生成 NeuCharPivot 失败：', error);
+                const message = error.response && error.response.data
+                    ? (error.response.data.title || error.response.data)
+                    : '生成失败，请检查 AI 模型配置和系统日志。';
+                this.$notify({ title: '生成失败', message: String(message), type: 'error' });
+            } finally {
+                this.pivot.loading = false;
+            }
+        },
+        generatePivot() {
+            return this.requestPivot(this.pivot.requirement);
+        },
+        refinePivotFromChat() {
+            return this.requestPivot(this.chat.message);
+        },
+        openModuleChat() {
+            this.chat.visible = true;
+        },
+        openFullModuleChat() {
+            const uid = this.data.xncfModule.uid;
+            window.location.href = `/Admin/AdminChat/Chat?moduleUids=${encodeURIComponent(uid)}`;
+        },
+        async runPivotFunction(fn) {
+            if (!this.pivot.moduleAvailable || !fn || !fn.available || !this.validatePivotRequired(fn)) {
+                return;
+            }
+            this.pivot.loading = true;
+            try {
+                const response = await service.post('/Admin/XncfModule/Start?handler=RunPivotFunction', {
+                    functionId: fn.id,
+                    parametersJson: this.getPivotParameterJson(fn)
+                }, { customAlert: true });
+                const result = this.unwrapResponse(response) || {};
+                this.showFunctionResult(result.success, result.data, result.errorMessage, result.requestTempId);
+            } catch (error) {
+                this.$notify({ title: '执行失败', message: 'Function 执行请求失败。', type: 'error' });
+            } finally {
+                this.pivot.loading = false;
+            }
+        },
+        showFunctionResult(success, data, errorMessage, requestTempId) {
+            const value = typeof data === 'string' ? data : JSON.stringify(data === undefined ? null : data, null, 2);
+            this.runResult.url = '';
+            this.runResult.tempId = requestTempId || '';
+            this.runResult.hasLog = !!requestTempId;
+            this.runResult.tit = success ? ncfT('Xncf.RunSuccess') : ncfT('Xncf.RunError');
+            this.runResult.tip = success ? ncfT('Xncf.ReturnInfo') : ncfT('Xncf.ErrorInfo');
+            this.runResult.msg = success ? value : (errorMessage || value || '执行失败');
+            this.runResult.visible = true;
+        },
+        openLoopTask(fn) {
+            const task = fn.loopTask || {};
+            this.loop.function = fn;
+            this.loop.enabled = !!task.enabled;
+            this.loop.intervalSeconds = Number(task.intervalSeconds || 300);
+            this.loop.useNeuBell = !!task.useNeuBell;
+            this.loop.workflowId = task.workflowId || null;
+            this.loop.visible = true;
+        },
+        async saveLoopTask() {
+            const fn = this.loop.function;
+            if (!fn || (this.loop.enabled && !this.validatePivotRequired(fn))) {
+                return;
+            }
+            this.loop.saving = true;
+            try {
+                const response = await service.post('/Admin/XncfModule/Start?handler=SaveLoopTask', {
+                    functionId: fn.id,
+                    parametersJson: this.getPivotParameterJson(fn),
+                    enabled: !!this.loop.enabled,
+                    intervalSeconds: Number(this.loop.intervalSeconds || 300),
+                    useNeuBell: !!this.loop.useNeuBell,
+                    workflowId: this.loop.workflowId || null
+                }, { customAlert: true });
+                fn.loopTask = this.unwrapResponse(response);
+                this.loop.visible = false;
+                this.$notify({ title: 'Loop Task', message: '定时任务配置已保存。', type: 'success' });
+            } catch (error) {
+                this.$notify({ title: '保存失败', message: '请检查必填参数和间隔设置。', type: 'error' });
+            } finally {
+                this.loop.saving = false;
+            }
+        },
+
+
+        // 打开首页
+        openUrl(url, flag) {
+            // 关闭状态返回
+            flag = flag + '';
+            if (flag !== '1') {
+                this.$notify({
+                    title: ncfT('Xncf.Prompt'),
+                    message: ncfT('Xncf.EnableFirst'),
+                    type: 'warning'
+                });
+                return;
+            }
+            window.location.href = url;
+        },
+        // 打开执行
+        openRun(item, flag) {
+            // 关闭状态返回
+            flag = flag + '';
+            if (flag !== '1') {
+                this.$notify({
+                    title: ncfT('Xncf.Prompt'),
+                    message: ncfT('Xncf.EnableFirst'),
+                    type: 'warning'
+                });
+                return;
+            }
+            this.run.data = item;
+            this.runData = {};
+            this.run.data.value.map(res => {
+                // 动态model绑定生成
+                // 默认选择赋值
+                // 多选
+                if (res.parameterType === 2 && res.selectionList.items) {
+                    this.runData[res.name] = {};
+                    this.runData[res.name].value = this.normalizeMultiValue(res.value);
+                    this.runData[res.name].item = res;
+                    res.selectionList.items.map(ele => {
+                        if (ele.defaultSelected && this.runData[res.name].value.indexOf(ele.value) < 0) {
+                            this.runData[res.name].value.push(ele.value);
+                        }
+                    });
+                }
+                // 下拉框value
+                if (res.parameterType === 1 && res.selectionList.items) {
+                    this.runData[res.name] = {};
+                    this.runData[res.name].value = res.value === null || typeof res.value === 'undefined' ? '' : res.value;
+                    this.runData[res.name].item = res;
+                    res.selectionList.items.map(ele => {
+                        if (!this.runData[res.name].value && ele.defaultSelected) {
+                            this.runData[res.name].value = ele.value;
+                        }
+                    });
+                    // 如果没有默认给第一个
+                    if (this.runData[res.name].value.length === 0) {
+                        this.runData[res.name].value = res.selectionList.items[0].value;
+                    }
+                }
+                // 输入框
+                if (res.parameterType === 0 || res.parameterType === 3 || res.parameterType === 5) {
+                    this.runData[res.name] = {};
+                    this.runData[res.name].item = res;
+                    this.runData[res.name].value = res.value === null || typeof res.value === 'undefined' ? '' : res.value;
+                }
+                // 布尔（单个复选框）
+                if (res.parameterType === 4) {
+                    this.runData[res.name] = {};
+                    this.runData[res.name].item = res;
+                    this.runData[res.name].value = res.value === true || res.value === 'true' || res.value === 'True';
+                }
+                if (res.parameterType === 6) {
+                    this.runData[res.name] = {};
+                    this.runData[res.name].item = res;
+                    this.runData[res.name].files = [];
+                    this.runData[res.name].value = res.allowMultiple ? [] : '';
+                }
+            });
+            this.runData = Object.assign({}, this.runData);
+            //  this.runData数组结构
+            //在接口传输时，将下拉单选转成数组
+            //{
+            //   // parameterType === 2 多选
+            //    Modules: {
+            //        item: {},
+            //        value: []
+            //    },
+            //   // parameterType === 1 下拉单选
+            //    ReferenceType: {
+            //        item: {},
+            //        value: []
+            //    },
+            //   // parameterType === 0 input
+            //    SourcePath: {
+            //        item: {},
+            //        value: ''
+            //    }
+            //};
+            this.run.visible = true;
+        },
+        // 执行
+        async handleRun() {
+            // 物理路径校验
+            if (this.runData.hasOwnProperty('SourcePath') && this.runData.SourcePath.length < 1) {
+                this.$notify({
+                    title: ncfT('Xncf.Prompt'),
+                    message: ncfT('Xncf.SourcePathRequired'),
+                    type: 'warning'
+                });
+                return;
+            }
+
+            // 设置 loading 状态
+            this.run.loading = true;
+
+            try {
+                let xncfFunctionParams = {};
+                for (var i in this.runData) {
+                    // 多选
+                    if (this.runData[i].item.parameterType === 2) {
+                        if (this.runData[i].item.isRequired && this.runData[i].value.length === 0) {
+                            this.$notify({
+                                title: ncfT('Xncf.Prompt'),
+                                message: ncfT('Xncf.RequiredOption', this.runData[i].item.title),
+                                type: 'warning'
+                            });
+                            return;
+                        } else {
+                            xncfFunctionParams[i] = this.runData[i].value;
+                        }
+                    }
+                    // 下拉框
+                    if (this.runData[i].item.parameterType === 1) {
+                        if (this.runData[i].item.isRequired && this.runData[i].value.length === 0) {
+                            this.$notify({
+                                title: ncfT('Xncf.Prompt'),
+                                message: ncfT('Xncf.RequiredField', this.runData[i].item.title),
+                                type: 'warning'
+                            });
+                            return;
+                        } else {
+                            xncfFunctionParams[i] = this.runData[i].value;
+                        }
+                    }
+                    // 输入框
+                    if (this.runData[i].item.parameterType === 0 ||
+                        this.runData[i].item.parameterType === 3 ||
+                        this.runData[i].item.parameterType === 5) {
+                        if (this.runData[i].item.isRequired && this.runData[i].value.length === 0) {
+                            this.$notify({
+                                title: ncfT('Xncf.Prompt'),
+                                message: ncfT('Xncf.RequiredField', this.runData[i].item.title),
+                                type: 'warning'
+                            });
+                            return;
+                        } else {
+                            xncfFunctionParams[i] = this.runData[i].value;
+                        }
+                    }
+                    // 布尔
+                    if (this.runData[i].item.parameterType === 4) {
+                        xncfFunctionParams[i] = !!this.runData[i].value;
+                    }
+                    if (this.runData[i].item.parameterType === 6) {
+                        const value = this.runData[i].value;
+                        const isEmpty = Array.isArray(value) ? value.length === 0 : !String(value || '').trim();
+                        if (this.runData[i].item.isRequired && isEmpty) {
+                            this.$notify({
+                                title: ncfT('Xncf.Prompt'),
+                                message: ncfT('Xncf.RequiredField', this.runData[i].item.title),
+                                type: 'warning'
+                            });
+                            return;
+                        }
+                        xncfFunctionParams[i] = value;
+                    }
+                }
+                const data = {
+                    xncfUid: this.data.xncfModule.uid,
+                    xncfFunctionName: this.run.data.key.functionKey || this.run.data.key.name,
+                    xncfFunctionParams: JSON.stringify(xncfFunctionParams)
+                };
+
+                const res = await service.post(`/Admin/XncfModule/Start?handler=RunFunction`, data, { customAlert: true });
+
+                this.runResult.url = '';
+                this.runResult.hasLog = false;
+                this.runResult.tempId = res.data.tempId;
+                if ((res.data.log || '').length > 0 && (res.data.tempId || '').length > 0) {
+                    this.runResult.hasLog = true;
+                }
+
+                const rawMsg = res.data.msg || '';
+                const decodedMsg = this.decodeFunctionResult(rawMsg);
+
+                if (!res.data.success) {
+                    this.runResult.tit = ncfT('Xncf.RunError');
+                    this.runResult.tip = ncfT('Xncf.ErrorInfo');
+                    this.runResult.msg = rawMsg || res.data.exception || '';
+                    this.runResult.visible = true;
+                    return;
+                }
+                if (decodedMsg && (decodedMsg.indexOf('http://') === 0 || decodedMsg.indexOf('https://') === 0)) {
+                    this.runResult.tit = ncfT('Xncf.RunSuccess');
+                    this.runResult.tip = ncfT('Xncf.UrlResultTip');
+                    try {
+                        const safeUrl = new URL(decodedMsg, window.location.origin);
+                        if (safeUrl.protocol !== 'http:' && safeUrl.protocol !== 'https:') {
+                            throw new Error('unsupported URL scheme');
+                        }
+                        this.runResult.url = safeUrl.href;
+                        this.runResult.msg = '';
+                    } catch {
+                        this.runResult.msg = rawMsg;
+                    }
+                }
+                else {
+                    this.runResult.tit = ncfT('Xncf.RunSuccess');
+                    this.runResult.tip = ncfT('Xncf.ReturnInfo');
+                    this.runResult.msg = rawMsg;
+                }
+                // 打开执行结果弹窗
+                this.runResult.visible = true;
+                this.getList();
+            } catch (error) {
+                console.error('执行出错:', error);
+                this.$notify({
+                    title: ncfT('Xncf.RunError'),
+                    message: ncfT('Xncf.ExecutionError'),
+                    type: 'error'
+                });
+            } finally {
+                // 无论成功失败都取消 loading 状态
+                this.run.loading = false;
+            }
+        },
+        // 关闭和开启
+        async updataState(state) {
+            const id = this.data.xncfModule.id;
+            const res = await service.get(`/Admin/XncfModule/Start?handler=ChangeState&id=${id}&tostate=${state}`);
+            window.location.reload();
+        },
+        // 更新版本
+        async  updataVersion() {
+            const uid = resizeUrl().uid;
+            await service.get(`/Admin/XncfModule/Index?handler=ScanAjax&uid=${uid}`);
+            window.location.reload();
+        },
+        // 删除
+        async handleDelete() {
+            const id = this.data.xncfModule.id;
+            const res = await service.post(`/Admin/XncfModule/Start?handler=Delete&id=${id}`);
+            window.sessionStorage.setItem('setNavMenuActive', ncfT('Xncf.Title'));
+            getNavMenu();
+            setTimeout(function () {
+                window.location.href = '/Admin/XncfModule/Index';
+            }, 100);
+        }
+    }
+});

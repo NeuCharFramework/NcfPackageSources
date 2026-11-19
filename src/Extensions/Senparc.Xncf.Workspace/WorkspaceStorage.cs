@@ -1,29 +1,32 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：WorkspaceStorage.cs
-    文件功能描述：工作区文件与命令存储
-    
-    
-    创建标识：Senparc - 20261015
-    
-    修改标识：Senparc - 20261021
-    修改描述：v0.1.1 按策略执行工作区文件访问与命令
 
-    修改标识：Senparc - 20261028
-    修改描述：多租户模式下元数据读写在独立作用域中还原当前请求租户上下文
+    File name: WorkspaceStorage.cs
+    File description: Workspace file and command storage
 
-    修改标识：Senparc - 20261102
-    修改描述：增加流式上传落盘与租户可见性校验
+    Created by: Senparc - 20261015
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.2 add streamed large-file Workspace uploads with tenant-aware ownership checks
+    Modified by: Senparc - 20261021
+    Change description: v0.1.1 enforce policy-based Workspace file access and commands
 
-    修改标识：Senparc - 20261109
-    修改描述：增加工作区用量统计，以及保留清单的内容清空
+    Modified by: Senparc - 20261028
+    Change description: restore request tenant context in an isolated scope for multi-tenant metadata access
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.2.7 完善 Workspace Agent、文件存储与模块注册兼容
+    Modified by: Senparc - 20261102
+    Change description: add streamed upload persistence and tenant visibility checks
+
+    Modified by: Senparc - 20261103
+    Change description: v0.2.2 add streamed large-file Workspace uploads with tenant-aware ownership checks
+
+    Modified by: Senparc - 20261109
+    Change description: add Workspace usage statistics and content clearing while retaining the directory
+
+    Modified by: Senparc - 20261111
+    Change description: v0.2.7 improve Workspace Agent, file storage, and module registration compatibility
+
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -77,7 +80,8 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
     }
 
     /// <summary>
-    /// 捕获当前请求的租户快照（非请求上下文返回未匹配快照，保持 fail-closed）。
+    /// Capture the current request tenant snapshot. Outside a request context,
+    /// return an unmatched snapshot to remain fail-closed.
     /// </summary>
     private RequestTenantSnapshot CaptureCurrentTenant()
     {
@@ -618,15 +622,15 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
                     continue;
                 }
 
-                var referenceSummary = string.Join("、", references.Take(5).Select(reference =>
+                var referenceSummary = string.Join(", ", references.Take(5).Select(reference =>
                     $"{reference.ReferenceType}:{reference.ReferenceId}"));
                 if (references.Count > 5)
                 {
-                    referenceSummary += $" 等 {references.Count} 项";
+                    referenceSummary += $" and {references.Count - 5} more";
                 }
 
                 throw new InvalidOperationException(
-                    $"工作区“{workspaceId}”仍被引用，不能删除：{referenceSummary}。请先解除业务引用。");
+                    $"Workspace “{workspaceId}” is still referenced and cannot be deleted: {referenceSummary}. Remove the business references first.");
             }
         }
 

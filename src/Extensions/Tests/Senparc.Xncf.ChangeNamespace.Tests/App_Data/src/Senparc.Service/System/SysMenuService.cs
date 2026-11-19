@@ -34,7 +34,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// TODO...重建菜单角色缓存
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="sysMenuDto"></param>
         /// <param name="buttons"></param>
@@ -58,7 +58,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// TODO...重建菜单角色缓存
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="sysMenuDto"></param>
         /// <param name="buttons"></param>
@@ -118,7 +118,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 获取缓存中的数据
+        /// get data from the cache
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>
@@ -128,7 +128,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 获取缓存中的数据
+        /// get data from the cache
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>
@@ -175,7 +175,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 获取缓存中的数据
+        /// get data from the cache
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>
@@ -193,7 +193,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 初始化
+        /// initialize
         /// </summary>
         public void Init()
         {

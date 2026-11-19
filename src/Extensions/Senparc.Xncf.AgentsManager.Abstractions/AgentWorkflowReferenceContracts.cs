@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AgentWorkflowReferenceContracts.cs
-    文件功能描述：AgentWorkflowReferenceContracts.cs 相关实现
+    File name: AgentWorkflowReferenceContracts.cs
+    File description: AgentWorkflowReferenceContracts.cs related implementation
 
+    Created by: Senparc - 20260822
 
-    创建标识：Senparc - 20260822
+    Modified by: Senparc - 20260822
+    Change description: v0.3.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.3.0 新增 AgentsManager 与工作流之间的引用校验契约
+    Modified by: Senparc - 20261119
+    Change description: v0.3.2 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 

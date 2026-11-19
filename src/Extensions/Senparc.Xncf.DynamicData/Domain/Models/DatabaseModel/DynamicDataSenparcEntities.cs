@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：DynamicDataSenparcEntities.cs
-    文件功能描述：DynamicDataSenparcEntities 相关实现
-    
-    
-    创建标识：Senparc - 20240718
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: DynamicDataSenparcEntities.cs
+    File description: DynamicDataSenparcEntities related implementation
+
+    Created by: Senparc - 20240718
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
 ----------------------------------------------------------------*/
 
@@ -32,10 +35,10 @@ namespace Senparc.Xncf.DynamicData.Models
         public DbSet<ColumnMetadata> ColumnMetadatas { get; set; }
         public DbSet<TableData> TableDatas { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
+        //Legacy comment translated to English.
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //}

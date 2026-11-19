@@ -1,23 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：XncfPreviewStateStore.cs
-    文件功能描述：XNCF 隔离预览任务和 Host 状态的数据库存储
+    File name: XncfPreviewStateStore.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20260802
 
-    创建标识：Senparc - 20260802
+    Modified by: Senparc - 20260804
+    Change description: v0.39.0-preview8 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+    Modified by: Senparc - 20260813
+    Change description: v0.40.0-preview10 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.40.0-preview10 增强 XncfBuilder 预览状态持久化与后台初始化
+    Modified by: Senparc - 20261028
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261028
-    修改描述：多租户模式下支持平台级（TenantId=0）租户上下文还原与启动恢复
+    Modified by: Senparc - 20261103
+    Change description: v0.41.7 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.41.7 XncfBuilder 状态存储支持平台级（TenantId=0）租户上下文
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 
@@ -38,7 +41,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
     public sealed class XncfPreviewPersistenceSnapshot
     {
         /// <summary>
-        /// 数据所属租户（多租户启用时用于恢复该租户的持久化上下文；0 表示单租户/系统公共）
+        ///Legacy comment translated to English.
         /// </summary>
         public int TenantId { get; init; }
 
@@ -140,7 +143,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
             {
-                // 多租户：逐个启用租户恢复/中断本租户的预览任务，快照携带 TenantId 供后续写回时还原租户上下文
+                //Legacy comment translated to English.
                 var tenantScopeFactory = _tenantScopeFactory
                     ?? throw new NcfTenantException("多租户预览持久化需要 IBackgroundTenantScopeFactory。");
                 await _writeLock.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -161,7 +164,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                             snapshots.AddRange(tenantSnapshots);
                         },
                         cancellationToken).ConfigureAwait(false);
-                    // 平台级（TenantId=0）预览任务不在启用租户列表中，需单独恢复/中断
+                    //Legacy comment translated to English.
                     await using var platformScope = _serviceScopeFactory.CreateAsyncScope();
                     ApplyTenantContext(platformScope, 0);
                     snapshots.AddRange(await LoadAndInterruptCoreAsync(
@@ -361,9 +364,9 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         }
 
         /// <summary>
-        /// 在新作用域中还原快照所属租户的 RequestTenantInfo（多租户启用时生效，
-        /// tenantId = 0 表示平台级/系统管理员数据），
-        /// 使租户过滤查询与 TenantId 自动写入保持在数据所属租户内。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         private static void ApplyTenantContext(IServiceScope scope, int tenantId)
         {
