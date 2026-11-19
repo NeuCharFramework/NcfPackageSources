@@ -71,4 +71,4 @@ Event payloads may contain prompts and model output. Apply authorization, tenant
 
 The Admin shared components provide draft tracking, history labels, manual scoring and quick view.
 Hosts can supply their own authorized AI callback without a dependency on AdminChat entities.
-See the [Admin integration guide](../../../tools/NcfSimulatedSite/Senparc.Areas.Admin/readme.md#promptcode-引用标注与统一评分).
+See the [Admin integration guide](../../../tools/NcfWebAdminBaseline/Senparc.Areas.Admin/readme.md#promptcode-引用标注与统一评分).

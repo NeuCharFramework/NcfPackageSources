@@ -37,7 +37,7 @@ SELECT * FROM [Xncf_AgentsManager_AgentTemplate] WHERE Name = 'PromptCatalyzer';
 ## 🛠️ 修复内容总结
 
 ### 修复1：EventHandler 注册（核心问题）
-**文件**：`tools/NcfSimulatedSite/Senparc.Web/Register.cs`
+**文件**：`tools/NcfWebAdminBaseline/Senparc.Web/Register.cs`
 - 使用 `AddSenparcEventBus()` 自动扫描和注册 Handler
 - 在 `StartWebEngine()` 之后调用，确保所有模块已加载
 
@@ -66,7 +66,7 @@ SELECT * FROM [Xncf_AgentsManager_AgentTemplate] WHERE Name = 'PromptCatalyzer';
 ```bash
 # 停止当前运行的应用（Ctrl+C）
 cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources
-dotnet run --project tools/NcfSimulatedSite/Senparc.Web/Senparc.Web.csproj
+dotnet run --project tools/NcfWebAdminBaseline/Senparc.Web/Senparc.Web.csproj
 ```
 
 ### 第2步：检查启动日志（关键！）
@@ -93,7 +93,7 @@ Senparc NCF EventBus Service is starting with MaxConcurrency=XX, EnableDuplicate
 **在新终端窗口运行**：
 
 ```bash
-tail -f tools/NcfSimulatedSite/Senparc.Web/App_Data/SenparcTraceLog/SenparcTrace-20260324.log
+tail -f tools/NcfWebAdminBaseline/Senparc.Web/App_Data/SenparcTraceLog/SenparcTrace-20260324.log
 ```
 
 ### 第4步：测试初始化

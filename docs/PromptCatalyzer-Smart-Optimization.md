@@ -230,7 +230,7 @@ PromptOptimizationController.OptimizeAsync
 
 ```bash
 # 在终端 5 中按 Ctrl+C 停止
-cd tools/NcfSimulatedSite/Senparc.Web
+cd tools/NcfWebAdminBaseline/Senparc.Web
 dotnet run
 ```
 

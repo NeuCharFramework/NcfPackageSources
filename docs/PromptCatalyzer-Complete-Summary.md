@@ -402,7 +402,7 @@ PromptCatalyzer 现在是一个**完整的 AI Prompt 优化和测试平台**：
 1. **重启应用**（必需）
    ```bash
    # 在终端 5 按 Ctrl+C 停止
-   cd tools/NcfSimulatedSite/Senparc.Web
+   cd tools/NcfWebAdminBaseline/Senparc.Web
    dotnet run
    ```
 

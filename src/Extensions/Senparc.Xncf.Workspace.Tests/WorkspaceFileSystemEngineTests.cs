@@ -191,11 +191,11 @@ public sealed class WorkspaceFileSystemEngineTests
     public async Task SearchSupportsRegexContentAndRelativePathGlob()
     {
         await _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
-            "tools/NcfSimulatedSite/Senparc.Areas.Admin/WorkspacePreview.cs",
+            "tools/NcfWebAdminBaseline/Senparc.Areas.Admin/WorkspacePreview.cs",
             Encoding.UTF8.GetBytes(
                 "WorkspaceAssets are loaded here.\nContent-Security-Policy is set here.\n")));
         await _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
-            "tools/NcfSimulatedSite/Senparc.Areas.Admin/Other.cs",
+            "tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Other.cs",
             Encoding.UTF8.GetBytes("WorkspaceAssets are not a path match.\n")));
 
         var contentMatches = await _engine.SearchAsync(new WorkspaceSearchRequest(
@@ -206,9 +206,9 @@ public sealed class WorkspaceFileSystemEngineTests
         Assert.IsTrue(contentMatches.All(item => item.MatchType == "content"));
 
         var pathMatches = await _engine.SearchAsync(new WorkspaceSearchRequest(
-            PathGlob: "tools/NcfSimulatedSite/Senparc.Areas.Admin/**/*Workspace*",
+            PathGlob: "tools/NcfWebAdminBaseline/Senparc.Areas.Admin/**/*Workspace*",
             MaxResults: 20));
-        Assert.AreEqual("tools/NcfSimulatedSite/Senparc.Areas.Admin/WorkspacePreview.cs",
+        Assert.AreEqual("tools/NcfWebAdminBaseline/Senparc.Areas.Admin/WorkspacePreview.cs",
             pathMatches.Single().RelativePath);
         Assert.AreEqual("path", pathMatches.Single().MatchType);
     }

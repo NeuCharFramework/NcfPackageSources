@@ -245,7 +245,7 @@ ChatGroup: ✅ 已存在，但 AdminAgentTemplateId=3, EnterAgentTemplateId=3
 #### 1. 停止应用并重启
 ```bash
 # 停止当前运行的应用（Ctrl+C）
-cd tools/NcfSimulatedSite/Senparc.Web
+cd tools/NcfWebAdminBaseline/Senparc.Web
 dotnet run
 ```
 

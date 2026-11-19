@@ -13,21 +13,21 @@
 ## 📂 涉及文件
 
 ### 新建文件
-1. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSession.cs`
-2. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatMessage.cs`
-3. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSessionModule.cs`
-4. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionDto.cs`
-5. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatMessageDto.cs`
-6. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionModuleDto.cs`
+1. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSession.cs`
+2. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatMessage.cs`
+3. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSessionModule.cs`
+4. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionDto.cs`
+5. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatMessageDto.cs`
+6. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionModuleDto.cs`
 
 ### 修改文件
-7. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminSenparcEntities.cs`
+7. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminSenparcEntities.cs`
 
 ## 🔧 实现步骤
 
 ### 1. 创建 AdminChatSession 实体
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSession.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSession.cs`
 
 **完整代码示例**:
 
@@ -167,7 +167,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
 
 ### 2. 创建 AdminChatMessage 实体
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatMessage.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatMessage.cs`
 
 **完整代码示例**:
 
@@ -309,7 +309,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
 
 ### 3. 创建 AdminChatSessionModule 实体
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSessionModule.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSessionModule.cs`
 
 **完整代码示例**:
 
@@ -399,7 +399,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
 
 ### 4. 创建 AdminChatSessionDto
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionDto.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionDto.cs`
 
 **完整代码示例**:
 
@@ -458,7 +458,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 
 ### 5. 创建 AdminChatMessageDto
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatMessageDto.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatMessageDto.cs`
 
 **完整代码示例**:
 
@@ -543,7 +543,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 
 ### 6. 创建 AdminChatSessionModuleDto
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionModuleDto.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionModuleDto.cs`
 
 **完整代码示例**:
 
@@ -594,7 +594,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 
 ### 7. 更新 AdminSenparcEntities
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminSenparcEntities.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminSenparcEntities.cs`
 
 **修改位置**: 在 `//DOT REMOVE OR MODIFY THIS LINE` 行之前添加
 

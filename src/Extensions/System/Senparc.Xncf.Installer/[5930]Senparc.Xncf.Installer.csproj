@@ -40,8 +40,8 @@
 		<ProjectReference Include="..\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.Installer.Interface\[5930]Senparc.Xncf.Installer.Interface.csproj" />
-		<ProjectReference Include="..\..\..\..\tools\NcfSimulatedSite\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
-		<ProjectReference Include="..\..\..\..\tools\NcfSimulatedSite\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
+		<ProjectReference Include="..\..\..\..\tools\NcfWebAdminBaseline\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
+		<ProjectReference Include="..\..\..\..\tools\NcfWebAdminBaseline\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\..\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />
 	</ItemGroup>
 	<ItemGroup>

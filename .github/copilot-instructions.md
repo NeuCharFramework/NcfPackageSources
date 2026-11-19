@@ -65,7 +65,7 @@ Key modules for the RAG implementation:
 ### 4. Critical Commands
 -   **Build & Run**: To avoid XncfBuilder Generated file conflicts, always use:
     ```bash
-    rm -rf "/Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/src/Extensions/Senparc.Xncf.XncfBuilder/Senparc.Xncf.XncfBuilder/Generated" && cd tools/NcfSimulatedSite/Senparc.Web && dotnet run
+    rm -rf "/Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/src/Extensions/Senparc.Xncf.XncfBuilder/Senparc.Xncf.XncfBuilder/Generated" && cd tools/NcfWebAdminBaseline/Senparc.Web && dotnet run
     ```
 -   **Migration**: When modifying entities, run `Add-Migration` in the `Senparc.Xncf.KnowledgeBase` project context (usually via Package Manager Console or dotnet ef tool).
     -   `dotnet ef migrations add [MigrationName] -c KnowledgeBaseSenparcEntities -p src/Extensions/Senparc.Xncf.KnowledgeBase/Senparc.Xncf.KnowledgeBase.csproj -s src/Extensions/Senparc.Xncf.KnowledgeBase/Senparc.Xncf.KnowledgeBase.csproj` (Adjust paths as needed).

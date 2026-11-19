@@ -449,7 +449,7 @@ var newPromptItem = await _promptItemService.AddPromptItemAsync(newPromptItemReq
 所有新增的 EventHandler 会被自动扫描和注册（通过 `Register.cs` 的配置）：
 
 ```csharp
-// tools/NcfSimulatedSite/Senparc.Web/Register.cs
+// tools/NcfWebAdminBaseline/Senparc.Web/Register.cs
 builder.Services.AddSenparcEventBus(
     options => { /* ... */ },
     AppDomain.CurrentDomain.GetAssemblies()
@@ -492,7 +492,7 @@ DELETE FROM Senparc_PromptRange_PromptRange WHERE NickName = 'PromptCatalyzer';
 ```bash
 # 停止应用 (Ctrl+C)
 # 重新启动
-cd tools/NcfSimulatedSite/Senparc.Web
+cd tools/NcfWebAdminBaseline/Senparc.Web
 dotnet run
 ```
 

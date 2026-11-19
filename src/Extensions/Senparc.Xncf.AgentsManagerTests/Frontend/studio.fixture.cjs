@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '../../../..');
 const moduleRoot = path.join(root, 'src/Extensions/Senparc.Xncf.AgentsManager');
-const siteRoot = path.join(root, 'tools/NcfSimulatedSite/Senparc.Web/wwwroot');
+const siteRoot = path.join(root, 'tools/NcfWebAdminBaseline/Senparc.Web/wwwroot');
 const promptRoot = path.join(root, 'src/Extensions/Senparc.Xncf.PromptRange/wwwroot');
 const assets = {
   '/vue.js': path.join(siteRoot, 'lib/vue/vue.js'),

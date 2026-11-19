@@ -33,7 +33,7 @@ public static class SenparcDbContextFactoryConfig
         {
             for (var directory = new DirectoryInfo(start); directory != null; directory = directory.Parent)
             {
-                var simulatedSite = Path.Combine(directory.FullName, "tools", "NcfSimulatedSite", "Senparc.Web");
+                var simulatedSite = Path.Combine(directory.FullName, "tools", "NcfWebAdminBaseline", "Senparc.Web");
                 if (Directory.Exists(simulatedSite))
                 {
                     return simulatedSite;

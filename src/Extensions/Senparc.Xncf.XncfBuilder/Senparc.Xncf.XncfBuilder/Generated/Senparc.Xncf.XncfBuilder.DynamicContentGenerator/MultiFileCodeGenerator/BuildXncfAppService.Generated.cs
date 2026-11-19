@@ -109,6 +109,9 @@ Code:
     Modified by: Senparc - 20260705
     Change description: v0.36.4-preview3 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -143,7 +146,20 @@ namespace Senparc.Xncf.XncfBuilder
         /// Senparc实体类模板
         /// Type: backend_template
         /// </summary>
-        public const string SenparcEntitiesTemplate = @"using Microsoft.EntityFrameworkCore;
+        public const string SenparcEntitiesTemplate = @"/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: Template_XncfNameSenparcEntities.cs
+    File description: Template_XncfNameSenparcEntities related implementation
+
+    Created by: Senparc - 20201226
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
@@ -173,7 +189,20 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models
         /// 颜色模型模板
         /// Type: backend_template
         /// </summary>
-        public const string ColorModelTemplate = @"using Senparc.Ncf.Core.Models;
+        public const string ColorModelTemplate = @"/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: Color.cs
+    File description: Color related implementation
+
+    Created by: Senparc - 20200820
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Models;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -274,7 +303,20 @@ namespace Template_OrgName.Xncf.Template_XncfName
         /// 颜色DTO模板
         /// Type: backend_template
         /// </summary>
-        public const string ColorDtoTemplate = @"using Senparc.Ncf.Core.Models;
+        public const string ColorDtoTemplate = @"/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: ColorDto.cs
+    File description: ColorDto related implementation
+
+    Created by: Senparc - 20200820
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Models;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto
 {
@@ -307,7 +349,20 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
         /// 颜色服务模板
         /// Type: backend_template
         /// </summary>
-        public const string ColorServiceTemplate = @"using Senparc.Ncf.Core.Enums;
+        public const string ColorServiceTemplate = @"/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: ColorService.cs
+    File description: ColorService related implementation
+
+    Created by: Senparc - 20200820
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
@@ -576,7 +631,20 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
         /// 数据库示例索引页面代码后置模板
         /// Type: frontend_template
         /// </summary>
-        public const string DatabaseSampleIndexCodeBehindTemplate = @"using Microsoft.AspNetCore.Mvc;
+        public const string DatabaseSampleIndexCodeBehindTemplate = @"/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: DatabaseSampleIndex.cshtml.cs
+    File description: DatabaseSampleIndex.cshtml related implementation
+
+    Created by: Senparc - 20250524
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Utility;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Services;

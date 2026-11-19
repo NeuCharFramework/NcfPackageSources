@@ -21,7 +21,7 @@
 
 ### 修复1：注册 EventBus 和 Handler
 
-**修改文件**：`tools/NcfSimulatedSite/Senparc.Web/Register.cs`
+**修改文件**：`tools/NcfWebAdminBaseline/Senparc.Web/Register.cs`
 
 **问题分析**：
 之前的代码只注册了 EventBus 本身和 HostedService，但没有调用 `AddSenparcEventBus()` 方法来扫描和注册 EventHandler。
@@ -213,7 +213,7 @@ Controller 返回给前端
 # 停止当前运行的应用（如果有）
 # 然后启动应用
 cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources
-dotnet run --project tools/NcfSimulatedSite/Senparc.Web/Senparc.Web.csproj
+dotnet run --project tools/NcfWebAdminBaseline/Senparc.Web/Senparc.Web.csproj
 ```
 
 ### 2. 检查启动日志
@@ -238,7 +238,7 @@ EventBus 已注册，共扫描了 XX 个程序集
 
 ### 4. 查看日志
 ```bash
-tail -f tools/NcfSimulatedSite/Senparc.Web/App_Data/SenparcTraceLog/SenparcTrace-20260324.log
+tail -f tools/NcfWebAdminBaseline/Senparc.Web/App_Data/SenparcTraceLog/SenparcTrace-20260324.log
 ```
 
 **应该能看到的日志**：
@@ -292,7 +292,7 @@ Successfully created PromptCatalyzer Agent with ID: xxx
 
 ## 相关文件
 
-- `tools/NcfSimulatedSite/Senparc.Web/Register.cs` - EventBus 注册配置
+- `tools/NcfWebAdminBaseline/Senparc.Web/Register.cs` - EventBus 注册配置
 - `src/Extensions/Senparc.Xncf.AgentsManager/Application/EventHandlers/PromptInitResponseHandler.cs` - 初始化响应处理器
 - `src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptInitRequestHandler.cs` - 初始化请求处理器
 - `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js` - 前端 API 调用逻辑
