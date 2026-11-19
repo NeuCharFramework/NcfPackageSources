@@ -1,4 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: LogController.cs
+    File description: LogController related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Models.VD;
 using Senparc.Ncf.Core.Extensions;
 using Senparc.Ncf.Core.Models;

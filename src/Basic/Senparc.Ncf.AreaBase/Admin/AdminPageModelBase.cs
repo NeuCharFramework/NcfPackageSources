@@ -13,6 +13,9 @@
     Modified by: Senparc - 20260729
     Change description: v0.22.0-preview3 Unify AdminOnly authorization policy naming and provide host registration extension
 
+    Modified by: Senparc - 20261119
+    Change description: v0.23.12 Improved administration page and authorization support
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;

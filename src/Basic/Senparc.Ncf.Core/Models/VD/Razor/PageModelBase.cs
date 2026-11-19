@@ -13,6 +13,9 @@
     Modified by: Senparc - 20260804
     Change description: v0.28.0-preview5 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;

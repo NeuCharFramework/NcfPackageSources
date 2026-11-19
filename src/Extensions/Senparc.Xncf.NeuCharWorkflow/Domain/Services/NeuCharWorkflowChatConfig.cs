@@ -11,6 +11,9 @@
     Modified by: Senparc - 20260915
     Change description: v0.4.0 enhance Chat trigger message persistence and recovery
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System;

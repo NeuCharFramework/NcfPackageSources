@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.5.10 add AITokenUsageRecorder and related services for token usage tracking
 
+    Modified by: Senparc - 20261119
+    Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 
 #pragma warning disable OPENAI001 //Legacy comment translated to English.

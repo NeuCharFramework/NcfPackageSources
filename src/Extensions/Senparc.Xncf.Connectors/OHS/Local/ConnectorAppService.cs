@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.1.0 provide application services for connector configuration and invocation
 
+    Modified by: Senparc - 20261119
+    Change description: v0.1.1 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel.DataAnnotations;

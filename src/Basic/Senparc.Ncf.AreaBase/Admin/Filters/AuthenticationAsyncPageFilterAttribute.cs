@@ -13,6 +13,9 @@
     Modified by: Senparc - 20260731
     Change description: v0.23.0-preview4 will integrate Ajax none permission prompt with core multilingual resources
 
+    Modified by: Senparc - 20261119
+    Change description: v0.23.12 Improved administration page and authorization support
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;

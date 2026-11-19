@@ -2,35 +2,38 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.1.13</Version>
-    <PackageReleaseNotes>      [2026-07-17] v0.1.0  Application moduleintegrateunifyresourcelocalizationimprovefeature text
-      1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
-      2. Updated module behavior and related support.
-      3. Updated module behavior and related support.
-      [2026-07-29] v0.1.1 Dependency update from Senparc.Ncf.XncfBase to 0.23.4-preview3
-      [2026-07-31] v0.1.2 Dependency update from Senparc.Ncf.XncfBase to 0.23.5-preview4
-      [2026-08-04] v0.1.3 Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
-      [2026-08-08] v0.1.4 Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
-      [2026-08-13] v0.1.5 Dependency update from Senparc.Ncf.XncfBase to 0.25.0-preview7
-      [2026-08-15] v0.1.6 Dependency update from Senparc.Ncf.XncfBase to 0.25.1-preview8
-      [2026-08-22] v0.1.7 synchronize Senparc.Xncf.Application dependency version
-      1. Updated module behavior and related support.
-      [2026-08-29] v0.1.8 Dependency updates from Senparc.Ncf.XncfBase to 0.26.1
-      1. Dependency update from Senparc.Ncf.XncfBase to 0.26.1
-      [2026-09-16] v0.1.9 Dependency updates from upstream modules
-      [2026-09-17] v0.1.10 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      [2026-10-05] v0.1.11 Enhanced Senparc.Xncf.Application functionality and compatibility
-      1. Updated Senparc.Xncf.Application project behavior and integration for the latest feature and reliability improvements.
-      [2026-11-03] v0.1.12 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Dependency update from Senparc.Ncf.XncfBase to 0.28.2
-      [2026-11-11] v0.1.12 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      [2026-11-12] v0.1.13 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
+    <Version>0.1.14</Version>
+    <PackageReleaseNotes>[2026-07-17] v0.1.0  Application moduleintegrateunifyresourcelocalizationimprovefeature text
+        1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-07-29] v0.1.1 Dependency update from Senparc.Ncf.XncfBase to 0.23.4-preview3
+        [2026-07-31] v0.1.2 Dependency update from Senparc.Ncf.XncfBase to 0.23.5-preview4
+        [2026-08-04] v0.1.3 Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
+        [2026-08-08] v0.1.4 Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+        [2026-08-13] v0.1.5 Dependency update from Senparc.Ncf.XncfBase to 0.25.0-preview7
+        [2026-08-15] v0.1.6 Dependency update from Senparc.Ncf.XncfBase to 0.25.1-preview8
+        [2026-08-22] v0.1.7 synchronize Senparc.Xncf.Application dependency version
+        1. Updated module behavior and related support.
+        [2026-08-29] v0.1.8 Dependency updates from Senparc.Ncf.XncfBase to 0.26.1
+        1. Dependency update from Senparc.Ncf.XncfBase to 0.26.1
+        [2026-09-16] v0.1.9 Dependency updates from upstream modules
+        [2026-09-17] v0.1.10 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-10-05] v0.1.11 Enhanced Senparc.Xncf.Application functionality and compatibility
+        1. Updated Senparc.Xncf.Application project behavior and integration for the latest feature and reliability improvements.
+        [2026-11-03] v0.1.12 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+        [2026-11-11] v0.1.12 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-11-12] v0.1.13 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-19] v0.1.14 Updated module behavior, localization metadata, and English source comments
+        1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+        2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
     </PackageReleaseNotes>
   </PropertyGroup>
 

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.12.15 enhance WeixinClaw integration with new message handling and UI improvements
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;

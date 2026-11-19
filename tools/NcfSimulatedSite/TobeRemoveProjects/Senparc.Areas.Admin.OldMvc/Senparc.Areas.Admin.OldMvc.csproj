@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+		<Version>0.0.1</Version>
+		<PackageReleaseNotes>[2026-11-19] v0.0.1 Localized administration, chat, and workflow surfaces
+		    1. Kept runtime behavior and module integration aligned with the affected service and registration changes.
+		    2. Standardized related English source comments and package metadata for the current release.
+		</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

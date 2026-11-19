@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261105
     Change description: v0.3.2-preview6 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.3.3-preview8 Localized PromptRange administration and runtime surfaces
+
 ----------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;

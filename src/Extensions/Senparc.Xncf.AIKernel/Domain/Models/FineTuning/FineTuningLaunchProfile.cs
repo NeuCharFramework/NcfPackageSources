@@ -7,6 +7,9 @@
 
     Created by: Senparc - 20261106
 
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
+
 ----------------------------------------------------------------*/
 
 using System;

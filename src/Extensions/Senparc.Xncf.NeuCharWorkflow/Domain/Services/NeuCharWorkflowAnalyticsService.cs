@@ -8,6 +8,9 @@
     Modified by: Senparc - 20260829
     Change description: v0.3.0 add workflow analysis queries and admin-side visualization
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;

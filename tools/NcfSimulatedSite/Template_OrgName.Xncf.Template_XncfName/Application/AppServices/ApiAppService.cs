@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260726
     Change description: v1.1.0 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;

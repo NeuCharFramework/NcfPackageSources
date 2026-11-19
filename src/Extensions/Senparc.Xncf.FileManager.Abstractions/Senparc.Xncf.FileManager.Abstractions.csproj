@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>Senparc.Xncf.FileManager.Abstractions</AssemblyName>
@@ -16,11 +16,13 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>File Management Abstractions</Title>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      [2026-10-01] v0.1.1 addcross-module private attachment import EventBus request-response contracts
-      [2026-11-03] v0.2.0 addfine-tuning artifact file resource types
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
+    <PackageReleaseNotes>[2026-10-01] v0.1.1 addcross-module private attachment import EventBus request-response contracts
+        [2026-11-03] v0.2.0 addfine-tuning artifact file resource types
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-19] v0.2.1 Localized file management and upload surfaces
+        1. Updated affected project files while preserving existing public integration behavior.
+        2. Standardized related English source comments and package metadata for the current release.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

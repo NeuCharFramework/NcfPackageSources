@@ -12,10 +12,11 @@
 		<Authors>NeuCharFramework</Authors>
 		<Owners>NeuCharFramework</Owners>
 		<Title>NCF Installer</Title>
-		<PackageReleaseNotes>
-			[2026-11-18] v0.6.0 Move to src/Extensions/System; system UID and XncfOrder(5930).
-			1. Prominent install-time language selection and menu localization on install.
-			2. Modernized install UI.
+		<PackageReleaseNotes>[2026-11-19] v0.6.0 Move to src/Extensions/System; system UID and XncfOrder(5930).
+		    1. Prominent install-time language selection and menu localization on install.
+		    2. Modernized install UI.
+		    3. Aligned the project with updated referenced module contracts and package versions.
+		    4. Preserved installer integration while keeping the dependency chain consistent.
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

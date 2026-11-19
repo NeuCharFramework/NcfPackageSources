@@ -25,6 +25,9 @@
     Modified by: Senparc - 20260829
     Change description: v0.4.5 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.11 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 
 using System.Net.Http.Json;

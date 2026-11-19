@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261109
     Change description: count Workspace files and capacity, and restore directories to their initial layout
 
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.Workspace.Abstractions;

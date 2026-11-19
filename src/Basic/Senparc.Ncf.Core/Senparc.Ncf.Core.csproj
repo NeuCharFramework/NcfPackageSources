@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.31.0-preview11</Version>
+    <Version>0.31.1-preview12</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -17,81 +17,84 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>				[2024-08-11] v0.19.2.0-preview1 add DtoBase&lt;T&gt; type
-				[2024-08-22] v0.20.0-preview1 Updated module behavior and related support.
-				v0.1.0 initial release
-				v0.1.1 Updated module behavior and related support.
-				v0.3.101 Updated module behavior and related support.
-				v0.7.3 Updated module behavior and related support.
-				v0.9.4.4 Updated module behavior and related support.
-				v0.11.5.2 Updated module behavior and related support.
-				v0.11.6 add SenparcCoreSetting.PasswordSaltToken parameter
-				v0.14.0 Updated module behavior and related support.
-				v0.14.1 Updated module behavior and related support.
-				v0.16.4 refactor EntityBase property
-				v0.16.7 Updated module behavior and related support.
-				[2024-08-26] v0.20.1 Updated module behavior and related support.
-				[2024-08-27] v0.20.2 Updated module behavior and related support.
-				[2024-08-28] v0.20.3 Updated module behavior and related support.
-				[2024-09-10] v0.20.4-preview1 upgrade the cache foundation libraries
-				[2024-10-16] v0.20.6-preview1 Updated module behavior and related support.
-				[2024-10-16] v0.21.0 Updated module behavior and related support.
-				[2024-10-26] v0.21.2 Updated module behavior and related support.
-				[2024-11-15] v0.22.0-preview1 Updated module behavior and related support.
-				[2024-11-16] v0.22.2-preview1 Updated module behavior and related support.
-				[2024-11-19] v0.23.1-preview1 Updated module behavior and related support.
-				[2024-11-20] v0.23.2-preview1 Updated module behavior and related support.
-				[2024-11-21] v0.23.3-preview1 Updated module behavior and related support.
-				[2024-11-28] v0.23.5-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-				[2025-01-12] v0.23.8-preview1 add LoginLockException
-				[2025-01-25] v0.23.10-preview1 Update Agents functions, support for function calling
-				[2025-04-29] v0.23.12-preview1 Update CO2NET and AIKernel
-				[2025-04-29] v0.23.13-preview1 Update CO2NET and AIKernel
-				[2025-11-01] update basic libraries, including Senparc.AI
-				[2026-07-02] v0.24.2-preview1 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				2. Updated module behavior and related support.
-				[2026-07-17] v0.25.0-preview2 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				2. Updated module behavior and related support.
-				3. Updated module behavior and related support.
-				4. Updated module behavior and related support.
-				5. Updated module behavior and related support.
-				[2026-07-29] v0.26.0-preview3 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				2. Updated module behavior and related support.
-				[2026-07-31] v0.27.0-preview4 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				2. Updated module behavior and related support.
-				3. Updated module behavior and related support.
-				[2026-08-04] v0.28.0-preview5 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				2. Updated module behavior and related support.
-				[2026-08-08] v0.28.1-preview6 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.5.0-preview4
-				[2026-08-13] v0.28.2-preview7 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.6.0-preview5
-				[2026-08-15] v0.29.0-preview8 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				2. Updated module behavior and related support.
-				[2026-08-29] v0.30.0-preview9 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				2. Updated module behavior and related support.
-				[2026-10-01] v0.30.1-preview9 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				2. Updated module behavior and related support.
-				[2026-10-02] provideunify, preserve
-				[2026-11-03] v0.30.3-preview9 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				2. Updated module behavior and related support.
-				3. Updated module behavior and related support.
-				4. Updated module behavior and related support.
-				[2026-11-03] v0.30.4-preview10 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				[2026-11-11] v0.30.4-preview10 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				2. Updated module behavior and related support.
-				[2026-11-12] v0.31.0-preview11 enhancelocalizationresourceculture fallbackcapabilities
-				1. Updated module behavior and related support.
-				2. Updated module behavior and related support.
+    <PackageReleaseNotes>[2024-08-11] v0.19.2.0-preview1 add DtoBase&lt;T&gt; type
+        [2024-08-22] v0.20.0-preview1 Updated module behavior and related support.
+        v0.1.0 initial release
+        v0.1.1 Updated module behavior and related support.
+        v0.3.101 Updated module behavior and related support.
+        v0.7.3 Updated module behavior and related support.
+        v0.9.4.4 Updated module behavior and related support.
+        v0.11.5.2 Updated module behavior and related support.
+        v0.11.6 add SenparcCoreSetting.PasswordSaltToken parameter
+        v0.14.0 Updated module behavior and related support.
+        v0.14.1 Updated module behavior and related support.
+        v0.16.4 refactor EntityBase property
+        v0.16.7 Updated module behavior and related support.
+        [2024-08-26] v0.20.1 Updated module behavior and related support.
+        [2024-08-27] v0.20.2 Updated module behavior and related support.
+        [2024-08-28] v0.20.3 Updated module behavior and related support.
+        [2024-09-10] v0.20.4-preview1 upgrade the cache foundation libraries
+        [2024-10-16] v0.20.6-preview1 Updated module behavior and related support.
+        [2024-10-16] v0.21.0 Updated module behavior and related support.
+        [2024-10-26] v0.21.2 Updated module behavior and related support.
+        [2024-11-15] v0.22.0-preview1 Updated module behavior and related support.
+        [2024-11-16] v0.22.2-preview1 Updated module behavior and related support.
+        [2024-11-19] v0.23.1-preview1 Updated module behavior and related support.
+        [2024-11-20] v0.23.2-preview1 Updated module behavior and related support.
+        [2024-11-21] v0.23.3-preview1 Updated module behavior and related support.
+        [2024-11-28] v0.23.5-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+        [2025-01-12] v0.23.8-preview1 add LoginLockException
+        [2025-01-25] v0.23.10-preview1 Update Agents functions, support for function calling
+        [2025-04-29] v0.23.12-preview1 Update CO2NET and AIKernel
+        [2025-04-29] v0.23.13-preview1 Update CO2NET and AIKernel
+        [2025-11-01] update basic libraries, including Senparc.AI
+        [2026-07-02] v0.24.2-preview1 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-17] v0.25.0-preview2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        [2026-07-29] v0.26.0-preview3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-31] v0.27.0-preview4 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-08-04] v0.28.0-preview5 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-08] v0.28.1-preview6 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.5.0-preview4
+        [2026-08-13] v0.28.2-preview7 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.6.0-preview5
+        [2026-08-15] v0.29.0-preview8 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-29] v0.30.0-preview9 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-10-01] v0.30.1-preview9 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-10-02] provideunify, preserve
+        [2026-11-03] v0.30.3-preview9 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        [2026-11-03] v0.30.4-preview10 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-11-11] v0.30.4-preview10 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-12] v0.31.0-preview11 enhancelocalizationresourceculture fallbackcapabilities
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-19] v0.31.1-preview12 Improved core module metadata, localization support, and source comments
+        1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+        2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

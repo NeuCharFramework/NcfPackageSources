@@ -19,19 +19,20 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>Workspace Agent</Title>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      [2026-10-24] Fix Workspace Agent deployment and support native or DLL startup.
-      [2026-11-03] v0.2.1 Updated module behavior and related support.
-      [2026-11-03] Rename to Senparc.Xncf.WorkspaceAgent and propagate runtime files through project references for build and publish.
-      [2026-11-11] v0.2.2 read workspace text by line window and limit individual line size
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      [2026-11-12] v0.2.3 Updated module behavior and related support.
-      1. the file-system engine supports relative-path globs and content regex search.
-      2. output clearer diagnostics on operation failure while preserving the single-line size limit.
-      [2026-11-13] v0.2.4 fix missing Agent runtime files for NuGet consumers
-      1. package the Agent DLL, dependency manifest, and runtime configuration into the tool directory.
-      2. copy runtime files to consumer output and publish directories through the buildTransitive target.
+    <PackageReleaseNotes>[2026-10-24] Fix Workspace Agent deployment and support native or DLL startup.
+        [2026-11-03] v0.2.1 Updated module behavior and related support.
+        [2026-11-03] Rename to Senparc.Xncf.WorkspaceAgent and propagate runtime files through project references for build and publish.
+        [2026-11-11] v0.2.2 read workspace text by line window and limit individual line size
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-12] v0.2.3 Updated module behavior and related support.
+        1. the file-system engine supports relative-path globs and content regex search.
+        2. output clearer diagnostics on operation failure while preserving the single-line size limit.
+        [2026-11-19] v0.2.4 Improved Workspace Agent runtime diagnostics and packaging
+        1. package the Agent DLL, dependency manifest, and runtime configuration into the tool directory.
+        2. copy runtime files to consumer output and publish directories through the buildTransitive target.
+        3. Kept runtime behavior and module integration aligned with the affected service and registration changes.
+        4. Standardized related English source comments and package metadata for the current release.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

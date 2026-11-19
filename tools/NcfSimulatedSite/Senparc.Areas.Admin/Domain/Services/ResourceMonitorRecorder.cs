@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.12.15 add PromptRange selector service, UI components, and tests
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Hosting;

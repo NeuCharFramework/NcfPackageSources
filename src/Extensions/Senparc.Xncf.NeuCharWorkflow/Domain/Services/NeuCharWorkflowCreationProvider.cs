@@ -5,6 +5,9 @@
     File name: NeuCharWorkflowCreationProvider.cs
     File description: Controlled AI-assisted Workflow creation boundary
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;

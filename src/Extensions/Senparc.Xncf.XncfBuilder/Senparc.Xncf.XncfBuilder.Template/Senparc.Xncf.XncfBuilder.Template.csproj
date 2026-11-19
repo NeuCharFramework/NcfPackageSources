@@ -22,60 +22,62 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>      v0.1.0 initial release
-      v0.1.7 Updated module behavior and related support.
-      v0.2.3 Updated module behavior and related support.
-      v0.2.18 add PostgreSQL database
-      v0.2.18.2 Updated module behavior and related support.
-      v0.3 Updated module behavior and related support.
-      v0.4 Updated module behavior and related support.
-      v0.4.0.8 Updated module behavior and related support.
-      v0.4.3 Updated module behavior and related support.
-      v0.4.4 Updated module behavior and related support.
-      v0.4.5 Updated module behavior and related support.
-      v0.4.6 updateprojectfile
-      v0.4.7 Updated module behavior and related support.
-      v0.5.0 Updated module behavior and related support.
-      v0.6.0 updateprojectreference, support .NET 8.0
-      v0.7.0 Updated module behavior and related support.
-      v0.8.0 Updated module behavior and related support.
-      v0.9.0
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      v0.10.0 Updated module behavior and related support.
-      v0.10.1 Updated module behavior and related support.
-      v0.11.0 Updated module behavior and related support.
-      v0.12.0 Updated module behavior and related support.
-      v0.12.1 Updated module behavior and related support.
-      v0.12.2 Updated module behavior and related support.
-      v0.12.3 Updated module behavior and related support.
-      v0.12.4 Updated module behavior and related support.
-      v0.12.5 update Demo
-      v0.12.6 Updated module behavior and related support.
-      v0.12.7 Updated module behavior and related support.
-      v0.12.8-beta1 Updated module behavior and related support.
-      v0.12.9-preview.7 Updated module behavior and related support.
-      [2025-11-01] update basic libraries, including Senparc.AI
-      [2026-04-24] Update FunctionRender request templates for simplified values and SelectionList UI metadata compatibility
-      [2026-07-17] v0.12.13-preview.1 Updated module behavior and related support.
-      1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
-      2. Updated module behavior and related support.
-      3. Updated module behavior and related support.
-      [2026-07-25] v0.13.0 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      3. Updated module behavior and related support.
-      [2026-08-04] v0.14.0 Updated module behavior and related support.
-      [2026-09-15] v0.1.1 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      [2026-11-03] v0.1.2 Updated module behavior and related support.
-      [2026-11-11] v0.1.2 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      [2026-11-12] v0.1.3 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      [2026-11-18] v0.1.4 Publish template package 0.15.0 with the current XNCF sample architecture, localized metadata, and sample-page fixes.
+    <PackageReleaseNotes>v0.1.0 initial release
+        v0.1.7 Updated module behavior and related support.
+        v0.2.3 Updated module behavior and related support.
+        v0.2.18 add PostgreSQL database
+        v0.2.18.2 Updated module behavior and related support.
+        v0.3 Updated module behavior and related support.
+        v0.4 Updated module behavior and related support.
+        v0.4.0.8 Updated module behavior and related support.
+        v0.4.3 Updated module behavior and related support.
+        v0.4.4 Updated module behavior and related support.
+        v0.4.5 Updated module behavior and related support.
+        v0.4.6 updateprojectfile
+        v0.4.7 Updated module behavior and related support.
+        v0.5.0 Updated module behavior and related support.
+        v0.6.0 updateprojectreference, support .NET 8.0
+        v0.7.0 Updated module behavior and related support.
+        v0.8.0 Updated module behavior and related support.
+        v0.9.0
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        v0.10.0 Updated module behavior and related support.
+        v0.10.1 Updated module behavior and related support.
+        v0.11.0 Updated module behavior and related support.
+        v0.12.0 Updated module behavior and related support.
+        v0.12.1 Updated module behavior and related support.
+        v0.12.2 Updated module behavior and related support.
+        v0.12.3 Updated module behavior and related support.
+        v0.12.4 Updated module behavior and related support.
+        v0.12.5 update Demo
+        v0.12.6 Updated module behavior and related support.
+        v0.12.7 Updated module behavior and related support.
+        v0.12.8-beta1 Updated module behavior and related support.
+        v0.12.9-preview.7 Updated module behavior and related support.
+        [2025-11-01] update basic libraries, including Senparc.AI
+        [2026-04-24] Update FunctionRender request templates for simplified values and SelectionList UI metadata compatibility
+        [2026-07-17] v0.12.13-preview.1 Updated module behavior and related support.
+        1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-07-25] v0.13.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-08-04] v0.14.0 Updated module behavior and related support.
+        [2026-09-15] v0.1.1 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-03] v0.1.2 Updated module behavior and related support.
+        [2026-11-11] v0.1.2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-11-12] v0.1.3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-19] v0.1.4 Localized XNCF Builder tools and template surfaces
+        1. Updated affected project files while preserving existing public integration behavior.
+        2. Standardized related English source comments and package metadata for the current release.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

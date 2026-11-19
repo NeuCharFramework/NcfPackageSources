@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.2.2 maintain Workspace database registration
 
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Workspace;

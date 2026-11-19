@@ -19,6 +19,9 @@
     Modified by: Senparc - 20260804
     Change description: v0.3.0 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 
 using System;

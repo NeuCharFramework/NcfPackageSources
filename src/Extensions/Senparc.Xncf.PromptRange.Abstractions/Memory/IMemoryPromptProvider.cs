@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.3.1-preview6 implement AdminChat memory storage and management system
 
+    Modified by: Senparc - 20261119
+    Change description: v0.3.3-preview8 Localized PromptRange administration and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System.Threading;

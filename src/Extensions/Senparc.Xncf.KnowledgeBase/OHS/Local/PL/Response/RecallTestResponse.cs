@@ -1,4 +1,17 @@
-﻿﻿/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: RecallTestResponse.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20260225
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
+
+----------------------------------------------------------------*/
+
+﻿/*----------------------------------------------------------------
 
     Copyright (C) 2026 Senparc
 

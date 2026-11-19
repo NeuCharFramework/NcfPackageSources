@@ -28,6 +28,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.12.15 add streamed large-file Workspace uploads with tenant-aware ownership checks
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.OHS.Local.PL;

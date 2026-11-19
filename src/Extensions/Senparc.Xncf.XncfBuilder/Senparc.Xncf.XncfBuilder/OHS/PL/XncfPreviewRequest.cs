@@ -7,6 +7,9 @@
 
     Created by: Senparc - 20260801
 
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

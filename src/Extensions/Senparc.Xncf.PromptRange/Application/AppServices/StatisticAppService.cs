@@ -19,6 +19,9 @@
     Modified by: Senparc - 20260729
     Change description: v0.17.1-preview6 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System;

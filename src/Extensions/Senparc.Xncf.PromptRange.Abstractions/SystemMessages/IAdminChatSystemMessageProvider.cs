@@ -7,6 +7,9 @@
 
     Created by: Senparc - 20261115
 
+    Modified by: Senparc - 20261119
+    Change description: v0.3.3-preview8 Localized PromptRange administration and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System.Threading;

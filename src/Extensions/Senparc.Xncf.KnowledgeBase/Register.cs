@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.8.2 unify XNCF Register display metadata and localization resource keys
 
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;

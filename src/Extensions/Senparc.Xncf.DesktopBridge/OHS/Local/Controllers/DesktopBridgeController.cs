@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.4.8 implement connection manager and workspace file system provider
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json;

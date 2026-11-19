@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260813
     Change description: v0.1.0-preview1 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.3.2 Localized Workflow designer and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Shared.Abstractions.Events;

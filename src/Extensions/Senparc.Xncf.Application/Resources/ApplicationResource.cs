@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260717
     Change description: v0.1.0 integrate shared resource localization and improve feature text for the Application module
 
+    Modified by: Senparc - 20261119
+    Change description: v0.1.14 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 #nullable enable
 

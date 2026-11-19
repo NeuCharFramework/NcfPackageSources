@@ -13,6 +13,9 @@
     Modified by: Senparc - 20260829
     Change description: v0.3.0 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Domain.Services;

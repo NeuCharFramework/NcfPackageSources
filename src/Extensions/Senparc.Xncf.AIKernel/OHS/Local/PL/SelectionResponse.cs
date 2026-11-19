@@ -8,6 +8,9 @@
     Modified by: Senparc - 20260915
     Change description: v0.16.0 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.AIKernel.Models;

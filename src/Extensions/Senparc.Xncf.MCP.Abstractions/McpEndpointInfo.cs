@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.1.1 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.1.2 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 
 using System;

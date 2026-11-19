@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.23.10-preview9 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.23.13-preview12 Updated service infrastructure and related localization metadata
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;

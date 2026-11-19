@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260804
     Change description: v0.39.0-preview8 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

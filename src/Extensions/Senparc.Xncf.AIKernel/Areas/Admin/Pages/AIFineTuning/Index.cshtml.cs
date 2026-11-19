@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.17.0 enhance Agent Studio, group configuration, and task management interactions
 
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
+
 ----------------------------------------------------------------*/
 
 /*----------------------------------------------------------------

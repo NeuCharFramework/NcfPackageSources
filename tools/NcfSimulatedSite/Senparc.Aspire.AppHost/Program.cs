@@ -13,6 +13,9 @@
     Modified by: Senparc - 20260724
     Change description: v0.0.5 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.0.22 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 
 using Aspire.Hosting;

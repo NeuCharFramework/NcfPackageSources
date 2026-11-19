@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
 
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
+
 ----------------------------------------------------------------*/
 
 using System;

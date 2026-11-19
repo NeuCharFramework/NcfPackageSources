@@ -19,6 +19,9 @@
     Modified by: Senparc - 20260822
     Change description: v0.41.0 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

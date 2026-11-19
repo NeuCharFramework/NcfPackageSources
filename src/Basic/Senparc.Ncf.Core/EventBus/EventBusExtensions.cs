@@ -13,6 +13,9 @@
     Modified by: Senparc - 20260726
     Change description: v0.25.0-preview2 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261112
     Change description: v0.2.3 support path globs and content regex search, and improve error diagnostics
 
+    Modified by: Senparc - 20261119
+    Change description: v0.2.4 Improved Workspace Agent runtime diagnostics and packaging
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;

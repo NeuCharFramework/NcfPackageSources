@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 
+    Modified by: Senparc - 20261119
+    Change description: v0.22.9-preview13 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Generic;

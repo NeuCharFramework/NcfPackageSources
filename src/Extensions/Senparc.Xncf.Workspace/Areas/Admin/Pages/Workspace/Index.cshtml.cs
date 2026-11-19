@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261109
     Change description: show owner-isolated usage and allow content clearing within authorization boundaries
 
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System.Text.Encodings.Web;

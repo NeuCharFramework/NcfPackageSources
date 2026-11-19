@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260915
     Change description: v0.39.0 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.39.9 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;

@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.28.1 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis.CSharp.Syntax;

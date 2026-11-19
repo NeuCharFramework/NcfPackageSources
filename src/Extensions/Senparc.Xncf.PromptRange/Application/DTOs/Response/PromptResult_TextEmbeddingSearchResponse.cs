@@ -9,6 +9,9 @@
 
     Modified by: Senparc - 20260705
 
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Generic;

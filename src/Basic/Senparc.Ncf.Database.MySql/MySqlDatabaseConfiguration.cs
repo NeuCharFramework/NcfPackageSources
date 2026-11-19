@@ -13,6 +13,9 @@
     Modified by: Senparc - 20260804
     Change description: v0.20.5-preview5 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.20.14 Updated database integration support and related localization metadata
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

@@ -17,6 +17,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.5.10 add comprehensive tests for MCP endpoint management and background tenant scope
 
+    Modified by: Senparc - 20261119
+    Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 
 using System;

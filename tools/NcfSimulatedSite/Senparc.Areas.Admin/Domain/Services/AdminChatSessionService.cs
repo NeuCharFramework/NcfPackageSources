@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261106
     Change description: Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

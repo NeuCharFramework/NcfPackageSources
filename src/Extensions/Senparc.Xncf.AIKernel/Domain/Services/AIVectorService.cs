@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260702
     Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Repository;

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.1.0-preview1</Version>
+    <Version>0.1.1-preview2</Version>
     <AssemblyName>Senparc.Ncf.IsolatedRuntime</AssemblyName>
     <RootNamespace>Senparc.Ncf.IsolatedRuntime</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -18,12 +18,14 @@
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'TemplateRelease'">true</GeneratePackageOnBuild>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-    <PackageReleaseNotes>
-      [2026-11-03] v0.1.0-preview1 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      3. Updated module behavior and related support.
-      4. Updated module behavior and related support.
+    <PackageReleaseNotes>[2026-11-03] v0.1.0-preview1 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        [2026-11-19] v0.1.1-preview2 Updated module behavior, localization metadata, and English source comments
+        1. Kept runtime behavior and module integration aligned with the affected service and registration changes.
+        2. Standardized related English source comments and package metadata for the current release.
     </PackageReleaseNotes>
   </PropertyGroup>
 

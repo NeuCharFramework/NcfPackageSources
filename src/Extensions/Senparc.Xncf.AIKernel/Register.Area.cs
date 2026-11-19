@@ -28,6 +28,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.17.0 add new Workspace projects and update AITokenMonitor icon
 
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Hosting;

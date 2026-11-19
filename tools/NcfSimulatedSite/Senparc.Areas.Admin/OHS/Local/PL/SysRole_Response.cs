@@ -1,4 +1,17 @@
-﻿using Senparc.Areas.Admin.Domain.Dto;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: SysRole_Response.cs
+    File description: SysRole_Response related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
+----------------------------------------------------------------*/
+
+using Senparc.Areas.Admin.Domain.Dto;
 using Senparc.Ncf.Core.Models;
 using System;
 using System.Collections.Generic;

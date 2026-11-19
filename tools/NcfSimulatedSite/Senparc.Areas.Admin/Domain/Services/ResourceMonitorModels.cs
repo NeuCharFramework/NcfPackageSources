@@ -12,6 +12,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.12.15 Admin home resource monitor - per-Web-process CPU/memory lines + nonlinear 24h time-axis chart
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Generic;

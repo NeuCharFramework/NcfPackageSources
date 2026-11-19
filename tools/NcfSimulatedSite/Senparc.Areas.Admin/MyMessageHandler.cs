@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260702
     Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

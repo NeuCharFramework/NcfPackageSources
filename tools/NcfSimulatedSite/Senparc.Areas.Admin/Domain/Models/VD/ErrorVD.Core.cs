@@ -1,4 +1,17 @@
-﻿
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: ErrorVD.Core.cs
+    File description: ErrorVD.Core related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
+----------------------------------------------------------------*/
+
+
 using System;
 
 namespace Senparc.Areas.Admin.Domain.Models.VD

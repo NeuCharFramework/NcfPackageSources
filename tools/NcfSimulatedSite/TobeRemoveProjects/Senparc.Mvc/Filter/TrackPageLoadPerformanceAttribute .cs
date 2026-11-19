@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: TrackPageLoadPerformanceAttribute .cs
+    File description: TrackPageLoadPerformanceAttribute  related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;

@@ -17,6 +17,9 @@
     Modified by: Senparc - 20260822
     Change description: v0.16.0 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.21.2-preview4</Version>
+    <Version>0.21.3-preview5</Version>
     <AssemblyName>Senparc.Ncf.Utility</AssemblyName>
     <RootNamespace>Senparc.Ncf.Utility</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -16,22 +16,25 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>				v0.1.0 initial release
-				[2024-10-07] delete AESEncryptionUtility , unify CO2NET feature.
-				[2024-10-26] 0.18.6-preview1 add GlobalCulture 
-				[2025-04-29] v0.19.6-preview1 Update CO2NET and AIKernel
-				[2025-11-01] update basic libraries, including Senparc.AI
-				[2026-07-17] v0.21.0-preview2 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				2. Updated module behavior and related support.
-				[2026-07-31] v0.21.1-preview3 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				[2026-11-11] v0.21.1-preview3 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				2. Updated module behavior and related support.
-				[2026-11-12] v0.21.2-preview4 Updated module behavior and related support.
-				1. Updated module behavior and related support.
-				2. Updated module behavior and related support.
+    <PackageReleaseNotes>v0.1.0 initial release
+        [2024-10-07] delete AESEncryptionUtility , unify CO2NET feature.
+        [2024-10-26] 0.18.6-preview1 add GlobalCulture
+        [2025-04-29] v0.19.6-preview1 Update CO2NET and AIKernel
+        [2025-11-01] update basic libraries, including Senparc.AI
+        [2026-07-17] v0.21.0-preview2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-31] v0.21.1-preview3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-11-11] v0.21.1-preview3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-12] v0.21.2-preview4 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-19] v0.21.3-preview5 Updated module behavior, localization metadata, and English source comments
+        1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+        2. Standardized related English source comments and package metadata for the current release.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -16,6 +16,9 @@
     Modified by: Senparc - 20260822
     Change description: v0.2.0 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.3.2 Localized sandbox setup and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Abstractions;

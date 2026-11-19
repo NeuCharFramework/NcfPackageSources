@@ -1,4 +1,17 @@
-﻿using Senparc.Ncf.Core.Models;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: ColorDto.cs
+    File description: ColorDto related implementation
+
+    Created by: Senparc - 20200820
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Models;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto
 {

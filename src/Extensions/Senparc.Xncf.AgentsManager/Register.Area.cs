@@ -13,6 +13,9 @@
     Modified by: Senparc - 20260717
     Change description: v0.12.0-preview6 integrate AgentsManager with unified localization and refine UI copy
 
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Hosting;

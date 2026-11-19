@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260726
     Change description: v1.1.0 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
+
 ----------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;

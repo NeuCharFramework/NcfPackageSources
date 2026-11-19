@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.4.0 implement connection manager and workspace file system provider
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System.Net;

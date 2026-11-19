@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: AdminOrJwtAuthorizeAttribute.cs
+    File description: AdminOrJwtAuthorizeAttribute related implementation
+
+    Created by: Senparc - 20260325
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
+----------------------------------------------------------------*/
+
 using Microsoft.AspNetCore.Authorization;
 using Senparc.Ncf.Core.Config;
 

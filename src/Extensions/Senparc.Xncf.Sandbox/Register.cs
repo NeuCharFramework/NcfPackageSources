@@ -34,6 +34,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.4.2 unify XNCF Register display metadata and localization resource keys
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System.Net.Http;

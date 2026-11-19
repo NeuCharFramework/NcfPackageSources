@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260822
     Change description: v0.2.0 enhance workflow function calls, task control, and replay management
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;

@@ -22,6 +22,9 @@
     Modified by: Senparc - 20260829
     Change description: v0.30.0-preview9 Add FunctionRender function name matching and global invoke control capabilities
 
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
+
 ----------------------------------------------------------------*/
 
 using System;

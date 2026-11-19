@@ -11,6 +11,9 @@
     Modified by: Senparc - 20260822
     Change description: v0.7.0 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.KnowledgeBase.Domain.Services

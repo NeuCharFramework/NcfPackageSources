@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.19.1 update AdminChat with PromptRange Skill integration
 
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;

@@ -32,6 +32,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.4.0 add bulk file upload functionality to Sandbox Lab
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;

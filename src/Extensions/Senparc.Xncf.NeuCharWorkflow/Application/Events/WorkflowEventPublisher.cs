@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260813
     Change description: v0.1.0-preview1 improve workflow orchestration, replay, Webhook, and parallel execution
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Shared.Abstractions.Events;

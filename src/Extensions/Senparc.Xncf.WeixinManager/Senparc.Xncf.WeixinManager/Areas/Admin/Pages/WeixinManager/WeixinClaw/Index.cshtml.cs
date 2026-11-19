@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.24.16 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;

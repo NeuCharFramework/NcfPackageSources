@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260717
     Change description: v0.15.0-preview3 integrate shared resource localization and improve feature text for the SystemManager module
 
+    Modified by: Senparc - 20261119
+    Change description: v0.15.14 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 global using Senparc.Xncf.SystemManager;
 global using Senparc.Ncf.Core.AppServices;

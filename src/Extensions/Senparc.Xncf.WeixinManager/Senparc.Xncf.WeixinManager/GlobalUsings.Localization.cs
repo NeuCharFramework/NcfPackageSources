@@ -10,5 +10,8 @@
     Modified by: Senparc - 20260717
     Change description: v0.23.0-preview3 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
+
 ----------------------------------------------------------------*/
 global using Senparc.Xncf.WeixinManager;

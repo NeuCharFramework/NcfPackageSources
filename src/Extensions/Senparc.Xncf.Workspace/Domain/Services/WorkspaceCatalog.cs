@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261109
     Change description: regular administrators manage their own Workspaces; super administrators can view and clear other Workspaces in the current tenant
 
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System.Security.Claims;

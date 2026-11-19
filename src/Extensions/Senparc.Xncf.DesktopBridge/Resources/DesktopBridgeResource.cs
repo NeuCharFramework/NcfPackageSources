@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.4.10 unify XNCF Register display metadata and localization resource keys
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Localization;

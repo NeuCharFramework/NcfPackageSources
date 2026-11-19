@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.24.16 Remove DatabaseSample and related components from MCP extension
 
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
+
 ----------------------------------------------------------------*/
 
 using SilkSharp.Codec;

@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260717
     Change description: v0.3.0-preview3 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
+
 ----------------------------------------------------------------*/
 global using Senparc.Xncf.KnowledgeBase;
 global using Senparc.Ncf.Core.AppServices;

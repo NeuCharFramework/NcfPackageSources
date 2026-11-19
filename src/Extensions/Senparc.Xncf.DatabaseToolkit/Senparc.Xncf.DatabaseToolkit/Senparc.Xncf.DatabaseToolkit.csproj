@@ -4,7 +4,7 @@
     <!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net8.0</TargetFrameworks>-->
     <!--<TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(DatabasePlant)' == 'true'">netcoreapp3.1</TargetFrameworks>-->
-    <Version>0.27.12</Version>
+    <Version>0.27.13</Version>
     <AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
     <RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -19,69 +19,72 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>      v0.1.0 initial release
-      v0.1.101 add Migrate databasefeature
-      v0.1.102 Updated module behavior and related support.
-      v0.1.103 addcheckdatabasefeature
-      v0.1.106 addexportdatabasefeature
-      v0.5.0 Updated module behavior and related support.
-      v0.11.0 Updated module behavior and related support.
-      v0.12 Updated module behavior and related support.
-      v0.16.5.1 Updated module behavior and related support.
-      v0.16.8 Updated module behavior and related support.
-      v0.23.0 Updated module behavior and related support.
-      [2024-09-07] v0.23.3-preview1 Updated module behavior and related support.
-      [2024-09-10] v0.23.4-preview1 upgrade the cache foundation libraries
-      [2024-09-13] v0.23.7-preview1 Updated module behavior and related support.
-      [2024-10-09] v0.23.9-preview1 Updated module behavior and related support.
-      [2024-11-08] v0.23.11-preview1 upgrade Senparc.AI
-      [2024-12-27] v0.24.2-preview1 Add exception log for UseXncfModules() auto progress
-      [2025-01-25] v0.24.6-preview1 Update Agents functions, support for function calling
-      [2025-04-29] v0.24.8-preview1 Update CO2NET and AIKernel
-      [2025-05-18] v0.24.9-preview1 Update Installation
-      [2025-06-20] v0.24.10-preview1 Add MCP functions in XncfRegisterBase class
-      [2025-11-01] update basic libraries, including Senparc.AI
-      [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
-      [2026-07-17] v0.26.0-preview2 Updated module behavior and related support.
-      1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
-      2. Updated module behavior and related support.
-      3. Updated module behavior and related support.
-      4. Updated module behavior and related support.
-      [2026-07-29] v0.27.0-preview3 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      [2026-07-31] v0.27.1-preview4 upgrade CO2NET WebApi compatibledependency
-      1. Updated module behavior and related support.
-      [2026-08-04] v0.27.2-preview5 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      [2026-08-08] v0.27.3-preview6 Dependency updates from upstream projects
-      1. Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
-      2. Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
-      3. Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
-      4. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
-      [2026-08-13] v0.27.4-preview7 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7
-      [2026-08-15] v0.27.5-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
-      [2026-08-22] v0.27.6-preview9 synchronize Senparc.Xncf.DatabaseToolkit dependency version
-      1. Updated module behavior and related support.
-      [2026-08-29] v0.27.7 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
-      1. Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
-      [2026-09-16] v0.27.8 Dependency updates from Senparc.Ncf.XncfBase.Tests to 0.0.14; Senparc.IntegrationSample to 0.0.13; Senparc.Web to 0.39.1
-      [2026-09-17] v0.27.9 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      [2026-10-05] v0.27.10 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
-      1. Updated Senparc.Xncf.DatabaseToolkit project behavior and integration for the latest feature and reliability improvements.
-      2. chore: update package versions and dependencies across multiple projects
-      [2026-11-03] v0.27.11 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Dependency update from Senparc.Ncf.AreaBase to 0.23.10
-      3. Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
-      4. Dependency update from Senparc.Ncf.XncfBase to 0.28.2
-      [2026-11-11] v0.27.11 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      [2026-11-12] v0.27.12 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
+    <PackageReleaseNotes>v0.1.0 initial release
+        v0.1.101 add Migrate databasefeature
+        v0.1.102 Updated module behavior and related support.
+        v0.1.103 addcheckdatabasefeature
+        v0.1.106 addexportdatabasefeature
+        v0.5.0 Updated module behavior and related support.
+        v0.11.0 Updated module behavior and related support.
+        v0.12 Updated module behavior and related support.
+        v0.16.5.1 Updated module behavior and related support.
+        v0.16.8 Updated module behavior and related support.
+        v0.23.0 Updated module behavior and related support.
+        [2024-09-07] v0.23.3-preview1 Updated module behavior and related support.
+        [2024-09-10] v0.23.4-preview1 upgrade the cache foundation libraries
+        [2024-09-13] v0.23.7-preview1 Updated module behavior and related support.
+        [2024-10-09] v0.23.9-preview1 Updated module behavior and related support.
+        [2024-11-08] v0.23.11-preview1 upgrade Senparc.AI
+        [2024-12-27] v0.24.2-preview1 Add exception log for UseXncfModules() auto progress
+        [2025-01-25] v0.24.6-preview1 Update Agents functions, support for function calling
+        [2025-04-29] v0.24.8-preview1 Update CO2NET and AIKernel
+        [2025-05-18] v0.24.9-preview1 Update Installation
+        [2025-06-20] v0.24.10-preview1 Add MCP functions in XncfRegisterBase class
+        [2025-11-01] update basic libraries, including Senparc.AI
+        [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+        [2026-07-17] v0.26.0-preview2 Updated module behavior and related support.
+        1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        [2026-07-29] v0.27.0-preview3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-31] v0.27.1-preview4 upgrade CO2NET WebApi compatibledependency
+        1. Updated module behavior and related support.
+        [2026-08-04] v0.27.2-preview5 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-08-08] v0.27.3-preview6 Dependency updates from upstream projects
+        1. Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+        2. Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+        3. Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+        4. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+        [2026-08-13] v0.27.4-preview7 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7
+        [2026-08-15] v0.27.5-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
+        [2026-08-22] v0.27.6-preview9 synchronize Senparc.Xncf.DatabaseToolkit dependency version
+        1. Updated module behavior and related support.
+        [2026-08-29] v0.27.7 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
+        1. Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
+        [2026-09-16] v0.27.8 Dependency updates from Senparc.Ncf.XncfBase.Tests to 0.0.14; Senparc.IntegrationSample to 0.0.13; Senparc.Web to 0.39.1
+        [2026-09-17] v0.27.9 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-10-05] v0.27.10 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+        1. Updated Senparc.Xncf.DatabaseToolkit project behavior and integration for the latest feature and reliability improvements.
+        2. chore: update package versions and dependencies across multiple projects
+        [2026-11-03] v0.27.11 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+        3. Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+        4. Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+        [2026-11-11] v0.27.11 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-11-12] v0.27.12 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-19] v0.27.13 Updated module behavior, localization metadata, and English source comments
+        1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+        2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

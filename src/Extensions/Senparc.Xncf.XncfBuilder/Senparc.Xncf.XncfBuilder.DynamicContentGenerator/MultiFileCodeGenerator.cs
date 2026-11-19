@@ -16,6 +16,9 @@
     Modified by: Senparc - 20260705
     Change description: v0.0.2 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.0.3 Localized XNCF Builder tools and template surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis;

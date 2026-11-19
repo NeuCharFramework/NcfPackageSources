@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.12.15 enhance Agent Studio, group configuration, and task management interactions
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 using Microsoft.SemanticKernel;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;

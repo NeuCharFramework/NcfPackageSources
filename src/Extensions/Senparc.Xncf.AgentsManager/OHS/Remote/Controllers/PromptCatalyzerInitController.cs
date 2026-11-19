@@ -13,6 +13,9 @@
     Modified by: Senparc - 20260729
     Change description: v0.12.1-preview7 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
+
 ----------------------------------------------------------------*/
 
 using System;

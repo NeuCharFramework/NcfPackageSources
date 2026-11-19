@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.2.2 add streamed large-file Workspace uploads with tenant-aware ownership checks
 
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Workspace;

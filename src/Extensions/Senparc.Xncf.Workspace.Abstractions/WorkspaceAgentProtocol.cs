@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.2.0 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.3.1 Localized workspace management and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json;

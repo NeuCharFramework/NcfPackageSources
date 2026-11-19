@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.12.14 integrate SmsExtension Register display metadata with shared resource localization
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;

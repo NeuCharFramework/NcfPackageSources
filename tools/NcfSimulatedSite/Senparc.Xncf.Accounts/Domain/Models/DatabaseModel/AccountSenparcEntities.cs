@@ -1,4 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: AccountSenparcEntities.cs
+    File description: AccountSenparcEntities related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.3.14 Updated module behavior, localization metadata, and English source comments
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Database;
 using Senparc.Xncf.Accounts.Domain.Models;
 using Senparc.Ncf.XncfBase.Database;

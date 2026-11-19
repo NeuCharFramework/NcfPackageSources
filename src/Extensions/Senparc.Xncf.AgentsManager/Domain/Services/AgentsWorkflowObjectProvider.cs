@@ -31,6 +31,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
 
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;

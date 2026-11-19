@@ -1,4 +1,17 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: Register.Area.cs
+    File description: Register.Area related implementation
+
+    Created by: Senparc - 20260808
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
+
+----------------------------------------------------------------*/
+
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Areas;

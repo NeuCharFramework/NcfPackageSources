@@ -13,6 +13,9 @@
     Modified by: Senparc - 20260804
     Change description: v0.5.0-preview6 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System;

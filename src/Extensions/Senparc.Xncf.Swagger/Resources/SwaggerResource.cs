@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260717
     Change description: v0.19.0-preview2 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.20.12 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 #nullable enable
 

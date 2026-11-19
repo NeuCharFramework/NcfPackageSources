@@ -1,4 +1,17 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: Register.Area.cs
+    File description: Register.Area related implementation
+
+    Created by: Senparc - 20200819
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Updated module behavior, localization metadata, and English source comments
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Areas;

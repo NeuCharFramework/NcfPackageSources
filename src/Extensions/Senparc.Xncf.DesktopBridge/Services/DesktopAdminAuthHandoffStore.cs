@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260808
     Change description: v0.4.0-preview4 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System.Security.Cryptography;

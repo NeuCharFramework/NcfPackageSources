@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.2.7 improve Workspace Agent, file storage, and module registration compatibility
 
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Concurrent;

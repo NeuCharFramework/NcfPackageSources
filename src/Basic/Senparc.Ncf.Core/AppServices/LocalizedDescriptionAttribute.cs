@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260717
     Change description: v0.25.0-preview2 add unify resource localization base facilities and support FunctionRender dynamic text
 
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
+
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Localization;
 using System;

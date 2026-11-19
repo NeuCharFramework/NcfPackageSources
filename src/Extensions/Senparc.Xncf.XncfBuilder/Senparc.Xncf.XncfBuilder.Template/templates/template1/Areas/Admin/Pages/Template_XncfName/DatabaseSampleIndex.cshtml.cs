@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: DatabaseSampleIndex.cshtml.cs
+    File description: DatabaseSampleIndex.cshtml related implementation
+
+    Created by: Senparc - 20250524
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
+
+----------------------------------------------------------------*/
+
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Utility;

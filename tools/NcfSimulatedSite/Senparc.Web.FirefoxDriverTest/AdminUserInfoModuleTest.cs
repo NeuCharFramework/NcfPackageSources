@@ -1,4 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: AdminUserInfoModuleTest.cs
+    File description: AdminUserInfoModuleTest related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated module behavior, localization metadata, and English source comments
+
+----------------------------------------------------------------*/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;

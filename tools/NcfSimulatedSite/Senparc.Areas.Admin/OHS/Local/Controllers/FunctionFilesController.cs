@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.12.15 add bulk file upload functionality to Sandbox Lab
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;

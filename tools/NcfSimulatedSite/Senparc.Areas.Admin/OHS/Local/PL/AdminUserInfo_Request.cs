@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260724
     Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Microsoft.Extensions.Localization;

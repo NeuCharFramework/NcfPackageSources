@@ -13,6 +13,9 @@
     Modified by: Senparc - 20260724
     Change description: v1.1.0 improve multilingual support for XNCF template pages and resources
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
+
 ----------------------------------------------------------------*/
 #nullable enable
 

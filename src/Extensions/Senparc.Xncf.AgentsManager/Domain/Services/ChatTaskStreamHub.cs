@@ -37,6 +37,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.19.1 update AgentsManager with new features and improvements
 
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
+
 ----------------------------------------------------------------*/
 
 using System;

@@ -43,6 +43,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.19.3 unify XNCF Register display metadata and localization resource keys
 
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
+
 ----------------------------------------------------------------*/
 
 using A2A.AspNetCore;

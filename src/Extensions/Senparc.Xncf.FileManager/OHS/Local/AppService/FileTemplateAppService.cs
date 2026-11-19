@@ -19,6 +19,9 @@
     Modified by: Senparc - 20260915
     Change description: v0.7.0 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.8.5 Localized file management and upload surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET;

@@ -16,6 +16,9 @@
     Modified by: Senparc - 20260915
     Change description: v0.4.0 improve Chat trigger message persistence and recovery
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

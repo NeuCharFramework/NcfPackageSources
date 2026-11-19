@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.8.1 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
 
+    Modified by: Senparc - 20261119
+    Change description: v0.8.5 Localized file management and upload surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.StaticFiles;

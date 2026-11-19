@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.12.15 Remove DatabaseSample and related components from MCP extension
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;

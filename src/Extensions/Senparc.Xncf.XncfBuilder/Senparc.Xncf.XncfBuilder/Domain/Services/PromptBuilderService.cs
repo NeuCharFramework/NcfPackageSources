@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260702
     Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc.Filters;

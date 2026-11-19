@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.3.1-preview6 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
 
+    Modified by: Senparc - 20261119
+    Change description: v0.3.3-preview8 Localized PromptRange administration and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System;

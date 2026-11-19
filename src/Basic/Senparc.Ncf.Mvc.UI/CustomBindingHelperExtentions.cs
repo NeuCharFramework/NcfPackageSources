@@ -13,6 +13,9 @@
     Modified by: Senparc - 20260731
     Change description: v0.22.0-preview4 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.22.9-preview13 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 
 using System.Text;

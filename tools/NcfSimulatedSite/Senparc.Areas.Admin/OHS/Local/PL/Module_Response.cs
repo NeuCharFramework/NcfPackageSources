@@ -1,4 +1,17 @@
-﻿using Senparc.Ncf.Core.Models.DataBaseModel;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: Module_Response.cs
+    File description: Module_Response related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;

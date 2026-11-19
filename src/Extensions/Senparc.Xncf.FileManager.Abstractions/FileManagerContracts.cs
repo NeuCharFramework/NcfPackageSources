@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.2.0 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
 
+    Modified by: Senparc - 20261119
+    Change description: v0.2.1 Localized file management and upload surfaces
+
 ----------------------------------------------------------------*/
 
 using System;

@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261111
     Change description: v1.1.14 unify XNCF Register display metadata and localization resource keys
 
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
+
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;

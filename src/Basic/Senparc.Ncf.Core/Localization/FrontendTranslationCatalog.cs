@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: FrontendTranslationCatalog.cs
+    File description: FrontendTranslationCatalog related implementation
+
+    Created by: Senparc - 20261116
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;

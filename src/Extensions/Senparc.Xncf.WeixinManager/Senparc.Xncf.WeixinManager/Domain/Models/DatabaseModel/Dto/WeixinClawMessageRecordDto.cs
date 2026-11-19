@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.24.16 add comprehensive tests for MCP endpoint management and background tenant scope
 
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
+
 ----------------------------------------------------------------*/
 
 using System;

@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: SandboxSessionStatus.cs
+    File description: SandboxSessionStatus related implementation
+
+    Created by: Senparc - 20260808
+
+    Modified by: Senparc - 20261119
+    Change description: v0.3.2 Localized sandbox setup and runtime surfaces
+
+----------------------------------------------------------------*/
+
 namespace Senparc.Xncf.Sandbox.Abstractions;
 
 /// <summary>

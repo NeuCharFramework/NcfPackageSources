@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
 
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System;

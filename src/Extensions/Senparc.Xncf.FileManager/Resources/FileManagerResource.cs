@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260717
     Change description: v0.3.0-preview2 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.8.5 Localized file management and upload surfaces
+
 ----------------------------------------------------------------*/
 #nullable enable
 

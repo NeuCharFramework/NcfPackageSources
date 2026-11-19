@@ -13,6 +13,9 @@
     Modified by: Senparc - 20260729
     Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET.Trace;

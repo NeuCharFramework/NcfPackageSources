@@ -1,4 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: Template_XncfNameSenparcEntities.cs
+    File description: Template_XncfNameSenparcEntities related implementation
+
+    Created by: Senparc - 20201226
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Updated module behavior, localization metadata, and English source comments
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;

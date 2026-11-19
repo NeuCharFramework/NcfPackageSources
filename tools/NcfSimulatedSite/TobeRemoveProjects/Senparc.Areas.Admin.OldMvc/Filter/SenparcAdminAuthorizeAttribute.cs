@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: SenparcAdminAuthorizeAttribute.cs
+    File description: SenparcAdminAuthorizeAttribute related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Security.Principal;
 using Senparc.Mvc;
 using Microsoft.AspNetCore.Http;

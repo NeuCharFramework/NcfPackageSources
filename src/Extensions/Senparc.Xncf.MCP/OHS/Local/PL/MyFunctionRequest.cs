@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.5.10 Remove DatabaseSample and related components from MCP extension
 
+    Modified by: Senparc - 20261119
+    Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase.FunctionRenders;

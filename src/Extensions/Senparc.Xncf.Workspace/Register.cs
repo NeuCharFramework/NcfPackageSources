@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.2.7 unify XNCF Register display metadata and localization keys
 
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;

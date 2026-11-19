@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260813
     Change description: v0.6.0-preview8 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;

@@ -1,4 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: LoginController.cs
+    File description: LoginController related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 

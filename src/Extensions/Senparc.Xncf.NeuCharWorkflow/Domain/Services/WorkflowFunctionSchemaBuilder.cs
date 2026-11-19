@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.4.6 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase;

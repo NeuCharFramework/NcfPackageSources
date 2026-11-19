@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 
+    Modified by: Senparc - 20261119
+    Change description: v0.1.6-preview7 Localized XNCF Builder tools and template surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Shared.Abstractions.Events;

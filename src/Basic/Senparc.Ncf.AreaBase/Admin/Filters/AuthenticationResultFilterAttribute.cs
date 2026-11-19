@@ -19,6 +19,9 @@
     Modified by: Senparc - 20260813
     Change description: v0.23.3-preview7 Fixes the login redirection when the backend session expires and the persistence of data protection keys
 
+    Modified by: Senparc - 20261119
+    Change description: v0.23.12 Improved administration page and authorization support
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;

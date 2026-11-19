@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.4.4 enhance fine-tuning functionality with artifact tracking and import/export capabilities
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System.Collections;

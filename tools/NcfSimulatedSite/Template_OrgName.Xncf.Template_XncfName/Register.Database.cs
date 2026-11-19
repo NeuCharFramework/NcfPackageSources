@@ -1,4 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: Register.Database.cs
+    File description: Register.Database related implementation
+
+    Created by: Senparc - 20200820
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Updated module behavior, localization metadata, and English source comments
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Senparc.Ncf.Database;

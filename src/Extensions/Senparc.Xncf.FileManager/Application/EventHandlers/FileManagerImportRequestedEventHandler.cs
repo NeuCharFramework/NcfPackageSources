@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.8.1 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.8.5 Localized file management and upload surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;

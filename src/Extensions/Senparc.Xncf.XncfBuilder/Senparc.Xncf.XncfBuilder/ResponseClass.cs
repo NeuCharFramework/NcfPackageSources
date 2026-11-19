@@ -16,6 +16,9 @@
     Modified by: Senparc - 20260705
     Change description: v0.36.4-preview3 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
+
 ----------------------------------------------------------------*/
 
 #nullable enable

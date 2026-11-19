@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>Senparc.Xncf.Connectors</AssemblyName>
@@ -17,13 +17,15 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>NCF Connectors</Title>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      [2026-11-11] v0.1.0 Updated module behavior and related support.
-      1. store connector accounts and protect secrets with data protection.
-      2. Updated module behavior and related support.
-      3. make available to Chat, Workflow, and Agent templates according to permissions.
-      4. Register resolves menu names and module descriptions through XncfRegisterText.
-      5. addmulti-database migrations, create the connector-instance table.
+    <PackageReleaseNotes>[2026-11-11] v0.1.0 Updated module behavior and related support.
+        1. store connector accounts and protect secrets with data protection.
+        2. Updated module behavior and related support.
+        3. make available to Chat, Workflow, and Agent templates according to permissions.
+        4. Register resolves menu names and module descriptions through XncfRegisterText.
+        5. addmulti-database migrations, create the connector-instance table.
+        [2026-11-19] v0.1.1 Updated module behavior, localization metadata, and English source comments
+        1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+        2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.3.0</Version>
+    <Version>0.3.1</Version>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>Senparc.Xncf.Workspace.Abstractions</AssemblyName>
@@ -16,20 +16,22 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>NCF Workspace Abstractions</Title>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      [2026-10-21] v0.1.0 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      [2026-11-03] v0.2.0 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      3. Updated module behavior and related support.
-      [2026-11-11] v0.2.0 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      [2026-11-12] v0.3.0 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
+    <PackageReleaseNotes>[2026-10-21] v0.1.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-03] v0.2.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-11-11] v0.2.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-12] v0.3.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-19] v0.3.1 Localized workspace management and runtime surfaces
+        1. Updated affected project files while preserving existing public integration behavior.
+        2. Standardized related English source comments and package metadata for the current release.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -19,6 +19,9 @@
     Modified by: Senparc - 20260915
     Change description: v0.7.2 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;

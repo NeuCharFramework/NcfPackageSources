@@ -40,6 +40,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.39.8 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.39.9 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 
 //Legacy comment translated to English.

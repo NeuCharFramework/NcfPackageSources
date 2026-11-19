@@ -1,4 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: WeixinController.cs
+    File description: WeixinController related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Senparc.CO2NET.AspNet.HttpUtility;
 using Senparc.CO2NET.HttpUtility;

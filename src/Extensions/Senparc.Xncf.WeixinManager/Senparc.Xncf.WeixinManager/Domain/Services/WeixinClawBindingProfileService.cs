@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.24.16 add WeixinClawBindingProfile management and UI enhancements
 
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;

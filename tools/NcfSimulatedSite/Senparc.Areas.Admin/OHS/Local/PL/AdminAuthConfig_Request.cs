@@ -13,6 +13,9 @@
     Modified by: Senparc - 20260705
     Change description: v0.0.4 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;

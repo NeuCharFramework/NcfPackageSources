@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261105
     Change description: v0.12.26 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 using System;
 using System.Threading.Tasks;

@@ -5,6 +5,9 @@
     File name: AdminChatWorkflowManagementToolFactory.cs
     File description: Approval-gated AI Workflow creation tools
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;

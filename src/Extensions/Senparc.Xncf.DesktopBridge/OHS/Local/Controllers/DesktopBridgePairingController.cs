@@ -7,6 +7,9 @@
 
     Created by: Senparc - 20260801
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using System.Net;

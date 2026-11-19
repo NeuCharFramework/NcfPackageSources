@@ -34,6 +34,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.19.3 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Identity.Client;

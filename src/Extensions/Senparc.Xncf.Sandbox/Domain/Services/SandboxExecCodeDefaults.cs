@@ -7,6 +7,9 @@
 
     Created by: Senparc - 20260808
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.Sandbox.Abstractions;

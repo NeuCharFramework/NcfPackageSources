@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.7.0-preview1</Version>
+    <Version>0.7.1-preview2</Version>
     <AssemblyName>Senparc.Ncf.Shared.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Ncf.Shared.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -17,25 +17,27 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      v0.1.0 initial release
-      [2026-07-26] v0.3.0-preview2 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      [2026-08-04] v0.4.0-preview3 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      [2026-08-08] v0.5.0-preview4 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      [2026-08-13] v0.6.0-preview5 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      [2026-11-03] v0.7.0-preview1 Updated module behavior and related support.
-      1. Updated module behavior and related support.
-      2. Updated module behavior and related support.
-      3. Updated module behavior and related support.
-</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.1.0 initial release
+        [2026-07-26] v0.3.0-preview2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-04] v0.4.0-preview3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-08] v0.5.0-preview4 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-13] v0.6.0-preview5 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-03] v0.7.0-preview1 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-11-19] v0.7.1-preview2 Updated module behavior, localization metadata, and English source comments
+        1. Kept runtime behavior and module integration aligned with the affected service and registration changes.
+        2. Standardized related English source comments and package metadata for the current release.
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

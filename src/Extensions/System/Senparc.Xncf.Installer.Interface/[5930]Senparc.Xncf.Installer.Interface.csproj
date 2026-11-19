@@ -14,8 +14,9 @@
 		<Authors>NeuCharFramework</Authors>
 		<Owners>NeuCharFramework</Owners>
 		<Title>NCF Installer Interface</Title>
-		<PackageReleaseNotes>
-			[2026-11-18] v0.3.0 Relocated with Senparc.Xncf.Installer under src/Extensions/System.
+		<PackageReleaseNotes>[2026-11-19] v0.3.0 Relocated with Senparc.Xncf.Installer under src/Extensions/System.
+		    1. Aligned the project with updated referenced module contracts and package versions.
+		    2. Preserved installer integration while keeping the dependency chain consistent.
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

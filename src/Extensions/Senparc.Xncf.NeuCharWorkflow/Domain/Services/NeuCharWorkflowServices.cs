@@ -32,6 +32,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.4.4 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

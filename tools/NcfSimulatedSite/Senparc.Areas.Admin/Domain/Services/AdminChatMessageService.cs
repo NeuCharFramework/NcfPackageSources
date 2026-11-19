@@ -28,6 +28,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.12.28 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 using Microsoft.EntityFrameworkCore;
 using Senparc.Areas.Admin.ACL;

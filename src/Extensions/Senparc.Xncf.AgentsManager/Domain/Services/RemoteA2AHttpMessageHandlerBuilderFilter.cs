@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260815
     Change description: v0.15.0-preview20 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Http;

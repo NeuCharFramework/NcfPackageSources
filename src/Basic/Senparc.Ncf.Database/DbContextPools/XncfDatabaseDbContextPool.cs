@@ -10,6 +10,9 @@
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 
+    Modified by: Senparc - 20261119
+    Change description: v0.21.14 Updated database integration support and related localization metadata
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Exceptions;

@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.1.0-preview1 implement connection manager and workspace file system provider
 
+    Modified by: Senparc - 20261119
+    Change description: v0.1.1-preview2 Updated module behavior, localization metadata, and English source comments
+
 ----------------------------------------------------------------*/
 
 using System.Globalization;
