@@ -52,10 +52,10 @@ public AdminChatSessionDto(AdminChatSession entity)
 **Existing system libraries (allowed):**
 - ✅ Vue.js 2.x - `~/lib/vue/vue.js`
 - ✅ Element UI 2.13.2 - `~/lib/element-ui_2.13.2/`
-- ✅ axios - `~/lib/axios/axios.min.js`（通过 service 封装）
+- ✅ axios - `~/lib/axios/axios.min.js` (wrapped by the service helper)
 - ✅ Font Awesome - `~/lib/font-awesome/`
 - ✅ Vuex - `~/lib/vuex.js`
-- ✅ Echarts - `~/lib/echarts/` (如需图表)
+- ✅ Echarts - `~/lib/echarts/` (when charts are needed)
 
 **Prohibited dependencies:**
 - ❌ lodash / underscore (implement utility functions locally)
@@ -115,7 +115,7 @@ formatMessageContent(content) {
 
 **Inheritance relationships:**
 ```csharp
-// ✅ 实体
+// ✅ Entity
 public class AdminChatSession : EntityBase<int> { }
 
 // ✅ DTO
@@ -146,7 +146,7 @@ public async Task<AppResponseBase<AdminChatSessionDto>> CreateSession([FromBody]
 
 **Correct:**
 ```html
-<!-- ✅ 使用本地文件 -->
+<!-- ✅ Use local files -->
 <script src="~/lib/vue/vue.js"></script>
 <script src="~/lib/element-ui_2.13.2/element.js"></script>
 <link href="~/lib/element-ui_2.13.2/element.css" rel="stylesheet" />
