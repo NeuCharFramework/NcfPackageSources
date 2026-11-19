@@ -1,55 +1,55 @@
-# 管理后台 AI 对话功能 - 技术规范说明
+# Admin AI Chat Feature - Technical Specification
 
-## 📋 技术约束总结
+## Technical Constraints Summary
 
-### 1. DTO 继承规范 ✅
+### 1. DTO Inheritance Rules ✅
 
-**正确做法**：
+**Correct:**
 ```csharp
-// ✅ 使用 DtoBase<int> 自动提供 Id 属性
+// ✅ DtoBase<int> provides the Id property automatically.
 public class AdminChatSessionDto : DtoBase<int>
 {
-    // 无需手动定义 Id 属性
-    // Id、Flag、AddTime、LastUpdateTime、TenantId 等由基类自动提供
+    // No manual Id property is required.
+    // Id, Flag, AddTime, LastUpdateTime, TenantId, and related fields come from the base class.
     
     public string Title { get; set; }
     public int UserId { get; set; }
-    // ... 其他业务属性
+    // ... other business properties
 }
 ```
 
-**错误做法**：
+**Incorrect:**
 ```csharp
-// ❌ 不要继承 DtoBase 然后手动添加 Id
+// ❌ Do not inherit DtoBase and then add Id manually.
 public class AdminChatSessionDto : DtoBase
 {
-    public int Id { get; set; } // 不需要！
+    public int Id { get; set; } // Not needed.
 }
 ```
 
-**实体转 DTO 时的注意事项**：
+**When converting an entity to a DTO:**
 ```csharp
 public AdminChatSessionDto(AdminChatSession entity)
 {
     if (entity == null) return;
 
-    // 基类属性（由 DtoBase<int> 提供）
-    Id = entity.Id;                      // ✅ 必须复制
-    AddTime = entity.AddTime;            // ✅ 必须复制
-    LastUpdateTime = entity.LastUpdateTime; // ✅ 必须复制
-    TenantId = entity.TenantId;          // ✅ 必须复制
-    Flag = entity.Flag;                  // ✅ 必须复制
+    // Base-class properties supplied by DtoBase<int>.
+    Id = entity.Id;                      // ✅ Must be copied.
+    AddTime = entity.AddTime;            // ✅ Must be copied.
+    LastUpdateTime = entity.LastUpdateTime; // ✅ Must be copied.
+    TenantId = entity.TenantId;          // ✅ Must be copied.
+    Flag = entity.Flag;                  // ✅ Must be copied.
     
-    // 业务属性
+    // Business properties.
     Title = entity.Title;
     UserId = entity.UserId;
     // ...
 }
 ```
 
-### 2. 前端技术栈约束 ✅
+### 2. Frontend Stack Constraints ✅
 
-**系统已有（可以使用）**：
+**Existing system libraries (allowed):**
 - ✅ Vue.js 2.x - `~/lib/vue/vue.js`
 - ✅ Element UI 2.13.2 - `~/lib/element-ui_2.13.2/`
 - ✅ axios - `~/lib/axios/axios.min.js`（通过 service 封装）
@@ -57,20 +57,20 @@ public AdminChatSessionDto(AdminChatSession entity)
 - ✅ Vuex - `~/lib/vuex.js`
 - ✅ Echarts - `~/lib/echarts/` (如需图表)
 
-**禁止引入（不要使用）**：
-- ❌ lodash / underscore（工具函数自己实现）
-- ❌ marked.js / markdown-it（Markdown 解析，使用简单正则）
-- ❌ moment.js / dayjs（时间格式化自己实现）
-- ❌ vue-virtual-scroller（虚拟滚动库）
-- ❌ jQuery（系统使用 Vue.js）
-- ❌ 任何 CDN 远程资源
-- ❌ 任何需要 npm install 的新包
+**Prohibited dependencies:**
+- ❌ lodash / underscore (implement utility functions locally)
+- ❌ marked.js / markdown-it (use simple regular expressions for Markdown parsing)
+- ❌ moment.js / dayjs (use native date formatting)
+- ❌ vue-virtual-scroller (virtual scrolling library)
+- ❌ jQuery (the system uses Vue.js)
+- ❌ Any remote CDN resource
+- ❌ Any new package that requires `npm install`
 
-**如何实现常见功能**：
+**Common implementation patterns:**
 
-1. **防抖（Debounce）**：
+1. **Debounce:**
 ```javascript
-// ✅ 自己实现简单的防抖
+// ✅ Implement a small debounce helper locally.
 methods: {
   debounce(func, wait) {
     let timeout;
@@ -82,23 +82,23 @@ methods: {
 }
 ```
 
-2. **时间格式化**：
+2. **Time formatting:**
 ```javascript
-// ✅ 使用原生 JavaScript
+// ✅ Use native JavaScript.
 formatTime(timeString) {
   const date = new Date(timeString);
   const now = new Date();
   const diff = now - date;
   
-  if (diff < 60000) return '刚刚';
-  if (diff < 3600000) return Math.floor(diff / 60000) + ' 分钟前';
-  return date.toLocaleString('zh-CN');
+  if (diff < 60000) return 'just now';
+  if (diff < 3600000) return Math.floor(diff / 60000) + ' minutes ago';
+  return date.toLocaleString('en-US');
 }
 ```
 
-3. **Markdown 简单解析**：
+3. **Simple Markdown parsing:**
 ```javascript
-// ✅ 使用正则表达式
+// ✅ Use regular expressions.
 formatMessageContent(content) {
   return content
     .replace(/&/g, '&amp;')
@@ -111,9 +111,9 @@ formatMessageContent(content) {
 }
 ```
 
-### 3. 后端技术规范 ✅
+### 3. Backend Technical Rules ✅
 
-**继承关系**：
+**Inheritance relationships:**
 ```csharp
 // ✅ 实体
 public class AdminChatSession : EntityBase<int> { }
@@ -128,23 +128,23 @@ public class AdminChatSessionService : ServiceBase<AdminChatSession> { }
 public class AdminChatAppService : AppServiceBase { }
 ```
 
-**API 接口规范**：
+**API contract rules:**
 ```csharp
-// ✅ 使用 ApiBind 特性
+// ✅ Use the ApiBind attribute.
 [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
 public async Task<AppResponseBase<AdminChatSessionDto>> CreateSession([FromBody] CreateSessionRequest request)
 {
     return await this.GetResponseAsync<AdminChatSessionDto>(
         async (response, logger) =>
         {
-            // 业务逻辑
+            // Business logic.
         });
 }
 ```
 
-### 4. 资源文件管理 ✅
+### 4. Resource File Management ✅
 
-**正确做法**：
+**Correct:**
 ```html
 <!-- ✅ 使用本地文件 -->
 <script src="~/lib/vue/vue.js"></script>
@@ -152,154 +152,154 @@ public async Task<AppResponseBase<AdminChatSessionDto>> CreateSession([FromBody]
 <link href="~/lib/element-ui_2.13.2/element.css" rel="stylesheet" />
 ```
 
-**错误做法**：
+**Incorrect:**
 ```html
-<!-- ❌ 不要使用 CDN -->
+<!-- ❌ Do not use a CDN. -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
 <script src="https://unpkg.com/element-ui@2.x/lib/index.js"></script>
 
-<!-- ❌ 不要引入新库 -->
-<script src="~/lib/marked/marked.min.js"></script> <!-- 这个库不存在 -->
+<!-- ❌ Do not introduce a new library. -->
+<script src="~/lib/marked/marked.min.js"></script> <!-- This library does not exist. -->
 ```
 
 ---
 
-## 📦 已修正的文件清单
+## Corrected File Checklist
 
-### ✅ 已更新的 steps 文件
+### ✅ Updated step files
 
 1. **step-01-data-models.md**
-   - ✅ 所有 DTO 改为继承 `DtoBase<int>`
-   - ✅ 移除手动定义的 Id 属性
-   - ✅ 实体转 DTO 时添加所有基类属性的复制
-   - ✅ 更新关键技术点说明
-   - ✅ 更新验收标准
+   - ✅ All DTOs now inherit `DtoBase<int>`.
+   - ✅ Manual Id properties removed.
+   - ✅ Entity-to-DTO constructors now copy all base-class properties.
+   - ✅ Key technical notes updated.
+   - ✅ Acceptance criteria updated.
 
 2. **step-03-homepage-ui.md**
-   - ✅ 强调只使用系统现有组件
-   - ✅ 不引入新依赖的说明
+   - ✅ Emphasizes using only existing system components.
+   - ✅ Documents that no new dependencies should be introduced.
 
 3. **step-04-chat-page.md**
-   - ✅ 移除 marked.js 库的建议
-   - ✅ 改用正则表达式进行简单格式化
-   - ✅ 添加 XSS 防护（HTML 转义）
-   - ✅ 强调只使用系统现有组件
+   - ✅ Removes the marked.js recommendation.
+   - ✅ Uses regular expressions for simple formatting.
+   - ✅ Adds XSS protection through HTML escaping.
+   - ✅ Emphasizes using only existing system components.
 
 4. **step-05-drag-drop.md**
-   - ✅ 强调使用原生 Drag & Drop API
-   - ✅ 不引入 SortableJS 等拖拽库
+   - ✅ Emphasizes the native Drag & Drop API.
+   - ✅ Does not introduce SortableJS or another drag-and-drop library.
 
 5. **step-06-testing.md**
-   - ✅ 移除 vue-virtual-scroller 的建议
-   - ✅ 移除 lodash 防抖的建议
-   - ✅ 改用自实现的简单工具函数
-   - ✅ 添加资源文件检查项
+   - ✅ Removes the vue-virtual-scroller recommendation.
+   - ✅ Removes the lodash debounce recommendation.
+   - ✅ Uses simple locally implemented utility functions.
+   - ✅ Adds resource-file checks.
 
 6. **scratchpad.md**
-   - ✅ 添加技术约束说明
-   - ✅ 更新数据库设计说明（包含 DTO 规范）
-   - ✅ 添加技术选型说明章节
-   - ✅ 列出系统已有和禁止引入的库
+   - ✅ Adds the technical constraints.
+   - ✅ Updates the database design notes, including DTO rules.
+   - ✅ Adds a technology-selection section.
+   - ✅ Lists existing and prohibited libraries.
 
 ---
 
-## 🎯 关键修正点总结
+## Key Corrections Summary
 
-### 修正 1: DTO 继承 `DtoBase<int>` ✅
+### Correction 1: DTO Inheritance with `DtoBase<int>` ✅
 
-**变更内容**：
-- `AdminChatSessionDto : DtoBase<int>` （原：`DtoBase`）
-- `AdminChatMessageDto : DtoBase<int>` （原：`DtoBase`）
-- `AdminChatSessionModuleDto : DtoBase<int>` （原：`DtoBase`）
+**Changes:**
+- `AdminChatSessionDto : DtoBase<int>` (previously `DtoBase`)
+- `AdminChatMessageDto : DtoBase<int>` (previously `DtoBase`)
+- `AdminChatSessionModuleDto : DtoBase<int>` (previously `DtoBase`)
 
-**影响范围**：
-- step-01-data-models.md（3 个 DTO 定义）
-- 所有实体转 DTO 的构造函数要复制基类属性
+**Scope:**
+- step-01-data-models.md (three DTO definitions)
+- Every entity-to-DTO constructor must copy base-class properties.
 
-**优势**：
-- 🎯 自动提供 Id 属性，代码更简洁
-- 🎯 类型安全，编译时检查
-- 🎯 符合框架规范
+**Benefits:**
+- 🎯 Id is provided automatically, keeping the code concise.
+- 🎯 Type safety is checked at compile time.
+- 🎯 The implementation follows framework conventions.
 
-### 修正 2: 不引入新依赖 ✅
+### Correction 2: Do Not Introduce New Dependencies ✅
 
-**变更内容**：
-- 移除 marked.js 的建议 → 使用正则表达式
-- 移除 lodash 的建议 → 自实现防抖函数
-- 移除 vue-virtual-scroller 的建议 → 使用简单分页
-- 强调使用系统现有组件
+**Changes:**
+- Remove the marked.js recommendation → use regular expressions.
+- Remove the lodash recommendation → implement debounce locally.
+- Remove the vue-virtual-scroller recommendation → use simple pagination.
+- Emphasize existing system components.
 
-**技术替代方案**：
-| 原计划 | 修正后 | 位置 |
+**Technical Alternatives:**
+| Original plan | Replacement | Location |
 |--------|--------|------|
-| marked.js | 正则表达式简单格式化 | step-04 |
-| lodash.debounce | 自实现防抖函数 | step-06 |
-| vue-virtual-scroller | Element UI 原生滚动 | step-06 |
-| moment.js | 原生 Date API | step-04 |
+| marked.js | Simple formatting with regular expressions | step-04 |
+| lodash.debounce | Locally implemented debounce | step-06 |
+| vue-virtual-scroller | Native Element UI scrolling | step-06 |
+| moment.js | Native Date API | step-04 |
 
-**优势**：
-- 🎯 无需下载新依赖
-- 🎯 减少项目体积
-- 🎯 避免版本冲突
-- 🎯 符合系统管理规范
-
----
-
-## ✅ 验证清单
-
-### DTO 定义检查
-- [x] AdminChatSessionDto 继承 `DtoBase<int>` ✅
-- [x] AdminChatMessageDto 继承 `DtoBase<int>` ✅
-- [x] AdminChatSessionModuleDto 继承 `DtoBase<int>` ✅
-- [x] 实体转 DTO 构造函数复制所有基类属性 ✅
-- [x] 无手动定义的 Id 属性 ✅
-
-### 依赖引入检查
-- [x] 未引入 marked.js ✅
-- [x] 未引入 lodash ✅
-- [x] 未引入 moment.js ✅
-- [x] 未引入 vue-virtual-scroller ✅
-- [x] 未引入任何 CDN 远程资源 ✅
-- [x] 只使用系统现有的 Vue.js、Element UI、axios、Font Awesome ✅
-
-### 文档更新检查
-- [x] step-01: DTO 定义已修正 ✅
-- [x] step-03: 技术约束已添加 ✅
-- [x] step-04: 移除 marked.js，使用正则 ✅
-- [x] step-05: 强调使用原生 API ✅
-- [x] step-06: 移除第三方库建议 ✅
-- [x] scratchpad.md: 添加技术选型说明 ✅
+**Benefits:**
+- 🎯 No new dependencies need to be downloaded.
+- 🎯 Smaller application footprint.
+- 🎯 Fewer version conflicts.
+- 🎯 Consistent with system management rules.
 
 ---
 
-## 📝 执行者使用指南
+## Verification Checklist
 
-### 开发时的检查清单
+### DTO Definition Checks
+- [x] AdminChatSessionDto inherits `DtoBase<int>` ✅
+- [x] AdminChatMessageDto inherits `DtoBase<int>` ✅
+- [x] AdminChatSessionModuleDto inherits `DtoBase<int>` ✅
+- [x] Entity-to-DTO constructors copy all base-class properties ✅
+- [x] No manually defined Id properties ✅
 
-**每创建一个 DTO 时**：
-1. ✅ 继承 `DtoBase<int>` 吗？
-2. ✅ 没有手动定义 Id 属性吗？
-3. ✅ 实体转换构造函数复制了所有基类属性吗？
+### Dependency Checks
+- [x] marked.js is not introduced ✅
+- [x] lodash is not introduced ✅
+- [x] moment.js is not introduced ✅
+- [x] vue-virtual-scroller is not introduced ✅
+- [x] No remote CDN resources are introduced ✅
+- [x] Only the existing Vue.js, Element UI, axios, and Font Awesome components are used ✅
 
-**每引入一个功能时**：
-1. ✅ 检查系统是否已有类似组件？
-2. ✅ 能用现有组件实现吗？
-3. ✅ 必须引入新库吗？（99% 情况下答案是：不需要）
-4. ✅ 如果必须引入，是否下载到本地？
-
-**每写一段 JavaScript 时**：
-1. ✅ 使用了 CDN 链接吗？（禁止）
-2. ✅ 引入了新的 .js 文件吗？（需要确认是否已存在）
-3. ✅ 工具函数能自己实现吗？（优先自己实现）
+### Documentation Checks
+- [x] step-01: DTO definitions corrected ✅
+- [x] step-03: Technical constraints added ✅
+- [x] step-04: marked.js removed; regular expressions used ✅
+- [x] step-05: Native APIs emphasized ✅
+- [x] step-06: Third-party library recommendations removed ✅
+- [x] scratchpad.md: Technology-selection notes added ✅
 
 ---
 
-## 🎉 修正完成
+## Executor Guide
 
-所有 steps 文件已更新，确保：
-1. ✅ 所有 DTO 继承 `DtoBase<int>`
-2. ✅ 不引入任何新的第三方库
-3. ✅ 只使用系统现有组件
-4. ✅ 技术约束清晰明确
+### Development Checklist
 
-现在规划文档已完全符合项目技术规范，可以开始执行实现了！
+**For every new DTO:**
+1. ✅ Does it inherit `DtoBase<int>`?
+2. ✅ Does it avoid a manual Id property?
+3. ✅ Does the entity conversion constructor copy all base-class properties?
+
+**For every new feature:**
+1. ✅ Does the system already have a similar component?
+2. ✅ Can the feature be implemented with existing components?
+3. ✅ Is a new library truly required? (In 99% of cases, the answer is no.)
+4. ✅ If it is required, is it downloaded locally?
+
+**For every JavaScript change:**
+1. ✅ Does it use a CDN link? (Prohibited.)
+2. ✅ Does it introduce a new `.js` file? (Confirm whether it already exists.)
+3. ✅ Can the utility function be implemented locally? (Prefer a local implementation.)
+
+---
+
+## Corrections Complete
+
+All step files have been updated to ensure:
+1. ✅ All DTOs inherit `DtoBase<int>`.
+2. ✅ No new third-party libraries are introduced.
+3. ✅ Only existing system components are used.
+4. ✅ Technical constraints are clear.
+
+The planning documents now comply with the project technical rules and are ready for implementation.
