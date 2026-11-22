@@ -85,7 +85,7 @@ var app = new Vue({
             //Legacy comment translated to English.
             parameterViewList: [
                 {
-                    tips: ncfST('Frontend.339'),
+                    tips: ncfST('Frontend.PromptRange.ControlsHowWideTheWordChoiceIsHigherValuesMakeTheGenerated'),
                     formField: 'topP',
                     label: 'Top_p',
                     value: 0.5,
@@ -96,7 +96,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: ncfST('Frontend.341'),
+                    tips: ncfST('Frontend.PromptRange.SamplingTemperatureAHigherValueSuchAsZeroEightMakesTheOutput'),
                     formField: 'temperature',
                     label: 'Temperature',
                     value: 0.5,
@@ -107,7 +107,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: ncfST('Frontend.342'),
+                    tips: ncfST('Frontend.PromptRange.TheTotalNumberOfRequestAndResponseTokensOrTheMaximumLength'),
                     formField: 'maxToken',
                     label: 'MaxToken',
                     value: 100,
@@ -118,7 +118,7 @@ var app = new Vue({
                     sliderStep: 1
                 },
                 {
-                    tips: ncfST('Frontend.338'),
+                    tips: ncfST('Frontend.PromptRange.PenalizeFrequentlyUsedWords'),
                     formField: 'frequencyPenalty',
                     label: 'Frequeny_penalty',
                     value: 0,
@@ -129,7 +129,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: ncfST('Frontend.337'),
+                    tips: ncfST('Frontend.PromptRange.PenalizeWordsAlreadyUsed'),
                     formField: 'presencePenalty',
                     label: 'Presence_penalty',
                     value: 0,
@@ -140,7 +140,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: ncfST('Frontend.340'),
+                    tips: ncfST('Frontend.PromptRange.StopSequencesForGeneratedTextWhenTheModelMeetsTheseSequencesIt'),
                     formField: 'stopSequences',
                     label: 'StopSequences',
                     value: '',
@@ -252,7 +252,7 @@ var app = new Vue({
             aiScoreForm: {
                 resultList: [{
                     id: 1,
-                    label: ncfST('Frontend.188'),
+                    label: ncfST('Frontend.PromptRange.EnterExpectedResult'),
                     value: ''
                 }]
             },
@@ -452,9 +452,9 @@ var app = new Vue({
         },
         promptInputTitle() {
             if (this.isSpeechToTextModelSelected) {
-                return ncfST('Frontend.385')
+                return ncfST('Frontend.PromptRange.SpeechRecognitionInput')
             }
-            return ncfST('Frontend.382')
+            return ncfST('Frontend.PromptRange.EnterPrompt')
         },
         shouldShowPromptEditor() {
             return !this.isSpeechToTextModelSelected
@@ -494,9 +494,9 @@ var app = new Vue({
             const versionParts = this.comparePromptA.fullVersion ? this.comparePromptA.fullVersion.split('-') : [];
             
             return {
-                targetRangeName: versionParts[0] || ncfST('Frontend.354'),
-                targetLaneName: versionParts[1] || ncfST('Frontend.355'),
-                tacticalName: versionParts[2] || ncfST('Frontend.353'),
+                targetRangeName: versionParts[0] || ncfST('Frontend.PromptRange.UnknownRange'),
+                targetLaneName: versionParts[1] || ncfST('Frontend.PromptRange.UnknownTacticAlternate'),
+                tacticalName: versionParts[2] || ncfST('Frontend.PromptRange.UnknownTactic'),
                 modelName: this.getModelName(this.comparePromptA.modelId)
             };
         },
@@ -509,9 +509,9 @@ var app = new Vue({
             const versionParts = this.comparePromptB.fullVersion ? this.comparePromptB.fullVersion.split('-') : [];
             
             return {
-                targetRangeName: versionParts[0] || ncfST('Frontend.354'),
-                targetLaneName: versionParts[1] || ncfST('Frontend.355'),
-                tacticalName: versionParts[2] || ncfST('Frontend.353'),
+                targetRangeName: versionParts[0] || ncfST('Frontend.PromptRange.UnknownRange'),
+                targetLaneName: versionParts[1] || ncfST('Frontend.PromptRange.UnknownTacticAlternate'),
+                tacticalName: versionParts[2] || ncfST('Frontend.PromptRange.UnknownTactic'),
                 modelName: this.getModelName(this.comparePromptB.modelId)
             };
         },
@@ -834,12 +834,12 @@ var app = new Vue({
     methods: {
         getPromptRangeText(key) {
             const resourceKeys = {
-                streamOptionLabel: 'Frontend.300',
-                streamOptionTooltip: 'Frontend.330',
-                switchOn: 'Frontend.029',
-                switchOff: 'Frontend.030',
-                streamFallbackWarning: 'Frontend.299',
-                streamUnsupportedWarning: 'Frontend.298'
+                streamOptionLabel: 'Frontend.PromptRange.StreamingOutput',
+                streamOptionTooltip: 'Frontend.PromptRange.WhenOnRunBurstAndContinuedConversationStreamLiveWhenOffOutput',
+                switchOn: 'Frontend.PromptRange.On',
+                switchOff: 'Frontend.PromptRange.Off',
+                streamFallbackWarning: 'Frontend.PromptRange.TheLiveStreamFailedToConnectAndSwitchedToNormalModeRefresh',
+                streamUnsupportedWarning: 'Frontend.PromptRange.ThisBrowserDoesNotSupportStreamingOutputSwitchedToNormalMode'
             };
             const resourceKey = resourceKeys[key];
             return resourceKey ? ncfST(resourceKey) : key;
@@ -1196,15 +1196,15 @@ var app = new Vue({
                 scoreVal: 0,
                 alResultList: [{
                     id: 1,
-                    label: ncfST('Frontend.416'),
+                    label: ncfST('Frontend.PromptRange.ExpectedResultOne'),
                     value: ''
                 }, {
                     id: 2,
-                    label: ncfST('Frontend.417'),
+                    label: ncfST('Frontend.PromptRange.ExpectedResultTwo'),
                     value: ''
                 }, {
                     id: 3,
-                    label: ncfST('Frontend.418'),
+                    label: ncfST('Frontend.PromptRange.ExpectedResultThree'),
                     value: ''
                 }]
             }
@@ -1223,7 +1223,7 @@ var app = new Vue({
                     const expectedList = JSON.parse(promptItem.expectedResultsJson)
                     normalized.alResultList = expectedList.map((value, index) => ({
                         id: index + 1,
-                        label: ncfST('Frontend.415'),
+                        label: ncfST('Frontend.PromptRange.ExpectedResult'),
                         value
                     }))
                 } catch (e) {
@@ -1987,14 +1987,14 @@ var app = new Vue({
             // stop event propagation
             e.stopPropagation();
             //Legacy comment translated to English.
-            this.$confirm(ncfST('Frontend.363'), ncfST('Frontend.343'), {
-                confirmButtonText: ncfST('Frontend.421'),
-                cancelButtonText: ncfST('Frontend.091'),
+            this.$confirm(ncfST('Frontend.PromptRange.ThisActionWillPermanentlyDeleteEverythingInThisRange'), ncfST('Frontend.PromptRange.Notice'), {
+                confirmButtonText: ncfST('Frontend.PromptRange.ConfirmAlternate'),
+                cancelButtonText: ncfST('Frontend.PromptRange.Cancel'),
                 type: 'warning'
             }).then(async () => {
                 let res = await servicePR.delete(`/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.DeleteAsync?rangeId=${id}`)
                 if (res.data.success) {
-                    this.$message.success(ncfST('Frontend.269'))
+                    this.$message.success(ncfST('Frontend.PromptRange.DeletedSuccessfully'))
                     let _isReset = id == this.promptField
                     //Legacy comment translated to English.
                     this.getFieldList().then(() => {
@@ -2020,16 +2020,16 @@ var app = new Vue({
             // stop event propagation
             e.stopPropagation();
             //Legacy comment translated to English.
-            this.$confirm(ncfST('Frontend.364'), ncfST('Frontend.343'), {
-                confirmButtonText: ncfST('Frontend.421'),
-                cancelButtonText: ncfST('Frontend.091'),
+            this.$confirm(ncfST('Frontend.PromptRange.ThisWillPermanentlyDeleteThisTactic'), ncfST('Frontend.PromptRange.Notice'), {
+                confirmButtonText: ncfST('Frontend.PromptRange.ConfirmAlternate'),
+                cancelButtonText: ncfST('Frontend.PromptRange.Cancel'),
                 type: 'warning'
             }).then(async () => {
                 this.btnDeleteHandle(id)
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: ncfST('Frontend.329')
+                    message: ncfST('Frontend.PromptRange.OperationCanceled')
                 });
             });
         },
@@ -2076,16 +2076,16 @@ var app = new Vue({
             // stop event propagation
             e.stopPropagation();
             //Legacy comment translated to English.
-            this.$confirm(ncfST('Frontend.366'), ncfST('Frontend.343'), {
-                confirmButtonText: ncfST('Frontend.421'),
-                cancelButtonText: ncfST('Frontend.091'),
+            this.$confirm(ncfST('Frontend.PromptRange.ThisWillResetThisTacticName'), ncfST('Frontend.PromptRange.Notice'), {
+                confirmButtonText: ncfST('Frontend.PromptRange.ConfirmAlternate'),
+                cancelButtonText: ncfST('Frontend.PromptRange.Cancel'),
                 type: 'warning'
             }).then(async () => {
                 this.btnEditHandle({ id: id, nickName: '' })
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: ncfST('Frontend.329')
+                    message: ncfST('Frontend.PromptRange.OperationCanceled')
                 });
             });
         },
@@ -2103,13 +2103,13 @@ var app = new Vue({
         confirmtargetlaneName() {
             if(!this.targetlaneName){
                 this.$message({
-                        message: ncfST('Frontend.422'),
+                        message: ncfST('Frontend.PromptRange.TacticNameCannotBeEmpty'),
                     type: 'error'
                 })
                 return
             }
-            const prefix = ncfST('Frontend.423');
-            const suffix = ncfST('Frontend.424');
+            const prefix = ncfST('Frontend.PromptRange.Name');
+            const suffix = ncfST('Frontend.PromptRange.Version');
 
             const startIndex = this.targetlaneName.indexOf(prefix);
             const endIndex = this.targetlaneName.indexOf(suffix, startIndex);
@@ -2141,10 +2141,10 @@ var app = new Vue({
                 ? restaurants.filter(item => {
                     return (
                         this.createFilter(queryString)(item) &&
-                        !item.label.includes(ncfST('Frontend.496'))
+                        !item.label.includes(ncfST('Frontend.PromptRange.NotSetAlternate'))
                     );
                 })
-                : restaurants.filter(item => !item.label.includes(ncfST('Frontend.496')));
+                : restaurants.filter(item => !item.label.includes(ncfST('Frontend.PromptRange.NotSetAlternate')));
             //Legacy comment translated to English.
             cb(results);
         },
@@ -2183,7 +2183,7 @@ var app = new Vue({
             //Legacy comment translated to English.
             if (!this.tacticalForm.chatMode) {
                 this.$message({
-                        message: ncfST('Frontend.379'),
+                        message: ncfST('Frontend.PromptRange.SelectARunTestMode'),
                     type: 'warning',
                     duration: 3000
                 })
@@ -2193,7 +2193,7 @@ var app = new Vue({
             //Legacy comment translated to English.
             if (this.promptid && !this.tacticalForm.tactics) {
                 this.$message({
-                        message: ncfST('Frontend.286'),
+                        message: ncfST('Frontend.PromptRange.SelectATacticEmphasis'),
                     type: 'warning',
                     duration: 3000
                 })
@@ -2205,7 +2205,7 @@ var app = new Vue({
                 // checkwhetherhasinputcontent
                 if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
                     this.$message({
-                        message: ncfST('Frontend.602'),
+                        message: ncfST('Frontend.PromptRange.UserMessageCannotBeEmpty'),
                         type: 'warning',
                         duration: 3000
                     })
@@ -2228,7 +2228,7 @@ var app = new Vue({
             const normalizedUserMessage = typeof userMessage === 'string' ? userMessage.trim() : ''
             if (!normalizedUserMessage) {
                 this.$message({
-                    message: ncfST('Frontend.602'),
+                    message: ncfST('Frontend.PromptRange.UserMessageCannotBeEmpty'),
                     type: 'warning',
                     duration: 3000
                 })
@@ -2332,7 +2332,7 @@ var app = new Vue({
         async targetShootHandel(isDraft = false, isSaveDirect) {
             if (!this.modelid) {
                 this.$message({
-                        message: ncfST('Frontend.380'),
+                        message: ncfST('Frontend.PromptRange.SelectAModelEmphasis'),
                     type: 'warning'
                 })
                 return
@@ -2342,7 +2342,7 @@ var app = new Vue({
             }
             if (!isDraft && !this.content) {
                 this.$message({
-                        message: ncfST('Frontend.287'),
+                        message: ncfST('Frontend.PromptRange.EnterContent'),
                     type: 'warning'
                 })
                 return
@@ -2701,7 +2701,7 @@ var app = new Vue({
         submitUploadPlugins() {
             let _fileData = JSON.parse(JSON.stringify(this.uploadPluginData))
             if (_fileData.length === 0) {
-                this.$message.warning(ncfST('Frontend.288'))
+                this.$message.warning(ncfST('Frontend.PromptRange.SelectAFolder'))
                 return
             }
             if (this.isPageLoading) return
@@ -2753,7 +2753,7 @@ var app = new Vue({
                 //console.log(res)
                 if (res.data.success) {
                     this.uploadPluginVisible = false
-                    app.$message.success(ncfST('Frontend.276'))
+                    app.$message.success(ncfST('Frontend.PromptRange.UploadedSuccessfully'))
                     // updaterangedata
                     this.getFieldList().then(() => {
                         if (this.promptFieldOpt && this.promptFieldOpt.length > 0) {
@@ -2905,7 +2905,7 @@ var app = new Vue({
                 this.updateExportPluginSelectedCount();
             });
             
-            this.$message.success(ncfST('Frontend.325'));
+            this.$message.success(ncfST('Frontend.PromptRange.AllTacticsSelected'));
         },
         
         //Legacy comment translated to English.
@@ -2942,7 +2942,7 @@ var app = new Vue({
                 this.updateExportPluginSelectedCount();
             });
             
-            this.$message.success(ncfST('Frontend.326'));
+            this.$message.success(ncfST('Frontend.PromptRange.SelectionInverted'));
         },
         
         //Legacy comment translated to English.
@@ -2957,7 +2957,7 @@ var app = new Vue({
                 this.updateExportPluginSelectedCount();
             });
             
-            this.$message.info(ncfST('Frontend.327'));
+            this.$message.info(ncfST('Frontend.PromptRange.AllSelectionsCleared'));
         },
         
         //Legacy comment translated to English.
@@ -3026,16 +3026,16 @@ var app = new Vue({
                         URL.revokeObjectURL(url); //Legacy comment translated to English.
                         a.parentNode && a.parentNode.removeChild(a); //Legacy comment translated to English.
                         
-                        this.$message.success(ncfST('Frontend.280'));
+                        this.$message.success(ncfST('Frontend.PromptRange.ExportedSuccessfully'));
                     }).catch((error) => {
                         this.isPageLoading = false
                         console.error('Export failed:', error);
                         
-                        let errorMessage = ncfST('Frontend.323');
+                        let errorMessage = ncfST('Frontend.PromptRange.FailedToExportPlugins');
                         if (error.response) {
                             //Legacy comment translated to English.
                             if (error.response.status === 500) {
-                                errorMessage = ncfST('Frontend.426') + (error.response.data?.message || ncfST('Frontend.323'));
+                                errorMessage = ncfST('Frontend.PromptRange.ServerError') + (error.response.data?.message || ncfST('Frontend.PromptRange.FailedToExportPlugins'));
                             } else if (error.response.data && error.response.data.message) {
                                 errorMessage = error.response.data.message;
                             }
@@ -3053,9 +3053,9 @@ var app = new Vue({
         //Legacy comment translated to English.
         deleteAiScoreBtn(index) {
             //console.log('delete', index)
-            this.$confirm(ncfST('Frontend.362'), ncfST('Frontend.343'), {
-                confirmButtonText: ncfST('Frontend.421'),
-                cancelButtonText: ncfST('Frontend.091'),
+            this.$confirm(ncfST('Frontend.PromptRange.ThisWillDeleteThisExpectedResultContinue'), ncfST('Frontend.PromptRange.Notice'), {
+                confirmButtonText: ncfST('Frontend.PromptRange.ConfirmAlternate'),
+                cancelButtonText: ncfST('Frontend.PromptRange.Cancel'),
                 type: 'warning'
             }).then(() => {
                 this.aiScoreForm.resultList.splice(index, 1)
@@ -3104,7 +3104,7 @@ var app = new Vue({
             //Legacy comment translated to English.
             if (this.pageChange) {
                 //Legacy comment translated to English.
-                let confirmationMessage = ncfST('Frontend.333');
+                let confirmationMessage = ncfST('Frontend.PromptRange.YourDataHasBeenModifiedSaveItAsADraft');
                 //Legacy comment translated to English.
                 e.preventDefault();
                 //Legacy comment translated to English.
@@ -3135,20 +3135,20 @@ var app = new Vue({
             if (source === 'A' || source === 'B') {
                 const prompt = source === 'A' ? this.comparePromptA : this.comparePromptB;
                 if (!prompt || !prompt.fullVersion) {
-                    this.$message.warning(ncfST('Frontend.349'));
+                    this.$message.warning(ncfST('Frontend.PromptRange.UnableToGetTheVersionNumber'));
                     return;
                 }
                 fullVersion = prompt.fullVersion;
-                label = ncfST('Frontend.427', source);
+                label = ncfST('Frontend.PromptRange.PromptValueVersion', source);
             } else {
                 //Legacy comment translated to English.
             if (!this.promptid) {
-                this.$message.info(ncfST('Frontend.381'))
+                this.$message.info(ncfST('Frontend.PromptRange.SelectATacticBeforeCopying'))
                 return
             }
             const promptItem = this.promptOpt.find(item => item.id === this.promptid)
                 if (!promptItem) {
-                    this.$message.warning(ncfST('Frontend.346'));
+                    this.$message.warning(ncfST('Frontend.PromptRange.UnableToGetTheCurrentPromptInformation'));
                     return;
                 }
                 fullVersion = promptItem.fullVersion;
@@ -3156,9 +3156,9 @@ var app = new Vue({
             }
             
             const message = label
-                ? ncfST('Frontend.428', label, fullVersion)
-                : ncfST('Frontend.429', fullVersion);
-            await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(fullVersion, message, ncfST('Frontend.304'), true)
+                ? ncfST('Frontend.PromptRange.CopiedValueValue', label, fullVersion)
+                : ncfST('Frontend.PromptRange.CopiedValue', fullVersion);
+            await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(fullVersion, message, ncfST('Frontend.PromptRange.FailedToCopyCode'), true)
         },
         //Legacy comment translated to English.
         formatDate(d) {
@@ -3188,10 +3188,10 @@ var app = new Vue({
             var hours = Math.floor(minutes / 60)
             var days = Math.floor(hours / 24)
             
-            if (minutes < 1) return ncfST('Frontend.311')
-            if (minutes < 60) return minutes + ncfST('Frontend.312')
-            if (hours < 24) return hours + ncfST('Frontend.313')
-            if (days < 7) return days + ncfST('Frontend.314')
+            if (minutes < 1) return ncfST('Frontend.PromptRange.JustNow')
+            if (minutes < 60) return minutes + ncfST('Frontend.PromptRange.MinutesAgo')
+            if (hours < 24) return hours + ncfST('Frontend.PromptRange.HoursAgo')
+            if (days < 7) return days + ncfST('Frontend.PromptRange.DaysAgo')
             
             //Legacy comment translated to English.
             var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
@@ -3357,19 +3357,19 @@ var app = new Vue({
                         //console.log('params', params)
                         let _data = params?.data[3] || {}
                         //find alias name by rangeName
-                        let alias = ncfST('Frontend.356')
+                        let alias = ncfST('Frontend.PromptRange.NotSetAlternate')
                         that.promptFieldOpt.forEach(item => {
                             if (item.rangeName === _data?.rangeName) {
                                 alias = item.alias
                             }
                         })
                         let _html = `<div style="text-align: left;font-size:10px;">
-<p>${ncfST('Frontend.431', alias)}</p>
-    <p>${ncfST('Frontend.432', _data?.rangeName || '')}</p>
-    <p>${ncfST('Frontend.433', _data?.fullVersion || '')}</p>
-<p>${ncfST('Frontend.434', _data?.evalAvgScore.toFixed(1) || '')}</p>
-<p>${ncfST('Frontend.435', _data?.evalMaxScore.toFixed(1) || '')}</p>
-<p>${ncfST('Frontend.436', this.formatDate(_data?.addTime) || '')}</p>
+<p>${ncfST('Frontend.PromptRange.CustomNameValue', alias)}</p>
+    <p>${ncfST('Frontend.PromptRange.RangeValue', _data?.rangeName || '')}</p>
+    <p>${ncfST('Frontend.PromptRange.VersionValue', _data?.fullVersion || '')}</p>
+<p>${ncfST('Frontend.PromptRange.AverageScoreValue', _data?.evalAvgScore.toFixed(1) || '')}</p>
+<p>${ncfST('Frontend.PromptRange.HighestScoreValue', _data?.evalMaxScore.toFixed(1) || '')}</p>
+<p>${ncfST('Frontend.PromptRange.TimeValue', this.formatDate(_data?.addTime) || '')}</p>
 </div>`
                         return _html
                     }
@@ -3534,7 +3534,7 @@ var app = new Vue({
                             formatter: function (params) {
                                 const promptItem = that.promptOpt.find(item => item.id === that.promptid)
                                 const fullVersion = promptItem ? promptItem.fullVersion : ''
-                                return params.data[3].fullVersion === fullVersion ? ncfST('Frontend.437') : ' ';  //Legacy comment translated to English.
+                                return params.data[3].fullVersion === fullVersion ? ncfST('Frontend.PromptRange.CurrentAlternate') : ' ';  //Legacy comment translated to English.
                             },
                             textStyle: {
                                 color: '#000',
@@ -3692,9 +3692,9 @@ var app = new Vue({
                 //Legacy comment translated to English.
                 if (this.pageChange && this.modelid) {
                     //Legacy comment translated to English.
-                    this.$confirm(ncfST('Frontend.333'), ncfST('Frontend.343'), {
-                        confirmButtonText: ncfST('Frontend.090'),
-                        cancelButtonText: ncfST('Frontend.309'),
+                    this.$confirm(ncfST('Frontend.PromptRange.YourDataHasBeenModifiedSaveItAsADraft'), ncfST('Frontend.PromptRange.Notice'), {
+                        confirmButtonText: ncfST('Frontend.PromptRange.Save'),
+                        cancelButtonText: ncfST('Frontend.PromptRange.DoNotSave'),
                         type: 'warning'
                     }).then(() => {
                         //Legacy comment translated to English.
@@ -3745,9 +3745,9 @@ var app = new Vue({
 
                 if (this.pageChange && this.modelid) {
                     //Legacy comment translated to English.
-                    this.$confirm(ncfST('Frontend.333'), ncfST('Frontend.343'), {
-                        confirmButtonText: ncfST('Frontend.090'),
-                        cancelButtonText: ncfST('Frontend.309'),
+                    this.$confirm(ncfST('Frontend.PromptRange.YourDataHasBeenModifiedSaveItAsADraft'), ncfST('Frontend.PromptRange.Notice'), {
+                        confirmButtonText: ncfST('Frontend.PromptRange.Save'),
+                        cancelButtonText: ncfST('Frontend.PromptRange.DoNotSave'),
                         type: 'warning'
                     }).then(() => {
                         //Legacy comment translated to English.
@@ -3995,14 +3995,14 @@ var app = new Vue({
                         })
                     } else {
                         this.$message({
-                            message: fallbackRes.data.errorMessage || ncfST('Frontend.347'),
+                            message: fallbackRes.data.errorMessage || ncfST('Frontend.PromptRange.UnableToGetDetailsForTheCurrentPrompt'),
                             type: 'error'
                         })
                     }
                 }
             } catch (error) {
                 this.$message({
-                    message: ncfST('Frontend.347') + ': ' + (error.message || ncfST('未知错误')),
+                    message: ncfST('Frontend.PromptRange.UnableToGetDetailsForTheCurrentPrompt') + ': ' + (error.message || ncfST('未知错误')),
                     type: 'error'
                 })
             }
@@ -4178,7 +4178,7 @@ var app = new Vue({
             //Legacy comment translated to English.
             if (!this.promptOpt || this.promptOpt.length === 0) {
                 this.$message({
-                    message: ncfST('Frontend.332'),
+                    message: ncfST('Frontend.PromptRange.ThisRangeHasNoRunsYetRunFirstThenComeBack'),
                     type: 'info',
                     duration: 3000
                 })
@@ -4598,13 +4598,13 @@ var app = new Vue({
                     console.log('Loaded', this.availableModelsForInit.length, 'available models');
                 } else {
                     // handlingerrorresponse
-                    const errorMsg = response.data?.errorMessage || ncfST('Frontend.319');
+                    const errorMsg = response.data?.errorMessage || ncfST('Frontend.PromptRange.FailedToLoadTheAIModelList');
                     this.$message.error(errorMsg);
                     console.error('Failed to load models:', errorMsg);
                 }
             } catch (error) {
                 console.error('Failed to load the AI model list:', error);
-                this.$message.error(ncfST('Frontend.319') + ': ' + (error.response?.data?.errorMessage || error.message));
+                this.$message.error(ncfST('Frontend.PromptRange.FailedToLoadTheAIModelList') + ': ' + (error.response?.data?.errorMessage || error.message));
             } finally {
                 this.loadingModels = false;
             }
@@ -4613,7 +4613,7 @@ var app = new Vue({
         // executeinitialize
         async executeInitialization() {
             if (!this.selectedModelIdForInit) {
-                this.$message.warning(ncfST('Frontend.377'));
+                this.$message.warning(ncfST('Frontend.PromptRange.SelectAnAIModelAlternate'));
                 return;
             }
 
@@ -4631,7 +4631,7 @@ var app = new Vue({
                 if (response.data && response.data.success) {
                     const initData = response.data.data || {};
                     this.$message({
-                        message: ncfST('Frontend.397', initData.promptCode || ncfST('Frontend.320')),
+                        message: ncfST('Frontend.PromptRange.InitializationSucceededPromptCatalyzerAgentCreatedPromptCodeValue', initData.promptCode || ncfST('Frontend.PromptRange.Created')),
                         type: 'success',
                         duration: 6000,
                         showClose: true
@@ -4646,13 +4646,13 @@ var app = new Vue({
                     //Legacy comment translated to English.
                     this.proceedWithOptimization();
                 } else {
-                    this.$message.error(ncfST('Frontend.317') + ': ' + (response.data.errorMessage || ncfST('未知错误')));
+                    this.$message.error(ncfST('Frontend.PromptRange.InitializationFailed') + ': ' + (response.data.errorMessage || ncfST('未知错误')));
                 }
             } catch (error) {
                 console.error('Initialization failed:', error);
                 const errorMsg = error.response?.data?.error || error.response?.data?.message || error.message;
                 this.$message({
-                    message: ncfST('Frontend.317') + ': ' + errorMsg,
+                    message: ncfST('Frontend.PromptRange.InitializationFailed') + ': ' + errorMsg,
                     type: 'error',
                     duration: 8000,
                     showClose: true
@@ -4683,7 +4683,7 @@ var app = new Vue({
                 
                 //Legacy comment translated to English.
                 if (finalScore === null || finalScore === undefined || finalScore === -1) {
-                    console.log(ncfST('Frontend.350'));
+                    console.log(ncfST('Frontend.PromptRange.NoValidScoreWasObtainedTheOptimizationPromptWasSkipped'));
                     return;
                 }
                 
@@ -4695,11 +4695,11 @@ var app = new Vue({
                 if (finalScore < optimizationThreshold) {
                     //Legacy comment translated to English.
                     this.$confirm(
-                        ncfST('Frontend.396', scoreType, finalScore.toFixed(1), optimizationThreshold),
-                        ncfST('Frontend.344'),
+                        ncfST('Frontend.PromptRange.TheCurrentPromptSValueIsValuePointsBelowValuePointsUse', scoreType, finalScore.toFixed(1), optimizationThreshold),
+                        ncfST('Frontend.PromptRange.ImprovePromptQualityAndResults'),
                         {
-                            confirmButtonText: ncfST('Frontend.387'),
-                            cancelButtonText: ncfST('Frontend.388'),
+                            confirmButtonText: ncfST('Frontend.PromptRange.OptimizeNow'),
+                            cancelButtonText: ncfST('Frontend.PromptRange.NotNow'),
                             type: 'warning',
                             center: true
                         }
@@ -4738,7 +4738,7 @@ var app = new Vue({
                 
                 //Legacy comment translated to English.
                 if (avgScore === -1 || avgScore === null || avgScore === undefined) {
-                    console.log(ncfST('Frontend.331'));
+                    console.log(ncfST('Frontend.PromptRange.TheCurrentPromptHasNoAverageScoreYet'));
                     return;
                 }
                 
@@ -4751,8 +4751,8 @@ var app = new Vue({
                 if (avgScore < optimizationThreshold) {
                     //Legacy comment translated to English.
                     this.$notify({
-                        title: ncfST('Frontend.344'),
-                        message: ncfST('Frontend.395', avgScore.toFixed(1)),
+                        title: ncfST('Frontend.PromptRange.ImprovePromptQualityAndResults'),
+                        message: ncfST('Frontend.PromptRange.TheCurrentPromptHasAnAverageScoreOfValueConsiderUsingAI', avgScore.toFixed(1)),
                         type: 'warning',
                         duration: 8000,
                         position: 'bottom-right',
@@ -4770,7 +4770,7 @@ var app = new Vue({
 
         async openOptimizeDialog() {
             if (!this.promptid) {
-                this.$message.warning(ncfST('Frontend.378'));
+                this.$message.warning(ncfST('Frontend.PromptRange.SelectATacticAlternate'));
                 return;
             }
             
@@ -4781,7 +4781,7 @@ var app = new Vue({
             if (!isInitialized) {
                 //Legacy comment translated to English.
                 this.$message({
-                    message: ncfST('Frontend.246'),
+                    message: ncfST('Frontend.PromptRange.FirstUseInitializePromptOptimization'),
                     type: 'info',
                     duration: 3000
                 });
@@ -4790,7 +4790,7 @@ var app = new Vue({
                 await this.loadAvailableModels();
                 
                 if (this.availableModelsForInit.length === 0) {
-                    this.$message.error(ncfST('Frontend.367'));
+                    this.$message.error(ncfST('Frontend.PromptRange.NoUsableAIModelCouldBeFoundPleaseConfigureAChatModel'));
                     return;
                 }
                 
@@ -4823,7 +4823,7 @@ var app = new Vue({
                 if (!formHasValues) {
                     this.aiScoreForm.resultList = arr.map((item, index) => ({
                         id: index + 1,
-                        label: ncfST('Frontend.384'),
+                        label: ncfST('Frontend.PromptRange.ExpectedResult'),
                         value: typeof item === 'string' ? item : String(item)
                     }));
                 }
@@ -4833,11 +4833,11 @@ var app = new Vue({
         },
         async executeOptimize() {
             if (this.optimizing) {
-                this.$message.warning(ncfST('Frontend.308'));
+                this.$message.warning(ncfST('Frontend.PromptRange.OptimizationIsInProgressPleaseDoNotClickAgain'));
                 return;
             }
             if (!this.promptid) {
-                this.$message.warning(ncfST('Frontend.284'));
+                this.$message.warning(ncfST('Frontend.PromptRange.PleaseSelectAPromptFirst'));
                 return;
             }
             
@@ -4858,28 +4858,28 @@ var app = new Vue({
             }
 
             if (!promptCode) {
-                this.$message.error(ncfST('Frontend.348'));
+                this.$message.error(ncfST('Frontend.PromptRange.UnableToGetTheVersionNumberPromptCodeOfTheCurrentPrompt'));
                 return;
             }
 
             //Legacy comment translated to English.
             const promptDetail = this.promptDetail;
             if (!promptDetail) {
-                this.$message.error(ncfST('Frontend.347'));
+                this.$message.error(ncfST('Frontend.PromptRange.UnableToGetDetailsForTheCurrentPrompt'));
                 return;
             }
 
             //Legacy comment translated to English.
             this.optimizing = true;
             this.optimizeErrorText = '';
-            this.optimizeProgressText = ncfST('Frontend.302');
+            this.optimizeProgressText = ncfST('Frontend.PromptRange.TheAgentIsReasoningAndCallingToolsThisMayTakeSeveralMinutes');
             try {
                 console.log('Starting Prompt optimization (Agent primary path):', promptCode);
                 
                 const requestData = {
                     promptCode: promptCode,
                     promptContent: promptDetail.promptContent || this.content,
-                    userRequirement: this.optimizeRequirement || ncfST('Frontend.344'),
+                    userRequirement: this.optimizeRequirement || ncfST('Frontend.PromptRange.ImprovePromptQualityAndResults'),
                     context: {
                         modelId: this.modelid || promptDetail.modelId,
                         currentTemperature: promptDetail.temperature || this.parameterViewList.find(p => p.formField === 'temperature')?.value || 0.7,
@@ -4899,22 +4899,22 @@ var app = new Vue({
                 );
 
                 if (response.data && response.data.success === false) {
-                    const topErr = response.data.errorMessage || response.data.message || ncfST('Frontend.273');
+                    const topErr = response.data.errorMessage || response.data.message || ncfST('Frontend.PromptRange.RequestFailed');
                     this.optimizeErrorText = String(topErr);
-                    this.$message.error(ncfST('Frontend.237') + '：' + topErr);
+                    this.$message.error(ncfST('Frontend.PromptRange.OptimizationFailed') + '：' + topErr);
                     return;
                 }
 
                 if (response.data && response.data.success && response.data.data) {
                     const optimizeResult = response.data.data;
                     if (!optimizeResult.success) {
-                        const err = optimizeResult.errorMessage || optimizeResult.evaluationReason || ncfST('Frontend.307');
+                        const err = optimizeResult.errorMessage || optimizeResult.evaluationReason || ncfST('Frontend.PromptRange.OptimizationDidNotCompleteSuccessfully');
                         this.optimizeErrorText = String(err);
-                        this.$message.error(ncfST('Frontend.237') + '：' + err);
+                        this.$message.error(ncfST('Frontend.PromptRange.OptimizationFailed') + '：' + err);
                         return;
                     }
 
-                    this.optimizeProgressText = ncfST('Frontend.301');
+                    this.optimizeProgressText = ncfST('Frontend.PromptRange.TheAgentHasFinishedRefreshingTacticsAndSelectingTheNewVersion');
                     await this.getFieldList();
                     //Legacy comment translated to English.
                     await this.getPromptOptData();
@@ -4925,7 +4925,7 @@ var app = new Vue({
                         p.label === code ||
                         (p.label && code && p.label.indexOf(code) >= 0));
                     if (!newPrompt) {
-                        const w = ncfST('Frontend.357') + '：' + code;
+                        const w = ncfST('Frontend.PromptRange.NoValidOptimizationResultReturned') + '：' + code;
                         this.optimizeErrorText = w;
                         this.$message.warning(w);
                         this.optimizeDialogVisible = false;
@@ -4949,7 +4949,7 @@ var app = new Vue({
 
                     if (this.autoShootAfterOptimize) {
                         this.syncAiScoreFormFromPromptDetail();
-                        this.optimizeProgressText = ncfST('Frontend.361');
+                        this.optimizeProgressText = ncfST('Frontend.PromptRange.RunningSameAsAManualRunOutputIsVisibleOnTheMain');
                         //Legacy comment translated to English.
                         const savedTactics = this.tacticalForm.tactics;
                         this.tacticalForm.tactics = 'rapid';
@@ -4968,7 +4968,7 @@ var app = new Vue({
                         if (!filled && this.aiScoreForm.resultList && this.aiScoreForm.resultList.some(r => r && r.value)) {
                             item.alResultList = this.aiScoreForm.resultList.map((x, idx) => ({
                                 id: idx + 1,
-                                label: ncfST('Frontend.384'),
+                                label: ncfST('Frontend.PromptRange.ExpectedResult'),
                                 value: x.value
                             }));
                             filled = true;
@@ -4979,7 +4979,7 @@ var app = new Vue({
                                 if (Array.isArray(arr) && arr.some(x => x !== undefined && x !== null && String(x).trim() !== '')) {
                                     item.alResultList = arr.map((v, idx) => ({
                                         id: idx + 1,
-                                        label: ncfST('Frontend.384'),
+                                        label: ncfST('Frontend.PromptRange.ExpectedResult'),
                                         value: typeof v === 'string' ? v : String(v)
                                     }));
                                     filled = true;
@@ -4989,18 +4989,18 @@ var app = new Vue({
                             }
                         }
                         if (filled) {
-                            this.optimizeProgressText = ncfST('Frontend.360');
+                            this.optimizeProgressText = ncfST('Frontend.PromptRange.AIScoringInProgressSameAsManualAIScoring');
                             item.scoreType = '1';
                             this.$set(this.robotScoreLoadingMap, item.id, true);
                             await this.saveManualScore(item, latestIndex);
                         } else {
-                            this.$message.warning(ncfST('Frontend.358'));
+                            this.$message.warning(ncfST('Frontend.PromptRange.NoExpectedResultIsConfiguredAIScoringWasSkipped'));
                         }
                     } else if (this.autoShootAfterOptimize && this.autoAIGradeAfterShoot && (!this.outputList || this.outputList.length === 0)) {
-                        this.$message.warning(ncfST('Frontend.368'));
+                        this.$message.warning(ncfST('Frontend.PromptRange.TheAutomaticRunReturnedNoOutputRecordSoAIScoringWasSkipped'));
                     }
 
-                    let message = ncfST('Frontend.398', code);
+                    let message = ncfST('Frontend.PromptRange.OptimizationCompleteNewPromptValue', code);
                     const evalReason = optimizeResult.evaluationReason || optimizeResult.EvaluationReason;
                     if (evalReason) {
                         message += `\n\n${evalReason}`;
@@ -5011,9 +5011,9 @@ var app = new Vue({
                     this.optimizeErrorText = '';
                     this.optimizeDialogVisible = false;
                 } else {
-                    const errorMsg = response.data?.errorMessage || ncfST('Frontend.357');
+                    const errorMsg = response.data?.errorMessage || ncfST('Frontend.PromptRange.NoValidOptimizationResultReturned');
                     this.optimizeErrorText = String(errorMsg);
-                    this.$message.error(ncfST('Frontend.237') + '：' + errorMsg);
+                    this.$message.error(ncfST('Frontend.PromptRange.OptimizationFailed') + '：' + errorMsg);
                 }
             } catch (error) {
                 console.error('Optimization failed:', error);
@@ -5026,7 +5026,7 @@ var app = new Vue({
                 }
                 this.optimizeErrorText = detail;
                 this.$message({
-                    message: '❌ ' + ncfST('Frontend.237') + ': ' + (resp?.errorMessage || resp?.message || error.message),
+                    message: '❌ ' + ncfST('Frontend.PromptRange.OptimizationFailed') + ': ' + (resp?.errorMessage || resp?.message || error.message),
                     type: 'error',
                     duration: 8000,
                     showClose: true
@@ -6402,7 +6402,7 @@ var app = new Vue({
                                 }
                                 
                                 //Legacy comment translated to English.
-                                tooltipContent += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: #999;">${ncfST('Frontend.470')}</div>`
+                                tooltipContent += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: #999;">${ncfST('Frontend.PromptRange.DoubleClickToQuicklySelectThisTactic')}</div>`
                             }
                             
                             tooltip.innerHTML = tooltipContent
@@ -7361,7 +7361,7 @@ var app = new Vue({
                 this.clearOutputGeneratingPlaceholder()
                 this.closePromptStream()
                 this.$message({
-                    message: error?.message || ncfST('Frontend.273'),
+                    message: error?.message || ncfST('Frontend.PromptRange.RequestFailed'),
                     type: 'error',
                     duration: 5 * 1000
                 })
@@ -7409,7 +7409,7 @@ var app = new Vue({
             for (let i in data) {
                 newData = {
                     id: data[i].data.id,
-                    label: data[i].name ? data[i].name + (data[i].nickName ? " (" + data[i].nickName + ")" : "") : ncfST('Frontend.351'),
+                    label: data[i].name ? data[i].name + (data[i].nickName ? " (" + data[i].nickName + ")" : "") : ncfST('Frontend.PromptRange.Unnamed'),
                     isPublic: false,
                     data: data[i].data,
                     attributes: data[i].attributes,
@@ -7443,7 +7443,7 @@ var app = new Vue({
             //Legacy comment translated to English.
             //Legacy comment translated to English.
             //Legacy comment translated to English.
-            this.$message.warning(ncfST('Frontend.345'))
+            this.$message.warning(ncfST('Frontend.PromptRange.ComingSoon'))
         },
         // versionrecord edit
         versionRecordEdit(itemData) {
@@ -7464,13 +7464,13 @@ var app = new Vue({
         versionRecordGenerateCode(itemData) {
             //console.log('versionrecord generatecode:', itemData)
             //Legacy comment translated to English.
-            this.$message.warning(ncfST('Frontend.345'))
+            this.$message.warning(ncfST('Frontend.PromptRange.ComingSoon'))
             //Legacy comment translated to English.
         },
         // versionrecord delete
         versionRecordDelete(itemData) {
             //console.log('versionrecord delete:', itemData)
-            this.$message.warning(ncfST('Frontend.345'))
+            this.$message.warning(ncfST('Frontend.PromptRange.ComingSoon'))
             //Legacy comment translated to English.
             //Legacy comment translated to English.
             //Legacy comment translated to English.
@@ -7545,7 +7545,7 @@ var app = new Vue({
                     this.getScoringTrendData()
                     
                     //Legacy comment translated to English.
-                    await this.checkScoreAndSuggestOptimization(res.data.data || item, ncfST('Frontend.086'));
+                    await this.checkScoreAndSuggestOptimization(res.data.data || item, ncfST('Frontend.PromptRange.AIScoreAlternate'));
                 } else {
                     //Legacy comment translated to English.
                     this.$set(this.robotScoreLoadingMap, item.id, false)
@@ -7571,7 +7571,7 @@ var app = new Vue({
                     this.getScoringTrendData()
                     
                     //Legacy comment translated to English.
-                    await this.checkScoreAndSuggestOptimization(res.data.data || item, ncfST('Frontend.087'));
+                    await this.checkScoreAndSuggestOptimization(res.data.data || item, ncfST('Frontend.PromptRange.ManualScoreAlternate'));
                 } else {
                     app.$message({
                         message: res.data.errorMessage || res.data.data || 'Error',
@@ -7646,7 +7646,7 @@ var app = new Vue({
             let _len = this.outputList[index].alResultList.length
             this.outputList[index].alResultList.push({
                 id: _len + 1,
-                label: ncfST('Frontend.384'),
+                label: ncfST('Frontend.PromptRange.ExpectedResult'),
                 value: ''
             })
         },
@@ -7846,7 +7846,7 @@ var app = new Vue({
             //Legacy comment translated to English.
             this.parameterViewList = [
                 {
-                    tips: ncfST('Frontend.339'),
+                    tips: ncfST('Frontend.PromptRange.ControlsHowWideTheWordChoiceIsHigherValuesMakeTheGenerated'),
                     formField: 'topP',
                     label: 'Top_p',
                     value: 0.5,
@@ -7857,7 +7857,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: ncfST('Frontend.341'),
+                    tips: ncfST('Frontend.PromptRange.SamplingTemperatureAHigherValueSuchAsZeroEightMakesTheOutput'),
                     formField: 'temperature',
                     label: 'Temperature',
                     value: 0.5,
@@ -7868,7 +7868,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: ncfST('Frontend.342'),
+                    tips: ncfST('Frontend.PromptRange.TheTotalNumberOfRequestAndResponseTokensOrTheMaximumLength'),
                     formField: 'maxToken',
                     label: 'MaxToken',
                     value: 100,
@@ -7879,7 +7879,7 @@ var app = new Vue({
                     sliderStep: 1
                 },
                 {
-                    tips: ncfST('Frontend.338'),
+                    tips: ncfST('Frontend.PromptRange.PenalizeFrequentlyUsedWords'),
                     formField: 'frequencyPenalty',
                     label: 'Frequeny_penalty',
                     value: 0,
@@ -7890,7 +7890,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: ncfST('Frontend.337'),
+                    tips: ncfST('Frontend.PromptRange.PenalizeWordsAlreadyUsed'),
                     formField: 'presencePenalty',
                     label: 'Presence_penalty',
                     value: 0,
@@ -7901,7 +7901,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: ncfST('Frontend.340'),
+                    tips: ncfST('Frontend.PromptRange.StopSequencesForGeneratedTextWhenTheModelMeetsTheseSequencesIt'),
                     formField: 'stopSequences',
                     label: 'StopSequences',
                     value: '',
@@ -7964,9 +7964,9 @@ var app = new Vue({
         },
         deleteModel(item) {
             //deletemodel confirm
-            this.$confirm(ncfST('Frontend.471', item.alias), ncfST('Frontend.343'), {
-                confirmButtonText: ncfST('Frontend.421'),
-                cancelButtonText: ncfST('Frontend.091'),
+            this.$confirm(ncfST('Frontend.PromptRange.ThisWillPermanentlyDeleteModelValueContinue', item.alias), ncfST('Frontend.PromptRange.Notice'), {
+                confirmButtonText: ncfST('Frontend.PromptRange.ConfirmAlternate'),
+                cancelButtonText: ncfST('Frontend.PromptRange.Cancel'),
                 type: 'warning'
             }).then(async () => {
                 await servicePR.delete('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.BatchDelete', { data: [item.id] })
@@ -8060,7 +8060,7 @@ var app = new Vue({
                     const configModelTypeName = this.getConfigModelTypeLabel(configModelTypeCode)
 
                     //Legacy comment translated to English.
-                    let label = `${item.alias || ncfST('Frontend.351')} [${configModelTypeName}]`
+                    let label = `${item.alias || ncfST('Frontend.PromptRange.Unnamed')} [${configModelTypeName}]`
                     if (item.apiVersion && item.apiVersion.trim()) {
                         label += ` v${item.apiVersion}`;
                     }
@@ -8119,7 +8119,7 @@ var app = new Vue({
                     value: item.id,
                     vectorDbTypeCode: this.parseVectorDbTypeValue(item.vectorDBType),
                     vectorDbTypeLabel: this.getVectorDbTypeLabel(item.vectorDBType),
-                    label: `${item.alias || item.name || ncfST('Frontend.352')} [${this.getVectorDbTypeLabel(item.vectorDBType)}]`
+                    label: `${item.alias || item.name || ncfST('Frontend.PromptRange.UnnamedVectorDatabase')} [${this.getVectorDbTypeLabel(item.vectorDBType)}]`
                 }))
 
                 if (this.isTextEmbeddingModelSelected && !this.embeddingForm.vectorDbId && this.vectorOpt.length > 0) {
@@ -8287,7 +8287,7 @@ var app = new Vue({
                         })
                         //Legacy comment translated to English.
                         this.$message({
-                            message: ncfST('Frontend.272'),
+                            message: ncfST('Frontend.PromptRange.AddedSuccessfully'),
                             type: 'success'
                         })
                         // disabledialog
@@ -8331,7 +8331,7 @@ var app = new Vue({
                         })
                         //Legacy comment translated to English.
                         this.$message({
-                            message: ncfST('Frontend.272'),
+                            message: ncfST('Frontend.PromptRange.AddedSuccessfully'),
                             type: 'success'
                         })
                         // disabledialog
@@ -8374,10 +8374,10 @@ var app = new Vue({
         renameField(e, item) {
             e.stopPropagation()
             //Legacy comment translated to English.
-            this.$prompt(ncfST('Frontend.473'), ncfST('Frontend.343'), {
-                confirmButtonText: ncfST('Frontend.421'),
-                cancelButtonText: ncfST('Frontend.091'),
-                inputErrorMessage: ncfST('Frontend.474'),
+            this.$prompt(ncfST('Frontend.PromptRange.EnterANewRangeName'), ncfST('Frontend.PromptRange.Notice'), {
+                confirmButtonText: ncfST('Frontend.PromptRange.ConfirmAlternate'),
+                cancelButtonText: ncfST('Frontend.PromptRange.Cancel'),
+                inputErrorMessage: ncfST('Frontend.PromptRange.RangeNameCannotBeEmpty'),
             }).then(async ({ value }) => {
                 const res = await servicePR.get('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.ChangeAliasAsync', {
                     params: {
@@ -8397,7 +8397,7 @@ var app = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: ncfST('Frontend.329')
+                    message: ncfST('Frontend.PromptRange.OperationCanceled')
                 });
             });
 
@@ -8492,7 +8492,7 @@ var app = new Vue({
                         this.aiScoreForm.resultList = _expectedResultsJson.map((item, index) => {
                             return {
                                 id: index + 1,
-                                label: ncfST('Frontend.384'),
+                                label: ncfST('Frontend.PromptRange.ExpectedResult'),
                                 value: item
                             }
                         })
@@ -8561,7 +8561,7 @@ var app = new Vue({
                         this.aiScoreForm.resultList = expectedResultsJson.map((item, index) => {
                             return {
                                 id: index + 1,
-                                        label: ncfST('Frontend.384'),
+                                        label: ncfST('Frontend.PromptRange.ExpectedResult'),
                                 value: item
                             }
                         })
@@ -8604,7 +8604,7 @@ var app = new Vue({
                 // deletesuccess
                 this.$message({
                     type: 'success',
-                        message: ncfST('Frontend.476')
+                        message: ncfST('Frontend.PromptRange.DeletedSuccessfullyEmphasis')
                 });
             } else {
                 app.$message({
@@ -8627,7 +8627,7 @@ var app = new Vue({
                 if (isSave) {
                     //Legacy comment translated to English.
                     this.$message({
-                        message: ncfST('Frontend.268'),
+                        message: ncfST('Frontend.PromptRange.SavedSuccessfully'),
                         type: 'success'
                     })
                 } else {
@@ -8649,7 +8649,7 @@ var app = new Vue({
             let _len = this.aiScoreForm.resultList.length
             this.aiScoreForm.resultList.push({
                 id: _len + 1,
-                label: ncfST('Frontend.384'),
+                label: ncfST('Frontend.PromptRange.ExpectedResult'),
                 value: ''
             })
         },
@@ -8664,7 +8664,7 @@ var app = new Vue({
                     resultList: _expectedResultsJson.map((item, index) => {
                         return {
                             id: index + 1,
-                            label: ncfST('Frontend.384'),
+                            label: ncfST('Frontend.PromptRange.ExpectedResult'),
                             value: item
                         }
                     })
@@ -8745,7 +8745,7 @@ var app = new Vue({
         //Legacy comment translated to English.
         async copyPromptResult(item, rawResult) {
             const text = rawResult ? item.resultString : item.resultStringHtml;
-            await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(text, ncfST('Frontend.477'), ncfST('Frontend.478'), true)
+            await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(text, ncfST('Frontend.PromptRange.CopiedSuccessfully'), ncfST('Frontend.PromptRange.CopyFailed'), true)
         },
         
         /**
@@ -8810,7 +8810,7 @@ var app = new Vue({
                 const copyBtn = document.createElement('button');
                 copyBtn.className = 'code-copy-btn';
                 copyBtn.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
-                copyBtn.title = ncfST('Frontend.479');
+                copyBtn.title = ncfST('Frontend.PromptRange.CopyCode');
                 
                 //Legacy comment translated to English.
                 copyBtn.addEventListener('click', async function(e) {
@@ -8825,8 +8825,8 @@ var app = new Vue({
                     if (window.PromptRangeUtils && window.PromptRangeUtils.CopyHelper) {
                         const success = await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(
                             code, 
-                            ncfST('Frontend.303'), 
-                            ncfST('Frontend.304'),
+                            ncfST('Frontend.PromptRange.CodeCopied'),
+                            ncfST('Frontend.PromptRange.FailedToCopyCode'),
                             true
                         );
                         
@@ -8878,7 +8878,7 @@ var app = new Vue({
                 document.body.removeChild(textarea);
                 
                 if (success) {
-                    this.$message.success(ncfST('Frontend.303'));
+                    this.$message.success(ncfST('Frontend.PromptRange.CodeCopied'));
                     button.classList.add('copied');
                     button.innerHTML = '<i class="el-icon-check"></i> Copied!';
                     
@@ -8887,11 +8887,11 @@ var app = new Vue({
                         button.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
                     }, 2000);
                 } else {
-                    this.$message.error(ncfST('Frontend.304'));
+                    this.$message.error(ncfST('Frontend.PromptRange.FailedToCopyCode'));
                 }
             } catch (err) {
                 console.error('Copy failed:', err);
-                this.$message.error(ncfST('Frontend.304'));
+                this.$message.error(ncfST('Frontend.PromptRange.FailedToCopyCode'));
             }
         },
         //Legacy comment translated to English.
@@ -9190,7 +9190,7 @@ var app = new Vue({
             
             //Legacy comment translated to English.
             this.$message({
-                message: ncfST('Frontend.482'),
+                message: ncfST('Frontend.PromptRange.RestoredToTheDefaultLayoutWidth'),
                 type: 'success',
                 duration: 2000
             });
@@ -9237,7 +9237,7 @@ var app = new Vue({
                 //Legacy comment translated to English.
                 if (this.comparePromptBId && id === this.comparePromptBId) {
                     this.$message({
-                        message: ncfST('Frontend.483'),
+                        message: ncfST('Frontend.PromptRange.WarningYouSelectedTheSamePromptForComparison'),
                         type: 'warning',
                         duration: 3000
                     });
@@ -9245,7 +9245,7 @@ var app = new Vue({
             } catch (error) {
                 console.error('Failed to load Prompt A:', error);
                 this.$message({
-                        message: ncfST('Frontend.484'),
+                        message: ncfST('Frontend.PromptRange.FailedToLoadPromptAData'),
                     type: 'error',
                     duration: 3000
                 });
@@ -9267,7 +9267,7 @@ var app = new Vue({
                 //Legacy comment translated to English.
                 if (this.comparePromptAId && id === this.comparePromptAId) {
                     this.$message({
-                        message: ncfST('Frontend.483'),
+                        message: ncfST('Frontend.PromptRange.WarningYouSelectedTheSamePromptForComparison'),
                         type: 'warning',
                         duration: 3000
                     });
@@ -9275,7 +9275,7 @@ var app = new Vue({
             } catch (error) {
                 console.error('Failed to load Prompt B:', error);
                 this.$message({
-                        message: ncfST('Frontend.485'),
+                        message: ncfST('Frontend.PromptRange.FailedToLoadPromptBData'),
                     type: 'error',
                     duration: 3000
                 });
@@ -9290,7 +9290,7 @@ var app = new Vue({
             if (res.data.success) {
                 return res.data.data;
             } else {
-                throw new Error(res.data.errorMessage || ncfST('Frontend.486'));
+                throw new Error(res.data.errorMessage || ncfST('Frontend.PromptRange.FailedToLoadPromptDetails'));
             }
         },
         
@@ -9330,7 +9330,7 @@ var app = new Vue({
         async switchToPrompt(promptId) {
             if (!promptId) {
                 this.$message({
-                    message: ncfST('Frontend.487'),
+                    message: ncfST('Frontend.PromptRange.InvalidPromptID'),
                     type: 'warning',
                     duration: 2000
                 });
@@ -9342,7 +9342,7 @@ var app = new Vue({
                 const promptData = await this.getPromptDetail(promptId);
                 
                 if (!promptData) {
-                    throw new Error(ncfST('Frontend.488'));
+                    throw new Error(ncfST('Frontend.PromptRange.UnableToGetPromptDetails'));
                 }
                 
                 //Legacy comment translated to English.
@@ -9355,7 +9355,7 @@ var app = new Vue({
                 );
                 
                 if (!targetRange) {
-                    throw new Error(ncfST('Frontend.489', targetRangeName));
+                    throw new Error(ncfST('Frontend.PromptRange.CorrespondingRangeNotFoundValue', targetRangeName));
                 }
                 
                 //Legacy comment translated to English.
@@ -9383,7 +9383,7 @@ var app = new Vue({
                 );
                 
                 if (!targetPrompt) {
-                    throw new Error(ncfST('Frontend.490'));
+                    throw new Error(ncfST('Frontend.PromptRange.NoCorrespondingPromptWasFoundInTheCurrentRange'));
                 }
                 
                 //Legacy comment translated to English.
@@ -9400,7 +9400,7 @@ var app = new Vue({
                 
                 //Legacy comment translated to English.
                 this.$message({
-                    message: ncfST('Frontend.491', promptData.fullVersion),
+                    message: ncfST('Frontend.PromptRange.SwitchedToPromptValue', promptData.fullVersion),
                     type: 'success',
                     duration: 2000
                 });
@@ -9408,7 +9408,7 @@ var app = new Vue({
             } catch (error) {
                 console.error('Failed to switch Prompt:', error);
                 this.$message({
-                    message: error.message || ncfST('Frontend.492'),
+                    message: error.message || ncfST('Frontend.PromptRange.FailedToSwitchPromptPleaseTryAgain'),
                     type: 'error',
                     duration: 3000
                 });
@@ -9431,10 +9431,10 @@ var app = new Vue({
         
         //Legacy comment translated to English.
         formatVariables(variablesJson) {
-            if (!variablesJson) return ncfST('Frontend.493');
+            if (!variablesJson) return ncfST('Frontend.PromptRange.None');
             try {
                 const vars = JSON.parse(variablesJson);
-                if (Object.keys(vars).length === 0) return ncfST('Frontend.493');
+                if (Object.keys(vars).length === 0) return ncfST('Frontend.PromptRange.None');
                 return Object.entries(vars).map(([key, value]) => `${key}: ${value}`).join('\n');
             } catch (e) {
                 return variablesJson;
@@ -9448,15 +9448,15 @@ var app = new Vue({
             
             //Legacy comment translated to English.
             if (!contentA && !contentB) {
-                return `<span class="diff-empty">${ncfST('Frontend.494')}</span>`;
+                return `<span class="diff-empty">${ncfST('Frontend.PromptRange.NoContent')}</span>`;
             }
             
             //Legacy comment translated to English.
             if (!contentA && side === 'A') {
-                return `<span class="diff-empty">${ncfST('Frontend.494')}</span>`;
+                return `<span class="diff-empty">${ncfST('Frontend.PromptRange.NoContent')}</span>`;
             }
             if (!contentB && side === 'B') {
-                return `<span class="diff-empty">${ncfST('Frontend.494')}</span>`;
+                return `<span class="diff-empty">${ncfST('Frontend.PromptRange.NoContent')}</span>`;
             }
             
             //Legacy comment translated to English.
@@ -9566,7 +9566,7 @@ var app = new Vue({
                 }
             }
             
-            return html || `<span class="diff-empty">${ncfST('Frontend.494')}</span>`;
+            return html || `<span class="diff-empty">${ncfST('Frontend.PromptRange.NoContent')}</span>`;
         },
         
         //Legacy comment translated to English.
@@ -10483,7 +10483,7 @@ var app = new Vue({
         getTargetRangeName: function(id) {
             //Legacy comment translated to English.
             return window.PromptRangeUtils.NameHelper.getName(
-                this.promptFieldOpt, id, ncfST('Frontend.354')
+                this.promptFieldOpt, id, ncfST('Frontend.PromptRange.UnknownRange')
             );
         },
         
@@ -10492,20 +10492,20 @@ var app = new Vue({
             var lane = window.PromptRangeUtils.NameHelper.getOption(
                 this.promptOpt, id, 'idkey'
             );
-            return lane ? (lane.nickName || lane.label || ncfST('Frontend.355')) : ncfST('Frontend.355');
+            return lane ? (lane.nickName || lane.label || ncfST('Frontend.PromptRange.UnknownTacticAlternate')) : ncfST('Frontend.PromptRange.UnknownTacticAlternate');
         },
         
         getTacticalName: function(id) {
             //Legacy comment translated to English.
             return window.PromptRangeUtils.NameHelper.getName(
-                this.tacticalOpt, id, ncfST('Frontend.353')
+                this.tacticalOpt, id, ncfST('Frontend.PromptRange.UnknownTactic')
             );
         },
         
         getModelName: function(id) {
             //Legacy comment translated to English.
             return window.PromptRangeUtils.NameHelper.getName(
-                this.modelOpt, id, ncfST('Frontend.495')
+                this.modelOpt, id, ncfST('Frontend.PromptRange.UnknownModel')
             );
         },
     }

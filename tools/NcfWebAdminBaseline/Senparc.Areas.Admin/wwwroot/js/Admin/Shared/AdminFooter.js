@@ -789,6 +789,16 @@
                     return;
                 }
                 window.NcfVoiceNavigation.toggle(this);
+                this.$nextTick(this.focusVoiceNavInput);
+            },
+            focusVoiceNavInput() {
+                if (!this.voiceNavPanelVisible) {
+                    return;
+                }
+                const input = this.$refs.voiceNavInput;
+                if (input && typeof input.focus === 'function') {
+                    input.focus();
+                }
             },
             submitVoiceNav() {
                 if (this.voiceNavEmbedded || !window.NcfVoiceNavigation) {

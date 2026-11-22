@@ -104,117 +104,117 @@
   </data>
 
 
-  <data name="Frontend.001" xml:space="preserve"><value>Módulos de extensión</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.002" xml:space="preserve"><value>Panel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.003" xml:space="preserve"><value>Panel de Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.004" xml:space="preserve"><value>Preparación del entorno</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Resumen del entorno Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.006" xml:space="preserve"><value>Sesiones registradas</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.007" xml:space="preserve"><value>En ejecución</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.008" xml:space="preserve"><value>Sesiones interactivas</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.009" xml:space="preserve"><value>Actualizar</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.010" xml:space="preserve"><value>Todas las Functions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.011" xml:space="preserve"><value>Documentación del entorno</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.012" xml:space="preserve"><value>Resumen de sesiones</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.013" xml:space="preserve"><value>Todas las sesiones</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.014" xml:space="preserve"><value>Registrado</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.015" xml:space="preserve"><value>Disponible actualmente</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.016" xml:space="preserve"><value>Notebook / vista previa</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.017" xml:space="preserve"><value>Pendiente de atención</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.018" xml:space="preserve"><value>Fallido o caducado</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.019" xml:space="preserve"><value>Acciones rápidas de Function</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.020" xml:space="preserve"><value>Abrir Function del módulo</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.021" xml:space="preserve"><value>Crear Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.022" xml:space="preserve"><value>Ejecutar código</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.023" xml:space="preserve"><value>Destruir Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.024" xml:space="preserve"><value>Entorno de ejecución</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.025" xml:space="preserve"><value>Ciclo de vida</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.026" xml:space="preserve"><value>Limpieza automática por TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.027" xml:space="preserve"><value>Comprobar entorno</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.028" xml:space="preserve"><value>Sesiones Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.029" xml:space="preserve"><value>Plantilla</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.030" xml:space="preserve"><value>Alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.031" xml:space="preserve"><value>Tiempo de ejecución</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.032" xml:space="preserve"><value>Estado</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.033" xml:space="preserve"><value>Puerto</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.034" xml:space="preserve"><value>Puertos adicionales</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.035" xml:space="preserve"><value>Acceso</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.036" xml:space="preserve"><value>Abrir sesión interactiva</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.037" xml:space="preserve"><value>Abrir</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.038" xml:space="preserve"><value>Acciones</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.039" xml:space="preserve"><value>Editar alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.040" xml:space="preserve"><value>Establecer alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.041" xml:space="preserve"><value>Ampliar o editar TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.042" xml:space="preserve"><value>Destruir entorno de ejecución</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.043" xml:space="preserve"><value>Eliminar permanentemente el registro de sesión</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.044" xml:space="preserve"><value>Alias de sesión</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.045" xml:space="preserve"><value>Deja vacío para borrar el alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.046" xml:space="preserve"><value>Cancelar</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.047" xml:space="preserve"><value>Guardar</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.048" xml:space="preserve"><value>Editar TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.049" xml:space="preserve"><value>Limpieza programada</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.050" xml:space="preserve"><value>Conservar para siempre</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.051" xml:space="preserve"><value>Comprobación local</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.052" xml:space="preserve"><value>Comprobar de nuevo</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.053" xml:space="preserve"><value>Disponible</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.054" xml:space="preserve"><value>No disponible</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.055" xml:space="preserve"><value>Prefijo del registro de imágenes</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.056" xml:space="preserve"><value>No configurado (se usan imágenes públicas predeterminadas; consulta la documentación)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.057" xml:space="preserve"><value>Lista de configuración manual (resumen)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.058" xml:space="preserve"><value>Abrir panel de Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.059" xml:space="preserve"><value>Documentación:</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.060" xml:space="preserve"><value>Comprueba la disponibilidad de Docker, los prefijos de imágenes y las notas de despliegue en la página de preparación del entorno.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.061" xml:space="preserve"><value>No</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.062" xml:space="preserve"><value>Configura aquí los prefijos o sobrescrituras; consulta la documentación.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.063" xml:space="preserve"><value>Usa la entrada de ejecución registrada por el módulo; la validación de parámetros y los registros coinciden con la página Function del módulo.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.064" xml:space="preserve"><value>Tras guardar, recalcula desde el momento actual y destruye la sesión automáticamente al vencer.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.065" xml:space="preserve"><value>Crear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.066" xml:space="preserve"><value>Envía código de tareas cortas en una sesión de plantilla Exec.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.067" xml:space="preserve"><value>Instala y arranca Docker (o una CLI compatible) en la misma máquina que ejecuta NCF. El módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.068" xml:space="preserve"><value>Para un registro interno, configúralo en el host</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.069" xml:space="preserve"><value>Ejecutar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.070" xml:space="preserve"><value>Descarga previamente las imágenes necesarias según la documentación oficial; usa los nombres y versiones documentados.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.071" xml:space="preserve"><value>Después de superar la comprobación, abre la Function del módulo «Crear Sandbox», selecciona Python Exec en la lista de plantillas y ejecútala; no hace falta introducir el nombre en la línea de comandos.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.072" xml:space="preserve"><value>Estado:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.073" xml:space="preserve"><value>de</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.074" xml:space="preserve"><value>Instala Docker automáticamente.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.075" xml:space="preserve"><value>Esta sesión no se destruye mediante el escaneo TTL y un administrador debe destruirla manualmente.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.076" xml:space="preserve"><value>Introduce un SessionId para detener y limpiar la sesión indicada.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.077" xml:space="preserve"><value>Elige una plantilla de ejecución y un entorno para crear una sesión aislada.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.078" xml:space="preserve"><value>Accede a sesiones interactivas mediante el proxy inverso del sitio; los enlaces no exponen el token del contenedor.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.079" xml:space="preserve"><value>Destruir</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.080" xml:space="preserve"><value>Prefijo del registro de imágenes:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.081" xml:space="preserve"><value>Revisa el estado de las sesiones en un solo lugar y crea, ejecuta y limpia entornos aislados mediante Functions del módulo.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.082" xml:space="preserve"><value>Estado actualizado {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.083" xml:space="preserve"><value>{0} sesiones</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.084" xml:space="preserve"><value>No hay sesiones Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.085" xml:space="preserve"><value>Los alias identifican sesiones en listas, resultados de Function y registros; no afectan al entorno de ejecución.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.086" xml:space="preserve"><value>Creando</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.087" xml:space="preserve"><value>Deteniendo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.088" xml:space="preserve"><value>Detenido</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.089" xml:space="preserve"><value>Fallido</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.090" xml:space="preserve"><value>Caducado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.091" xml:space="preserve"><value>Desconocido ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.092" xml:space="preserve"><value>Docker está listo; puedes continuar creando sandboxes.</value></data>
-  <data name="Frontend.093" xml:space="preserve"><value>Docker no está listo: completa la instalación manual y descarga previamente las imágenes según la documentación.</value></data>
-  <data name="Frontend.094" xml:space="preserve"><value>Instala y arranca Docker (o una CLI compatible) en la misma máquina que ejecuta NCF. El módulo no instala Docker automáticamente.</value></data>
-  <data name="Frontend.095" xml:space="preserve"><value>Para un registro interno, configura el prefijo o las sobrescrituras en SenparcXncfSandbox:Images dentro del appsettings.json del host; consulta la documentación.</value></data>
-  <data name="Frontend.096" xml:space="preserve"><value>Esperando la limpieza</value></data>
-  <data name="Frontend.097" xml:space="preserve"><value>No se pudieron actualizar las sesiones Sandbox. Comprueba el estado del servicio.</value></data>
-  <data name="Frontend.098" xml:space="preserve"><value>Alias actualizado.</value></data>
-  <data name="Frontend.099" xml:space="preserve"><value>Alias eliminado.</value></data>
-  <data name="Frontend.100" xml:space="preserve"><value>No se pudo actualizar el alias. Comprueba el estado de la sesión.</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>Configurado para conservarse permanentemente.</value></data>
-  <data name="Frontend.102" xml:space="preserve"><value>TTL actualizado.</value></data>
-  <data name="Frontend.103" xml:space="preserve"><value>No se pudo actualizar el TTL. Comprueba el estado de la sesión y la configuración del TTL.</value></data>
-  <data name="Frontend.104" xml:space="preserve"><value>Al destruirlo se detendrá y eliminará el entorno de ejecución correspondiente. ¿Continuar?</value></data>
-  <data name="Frontend.105" xml:space="preserve"><value>Destruir sandbox</value></data>
-  <data name="Frontend.106" xml:space="preserve"><value>Sesión Sandbox destruida.</value></data>
-  <data name="Frontend.107" xml:space="preserve"><value>No se pudo destruir la sesión Sandbox. Comprueba los registros del servicio.</value></data>
-  <data name="Frontend.108" xml:space="preserve"><value>Esta operación eliminará permanentemente el registro de la sesión y no se puede deshacer. Confirma que el entorno de ejecución ya se ha destruido. ¿Continuar?</value></data>
-  <data name="Frontend.109" xml:space="preserve"><value>Eliminar registro de sesión</value></data>
-  <data name="Frontend.110" xml:space="preserve"><value>Registro de sesión Sandbox eliminado.</value></data>
-  <data name="Frontend.111" xml:space="preserve"><value>No se pudo eliminar el registro de la sesión. Destruye primero el entorno de ejecución o comprueba los registros del servicio.</value></data>
+  <data name="Frontend.Sandbox.ExtensionModules" xml:space="preserve"><value>Módulos de extensión</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Panel" xml:space="preserve"><value>Panel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SandboxPanel" xml:space="preserve"><value>Panel de Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.EnvironmentSetup" xml:space="preserve"><value>Preparación del entorno</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SandboxRuntimeOverview" xml:space="preserve"><value>Resumen del entorno Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.RegisteredSessions" xml:space="preserve"><value>Sesiones registradas</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Running" xml:space="preserve"><value>En ejecución</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.InteractiveSessions" xml:space="preserve"><value>Sesiones interactivas</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Refresh" xml:space="preserve"><value>Actualizar</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.AllFunctions" xml:space="preserve"><value>Todas las Functions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.EnvironmentDocs" xml:space="preserve"><value>Documentación del entorno</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SessionOverview" xml:space="preserve"><value>Resumen de sesiones</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.AllSessions" xml:space="preserve"><value>Todas las sesiones</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Registered" xml:space="preserve"><value>Registrado</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.CurrentlyAvailable" xml:space="preserve"><value>Disponible actualmente</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.NotebookPreview" xml:space="preserve"><value>Notebook / vista previa</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.NeedsAttention" xml:space="preserve"><value>Pendiente de atención</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.FailedOrExpired" xml:space="preserve"><value>Fallido o caducado</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.FunctionQuickActions" xml:space="preserve"><value>Acciones rápidas de Function</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.OpenModuleFunction" xml:space="preserve"><value>Abrir Function del módulo</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.CreateSandbox" xml:space="preserve"><value>Crear Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.ExecuteCode" xml:space="preserve"><value>Ejecutar código</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.DestroySandbox" xml:space="preserve"><value>Destruir Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.RuntimeEnvironment" xml:space="preserve"><value>Entorno de ejecución</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Lifecycle" xml:space="preserve"><value>Ciclo de vida</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.AutomaticTTLCleanup" xml:space="preserve"><value>Limpieza automática por TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.CheckEnvironment" xml:space="preserve"><value>Comprobar entorno</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SandboxSessions" xml:space="preserve"><value>Sesiones Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Template" xml:space="preserve"><value>Plantilla</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Alias" xml:space="preserve"><value>Alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Runtime" xml:space="preserve"><value>Tiempo de ejecución</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Status" xml:space="preserve"><value>Estado</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Port" xml:space="preserve"><value>Puerto</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.AdditionalPorts" xml:space="preserve"><value>Puertos adicionales</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Access" xml:space="preserve"><value>Acceso</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.OpenInteractiveSession" xml:space="preserve"><value>Abrir sesión interactiva</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Open" xml:space="preserve"><value>Abrir</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Actions" xml:space="preserve"><value>Acciones</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.EditAlias" xml:space="preserve"><value>Editar alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SetAlias" xml:space="preserve"><value>Establecer alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.ExtendOrEditTTL" xml:space="preserve"><value>Ampliar o editar TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.DestroyRuntime" xml:space="preserve"><value>Destruir entorno de ejecución</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.PermanentlyDeleteSessionRecord" xml:space="preserve"><value>Eliminar permanentemente el registro de sesión</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SessionAlias" xml:space="preserve"><value>Alias de sesión</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.LeaveEmptyToClearTheAlias" xml:space="preserve"><value>Deja vacío para borrar el alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Cancel" xml:space="preserve"><value>Cancelar</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Save" xml:space="preserve"><value>Guardar</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.EditTTL" xml:space="preserve"><value>Editar TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.ScheduledCleanup" xml:space="preserve"><value>Limpieza programada</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.KeepForever" xml:space="preserve"><value>Conservar para siempre</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.LocalCheck" xml:space="preserve"><value>Comprobación local</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.CheckAgain" xml:space="preserve"><value>Comprobar de nuevo</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Available" xml:space="preserve"><value>Disponible</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Unavailable" xml:space="preserve"><value>No disponible</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.ImageRegistryPrefix" xml:space="preserve"><value>Prefijo del registro de imágenes</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.NotConfiguredPublicDefaultImagesAreUsedSeeDocumentation" xml:space="preserve"><value>No configurado (se usan imágenes públicas predeterminadas; consulta la documentación)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.ManualConfigurationChecklistSummary" xml:space="preserve"><value>Lista de configuración manual (resumen)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.OpenSandboxPanel" xml:space="preserve"><value>Abrir panel de Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Documentation" xml:space="preserve"><value>Documentación:</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.CheckDockerAvailabilityImagePrefixesAndDeploymentNotesOnTheEnvironmentSetup" xml:space="preserve"><value>Comprueba la disponibilidad de Docker, los prefijos de imágenes y las notas de despliegue en la página de preparación del entorno.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.No" xml:space="preserve"><value>No</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.ConfigurePrefixesOrOverridesHereSeeTheDocumentation" xml:space="preserve"><value>Configura aquí los prefijos o sobrescrituras; consulta la documentación.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.UsesTheExecutionEntryRegisteredByTheModuleParameterValidationAndResult" xml:space="preserve"><value>Usa la entrada de ejecución registrada por el módulo; la validación de parámetros y los registros coinciden con la página Function del módulo.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.RecalculatesFromTheCurrentTimeAfterSavingAndDestroysTheSessionAutomatically" xml:space="preserve"><value>Tras guardar, recalcula desde el momento actual y destruye la sesión automáticamente al vencer.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Create" xml:space="preserve"><value>Crear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.SubmitShortTaskCodeInAnExecTemplateSession" xml:space="preserve"><value>Envía código de tareas cortas en una sesión de plantilla Exec.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.InstallAndStartDockerOrACompatibleCLIOnTheSameMachine" xml:space="preserve"><value>Instala y arranca Docker (o una CLI compatible) en la misma máquina que ejecuta NCF. El módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.ForAnInternalRegistryConfigureItOnTheHost" xml:space="preserve"><value>Para un registro interno, configúralo en el host</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Execute" xml:space="preserve"><value>Ejecutar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.PrePullTheRequiredImagesAccordingToTheOfficialDocumentationUseThe" xml:space="preserve"><value>Descarga previamente las imágenes necesarias según la documentación oficial; usa los nombres y versiones documentados.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.AfterTheCheckPassesOpenTheModuleFunctionCreateSandboxChoosePython" xml:space="preserve"><value>Después de superar la comprobación, abre la Function del módulo «Crear Sandbox», selecciona Python Exec en la lista de plantillas y ejecútala; no hace falta introducir el nombre en la línea de comandos.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.StatusLabel" xml:space="preserve"><value>Estado:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Of" xml:space="preserve"><value>de</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.InstallDockerAutomatically" xml:space="preserve"><value>Instala Docker automáticamente.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.ThisSessionIsNotDestroyedByTheTTLScanAndMustBe" xml:space="preserve"><value>Esta sesión no se destruye mediante el escaneo TTL y un administrador debe destruirla manualmente.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.EnterASessionIdToStopAndCleanUpTheSpecifiedSession" xml:space="preserve"><value>Introduce un SessionId para detener y limpiar la sesión indicada.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.ChooseAnExecutionTemplateAndRuntimeToCreateAnIsolatedSession" xml:space="preserve"><value>Elige una plantilla de ejecución y un entorno para crear una sesión aislada.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.AccessInteractiveSessionsThroughTheSiteReverseProxyLinksDoNotExpose" xml:space="preserve"><value>Accede a sesiones interactivas mediante el proxy inverso del sitio; los enlaces no exponen el token del contenedor.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Destroy" xml:space="preserve"><value>Destruir</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.ImageRegistryPrefixLabel" xml:space="preserve"><value>Prefijo del registro de imágenes:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.ReviewSessionStatusInOnePlaceAndCreateExecuteAndCleanIsolated" xml:space="preserve"><value>Revisa el estado de las sesiones en un solo lugar y crea, ejecuta y limpia entornos aislados mediante Functions del módulo.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.StatusUpdatedValue" xml:space="preserve"><value>Estado actualizado {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.ValueSessions" xml:space="preserve"><value>{0} sesiones</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.NoSandboxSessions" xml:space="preserve"><value>No hay sesiones Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.AliasesIdentifySessionsInListsFunctionResultsAndLogsTheyDoNot" xml:space="preserve"><value>Los alias identifican sesiones en listas, resultados de Function y registros; no afectan al entorno de ejecución.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Creating" xml:space="preserve"><value>Creando</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Stopping" xml:space="preserve"><value>Deteniendo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Stopped" xml:space="preserve"><value>Detenido</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Failed" xml:space="preserve"><value>Fallido</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Expired" xml:space="preserve"><value>Caducado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.UnknownValue" xml:space="preserve"><value>Desconocido ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.DockerIsReadyYouCanContinueCreatingSandboxes" xml:space="preserve"><value>Docker está listo; puedes continuar creando sandboxes.</value></data>
+  <data name="Frontend.Sandbox.DockerIsNotReadyCompleteTheManualInstallationAndPrePullThe" xml:space="preserve"><value>Docker no está listo: completa la instalación manual y descarga previamente las imágenes según la documentación.</value></data>
+  <data name="Frontend.Sandbox.InstallAndStartDockerOrACompatibleCLIOnTheSameMachineAlternate" xml:space="preserve"><value>Instala y arranca Docker (o una CLI compatible) en la misma máquina que ejecuta NCF. El módulo no instala Docker automáticamente.</value></data>
+  <data name="Frontend.Sandbox.ForAnInternalRegistryConfigureThePrefixOrOverridesInSenparcXncfSandboxImages" xml:space="preserve"><value>Para un registro interno, configura el prefijo o las sobrescrituras en SenparcXncfSandbox:Images dentro del appsettings.json del host; consulta la documentación.</value></data>
+  <data name="Frontend.Sandbox.WaitingForCleanup" xml:space="preserve"><value>Esperando la limpieza</value></data>
+  <data name="Frontend.Sandbox.FailedToRefreshSandboxSessionsCheckTheServiceStatus" xml:space="preserve"><value>No se pudieron actualizar las sesiones Sandbox. Comprueba el estado del servicio.</value></data>
+  <data name="Frontend.Sandbox.AliasUpdated" xml:space="preserve"><value>Alias actualizado.</value></data>
+  <data name="Frontend.Sandbox.AliasCleared" xml:space="preserve"><value>Alias eliminado.</value></data>
+  <data name="Frontend.Sandbox.FailedToUpdateTheAliasCheckTheSessionStatus" xml:space="preserve"><value>No se pudo actualizar el alias. Comprueba el estado de la sesión.</value></data>
+  <data name="Frontend.Sandbox.SetToKeepPermanently" xml:space="preserve"><value>Configurado para conservarse permanentemente.</value></data>
+  <data name="Frontend.Sandbox.TTLUpdated" xml:space="preserve"><value>TTL actualizado.</value></data>
+  <data name="Frontend.Sandbox.FailedToUpdateTTLCheckTheSessionStatusAndTTLSetting" xml:space="preserve"><value>No se pudo actualizar el TTL. Comprueba el estado de la sesión y la configuración del TTL.</value></data>
+  <data name="Frontend.Sandbox.TheEnvironmentWillBeStoppedAndDeletedAfterDestructionContinue" xml:space="preserve"><value>Al destruirlo se detendrá y eliminará el entorno de ejecución correspondiente. ¿Continuar?</value></data>
+  <data name="Frontend.Sandbox.DestroySandboxAlternate" xml:space="preserve"><value>Destruir sandbox</value></data>
+  <data name="Frontend.Sandbox.SandboxSessionDestroyed" xml:space="preserve"><value>Sesión Sandbox destruida.</value></data>
+  <data name="Frontend.Sandbox.FailedToDestroyTheSandboxSessionCheckTheServiceLogs" xml:space="preserve"><value>No se pudo destruir la sesión Sandbox. Comprueba los registros del servicio.</value></data>
+  <data name="Frontend.Sandbox.ThisPermanentlyDeletesTheSessionRecordAndCannotBeUndoneConfirmThat" xml:space="preserve"><value>Esta operación eliminará permanentemente el registro de la sesión y no se puede deshacer. Confirma que el entorno de ejecución ya se ha destruido. ¿Continuar?</value></data>
+  <data name="Frontend.Sandbox.DeleteSessionRecord" xml:space="preserve"><value>Eliminar registro de sesión</value></data>
+  <data name="Frontend.Sandbox.SandboxSessionRecordDeleted" xml:space="preserve"><value>Registro de sesión Sandbox eliminado.</value></data>
+  <data name="Frontend.Sandbox.FailedToDeleteTheSessionRecordDestroyTheRuntimeEnvironmentFirstOr" xml:space="preserve"><value>No se pudo eliminar el registro de la sesión. Destruye primero el entorno de ejecución o comprueba los registros del servicio.</value></data>
   <data name="Function.Sandbox.List.Name" xml:space="preserve"><value>Listar sandboxes</value></data>
   <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>Ver las sesiones de sandbox recientes.</value></data>
   <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>Estado del sandbox</value></data>
@@ -257,24 +257,24 @@
   <data name="Parameter.Sandbox.SessionId.Help" xml:space="preserve"><value>Debe identificar una sesión de JupyterLab en ejecución.</value></data>
   <data name="Parameter.Sandbox.MaxBytes" xml:space="preserve"><value>Límite de lectura (bytes)</value></data>
   <data name="Parameter.Sandbox.MaxBytes.Help" xml:space="preserve"><value>Déjalo vacío o usa 0 para aplicar el límite predeterminado del sistema.</value></data>
-  <data name="Frontend.112" xml:space="preserve"><value>Tarea Python corta (Docker)</value></data>
-  <data name="Frontend.113" xml:space="preserve"><value>Tarea C# corta (imagen SDK de Docker)</value></data>
-  <data name="Frontend.114" xml:space="preserve"><value>Notebook Python interactivo (consume memoria)</value></data>
-  <data name="Frontend.115" xml:space="preserve"><value>Notebook C# interactivo (primero hay que crear/configurar la imagen)</value></data>
-  <data name="Frontend.116" xml:space="preserve"><value>Requiere Docker local</value></data>
-  <data name="Frontend.117" xml:space="preserve"><value>Marcador de la primera versión; todavía no disponible</value></data>
+  <data name="Frontend.Sandbox.ShortPythonTaskDocker" xml:space="preserve"><value>Tarea Python corta (Docker)</value></data>
+  <data name="Frontend.Sandbox.ShortCTaskDockerSDKImage" xml:space="preserve"><value>Tarea C# corta (imagen SDK de Docker)</value></data>
+  <data name="Frontend.Sandbox.InteractivePythonNotebookMemoryIntensive" xml:space="preserve"><value>Notebook Python interactivo (consume memoria)</value></data>
+  <data name="Frontend.Sandbox.InteractiveCNotebookImageMustBeBuiltConfiguredFirst" xml:space="preserve"><value>Notebook C# interactivo (primero hay que crear/configurar la imagen)</value></data>
+  <data name="Frontend.Sandbox.RequiresLocalDocker" xml:space="preserve"><value>Requiere Docker local</value></data>
+  <data name="Frontend.Sandbox.PlaceholderForTheFirstReleaseNotAvailableYet" xml:space="preserve"><value>Marcador de la primera versión; todavía no disponible</value></data>
   <data name="Function.Sandbox.LabUploadFiles.Name" xml:space="preserve"><value>Subir archivos de Lab</value></data>
   <data name="Function.Sandbox.LabUploadFiles.Description" xml:space="preserve"><value>Escribe varios archivos subidos como flujos en un espacio JupyterLab persistente en ejecución.</value></data>
-  <data name="Frontend.118" xml:space="preserve"><value>Código</value></data>
-  <data name="Frontend.119" xml:space="preserve"><value>Código de tarea corta. Ejemplo Python: print('hello from NCF Sandbox'); ejemplo C#: Console.WriteLine("hello from NCF Sandbox"); (las cadenas C# deben usar comillas dobles)</value></data>
-  <data name="Frontend.120" xml:space="preserve"><value>Comando</value></data>
-  <data name="Frontend.121" xml:space="preserve"><value>Comando ejecutado mediante /bin/sh -lc dentro del contenedor Lab; el directorio de trabajo está limitado al espacio Lab.</value></data>
-  <data name="Frontend.122" xml:space="preserve"><value>Directorio de trabajo</value></data>
-  <data name="Frontend.123" xml:space="preserve"><value>Directorio relativo al espacio Lab; déjalo vacío para usar la raíz.</value></data>
-  <data name="Frontend.124" xml:space="preserve"><value>Tiempo de espera (segundos)</value></data>
-  <data name="Frontend.125" xml:space="preserve"><value>Duración máxima de un comando; 30 segundos por defecto y 120 segundos como máximo.</value></data>
-  <data name="Frontend.126" xml:space="preserve"><value>Entrada estándar</value></data>
-  <data name="Frontend.127" xml:space="preserve"><value>Opcional; con contenido se usa docker exec -i y se escribe línea a línea en stdin, hasta 32768 caracteres.</value></data>
+  <data name="Frontend.Sandbox.Code" xml:space="preserve"><value>Código</value></data>
+  <data name="Frontend.Sandbox.ShortTaskSourceCodePythonExamplePrintHelloFromNCFSandboxC" xml:space="preserve"><value>Código de tarea corta. Ejemplo Python: print('hello from NCF Sandbox'); ejemplo C#: Console.WriteLine("hello from NCF Sandbox"); (las cadenas C# deben usar comillas dobles)</value></data>
+  <data name="Frontend.Sandbox.Command" xml:space="preserve"><value>Comando</value></data>
+  <data name="Frontend.Sandbox.CommandExecutedThroughBinShLcInsideTheLabContainerTheWorking" xml:space="preserve"><value>Comando ejecutado mediante /bin/sh -lc dentro del contenedor Lab; el directorio de trabajo está limitado al espacio Lab.</value></data>
+  <data name="Frontend.Sandbox.WorkingDirectory" xml:space="preserve"><value>Directorio de trabajo</value></data>
+  <data name="Frontend.Sandbox.DirectoryRelativeToTheLabWorkspaceLeaveEmptyForTheWorkspaceRoot" xml:space="preserve"><value>Directorio relativo al espacio Lab; déjalo vacío para usar la raíz.</value></data>
+  <data name="Frontend.Sandbox.TimeoutSeconds" xml:space="preserve"><value>Tiempo de espera (segundos)</value></data>
+  <data name="Frontend.Sandbox.MaximumDurationOfOneCommand30SecondsByDefaultAnd120Seconds" xml:space="preserve"><value>Duración máxima de un comando; 30 segundos por defecto y 120 segundos como máximo.</value></data>
+  <data name="Frontend.Sandbox.StandardInput" xml:space="preserve"><value>Entrada estándar</value></data>
+  <data name="Frontend.Sandbox.OptionalWhenProvidedTheCommandRunsWithDockerExecIAndThe" xml:space="preserve"><value>Opcional; con contenido se usa docker exec -i y se escribe línea a línea en stdin, hasta 32768 caracteres.</value></data>
   <data name="Parameter.Sandbox.RelativePath" xml:space="preserve"><value>Ruta de archivo del espacio de trabajo</value></data>
   <data name="Parameter.Sandbox.RelativePath.Help" xml:space="preserve"><value>Solo se permite una ruta relativa dentro del espacio, por ejemplo data/input.json.</value></data>
   <data name="Parameter.Sandbox.Base64" xml:space="preserve"><value>Contenido Base64</value></data>
@@ -299,6 +299,6 @@
   <data name="Parameter.Sandbox.MaxItems.Help" xml:space="preserve"><value>Déjalo vacío o usa 0 para aplicar el límite predeterminado del sistema.</value></data>
   <data name="Parameter.Sandbox.NotebookPath" xml:space="preserve"><value>Ruta de archivo del espacio de trabajo</value></data>
   <data name="Parameter.Sandbox.NotebookPath.Help" xml:space="preserve"><value>La ruta debe terminar en .ipynb, por ejemplo notebooks/demo.ipynb.</value></data>
-  <data name="Frontend.220" xml:space="preserve"><value>Kernel Python 3 estándar</value></data>
-  <data name="Frontend.221" xml:space="preserve"><value>Kernel C# de dotnet-interactive; se necesita una imagen Jupyter de C#.</value></data>
+  <data name="Frontend.Sandbox.StandardPythonThreeKernel" xml:space="preserve"><value>Kernel Python 3 estándar</value></data>
+  <data name="Frontend.Sandbox.DotnetInteractiveCKernelACJupyterImageIsRequired" xml:space="preserve"><value>Kernel C# de dotnet-interactive; se necesita una imagen Jupyter de C#.</value></data>
 </root>

@@ -25,9 +25,9 @@ new Vue({
             return this.replay && this.stepIndex >= 0 ? this.replay.events[this.stepIndex] || null : null;
         },
         stepLabel() {
-            if (!this.replay) return ncfWorkflowText('Frontend.107');
-            if (this.stepIndex < 0) return ncfWorkflowText('Frontend.108');
-            return ncfWorkflowText('Frontend.109').replace('{0}', this.stepIndex + 1).replace('{1}', this.replay.events.length);
+            if (!this.replay) return ncfWorkflowText('Frontend.NeuCharWorkflow.ReadingRunRecords');
+            if (this.stepIndex < 0) return ncfWorkflowText('Frontend.NeuCharWorkflow.BeforeRunStart');
+            return ncfWorkflowText('Frontend.NeuCharWorkflow.StepValueValue').replace('{0}', this.stepIndex + 1).replace('{1}', this.replay.events.length);
         },
         canvasInset() { return 240; },
         canvasSize() {
@@ -72,14 +72,14 @@ new Vue({
         async loadReplay() {
             const executionLogId = this.routeExecutionLogId();
             if (!executionLogId) {
-                this.loadError = ncfWorkflowText('Frontend.110');
+                this.loadError = ncfWorkflowText('Frontend.NeuCharWorkflow.TheTaskIdentifierRequiredForReplayIsMissing');
                 return;
             }
             this.loading = true;
             try {
                 const response = await service.get(`/Admin/NeuCharWorkflow/Replay?handler=Data&executionLogId=${executionLogId}`);
                 this.replay = NeuCharWorkflowUi.unwrap(response);
-                if (!this.replay) throw new Error(ncfWorkflowText('Frontend.111'));
+                if (!this.replay) throw new Error(ncfWorkflowText('Frontend.NeuCharWorkflow.TaskReplayDataWasNotFound'));
                 this.replay.events = Array.isArray(this.replay.events) ? this.replay.events : [];
                 this.timelineRenderLimit = Math.min(this.timelineChunkSize, this.replay.events.length);
                 this.graph = NeuCharWorkflowUi.parseJson(this.replay.definition && this.replay.definition.graphJson, { nodes: [], edges: [] }) || { nodes: [], edges: [] };
@@ -87,7 +87,7 @@ new Vue({
                 this.graph.edges = Array.isArray(this.graph.edges) ? this.graph.edges : [];
                 this.scheduleInitialCenter();
             } catch (error) {
-                this.loadError = this.errorMessage(error, ncfWorkflowText('Frontend.112'));
+                this.loadError = this.errorMessage(error, ncfWorkflowText('Frontend.NeuCharWorkflow.CannotReadTheTaskReplayRunningTasksMustFinishFirstOlderTasks'));
             } finally {
                 this.loading = false;
             }
@@ -253,24 +253,24 @@ new Vue({
         },
         eventStatusText(status) {
             const source = {
-                running: ncfWorkflowText('Frontend.400'),
-                success: ncfWorkflowText('Frontend.401'),
-                failed: ncfWorkflowText('Frontend.402'),
-                branch: ncfWorkflowText('Frontend.403'),
-                console: ncfWorkflowText('Frontend.404')
-            }[status] || ncfWorkflowText('Frontend.405');
+                running: ncfWorkflowText('Frontend.NeuCharWorkflow.RunningSupplemental'),
+                success: ncfWorkflowText('Frontend.NeuCharWorkflow.ExecutionComplete'),
+                failed: ncfWorkflowText('Frontend.NeuCharWorkflow.ExecutionFailed'),
+                branch: ncfWorkflowText('Frontend.NeuCharWorkflow.SelectBranch'),
+                console: ncfWorkflowText('Frontend.NeuCharWorkflow.ConsoleOutputAlternate')
+            }[status] || ncfWorkflowText('Frontend.NeuCharWorkflow.StatusUpdate');
             return window.ncfWorkflowText(source);
         },
         eventType(status) { return { success: 'success', failed: 'danger', running: 'warning', branch: 'primary' }[status] || 'info'; },
         statusText(status) {
-            const source = { success: ncfWorkflowText('Frontend.406'), failed: ncfWorkflowText('Frontend.407') }[status] || ncfWorkflowText('Frontend.408');
+            const source = { success: ncfWorkflowText('Frontend.NeuCharWorkflow.RunSucceeded'), failed: ncfWorkflowText('Frontend.NeuCharWorkflow.RunFailed') }[status] || ncfWorkflowText('Frontend.NeuCharWorkflow.RunCompletedAlternate');
             return window.ncfWorkflowText(source);
         },
         nodeTypeText(type) {
             return {
-                'manual-trigger': ncfWorkflowText('Frontend.248'), 'interval-trigger': ncfWorkflowText('Frontend.471'), 'webhook-trigger': ncfWorkflowText('Frontend.470'),
-                function: 'Function', delay: ncfWorkflowText('Frontend.115'), condition: ncfWorkflowText('Frontend.413'), agent: 'Agent', 'agent-group': ncfWorkflowText('Frontend.117'),
-                aggregate: ncfWorkflowText('Frontend.422'), console: 'Console', neubell: ncfWorkflowText('Frontend.427'), end: ncfWorkflowText('Frontend.430')
+                'manual-trigger': ncfWorkflowText('Frontend.NeuCharWorkflow.ManualTrigger'), 'interval-trigger': ncfWorkflowText('Frontend.NeuCharWorkflow.ScheduledTrigger'), 'webhook-trigger': ncfWorkflowText('Frontend.NeuCharWorkflow.WebhookTrigger'),
+                function: 'Function', delay: ncfWorkflowText('Frontend.NeuCharWorkflow.Waiting'), condition: ncfWorkflowText('Frontend.NeuCharWorkflow.ConditionSupplemental'), agent: 'Agent', 'agent-group': ncfWorkflowText('Frontend.NeuCharWorkflow.AgentGroup'),
+                aggregate: ncfWorkflowText('Frontend.NeuCharWorkflow.Aggregate'), console: 'Console', neubell: ncfWorkflowText('Frontend.NeuCharWorkflow.SendNeuBell'), end: ncfWorkflowText('Frontend.NeuCharWorkflow.EndAlternate')
             }[type] || type;
         },
         formatDate(value) {
@@ -288,10 +288,10 @@ new Vue({
                     executionLogId: this.replay.executionLogId
                 }, { customAlert: true });
                 const workflow = NeuCharWorkflowUi.unwrap(response);
-                if (!workflow || !workflow.id) throw new Error(ncfWorkflowText('Frontend.114'));
+                if (!workflow || !workflow.id) throw new Error(ncfWorkflowText('Frontend.NeuCharWorkflow.FailedToCopyTheWorkflow'));
                 window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${workflow.id}`);
             } catch (error) {
-                this.$message.error(this.errorMessage(error, ncfWorkflowText('Frontend.113')));
+                this.$message.error(this.errorMessage(error, ncfWorkflowText('Frontend.NeuCharWorkflow.CannotCreateAWorkflowDraftFromTheCurrentReplay')));
             } finally {
                 this.copying = false;
             }

@@ -65,7 +65,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 throw new NcfExceptionBase(Template_XncfNameResource.Format(
-                    "Frontend.063",
+                    "Frontend.Template_XncfName.ExceptionThrowTestParametersPassedValueValue",
                     "Exception test with parameters: {0} {1}",
                     request.FirstName,
                     request.LastName));

@@ -54,220 +54,220 @@
   <data name="Common.Submit" xml:space="preserve">
     <value>Отправить</value>
   </data>
-  <data name="Frontend.001" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ExtensionModules" xml:space="preserve">
     <value>Модули расширения</value>
   </data>
-  <data name="Frontend.002" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ModuleManagement" xml:space="preserve">
     <value>Управление модулями</value>
   </data>
-  <data name="Frontend.003" xml:space="preserve">
+  <data name="Frontend.WeixinManager.WeixinManagement" xml:space="preserve">
     <value>Управление Weixin</value>
   </data>
-  <data name="Frontend.004" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountControlCenter" xml:space="preserve">
     <value>Центр управления официальным аккаунтом</value>
   </data>
-  <data name="Frontend.005" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountCount" xml:space="preserve">
     <value>Число официальных аккаунтов</value>
   </data>
-  <data name="Frontend.006" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountsAlreadyInTheSystem" xml:space="preserve">
     <value>Официальные аккаунты, уже внесённые в систему</value>
   </data>
-  <data name="Frontend.007" xml:space="preserve">
+  <data name="Frontend.WeixinManager.RunningAccountCount" xml:space="preserve">
     <value>Число запущенных аккаунтов</value>
   </data>
-  <data name="Frontend.008" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NumberOfAccountsThatAreActiveAndConnectedToTheWeChatServer" xml:space="preserve">
     <value>Число учётных записей, которые активны и подключены к серверу WeChat</value>
   </data>
-  <data name="Frontend.009" xml:space="preserve">
+  <data name="Frontend.WeixinManager.TotalWeChatUsers" xml:space="preserve">
     <value>Всего пользователей WeChat</value>
   </data>
-  <data name="Frontend.010" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NumberOfUsersWhoInteractedOnThisPlatformOrWereFetchedAutomatically" xml:space="preserve">
     <value>Число пользователей, которые взаимодействовали на этой платформе или были автоматически загружены как подписчики</value>
   </data>
-  <data name="Frontend.011" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NewUsersToday" xml:space="preserve">
     <value>Новые пользователи за сегодня</value>
   </data>
-  <data name="Frontend.012" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NumberOfUsersSyncedOrAddedToThePlatformToday" xml:space="preserve">
     <value>Число пользователей, синхронизированных или добавленных на платформу сегодня</value>
   </data>
-  <data name="Frontend.013" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ViewUsers" xml:space="preserve">
     <value>Просмотр пользователей</value>
   </data>
-  <data name="Frontend.014" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ViewGroups" xml:space="preserve">
     <value>Просмотр групп</value>
   </data>
-  <data name="Frontend.015" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ViewTags" xml:space="preserve">
     <value>Просмотр тегов</value>
   </data>
-  <data name="Frontend.016" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Conversation" xml:space="preserve">
     <value>Диалог</value>
   </data>
-  <data name="Frontend.017" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Edit" xml:space="preserve">
     <value>Изменить</value>
   </data>
-  <data name="Frontend.018" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AccessTokenCredentialValidity" xml:space="preserve">
     <value>Срок действия учётных данных AccessToken</value>
   </data>
-  <data name="Frontend.019" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AccessTokenCredentialStatus" xml:space="preserve">
     <value>Состояние учётных данных AccessToken</value>
   </data>
-  <data name="Frontend.020" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountManagement" xml:space="preserve">
     <value>Управление официальными аккаунтами</value>
   </data>
-  <data name="Frontend.021" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Add" xml:space="preserve">
     <value>Добавить</value>
   </data>
-  <data name="Frontend.022" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Delete" xml:space="preserve">
     <value>Удалить</value>
   </data>
-  <data name="Frontend.023" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Name" xml:space="preserve">
     <value>Имя</value>
   </data>
-  <data name="Frontend.024" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Notes" xml:space="preserve">
     <value>Примечания</value>
   </data>
-  <data name="Frontend.025" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Description" xml:space="preserve">
     <value>Описание</value>
   </data>
-  <data name="Frontend.026" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AddedTime" xml:space="preserve">
     <value>Время добавления</value>
   </data>
-  <data name="Frontend.027" xml:space="preserve">
+  <data name="Frontend.WeixinManager.MessageURL" xml:space="preserve">
     <value>URL сообщения</value>
   </data>
-  <data name="Frontend.028" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Open" xml:space="preserve">
     <value>Открыть</value>
   </data>
-  <data name="Frontend.029" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Actions" xml:space="preserve">
     <value>Действия</value>
   </data>
-  <data name="Frontend.030" xml:space="preserve">
+  <data name="Frontend.WeixinManager.UserManagement" xml:space="preserve">
     <value>Управление пользователями</value>
   </data>
-  <data name="Frontend.031" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountName" xml:space="preserve">
     <value>Имя официального аккаунта</value>
   </data>
-  <data name="Frontend.032" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ServerAddressURLConfiguredInTheWeChatAdminConsole" xml:space="preserve">
     <value>Адрес сервера (URL), заданный в консоли администрирования WeChat</value>
   </data>
-  <data name="Frontend.033" xml:space="preserve">
+  <data name="Frontend.WeixinManager.YourDomain" xml:space="preserve">
     <value>[Ваш домен]</value>
   </data>
-  <data name="Frontend.034" xml:space="preserve">
+  <data name="Frontend.WeixinManager.YourDomainAlternate" xml:space="preserve">
     <value>[Ваш домен]</value>
   </data>
-  <data name="Frontend.035" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NoteTheOfficialAccountNameMustMatchTheNameInMpMessageHandlerName" xml:space="preserve">
     <value>Внимание: «имя официального аккаунта» должно совпадать с name в [MpMessageHandler(name)] у соответствующего MessageHandler</value>
   </data>
-  <data name="Frontend.036" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Cancel" xml:space="preserve">
     <value>Отмена</value>
   </data>
-  <data name="Frontend.037" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Confirm" xml:space="preserve">
     <value>Подтвердить</value>
   </data>
-  <data name="Frontend.038" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EnterOfficialAccountName" xml:space="preserve">
     <value>Введите имя официального аккаунта</value>
   </data>
-  <data name="Frontend.039" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EnterAppId" xml:space="preserve">
     <value>Введите AppId</value>
   </data>
-  <data name="Frontend.040" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EnterAppSecret" xml:space="preserve">
     <value>Введите AppSecret</value>
   </data>
-  <data name="Frontend.041" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EnterToken" xml:space="preserve">
     <value>Введите Token</value>
   </data>
-  <data name="Frontend.042" xml:space="preserve">
+  <data name="Frontend.WeixinManager.LengthMustBeBetweenOneAnd100" xml:space="preserve">
     <value>Длина должна быть от 1 до 100</value>
   </data>
-  <data name="Frontend.043" xml:space="preserve">
+  <data name="Frontend.WeixinManager.LengthMustBeBetweenOneAnd500" xml:space="preserve">
     <value>Длина должна быть от 1 до 500</value>
   </data>
-  <data name="Frontend.044" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AddOfficialAccount" xml:space="preserve">
     <value>Добавить официальный аккаунт</value>
   </data>
-  <data name="Frontend.045" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EditOfficialAccount" xml:space="preserve">
     <value>Изменить официальный аккаунт</value>
   </data>
-  <data name="Frontend.046" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountAddedSuccessfully" xml:space="preserve">
     <value>Официальный аккаунт добавлен</value>
   </data>
-  <data name="Frontend.047" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountUpdatedSuccessfully" xml:space="preserve">
     <value>Официальный аккаунт обновлён</value>
   </data>
-  <data name="Frontend.048" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Success" xml:space="preserve">
     <value>Успешно</value>
   </data>
-  <data name="Frontend.049" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Warning" xml:space="preserve">
     <value>Предупреждение</value>
   </data>
-  <data name="Frontend.050" xml:space="preserve">
+  <data name="Frontend.WeixinManager.SelectAtLeastOneOfficialAccount" xml:space="preserve">
     <value>Выберите хотя бы один официальный аккаунт</value>
   </data>
-  <data name="Frontend.051" xml:space="preserve">
+  <data name="Frontend.WeixinManager.DeleteAllSelectedItems" xml:space="preserve">
     <value>Удалить все выбранные элементы?</value>
   </data>
-  <data name="Frontend.052" xml:space="preserve">
+  <data name="Frontend.WeixinManager.SuccessfullyDeletedValueItems" xml:space="preserve">
     <value>Удалено элементов: {0}</value>
   </data>
-  <data name="Frontend.053" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AddNewFollowers" xml:space="preserve">
     <value>Добавить новых подписчиков</value>
   </data>
-  <data name="Frontend.054" xml:space="preserve">
+  <data name="Frontend.WeixinManager.SyncAllFollowers" xml:space="preserve">
     <value>Синхронизировать всех подписчиков</value>
   </data>
-  <data name="Frontend.055" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NoteIfThereAreManyUsersThisMayTakeAVeryLong" xml:space="preserve">
     <value>Внимание: при большом числе пользователей это может занять очень много времени!</value>
   </data>
-  <data name="Frontend.056" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Nickname" xml:space="preserve">
     <value>Псевдоним</value>
   </data>
-  <data name="Frontend.057" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Avatar" xml:space="preserve">
     <value>Аватар</value>
   </data>
-  <data name="Frontend.058" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Gender" xml:space="preserve">
     <value>Пол</value>
   </data>
-  <data name="Frontend.059" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Male" xml:space="preserve">
     <value>Муж.</value>
   </data>
-  <data name="Frontend.060" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Female" xml:space="preserve">
     <value>Жен.</value>
   </data>
-  <data name="Frontend.061" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Unknown" xml:space="preserve">
     <value>Неизвестно</value>
   </data>
-  <data name="Frontend.062" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Region" xml:space="preserve">
     <value>Регион</value>
   </data>
-  <data name="Frontend.063" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Group" xml:space="preserve">
     <value>Группа</value>
   </data>
-  <data name="Frontend.064" xml:space="preserve">
+  <data name="Frontend.WeixinManager.FollowedAt" xml:space="preserve">
     <value>Дата подписки</value>
   </data>
-  <data name="Frontend.065" xml:space="preserve">
+  <data name="Frontend.WeixinManager.FollowStatus" xml:space="preserve">
     <value>Статус подписки</value>
   </data>
-  <data name="Frontend.066" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Following" xml:space="preserve">
     <value>Подписан</value>
   </data>
-  <data name="Frontend.067" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NotFollowing" xml:space="preserve">
     <value>Не подписан</value>
   </data>
-  <data name="Frontend.068" xml:space="preserve">
+  <data name="Frontend.WeixinManager.FollowSource" xml:space="preserve">
     <value>Источник подписки</value>
   </data>
-  <data name="Frontend.069" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Tags" xml:space="preserve">
     <value>Теги</value>
   </data>
-  <data name="Frontend.070" xml:space="preserve">
+  <data name="Frontend.WeixinManager.None" xml:space="preserve">
     <value>Нет</value>
   </data>
-  <data name="Frontend.071" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AllUsers" xml:space="preserve">
     <value>Все пользователи</value>
   </data>
-  <data name="Frontend.072" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ValueUsers" xml:space="preserve">
     <value>Пользователи {0}</value>
   </data>
   <data name="User.AccountUsers" xml:space="preserve">
@@ -276,10 +276,10 @@
   <data name="User.AllUsers" xml:space="preserve">
     <value>Все пользователи</value>
   </data>
-  <data name="Frontend.073" xml:space="preserve">
+  <data name="Frontend.WeixinManager.YourDomainWeixinMpValue" xml:space="preserve">
     <value>[Ваш домен]/WeixinMp/{0}</value>
   </data>
-  <data name="Frontend.074" xml:space="preserve">
+  <data name="Frontend.WeixinManager.YourDomainWeixinMpValueAlternate" xml:space="preserve">
     <value>[Ваш домен]/WeixinMp/{0}</value>
   </data>
   <data name="Public.ToggleNavigation" xml:space="preserve">
@@ -314,62 +314,62 @@
   </data>
 
 
-  <data name="Frontend.075" xml:space="preserve"><value>Личный бот WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.076" xml:space="preserve"><value>Код сопряжения /bind</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.077" xml:space="preserve"><value>AIModelId (необязательно)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.078" xml:space="preserve"><value>WorkflowId (необязательно)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.079" xml:space="preserve"><value>Учётная запись iLink</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.080" xml:space="preserve"><value>Токен защищён с помощью Data Protection на сервере и больше никогда не отображается.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.081" xml:space="preserve"><value>· Отправка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.082" xml:space="preserve"><value>· Ошибка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.083" xml:space="preserve"><value>· Отправлено</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.084" xml:space="preserve"><value>Личный бот WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.085" xml:space="preserve"><value>Например: суперадминистратор</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.086" xml:space="preserve"><value>Например: мой личный WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.087" xml:space="preserve"><value>Сохранить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.088" xml:space="preserve"><value>Сохранить настройки привязки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.089" xml:space="preserve"><value>Разрешить NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.090" xml:space="preserve"><value>Разрешить Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.091" xml:space="preserve"><value>Все сообщения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.092" xml:space="preserve"><value>Закрыть</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.093" xml:space="preserve"><value>Обновить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.094" xml:space="preserve"><value>Обновить состояние</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.095" xml:space="preserve"><value>Функции</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.096" xml:space="preserve"><value>Отправить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.097" xml:space="preserve"><value>Отмена</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.098" xml:space="preserve"><value>Включить привязку</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.099" xml:space="preserve"><value>Включить длительный опрос</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.100" xml:space="preserve"><value>Изображение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.101" xml:space="preserve"><value>Медиафайл ещё не готов.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.102" xml:space="preserve"><value>Личный WeChat ещё не подключён.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.103" xml:space="preserve"><value>Все отправленные и полученные записи этой учётной записи</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.104" xml:space="preserve"><value>Для этой учётной записи не настроен код привязки.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.105" xml:space="preserve"><value>QR-код входа в WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.106" xml:space="preserve"><value>Открыть ссылку</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.107" xml:space="preserve"><value>Отсканируйте QR-код, чтобы подключить личный WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.108" xml:space="preserve"><value>Подключиться сканированием</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.109" xml:space="preserve"><value>Файл</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.110" xml:space="preserve"><value>Новая конфигурация привязки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.111" xml:space="preserve"><value>Последние сообщения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.112" xml:space="preserve"><value>Последние подключения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.113" xml:space="preserve"><value>Состояние</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.114" xml:space="preserve"><value>Состояние:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.115" xml:space="preserve"><value>Используется обработчиком верхнего уровня; может быть пустым</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.116" xml:space="preserve"><value>Оставьте пустым, чтобы сохранить существующий токен</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.117" xml:space="preserve"><value>Код привязки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.118" xml:space="preserve"><value>Конфигурация привязки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.119" xml:space="preserve"><value>Аудиофайл (SILK / MP3)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.120" xml:space="preserve"><value>Отсканируйте QR-код с помощью WeChat и подтвердите вход на телефоне.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.121" xml:space="preserve"><value>Введите код подтверждения, запрошенный WeChat, затем обновите состояние</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.122" xml:space="preserve"><value>Введите сообщение для текущего диалога WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.123" xml:space="preserve"><value>Имя конфигурации</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.124" xml:space="preserve"><value>Код подтверждения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.125" xml:space="preserve"><value>Посещаемость WeCom</value></data>
-  <data name="Frontend.126" xml:space="preserve"><value>Получить записи о посещаемости WeCom</value></data>
-  <data name="Frontend.127" xml:space="preserve"><value>Получить записи о посещаемости</value></data>
-  <data name="Frontend.128" xml:space="preserve"><value>Получает записи о посещаемости WeCom по учётной записи сотрудника и диапазону времени, не более 30 дней за запрос.</value></data>
-  <data name="Frontend.129" xml:space="preserve"><value>Учётные данные WeCom действительны, записи о посещаемости можно получить.</value></data>
-  <data name="Frontend.130" xml:space="preserve"><value>Подключатель посещаемости WeCom позволяет только получать записи о посещаемости.</value></data>
+  <data name="Frontend.WeixinManager.PersonalWeChatBot" xml:space="preserve"><value>Личный бот WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.BindPairingCode" xml:space="preserve"><value>Код сопряжения /bind</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AIModelIdOptional" xml:space="preserve"><value>AIModelId (необязательно)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.WorkflowIdOptional" xml:space="preserve"><value>WorkflowId (необязательно)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ILinkAccount" xml:space="preserve"><value>Учётная запись iLink</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.TheTokenIsProtectedWithDataProtectionOnTheServerAndIs" xml:space="preserve"><value>Токен защищён с помощью Data Protection на сервере и больше никогда не отображается.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Sending" xml:space="preserve"><value>· Отправка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Failed" xml:space="preserve"><value>· Ошибка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Submitted" xml:space="preserve"><value>· Отправлено</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.PersonalWeChatBotAlternate" xml:space="preserve"><value>Личный бот WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ForExampleSuperAdministrator" xml:space="preserve"><value>Например: суперадминистратор</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ForExampleMyPersonalWeChat" xml:space="preserve"><value>Например: мой личный WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Save" xml:space="preserve"><value>Сохранить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.SaveBindingSettings" xml:space="preserve"><value>Сохранить настройки привязки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AllowNeuBell" xml:space="preserve"><value>Разрешить NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AllowWorkflow" xml:space="preserve"><value>Разрешить Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AllMessages" xml:space="preserve"><value>Все сообщения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Close" xml:space="preserve"><value>Закрыть</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Refresh" xml:space="preserve"><value>Обновить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.RefreshStatus" xml:space="preserve"><value>Обновить состояние</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Features" xml:space="preserve"><value>Функции</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Send" xml:space="preserve"><value>Отправить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.CancelAlternate" xml:space="preserve"><value>Отмена</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.EnableBinding" xml:space="preserve"><value>Включить привязку</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.EnableLongPolling" xml:space="preserve"><value>Включить длительный опрос</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Image" xml:space="preserve"><value>Изображение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.TheMediaFileIsNotReadyYet" xml:space="preserve"><value>Медиафайл ещё не готов.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.PersonalWeChatIsNotConnectedYet" xml:space="preserve"><value>Личный WeChat ещё не подключён.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AllSentAndReceivedRecordsForThisAccount" xml:space="preserve"><value>Все отправленные и полученные записи этой учётной записи</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.NoBindingCodeHasBeenConfiguredForThisAccount" xml:space="preserve"><value>Для этой учётной записи не настроен код привязки.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.WeChatLoginQRCode" xml:space="preserve"><value>QR-код входа в WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.OpenLink" xml:space="preserve"><value>Открыть ссылку</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ScanTheQRCodeToConnectPersonalWeChat" xml:space="preserve"><value>Отсканируйте QR-код, чтобы подключить личный WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ConnectByScanning" xml:space="preserve"><value>Подключиться сканированием</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.File" xml:space="preserve"><value>Файл</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.NewBindingConfiguration" xml:space="preserve"><value>Новая конфигурация привязки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.RecentMessages" xml:space="preserve"><value>Последние сообщения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.RecentConnections" xml:space="preserve"><value>Последние подключения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Status" xml:space="preserve"><value>Состояние</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.StatusLabel" xml:space="preserve"><value>Состояние:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.UsedByTheUpstreamHandlerMayBeEmpty" xml:space="preserve"><value>Используется обработчиком верхнего уровня; может быть пустым</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.LeaveEmptyToKeepTheExistingToken" xml:space="preserve"><value>Оставьте пустым, чтобы сохранить существующий токен</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.BindingCode" xml:space="preserve"><value>Код привязки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.BindingConfiguration" xml:space="preserve"><value>Конфигурация привязки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AudioFileSILKMPThree" xml:space="preserve"><value>Аудиофайл (SILK / MP3)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ScanTheQRCodeWithWeChatAndConfirmTheLoginOnYour" xml:space="preserve"><value>Отсканируйте QR-код с помощью WeChat и подтвердите вход на телефоне.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.EnterTheVerificationCodeRequestedByWeChatThenRefreshTheStatus" xml:space="preserve"><value>Введите код подтверждения, запрошенный WeChat, затем обновите состояние</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.EnterAMessageToSendToTheCurrentWeChatConversation" xml:space="preserve"><value>Введите сообщение для текущего диалога WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ConfigurationName" xml:space="preserve"><value>Имя конфигурации</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.VerificationCode" xml:space="preserve"><value>Код подтверждения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.WeComAttendance" xml:space="preserve"><value>Посещаемость WeCom</value></data>
+  <data name="Frontend.WeixinManager.RetrieveWeComAttendanceRecords" xml:space="preserve"><value>Получить записи о посещаемости WeCom</value></data>
+  <data name="Frontend.WeixinManager.GetAttendanceRecords" xml:space="preserve"><value>Получить записи о посещаемости</value></data>
+  <data name="Frontend.WeixinManager.RetrieveWeComAttendanceRecordsByMemberAccountAndTimeRangeUpTo" xml:space="preserve"><value>Получает записи о посещаемости WeCom по учётной записи сотрудника и диапазону времени, не более 30 дней за запрос.</value></data>
+  <data name="Frontend.WeixinManager.TheWeComCredentialIsValidAndCanRetrieveAttendanceRecords" xml:space="preserve"><value>Учётные данные WeCom действительны, записи о посещаемости можно получить.</value></data>
+  <data name="Frontend.WeixinManager.TheWeComAttendanceConnectorCurrentlyOnlyProvidesAttendanceRecordRetrieval" xml:space="preserve"><value>Подключатель посещаемости WeCom позволяет только получать записи о посещаемости.</value></data>
   <data name="Connector.WeCom.Name" xml:space="preserve"><value>Посещаемость WeCom</value></data>
   <data name="Connector.WeCom.Description" xml:space="preserve"><value>Использует CorpId и Secret приложения WeCom для получения записей о посещаемости. После настройки подключатель можно выбрать в Chat, Workflow и шаблонах Agent.</value></data>
   <data name="Connector.WeCom.CorpId.Label" xml:space="preserve"><value>Корпоративный ID</value></data>
@@ -406,33 +406,33 @@
   <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>Время окончания должно быть позже времени начала.</value></data>
   <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>WeCom позволяет получать не более 30 дней записей о посещаемости за один запрос.</value></data>
   <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>Тип посещаемости должен быть 1 (рабочая), 2 (внешняя) или 3 (вся).</value></data>
-  <data name="Frontend.131" xml:space="preserve"><value>Истории диалогов пока нет. Отправьте текст в WeChat ClawBot с телефона.</value></data>
-  <data name="Frontend.132" xml:space="preserve"><value>Добавить личный аккаунт WeChat</value></data>
-  <data name="Frontend.133" xml:space="preserve"><value>Изменить личный аккаунт WeChat</value></data>
-  <data name="Frontend.134" xml:space="preserve"><value>Получено сообщение WeChat</value></data>
-  <data name="Frontend.135" xml:space="preserve"><value>{0} получил новое сообщение с телефона</value></data>
-  <data name="Frontend.136" xml:space="preserve"><value>Не удалось обновить состояние подключения WeChat</value></data>
-  <data name="Frontend.137" xml:space="preserve"><value>Не удалось начать вход в личный WeChat</value></data>
-  <data name="Frontend.138" xml:space="preserve"><value>Не удалось получить состояние входа. Нажмите «Обновить состояние» и повторите попытку.</value></data>
-  <data name="Frontend.139" xml:space="preserve"><value>Сначала отправьте текст в WeChat ClawBot с телефона, чтобы сохранить контекст для ответа.</value></data>
-  <data name="Frontend.140" xml:space="preserve"><value>Настройки привязки сохранены.</value></data>
-  <data name="Frontend.141" xml:space="preserve"><value>Не удалось сохранить настройки привязки</value></data>
-  <data name="Frontend.142" xml:space="preserve"><value>Не удалось удалить настройки привязки</value></data>
-  <data name="Frontend.143" xml:space="preserve"><value>Медиафайл не воспроизводится. Скачайте исходный файл; для ошибок преобразования аудио проверьте журналы службы, а для видео используйте поддерживаемый браузером кодек.</value></data>
-  <data name="Frontend.144" xml:space="preserve"><value>Медиасообщение отправлено.</value></data>
-  <data name="Frontend.145" xml:space="preserve"><value>Не удалось отправить медиафайл</value></data>
-  <data name="Frontend.146" xml:space="preserve"><value>Сообщение отправлено с использованием последнего контекста разговора WeChat.</value></data>
-  <data name="Frontend.147" xml:space="preserve"><value>Сообщение отправлено в WeChat Claw.</value></data>
-  <data name="Frontend.148" xml:space="preserve"><value>Не удалось отправить сообщение в личный WeChat</value></data>
-  <data name="Frontend.149" xml:space="preserve"><value>Телефон</value></data>
-  <data name="Frontend.150" xml:space="preserve"><value>Система</value></data>
-  <data name="Frontend.151" xml:space="preserve"><value>Новых сообщений: {0}</value></data>
-  <data name="Frontend.152" xml:space="preserve"><value>Ошибка</value></data>
-  <data name="Frontend.153" xml:space="preserve"><value>Отключено</value></data>
-  <data name="Frontend.154" xml:space="preserve"><value>Не подключено</value></data>
-  <data name="Frontend.155" xml:space="preserve"><value>Включено</value></data>
-  <data name="Frontend.156" xml:space="preserve"><value>Отключено</value></data>
-  <data name="Frontend.157" xml:space="preserve"><value>Последний отправитель: {0}</value></data>
-  <data name="Frontend.158" xml:space="preserve"><value>Текущий разговор</value></data>
-  <data name="Frontend.159" xml:space="preserve"><value>Сообщений: {0}</value></data>
+  <data name="Frontend.WeixinManager.NoConversationRecordsYetSendATextToWeChatClawBotFromYour" xml:space="preserve"><value>Истории диалогов пока нет. Отправьте текст в WeChat ClawBot с телефона.</value></data>
+  <data name="Frontend.WeixinManager.AddPersonalWeChatAccount" xml:space="preserve"><value>Добавить личный аккаунт WeChat</value></data>
+  <data name="Frontend.WeixinManager.EditPersonalWeChatAccount" xml:space="preserve"><value>Изменить личный аккаунт WeChat</value></data>
+  <data name="Frontend.WeixinManager.WeChatMessageReceived" xml:space="preserve"><value>Получено сообщение WeChat</value></data>
+  <data name="Frontend.WeixinManager.ValueReceivedANewPhoneMessage" xml:space="preserve"><value>{0} получил новое сообщение с телефона</value></data>
+  <data name="Frontend.WeixinManager.FailedToRefreshTheWeChatConnectionStatus" xml:space="preserve"><value>Не удалось обновить состояние подключения WeChat</value></data>
+  <data name="Frontend.WeixinManager.FailedToStartPersonalWeChatLogin" xml:space="preserve"><value>Не удалось начать вход в личный WeChat</value></data>
+  <data name="Frontend.WeixinManager.FailedToQueryLoginStatusClickRefreshStatusToRetry" xml:space="preserve"><value>Не удалось получить состояние входа. Нажмите «Обновить состояние» и повторите попытку.</value></data>
+  <data name="Frontend.WeixinManager.SendATextToWeChatClawBotFromYourPhoneFirstSoThe" xml:space="preserve"><value>Сначала отправьте текст в WeChat ClawBot с телефона, чтобы сохранить контекст для ответа.</value></data>
+  <data name="Frontend.WeixinManager.BindingConfigurationSaved" xml:space="preserve"><value>Настройки привязки сохранены.</value></data>
+  <data name="Frontend.WeixinManager.FailedToSaveTheBindingConfiguration" xml:space="preserve"><value>Не удалось сохранить настройки привязки</value></data>
+  <data name="Frontend.WeixinManager.FailedToDeleteTheBindingConfiguration" xml:space="preserve"><value>Не удалось удалить настройки привязки</value></data>
+  <data name="Frontend.WeixinManager.MediaCannotBePlayedDownloadTheOriginalFileCheckTheServiceLogs" xml:space="preserve"><value>Медиафайл не воспроизводится. Скачайте исходный файл; для ошибок преобразования аудио проверьте журналы службы, а для видео используйте поддерживаемый браузером кодек.</value></data>
+  <data name="Frontend.WeixinManager.MediaMessageSubmitted" xml:space="preserve"><value>Медиасообщение отправлено.</value></data>
+  <data name="Frontend.WeixinManager.FailedToSendMedia" xml:space="preserve"><value>Не удалось отправить медиафайл</value></data>
+  <data name="Frontend.WeixinManager.MessageSubmittedUsingTheLatestWeChatConversationContext" xml:space="preserve"><value>Сообщение отправлено с использованием последнего контекста разговора WeChat.</value></data>
+  <data name="Frontend.WeixinManager.MessageSubmittedToWeChatClaw" xml:space="preserve"><value>Сообщение отправлено в WeChat Claw.</value></data>
+  <data name="Frontend.WeixinManager.FailedToSendThePersonalWeChatMessage" xml:space="preserve"><value>Не удалось отправить сообщение в личный WeChat</value></data>
+  <data name="Frontend.WeixinManager.Phone" xml:space="preserve"><value>Телефон</value></data>
+  <data name="Frontend.WeixinManager.System" xml:space="preserve"><value>Система</value></data>
+  <data name="Frontend.WeixinManager.ValueNewMessages" xml:space="preserve"><value>Новых сообщений: {0}</value></data>
+  <data name="Frontend.WeixinManager.Error" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Frontend.WeixinManager.Disabled" xml:space="preserve"><value>Отключено</value></data>
+  <data name="Frontend.WeixinManager.NotConnected" xml:space="preserve"><value>Не подключено</value></data>
+  <data name="Frontend.WeixinManager.Enabled" xml:space="preserve"><value>Включено</value></data>
+  <data name="Frontend.WeixinManager.DisabledAlternate" xml:space="preserve"><value>Отключено</value></data>
+  <data name="Frontend.WeixinManager.LastSenderValue" xml:space="preserve"><value>Последний отправитель: {0}</value></data>
+  <data name="Frontend.WeixinManager.CurrentConversation" xml:space="preserve"><value>Текущий разговор</value></data>
+  <data name="Frontend.WeixinManager.ValueMessages" xml:space="preserve"><value>Сообщений: {0}</value></data>
 </root>

@@ -163,85 +163,85 @@
     <value>执行 MCP；选择模块时，默认地址为 http://localhost:5080/{Module Name}/sse</value>
   </data>
 
-  <data name="Frontend.001" xml:space="preserve"><value>仅显示已启用</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>以下为本站运行时已映射的 MCP 服务，只读展示，不属于客户端连接配置。</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>例如 1.0（可选）</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>例如 http://localhost:3001/mcp/sse</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>保存</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>保存前测试</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>关闭</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>删除</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>刷新</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>协议版本</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>参数列表</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>参数名</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>参数数</value></data>
-  <data name="Frontend.014" xml:space="preserve"><value>发布路由</value></data>
-  <data name="Frontend.015" xml:space="preserve"><value>取消</value></data>
-  <data name="Frontend.016" xml:space="preserve"><value>可选</value></data>
-  <data name="Frontend.017" xml:space="preserve"><value>可选，保存为 AuthConfig JSON（字段 token）</value></data>
-  <data name="Frontend.018" xml:space="preserve"><value>名称</value></data>
-  <data name="Frontend.019" xml:space="preserve"><value>否</value></data>
-  <data name="Frontend.020" xml:space="preserve"><value>启用</value></data>
-  <data name="Frontend.021" xml:space="preserve"><value>复制</value></data>
-  <data name="Frontend.022" xml:space="preserve"><value>客户端连接配置</value></data>
-  <data name="Frontend.023" xml:space="preserve"><value>工具名称</value></data>
-  <data name="Frontend.024" xml:space="preserve"><value>必填</value></data>
-  <data name="Frontend.025" xml:space="preserve"><value>所属模块</value></data>
-  <data name="Frontend.026" xml:space="preserve"><value>描述</value></data>
-  <data name="Frontend.027" xml:space="preserve"><value>搜索名称 / 地址 / 描述</value></data>
-  <data name="Frontend.028" xml:space="preserve"><value>搜索服务 / 模块 / 地址</value></data>
-  <data name="Frontend.029" xml:space="preserve"><value>操作</value></data>
-  <data name="Frontend.030" xml:space="preserve"><value>放大查看</value></data>
-  <data name="Frontend.031" xml:space="preserve"><value>新增 Endpoint</value></data>
-  <data name="Frontend.032" xml:space="preserve"><value>是</value></data>
-  <data name="Frontend.033" xml:space="preserve"><value>最近测试</value></data>
-  <data name="Frontend.034" xml:space="preserve"><value>服务名称</value></data>
-  <data name="Frontend.035" xml:space="preserve"><value>未测试</value></data>
-  <data name="Frontend.036" xml:space="preserve"><value>未获取到工具列表。请检查端点地址、协议类型与鉴权信息后重试。</value></data>
-  <data name="Frontend.037" xml:space="preserve"><value>标题</value></data>
-  <data name="Frontend.038" xml:space="preserve"><value>测试</value></data>
-  <data name="Frontend.039" xml:space="preserve"><value>测试当前配置连接</value></data>
-  <data name="Frontend.040" xml:space="preserve"><value>用于唯一标识该 MCP 端点</value></data>
-  <data name="Frontend.041" xml:space="preserve"><value>端点地址</value></data>
-  <data name="Frontend.042" xml:space="preserve"><value>端点类型</value></data>
-  <data name="Frontend.043" xml:space="preserve"><value>类型</value></data>
-  <data name="Frontend.044" xml:space="preserve"><value>编辑</value></data>
-  <data name="Frontend.045" xml:space="preserve"><value>访问端点</value></data>
-  <data name="Frontend.046" xml:space="preserve"><value>输入 Schema（JSON）</value></data>
-  <data name="Frontend.047" xml:space="preserve"><value>本站发布的 MCP（{0}）</value></data>
-  <data name="Frontend.048" xml:space="preserve"><value>暂无匹配的本站 MCP 服务</value></data>
-  <data name="Frontend.049" xml:space="preserve"><value>发现 {0} 个工具（Function）</value></data>
-  <data name="Frontend.050" xml:space="preserve"><value>连接测试 - {0}</value></data>
-  <data name="Frontend.051" xml:space="preserve"><value>共发现 {0} 个工具（Function）。点击左侧箭头展开查看参数与输入 Schema。</value></data>
-  <data name="Frontend.052" xml:space="preserve"><value>发布开关、工具和访问权限由所属模块管理。地址基于当前访问站点生成，不代表已允许匿名访问或公网可达。</value></data>
-  <data name="Frontend.053" xml:space="preserve"><value>工具 {0}</value></data>
-  <data name="Frontend.054" xml:space="preserve"><value>（无）</value></data>
-  <data name="Frontend.055" xml:space="preserve"><value>服务器响应格式不正确，请确认登录状态并刷新页面</value></data>
-  <data name="Frontend.056" xml:space="preserve"><value>请求失败</value></data>
-  <data name="Frontend.057" xml:space="preserve"><value>：接口不存在（HTTP 404），请确认站点已加载新版 MCP 模块</value></data>
-  <data name="Frontend.058" xml:space="preserve"><value>：登录已失效或无访问权限，请重新登录</value></data>
-  <data name="Frontend.059" xml:space="preserve"><value>服务器返回的连接测试结果格式不正确</value></data>
-  <data name="Frontend.060" xml:space="preserve"><value>新增 MCP Endpoint</value></data>
-  <data name="Frontend.061" xml:space="preserve"><value>端点名称不能为空</value></data>
-  <data name="Frontend.062" xml:space="preserve"><value>端点地址不能为空</value></data>
-  <data name="Frontend.063" xml:space="preserve"><value>服务器返回的本站 MCP 服务列表格式不正确</value></data>
-  <data name="Frontend.064" xml:space="preserve"><value>读取本站发布的 MCP 服务失败</value></data>
-  <data name="Frontend.065" xml:space="preserve"><value>当前浏览器不支持复制，请手动选择端点地址复制</value></data>
-  <data name="Frontend.066" xml:space="preserve"><value>端点地址已复制</value></data>
-  <data name="Frontend.067" xml:space="preserve"><value>复制失败，请手动选择端点地址复制</value></data>
-  <data name="Frontend.068" xml:space="preserve"><value>服务器返回的端点列表格式不正确</value></data>
-  <data name="Frontend.069" xml:space="preserve"><value>读取 MCP Endpoint 列表失败</value></data>
-  <data name="Frontend.070" xml:space="preserve"><value>编辑 MCP Endpoint</value></data>
-  <data name="Frontend.071" xml:space="preserve"><value>✓ 端点连接测试成功</value></data>
-  <data name="Frontend.072" xml:space="preserve"><value>✗ 端点连接测试失败</value></data>
-  <data name="Frontend.073" xml:space="preserve"><value>保存成功</value></data>
-  <data name="Frontend.074" xml:space="preserve"><value>保存失败</value></data>
-  <data name="Frontend.075" xml:space="preserve"><value>更新失败</value></data>
-  <data name="Frontend.076" xml:space="preserve"><value>确认删除 MCP Endpoint「{0}」？</value></data>
-  <data name="Frontend.077" xml:space="preserve"><value>提示</value></data>
-  <data name="Frontend.078" xml:space="preserve"><value>删除成功</value></data>
-  <data name="Frontend.079" xml:space="preserve"><value>删除失败</value></data>
-  <data name="Frontend.080" xml:space="preserve"><value>输入 Schema</value></data>
-  <data name="Frontend.081" xml:space="preserve"><value>（无 JSON Schema 信息）</value></data>
+  <data name="Frontend.Mcp.EnabledOnly" xml:space="preserve"><value>仅显示已启用</value></data>
+  <data name="Frontend.Mcp.TheseAreMCPServicesMappedByThisSiteRuntimeTheyAreRead" xml:space="preserve"><value>以下为本站运行时已映射的 MCP 服务，只读展示，不属于客户端连接配置。</value></data>
+  <data name="Frontend.Mcp.ForExampleOneZeroOptional" xml:space="preserve"><value>例如 1.0（可选）</value></data>
+  <data name="Frontend.Mcp.ForExampleHttpLocalhost3001McpSse" xml:space="preserve"><value>例如 http://localhost:3001/mcp/sse</value></data>
+  <data name="Frontend.Mcp.Save" xml:space="preserve"><value>保存</value></data>
+  <data name="Frontend.Mcp.TestBeforeSaving" xml:space="preserve"><value>保存前测试</value></data>
+  <data name="Frontend.Mcp.Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="Frontend.Mcp.Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Frontend.Mcp.Refresh" xml:space="preserve"><value>刷新</value></data>
+  <data name="Frontend.Mcp.ProtocolVersion" xml:space="preserve"><value>协议版本</value></data>
+  <data name="Frontend.Mcp.Parameters" xml:space="preserve"><value>参数列表</value></data>
+  <data name="Frontend.Mcp.ParameterName" xml:space="preserve"><value>参数名</value></data>
+  <data name="Frontend.Mcp.ParameterCount" xml:space="preserve"><value>参数数</value></data>
+  <data name="Frontend.Mcp.PublishedRoute" xml:space="preserve"><value>发布路由</value></data>
+  <data name="Frontend.Mcp.Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Frontend.Mcp.Optional" xml:space="preserve"><value>可选</value></data>
+  <data name="Frontend.Mcp.OptionalSaveAsAuthConfigJSONWithATokenField" xml:space="preserve"><value>可选，保存为 AuthConfig JSON（字段 token）</value></data>
+  <data name="Frontend.Mcp.Name" xml:space="preserve"><value>名称</value></data>
+  <data name="Frontend.Mcp.No" xml:space="preserve"><value>否</value></data>
+  <data name="Frontend.Mcp.Enabled" xml:space="preserve"><value>启用</value></data>
+  <data name="Frontend.Mcp.Copy" xml:space="preserve"><value>复制</value></data>
+  <data name="Frontend.Mcp.ClientConnectionConfiguration" xml:space="preserve"><value>客户端连接配置</value></data>
+  <data name="Frontend.Mcp.ToolName" xml:space="preserve"><value>工具名称</value></data>
+  <data name="Frontend.Mcp.Required" xml:space="preserve"><value>必填</value></data>
+  <data name="Frontend.Mcp.OwningModule" xml:space="preserve"><value>所属模块</value></data>
+  <data name="Frontend.Mcp.Description" xml:space="preserve"><value>描述</value></data>
+  <data name="Frontend.Mcp.SearchNameAddressDescription" xml:space="preserve"><value>搜索名称 / 地址 / 描述</value></data>
+  <data name="Frontend.Mcp.SearchServiceModuleAddress" xml:space="preserve"><value>搜索服务 / 模块 / 地址</value></data>
+  <data name="Frontend.Mcp.Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="Frontend.Mcp.ZoomIn" xml:space="preserve"><value>放大查看</value></data>
+  <data name="Frontend.Mcp.AddEndpoint" xml:space="preserve"><value>新增 Endpoint</value></data>
+  <data name="Frontend.Mcp.Yes" xml:space="preserve"><value>是</value></data>
+  <data name="Frontend.Mcp.LastTested" xml:space="preserve"><value>最近测试</value></data>
+  <data name="Frontend.Mcp.ServiceName" xml:space="preserve"><value>服务名称</value></data>
+  <data name="Frontend.Mcp.NotTested" xml:space="preserve"><value>未测试</value></data>
+  <data name="Frontend.Mcp.NoToolListWasReturnedCheckTheEndpointProtocolAndAuthenticationThen" xml:space="preserve"><value>未获取到工具列表。请检查端点地址、协议类型与鉴权信息后重试。</value></data>
+  <data name="Frontend.Mcp.Title" xml:space="preserve"><value>标题</value></data>
+  <data name="Frontend.Mcp.Test" xml:space="preserve"><value>测试</value></data>
+  <data name="Frontend.Mcp.TestTheCurrentConfiguration" xml:space="preserve"><value>测试当前配置连接</value></data>
+  <data name="Frontend.Mcp.UniquelyIdentifiesThisMCPEndpoint" xml:space="preserve"><value>用于唯一标识该 MCP 端点</value></data>
+  <data name="Frontend.Mcp.EndpointAddress" xml:space="preserve"><value>端点地址</value></data>
+  <data name="Frontend.Mcp.EndpointType" xml:space="preserve"><value>端点类型</value></data>
+  <data name="Frontend.Mcp.Type" xml:space="preserve"><value>类型</value></data>
+  <data name="Frontend.Mcp.Edit" xml:space="preserve"><value>编辑</value></data>
+  <data name="Frontend.Mcp.AccessEndpoint" xml:space="preserve"><value>访问端点</value></data>
+  <data name="Frontend.Mcp.InputSchemaJSON" xml:space="preserve"><value>输入 Schema（JSON）</value></data>
+  <data name="Frontend.Mcp.MCPServicesPublishedByThisSiteValue" xml:space="preserve"><value>本站发布的 MCP（{0}）</value></data>
+  <data name="Frontend.Mcp.NoMatchingMCPServicePublishedByThisSite" xml:space="preserve"><value>暂无匹配的本站 MCP 服务</value></data>
+  <data name="Frontend.Mcp.FoundValueToolsFunctions" xml:space="preserve"><value>发现 {0} 个工具（Function）</value></data>
+  <data name="Frontend.Mcp.ConnectionTestValue" xml:space="preserve"><value>连接测试 - {0}</value></data>
+  <data name="Frontend.Mcp.FoundValueToolsFunctionsSelectTheArrowOnTheLeftToView" xml:space="preserve"><value>共发现 {0} 个工具（Function）。点击左侧箭头展开查看参数与输入 Schema。</value></data>
+  <data name="Frontend.Mcp.PublishingToolsAndAccessPermissionsAreManagedByTheOwningModuleThe" xml:space="preserve"><value>发布开关、工具和访问权限由所属模块管理。地址基于当前访问站点生成，不代表已允许匿名访问或公网可达。</value></data>
+  <data name="Frontend.Mcp.ToolsValue" xml:space="preserve"><value>工具 {0}</value></data>
+  <data name="Frontend.Mcp.None" xml:space="preserve"><value>（无）</value></data>
+  <data name="Frontend.Mcp.TheServerResponseFormatIsInvalidConfirmThatYouAreSignedIn" xml:space="preserve"><value>服务器响应格式不正确，请确认登录状态并刷新页面</value></data>
+  <data name="Frontend.Mcp.RequestFailed" xml:space="preserve"><value>请求失败</value></data>
+  <data name="Frontend.Mcp.TheInterfaceWasNotFoundHTTP404ConfirmThatTheSiteHas" xml:space="preserve"><value>：接口不存在（HTTP 404），请确认站点已加载新版 MCP 模块</value></data>
+  <data name="Frontend.Mcp.YourSignInHasExpiredOrYouDoNotHavePermissionSign" xml:space="preserve"><value>：登录已失效或无访问权限，请重新登录</value></data>
+  <data name="Frontend.Mcp.TheServerReturnedAnInvalidConnectionTestResultFormat" xml:space="preserve"><value>服务器返回的连接测试结果格式不正确</value></data>
+  <data name="Frontend.Mcp.AddMCPEndpoint" xml:space="preserve"><value>新增 MCP Endpoint</value></data>
+  <data name="Frontend.Mcp.EndpointNameCannotBeEmpty" xml:space="preserve"><value>端点名称不能为空</value></data>
+  <data name="Frontend.Mcp.EndpointAddressCannotBeEmpty" xml:space="preserve"><value>端点地址不能为空</value></data>
+  <data name="Frontend.Mcp.TheServerReturnedAnInvalidListOfMCPServicesPublishedByThis" xml:space="preserve"><value>服务器返回的本站 MCP 服务列表格式不正确</value></data>
+  <data name="Frontend.Mcp.FailedToReadMCPServicesPublishedByThisSite" xml:space="preserve"><value>读取本站发布的 MCP 服务失败</value></data>
+  <data name="Frontend.Mcp.ThisBrowserCannotCopyToTheClipboardSelectAndCopyTheEndpoint" xml:space="preserve"><value>当前浏览器不支持复制，请手动选择端点地址复制</value></data>
+  <data name="Frontend.Mcp.EndpointAddressCopied" xml:space="preserve"><value>端点地址已复制</value></data>
+  <data name="Frontend.Mcp.CopyFailedSelectAndCopyTheEndpointAddressManually" xml:space="preserve"><value>复制失败，请手动选择端点地址复制</value></data>
+  <data name="Frontend.Mcp.TheServerReturnedAnInvalidEndpointListFormat" xml:space="preserve"><value>服务器返回的端点列表格式不正确</value></data>
+  <data name="Frontend.Mcp.FailedToReadTheMCPEndpointList" xml:space="preserve"><value>读取 MCP Endpoint 列表失败</value></data>
+  <data name="Frontend.Mcp.EditMCPEndpoint" xml:space="preserve"><value>编辑 MCP Endpoint</value></data>
+  <data name="Frontend.Mcp.EndpointConnectionTestSucceeded" xml:space="preserve"><value>✓ 端点连接测试成功</value></data>
+  <data name="Frontend.Mcp.EndpointConnectionTestFailed" xml:space="preserve"><value>✗ 端点连接测试失败</value></data>
+  <data name="Frontend.Mcp.SavedSuccessfully" xml:space="preserve"><value>保存成功</value></data>
+  <data name="Frontend.Mcp.SaveFailed" xml:space="preserve"><value>保存失败</value></data>
+  <data name="Frontend.Mcp.UpdateFailed" xml:space="preserve"><value>更新失败</value></data>
+  <data name="Frontend.Mcp.DeleteMCPEndpointValue" xml:space="preserve"><value>确认删除 MCP Endpoint「{0}」？</value></data>
+  <data name="Frontend.Mcp.Notice" xml:space="preserve"><value>提示</value></data>
+  <data name="Frontend.Mcp.DeletedSuccessfully" xml:space="preserve"><value>删除成功</value></data>
+  <data name="Frontend.Mcp.DeleteFailed" xml:space="preserve"><value>删除失败</value></data>
+  <data name="Frontend.Mcp.InputSchema" xml:space="preserve"><value>输入 Schema</value></data>
+  <data name="Frontend.Mcp.NoJSONSchemaInformation" xml:space="preserve"><value>（无 JSON Schema 信息）</value></data>
 </root>

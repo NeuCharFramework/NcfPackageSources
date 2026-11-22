@@ -68,15 +68,16 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
 
             List<KeyValuePair<ContentType, string>> contentMap = new List<KeyValuePair<ContentType, string>>();
 
-            Console.WriteLine($"Crawl: {request.Url}, depth: {request.Deepth}, max pages: {request.PageNumber}");
+            var maxPageCount = request.GetEffectivePageCount();
+            Console.WriteLine($"Crawl: {request.Url}, depth: {request.Deepth}, max pages: {maxPageCount}");
 
             var senMapicEngine = new SenMapicEngine(
                                 serviceProvider: base.ServiceProvider,
                                 urls: new[] { request.Url },
-                                maxThread: 20,
+                                maxThread: 4,
                                 maxBuildMinutesForSingleSite: 5,
                                 maxDeep: request.Deepth,
-                                maxPageCount: request.PageNumber);
+                                maxPageCount: maxPageCount);
 
             var senMapicResult = senMapicEngine.Build();
 

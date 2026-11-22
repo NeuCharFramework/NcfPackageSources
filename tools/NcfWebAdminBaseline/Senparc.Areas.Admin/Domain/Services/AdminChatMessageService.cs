@@ -40,11 +40,15 @@ using Senparc.Ncf.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Xncf.PromptRange.Abstractions.References;
+using Senparc.Xncf.Workspace.Abstractions;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.CO2NET.Trace;
 
 namespace Senparc.Areas.Admin.Domain.Services
 {
@@ -167,6 +171,95 @@ namespace Senparc.Areas.Admin.Domain.Services
             var provider = _serviceProvider.GetService<IPromptReferenceService>()
                 ?? throw new NcfExceptionBase("PromptRange is unavailable.");
             return await provider.ScoreWithAIAsync(promptItemId, message.Content, result.Content);
+        }
+
+        public async Task<AdminChatMessageDto> AttachPromptReferenceAsync(
+            int userId, int messageId, PromptReference reference)
+        {
+            if (userId <= 0) throw new NcfExceptionBase("Sign in to attach a prompt.");
+            var message = await GetObjectAsync(item => item.Id == messageId)
+                ?? throw new NcfExceptionBase("Message not found.");
+            var session = await _serviceProvider.GetRequiredService<AdminChatSessionService>()
+                .GetSessionByIdAsync(message.SessionId, userId);
+            if (session == null) throw new NcfExceptionBase("Message is not accessible.");
+            var provider = _serviceProvider.GetService<IPromptReferenceService>()
+                ?? throw new NcfExceptionBase("PromptRange is unavailable.");
+
+            var references = message.GetPromptReferences().ToList();
+            references.RemoveAll(item =>
+                item.Start < reference.Start + reference.Length &&
+                reference.Start < item.Start + item.Length);
+            references.Add(reference);
+            references = references.OrderBy(item => item.Start).ToList();
+            await provider.ValidateAsync(message.Content, references);
+            message.SetPromptReferences(references);
+            await base.SaveObjectAsync(message);
+            return AdminChatMessageDto.CreateFromEntity(message);
+        }
+
+        public async Task<IReadOnlyList<AdminChatAttachment>> CollectWorkspaceArtifactsAsync(
+            int sessionId, AdminChatHarnessResult harness)
+        {
+            if (harness?.TrajectoryEvents == null || harness.TrajectoryEvents.Count == 0)
+                return Array.Empty<AdminChatAttachment>();
+            var session = await _serviceProvider.GetRequiredService<AdminChatSessionService>()
+                .GetObjectAsync(item => item.Id == sessionId);
+            var storage = _serviceProvider.GetService<IWorkspaceStorage>();
+            if (session == null || storage == null || string.IsNullOrWhiteSpace(session.WorkspaceId))
+                return Array.Empty<AdminChatAttachment>();
+            var paths = new List<string>();
+            foreach (var trajectoryEvent in harness.TrajectoryEvents)
+            {
+                if (!string.Equals(trajectoryEvent.EventType, "workspace.change", StringComparison.OrdinalIgnoreCase)
+                    || string.IsNullOrWhiteSpace(trajectoryEvent.PayloadJson))
+                    continue;
+                try
+                {
+                    using var document = JsonDocument.Parse(trajectoryEvent.PayloadJson);
+                    var change = document.RootElement.GetProperty("change");
+                    var changeType = change.GetProperty("changeType").GetString();
+                    if (string.Equals(changeType, "deleted", StringComparison.OrdinalIgnoreCase))
+                        continue;
+                    var path = change.GetProperty("path").GetString();
+                    if (!string.IsNullOrWhiteSpace(path)) paths.Add(path);
+                }
+                catch (Exception error) when (error is JsonException or InvalidOperationException)
+                {
+                    SenparcTrace.SendCustomLog("AdminChat.WorkspaceArtifact",
+                        $"Ignored invalid trajectory payload: {error.Message}");
+                }
+            }
+            var result = new List<AdminChatAttachment>();
+            foreach (var path in paths.Distinct(StringComparer.Ordinal).Take(4))
+            {
+                try
+                {
+                    var normalized = WorkspaceAssetPreviewBuilder.NormalizePath(path);
+                    var metadata = await storage.GetFileInfoAsync(session.WorkspaceId, normalized);
+                    if (metadata.IsDirectory) continue;
+                    result.Add(new AdminChatAttachment
+                    {
+                        RelativePath = normalized,
+                        Name = Path.GetFileName(normalized),
+                        ContentType = WorkspaceTextFiles.ResolveContentType(normalized),
+                        Size = metadata.Length,
+                        ETag = metadata.ETag,
+                        IsWorkspaceArtifact = true,
+                        PreviewKind = WorkspaceTextFiles.Is3D(normalized) ? "3d"
+                            : metadata.Length > 0 && WorkspaceTextFiles.ResolveContentType(normalized).StartsWith("image/")
+                                ? "image"
+                                : "file",
+                        CreatedAt = DateTimeOffset.UtcNow
+                    });
+                }
+                catch (Exception error) when (error is ArgumentException or IOException
+                    or FileNotFoundException or DirectoryNotFoundException)
+                {
+                    SenparcTrace.SendCustomLog("AdminChat.WorkspaceArtifact",
+                        $"Artifact unavailable: {path}; {error.Message}");
+                }
+            }
+            return result;
         }
 
         /// <summary>

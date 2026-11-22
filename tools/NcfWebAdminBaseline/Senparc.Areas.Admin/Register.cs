@@ -277,6 +277,9 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatTrajectoryService>();
             services.AddScoped<AdminChatTrajectoryEventService>();
             services.AddScoped<AdminChatAiService>();
+            services.AddSingleton<OllamaModelCapabilityService>();
+            services.AddHttpClient(OllamaModelCapabilityService.HttpClientName, client =>
+                client.Timeout = TimeSpan.FromSeconds(5));
             services.AddSingleton<AdminChatRunRegistry>();
             services.AddSingleton<AdminChatMemoryStore>();
             services.AddScoped<IAdminChatMemoryStore>(provider => new AdminChatMemoryDatabaseStore(
@@ -287,6 +290,7 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatWorkspaceAssetService>();
             services.AddSingleton<WorkspaceAssetPreviewBuilder>();
             services.AddSingleton<WorkspaceAssetShareStore>();
+            services.AddSingleton<WorkspaceAssetCapabilityStore>();
             services.AddSingleton<WorkspaceDocumentReader>();
             services.AddScoped<AdminChatAttachmentService>();
             services.AddScoped<IWeixinClawAdminBindingRepository, WeixinClawAdminBindingRepository>();

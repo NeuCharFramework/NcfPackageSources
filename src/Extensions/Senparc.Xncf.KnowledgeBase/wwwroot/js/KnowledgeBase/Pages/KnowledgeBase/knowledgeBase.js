@@ -33,7 +33,7 @@ var app = new Vue({
             recallKbOptions: [], //Legacy comment translated to English.
             embeddingProgressPercent: 0,
             embeddingProgressStatus: '',   // '' | success | exception
-            embeddingProgressText: ncfST('Frontend.134'),
+            embeddingProgressText: ncfST('Frontend.KnowledgeBase.Preparing'),
             embeddingResultText: '',
             embeddingTaskName: '',
             embeddingDoneCount: 0,
@@ -93,20 +93,20 @@ var app = new Vue({
                 content: []
             },
             colData: [
-                { title: ncfST('Frontend.177'), istrue: false },
-                { title: ncfST('Frontend.198'), istrue: false },
-                { title: ncfST('Frontend.203'), istrue: false },
-                { title: ncfST('Frontend.011'), istrue: true },
-                { title: ncfST('Frontend.090'), istrue: true },
+                { title: ncfST('Frontend.KnowledgeBase.EmbeddingModel'), istrue: false },
+                { title: ncfST('Frontend.KnowledgeBase.VectorDatabase'), istrue: false },
+                { title: ncfST('Frontend.KnowledgeBase.ChatModel'), istrue: false },
+                { title: ncfST('Frontend.KnowledgeBase.Close'), istrue: true },
+                { title: ncfST('Frontend.KnowledgeBase.Source'), istrue: true },
             ],
             checkBoxGroup: [
-                ncfST('Frontend.177'), ncfST('Frontend.198'), ncfST('Frontend.203'), ncfST('Frontend.011'), ncfST('Frontend.090')
+                ncfST('Frontend.KnowledgeBase.EmbeddingModel'), ncfST('Frontend.KnowledgeBase.VectorDatabase'), ncfST('Frontend.KnowledgeBase.ChatModel'), ncfST('Frontend.KnowledgeBase.Close'), ncfST('Frontend.KnowledgeBase.Source')
             ],
             checkedColumns: [],
             contentTypeData: [
-                { value: 1, label: ncfST('Frontend.090') },
-                { value: 2, label: ncfST('Frontend.255') },
-                { value: 3, label: ncfST('Frontend.254') }
+                { value: 1, label: ncfST('Frontend.KnowledgeBase.Source') },
+                { value: 2, label: ncfST('Frontend.KnowledgeBase.SelectMaterialFiles') },
+                { value: 3, label: ncfST('Frontend.KnowledgeBase.SelectKnowledgeBaseMaterials') }
             ],
             keyword: '',
             multipleSelection: '',
@@ -136,7 +136,7 @@ var app = new Vue({
             dialogVisible: false,
             dialog:
             {
-                title: ncfST('Frontend.215'),
+                title: ncfST('Frontend.KnowledgeBase.NewKnowledgeBase'),
                 visible: false,
                 data:
                 {
@@ -155,15 +155,15 @@ var app = new Vue({
                 {
                     name:
                         [
-                            { required: true, message: ncfST('Frontend.243'), trigger: "blur" }
+                            { required: true, message: ncfST('Frontend.KnowledgeBase.EnterAKnowledgeBaseName'), trigger: "blur" }
                         ],
                     embeddingModelId:
                         [
-                            { required: true, message: ncfST('Frontend.244'), trigger: "change" }
+                            { required: true, message: ncfST('Frontend.KnowledgeBase.SelectAnEmbeddingModelAlternate'), trigger: "change" }
                         ],
                     vectorDBId:
                         [
-                            { required: true, message: ncfST('Frontend.245'), trigger: "change" }
+                            { required: true, message: ncfST('Frontend.KnowledgeBase.SelectARedisOrQdrantVectorStore'), trigger: "change" }
                         ]
                 },
                 updateLoading: false,
@@ -172,7 +172,7 @@ var app = new Vue({
             },
             detailDialog:
             {
-                title: ncfST('Frontend.137'),
+                title: ncfST('Frontend.KnowledgeBase.KnowledgeBaseDetails'),
                 visible: false,
                 data:
                 {
@@ -182,7 +182,7 @@ var app = new Vue({
                 {
                     name:
                         [
-                            { required: true, message: ncfST('Frontend.136'), trigger: "blur" }
+                            { required: true, message: ncfST('Frontend.KnowledgeBase.KnowledgeBaseNameIsRequired'), trigger: "blur" }
                         ]
                 },
                 updateLoading: false,
@@ -198,16 +198,16 @@ var app = new Vue({
             },
             groupFormRules: {
                 name: [
-                    { required: true, message: ncfST('Frontend.162'), trigger: 'blur' },
+                    { required: true, message: ncfST('Frontend.KnowledgeBase.VectorizationOfKnowledgeBaseValueIsComplete'), trigger: 'blur' },
                 ],
                 members: [
-                    { required: true, message: ncfST('Frontend.162'), trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.KnowledgeBase.VectorizationOfKnowledgeBaseValueIsComplete'), trigger: 'change' },
                 ],
                 adminAgentTemplateId: [
-                    { required: true, message: ncfST('Frontend.162'), trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.KnowledgeBase.VectorizationOfKnowledgeBaseValueIsComplete'), trigger: 'change' },
                 ],
                 enterAgentTemplateId: [
-                    { required: true, message: ncfST('Frontend.138'), trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.KnowledgeBase.Select'), trigger: 'change' },
                 ],
                 // description: [
                 //     { required: true, message: 'please enter a value', trigger: 'blur' },
@@ -244,10 +244,10 @@ var app = new Vue({
                 const ready = this.isKnowledgeBaseReady(item);
                 return {
                     id: item.id,
-                        name: item.name || (ncfST('Frontend.234') + '-' + item.id),
+                        name: item.name || (ncfST('Frontend.KnowledgeBase.KnowledgeBases') + '-' + item.id),
                     ready: ready,
                     retrievalConfig: item.retrievalConfig || null,
-                    label: (item.name || (ncfST('Frontend.234') + '-' + item.id)) + (ready ? '' : '（' + ncfST('Frontend.220') + '）')
+                    label: (item.name || (ncfST('Frontend.KnowledgeBase.KnowledgeBases') + '-' + item.id)) + (ready ? '' : '（' + ncfST('Frontend.KnowledgeBase.NotVectorized') + '）')
                 };
             });
         },
@@ -257,20 +257,20 @@ var app = new Vue({
         recallRerankSummary() {
             const kb = this.selectedKnowledgeBase;
             if (!kb) {
-                return ncfST('Frontend.103');
+                return ncfST('Frontend.KnowledgeBase.SelectAKnowledgeBaseFirst');
             }
             const cfg = kb.retrievalConfig || {};
             const mode = cfg.rerankMode || 'None';
             if (mode === 'None') {
-                return ncfST('Frontend.188');
+                return ncfST('Frontend.KnowledgeBase.OffDefault');
             }
             const candidates = cfg.rerankCandidateCount || 20;
             if (mode === 'Lexical') {
                 const weight = cfg.lexicalWeight == null ? 0.35 : cfg.lexicalWeight;
-                return ncfST('Frontend.240') + ' (' + candidates + ', ' + ncfST('Frontend.238') + ' ' + weight + ')';
+                return ncfST('Frontend.KnowledgeBase.LexicalHybridNoExtraModelCall') + ' (' + candidates + ', ' + ncfST('Frontend.KnowledgeBase.LexicalWeight') + ' ' + weight + ')';
             }
-            const modelText = cfg.rerankModelId > 0 ? ('#' + cfg.rerankModelId) : ncfST('Frontend.232');
-            return ncfST('Frontend.179') + ' (' + candidates + ', ' + modelText + ')';
+            const modelText = cfg.rerankModelId > 0 ? ('#' + cfg.rerankModelId) : ncfST('Frontend.KnowledgeBase.LeaveEmptyToUseThisKnowledgeBaseSChatModel');
+            return ncfST('Frontend.KnowledgeBase.LLMRerankingUsingAChatModel') + ' (' + candidates + ', ' + modelText + ')';
         },
         recordTotal() {
             return this.recordList.length;
@@ -334,7 +334,7 @@ var app = new Vue({
             if (!item) {
                 return '';
             }
-            return item.alias || item.name || ((fallbackPrefix || ncfST('Frontend.291')) + '-' + item.id);
+            return item.alias || item.name || ((fallbackPrefix || ncfST('Frontend.KnowledgeBase.Option')) + '-' + item.id);
         },
         isKnowledgeBaseReady(row) {
             return !!(row && row.vectorCollectionName && row.embeddedTime);
@@ -387,9 +387,9 @@ var app = new Vue({
             }
             that.embeddingResultCard = {
                 isError: !!opts.isError,
-                title: opts.title || (opts.isError ? ncfST('Frontend.163') : ncfST('Frontend.161')),
+                title: opts.title || (opts.isError ? ncfST('Frontend.KnowledgeBase.ProcessingError') : ncfST('Frontend.KnowledgeBase.VectorizationCompleted')),
                 timeText: that.formatEmbeddingTime(opts.startedAt || that.embeddingStartedAt || new Date()),
-                taskName: opts.taskName || that.embeddingTaskName || ncfST('Frontend.197'),
+                taskName: opts.taskName || that.embeddingTaskName || ncfST('Frontend.KnowledgeBase.VectorizationStatus'),
                 total: stats.total,
                 success: stats.success,
                 fail: stats.fail,
@@ -412,7 +412,7 @@ var app = new Vue({
                 this.recallKbOptions = Array.isArray(payload.list) ? payload.list : [];
             } catch (e) {
                 console.error(e);
-                this.$message.error(ncfST('Frontend.279', ''));
+                this.$message.error(ncfST('Frontend.KnowledgeBase.FailedToLoadTheKnowledgeBaseListValue', ''));
             }
         },
         handleRowCommand(command, row) {
@@ -423,9 +423,9 @@ var app = new Vue({
                 this.activeNavKey = 'recall';
                 this.loadRecallKnowledgeBaseList();
             } else if (command === 'delete') {
-                this.$confirm(ncfST('Frontend.150', row && row.name ? row.name : ''), ncfST('Frontend.151'), {
-                    confirmButtonText: ncfST('Frontend.007'),
-                    cancelButtonText: ncfST('Frontend.097'),
+                this.$confirm(ncfST('Frontend.KnowledgeBase.DeleteFileValueTheDatabaseRecordAndThePhysicalFileWillBoth', row && row.name ? row.name : ''), ncfST('Frontend.KnowledgeBase.DeleteConfirmation'), {
+                    confirmButtonText: ncfST('Frontend.KnowledgeBase.Save'),
+                    cancelButtonText: ncfST('Frontend.KnowledgeBase.EnterAnAttributeName'),
                     type: 'warning'
                 }).then(() => {
                     this.handleDelete(0, row);
@@ -452,15 +452,15 @@ var app = new Vue({
             const content = (this.recallContent || '').trim();
             const recallUrl = '/api/Senparc.Xncf.KnowledgeBase/RecallTestAppService/Xncf.KnowledgeBase_RecallTestAppService.RecallTest';
             if (!knowledgeBase) {
-                this.$message.warning(ncfST('Frontend.103'));
+                this.$message.warning(ncfST('Frontend.KnowledgeBase.SelectAKnowledgeBaseFirst'));
                 return;
             }
             if (!knowledgeBase.ready) {
-                this.$message.warning(ncfST('Frontend.280'));
+                this.$message.warning(ncfST('Frontend.KnowledgeBase.ThisKnowledgeBaseHasNotBeenVectorizedReturnToTheKnowledgeBase'));
                 return;
             }
             if (!content) {
-                this.$message.warning(ncfST('Frontend.281'));
+                this.$message.warning(ncfST('Frontend.KnowledgeBase.EnterTheQuestionToTest'));
                 return;
             }
 
@@ -476,7 +476,7 @@ var app = new Vue({
                 });
                 const body = response && response.data;
                 const results = body && Object.prototype.hasOwnProperty.call(body, 'data') ? body.data : body;
-                if (!Array.isArray(results)) throw new Error(ncfST('Frontend.282'));
+                if (!Array.isArray(results)) throw new Error(ncfST('Frontend.KnowledgeBase.TheServiceDidNotReturnValidRecallResults'));
 
                 this.recallResults = results.map(function (item, index) {
                     return Object.assign({}, item, {
@@ -496,11 +496,11 @@ var app = new Vue({
                     time: new Date().toLocaleString('zh-CN', { hour12: false })
                 });
                 this.recordPage = 1;
-                this.$message.success(this.recallResults.length ? ncfST('Frontend.283') : ncfST('Frontend.284'));
+                this.$message.success(this.recallResults.length ? ncfST('Frontend.KnowledgeBase.RecallTestCompletedCheckTheSourcesAndContent') : ncfST('Frontend.KnowledgeBase.TestCompletedButNoMatchingPassagesWereReturned'));
             } catch (error) {
                 const response = error && error.response && error.response.data;
-                const msg = (response && (response.errorMessage || response.message || response.title)) || (error && error.message) || ncfST('Frontend.278');
-                this.$notify({ title: ncfST('Frontend.285'), message: msg, type: 'error', duration: 6000 });
+                const msg = (response && (response.errorMessage || response.message || response.title)) || (error && error.message) || ncfST('Frontend.KnowledgeBase.TheRequestDidNotCompleteCheckTheKnowledgeBaseAndModelConfiguration');
+                this.$notify({ title: ncfST('Frontend.KnowledgeBase.RecallDidNotComplete'), message: msg, type: 'error', duration: 6000 });
             } finally {
                 this.recallLoading = false;
             }
@@ -529,7 +529,7 @@ var app = new Vue({
             target.handled = true
             const knowledgeBase = (rows || []).find(item => Number(item.id) === knowledgeBaseId)
             if (!knowledgeBase) {
-                this.$message.warning(ncfST('Frontend.292'))
+                this.$message.warning(ncfST('Frontend.KnowledgeBase.TheKnowledgeBaseCouldNotBeFoundItMayHaveBeenDeleted'))
                 return
             }
 
@@ -558,24 +558,24 @@ var app = new Vue({
             //debugger
             if (res.stateCode == 0) {
                 that.$notify({
-                    title: ncfST('Frontend.048'),
-                    message: ncfST('Frontend.139'),
+                    title: ncfST('Frontend.KnowledgeBase.PassageDetails'),
+                    message: ncfST('Frontend.KnowledgeBase.FileUploadedToFileManagement'),
                     type: 'success'
                 });
                 //Legacy comment translated to English.
                 that.$refs.uploadRef.clearFiles();
             } else {
                 that.$notify.error({
-                    title: ncfST('Frontend.049'),
-                    message: ncfST('Frontend.132')
+                    title: ncfST('Frontend.KnowledgeBase.Test'),
+                    message: ncfST('Frontend.KnowledgeBase.UploadFailedPleaseUploadAgain')
                 });
             }
         },
         uploadError() {
             let that = this;
             that.$notify.error({
-                title: ncfST('Frontend.049'),
-                message: ncfST('Frontend.132')
+                title: ncfST('Frontend.KnowledgeBase.Test'),
+                message: ncfST('Frontend.KnowledgeBase.UploadFailedPleaseUploadAgain')
             });
         },
         //Legacy comment translated to English.
@@ -596,16 +596,16 @@ var app = new Vue({
                     const row = that.fileList.find(i => i.id === id);
                     if (row) that.toggleSelection(that.groupForm.files.map(f => that.fileList.find(i => i.id === f.id)).filter(Boolean));
                 });
-                that.$notify({ title: ncfST('Frontend.048'), message: ncfST('Frontend.143'), type: 'success' });
+                that.$notify({ title: ncfST('Frontend.KnowledgeBase.PassageDetails'), message: ncfST('Frontend.KnowledgeBase.TheFileIsLinkedToTheKnowledgeBaseAndAnEntryWas'), type: 'success' });
             } else {
-                that.$notify.error({ title: ncfST('Frontend.049'), message: ncfST('Frontend.140') });
+                that.$notify.error({ title: ncfST('Frontend.KnowledgeBase.Test'), message: ncfST('Frontend.KnowledgeBase.UploadFailedPleaseTryAgain') });
             }
             that.$nextTick(() => {
                 if (that.$refs.configUploadRef) that.$refs.configUploadRef.clearFiles();
             });
         },
         configUploadError() {
-            this.$notify.error({ title: ncfST('Frontend.049'), message: ncfST('Frontend.132') });
+            this.$notify.error({ title: ncfST('Frontend.KnowledgeBase.Test'), message: ncfST('Frontend.KnowledgeBase.UploadFailedPleaseUploadAgain') });
         },
         handleDialogFileClose() {
             this.configUploadFileList = [];
@@ -666,7 +666,7 @@ var app = new Vue({
         resolveSaveResponse(res) {
             var body = res && res.data;
             if (!body) {
-                return { ok: false, message: ncfST('Frontend.149') + ncfST('Frontend.148') };
+                return { ok: false, message: ncfST('Frontend.KnowledgeBase.ErrorWhileSaving') + ncfST('Frontend.KnowledgeBase.SaveFailedPleaseCheckTheData') };
             }
             var payload = body;
             if (body.data && typeof body.data === 'object' && !Array.isArray(body.data)) {
@@ -678,7 +678,7 @@ var app = new Vue({
             var success = payload.success === true || payload.Success === true;
             var message = payload.msg || payload.Msg || body.msg || body.Msg
                 || body.exception || body.Exception
-                || (success ? ncfST('Frontend.147') : ncfST('Frontend.148'));
+                || (success ? ncfST('Frontend.KnowledgeBase.KnowledgeBaseSavedSuccessfully') : ncfST('Frontend.KnowledgeBase.SaveFailedPleaseCheckTheData'));
             return { ok: success, message: String(message) };
         },
         async getChatModelList() {
@@ -719,10 +719,10 @@ var app = new Vue({
                             })
                         }
                     } else {
-                        app.$message({ message: ncfST('Frontend.293'), type: 'error', duration: 5 * 1000 })
+                        app.$message({ message: ncfST('Frontend.KnowledgeBase.FailedToLoadTheResourceListPleaseTryAgainLater'), type: 'error', duration: 5 * 1000 })
                     }
                 }).catch((err) => {
-                    that.$notify({ title: ncfST('Frontend.294'), message: ncfST('Frontend.293'), type: 'error', duration: 3000 })
+                    that.$notify({ title: ncfST('Frontend.KnowledgeBase.Error'), message: ncfST('Frontend.KnowledgeBase.FailedToLoadTheResourceListPleaseTryAgainLater'), type: 'error', duration: 3000 })
                 })
         },
         //Legacy comment translated to English.
@@ -869,7 +869,7 @@ var app = new Vue({
             });
 
             if (flag === 'add') {
-                that.dialog.title = ncfST('Frontend.135');
+                that.dialog.title = ncfST('Frontend.KnowledgeBase.AddKnowledgeBase');
                 that.dialog.data = {
                     id: 0,
                     embeddingModelId: null,
@@ -896,7 +896,7 @@ var app = new Vue({
             };
 
             if (flag === 'edit') {
-                that.dialog.title = ncfST('Frontend.141');
+                that.dialog.title = ncfST('Frontend.KnowledgeBase.EditKnowledgeBase');
             }
         },
         //Legacy comment translated to English.
@@ -936,14 +936,14 @@ var app = new Vue({
                         const res = await service.post(serviceURL, requestData);
                         const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
                         if (success) {
-                            that.$notify({ title: ncfST('Frontend.048'), message: ncfST('Frontend.186'), type: 'success', duration: 3500 });
+                            that.$notify({ title: ncfST('Frontend.KnowledgeBase.PassageDetails'), message: ncfST('Frontend.KnowledgeBase.AfterSavingMaterialAssociationsBuiltVectorsBecomeInvalidReturnToTheList'), type: 'success', duration: 3500 });
                             that.visible.drawerGroup = false;
                             that.getList();
                         } else {
-                            that.$notify({ title: ncfST('Frontend.049'), message: ncfST('Frontend.144'), type: 'error', duration: 3000 });
+                            that.$notify({ title: ncfST('Frontend.KnowledgeBase.Test'), message: ncfST('Frontend.KnowledgeBase.FileImportFailed'), type: 'error', duration: 3000 });
                         }
                     } catch (err) {
-                        that.$notify({ title: ncfST('Frontend.049'), message: ncfST('Frontend.144'), type: 'error', duration: 3000 });
+                        that.$notify({ title: ncfST('Frontend.KnowledgeBase.Test'), message: ncfST('Frontend.KnowledgeBase.FileImportFailed'), type: 'error', duration: 3000 });
                     }
                 } else if (contentType === 1) {
                     const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.SetKnowledgeBaseDetail';
@@ -955,17 +955,17 @@ var app = new Vue({
                     try {
                         const res = await service.post(serviceURL, requestData);
                         const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
-                        if (!success) throw new Error(ncfST('Frontend.148'));
-                        that.$notify({ title: ncfST('Frontend.048'), message: ncfST('Frontend.143'), type: 'success', duration: 2000 });
+                        if (!success) throw new Error(ncfST('Frontend.KnowledgeBase.SaveFailedPleaseCheckTheData'));
+                        that.$notify({ title: ncfST('Frontend.KnowledgeBase.PassageDetails'), message: ncfST('Frontend.KnowledgeBase.TheFileIsLinkedToTheKnowledgeBaseAndAnEntryWas'), type: 'success', duration: 2000 });
                         that.visible.drawerGroup = false;
                         that.getList();
                     } catch (err) {
-                        that.$notify({ title: ncfST('Frontend.049'), message: ncfST('Frontend.148'), type: 'error', duration: 3000 });
+                        that.$notify({ title: ncfST('Frontend.KnowledgeBase.Test'), message: ncfST('Frontend.KnowledgeBase.SaveFailedPleaseCheckTheData'), type: 'error', duration: 3000 });
                     }
                 } else {
                     that.$notify({
-                        title: ncfST('Frontend.158'),
-                        message: ncfST('Frontend.290'),
+                        title: ncfST('Frontend.KnowledgeBase.DeletionFailed'),
+                        message: ncfST('Frontend.KnowledgeBase.ExternalCollectionRequiresSeparateCrawlerPermissionAndCleaningConfigurationThisVersionWill'),
                         type: 'warning',
                         duration: 4000
                     });
@@ -1024,16 +1024,16 @@ var app = new Vue({
                     if (result.ok) {
                         that.getList();
                         that.$notify({
-                            title: ncfST('Frontend.299'),
-                            message: result.message || ncfST('Frontend.295'),
+                            title: ncfST('Frontend.KnowledgeBase.SuccessAlternate'),
+                            message: result.message || ncfST('Frontend.KnowledgeBase.KnowledgeBaseSavedSuccessfullyAlternate'),
                             type: "success",
                             duration: 2000
                         });
                         that.dialog.visible = false;
                     } else {
                         that.$notify({
-                            title: ncfST('Frontend.297'),
-                            message: result.message || ncfST('Frontend.296'),
+                            title: ncfST('Frontend.KnowledgeBase.SaveError'),
+                            message: result.message || ncfST('Frontend.KnowledgeBase.SaveFailedPleaseCheckTheDataAlternate'),
                             type: "error",
                             duration: 5000
                         });
@@ -1044,10 +1044,10 @@ var app = new Vue({
                     const response = err && err.response && err.response.data;
                     const message = (response && (response.msg || response.Msg || response.message || response.Message || response.exception))
                         || (err && err.message)
-                        || ncfST('Frontend.298');
+                        || ncfST('Frontend.KnowledgeBase.CouldNotSavePleaseTryAgainLater');
                     that.$notify({
-                        title: ncfST('Frontend.294'),
-                        message: String(message || ncfST('Frontend.298')),
+                        title: ncfST('Frontend.KnowledgeBase.Error'),
+                        message: String(message || ncfST('Frontend.KnowledgeBase.CouldNotSavePleaseTryAgainLater')),
                         type: "error",
                         duration: 5000
                     });
@@ -1063,8 +1063,8 @@ var app = new Vue({
                 if (res.data.success) {
                     that.getList();
                     that.$notify({
-                        title: ncfST('Frontend.299'),
-                        message: ncfST('Frontend.300'),
+                        title: ncfST('Frontend.KnowledgeBase.SuccessAlternate'),
+                        message: ncfST('Frontend.KnowledgeBase.DeletedSuccessfullyAlternate'),
                         type: "success",
                         duration: 2000
                     });
@@ -1121,11 +1121,11 @@ var app = new Vue({
         },
         clearConfigFileSelection() {
             if (!(this.groupForm.files || []).length) {
-                this.$message.info(ncfST('Frontend.286'))
+                this.$message.info(ncfST('Frontend.KnowledgeBase.NoMaterialsAreSelected'))
                 return
             }
-            this.$confirm(ncfST('Frontend.287'), ncfST('Frontend.288'), {
-                confirmButtonText: ncfST('Frontend.228'), cancelButtonText: ncfST('Frontend.097'), type: 'warning'
+            this.$confirm(ncfST('Frontend.KnowledgeBase.ThisOnlyCancelsTheUnsavedAssociationForTheCurrentKnowledgeBaseFiles'), ncfST('Frontend.KnowledgeBase.ClearSelectionSupplemental'), {
+                confirmButtonText: ncfST('Frontend.KnowledgeBase.ClearSelectionAlternate'), cancelButtonText: ncfST('Frontend.KnowledgeBase.EnterAnAttributeName'), type: 'warning'
             }).then(() => {
                 this.groupForm.files = []
                 this.$nextTick(() => this.$refs.groupAgentTable?.clearSelection())
@@ -1188,15 +1188,15 @@ var app = new Vue({
         handleEmbeddingBtn(btnType, item) {
             const that = this;
             if (btnType === 'embedding') {
-                this.$confirm(ncfST('Frontend.301', item.name), ncfST('Frontend.159'), {
-                    confirmButtonText: ncfST('Frontend.007'),
-                    cancelButtonText: ncfST('Frontend.097'),
+                this.$confirm(ncfST('Frontend.KnowledgeBase.VectorizeKnowledgeBaseValue', item.name), ncfST('Frontend.KnowledgeBase.ConfirmVectorization'), {
+                    confirmButtonText: ncfST('Frontend.KnowledgeBase.Save'),
+                    cancelButtonText: ncfST('Frontend.KnowledgeBase.EnterAnAttributeName'),
                     type: 'warning'
                 }).then(() => {
                     that.embeddingProgressPercent = 0;
                     that.embeddingProgressStatus = '';
-                    that.embeddingProgressText = ncfST('Frontend.134');
-                    that.embeddingTaskName = item && item.name ? item.name : (ncfST('Frontend.234') + '-' + (item && item.id ? item.id : ''));
+                    that.embeddingProgressText = ncfST('Frontend.KnowledgeBase.Preparing');
+                    that.embeddingTaskName = item && item.name ? item.name : (ncfST('Frontend.KnowledgeBase.KnowledgeBases') + '-' + (item && item.id ? item.id : ''));
                     that.embeddingDoneCount = 0;
                     that.embeddingTotalCount = 1;
                     that.embeddingPanelCollapsed = false;
@@ -1209,7 +1209,7 @@ var app = new Vue({
                         progressVal += Math.random() * 8 + 4;
                         if (progressVal > 90) progressVal = 90;
                         that.embeddingProgressPercent = Math.floor(progressVal);
-                    that.embeddingProgressText = ncfST('Frontend.160') + ' ' + that.embeddingProgressPercent + '%';
+                    that.embeddingProgressText = ncfST('Frontend.KnowledgeBase.Vectorizing') + ' ' + that.embeddingProgressPercent + '%';
                     }, 400);
 
                     const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.EmbeddingKnowledgeBase';
@@ -1223,7 +1223,7 @@ var app = new Vue({
                         that.embeddingProgressPercent = 100;
                         that.embeddingProgressStatus = 'success';
                         that.embeddingDoneCount = 1;
-                        that.embeddingProgressText = ncfST('Frontend.161');
+                        that.embeddingProgressText = ncfST('Frontend.KnowledgeBase.VectorizationCompleted');
 
                         var body = res && res.data;
                         var success = body && (body.success === true);
@@ -1232,19 +1232,19 @@ var app = new Vue({
                             setTimeout(function () {
                                 that.showEmbeddingResultToast({
                                     isError: false,
-                                    title: ncfST('Frontend.161'),
+                                    title: ncfST('Frontend.KnowledgeBase.VectorizationCompleted'),
                                     taskName: that.embeddingTaskName,
                                     startedAt: that.embeddingStartedAt,
-                                    message: resultMessage || ncfST('Frontend.162', item.name || '')
+                                    message: resultMessage || ncfST('Frontend.KnowledgeBase.VectorizationOfKnowledgeBaseValueIsComplete', item.name || '')
                                 });
                             }, 500);
                         } else {
                             that.embeddingProgressStatus = 'exception';
-                            that.embeddingProgressText = ncfST('Frontend.163');
+                            that.embeddingProgressText = ncfST('Frontend.KnowledgeBase.ProcessingError');
                             setTimeout(function () {
                                 that.showEmbeddingResultToast({
                                     isError: true,
-                                    title: ncfST('Frontend.163'),
+                                    title: ncfST('Frontend.KnowledgeBase.ProcessingError'),
                                     taskName: that.embeddingTaskName,
                                     startedAt: that.embeddingStartedAt,
                                     total: 1,
@@ -1262,18 +1262,18 @@ var app = new Vue({
                         }
                         that.embeddingProgressStatus = 'exception';
                         that.embeddingProgressPercent = Math.max(that.embeddingProgressPercent, 50);
-                        that.embeddingProgressText = ncfST('Frontend.163');
+                        that.embeddingProgressText = ncfST('Frontend.KnowledgeBase.ProcessingError');
                         setTimeout(function () {
                             that.showEmbeddingResultToast({
                                 isError: true,
-                                title: ncfST('Frontend.163'),
+                                title: ncfST('Frontend.KnowledgeBase.ProcessingError'),
                                 taskName: that.embeddingTaskName,
                                 startedAt: that.embeddingStartedAt,
                                 total: 1,
                                 success: 0,
                                 fail: 1,
-                                detail: err.message || ncfST('Frontend.163'),
-                                message: err.message || ncfST('Frontend.163')
+                                detail: err.message || ncfST('Frontend.KnowledgeBase.ProcessingError'),
+                                message: err.message || ncfST('Frontend.KnowledgeBase.ProcessingError')
                             });
                         }, 800);
                     });
@@ -1307,7 +1307,7 @@ var app = new Vue({
         //Legacy comment translated to English.
         handleElVisibleClose(btnType) {
             // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
-            this.$confirm(ncfST('Frontend.289'))
+            this.$confirm(ncfST('Frontend.KnowledgeBase.CloseWithoutSaving'))
                 .then(_ => {
                     let refName = '', formName = ''
                     // group

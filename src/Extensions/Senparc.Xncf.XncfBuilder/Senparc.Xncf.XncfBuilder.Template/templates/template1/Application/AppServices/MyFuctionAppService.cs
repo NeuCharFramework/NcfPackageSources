@@ -83,7 +83,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
                         {
                             response.Success = false;
                             response.ErrorMessage = Template_XncfNameResource.Get(
-                                "Frontend.061",
+                                "Frontend.Template_XncfName.DivisorCannotBeZero",
                                 "The divisor cannot be zero.");
                             return null;
                         }
@@ -92,7 +92,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
                     default:
                         response.Success = false;
                         response.ErrorMessage = Template_XncfNameResource.Format(
-                            "Frontend.062",
+                            "Frontend.Template_XncfName.UnknownOperatorValue",
                             "Unknown operator: {0}",
                             theOperator);
                         return null;

@@ -59,6 +59,11 @@ public sealed class WorkspaceAssetPreviewBuilder
             [".cjs"] = "text/javascript"
         };
 
+    public static bool IsPreviewAsset(string path) =>
+        AssetTypes.ContainsKey(Path.GetExtension(path))
+        || new[] { ".bin", ".gltf", ".glb", ".obj", ".stl", ".ply", ".mtl", ".json" }
+            .Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase);
+
     public async Task<WorkspaceHtmlPreview> BuildAsync(
         IWorkspaceStorage storage, string workspaceId, string filePath,
         CancellationToken cancellationToken = default)

@@ -5,7 +5,7 @@
 @using Senparc.Xncf.DesktopBridge
 @inject IStringLocalizer<DesktopBridgeResource> XR
 @{
-    ViewData["Title"] = XR["Frontend.027"];
+    ViewData["Title"] = XR["Frontend.DesktopBridge.DevicePairingAndSessions"];
     Layout = "_Layout_Vue";
     var jsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
     var pendingPairingsJson = JsonSerializer.Serialize(Model.PendingPairings, jsonOptions);
@@ -13,9 +13,9 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@XR["Frontend.009"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.DesktopBridge.ExtensionModule"]</el-breadcrumb-item>
     <el-breadcrumb-item>DesktopBridge</el-breadcrumb-item>
-    <el-breadcrumb-item>@XR["Frontend.027"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.DesktopBridge.DevicePairingAndSessions"]</el-breadcrumb-item>
 }
 
 <div>
@@ -23,17 +23,17 @@
         <el-header class="module-header">
             <span class="start-title">
                 <i class="fa fa-desktop"></i>&nbsp;
-                <span class="module-header-v">@XR["Frontend.027"]</span>
+                <span class="module-header-v">@XR["Frontend.DesktopBridge.DevicePairingAndSessions"]</span>
             </span>
         </el-header>
 
         <el-main>
             <el-alert
-                :title="ncfST('Frontend.006')"
+                :title="ncfST('Frontend.DesktopBridge.SecurePairingInstructions')"
                 type="info"
                 show-icon
                 :closable="false"
-                :description="ncfST('Frontend.034')">
+                :description="ncfST('Frontend.DesktopBridge.LeavingTheTokenEmptyOnTheDesktopGeneratesAPairingCodeValid')">
             </el-alert>
 
             @if (TempData["DesktopBridgeMessage"] is string message)
@@ -48,46 +48,46 @@
 
             <div class="filter-container">
                 <el-button type="primary" size="small" icon="el-icon-refresh" @@click="refreshPage">
-                    {{ ncfST('Frontend.003') }}
+                    {{ ncfST('Frontend.DesktopBridge.ContinueOnlyWhenThisPageWasOpenedAutomaticallyByTheNCFGUI') }}
                 </el-button>
-                <el-tag type="warning" size="small">{{ ncfST('Frontend.008', Model.PendingPairings.Count) }}</el-tag>
-                <el-tag type="success" size="small">{{ ncfST('Frontend.023', Model.Sessions.Count) }}</el-tag>
+                <el-tag type="warning" size="small">{{ ncfST('Frontend.DesktopBridge.PendingApprovalModelPendingPairingsCount', Model.PendingPairings.Count) }}</el-tag>
+                <el-tag type="success" size="small">{{ ncfST('Frontend.DesktopBridge.ActiveSessionsModelSessionsCount', Model.Sessions.Count) }}</el-tag>
             </div>
 
             <el-card shadow="never">
                 <div slot="header" class="clearfix">
-                    <span><i class="fa fa-key"></i>&nbsp;{{ ncfST('Frontend.001') }}</span>
+                    <span><i class="fa fa-key"></i>&nbsp;{{ ncfST('Frontend.DesktopBridge.PendingApprovalRequests') }}</span>
                     <ncf-doc-help topic="desktop.pairing"></ncf-doc-help>
                 </div>
 
-                <el-table :data="pendingPairings" border stripe :empty-text="ncfST('Frontend.030')">
-                    <el-table-column :label="ncfST('Frontend.029')" min-width="170">
+                <el-table :data="pendingPairings" border stripe :empty-text="ncfST('Frontend.DesktopBridge.ThereAreNoPendingPairingRequests')">
+                    <el-table-column :label="ncfST('Frontend.DesktopBridge.PairingCode')" min-width="170">
                         <template slot-scope="scope">
                             <el-tag type="warning" effect="plain">{{ scope.row.deviceCode }}</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="clientName" :label="ncfST('Frontend.021')" min-width="190"></el-table-column>
-                    <el-table-column prop="remoteAddress" :label="ncfST('Frontend.020')" min-width="150"></el-table-column>
-                    <el-table-column :label="ncfST('Frontend.005')" min-width="170">
+                    <el-table-column prop="clientName" :label="ncfST('Frontend.DesktopBridge.DesktopClient')" min-width="190"></el-table-column>
+                    <el-table-column prop="remoteAddress" :label="ncfST('Frontend.DesktopBridge.SourceAddress')" min-width="150"></el-table-column>
+                    <el-table-column :label="ncfST('Frontend.DesktopBridge.StartedAt')" min-width="170">
                         <template slot-scope="scope">{{ formatDate(scope.row.createdAt) }}</template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.004')" min-width="170">
+                    <el-table-column :label="ncfST('Frontend.DesktopBridge.ExpiresAt')" min-width="170">
                         <template slot-scope="scope">{{ formatDate(scope.row.expiresAt) }}</template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.017')" width="170" fixed="right" class-name="ncf-table-actions-column">
+                    <el-table-column :label="ncfST('Frontend.DesktopBridge.Actions')" width="170" fixed="right" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
                             <form class="d-inline-block" method="post" asp-page-handler="Approve">
                                 <input type="hidden" name="Uid" value="@Model.Uid" />
                                 <input type="hidden" name="requestId" :value="scope.row.requestId" />
                                 <button type="submit" class="el-button el-button--success el-button--mini">
-                                    <i class="el-icon-check"></i><span>{{ ncfST('Frontend.010') }}</span>
+                                    <i class="el-icon-check"></i><span>{{ ncfST('Frontend.DesktopBridge.Approve') }}</span>
                                 </button>
                             </form>
                             <form class="d-inline-block" method="post" asp-page-handler="Deny">
                                 <input type="hidden" name="Uid" value="@Model.Uid" />
                                 <input type="hidden" name="requestId" :value="scope.row.requestId" />
                                 <button type="submit" class="el-button el-button--danger el-button--mini">
-                                    <i class="el-icon-close"></i><span>{{ ncfST('Frontend.013') }}</span>
+                                    <i class="el-icon-close"></i><span>{{ ncfST('Frontend.DesktopBridge.Reject') }}</span>
                                 </button>
                             </form>
                         </template>
@@ -99,32 +99,32 @@
 
             <el-card shadow="never">
                 <div slot="header" class="clearfix">
-                    <span><i class="fa fa-link"></i>&nbsp;{{ ncfST('Frontend.002') }}</span>
+                    <span><i class="fa fa-link"></i>&nbsp;{{ ncfST('Frontend.DesktopBridge.ActiveSessions') }}</span>
                 </div>
 
-                <el-table :data="sessions" border stripe :empty-text="ncfST('Frontend.031')">
-                    <el-table-column prop="clientName" :label="ncfST('Frontend.021')" min-width="190"></el-table-column>
-                    <el-table-column prop="remoteAddress" :label="ncfST('Frontend.020')" min-width="150"></el-table-column>
-                    <el-table-column prop="approvedBy" :label="ncfST('Frontend.011')" min-width="130"></el-table-column>
-                    <el-table-column :label="ncfST('Frontend.012')" min-width="170">
+                <el-table :data="sessions" border stripe :empty-text="ncfST('Frontend.DesktopBridge.ThereAreNoActiveSessionsIssuedThroughPairing')">
+                    <el-table-column prop="clientName" :label="ncfST('Frontend.DesktopBridge.DesktopClient')" min-width="190"></el-table-column>
+                    <el-table-column prop="remoteAddress" :label="ncfST('Frontend.DesktopBridge.SourceAddress')" min-width="150"></el-table-column>
+                    <el-table-column prop="approvedBy" :label="ncfST('Frontend.DesktopBridge.ApprovedBy')" min-width="130"></el-table-column>
+                    <el-table-column :label="ncfST('Frontend.DesktopBridge.ApprovedAt')" min-width="170">
                         <template slot-scope="scope">{{ formatDate(scope.row.approvedAt) }}</template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.018')" min-width="170">
-                        <template slot-scope="scope">{{ scope.row.lastUsedAt ? formatDate(scope.row.lastUsedAt) : ncfST('Frontend.018') }}</template>
+                    <el-table-column :label="ncfST('Frontend.DesktopBridge.LastUsed')" min-width="170">
+                        <template slot-scope="scope">{{ scope.row.lastUsedAt ? formatDate(scope.row.lastUsedAt) : ncfST('Frontend.DesktopBridge.LastUsed') }}</template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.004')" min-width="170">
+                    <el-table-column :label="ncfST('Frontend.DesktopBridge.ExpiresAt')" min-width="170">
                         <template slot-scope="scope">{{ formatDate(scope.row.expiresAt) }}</template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.024')" width="90">
-                        <template slot-scope="scope"><el-tag type="success" size="small">{{ ncfST('Frontend.007') }}</el-tag></template>
+                    <el-table-column :label="ncfST('Frontend.DesktopBridge.Status')" width="90">
+                        <template slot-scope="scope"><el-tag type="success" size="small">{{ ncfST('Frontend.DesktopBridge.Authorized') }}</el-tag></template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.017')" width="100" fixed="right" class-name="ncf-table-actions-column">
+                    <el-table-column :label="ncfST('Frontend.DesktopBridge.Actions')" width="100" fixed="right" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
                             <form method="post" asp-page-handler="Revoke">
                                 <input type="hidden" name="Uid" value="@Model.Uid" />
                                 <input type="hidden" name="sessionId" :value="scope.row.sessionId" />
                                 <button type="submit" class="el-button el-button--danger el-button--mini">
-                                    <i class="el-icon-switch-button"></i><span>{{ ncfST('Frontend.016') }}</span>
+                                    <i class="el-icon-switch-button"></i><span>{{ ncfST('Frontend.DesktopBridge.Revoke') }}</span>
                                 </button>
                             </form>
                         </template>
@@ -133,7 +133,7 @@
             </el-card>
 
             <el-alert
-                :title="ncfST('Frontend.025')"
+                :title="ncfST('Frontend.DesktopBridge.EnvironmentVariableTokensAreCompatibilityChannelsTheyDoNotAppearInActive')"
                 type="warning"
                 show-icon
                 :closable="false">

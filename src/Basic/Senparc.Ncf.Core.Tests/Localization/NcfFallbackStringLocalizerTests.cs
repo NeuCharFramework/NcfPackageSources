@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.Localization;
 using Senparc.Ncf.Core.Tests.Resources;
 
@@ -11,6 +12,16 @@ namespace Senparc.Ncf.Core.Tests.Localization;
 [TestClass]
 public class NcfFallbackStringLocalizerTests
 {
+    [TestMethod]
+    public void FrontendCatalog_ShouldIncludeGlobalSystemKeys()
+    {
+        var factory = new NcfFallbackStringLocalizerFactory();
+
+        var catalog = FrontendTranslationCatalog.Get(factory, typeof(NcfCoreResource));
+
+        Assert.IsTrue(catalog.ContainsKey("Global.InspectFineTuningWorker"));
+    }
+
     [TestMethod]
     public void FrontendCatalog_ShouldIgnoreUntranslatedEnglishSourceFallback()
     {

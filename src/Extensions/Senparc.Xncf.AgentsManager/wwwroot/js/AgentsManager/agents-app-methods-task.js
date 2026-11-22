@@ -336,7 +336,7 @@ var AgentsAppMethodsTask = {
       //TODO:
       if (id == undefined) {
         app.$message({
-          message: ncfST('Frontend.552'),
+          message: ncfST('Frontend.AgentsManager.ThereAreNoExecutableTasksYet'),
           type: 'error',
           duration: 5 * 1000
         })
@@ -540,7 +540,7 @@ var AgentsAppMethodsTask = {
         const res = await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${chatGroupld}`)
         const data = res?.data ?? {}
         if (!data.success) {
-          throw new Error(data.errorMessage || data.data || ncfST('Frontend.553'))
+          throw new Error(data.errorMessage || data.data || ncfST('Frontend.AgentsManager.FailedToLoadTaskMembers'))
         }
 
         const groupDetail = data?.data ?? {}
@@ -578,7 +578,7 @@ var AgentsAppMethodsTask = {
         return taskMemberList
       } catch (err) {
         app.$message({
-          message: err?.message || ncfST('Frontend.553'),
+          message: err?.message || ncfST('Frontend.AgentsManager.FailedToLoadTaskMembers'),
           type: 'error',
           duration: 5 * 1000
         })
@@ -630,7 +630,7 @@ var AgentsAppMethodsTask = {
         const res = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupHistoryAppService/Xncf.AgentsManager_ChatGroupHistoryAppService.GetUsageAnalytics?${getInterfaceQueryStr(query)}`)
         const data = res?.data ?? {}
         if (!data.success) {
-        this.$message.error(data.errorMessage || data.data || ncfST('Frontend.554'))
+        this.$message.error(data.errorMessage || data.data || ncfST('Frontend.AgentsManager.FailedToLoadStatisticsAlternate'))
           return
         }
 
@@ -643,7 +643,7 @@ var AgentsAppMethodsTask = {
         }
       } catch (e) {
         console.error(e)
-        this.$message.error(ncfST('Frontend.554'))
+        this.$message.error(ncfST('Frontend.AgentsManager.FailedToLoadStatisticsAlternate'))
       } finally {
         this.usageAnalyticsLoading = false
       }
@@ -705,7 +705,7 @@ var AgentsAppMethodsTask = {
       return numeric.toLocaleString('en-US')
     },
     formatActivityTime(value) {
-      return value ? formatDate(value) : ncfST('Frontend.555')
+      return value ? formatDate(value) : ncfST('Frontend.AgentsManager.NoneAlternate')
     },
     formatResponseMilliseconds(milliseconds, emptyText = '--') {
       const numeric = Number(milliseconds || 0)
@@ -754,7 +754,7 @@ var AgentsAppMethodsTask = {
     async handleTaskArchiveToggle(item) {
       if (!item || !item.id) return
       const nextArchived = !item.isArchived
-      const actionText = nextArchived ? ncfST('Frontend.187') : ncfST('Frontend.186')
+      const actionText = nextArchived ? ncfST('Frontend.AgentsManager.Archive') : ncfST('Frontend.AgentsManager.Unarchive')
       this.taskArchiveSavingId = item.id
       try {
         const response = await serviceAM.post(
@@ -762,11 +762,11 @@ var AgentsAppMethodsTask = {
         )
         const data = response?.data ?? {}
         if (!data.success) {
-          this.$message.error(data.errorMessage || data.data || ncfST('Frontend.207', actionText))
+          this.$message.error(data.errorMessage || data.data || ncfST('Frontend.AgentsManager.ValueFailed', actionText))
           return
         }
 
-        this.$message.success(ncfST('Frontend.208', actionText))
+        this.$message.success(ncfST('Frontend.AgentsManager.ValueSucceeded', actionText))
         const currentTaskId = Number(this.taskDetails?.id || 0)
         if (currentTaskId === Number(item.id) && this.taskArchiveScope !== 'all' && this.taskArchiveScope !== (nextArchived ? 'archived' : 'active')) {
           this.scrollbarTaskIndex = ''
@@ -778,7 +778,7 @@ var AgentsAppMethodsTask = {
         }
         this.gettaskListData('task')
       } catch (error) {
-        this.$message.error(ncfST('Frontend.209', actionText, error?.message || ncfST('Frontend.210')))
+        this.$message.error(ncfST('Frontend.AgentsManager.ValueFailedValue', actionText, error?.message || ncfST('Frontend.AgentsManager.UnknownError')))
       } finally {
         this.taskArchiveSavingId = 0
       }
@@ -859,7 +859,7 @@ var AgentsAppMethodsTask = {
         const chatGroupId = this.getGroupStartChatGroupId(serviceForm)
         if (!chatGroupId) {
           app.$message({
-            message: ncfST('Frontend.556'),
+            message: ncfST('Frontend.AgentsManager.NoValidChatGroupWasFoundOpenTheStartWindowFromA'),
             type: 'error',
             duration: 5 * 1000
           })
@@ -1325,7 +1325,7 @@ var AgentsAppMethodsTask = {
     formatToolApprovalArguments(rawArguments) {
       let value = rawArguments
       if (value === undefined || value === null || String(value).trim() === '') {
-        return ncfST('Frontend.565')
+        return ncfST('Frontend.AgentsManager.NoParametersProvided')
       }
 
       for (let index = 0; index < 2 && typeof value === 'string'; index++) {
@@ -1383,22 +1383,22 @@ var AgentsAppMethodsTask = {
 
       this.toolApprovalSubmitting = true
       try {
-        const reason = approved ? ncfST('Frontend.557') : ncfST('Frontend.558')
+        const reason = approved ? ncfST('Frontend.AgentsManager.UserConfirmed') : ncfST('Frontend.AgentsManager.UserRejected')
         const query = getInterfaceQueryStr({ requestId, approved, reason })
         const response = await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ResolveHumanRequest?${query}`)
         const data = response?.data ?? {}
         if (!data.success) {
-          this.$message.error(data.errorMessage || data.data || ncfST('Frontend.559'))
+          this.$message.error(data.errorMessage || data.data || ncfST('Frontend.AgentsManager.HumanApprovalSubmissionFailed'))
           return
         }
-        this.$message.success(approved ? ncfST('Frontend.560') : ncfST('Frontend.561'))
+        this.$message.success(approved ? ncfST('Frontend.AgentsManager.ToolCallApprovedTheTaskContinues') : ncfST('Frontend.AgentsManager.ToolCallRejectedTheTaskContinues'))
         this.toolApprovalDialogVisible = false
         this.toolApprovalRequest = null
         this.toolApprovalArgumentText = ''
         this.$delete(this.humanApprovalRequests, requestId)
         this.$nextTick(() => this.showNextToolApproval())
       } catch (error) {
-        this.$message.error(error?.message || ncfST('Frontend.559'))
+        this.$message.error(error?.message || ncfST('Frontend.AgentsManager.HumanApprovalSubmissionFailed'))
       } finally {
         this.toolApprovalSubmitting = false
       }
@@ -1429,7 +1429,7 @@ var AgentsAppMethodsTask = {
       const requestId = String(this.humanReplyRequest?.humanRequestId || this.humanReplyRequest?.requestId || '')
       const input = String(this.humanReplyText || '').trim()
       if (!requestId || !input) {
-      this.$message.warning(ncfST('Frontend.562'))
+      this.$message.warning(ncfST('Frontend.AgentsManager.EnterTheHumanReply'))
         return
       }
 
@@ -1440,7 +1440,7 @@ var AgentsAppMethodsTask = {
           { requestId, input })
         const data = response?.data ?? {}
         if (!data.success) {
-          this.$message.error(data.errorMessage || data.data || ncfST('Frontend.563'))
+          this.$message.error(data.errorMessage || data.data || ncfST('Frontend.AgentsManager.HumanReplySubmissionFailed'))
           return
         }
 
@@ -1449,9 +1449,9 @@ var AgentsAppMethodsTask = {
         this.humanReplyRequest = null
         this.humanReplyText = ''
         this.$delete(this.humanApprovalRequests, submittedRequestId)
-        this.$message.success(ncfST('Frontend.564'))
+        this.$message.success(ncfST('Frontend.AgentsManager.HumanReplySubmitted'))
       } catch (error) {
-        this.$message.error(error?.message || ncfST('Frontend.563'))
+        this.$message.error(error?.message || ncfST('Frontend.AgentsManager.HumanReplySubmissionFailed'))
       } finally {
         this.humanReplySubmitting = false
       }

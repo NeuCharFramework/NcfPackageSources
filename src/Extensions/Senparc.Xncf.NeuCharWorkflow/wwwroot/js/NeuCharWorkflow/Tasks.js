@@ -72,7 +72,7 @@ new Vue({
                 this.hasMore = page.hasMore;
                 this.nextExecutionLogId = page.nextExecutionLogId;
             } catch (error) {
-                this.$message.error(this.errorMessage(error, ncfST('Frontend.104')));
+                this.$message.error(this.errorMessage(error, ncfST('Frontend.NeuCharWorkflow.FailedToLoadTheWorkflowTaskList')));
             } finally {
                 this.loading = false;
                 this.scheduleRefresh();
@@ -94,7 +94,7 @@ new Vue({
                     this.nextExecutionLogId = page.nextExecutionLogId;
                 }
             } catch (error) {
-                this.$message.error(this.errorMessage(error, ncfST('Frontend.105')));
+                this.$message.error(this.errorMessage(error, ncfST('Frontend.NeuCharWorkflow.FailedToRefreshTheWorkflowTaskList')));
             } finally {
                 this.loading = false;
                 this.scheduleRefresh();
@@ -121,7 +121,7 @@ new Vue({
                     this.hasMore = false;
                 }
             } catch (error) {
-                this.$message.error(this.errorMessage(error, ncfST('Frontend.106')));
+                this.$message.error(this.errorMessage(error, ncfST('Frontend.NeuCharWorkflow.FailedToLoadMoreWorkflowTasks')));
             } finally {
                 this.loadingMore = false;
                 this.$nextTick(() => this.handleScroll());
@@ -202,25 +202,25 @@ new Vue({
         },
         statusText(status) {
             return {
-                running: ncfST('Frontend.077'),
-                success: ncfST('Frontend.127'),
-                failed: ncfST('Frontend.128')
-            }[status] || ncfST('Frontend.652');
+                running: ncfST('Frontend.NeuCharWorkflow.RunningAlternate'),
+                success: ncfST('Frontend.NeuCharWorkflow.Success'),
+                failed: ncfST('Frontend.NeuCharWorkflow.Failed')
+            }[status] || ncfST('Frontend.NeuCharWorkflow.Unknown');
         },
         statusType(status) {
             return { running: 'warning', success: 'success', failed: 'danger' }[status] || 'info';
         },
         sourceText(source) {
             return {
-                manual: ncfST('Frontend.467'),
+                manual: ncfST('Frontend.NeuCharWorkflow.ManualRun'),
                 webhook: 'Webhook',
-                interval: ncfST('Frontend.471'),
-                history: ncfST('Frontend.468')
-            }[source] || ncfST('Frontend.469');
+                interval: ncfST('Frontend.NeuCharWorkflow.ScheduledTrigger'),
+                history: ncfST('Frontend.NeuCharWorkflow.History')
+            }[source] || ncfST('Frontend.NeuCharWorkflow.RunRecords');
         },
         summaryText(task) {
             return task.errorMessage || task.summary ||
-                (task.status === 'running' ? ncfST('Frontend.653') : ncfST('Frontend.654'));
+                (task.status === 'running' ? ncfST('Frontend.NeuCharWorkflow.PreparingExecution') : ncfST('Frontend.NeuCharWorkflow.NoResultSummaryIsAvailable'));
         },
         formatDate(value) {
             if (!value) return '—';
@@ -233,14 +233,14 @@ new Vue({
             if (!task || !task.workflowId) return;
             if (task.status === 'running') {
                 if (!task.runId) {
-                    this.$message.warning(ncfST('Frontend.656'));
+                    this.$message.warning(ncfST('Frontend.NeuCharWorkflow.ThisRunHasNoLiveRunIdentifierPossiblyLeftByAnExited'));
                     return;
                 }
                 window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${encodeURIComponent(task.workflowId)}&runId=${encodeURIComponent(task.runId)}`);
                 return;
             }
             if (!task.replayAvailable || !task.executionLogId) {
-                this.$message.warning(ncfST('Frontend.486'));
+                this.$message.warning(ncfST('Frontend.NeuCharWorkflow.ThisTaskHasNoAvailableRunSnapshotItMayPredateReplaySupport'));
                 return;
             }
             window.location.assign(`/Admin/NeuCharWorkflow/Replay?executionLogId=${encodeURIComponent(task.executionLogId)}`);
@@ -248,20 +248,20 @@ new Vue({
         async abortTask(task) {
             if (!task || task.status !== 'running' || this.abortingTaskId) return;
             if (!task.runId && !task.executionLogId) {
-                this.$message.error(ncfST('Frontend.655'));
+                this.$message.error(ncfST('Frontend.NeuCharWorkflow.ThisRunHasNoAbortIdentifierRefreshTheTaskListAndTry'));
                 return;
             }
             try {
                 if (this.$confirm) {
-                    await this.$confirm(ncfST('Frontend.508', task.workflowName || ncfST('Frontend.507')), ncfST('Frontend.509'), {
-                        confirmButtonText: ncfST('Frontend.510'),
-                        cancelButtonText: ncfST('Frontend.511'),
+                    await this.$confirm(ncfST('Frontend.NeuCharWorkflow.AbortValue', task.workflowName || ncfST('Frontend.NeuCharWorkflow.CurrentWorkflow')), ncfST('Frontend.NeuCharWorkflow.ConfirmAbort'), {
+                        confirmButtonText: ncfST('Frontend.NeuCharWorkflow.Abort'),
+                        cancelButtonText: ncfST('Frontend.NeuCharWorkflow.ContinueRunning'),
                         type: 'warning'
                     });
                 }
             } catch (error) {
                 if (error !== 'cancel' && error !== 'close') {
-                    this.$message.error(this.errorMessage(error, ncfST('Frontend.512')));
+                    this.$message.error(this.errorMessage(error, ncfST('Frontend.NeuCharWorkflow.UnableToShowTheAbortConfirmation')));
                 }
                 return;
             }
@@ -272,10 +272,10 @@ new Vue({
                     runId: task.runId || null,
                     executionLogId: task.executionLogId || null
                 }, { customAlert: true });
-                this.$message.success(ncfST('Frontend.513'));
+                this.$message.success(ncfST('Frontend.NeuCharWorkflow.ManualAbortRequestedTheTaskWillBeMarkedAsFailed'));
                 await this.refreshTasks();
             } catch (error) {
-                this.$message.error(this.errorMessage(error, ncfST('Frontend.514')));
+                this.$message.error(this.errorMessage(error, ncfST('Frontend.NeuCharWorkflow.FailedToAbortTheWorkflowTask')));
             } finally {
                 this.abortingTaskId = '';
             }
@@ -288,17 +288,17 @@ new Vue({
                 const preview = NeuCharWorkflowUi.unwrap(previewResponse) || {};
                 const completedCount = Number(preview.completedCount || 0);
                 if (completedCount <= 0) {
-                    this.$message.info(ncfST('Frontend.515'));
+                    this.$message.info(ncfST('Frontend.NeuCharWorkflow.NoCompletedTaskRecordsCanBeCleanedUpRunningTasksAreAlways'));
                     return;
                 }
 
                 if (this.$confirm) {
                     await this.$confirm(
-                        ncfST('Frontend.517', completedCount, Number(preview.succeededCount || 0), Number(preview.failedCount || 0)),
-                        ncfST('Frontend.516'),
+                        ncfST('Frontend.NeuCharWorkflow.ThisWillPermanentlyDeleteValueCompletedTaskRecordsValueSucceededValueFailed', completedCount, Number(preview.succeededCount || 0), Number(preview.failedCount || 0)),
+                        ncfST('Frontend.NeuCharWorkflow.ConfirmQuickCleanup'),
                         {
-                            confirmButtonText: ncfST('Frontend.518', completedCount),
-                            cancelButtonText: ncfST('Frontend.193'),
+                            confirmButtonText: ncfST('Frontend.NeuCharWorkflow.CleanUpValue', completedCount),
+                            cancelButtonText: ncfST('Frontend.NeuCharWorkflow.Cancel'),
                             type: 'warning',
                             closeOnClickModal: false
                         });
@@ -308,11 +308,11 @@ new Vue({
                     cutoff: preview.cutoff
                 }, { customAlert: true });
                 const result = NeuCharWorkflowUi.unwrap(resultResponse) || {};
-                this.$message.success(ncfST('Frontend.519', Number(result.deletedCount || 0)));
+                this.$message.success(ncfST('Frontend.NeuCharWorkflow.CleanedUpValueCompletedTaskRecords', Number(result.deletedCount || 0)));
                 await this.loadTasks();
             } catch (error) {
                 if (error !== 'cancel' && error !== 'close') {
-                    this.$message.error(this.errorMessage(error, ncfST('Frontend.657')));
+                    this.$message.error(this.errorMessage(error, ncfST('Frontend.NeuCharWorkflow.QuickCleanupOfWorkflowTasksFailed')));
                 }
             } finally {
                 this.cleaning = false;
@@ -369,11 +369,11 @@ new Vue({
                 const body = NeuCharWorkflowUi.unwrap(response) || {};
                 const consumedCount = Number(body && body.consumedCount || 0);
                 this.neuBellConsumeMessage = consumedCount > 0
-                    ? (mode === 'provider' ? ncfST('Frontend.859', consumedCount) : ncfST('Frontend.860'))
-                    : ncfST('Frontend.861');
+                    ? (mode === 'provider' ? ncfST('Frontend.NeuCharWorkflow.ConsumedValueRemindersInTheCurrentSubscription', consumedCount) : ncfST('Frontend.NeuCharWorkflow.ConsumedTheCurrentReminder'))
+                    : ncfST('Frontend.NeuCharWorkflow.ThisReminderWasAlreadyConsumedOrNoLongerBelongsToTheCurrent');
             } catch (error) {
                 this.neuBellConsumeError = true;
-                this.neuBellConsumeMessage = this.errorMessage(error, ncfST('Frontend.862'));
+                this.neuBellConsumeMessage = this.errorMessage(error, ncfST('Frontend.NeuCharWorkflow.TheReminderCouldNotBeConsumedAutomaticallyItsBusinessStateWasPreserved'));
             }
         }
     }

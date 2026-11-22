@@ -1,5 +1,6 @@
 using Senparc.CO2NET.Extensions;
 using Senparc.Xncf.SenMapic.Domain.SiteMap;
+using Senparc.Xncf.SenMapic.OHS.Local.PL;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,6 +13,19 @@ namespace Senparc.Xncf.SenMapicTests.Domain.SenMapic
     {
 
         string testUrl_Ncf = $"https://doc.ncf.pub";
+
+        [TestMethod]
+        public void FunctionRequest_PageCount_ShouldUseSafeBounds()
+        {
+            var request = new MyFunction_SenMapicRequest();
+            Assert.AreEqual(MyFunction_SenMapicRequest.DefaultPageCount, request.GetEffectivePageCount());
+
+            request.PageNumber = 0;
+            Assert.AreEqual(MyFunction_SenMapicRequest.DefaultPageCount, request.GetEffectivePageCount());
+
+            request.PageNumber = MyFunction_SenMapicRequest.MaximumPageCount + 1;
+            Assert.AreEqual(MyFunction_SenMapicRequest.MaximumPageCount, request.GetEffectivePageCount());
+        }
 
         [TestMethod]
         public void Build_WithValidUrl_ShouldReturnUrlData()

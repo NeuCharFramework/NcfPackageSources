@@ -125,202 +125,200 @@
   <data name="Function.Api.ExceptionHandled" xml:space="preserve">
     <value>Exception traitée : {0}</value>
   </data>
-  <data name="Frontend.001" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.ColorDatabaseManagement" xml:space="preserve">
     <value>Gestion de la base de données Color</value>
   </data>
-  <data name="Frontend.002" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.ExtensionModules" xml:space="preserve">
     <value>Modules d’extension</value>
   </data>
-  <data name="Frontend.003" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.AddColor" xml:space="preserve">
     <value>Ajouter une couleur</value>
   </data>
-  <data name="Frontend.004" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.Refresh" xml:space="preserve">
     <value>Actualiser</value>
   </data>
-  <data name="Frontend.005" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.DebugInformation" xml:space="preserve">
     <value>Informations de débogage</value>
   </data>
-  <data name="Frontend.006" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.DebugInformationLabel" xml:space="preserve">
     <value>Informations de débogage :</value>
   </data>
-  <data name="Frontend.007" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.TableDataLength" xml:space="preserve">
     <value>Longueur de tableData :</value>
   </data>
-  <data name="Frontend.008" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.VueInstanceOK" xml:space="preserve">
     <value>Instance Vue valide :</value>
   </data>
-  <data name="Frontend.009" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.Yes" xml:space="preserve">
     <value>Oui</value>
   </data>
-  <data name="Frontend.010" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.No" xml:space="preserve">
     <value>Non</value>
   </data>
-  <data name="Frontend.011" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.FirstItem" xml:space="preserve">
     <value>Premier élément :</value>
   </data>
-  <data name="Frontend.012" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.SimplifiedDataDisplayTest" xml:space="preserve">
     <value>Test d'affichage simplifié des données :</value>
   </data>
-  <data name="Frontend.013" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.Time" xml:space="preserve">
     <value>Heure :</value>
   </data>
-  <data name="Frontend.014" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.NoDataToDisplay" xml:space="preserve">
     <value>Aucune donnée à afficher !</value>
   </data>
-  <data name="Frontend.015" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.RedValueR" xml:space="preserve">
     <value>Valeur du rouge (R)</value>
   </data>
-  <data name="Frontend.016" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.GreenValueG" xml:space="preserve">
     <value>Valeur du vert (G)</value>
   </data>
-  <data name="Frontend.017" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.BlueValueB" xml:space="preserve">
     <value>Valeur du bleu (B)</value>
   </data>
-  <data name="Frontend.018" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.ColorPreview" xml:space="preserve">
     <value>Aperçu de la couleur</value>
   </data>
-  <data name="Frontend.019" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.Created" xml:space="preserve">
     <value>Créé</value>
   </data>
-  <data name="Frontend.020" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.UpdatedAt" xml:space="preserve">
     <value>Mis à jour le</value>
   </data>
-  <data name="Frontend.021" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
-  <data name="Frontend.022" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.Edit" xml:space="preserve">
     <value>Modifier</value>
   </data>
-  <data name="Frontend.023" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.Random" xml:space="preserve">
     <value>Aléatoire</value>
   </data>
-  <data name="Frontend.024" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.Delete" xml:space="preserve">
     <value>Supprimer</value>
   </data>
-  <data name="Frontend.025" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.AdditionalNote" xml:space="preserve">
     <value>Remarque supplémentaire</value>
   </data>
-  <data name="Frontend.026" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.EnterAdditionalNotesForTheColor" xml:space="preserve">
     <value>Saisissez des remarques supplémentaires sur la couleur...</value>
   </data>
-  <data name="Frontend.027" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.RandomColor" xml:space="preserve">
     <value>Couleur aléatoire</value>
   </data>
-  <data name="Frontend.028" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.Cancel" xml:space="preserve">
     <value>Annuler</value>
   </data>
-  <data name="Frontend.029" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.OK" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="Frontend.030" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.EditColor" xml:space="preserve">
     <value>Modifier la couleur</value>
   </data>
-  <data name="Frontend.031" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.SetTheRedValue" xml:space="preserve">
     <value>Définissez la valeur du rouge</value>
   </data>
-  <data name="Frontend.032" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.RedValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>La valeur du rouge doit être comprise entre 0 et 255</value>
   </data>
-  <data name="Frontend.033" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.SetTheGreenValue" xml:space="preserve">
     <value>Définissez la valeur du vert</value>
   </data>
-  <data name="Frontend.034" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.GreenValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>La valeur du vert doit être comprise entre 0 et 255</value>
   </data>
-  <data name="Frontend.035" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.SetTheBlueValue" xml:space="preserve">
     <value>Définissez la valeur du bleu</value>
   </data>
-  <data name="Frontend.036" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.BlueValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>La valeur du bleu doit être comprise entre 0 et 255</value>
   </data>
-  <data name="Frontend.037" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.FailedToLoadDataValue" xml:space="preserve">
     <value>Échec du chargement des données : {0}</value>
   </data>
-  <data name="Frontend.038" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.OperationCompleted" xml:space="preserve">
     <value>Opération terminée</value>
   </data>
-  <data name="Frontend.039" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.CreationFailed" xml:space="preserve">
     <value>Échec de la création</value>
   </data>
-  <data name="Frontend.040" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.UpdateFailed" xml:space="preserve">
     <value>Échec de la mise à jour</value>
   </data>
-  <data name="Frontend.041" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.ThisWillPermanentlyDeleteThisColorContinue" xml:space="preserve">
     <value>Cela supprimera définitivement cette couleur. Continuer ?</value>
   </data>
-  <data name="Frontend.042" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.Notice" xml:space="preserve">
     <value>Information</value>
   </data>
-  <data name="Frontend.043" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.Confirm" xml:space="preserve">
     <value>Confirmer</value>
   </data>
-  <data name="Frontend.044" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.CancelAlternate" xml:space="preserve">
     <value>Annuler</value>
   </data>
-  <data name="Frontend.045" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.DeleteFailed" xml:space="preserve">
     <value>Échec de la suppression</value>
   </data>
-  <data name="Frontend.046" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.DeletionCancelled" xml:space="preserve">
     <value>Suppression annulée</value>
   </data>
-  <data name="Frontend.047" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.RandomizationFailed" xml:space="preserve">
     <value>Échec de la randomisation</value>
   </data>
-  <data name="Frontend.048" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.DataLoadedSuccessfully" xml:space="preserve">
     <value>Données chargées</value>
   </data>
-  <data name="Frontend.049" xml:space="preserve">
-    <value>Échec du chargement des données : {0}</value>
-  </data>
-  <data name="Frontend.050" xml:space="preserve">
+
+  <data name="Frontend.AdminTemplate.RequestParametersCannotBeEmpty" xml:space="preserve">
     <value>Les paramètres de la requête ne peuvent pas être vides</value>
   </data>
-  <data name="Frontend.051" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.ColorCreatedSuccessfully" xml:space="preserve">
     <value>Couleur créée</value>
   </data>
-  <data name="Frontend.052" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.FailedToCreateValue" xml:space="preserve">
     <value>Échec de la création : {0}</value>
   </data>
-  <data name="Frontend.053" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.TheColorDoesNotExist" xml:space="preserve">
     <value>La couleur n'existe pas.</value>
   </data>
-  <data name="Frontend.054" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.ColorUpdatedSuccessfully" xml:space="preserve">
     <value>Couleur mise à jour</value>
   </data>
-  <data name="Frontend.055" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.UpdateFailedValue" xml:space="preserve">
     <value>Échec de la mise à jour : {0}</value>
   </data>
-  <data name="Frontend.056" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.ColorDeletedSuccessfully" xml:space="preserve">
     <value>Couleur supprimée</value>
   </data>
-  <data name="Frontend.057" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.FailedToDeleteValue" xml:space="preserve">
     <value>Échec de la suppression : {0}</value>
   </data>
-  <data name="Frontend.058" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.ColorRandomizedSuccessfully" xml:space="preserve">
     <value>Couleur aléatoire appliquée</value>
   </data>
-  <data name="Frontend.059" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.RandomizationFailedValue" xml:space="preserve">
     <value>Échec de la randomisation : {0}</value>
   </data>
-  <data name="Frontend.060" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.FailedToLoadValue" xml:space="preserve">
     <value>Échec du chargement : {0}</value>
   </data>
-  <data name="Frontend.061" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.DivisorCannotBeZero" xml:space="preserve">
     <value>Le diviseur ne peut pas être 0 !</value>
   </data>
-  <data name="Frontend.062" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.UnknownOperatorValue" xml:space="preserve">
     <value>Opérateur inconnu : {0}</value>
   </data>
-  <data name="Frontend.063" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.ExceptionThrowTestParametersPassedValueValue" xml:space="preserve">
     <value>Test de levée d'exception, paramètres transmis : {0} {1}</value>
   </data>
-  <data name="Frontend.064" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.TheRedValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>La valeur de rouge doit être comprise entre 0 et 255</value>
   </data>
-  <data name="Frontend.065" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.TheGreenValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>La valeur de vert doit être comprise entre 0 et 255</value>
   </data>
-  <data name="Frontend.066" xml:space="preserve">
+  <data name="Frontend.AdminTemplate.TheBlueValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>La valeur de bleu doit être comprise entre 0 et 255</value>
   </data>
 

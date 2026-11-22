@@ -17,7 +17,7 @@
 
 <div class="admin-chat-container">
     <input ref="workspaceFileInput" type="file" hidden multiple
-        accept=".txt,.md,.csv,.tsv,.json,.docx,.xlsx,.pptx,.pdf,.doc,.xls,.ppt,.png,.jpg,.jpeg,.webp"
+        accept=".txt,.md,.csv,.tsv,.json,.docx,.xlsx,.pptx,.pdf,.doc,.xls,.ppt,.png,.jpg,.jpeg,.webp,.glb,.gltf,.obj,.stl,.ply"
         @@change="handleWorkspaceFilesSelected" />
     <el-container
         ref="workspaceContainer"
@@ -282,137 +282,179 @@
                             <el-tag v-if="currentSessionWorkspaceCliEnabled" size="mini" type="danger">可执行 CLI</el-tag>
                         </div>
                     </div>
-                    <div class="chat-modules" v-if="currentSessionModules.length > 0">
+                    <div class="chat-modules chat-context-references" v-if="sessionContextReferences.length > 0">
                         <el-popover
-                            v-for="module in currentSessionModules.slice(0, 3)"
-                            :key="module.id"
+                            v-for="reference in visibleSessionContextReferences"
+                            :key="reference.key"
                             placement="bottom-start"
                             width="420"
                             trigger="hover"
                             popper-class="chat-module-detail-popover">
                             <div class="chat-module-detail-wrapper">
-                                <div class="module-selector-preview-title">
-                                    <i :class="[resolveModuleDetail(module).icon, 'selector-module-icon']"></i>
-                                    <span>{{ resolveModuleDetail(module).name }}</span>
-                                    <span class="selector-module-version" v-if="resolveModuleDetail(module).version">v{{ resolveModuleDetail(module).version }}</span>
-                                </div>
-                                <div class="module-selector-preview-subtitle">{{ resolveModuleDetail(module).description }}</div>
-
-                                <div class="module-selector-preview-body">
-                                    <div class="module-selector-preview-section" v-if="resolveModuleDetail(module).menus && resolveModuleDetail(module).menus.length > 0">
-                                        <div class="module-selector-preview-section-title">@AR["AdminChat.MenuHierarchy"]</div>
-                                        <el-tree
-                                            :data="resolveModuleDetail(module).menus"
-                                            node-key="id"
-                                            :props="{ label: 'name', children: 'children' }"
-                                            default-expand-all
-                                            class="module-selector-menu-tree">
-                                            <span class="custom-tree-node" slot-scope="{ data }">
-                                                <a :href="data.url">{{ data.name }}</a>
-                                            </span>
-                                        </el-tree>
+                                <template v-if="reference.kind === 'module'">
+                                    <div class="module-selector-preview-title">
+                                        <i :class="[reference.detail.icon, 'selector-module-icon']"></i>
+                                        <span>{{ reference.detail.name }}</span>
+                                        <span class="selector-module-version" v-if="reference.detail.version">v{{ reference.detail.version }}</span>
                                     </div>
-
-                                    <div class="module-selector-preview-section" v-if="resolveModuleDetail(module).functions && resolveModuleDetail(module).functions.length > 0">
-                                        <div class="module-selector-preview-section-title">@AR["AdminChat.Functions"]</div>
+                                    <div class="module-selector-preview-subtitle">{{ reference.detail.description }}</div>
+                                    <div class="module-selector-preview-body">
+                                        <div class="module-selector-preview-section" v-if="reference.detail.menus.length > 0">
+                                            <div class="module-selector-preview-section-title">@AR["AdminChat.MenuHierarchy"]</div>
+                                            <el-tree
+                                                :data="reference.detail.menus"
+                                                node-key="id"
+                                                :props="{ label: 'name', children: 'children' }"
+                                                default-expand-all
+                                                class="module-selector-menu-tree">
+                                                <span class="custom-tree-node" slot-scope="{ data }">
+                                                    <a :href="data.url">{{ data.name }}</a>
+                                                </span>
+                                            </el-tree>
+                                        </div>
+                                        <div class="module-selector-preview-section" v-if="reference.detail.functions.length > 0">
+                                            <div class="module-selector-preview-section-title">@AR["AdminChat.Functions"]</div>
+                                            <div class="module-selector-functions-list">
+                                                <div v-for="func in reference.detail.functions" :key="func.name" class="module-selector-function-item">
+                                                    <div class="module-selector-function-name">{{ func.name }}</div>
+                                                    <div class="module-selector-function-description">{{ func.description }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="module-selector-preview-empty"
+                                             v-if="reference.detail.menus.length === 0 && reference.detail.functions.length === 0">
+                                            @AR["AdminChat.NoPreview"]
+                                        </div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div class="module-selector-preview-title">
+                                        <i class="fa fa-random selector-module-icon"></i>
+                                        <span>{{ reference.detail.name }}</span>
+                                        <span class="selector-module-version">#{{ reference.detail.id }}</span>
+                                    </div>
+                                    <div class="module-selector-preview-subtitle">{{ reference.detail.description || ncfT('AdminChat.ReferenceWorkflowEnabled') }}</div>
+                                    <div class="module-selector-preview-section" v-if="reference.detail.parameters.length > 0">
+                                        <div class="module-selector-preview-section-title">{{ ncfT('AdminChat.WorkflowParameters') }}</div>
                                         <div class="module-selector-functions-list">
-                                            <div v-for="func in resolveModuleDetail(module).functions" :key="func.name" class="module-selector-function-item">
-                                                <div class="module-selector-function-name">{{ func.name }}</div>
-                                                <div class="module-selector-function-description">{{ func.description }}</div>
+                                            <div v-for="parameter in reference.detail.parameters"
+                                                 :key="`${reference.key}-${parameter.name}`"
+                                                 class="module-selector-function-item">
+                                                <div class="module-selector-function-name">{{ parameter.name }}</div>
+                                                <div class="module-selector-function-description">{{ parameter.description || ncfT('AdminChat.OptionalParameter') }}</div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div
-                                        class="module-selector-preview-empty"
-                                        v-if="(!resolveModuleDetail(module).menus || resolveModuleDetail(module).menus.length === 0) && (!resolveModuleDetail(module).functions || resolveModuleDetail(module).functions.length === 0)">
-                                        @AR["AdminChat.NoPreview"]
-                                    </div>
-                                </div>
+                                    <div class="module-selector-preview-empty" v-else>{{ ncfT('AdminChat.WorkflowNoParameters') }}</div>
+                                </template>
                             </div>
 
                             <el-tag
                                 slot="reference"
                                 size="mini"
-                                type="info"
-                                :title="module.moduleDescription || module.xncfModuleUid"
-                                class="chat-module-tag-detail">
-                                <i class="fa fa-cube"></i>
-                                {{ module.displayName || module.menuName || module.moduleName || module.xncfModuleUid }}
-                                <span v-if="module.moduleVersion"> v{{ module.moduleVersion }}</span>
+                                :type="reference.kind === 'workflow' ? 'success' : 'info'"
+                                :class="['chat-reference-chip', reference.kind === 'workflow' ? 'chat-workflow-tag' : 'chat-module-tag-detail']"
+                                :title="reference.detail.description">
+                                <i :class="reference.kind === 'workflow' ? 'fa fa-random' : reference.detail.icon" aria-hidden="true"></i>
+                                <span class="chat-reference-chip-name">{{ reference.detail.name }}</span>
+                                <span v-if="reference.kind === 'module' && reference.detail.version"> v{{ reference.detail.version }}</span>
                             </el-tag>
                         </el-popover>
+
                         <el-popover
-                            v-if="currentSessionModules.length > 3"
+                            v-if="overflowSessionContextReferences.length > 0"
                             placement="bottom-start"
-                            width="300"
-                            trigger="click">
-                            <div class="chat-context-popover-list">
-                                <div
-                                    v-for="module in currentSessionModules.slice(3)"
-                                    :key="`extra-module-${module.id}`"
-                                    class="chat-context-popover-item">
-                                    <i class="fa fa-cube"></i>
-                                    <span>{{ module.displayName || module.menuName || module.moduleName || module.xncfModuleUid }}</span>
-                                </div>
-                            </div>
-                            <el-button slot="reference" size="mini" plain class="chat-context-more">
-                                +{{ currentSessionModules.length - 3 }}
-                            </el-button>
-                        </el-popover>
-                    </div>
-                    <div class="chat-modules" v-if="currentSessionWorkflows.length > 0">
-                        <el-popover
-                            v-for="workflow in currentSessionWorkflows.slice(0, 2)"
-                            :key="workflow.id"
-                            placement="bottom-start"
-                            width="360"
+                            width="420"
                             trigger="hover"
-                            popper-class="chat-module-detail-popover">
-                            <div class="chat-module-detail-wrapper">
-                                <div class="module-selector-preview-title">
-                                    <i class="fa fa-random selector-module-icon"></i>
-                                    <span>{{ workflow.workflowName }}</span>
-                                    <span class="selector-module-version">#{{ workflow.workflowId }}</span>
-                                </div>
-                                <div class="module-selector-preview-subtitle">{{ workflow.workflowDescription || '已启用 Workflow' }}</div>
-                                <div class="module-selector-preview-section" v-if="workflow.parameters && workflow.parameters.length > 0">
-                                    <div class="module-selector-preview-section-title">Function Calling 参数</div>
-                                    <div class="module-selector-functions-list">
-                                        <div v-for="parameter in workflow.parameters"
-                                             :key="`session-workflow-${workflow.workflowId}-${parameter.name}`"
-                                             class="module-selector-function-item">
-                                            <div class="module-selector-function-name">{{ parameter.name }}</div>
-                                            <div class="module-selector-function-description">{{ parameter.description || '可选参数' }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <el-tag
-                                slot="reference"
-                                size="mini"
-                                type="success"
-                                class="chat-workflow-tag">
-                                <i class="fa fa-random"></i>
-                                {{ workflow.workflowName }}
-                            </el-tag>
-                        </el-popover>
-                        <el-popover
-                            v-if="currentSessionWorkflows.length > 2"
-                            placement="bottom-start"
-                            width="300"
-                            trigger="click">
+                            :open-delay="80"
+                            :close-delay="160"
+                            popper-class="chat-context-overflow-popover">
                             <div class="chat-context-popover-list">
-                                <div
-                                    v-for="workflow in currentSessionWorkflows.slice(2)"
-                                    :key="`extra-workflow-${workflow.id}`"
-                                    class="chat-context-popover-item">
-                                    <i class="fa fa-random"></i>
-                                    <span>{{ workflow.workflowName }}</span>
-                                </div>
+                                <el-popover
+                                    v-for="reference in overflowSessionContextReferences"
+                                    :key="reference.key"
+                                    placement="right-start"
+                                    width="420"
+                                    trigger="hover"
+                                    :open-delay="80"
+                                    :close-delay="140"
+                                    popper-class="chat-module-detail-popover">
+                                    <div class="chat-module-detail-wrapper">
+                                        <template v-if="reference.kind === 'module'">
+                                            <div class="module-selector-preview-title">
+                                                <i :class="[reference.detail.icon, 'selector-module-icon']"></i>
+                                                <span>{{ reference.detail.name }}</span>
+                                                <span class="selector-module-version" v-if="reference.detail.version">v{{ reference.detail.version }}</span>
+                                            </div>
+                                            <div class="module-selector-preview-subtitle">{{ reference.detail.description }}</div>
+                                            <div class="module-selector-preview-body">
+                                                <div class="module-selector-preview-section" v-if="reference.detail.menus.length > 0">
+                                                    <div class="module-selector-preview-section-title">@AR["AdminChat.MenuHierarchy"]</div>
+                                                    <el-tree
+                                                        :data="reference.detail.menus"
+                                                        node-key="id"
+                                                        :props="{ label: 'name', children: 'children' }"
+                                                        default-expand-all
+                                                        class="module-selector-menu-tree">
+                                                        <span class="custom-tree-node" slot-scope="{ data }">
+                                                            <a :href="data.url">{{ data.name }}</a>
+                                                        </span>
+                                                    </el-tree>
+                                                </div>
+                                                <div class="module-selector-preview-section" v-if="reference.detail.functions.length > 0">
+                                                    <div class="module-selector-preview-section-title">@AR["AdminChat.Functions"]</div>
+                                                    <div class="module-selector-functions-list">
+                                                        <div v-for="func in reference.detail.functions" :key="`${reference.key}-${func.name}`" class="module-selector-function-item">
+                                                            <div class="module-selector-function-name">{{ func.name }}</div>
+                                                            <div class="module-selector-function-description">{{ func.description }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="module-selector-preview-empty"
+                                                     v-if="reference.detail.menus.length === 0 && reference.detail.functions.length === 0">
+                                                    @AR["AdminChat.NoPreview"]
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <template v-else>
+                                            <div class="module-selector-preview-title">
+                                                <i class="fa fa-random selector-module-icon"></i>
+                                                <span>{{ reference.detail.name }}</span>
+                                                <span class="selector-module-version">#{{ reference.detail.id }}</span>
+                                            </div>
+                                            <div class="module-selector-preview-subtitle">{{ reference.detail.description || ncfT('AdminChat.ReferenceWorkflowEnabled') }}</div>
+                                            <div class="module-selector-preview-section" v-if="reference.detail.parameters.length > 0">
+                                                <div class="module-selector-preview-section-title">{{ ncfT('AdminChat.WorkflowParameters') }}</div>
+                                                <div class="module-selector-functions-list">
+                                                    <div v-for="parameter in reference.detail.parameters"
+                                                         :key="`${reference.key}-${parameter.name}`"
+                                                         class="module-selector-function-item">
+                                                        <div class="module-selector-function-name">{{ parameter.name }}</div>
+                                                        <div class="module-selector-function-description">{{ parameter.description || ncfT('AdminChat.OptionalParameter') }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="module-selector-preview-empty" v-else>{{ ncfT('AdminChat.WorkflowNoParameters') }}</div>
+                                        </template>
+                                    </div>
+                                    <button
+                                        slot="reference"
+                                        type="button"
+                                        class="chat-context-popover-item">
+                                        <span class="chat-context-popover-kind" :class="reference.kind">
+                                            <i :class="reference.kind === 'workflow' ? 'fa fa-random' : reference.detail.icon" aria-hidden="true"></i>
+                                        </span>
+                                        <span class="chat-context-popover-name">
+                                            <strong>{{ reference.detail.name }}</strong>
+                                            <small v-if="reference.kind === 'module' && reference.detail.version">v{{ reference.detail.version }}</small>
+                                            <small v-else-if="reference.kind === 'workflow'">#{{ reference.detail.id }}</small>
+                                        </span>
+                                        <i class="el-icon-arrow-right chat-context-popover-chevron" aria-hidden="true"></i>
+                                    </button>
+                                </el-popover>
                             </div>
                             <el-button slot="reference" size="mini" plain class="chat-context-more">
-                                +{{ currentSessionWorkflows.length - 2 }}
+                                +{{ overflowSessionContextReferences.length }}
                             </el-button>
                         </el-popover>
                     </div>
@@ -420,7 +462,10 @@
             </div>
 
             <div class="messages-stage" v-if="currentSessionId">
-            <div class="messages-container" ref="messagesContainer" v-loading="loadingMessages" @@scroll="updateActiveUserMarker">
+            <div class="messages-container" ref="messagesContainer" v-loading="loadingMessages"
+                 @@scroll="updateActiveUserMarker"
+                 @@mouseup="handleMessageSelectionEnd"
+                 @@click="handleRichPreviewClick">
                 <div class="message-manage-toolbar" v-if="isManageMode">
                     <el-checkbox
                         :value="messageList.length > 0 && selectedMessageIds.length === messageList.length"
@@ -454,16 +499,29 @@
                             <span class="message-role">{{ getRoleTypeName(message.roleType) }}</span>
                             <span class="message-time">{{ formatTime(message.addTime) }}</span>
                         </div>
+                        <div v-if="message.roleType === 0 && !isManageMode" class="message-hover-actions">
+                            <button type="button" @@click.stop="openPromptShotting(message.content, message)">
+                                <i class="fa fa-bullseye" aria-hidden="true"></i>
+                                <span>@AR["AdminChat.PromptShotting"]</span>
+                            </button>
+                            <button type="button" @@click.stop="copyMessageContent(message.content)">
+                                <i class="el-icon-document-copy" aria-hidden="true"></i>
+                                <span>@AR["AdminChat.Copy"]</span>
+                            </button>
+                        </div>
                         <prompt-reference-content v-if="message.promptReferences && message.promptReferences.length"
                             class="message-text" :content="message.content" :references="message.promptReferences"
                             :ai-score="promptReferenceAiScorer(message)"></prompt-reference-content>
                         <div v-else class="message-text" v-html="formatMessageContent(message.content)"></div>
                         <div v-if="message.attachments && message.attachments.length" class="chat-message-attachments">
                             <button v-for="attachment in message.attachments" :key="attachment.relativePath"
-                                type="button" :title="'下载原文件：' + attachment.name"
-                                @@click="downloadWorkspaceEntry(attachment.relativePath)">
-                                <i :class="workspaceFileIcon(attachment.relativePath)"></i>
+                                type="button"
+                                :class="{ 'is-workspace-artifact': attachment.isWorkspaceArtifact }"
+                                :title="attachment.isWorkspaceArtifact || attachment.previewKind === '3d' ? ncfT('AdminChat.WorkspaceArtifact.Preview', attachment.name) : ncfT('AdminChat.WorkspaceArtifact.Download', attachment.name)"
+                                @@click="attachment.isWorkspaceArtifact || attachment.previewKind === '3d' ? openWorkspaceArtifact(attachment) : downloadWorkspaceEntry(attachment.relativePath)">
+                                <i :class="attachment.previewKind === '3d' ? 'fa fa-cube' : workspaceFileIcon(attachment.relativePath)"></i>
                                 <span>{{ attachment.name }}</span>
+                                <small v-if="attachment.isWorkspaceArtifact">Workspace</small>
                                 <small v-if="attachment.useVision">视觉</small>
                             </button>
                         </div>
@@ -1322,7 +1380,7 @@
                         <div :style="{ height: workspaceLineBottomPad + 'px' }"></div>
                     </div>
                     <iframe
-                        v-else-if="workspacePreviewIsDocument"
+                        v-else-if="workspacePreviewIsDocument || workspacePreviewIs3D"
                         class="chat-workspace-html-frame"
                         sandbox="allow-scripts"
                         :srcdoc="workspacePreviewSrcdoc"
@@ -1661,6 +1719,94 @@
             </el-button>
             <el-button size="small" :disabled="memoryBusy" @@click="memoryDialogVisible = false">@AR["Xncf.CloseDialog"]</el-button>
             <el-button v-if="memoryTab === 'edit' || memoryTab === 'system'" type="primary" size="small" :loading="memoryBusy" @@click="saveMemory">@AR["AdminChat.Memory.SaveChanges"]</el-button>
+        </div>
+    </el-dialog>
+
+    <button v-show="selectionShotVisible" type="button" class="chat-selection-shot"
+            :style="{ left: selectionShotLeft + 'px', top: selectionShotTop + 'px' }"
+            @@mousedown.prevent
+            @@click="openPromptShotting(selectionShotText)">
+        <i class="fa fa-bullseye" aria-hidden="true"></i>
+        <span>@AR["AdminChat.PromptShotting"]</span>
+    </button>
+
+    <el-dialog
+        :visible.sync="promptShottingVisible"
+        width="720px"
+        custom-class="prompt-shotting-dialog"
+        :close-on-click-modal="!promptShottingSaving"
+        :close-on-press-escape="!promptShottingSaving">
+        <div slot="title" class="prompt-shotting-title">
+            <i class="fa fa-bullseye" aria-hidden="true"></i>
+            <span>@AR["AdminChat.PromptShotting"]</span>
+        </div>
+        <el-form label-position="top" size="small" v-loading="promptShottingLoading">
+            <el-form-item label="@AR["AdminChat.PromptShotting.Range"]">
+                <el-radio-group v-model="promptShottingRangeMode">
+                    <el-radio label="existing">@AR["AdminChat.PromptShotting.ExistingRange"]</el-radio>
+                    <el-radio label="new">@AR["AdminChat.PromptShotting.NewRange"]</el-radio>
+                </el-radio-group>
+                <el-select v-if="promptShottingRangeMode === 'existing'"
+                           v-model="promptShottingRangeId"
+                           filterable
+                           class="prompt-shotting-range-select"
+                           :placeholder="ncfT('AdminChat.PromptShotting.SelectRange')">
+                    <el-option v-for="range in promptShottingRanges"
+                               :key="range.id"
+                               :label="range.name"
+                               :value="range.id">
+                        <span>{{ range.name }}</span>
+                        <small class="prompt-shotting-range-count">{{ ncfT('AdminChat.PromptShotting.RangeCount', range.promptCount) }}</small>
+                    </el-option>
+                </el-select>
+                <el-input v-else v-model="promptShottingNewRangeName"
+                          :placeholder="ncfT('AdminChat.PromptShotting.RangeNamePlaceholder')"></el-input>
+            </el-form-item>
+            <el-form-item label="@AR["AdminChat.PromptShotting.Prompt"]">
+                <el-input v-model="promptShottingPrompt"
+                          type="textarea"
+                          :autosize="{ minRows: 5, maxRows: 14 }"></el-input>
+            </el-form-item>
+            <el-form-item label="@AR["AdminChat.PromptShotting.Model"]">
+                <el-select v-model="promptShottingModelId" class="prompt-shotting-range-select">
+                    <el-option v-for="model in aiModelOptions"
+                               :key="model.id"
+                               :label="model.name"
+                               :value="model.id"></el-option>
+                </el-select>
+                <div class="prompt-shotting-defaults">
+                    <i class="el-icon-info" aria-hidden="true"></i>
+                    @AR["AdminChat.PromptShotting.DefaultParameters"]
+                </div>
+            </el-form-item>
+            <el-alert v-if="promptShottingResult"
+                      type="success"
+                      :closable="false"
+                      class="prompt-shotting-output"
+                      :title="ncfT('AdminChat.PromptShotting.Result', promptShottingResult.promptCode)">
+                <div class="prompt-shotting-result-meta">
+                    <span class="prompt-shotting-code">
+                        <i class="fa fa-code-fork" aria-hidden="true"></i>
+                        {{ promptShottingResult.promptCode }}
+                    </span>
+                    <el-button type="text" size="mini"
+                               @@click="openPromptShottingTarget(promptShottingResult.rangeId, promptShottingResult.promptItemId)">
+                        <i class="el-icon-position" aria-hidden="true"></i>
+                        @AR["AdminChat.PromptShotting.OpenTarget"]
+                    </el-button>
+                </div>
+                <div v-if="promptShottingResult.output" class="prompt-shotting-output-content">{{ promptShottingResult.output }}</div>
+            </el-alert>
+        </el-form>
+        <div slot="footer">
+            <el-button :disabled="promptShottingSaving" @@click="promptShottingVisible = false">@AR["Xncf.CloseDialog"]</el-button>
+            <el-button :loading="promptShottingSaving" @@click="savePromptShot(false)">
+                @AR["AdminChat.PromptShotting.Save"]
+            </el-button>
+            <el-button type="primary" :loading="promptShottingSaving" @@click="savePromptShot(true)">
+                <i class="fa fa-bullseye" aria-hidden="true"></i>
+                @AR["AdminChat.PromptShotting.SaveAndRun"]
+            </el-button>
         </div>
     </el-dialog>
 

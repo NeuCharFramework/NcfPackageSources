@@ -27,10 +27,10 @@ var app = new Vue({
         this.getListData()
     },
     mounted() {
-        
+
     },
     beforeDestroy() {
-        
+
     },
     methods: {
         // get layoutList data
@@ -41,8 +41,8 @@ var app = new Vue({
                 simulationData.push({
                     id: i + 1,
                     thumbnail: '',
-                    name: ncfST('Frontend.300'),
-                    description: ncfST('Frontend.267'),
+                    name: ncfST('Frontend.DynamicData.ThisIsTheLayoutName'),
+                    description: ncfST('Frontend.DynamicData.BindDataTableOneBindDataTableTwoBindDataTableThree'),
                     state: i % 2 ? 1 : 2,
                     operationVisible: false
                 })
@@ -71,10 +71,10 @@ var app = new Vue({
             let text = ''
             switch (valFormatt) {
                 case '1':
-                        text = ncfST('Frontend.301')
+                        text = ncfST('Frontend.DynamicData.Enabled')
                     break
                 case '2':
-                        text = ncfST('Frontend.302')
+                        text = ncfST('Frontend.DynamicData.DisabledAlternate')
                     break
             }
             return text
@@ -90,15 +90,15 @@ var app = new Vue({
             item.operationVisible = false
             // todo invokeinterface
             //English documentation comment.
-            this.$prompt(ncfST('Frontend.303'), ncfST('Frontend.044'), {
-                confirmButtonText: ncfST('Frontend.152'),
-                cancelButtonText: ncfST('Frontend.034'),
+            this.$prompt(ncfST('Frontend.DynamicData.LayoutName'), ncfST('Frontend.DynamicData.CopyLayout'), {
+                confirmButtonText: ncfST('Frontend.DynamicData.Confirm'),
+                cancelButtonText: ncfST('Frontend.DynamicData.Cancel'),
                 inputPattern: /^(?!\s*$).+/,
-                inputErrorMessage: ncfST('Frontend.304')
+                inputErrorMessage: ncfST('Frontend.DynamicData.LayoutNameIsIncorrect')
             }).then(({ value }) => {
                 this.$message({
                     type: 'success',
-                    message: ncfST('Frontend.305') + ' ' + value
+                    message: ncfST('Frontend.DynamicData.YourLayoutNameIs') + ' ' + value
                 });
             }).catch(() => {
                 //this.$message({

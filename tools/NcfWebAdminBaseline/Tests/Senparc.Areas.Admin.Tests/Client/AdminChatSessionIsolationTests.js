@@ -37,6 +37,8 @@ function createApp() {
     app.clearPendingAttachments = () => {};
     app.getSessionAiModelId = () => 0;
     app.normalizeAiModelId = value => value;
+    app.getSessionMode = () => 'simple';
+    app.setSessionMode = () => {};
     app.loadMemoryMode = async () => {};
     app.loadSessionList = async () => {};
     app.loadTrajectoryList = async () => {};
@@ -122,6 +124,25 @@ async function backgroundFailure() {
         assert.strictEqual(app.inputMessage, 'B draft', 'A failure must never restore A input into B.');
         assert.strictEqual(app.pendingAttachments[0].relativePath, 'B attachment');
     }
+}
+
+async function functionStyleMessageApi() {
+    const app = createApp();
+    app.currentSessionId = 1;
+    app.memoryReady = true;
+    app.inputMessage = 'A request';
+    const notices = [];
+    app.$message = options => notices.push(options);
+    app.consumeAdminChatStream = async () => {
+        throw new Error('当前 Ollama 模型不支持工具调用，请切换模式。');
+    };
+
+    await app.sendMessage();
+
+    assert.strictEqual(notices.length, 1);
+    assert.strictEqual(notices[0].type, 'error');
+    assert.match(notices[0].message, /Ollama 模型不支持工具调用/);
+    assert.strictEqual(app.inputMessage, 'A request');
 }
 
 async function staleLoads() {
@@ -366,6 +387,7 @@ async function createdSessionKeepsPromptReference() {
 async function run() {
     await streamingNavigation();
     await backgroundFailure();
+    await functionStyleMessageApi();
     await staleLoads();
     await lateHarnessResults();
     await streamRouting();

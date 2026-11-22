@@ -7,63 +7,63 @@
   <data name="Module.Workspace.MenuName" xml:space="preserve"><value>工作区</value></data>
   <data name="Module.Workspace.Description" xml:space="preserve"><value>通过跨平台 Workspace Agent 提供隔离文件访问、桌面编辑和安全运行时。</value></data>
   <data name="Area.Menu.Admin" xml:space="preserve"><value>工作区与远程编辑</value></data>
-  <data name="Frontend.001" xml:space="preserve"><value>扩展模块</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>远程编辑</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>安全远程工作区</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>我的工作区</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>其他管理员</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>当前租户合计</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>创建工作区</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>还没有工作区</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>其他管理员的工作区</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>连接指南</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>在 VS Code / Cursor 中连接</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>管理设备配对</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>文件</value></data>
-  <data name="Frontend.014" xml:space="preserve"><value>目录</value></data>
-  <data name="Frontend.015" xml:space="preserve"><value>已用</value></data>
-  <data name="Frontend.016" xml:space="preserve"><value>上传</value></data>
-  <data name="Frontend.017" xml:space="preserve"><value>清空</value></data>
-  <data name="Frontend.018" xml:space="preserve"><value>输入一个名字并点击「创建工作区」，即可在 AI 对话与远程编辑器之间安全共享文件。</value></data>
-  <data name="Frontend.019" xml:space="preserve"><value>当前租户没有其他管理员的工作区</value></data>
-  <data name="Frontend.020" xml:space="preserve"><value>设备尚未配对？前往设备会话页面完成配对。</value></data>
-  <data name="Frontend.021" xml:space="preserve"><value>刚刚</value></data>
-  <data name="Frontend.022" xml:space="preserve"><value>{0} 分钟前</value></data>
-  <data name="Frontend.023" xml:space="preserve"><value>{0} 小时前</value></data>
-  <data name="Frontend.024" xml:space="preserve"><value>{0} 天前</value></data>
-  <data name="Frontend.025" xml:space="preserve"><value>{0} 个月前</value></data>
-  <data name="Frontend.026" xml:space="preserve"><value>{0} 年前</value></data>
-  <data name="Frontend.027" xml:space="preserve"><value>无法取得 Workspace 上传限制。</value></data>
-  <data name="Frontend.028" xml:space="preserve"><value>{0} 为空或超过 {1}。</value></data>
-  <data name="Frontend.029" xml:space="preserve"><value>{0} 上传响应无效。</value></data>
-  <data name="Frontend.030" xml:space="preserve"><value>{0} 已上传到 Workspace/input。</value></data>
-  <data name="Frontend.031" xml:space="preserve"><value>Workspace 手动上传失败：</value></data>
-  <data name="Frontend.032" xml:space="preserve"><value>Workspace 手动上传失败。</value></data>
-  <data name="Frontend.033" xml:space="preserve"><value>这将清空其他管理员 #{0} 的工作区「{1}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。</value></data>
-  <data name="Frontend.034" xml:space="preserve"><value>这将清空你自己的工作区「{0}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。</value></data>
-  <data name="Frontend.035" xml:space="preserve"><value>工作区与远程编辑</value></data>
-  <data name="Frontend.036" xml:space="preserve"><value>文件保存在隔离目录中，AdminChat、VS Code 与 Cursor 共用。这里查看每个工作区的文件数量和容量，也可以清空内容并恢复成新建时的空目录。</value></data>
-  <data name="Frontend.037" xml:space="preserve"><value>当前账号 #{0} · 单个工作区配额 {1} · 文件数和容量不含工作区清单。</value></data>
-  <data name="Frontend.038" xml:space="preserve"><value>其他管理员只统计当前租户内不属于你的工作区。</value></data>
-  <data name="Frontend.039" xml:space="preserve"><value>{0} 个</value></data>
-  <data name="Frontend.040" xml:space="preserve"><value>给新任务起个名字，例如：订单系统重构</value></data>
-  <data name="Frontend.041" xml:space="preserve"><value>创建于 {0}</value></data>
-  <data name="Frontend.042" xml:space="preserve"><value>访问于 {0}</value></data>
-  <data name="Frontend.043" xml:space="preserve"><value>这些工作区不属于当前账号。超级管理员可以查看用量并清空内容，操作会记入日志。</value></data>
-  <data name="Frontend.044" xml:space="preserve"><value>这里只显示同一个租户里、所有者不是你的工作区。</value></data>
-  <data name="Frontend.045" xml:space="preserve"><value>管理员 #{0}</value></data>
-  <data name="Frontend.046" xml:space="preserve"><value>安装 “NCF Workspace” 扩展</value></data>
-  <data name="Frontend.047" xml:space="preserve"><value>运行 “NCF: 连接工作区”</value></data>
-  <data name="Frontend.048" xml:space="preserve"><value>输入站点地址，在浏览器中确认配对</value></data>
-  <data name="Frontend.049" xml:space="preserve"><value>选择工作区，文件将作为远程文件夹打开</value></data>
-  <data name="Frontend.050" xml:space="preserve"><value>工作区本身会保留。此操作不可撤销。</value></data>
-  <data name="Frontend.051" xml:space="preserve"><value>当前租户没有其他管理员的工作区</value></data>
-  <data name="Frontend.052" xml:space="preserve"><value>设备尚未配对？前往设备会话页面完成配对。</value></data>
-  <data name="Frontend.053" xml:space="preserve"><value>工作区</value></data>
-  <data name="Frontend.054" xml:space="preserve"><value>我的</value></data>
-  <data name="Frontend.055" xml:space="preserve"><value>其他管理员</value></data>
-  <data name="Frontend.056" xml:space="preserve"><value>创建工作区</value></data>
-  <data name="Frontend.057" xml:space="preserve"><value>当前账号</value></data>
+  <data name="Frontend.Workspace.ExtensionModules" xml:space="preserve"><value>扩展模块</value></data>
+  <data name="Frontend.Workspace.RemoteEditing" xml:space="preserve"><value>远程编辑</value></data>
+  <data name="Frontend.Workspace.SecureRemoteWorkspace" xml:space="preserve"><value>安全远程工作区</value></data>
+  <data name="Frontend.Workspace.MyWorkspaces" xml:space="preserve"><value>我的工作区</value></data>
+  <data name="Frontend.Workspace.OtherAdministrators" xml:space="preserve"><value>其他管理员</value></data>
+  <data name="Frontend.Workspace.CurrentTenantTotal" xml:space="preserve"><value>当前租户合计</value></data>
+  <data name="Frontend.Workspace.CreateWorkspace" xml:space="preserve"><value>创建工作区</value></data>
+  <data name="Frontend.Workspace.NoWorkspacesYet" xml:space="preserve"><value>还没有工作区</value></data>
+  <data name="Frontend.Workspace.OtherAdministratorsWorkspaces" xml:space="preserve"><value>其他管理员的工作区</value></data>
+  <data name="Frontend.Workspace.ConnectionGuide" xml:space="preserve"><value>连接指南</value></data>
+  <data name="Frontend.Workspace.ConnectInVSCodeCursor" xml:space="preserve"><value>在 VS Code / Cursor 中连接</value></data>
+  <data name="Frontend.Workspace.ManageDevicePairing" xml:space="preserve"><value>管理设备配对</value></data>
+  <data name="Frontend.Workspace.Files" xml:space="preserve"><value>文件</value></data>
+  <data name="Frontend.Workspace.Directories" xml:space="preserve"><value>目录</value></data>
+  <data name="Frontend.Workspace.Used" xml:space="preserve"><value>已用</value></data>
+  <data name="Frontend.Workspace.Upload" xml:space="preserve"><value>上传</value></data>
+  <data name="Frontend.Workspace.Clear" xml:space="preserve"><value>清空</value></data>
+  <data name="Frontend.Workspace.EnterANameAndChooseCreateWorkspaceToShareFilesSecurelyBetween" xml:space="preserve"><value>输入一个名字并点击「创建工作区」，即可在 AI 对话与远程编辑器之间安全共享文件。</value></data>
+  <data name="Frontend.Workspace.NoOtherAdministratorWorkspacesExistInTheCurrentTenant" xml:space="preserve"><value>当前租户没有其他管理员的工作区</value></data>
+  <data name="Frontend.Workspace.DeviceNotPairedOpenDeviceSessionsToCompletePairing" xml:space="preserve"><value>设备尚未配对？前往设备会话页面完成配对。</value></data>
+  <data name="Frontend.Workspace.JustNow" xml:space="preserve"><value>刚刚</value></data>
+  <data name="Frontend.Workspace.ValueMinutesAgo" xml:space="preserve"><value>{0} 分钟前</value></data>
+  <data name="Frontend.Workspace.ValueHoursAgo" xml:space="preserve"><value>{0} 小时前</value></data>
+  <data name="Frontend.Workspace.ValueDaysAgo" xml:space="preserve"><value>{0} 天前</value></data>
+  <data name="Frontend.Workspace.ValueMonthsAgo" xml:space="preserve"><value>{0} 个月前</value></data>
+  <data name="Frontend.Workspace.ValueYearsAgo" xml:space="preserve"><value>{0} 年前</value></data>
+  <data name="Frontend.Workspace.CouldNotReadTheWorkspaceUploadLimit" xml:space="preserve"><value>无法取得 Workspace 上传限制。</value></data>
+  <data name="Frontend.Workspace.ValueIsEmptyOrExceedsValue" xml:space="preserve"><value>{0} 为空或超过 {1}。</value></data>
+  <data name="Frontend.Workspace.TheUploadResponseForValueIsInvalid" xml:space="preserve"><value>{0} 上传响应无效。</value></data>
+  <data name="Frontend.Workspace.ValueWasUploadedToWorkspaceInput" xml:space="preserve"><value>{0} 已上传到 Workspace/input。</value></data>
+  <data name="Frontend.Workspace.ManualWorkspaceUploadFailed" xml:space="preserve"><value>Workspace 手动上传失败：</value></data>
+  <data name="Frontend.Workspace.ManualWorkspaceUploadFailedAlternate" xml:space="preserve"><value>Workspace 手动上传失败。</value></data>
+  <data name="Frontend.Workspace.ThisWillClearAdministratorValueSWorkspaceValueFilesWillBeDeleted" xml:space="preserve"><value>这将清空其他管理员 #{0} 的工作区「{1}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。</value></data>
+  <data name="Frontend.Workspace.ThisWillClearYourWorkspaceValueFilesWillBeDeletedAndInput" xml:space="preserve"><value>这将清空你自己的工作区「{0}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。</value></data>
+  <data name="Frontend.Workspace.WorkspacesAndRemoteEditing" xml:space="preserve"><value>工作区与远程编辑</value></data>
+  <data name="Frontend.Workspace.FilesAreStoredInIsolatedDirectoriesSharedByAdminChatVSCodeAnd" xml:space="preserve"><value>文件保存在隔离目录中，AdminChat、VS Code 与 Cursor 共用。这里查看每个工作区的文件数量和容量，也可以清空内容并恢复成新建时的空目录。</value></data>
+  <data name="Frontend.Workspace.CurrentAccountValuePerWorkspaceQuotaValueFileCountsAndUsageExclude" xml:space="preserve"><value>当前账号 #{0} · 单个工作区配额 {1} · 文件数和容量不含工作区清单。</value></data>
+  <data name="Frontend.Workspace.OtherAdministratorsIncludeOnlyWorkspacesInTheCurrentTenantThatAreNot" xml:space="preserve"><value>其他管理员只统计当前租户内不属于你的工作区。</value></data>
+  <data name="Frontend.Workspace.Value" xml:space="preserve"><value>{0} 个</value></data>
+  <data name="Frontend.Workspace.NameTheNewTaskForExampleOrderSystemRefactor" xml:space="preserve"><value>给新任务起个名字，例如：订单系统重构</value></data>
+  <data name="Frontend.Workspace.CreatedValue" xml:space="preserve"><value>创建于 {0}</value></data>
+  <data name="Frontend.Workspace.AccessedValue" xml:space="preserve"><value>访问于 {0}</value></data>
+  <data name="Frontend.Workspace.TheseWorkspacesAreNotOwnedByTheCurrentAccountSuperAdministratorsCan" xml:space="preserve"><value>这些工作区不属于当前账号。超级管理员可以查看用量并清空内容，操作会记入日志。</value></data>
+  <data name="Frontend.Workspace.OnlyWorkspacesInTheSameTenantWithAnotherOwnerAreShownHere" xml:space="preserve"><value>这里只显示同一个租户里、所有者不是你的工作区。</value></data>
+  <data name="Frontend.Workspace.AdministratorValue" xml:space="preserve"><value>管理员 #{0}</value></data>
+  <data name="Frontend.Workspace.InstallTheNCFWorkspaceExtension" xml:space="preserve"><value>安装 “NCF Workspace” 扩展</value></data>
+  <data name="Frontend.Workspace.RunNCFConnectWorkspace" xml:space="preserve"><value>运行 “NCF: 连接工作区”</value></data>
+  <data name="Frontend.Workspace.EnterTheSiteAddressAndConfirmPairingInTheBrowser" xml:space="preserve"><value>输入站点地址，在浏览器中确认配对</value></data>
+  <data name="Frontend.Workspace.ChooseAWorkspaceItsFilesOpenAsARemoteFolder" xml:space="preserve"><value>选择工作区，文件将作为远程文件夹打开</value></data>
+  <data name="Frontend.Workspace.TheWorkspaceItselfRemainsThisActionCannotBeUndone" xml:space="preserve"><value>工作区本身会保留。此操作不可撤销。</value></data>
+
+
+  <data name="Frontend.Workspace.Workspace" xml:space="preserve"><value>工作区</value></data>
+  <data name="Frontend.Workspace.Mine" xml:space="preserve"><value>我的</value></data>
+  <data name="Frontend.Workspace.OtherAdministrator" xml:space="preserve"><value>其他管理员</value></data>
+
+  <data name="Frontend.Workspace.CurrentAccount" xml:space="preserve"><value>当前账号</value></data>
   <data name="Server.IdentityInvalid" xml:space="preserve"><value>当前管理员身份无效，请重新登录。||The current administrator identity is invalid. Please sign in again.</value></data>
   <data name="Server.UsageReadFailed" xml:space="preserve"><value>读取工作区用量失败，请稍后重试。||Failed to read Workspace usage. Please retry later.</value></data>
   <data name="Server.NameRequired" xml:space="preserve"><value>请输入工作区名称。||Enter a Workspace name.</value></data>
@@ -73,7 +73,7 @@
   <data name="Server.SelectionRequired" xml:space="preserve"><value>请选择要清空的工作区。||Select a Workspace to clear.</value></data>
   <data name="Server.NotFound" xml:space="preserve"><value>工作区不存在，或不在当前账号的管理范围内。||The Workspace does not exist or is outside the current administrator's scope.</value></data>
   <data name="Server.ClearFailed" xml:space="preserve"><value>清空工作区失败，请稍后重试。||Failed to clear the Workspace. Please retry later.</value></data>
-  <data name="Frontend.058" xml:space="preserve"><value>{0} 个文件 ·</value></data>
-  <data name="Frontend.059" xml:space="preserve"><value>当前账号 #{0} · 单个工作区配额 · 文件数和容量不含工作区清单。</value></data>
-  <data name="Frontend.060" xml:space="preserve"><value>{0} 个文件 · {1}</value></data>
+  <data name="Frontend.Workspace.ValueFiles" xml:space="preserve"><value>{0} 个文件 ·</value></data>
+  <data name="Frontend.Workspace.CurrentAccountValuePerWorkspaceQuotaFileCountAndCapacityExcludeThe" xml:space="preserve"><value>当前账号 #{0} · 单个工作区配额 · 文件数和容量不含工作区清单。</value></data>
+  <data name="Frontend.Workspace.ValueFilesValue" xml:space="preserve"><value>{0} 个文件 · {1}</value></data>
 </root>

@@ -996,7 +996,7 @@ public sealed class NeuCharWorkflowEngine
                     progress,
                     item.node,
                     "running",
-                    NeuCharWorkflowResource.Get("Frontend.398", "开始执行节点。"),
+                    NeuCharWorkflowResource.Get("Frontend.NeuCharWorkflow.StartingNodeExecution", "开始执行节点。"),
                     null,
                     input: replayInputText);
                 var objectReferenceKey = item.node.Type is "agent" or "agent-group" or "a2a" or "function"
@@ -1048,7 +1048,7 @@ public sealed class NeuCharWorkflowEngine
                     progress,
                     node,
                     "success",
-                    NeuCharWorkflowResource.Get("Frontend.399", "节点执行完成。"),
+                    NeuCharWorkflowResource.Get("Frontend.NeuCharWorkflow.NodeExecutionCompleted", "节点执行完成。"),
                     outputText,
                     JsonSerializer.Serialize(outputSchema, JsonOptions),
                     replayInputText,

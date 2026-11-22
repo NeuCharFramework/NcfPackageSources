@@ -212,13 +212,17 @@ public sealed class AdminChatStreamController : ControllerBase
                 clientConnected = await EmitLiveAsync(run, liveEvent, clientConnected).ConfigureAwait(false);
 
             var result = await generationTask.ConfigureAwait(false);
+            var workspaceArtifacts = await _messageService
+                .CollectWorkspaceArtifactsAsync(request.SessionId, result.Harness)
+                .ConfigureAwait(false);
             var assistantMessage = await _messageService.AddMessageAsync(
                 request.SessionId,
                 ChatMessageRoleType.Assistant,
                 result.Response,
                 result.ModelIdentifier,
                 result.Harness?.TrajectoryId,
-                result.Harness?.TrajectorySequence);
+                result.Harness?.TrajectorySequence,
+                workspaceArtifacts);
 
             if (_eventBus != null)
             {

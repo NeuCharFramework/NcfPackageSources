@@ -1,3 +1,22 @@
+window.ncfShowAdminChatMessage = window.ncfShowAdminChatMessage || function(vm, type, message) {
+  const text = typeof message === 'string' ? message : message && message.message
+    ? message.message : String(message || '');
+  const messageApi = vm && vm.$message;
+  if (messageApi && typeof messageApi[type] === 'function') {
+    messageApi[type](text);
+    return;
+  }
+  if (typeof messageApi === 'function') {
+    messageApi({ type, message: text });
+    return;
+  }
+  if (typeof ELEMENT !== 'undefined' && ELEMENT && typeof ELEMENT.Message === 'function') {
+    ELEMENT.Message({ type, message: text });
+    return;
+  }
+  console.error(text);
+};
+
 window.ChatLauncherMixin = {
   data() {
     return {
@@ -620,10 +639,13 @@ window.ChatLauncherMixin = {
           return;
         }
 
-        this.$message.error((response.data && response.data.errorMessage) || ncfT('AdminChat.CreateSessionFailed'));
+        window.ncfShowAdminChatMessage(
+          this,
+          'error',
+          (response.data && response.data.errorMessage) || ncfT('AdminChat.CreateSessionFailed'));
       } catch (error) {
         console.error('创建会话失败:', error);
-        this.$message.error(ncfT('AdminChat.CreateSessionFailedRetry'));
+        window.ncfShowAdminChatMessage(this, 'error', ncfT('AdminChat.CreateSessionFailedRetry'));
       } finally {
         this.isCreatingSession = false;
       }

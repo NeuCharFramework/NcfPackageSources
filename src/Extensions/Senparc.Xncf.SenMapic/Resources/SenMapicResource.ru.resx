@@ -88,7 +88,7 @@
     <value>Глубина||Введите максимальную глубину обхода</value>
   </data>
   <data name="Parameter.SenMapic.PageCount" xml:space="preserve">
-    <value>Число страниц||Введите максимальное число страниц для обхода</value>
+    <value>Число страниц||По умолчанию 20 страниц, жёсткий лимит — 100 страниц</value>
   </data>
   <data name="Area.Extensions" xml:space="preserve">
     <value>Расширения</value>
@@ -252,31 +252,31 @@
   <data name="Message.DeleteFailed" xml:space="preserve">
     <value>Не удалось удалить</value>
   </data>
-  <data name="Frontend.001" xml:space="preserve">
+  <data name="Frontend.SenMapic.ExceptionThrowTestParametersPassedValueValue" xml:space="preserve">
     <value>Тест выброса исключения, передаваемые параметры: {0} {1}</value>
   </data>
-  <data name="Frontend.002" xml:space="preserve">
+  <data name="Frontend.SenMapic.DivisorCannotBeZero" xml:space="preserve">
     <value>Делитель не может быть равен 0!</value>
   </data>
-  <data name="Frontend.003" xml:space="preserve">
+  <data name="Frontend.SenMapic.UnknownOperatorValue" xml:space="preserve">
     <value>Неизвестный оператор: {0}</value>
   </data>
-  <data name="Frontend.004" xml:space="preserve">
+  <data name="Frontend.SenMapic.UnknownOperator" xml:space="preserve">
     <value>Неизвестный оператор</value>
   </data>
-  <data name="Frontend.005" xml:space="preserve">
+  <data name="Frontend.SenMapic.EnterAValidURL" xml:space="preserve">
     <value>Укажите правильный URL!</value>
   </data>
-  <data name="Frontend.006" xml:space="preserve">
+  <data name="Frontend.SenMapic.TheTargetHostResolvedToANonPublicAddressTheConnectionWas" xml:space="preserve">
     <value>Целевой узел разрешился в непубличный адрес. Соединение отклонено.</value>
   </data>
-  <data name="Frontend.007" xml:space="preserve">
+  <data name="Frontend.SenMapic.UnableToConnectToTheTargetHostThatPassedThePublicAddress" xml:space="preserve">
     <value>Не удаётся подключиться к целевому узлу, прошедшему проверку публичного адреса.</value>
   </data>
-  <data name="Frontend.008" xml:space="preserve">
+  <data name="Frontend.SenMapic.TheTargetURLIsNotAllowed" xml:space="preserve">
     <value>Доступ к целевому URL запрещён.</value>
   </data>
-  <data name="Frontend.009" xml:space="preserve">
+  <data name="Frontend.SenMapic.TheRedirectTargetURLIsNotAllowed" xml:space="preserve">
     <value>Доступ к целевому URL перенаправления запрещён.</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
@@ -289,7 +289,7 @@
     <value>Веб-краулер</value>
   </data>
   <data name="Function.SenMapic.Crawl.Description" xml:space="preserve">
-    <value>Извлекает информацию с веб-страниц</value>
+    <value>Извлекает данные с веб-страниц; по умолчанию 20 страниц, максимум 100 страниц за вызов</value>
   </data>
 
 </root>

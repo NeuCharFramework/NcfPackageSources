@@ -1,0 +1,125 @@
+.trace-page,
+.trace-date-card,
+.trace-table-card,
+.trace-filter-card {
+    min-width: 0;
+}
+
+.trace-redacted-notice,
+.trace-summary,
+.trace-filter-card,
+.trace-date-card {
+    margin-bottom: 16px;
+}
+
+.trace-summary .el-card__body {
+    padding: 16px 20px;
+}
+
+.trace-summary__label {
+    color: var(--el-color-text-secondary, #606266);
+    font-size: 13px;
+}
+
+.trace-summary__value {
+    margin-top: 8px;
+    color: #303133;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.trace-summary__value--danger {
+    color: #f56c6c;
+}
+
+.trace-filter-card .el-col {
+    margin-bottom: 12px;
+}
+
+.trace-filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0 !important;
+}
+
+.trace-full-width {
+    width: 100%;
+}
+
+.trace-preview {
+    overflow: hidden;
+    color: #606266;
+    line-height: 1.5;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.trace-date-link {
+    color: #409eff;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    font-weight: 600;
+}
+
+.trace-date-link .el-icon-document {
+    margin-right: 6px;
+}
+
+.trace-detail {
+    padding: 0 20px 28px;
+}
+
+.trace-detail__meta {
+    align-items: center;
+    color: #909399;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.trace-detail h3,
+.trace-detail h4 {
+    margin: 18px 0 10px;
+}
+
+.trace-detail pre {
+    background: #f7f8fa;
+    border: 1px solid #ebeef5;
+    border-radius: 4px;
+    color: #303133;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    max-height: 360px;
+    margin: 0;
+    overflow: auto;
+    padding: 12px 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.trace-detail__heading {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.trace-table-card .el-table tbody tr {
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .trace-summary .el-col {
+        margin-bottom: 12px;
+    }
+
+    .trace-filter-actions {
+        justify-content: flex-start;
+    }
+
+    .trace-detail {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}

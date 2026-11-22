@@ -450,6 +450,10 @@
   <data name="AdminChat.Done" xml:space="preserve"><value>完了</value></data>
   <data name="AdminChat.MenuHierarchy" xml:space="preserve"><value>メニュー階層</value></data>
   <data name="AdminChat.NoPreview" xml:space="preserve"><value>プレビューできる詳細はありません</value></data>
+  <data name="AdminChat.ReferenceWorkflowEnabled" xml:space="preserve"><value>有効な Workflow</value></data>
+  <data name="AdminChat.WorkflowParameters" xml:space="preserve"><value>Workflow パラメーター</value></data>
+  <data name="AdminChat.WorkflowNoParameters" xml:space="preserve"><value>この Workflow には入力パラメーターがありません</value></data>
+  <data name="AdminChat.OptionalParameter" xml:space="preserve"><value>任意のパラメーター</value></data>
   <data name="AdminChat.SelectedCount" xml:space="preserve"><value>{0} 件選択</value></data>
   <data name="AdminChat.Copy" xml:space="preserve"><value>コピー</value></data>
   <data name="AdminChat.ClearSelection" xml:space="preserve"><value>選択をクリア</value></data>
@@ -703,6 +707,26 @@
   <data name="Trace.Content" xml:space="preserve"><value>コンテンツ</value></data>
   <data name="Trace.ReturnResult" xml:space="preserve"><value>戻り値</value></data>
   <data name="Trace.PostData" xml:space="preserve"><value>POST データ</value></data>
+  <data name="Trace.TotalRecords" xml:space="preserve"><value>総レコード数</value></data>
+  <data name="Trace.FileSize" xml:space="preserve"><value>ファイルサイズ</value></data>
+  <data name="Trace.LastUpdated" xml:space="preserve"><value>最終更新</value></data>
+  <data name="Trace.Preview" xml:space="preserve"><value>プレビュー</value></data>
+  <data name="Trace.Details" xml:space="preserve"><value>詳細</value></data>
+  <data name="Trace.Refresh" xml:space="preserve"><value>更新</value></data>
+  <data name="Trace.Reset" xml:space="preserve"><value>リセット</value></data>
+  <data name="Trace.Loading" xml:space="preserve"><value>ログを読み込み中</value></data>
+  <data name="Trace.LoadFailed" xml:space="preserve"><value>ログを読み込めませんでした。もう一度お試しください。</value></data>
+  <data name="Trace.NoData" xml:space="preserve"><value>一致するログがありません</value></data>
+  <data name="Trace.RedactedNotice" xml:space="preserve"><value>トークン、パスワード、Cookie、認証情報などの機密値はマスク表示されます。</value></data>
+  <data name="Trace.Copy" xml:space="preserve"><value>コピー</value></data>
+  <data name="Trace.Copied" xml:space="preserve"><value>コピーしました</value></data>
+  <data name="Trace.CopyFailed" xml:space="preserve"><value>コピーに失敗しました。ブラウザーの権限を確認してください。</value></data>
+  <data name="Trace.ExceptionStackTrace" xml:space="preserve"><value>スタックトレース</value></data>
+  <data name="Trace.TypeNormal" xml:space="preserve"><value>通常</value></data>
+  <data name="Trace.TypeAPI" xml:space="preserve"><value>API</value></data>
+  <data name="Trace.TypePostRequest" xml:space="preserve"><value>POST リクエスト</value></data>
+  <data name="Trace.TypeGetRequest" xml:space="preserve"><value>GET リクエスト</value></data>
+  <data name="Trace.TypeException" xml:space="preserve"><value>例外</value></data>
   <data name="AdminChat.AddReferenceModule" xml:space="preserve"><value>参照モジュールを追加</value></data>
   <data name="AdminChat.SearchModulePlaceholder" xml:space="preserve"><value>モジュール名 / 説明 / UID を検索</value></data>
   <data name="AdminChat.SelectFiltered" xml:space="preserve"><value>絞り込み結果をすべて選択</value></data>
@@ -712,114 +736,114 @@
   <data name="AdminChat.NoMenuOrFunctions" xml:space="preserve"><value>このモジュールには利用可能なメニューまたは機能がありません。</value></data>
   <data name="AdminChat.NoMatchingModules" xml:space="preserve"><value>一致するモジュールはありません</value></data>
   <data name="AdminChat.ConfirmAdd" xml:space="preserve"><value>追加を確定</value></data>
-  <data name="Frontend.001" xml:space="preserve"><value>拡張モジュール</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>ホーム</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>データベース操作例</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>Add</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Add</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>Edit</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>Delete</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>キャンセル</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>Confirm</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>Confirm</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>保存する</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>閉じる</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>戻る</value></data>
-  <data name="Frontend.014" xml:space="preserve"><value>Search</value></data>
-  <data name="Frontend.015" xml:space="preserve"><value>Search</value></data>
-  <data name="Frontend.016" xml:space="preserve"><value>リセット</value></data>
-  <data name="Frontend.017" xml:space="preserve"><value>Refresh</value></data>
-  <data name="Frontend.018" xml:space="preserve"><value>アクション</value></data>
-  <data name="Frontend.019" xml:space="preserve"><value>Name</value></data>
-  <data name="Frontend.020" xml:space="preserve"><value>Kind</value></data>
-  <data name="Frontend.021" xml:space="preserve"><value>ステータス</value></data>
-  <data name="Frontend.022" xml:space="preserve"><value>メモ</value></data>
-  <data name="Frontend.023" xml:space="preserve"><value>Description</value></data>
-  <data name="Frontend.024" xml:space="preserve"><value>Details</value></data>
-  <data name="Frontend.025" xml:space="preserve"><value>Configure</value></data>
-  <data name="Frontend.026" xml:space="preserve"><value>管理する</value></data>
-  <data name="Frontend.027" xml:space="preserve"><value>リスト</value></data>
-  <data name="Frontend.028" xml:space="preserve"><value>アップロード</value></data>
-  <data name="Frontend.029" xml:space="preserve"><value>ダウンロード</value></data>
-  <data name="Frontend.030" xml:space="preserve"><value>インポート</value></data>
-  <data name="Frontend.031" xml:space="preserve"><value>エクスポート</value></data>
-  <data name="Frontend.032" xml:space="preserve"><value>Enabled</value></data>
-  <data name="Frontend.033" xml:space="preserve"><value>Disabled</value></data>
-  <data name="Frontend.034" xml:space="preserve"><value>すべて</value></data>
-  <data name="Frontend.035" xml:space="preserve"><value>データなし</value></data>
-  <data name="Frontend.036" xml:space="preserve"><value>コンテンツなし</value></data>
-  <data name="Frontend.037" xml:space="preserve"><value>選択してください</value></data>
-  <data name="Frontend.038" xml:space="preserve"><value>記入してください</value></data>
-  <data name="Frontend.039" xml:space="preserve"><value>入力してください</value></data>
-  <data name="Frontend.040" xml:space="preserve"><value>Added time</value></data>
-  <data name="Frontend.041" xml:space="preserve"><value>Started</value></data>
-  <data name="Frontend.042" xml:space="preserve"><value>Finished</value></data>
-  <data name="Frontend.043" xml:space="preserve"><value>Created</value></data>
-  <data name="Frontend.044" xml:space="preserve"><value>Updated at</value></data>
-  <data name="Frontend.045" xml:space="preserve"><value>ファイル名</value></data>
-  <data name="Frontend.046" xml:space="preserve"><value>ファイルサイズ</value></data>
-  <data name="Frontend.047" xml:space="preserve"><value>アップロード日時</value></data>
-  <data name="Frontend.048" xml:space="preserve"><value>選択を削除</value></data>
-  <data name="Frontend.049" xml:space="preserve"><value>ファイルを追加</value></data>
-  <data name="Frontend.050" xml:space="preserve"><value>ファイルを選択</value></data>
-  <data name="Frontend.051" xml:space="preserve"><value>前へ</value></data>
-  <data name="Frontend.052" xml:space="preserve"><value>次へ</value></data>
-  <data name="Frontend.053" xml:space="preserve"><value>成功しました</value></data>
-  <data name="Frontend.054" xml:space="preserve"><value>Failed</value></data>
-  <data name="Frontend.055" xml:space="preserve"><value>Success</value></data>
-  <data name="Frontend.056" xml:space="preserve"><value>エラー</value></data>
-  <data name="Frontend.057" xml:space="preserve"><value>読み込み失敗</value></data>
-  <data name="Frontend.058" xml:space="preserve"><value>追加に成功しました</value></data>
-  <data name="Frontend.059" xml:space="preserve"><value>追加に失敗しました</value></data>
-  <data name="Frontend.060" xml:space="preserve"><value>Updated successfully</value></data>
-  <data name="Frontend.061" xml:space="preserve"><value>編集に失敗しました</value></data>
-  <data name="Frontend.062" xml:space="preserve"><value>削除しました</value></data>
-  <data name="Frontend.063" xml:space="preserve"><value>削除に失敗しました</value></data>
-  <data name="Frontend.064" xml:space="preserve"><value>アップロード完了</value></data>
-  <data name="Frontend.065" xml:space="preserve"><value>アップロード失敗</value></data>
-  <data name="Frontend.066" xml:space="preserve"><value>コピーしました</value></data>
-  <data name="Frontend.067" xml:space="preserve"><value>コピー失敗</value></data>
-  <data name="Frontend.068" xml:space="preserve"><value>Notice</value></data>
-  <data name="Frontend.069" xml:space="preserve"><value>Warning</value></data>
-  <data name="Frontend.070" xml:space="preserve"><value>エラー</value></data>
-  <data name="Frontend.071" xml:space="preserve"><value>はい</value></data>
-  <data name="Frontend.072" xml:space="preserve"><value>いいえ</value></data>
-  <data name="Frontend.073" xml:space="preserve"><value>Enabled</value></data>
-  <data name="Frontend.074" xml:space="preserve"><value>Unknown</value></data>
-  <data name="Frontend.075" xml:space="preserve"><value>Not set</value></data>
-  <data name="Frontend.076" xml:space="preserve"><value>記録なし</value></data>
-  <data name="Frontend.077" xml:space="preserve"><value>キーワードを入力してください</value></data>
-  <data name="Frontend.078" xml:space="preserve"><value>種類を選択</value></data>
-  <data name="Frontend.079" xml:space="preserve"><value>ステータスを選択</value></data>
-  <data name="Frontend.080" xml:space="preserve"><value>Create</value></data>
-  <data name="Frontend.081" xml:space="preserve"><value>Submit</value></data>
-  <data name="Frontend.082" xml:space="preserve"><value>View</value></data>
-  <data name="Frontend.083" xml:space="preserve"><value>デフォルトに設定</value></data>
-  <data name="Frontend.084" xml:space="preserve"><value>テスト</value></data>
-  <data name="Frontend.085" xml:space="preserve"><value>接続しました</value></data>
-  <data name="Frontend.086" xml:space="preserve"><value>Connection failed</value></data>
-  <data name="Frontend.087" xml:space="preserve"><value>パスワードは必須です！</value></data>
-  <data name="Frontend.088" xml:space="preserve"><value>{0} は重複しています。</value></data>
-  <data name="Frontend.089" xml:space="preserve"><value>管理者は自分自身を削除できません！</value></data>
-  <data name="Frontend.090" xml:space="preserve"><value>管理者が存在しません！</value></data>
-  <data name="Frontend.091" xml:space="preserve"><value>削除しました！</value></data>
-  <data name="Frontend.092" xml:space="preserve"><value>WeChatログファイルが存在しません：</value></data>
-  <data name="Frontend.093" xml:space="preserve"><value>{0} は 16 文字より長くする必要があります！</value></data>
-  <data name="Frontend.094" xml:space="preserve"><value>現在のセッションには、XNCF モジュールが関連付けられていません。</value></data>
-  <data name="Frontend.095" xml:space="preserve"><value>一致するモジュールが見つかりません：「{0}」。先に GetSessionModuleList を呼び出し、現在のセッションのモジュール一覧を確認してください。</value></data>
-  <data name="Frontend.096" xml:space="preserve"><value>モジュールが見つかりません：「{0}」。先に GetSessionModuleList を呼び出し、利用できるモジュールを確認してください。</value></data>
-  <data name="Frontend.097" xml:space="preserve"><value>モジュール {0} の実行時登録が見つからないため、データベース情報を読み取れません。</value></data>
-  <data name="Frontend.098" xml:space="preserve"><value>システムに登録済みのモジュールはありません。</value></data>
-  <data name="Frontend.099" xml:space="preserve"><value>SenparcAiSetting を読み取れませんでした。appsettings.json の設定を確認してください。</value></data>
-  <data name="Frontend.100" xml:space="preserve"><value>SenparcAiSetting.AiPlatform はまだ UnSet です。先に appsettings.json で利用できるプラットフォームを設定してください。</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>このシステムでは AIKernel モジュールが未インストール、または無効のため、指定した AI モデルへ切り替えられません。</value></data>
-  <data name="Frontend.102" xml:space="preserve"><value>AIModelService を解決できなかったため、指定した AI モデルを読み込めません。</value></data>
-  <data name="Frontend.103" xml:space="preserve"><value>選択した AI モデルは存在しません: {0}</value></data>
-  <data name="Frontend.104" xml:space="preserve"><value>選択中の AI モデルは Chat タイプではありません：{0}</value></data>
-  <data name="Frontend.105" xml:space="preserve"><value>現在のユーザーはログインしていないため、更新できません。</value></data>
-  <data name="Frontend.106" xml:space="preserve"><value>ユーザー情報が存在しません！</value></data>
-  <data name="Frontend.107" xml:space="preserve"><value>ユーザー名が存在しないか、パスワードが正しくありません：{0}！</value></data>
-  <data name="Frontend.108" xml:space="preserve"><value>ユーザー名が存在しないか、パスワードが正しくありません！</value></data>
+  <data name="Frontend.Admin.ExtensionModules" xml:space="preserve"><value>拡張モジュール</value></data>
+  <data name="Frontend.Admin.Home" xml:space="preserve"><value>ホーム</value></data>
+  <data name="Frontend.Admin.DatabaseSample" xml:space="preserve"><value>データベース操作例</value></data>
+  <data name="Frontend.Admin.Add" xml:space="preserve"><value>Add</value></data>
+  <data name="Frontend.Admin.AddAlternate" xml:space="preserve"><value>Add</value></data>
+  <data name="Frontend.Admin.Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Frontend.Admin.Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Frontend.Admin.Cancel" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="Frontend.Admin.Confirm" xml:space="preserve"><value>Confirm</value></data>
+  <data name="Frontend.Admin.ConfirmAlternate" xml:space="preserve"><value>Confirm</value></data>
+  <data name="Frontend.Admin.Save" xml:space="preserve"><value>保存する</value></data>
+  <data name="Frontend.Admin.Close" xml:space="preserve"><value>閉じる</value></data>
+  <data name="Frontend.Admin.Back" xml:space="preserve"><value>戻る</value></data>
+  <data name="Frontend.Admin.Search" xml:space="preserve"><value>Search</value></data>
+  <data name="Frontend.Admin.SearchAlternate" xml:space="preserve"><value>Search</value></data>
+  <data name="Frontend.Admin.Reset" xml:space="preserve"><value>リセット</value></data>
+  <data name="Frontend.Admin.Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Frontend.Admin.Actions" xml:space="preserve"><value>アクション</value></data>
+  <data name="Frontend.Admin.Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Frontend.Admin.Kind" xml:space="preserve"><value>Kind</value></data>
+  <data name="Frontend.Admin.Status" xml:space="preserve"><value>ステータス</value></data>
+  <data name="Frontend.Admin.Notes" xml:space="preserve"><value>メモ</value></data>
+  <data name="Frontend.Admin.Description" xml:space="preserve"><value>Description</value></data>
+  <data name="Frontend.Admin.Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Frontend.Admin.Configure" xml:space="preserve"><value>Configure</value></data>
+  <data name="Frontend.Admin.Manage" xml:space="preserve"><value>管理する</value></data>
+  <data name="Frontend.Admin.List" xml:space="preserve"><value>リスト</value></data>
+  <data name="Frontend.Admin.Upload" xml:space="preserve"><value>アップロード</value></data>
+  <data name="Frontend.Admin.Download" xml:space="preserve"><value>ダウンロード</value></data>
+  <data name="Frontend.Admin.Import" xml:space="preserve"><value>インポート</value></data>
+  <data name="Frontend.Admin.Export" xml:space="preserve"><value>エクスポート</value></data>
+  <data name="Frontend.Admin.Enabled" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Frontend.Admin.Disabled" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Frontend.Admin.All" xml:space="preserve"><value>すべて</value></data>
+  <data name="Frontend.Admin.NoData" xml:space="preserve"><value>データなし</value></data>
+  <data name="Frontend.Admin.NoContent" xml:space="preserve"><value>コンテンツなし</value></data>
+  <data name="Frontend.Admin.Select" xml:space="preserve"><value>選択してください</value></data>
+  <data name="Frontend.Admin.PleaseFillIn" xml:space="preserve"><value>記入してください</value></data>
+  <data name="Frontend.Admin.PleaseEnter" xml:space="preserve"><value>入力してください</value></data>
+  <data name="Frontend.Admin.AddedTime" xml:space="preserve"><value>Added time</value></data>
+  <data name="Frontend.Admin.Started" xml:space="preserve"><value>Started</value></data>
+  <data name="Frontend.Admin.Finished" xml:space="preserve"><value>Finished</value></data>
+  <data name="Frontend.Admin.Created" xml:space="preserve"><value>Created</value></data>
+  <data name="Frontend.Admin.UpdatedAt" xml:space="preserve"><value>Updated at</value></data>
+  <data name="Frontend.Admin.FileName" xml:space="preserve"><value>ファイル名</value></data>
+  <data name="Frontend.Admin.FileSize" xml:space="preserve"><value>ファイルサイズ</value></data>
+  <data name="Frontend.Admin.UploadTime" xml:space="preserve"><value>アップロード日時</value></data>
+  <data name="Frontend.Admin.DeleteSelected" xml:space="preserve"><value>選択を削除</value></data>
+  <data name="Frontend.Admin.AddFile" xml:space="preserve"><value>ファイルを追加</value></data>
+  <data name="Frontend.Admin.SelectFile" xml:space="preserve"><value>ファイルを選択</value></data>
+  <data name="Frontend.Admin.Previous" xml:space="preserve"><value>前へ</value></data>
+  <data name="Frontend.Admin.Next" xml:space="preserve"><value>次へ</value></data>
+  <data name="Frontend.Admin.Success" xml:space="preserve"><value>成功しました</value></data>
+  <data name="Frontend.Admin.Failed" xml:space="preserve"><value>Failed</value></data>
+  <data name="Frontend.Admin.SuccessAlternate" xml:space="preserve"><value>Success</value></data>
+  <data name="Frontend.Admin.OperationFailed" xml:space="preserve"><value>エラー</value></data>
+  <data name="Frontend.Admin.FailedToLoad" xml:space="preserve"><value>読み込み失敗</value></data>
+  <data name="Frontend.Admin.ModulesAddedSuccessfully" xml:space="preserve"><value>追加に成功しました</value></data>
+  <data name="Frontend.Admin.AddFailed" xml:space="preserve"><value>追加に失敗しました</value></data>
+  <data name="Frontend.Admin.UpdatedSuccessfully" xml:space="preserve"><value>Updated successfully</value></data>
+  <data name="Frontend.Admin.UpdateFailed" xml:space="preserve"><value>編集に失敗しました</value></data>
+  <data name="Frontend.Admin.DeletedSuccessfully" xml:space="preserve"><value>削除しました</value></data>
+  <data name="Frontend.Admin.DeleteFailed" xml:space="preserve"><value>削除に失敗しました</value></data>
+  <data name="Frontend.Admin.UploadedSuccessfully" xml:space="preserve"><value>アップロード完了</value></data>
+  <data name="Frontend.Admin.UploadFailed" xml:space="preserve"><value>アップロード失敗</value></data>
+  <data name="Frontend.Admin.CopiedSuccessfully" xml:space="preserve"><value>コピーしました</value></data>
+  <data name="Frontend.Admin.CopyFailed" xml:space="preserve"><value>コピー失敗</value></data>
+  <data name="Frontend.Admin.Notice" xml:space="preserve"><value>Notice</value></data>
+  <data name="Frontend.Admin.Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="Frontend.Admin.Error" xml:space="preserve"><value>エラー</value></data>
+  <data name="Frontend.Admin.Yes" xml:space="preserve"><value>はい</value></data>
+  <data name="Frontend.Admin.No" xml:space="preserve"><value>いいえ</value></data>
+  <data name="Frontend.Admin.EnabledAlternate" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Frontend.Admin.Unknown" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Frontend.Admin.NotSet" xml:space="preserve"><value>Not set</value></data>
+  <data name="Frontend.Admin.NoRecords" xml:space="preserve"><value>記録なし</value></data>
+  <data name="Frontend.Admin.EnterAKeyword" xml:space="preserve"><value>キーワードを入力してください</value></data>
+  <data name="Frontend.Admin.SelectAType" xml:space="preserve"><value>種類を選択</value></data>
+  <data name="Frontend.Admin.SelectStatus" xml:space="preserve"><value>ステータスを選択</value></data>
+  <data name="Frontend.Admin.Create" xml:space="preserve"><value>Create</value></data>
+  <data name="Frontend.Admin.Submit" xml:space="preserve"><value>Submit</value></data>
+  <data name="Frontend.Admin.View" xml:space="preserve"><value>View</value></data>
+  <data name="Frontend.Admin.SetAsDefault" xml:space="preserve"><value>デフォルトに設定</value></data>
+  <data name="Frontend.Admin.Test" xml:space="preserve"><value>テスト</value></data>
+  <data name="Frontend.Admin.ConnectedSuccessfully" xml:space="preserve"><value>接続しました</value></data>
+  <data name="Frontend.Admin.ConnectionFailed" xml:space="preserve"><value>Connection failed</value></data>
+  <data name="Frontend.Admin.PasswordIsRequired" xml:space="preserve"><value>パスワードは必須です！</value></data>
+  <data name="Frontend.Admin.ValueIsDuplicated" xml:space="preserve"><value>{0} は重複しています。</value></data>
+  <data name="Frontend.Admin.AdministratorsCannotDeleteThemselves" xml:space="preserve"><value>管理者は自分自身を削除できません！</value></data>
+  <data name="Frontend.Admin.AdministratorDoesNotExist" xml:space="preserve"><value>管理者が存在しません！</value></data>
+  <data name="Frontend.Admin.DeletedSuccessfullyEmphasis" xml:space="preserve"><value>削除しました！</value></data>
+  <data name="Frontend.Admin.WeChatLogFileDoesNotExist" xml:space="preserve"><value>WeChatログファイルが存在しません：</value></data>
+  <data name="Frontend.Admin.ValueMustBeLongerThan16Characters" xml:space="preserve"><value>{0} は 16 文字より長くする必要があります！</value></data>
+  <data name="Frontend.Admin.TheCurrentSessionIsNotLinkedToAnyXNCFModule" xml:space="preserve"><value>現在のセッションには、XNCF モジュールが関連付けられていません。</value></data>
+  <data name="Frontend.Admin.NoMatchingModuleWasFoundValueCallGetSessionModuleListFirstToConfirmThe" xml:space="preserve"><value>一致するモジュールが見つかりません：「{0}」。先に GetSessionModuleList を呼び出し、現在のセッションのモジュール一覧を確認してください。</value></data>
+  <data name="Frontend.Admin.ModuleNotFoundValueCallGetSessionModuleListFirstToConfirmTheAvailableModules" xml:space="preserve"><value>モジュールが見つかりません：「{0}」。先に GetSessionModuleList を呼び出し、利用できるモジュールを確認してください。</value></data>
+  <data name="Frontend.Admin.RuntimeRegistrationForModuleValueWasNotFoundSoDatabaseInformationCannot" xml:space="preserve"><value>モジュール {0} の実行時登録が見つからないため、データベース情報を読み取れません。</value></data>
+  <data name="Frontend.Admin.NoModuleIsRegisteredInTheSystem" xml:space="preserve"><value>システムに登録済みのモジュールはありません。</value></data>
+  <data name="Frontend.Admin.SenparcAiSettingWasNotLoadedCheckTheAppsettingsJsonConfiguration" xml:space="preserve"><value>SenparcAiSetting を読み取れませんでした。appsettings.json の設定を確認してください。</value></data>
+  <data name="Frontend.Admin.SenparcAiSettingAiPlatformIsStillUnSetSetAnAvailablePlatformInAppsettingsJson" xml:space="preserve"><value>SenparcAiSetting.AiPlatform はまだ UnSet です。先に appsettings.json で利用できるプラットフォームを設定してください。</value></data>
+  <data name="Frontend.Admin.TheAIKernelModuleIsNotInstalledOrNotEnabledSoTheSystem" xml:space="preserve"><value>このシステムでは AIKernel モジュールが未インストール、または無効のため、指定した AI モデルへ切り替えられません。</value></data>
+  <data name="Frontend.Admin.AIModelServiceCouldNotBeResolvedSoTheSpecifiedAIModelCannotBe" xml:space="preserve"><value>AIModelService を解決できなかったため、指定した AI モデルを読み込めません。</value></data>
+  <data name="Frontend.Admin.TheSelectedAIModelDoesNotExistValue" xml:space="preserve"><value>選択した AI モデルは存在しません: {0}</value></data>
+  <data name="Frontend.Admin.TheSelectedAIModelIsNotAChatTypeValue" xml:space="preserve"><value>選択中の AI モデルは Chat タイプではありません：{0}</value></data>
+  <data name="Frontend.Admin.TheCurrentUserIsNotSignedInSoRenewalIsNotPossible" xml:space="preserve"><value>現在のユーザーはログインしていないため、更新できません。</value></data>
+  <data name="Frontend.Admin.UserInformationDoesNotExist" xml:space="preserve"><value>ユーザー情報が存在しません！</value></data>
+  <data name="Frontend.Admin.TheUsernameDoesNotExistOrThePasswordIsIncorrectValue" xml:space="preserve"><value>ユーザー名が存在しないか、パスワードが正しくありません：{0}！</value></data>
+  <data name="Frontend.Admin.TheUsernameDoesNotExistOrThePasswordIsIncorrect" xml:space="preserve"><value>ユーザー名が存在しないか、パスワードが正しくありません！</value></data>
   <data name="Admin.Home.AgentsOverview" xml:space="preserve"><value>Agents 運用概要</value></data>
   <data name="Admin.Home.AgentsOverviewLive" xml:space="preserve"><value>リアルタイム</value></data>
   <data name="Admin.Home.AgentsManage" xml:space="preserve"><value>Agents を管理</value></data>
@@ -1001,357 +1025,357 @@
   <data name="PromptReference.HumanScore" xml:space="preserve"><value>Manual score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="PromptReference.RobotScore" xml:space="preserve"><value>AI score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="PromptReference.Retry" xml:space="preserve"><value>Retry</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.109" xml:space="preserve"><value>GET (no body; data is passed through URL placeholders)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.110" xml:space="preserve"><value>NeuBell WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.111" xml:space="preserve"><value>POST (default, with a JSON body)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.112" xml:space="preserve"><value>PUT (with a request body)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.113" xml:space="preserve"><value>Provider filter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.114" xml:space="preserve"><value>WebHook URL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.115" xml:space="preserve"><value>WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.116" xml:space="preserve"><value>WebHook request payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.117" xml:space="preserve"><value>For example: operations duty bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.118" xml:space="preserve"><value>This records request data and results for parameter-triggered NeuBell notifications, settings-page tests, and monitored change notifications.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.119" xml:space="preserve"><value>Action value ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.120" xml:space="preserve"><value>Placeholders</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.121" xml:space="preserve"><value>Complete default JSON payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.122" xml:space="preserve"><value>Configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.123" xml:space="preserve"><value>Payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.124" xml:space="preserve"><value>Search name, URL, or Provider</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.125" xml:space="preserve"><value>Count ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.126" xml:space="preserve"><value>Add WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.127" xml:space="preserve"><value>Notify on added</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.128" xml:space="preserve"><value>Method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.129" xml:space="preserve"><value>Time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.130" xml:space="preserve"><value>No request logs yet.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.131" xml:space="preserve"><value>Titles added/removed in this event (joined with 、)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.132" xml:space="preserve"><value>Item ID ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.133" xml:space="preserve"><value>Item updated at</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.134" xml:space="preserve"><value>Item title ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.135" xml:space="preserve"><value>Item link (absolute when a site root is configured) ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.136" xml:space="preserve"><value>Template</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.137" xml:space="preserve"><value>Clear (keep 50)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.138" xml:space="preserve"><value>Choose Add WebHook in the upper right to configure an external WebAPI notification endpoint.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.139" xml:space="preserve"><value>Leave empty to use the default JSON payload; values starting with { or [ are treated as JSON. For example: {</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.140" xml:space="preserve"><value>Leave empty for all Providers</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.141" xml:space="preserve"><value>Tenant identifier (empty without a tenant)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.142" xml:space="preserve"><value>Removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.143" xml:space="preserve"><value>Notify on removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.144" xml:space="preserve"><value>Signature</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.145" xml:space="preserve"><value>Signing secret</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.146" xml:space="preserve"><value>Result</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.147" xml:space="preserve"><value>Duration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.148" xml:space="preserve"><value>Request body template</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.149" xml:space="preserve"><value>Request method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.150" xml:space="preserve"><value>リクエストログ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.151" xml:space="preserve"><value>WebHookはまだありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.152" xml:space="preserve"><value>通知時刻（ISO 8601）·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.153" xml:space="preserve"><value>設定後のリクエストにはX-NeuBell-Signature（HMAC-SHA256）が付与されます</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.154" xml:space="preserve"><value>（Workflowテキストテンプレートと同じ形式、</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.155" xml:space="preserve"><value>NeuCharPivotパネル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.156" xml:space="preserve"><value>Provit Block一覧（ドラッグで並べ替え）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.157" xml:space="preserve"><value>admin-home（管理ホーム）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.158" xml:space="preserve"><value>一行の説明</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.159" xml:space="preserve"><value>テーマカラー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.160" xml:space="preserve"><value>例：管理ホームの運用パネル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.161" xml:space="preserve"><value>列数</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.162" xml:space="preserve"><value>パネルを作成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.163" xml:space="preserve"><value>送信</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.164" xml:space="preserve"><value>ブロックタイトル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.165" xml:space="preserve"><value>パネル（Provit Panel）をadmin-homeなどのページにバインドし、任意のXNCFモジュールのProvit Blockを組み合わせ、AI Chatによる作成・編集に対応します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.166" xml:space="preserve"><value>無効</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.167" xml:space="preserve"><value>ホームページの不足ブロックから参照情報を事前入力しました</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.168" xml:space="preserve"><value>パネル名またはページ識別子を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.169" xml:space="preserve"><value>ブロックはまだありません。「ブロックを追加」をクリックし、任意のXNCFモジュールのPivot Functionから選択してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.170" xml:space="preserve"><value>モジュールUID：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.171" xml:space="preserve"><value>オレンジ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.172" xml:space="preserve"><value>Provit Blockを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.173" xml:space="preserve"><value>ブロックを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.174" xml:space="preserve"><value>グレー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.175" xml:space="preserve"><value>右上の「パネルを作成」をクリックして、admin-homeなどのページにパネルをバインドします。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.176" xml:space="preserve"><value>AIに要件を1文で伝えてください。例：ホスト監視とToDoの2ブロックを3列にする</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.177" xml:space="preserve"><value>紫</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.178" xml:space="preserve"><value>緑</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.179" xml:space="preserve"><value>青</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.180" xml:space="preserve"><value>パネルはまだありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.181" xml:space="preserve"><value>Functionを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.182" xml:space="preserve"><value>任意のXNCFモジュールのPivot Functionをこのパネルのブロックとして選択します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.183" xml:space="preserve"><value>モジュールを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.184" xml:space="preserve"><value>パネル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.185" xml:space="preserve"><value>パネル名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.186" xml:space="preserve"><value>ページ識別子</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.187" xml:space="preserve"><value>Functionの状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.188" xml:space="preserve"><value>Function：すべて</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.189" xml:space="preserve"><value>Function：利用可能</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.190" xml:space="preserve"><value>Function：削除済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.191" xml:space="preserve"><value>LoopTaskの状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.192" xml:space="preserve"><value>LoopTask：前回失敗</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.193" xml:space="preserve"><value>LoopTask：カウントダウン</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.194" xml:space="preserve"><value>LoopTask：すべて</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.195" xml:space="preserve"><value>LoopTask：無効</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.196" xml:space="preserve"><value>LoopTask：待機中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.197" xml:space="preserve"><value>LoopTask：実行中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.198" xml:space="preserve"><value>LoopTask：未設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.199" xml:space="preserve"><value>NeuCharPivotモジュールナビゲーション</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.200" xml:space="preserve"><value>NeuCharPivot集約</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.201" xml:space="preserve"><value>Pivot実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.202" xml:space="preserve"><value>Workflow連携</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.203" xml:space="preserve"><value>Workflowトリガー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.204" xml:space="preserve"><value>Workflow：すべて</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.205" xml:space="preserve"><value>Workflow：連携済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.206" xml:space="preserve"><value>Workflow：未連携</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.207" xml:space="preserve"><value>前回失敗</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.208" xml:space="preserve"><value>利用可能 / 合計</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.209" xml:space="preserve"><value>有効 / 設定済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.210" xml:space="preserve"><value>現在のバージョンで削除済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.211" xml:space="preserve"><value>成功 / 失敗</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.212" xml:space="preserve"><value>実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.213" xml:space="preserve"><value>実行中 / カウントダウン</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.214" xml:space="preserve"><value>実行状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.215" xml:space="preserve"><value>モジュール、Function、Workflowを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.216" xml:space="preserve"><value>モジュール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.217" xml:space="preserve"><value>モジュールナビゲーション</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.218" xml:space="preserve"><value>モジュールは停止中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.219" xml:space="preserve"><value>モジュール状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.220" xml:space="preserve"><value>モジュール状態：利用不可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.221" xml:space="preserve"><value>モジュール状態：すべて</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.222" xml:space="preserve"><value>モジュール状態：利用可能</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.223" xml:space="preserve"><value>一致するNeuCharPivotがありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.224" xml:space="preserve"><value>集約</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.225" xml:space="preserve"><value>このモジュールは未インストールまたは無効です。Functionの設定は保持されますが、実行できません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.226" xml:space="preserve"><value>フィルターを調整するか、任意のモジュールで「設定/実行 → NeuCharPivot」を開き、先に操作パネルを生成してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.227" xml:space="preserve"><value>フィルターをリセット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.228" xml:space="preserve"><value>モジュールパネル、パラメーター付きFunction、LoopTaskのカウントダウン、完了後に起動するWorkflowをまとめて確認します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.229" xml:space="preserve"><value>FunctionのグローバルProvitアクセス制御</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.230" xml:space="preserve"><value>Functionは存在しません。ポリシーは冗長な設定として保持されます</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.231" xml:space="preserve"><value>Functionに「制限付き」ポリシーを適用します。制限モードでは、紐付けられたユーザー、ロール、権限コードだけがグローバルProvitにアクセスできます。少なくとも1つを紐付けてください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.232" xml:space="preserve"><value>任意のXNCFモジュールのFunctionに、ユーザー、ロール、権限コードを紐付けたデータベースアクセスポリシーを設定します。データベースポリシーはコード属性を上書きします。モジュール削除後もポリシーは冗長設定として残り、再インストール後に自動的に再び有効になります。手動で削除した場合のみ消去されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.233" xml:space="preserve"><value>コードの基準</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.234" xml:space="preserve"><value>コードの基準（FunctionRenderAttribute）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.235" xml:space="preserve"><value>ログイン済みの管理者</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.236" xml:space="preserve"><value>ポリシーを保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.237" xml:space="preserve"><value>許可する権限コード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.238" xml:space="preserve"><value>許可するユーザー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.239" xml:space="preserve"><value>許可するロール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.240" xml:space="preserve"><value>制限付き</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.241" xml:space="preserve"><value>選択項目に適用</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.242" xml:space="preserve"><value>データベースポリシーは未設定です。現在はコードの基準に従います。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.243" xml:space="preserve"><value>既存のバインド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.244" xml:space="preserve"><value>適用</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.245" xml:space="preserve"><value>公開</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.246" xml:space="preserve"><value>現在のデータベースポリシー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.247" xml:space="preserve"><value>一括制限</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.248" xml:space="preserve"><value>一括制限設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.249" xml:space="preserve"><value>一括公開</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.250" xml:space="preserve"><value>継承を一括復元</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.251" xml:space="preserve"><value>一括クリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.252" xml:space="preserve"><value>一括無効化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.253" xml:space="preserve"><value>モジュール / Functionを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.254" xml:space="preserve"><value>データベースポリシー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.255" xml:space="preserve"><value>未設定（コードの基準）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.256" xml:space="preserve"><value>モジュール利用不可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.257" xml:space="preserve"><value>モジュールをクリア済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.258" xml:space="preserve"><value>モジュールはクリア済みでコードの基準を読み取れないため、データベース記録を基準にします。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.259" xml:space="preserve"><value>モード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.260" xml:space="preserve"><value>クリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.261" xml:space="preserve"><value>有効なポリシー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.262" xml:space="preserve"><value>対象情報</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.263" xml:space="preserve"><value>無効</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.264" xml:space="preserve"><value>保存後は冗長設定として保持され、モジュール再インストール後に自動で有効になります</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.265" xml:space="preserve"><value>ポリシーモード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.266" xml:space="preserve"><value>コードを継承</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.267" xml:space="preserve"><value>後の監査のため、このポリシー変更の理由を記録します</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.268" xml:space="preserve"><value>設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.269" xml:space="preserve"><value>グローバルProvitアクセスポリシーを設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.270" xml:space="preserve"><value>アクセス制御</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.271" xml:space="preserve"><value>権限リソースコードを入力</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.272" xml:space="preserve"><value>権限リソースコードを入力（例：sandbox.execute。いずれかに一致すれば許可）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.273" xml:space="preserve"><value>管理者ユーザーを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.274" xml:space="preserve"><value>管理者ユーザーを選択（いずれかに一致すれば許可）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.275" xml:space="preserve"><value>ロールコードを選択または入力</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.276" xml:space="preserve"><value>ロールコードを選択または入力（いずれかに一致すれば許可）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.277" xml:space="preserve"><value>（なし）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.278" xml:space="preserve"><value>Chat編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.279" xml:space="preserve"><value>ChatAgent · 現在のXNCFモジュール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.280" xml:space="preserve"><value>ChatAgentはすべてのFunctionを宣言型のクイック操作パネルにまとめます。AIが生成したスクリプトや任意の内部メソッドは実行しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.281" xml:space="preserve"><value>NeuBell通知</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.282" xml:space="preserve"><value>NeuCharPivotの生成中はFunction Callingを無効にします。完全なAdminChatでは、セッションに明示的に関連付けられたモジュールが公開登録したFunctionRenderだけを読み込みます。Pivot/Workflowの実行時にもサーバー側の許可リストとモジュール状態を再確認します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.283" xml:space="preserve"><value>未連携</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.284" xml:space="preserve"><value>例：よく使う操作を最初のグループに置き、必要なパラメーターだけを公開する</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.285" xml:space="preserve"><value>送信してPivotを更新</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.286" xml:space="preserve"><value>有効化前にすべての必須パラメーターを再検証します。モジュールが無効またはFunctionが削除済みの場合は実行しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.287" xml:space="preserve"><value>完了後にWorkflowを起動</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.288" xml:space="preserve"><value>現在の参照：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.289" xml:space="preserve"><value>完全なAdminChatを開く</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.290" xml:space="preserve"><value>モジュールが未インストールまたは無効のため、すべてのPivot Functionとスケジュールタスクを基盤で無効化しています。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.291" xml:space="preserve"><value>このモジュールのNeuCharPivotを生成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.292" xml:space="preserve"><value>インターフェースを生成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.293" xml:space="preserve"><value>自動実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.294" xml:space="preserve"><value>AI計算リソースを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.295" xml:space="preserve"><value>間隔（秒）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.296" xml:space="preserve"><value>Workflow機能は現在有効ではありません。リストは表示されますが、モバイルコマンドは動作しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.297" xml:space="preserve"><value>個人WeChat Bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.298" xml:space="preserve"><value>個人WeChat連携</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.299" xml:space="preserve"><value>個人WeChat連携は現在無効です。モバイルコマンドはAdminに入りません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.300" xml:space="preserve"><value>バインド設定を作成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.301" xml:space="preserve"><value>利用可能なWorkflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.302" xml:space="preserve"><value>コマンドプレフィックス @Model.PageData.CommandPrefix@(Model.PageData.RequireCommandPrefix ? " · 必須" : " · 任意")</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.303" xml:space="preserve"><value>WeChatでバインドを完了</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.304" xml:space="preserve"><value>コピー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.305" xml:space="preserve"><value>現在のAdminユーザーID</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.306" xml:space="preserve"><value>現在の管理者が利用できるWorkflowはありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.307" xml:space="preserve"><value>現在の機能</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.308" xml:space="preserve"><value>モバイルコマンド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.309" xml:space="preserve"><value>個人WeChat Botを開く</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.310" xml:space="preserve"><value>現在の管理者をWeChatアカウントにバインドすると、スマートフォンからWorkflowを確認・実行できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.311" xml:space="preserve"><value>バインドコードを相手に送信</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.312" xml:space="preserve"><value>現在の管理者ID @Model.PageData.WorkflowUserId で検索します。スマートフォンで「Workflow一覧を取得」を送ると同じ結果が返ります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.313" xml:space="preserve"><value>IDまたは名前を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.314" xml:space="preserve"><value>データベースバインド設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.315" xml:space="preserve"><value>有効</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.316" xml:space="preserve"><value>システムには不可逆ハッシュのみ保存されます。作成または変更に成功したら、平文のバインドコードを対応するWeChatユーザーにすぐ送信してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.317" xml:space="preserve"><value>相手に「WeChatアカウントをバインド」を送ってもらいます。バインド後、「Workflow一覧を取得」を送ると、このページと同じ一覧を確認できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.318" xml:space="preserve"><value>有効なバインド設定がありません。まず個人WeChat BotでWeChatアカウントのバインドを作成すると、スマートフォンが管理者を識別できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.319" xml:space="preserve"><value>連携状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.320" xml:space="preserve"><value>初回バインド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.321" xml:space="preserve"><value>Pivot Blockは未初期化です</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.322" xml:space="preserve"><value>モジュールのNeuCharPivot設定を開く</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.323" xml:space="preserve"><value>パネル設定を開き、コードを事前入力</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.324" xml:space="preserve"><value>このブロックが参照するFunctionがデータベースにありません。Functionを初期化または復元してから、パネル設定に戻って再選択してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.325" xml:space="preserve"><value>パネルを管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.326" xml:space="preserve"><value>日本語</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.327" xml:space="preserve"><value>簡体字中国語</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.328" xml:space="preserve"><value>蘇州盛派ネットワークテクノロジー有限公司</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.329" xml:space="preserve"><value>Function Callingパラメーター</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.330" xml:space="preserve"><value>XNCFモジュール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.331" xml:space="preserve"><value>通常のinputパラメーターのみ受け取る</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.332" xml:space="preserve"><value>開く</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.333" xml:space="preserve"><value>Workflow名 / 説明 / パラメーターを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.334" xml:space="preserve"><value>利用可能な有効Workflowはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.335" xml:space="preserve"><value>選択をクリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.336" xml:space="preserve"><value>AIクイックチャット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.337" xml:space="preserve"><value>Admin Chatクイックチャット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.338" xml:space="preserve"><value>NeuBell通知</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.339" xml:space="preserve"><value>このページの読み込み後に取得したブラウザーログのみ表示し、サーバーstdoutは含みません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.340" xml:space="preserve"><value>すべて閉じる</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.341" xml:space="preserve"><value>正式ページに切り替え</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.342" xml:space="preserve"><value>現在、NeuBell情報を提供するモジュールはありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.343" xml:space="preserve"><value>ログはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.344" xml:space="preserve"><value>サーバー時刻</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.345" xml:space="preserve"><value>ブラウザーConsole</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.346" xml:space="preserve"><value>消費</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.347" xml:space="preserve"><value>すべて消費</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.348" xml:space="preserve"><value>クリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.349" xml:space="preserve"><value>Footerに表示するモジュール通知を選択します。設定はこのアカウントのブラウザーに保存されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.350" xml:space="preserve"><value>通常のテキストと絶対http/httpsリンクを持つ&lt;a&gt;タグに対応し、それ以外のHTMLはエンコードされます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.351" xml:space="preserve"><value>1時間</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.352" xml:space="preserve"><value>24時間</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.353" xml:space="preserve"><value>7日間</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.354" xml:space="preserve"><value>AdminChatコマンド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.355" xml:space="preserve"><value>匿名HTMLスナップショット共有</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.356" xml:space="preserve"><value>Harnessタスクトレース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.357" xml:space="preserve"><value>Workspace PDFプレビュー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.358" xml:space="preserve"><value>Workspace名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.359" xml:space="preserve"><value>Workspaceファイルとパス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.360" xml:space="preserve"><value>Workspaceアセット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.361" xml:space="preserve"><value>前のセクション</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.362" xml:space="preserve"><value>資料をアップロード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.363" xml:space="preserve"><value>次のセクション</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.364" xml:space="preserve"><value>ダウンロード / 名前を付けて保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.365" xml:space="preserve"><value>現在のディレクトリをダウンロード（.zip）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.366" xml:space="preserve"><value>Workspaceを使用しない</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.367" xml:space="preserve"><value>モジュールを参照せずに開始</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.368" xml:space="preserve"><value>現在の会話に呼び出し可能なモジュールまたはWorkflowを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.369" xml:space="preserve"><value>現在の会話のWorkspaceを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.370" xml:space="preserve"><value>このターンのみ圧縮画像をビジョンモデルに送信することを許可します。追加Tokenが発生する場合があります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.371" xml:space="preserve"><value>このターンから削除し、Workspaceファイルも削除</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.372" xml:space="preserve"><value>リンクを持つ全員がこのスナップショットを閲覧できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.373" xml:space="preserve"><value>タスクトレース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.374" xml:space="preserve"><value>例：Yield C#サンプルプロジェクト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.375" xml:space="preserve"><value>ファイルを保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.376" xml:space="preserve"><value>許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.377" xml:space="preserve"><value>AIによるファイル書き込みを許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.378" xml:space="preserve"><value>AIによるPython実行を許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.379" xml:space="preserve"><value>アセットパネルを閉じる</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.380" xml:space="preserve"><value>共有の有効期限</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.381" xml:space="preserve"><value>読み取り専用スナップショットリンクを作成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.382" xml:space="preserve"><value>匿名スナップショットリンク</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.383" xml:space="preserve"><value>編集をキャンセル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.384" xml:space="preserve"><value>書き込み可能</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.385" xml:space="preserve"><value>実行可能CLI</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.386" xml:space="preserve"><value>任意：補足説明または拒否理由を入力</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.387" xml:space="preserve"><value>外部ブラウザーで開く（読み取り専用）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.388" xml:space="preserve"><value>利用可能な最大幅まで展開</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.389" xml:space="preserve"><value>参照モジュール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.390" xml:space="preserve"><value>現在のセッション</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.391" xml:space="preserve"><value>現在のディレクトリは空です</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.392" xml:space="preserve"><value>拒否</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.393" xml:space="preserve"><value>モデルを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.394" xml:space="preserve"><value>元に戻す</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.395" xml:space="preserve"><value>Workspaceを新規作成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.396" xml:space="preserve"><value>Harnessトレースはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.397" xml:space="preserve"><value>未保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.398" xml:space="preserve"><value>リアルタイム実行を表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.399" xml:space="preserve"><value>トレース、ツール、結果を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.400" xml:space="preserve"><value>Workspaceを検索中…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.401" xml:space="preserve"><value>このファイル形式はテキストプレビューに対応していません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.402" xml:space="preserve"><value>一致するファイルまたはパスがありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.403" xml:space="preserve"><value>匿名共有を管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.404" xml:space="preserve"><value>ファイルを編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.405" xml:space="preserve"><value>ビジョン</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.406" xml:space="preserve"><value>アセット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.407" xml:space="preserve"><value>移動</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.408" xml:space="preserve"><value>行へ移動</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.409" xml:space="preserve"><value>既定のシステムプロンプトはPromptRangeで管理されます。現在のテキストは個人またはテナントの追加設定です。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.410" xml:space="preserve"><value>、@@でファイルまたはパスを参照</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.411" xml:space="preserve"><value>、@@を入力してファイルまたはパスを参照</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.412" xml:space="preserve"><value>通常のテキストと絶対http/httpsリンクを持つ&lt;a&gt;タグに対応し、それ以外のHTMLはエンコードされます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.413" xml:space="preserve"><value>フォーク</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.414" xml:space="preserve"><value>思考中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.415" xml:space="preserve"><value>ツールの確認待ち</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.416" xml:space="preserve"><value>再生イベント #{0} ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.417" xml:space="preserve"><value>Ctrl + EnterまたはCmd + Enterで開始</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.418" xml:space="preserve"><value>フォーク</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.419" xml:space="preserve"><value>有効な共有はありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.420" xml:space="preserve"><value>残り{0}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.421" xml:space="preserve"><value>プレビューを表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.422" xml:space="preserve"><value>テキストに戻る</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.423" xml:space="preserve"><value>ツリー表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.424" xml:space="preserve"><value>ソースを表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.425" xml:space="preserve"><value>プレビューを読み込み中…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.426" xml:space="preserve"><value>Functionがありません：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.427" xml:space="preserve"><value>現在のフィルター結果をすべて選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.428" xml:space="preserve"><value>選択済み {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.429" xml:space="preserve"><value>NeuBell · WebHook設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.430" xml:space="preserve"><value>WebHookを編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.431" xml:space="preserve"><value>WebHookを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.432" xml:space="preserve"><value>個人WeChat連携</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.433" xml:space="preserve"><value>一致するWorkflowはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.434" xml:space="preserve"><value>データベースポリシー {0}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.435" xml:space="preserve"><value>孤立ポリシー {0}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.436" xml:space="preserve"><value>利用可能なWorkflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.437" xml:space="preserve"><value>パネル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.438" xml:space="preserve"><value>最大{0}ファイル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.439" xml:space="preserve"><value>利用できないモジュールを表示（{0}）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.440" xml:space="preserve"><value>モジュールバージョン</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.441" xml:space="preserve"><value>最大{0}ファイル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.442" xml:space="preserve"><value>合計{0}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.443" xml:space="preserve"><value>{0}件/ページ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.444" xml:space="preserve"><value>移動</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.445" xml:space="preserve"><value>ページ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.446" xml:space="preserve"><value>10件/ページ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.447" xml:space="preserve"><value>20件/ページ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.448" xml:space="preserve"><value>30件/ページ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.449" xml:space="preserve"><value>40件/ページ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.450" xml:space="preserve"><value>コマンドプレフィックス {0} · 必須</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.451" xml:space="preserve"><value>コマンドプレフィックス {0} · 任意</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.452" xml:space="preserve"><value>Harnessは無効です</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.453" xml:space="preserve"><value>WeChatアカウントをバインド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.454" xml:space="preserve"><value>Workflow一覧を取得</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.455" xml:space="preserve"><value>現在のコマンドプレフィックス：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.456" xml:space="preserve"><value>{0} / {1}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.457" xml:space="preserve"><value>入力内容</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.458" xml:space="preserve"><value>新着メッセージ{0}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.459" xml:space="preserve"><value>コマンドプレフィックス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.GETNoBodyDataIsPassedThroughURLPlaceholders" xml:space="preserve"><value>GET (no body; data is passed through URL placeholders)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NeuBellWebHookSettings" xml:space="preserve"><value>NeuBell WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.POSTDefaultWithAJSONBody" xml:space="preserve"><value>POST (default, with a JSON body)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.PUTWithARequestBody" xml:space="preserve"><value>PUT (with a request body)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ProviderFilter" xml:space="preserve"><value>Provider filter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.WebHookURL" xml:space="preserve"><value>WebHook URL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.WebHookSettings" xml:space="preserve"><value>WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.WebHookRequestPayload" xml:space="preserve"><value>WebHook request payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ForExampleOperationsDutyBot" xml:space="preserve"><value>For example: operations duty bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ThisRecordsRequestDataAndResultsForParameterTriggeredNeuBellNotificationsSettings" xml:space="preserve"><value>This records request data and results for parameter-triggered NeuBell notifications, settings-page tests, and monitored change notifications.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ActionValue" xml:space="preserve"><value>Action value ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Placeholders" xml:space="preserve"><value>Placeholders</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CompleteDefaultJSONPayload" xml:space="preserve"><value>Complete default JSON payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Configured" xml:space="preserve"><value>Configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Payload" xml:space="preserve"><value>Payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SearchNameURLOrProvider" xml:space="preserve"><value>Search name, URL, or Provider</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Count" xml:space="preserve"><value>Count ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AddWebHook" xml:space="preserve"><value>Add WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NotifyOnAdded" xml:space="preserve"><value>Notify on added</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Method" xml:space="preserve"><value>Method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Time" xml:space="preserve"><value>Time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NoRequestLogsYet" xml:space="preserve"><value>No request logs yet.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.TitlesAddedRemovedInThisEventJoinedWith" xml:space="preserve"><value>Titles added/removed in this event (joined with 、)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ItemID" xml:space="preserve"><value>Item ID ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ItemUpdatedAt" xml:space="preserve"><value>Item updated at</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ItemTitle" xml:space="preserve"><value>Item title ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ItemLinkAbsoluteWhenASiteRootIsConfigured" xml:space="preserve"><value>Item link (absolute when a site root is configured) ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Template" xml:space="preserve"><value>Template</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ClearKeep50" xml:space="preserve"><value>Clear (keep 50)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ChooseAddWebHookInTheUpperRightToConfigureAnExternalWebAPI" xml:space="preserve"><value>Choose Add WebHook in the upper right to configure an external WebAPI notification endpoint.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.LeaveEmptyToUseTheDefaultJSONPayloadValuesStartingWithOr" xml:space="preserve"><value>Leave empty to use the default JSON payload; values starting with { or [ are treated as JSON. For example: {</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.LeaveEmptyForAllProviders" xml:space="preserve"><value>Leave empty for all Providers</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.TenantIdentifierEmptyWithoutATenant" xml:space="preserve"><value>Tenant identifier (empty without a tenant)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Removed" xml:space="preserve"><value>Removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NotifyOnRemoved" xml:space="preserve"><value>Notify on removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Signature" xml:space="preserve"><value>Signature</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SigningSecret" xml:space="preserve"><value>Signing secret</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Result" xml:space="preserve"><value>Result</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Duration" xml:space="preserve"><value>Duration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.RequestBodyTemplate" xml:space="preserve"><value>Request body template</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.RequestMethod" xml:space="preserve"><value>Request method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.RequestLogs" xml:space="preserve"><value>リクエストログ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NoWebHooksYet" xml:space="preserve"><value>WebHookはまだありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NotificationTimeISO8601" xml:space="preserve"><value>通知時刻（ISO 8601）·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ConfiguredRequestsIncludeXNeuBellSignatureHMACSHA256" xml:space="preserve"><value>設定後のリクエストにはX-NeuBell-Signature（HMAC-SHA256）が付与されます</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SameFormatAsWorkflowTextTemplates" xml:space="preserve"><value>（Workflowテキストテンプレートと同じ形式、</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NeuCharPivotPanel" xml:space="preserve"><value>NeuCharPivotパネル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ProvitBlockListDragToReorder" xml:space="preserve"><value>Provit Block一覧（ドラッグで並べ替え）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AdminHomeAdminHome" xml:space="preserve"><value>admin-home（管理ホーム）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.OneLineDescription" xml:space="preserve"><value>一行の説明</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ThemeColor" xml:space="preserve"><value>テーマカラー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ForExampleAdminHomeOperationsPanel" xml:space="preserve"><value>例：管理ホームの運用パネル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ColumnCount" xml:space="preserve"><value>列数</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CreatePanel" xml:space="preserve"><value>パネルを作成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Send" xml:space="preserve"><value>送信</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.BlockTitle" xml:space="preserve"><value>ブロックタイトル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.BindAPanelProvitPanelToAPageSuchAsAdminHome" xml:space="preserve"><value>パネル（Provit Panel）をadmin-homeなどのページにバインドし、任意のXNCFモジュールのProvit Blockを組み合わせ、AI Chatによる作成・編集に対応します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.DisabledAlternate" xml:space="preserve"><value>無効</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ReferencesPrefilledFromMissingBlocksOnTheHomePage" xml:space="preserve"><value>ホームページの不足ブロックから参照情報を事前入力しました</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SearchPanelNameOrPageIdentifier" xml:space="preserve"><value>パネル名またはページ識別子を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NoBlocksYetClickAddBlockToChooseFromPivotFunctionsIn" xml:space="preserve"><value>ブロックはまだありません。「ブロックを追加」をクリックし、任意のXNCFモジュールのPivot Functionから選択してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ModuleUID" xml:space="preserve"><value>モジュールUID：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Orange" xml:space="preserve"><value>オレンジ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AddProvitBlock" xml:space="preserve"><value>Provit Blockを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AddBlock" xml:space="preserve"><value>ブロックを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Gray" xml:space="preserve"><value>グレー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ClickCreatePanelInTheUpperRightToBindThePanelTo" xml:space="preserve"><value>右上の「パネルを作成」をクリックして、admin-homeなどのページにパネルをバインドします。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.DescribeYourNeedToAIInOneSentenceForExampleAddHost" xml:space="preserve"><value>AIに要件を1文で伝えてください。例：ホスト監視とToDoの2ブロックを3列にする</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Purple" xml:space="preserve"><value>紫</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Green" xml:space="preserve"><value>緑</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Blue" xml:space="preserve"><value>青</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NoPanelsYet" xml:space="preserve"><value>パネルはまだありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SelectFunction" xml:space="preserve"><value>Functionを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ChooseAPivotFunctionFromAnyXNCFModuleAsABlockFor" xml:space="preserve"><value>任意のXNCFモジュールのPivot Functionをこのパネルのブロックとして選択します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SelectModule" xml:space="preserve"><value>モジュールを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Panel" xml:space="preserve"><value>パネル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.PanelName" xml:space="preserve"><value>パネル名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.PageIdentifier" xml:space="preserve"><value>ページ識別子</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.FunctionStatus" xml:space="preserve"><value>Functionの状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.FunctionAll" xml:space="preserve"><value>Function：すべて</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.FunctionAvailable" xml:space="preserve"><value>Function：利用可能</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.FunctionRemoved" xml:space="preserve"><value>Function：削除済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.LoopTaskStatus" xml:space="preserve"><value>LoopTaskの状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.LoopTaskLastFailed" xml:space="preserve"><value>LoopTask：前回失敗</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.LoopTaskCountdown" xml:space="preserve"><value>LoopTask：カウントダウン</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.LoopTaskAll" xml:space="preserve"><value>LoopTask：すべて</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.LoopTaskDisabled" xml:space="preserve"><value>LoopTask：無効</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.LoopTaskPending" xml:space="preserve"><value>LoopTask：待機中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.LoopTaskRunning" xml:space="preserve"><value>LoopTask：実行中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.LoopTaskNotConfigured" xml:space="preserve"><value>LoopTask：未設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NeuCharPivotModuleNavigation" xml:space="preserve"><value>NeuCharPivotモジュールナビゲーション</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NeuCharPivotAggregate" xml:space="preserve"><value>NeuCharPivot集約</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.PivotExecution" xml:space="preserve"><value>Pivot実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.WorkflowLinks" xml:space="preserve"><value>Workflow連携</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.WorkflowTrigger" xml:space="preserve"><value>Workflowトリガー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.WorkflowAll" xml:space="preserve"><value>Workflow：すべて</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.WorkflowLinked" xml:space="preserve"><value>Workflow：連携済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.WorkflowUnlinked" xml:space="preserve"><value>Workflow：未連携</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.LastFailed" xml:space="preserve"><value>前回失敗</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AvailableTotal" xml:space="preserve"><value>利用可能 / 合計</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.EnabledConfigured" xml:space="preserve"><value>有効 / 設定済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.RemovedInCurrentVersion" xml:space="preserve"><value>現在のバージョンで削除済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SuccessFailed" xml:space="preserve"><value>成功 / 失敗</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Run" xml:space="preserve"><value>実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.RunningCountdown" xml:space="preserve"><value>実行中 / カウントダウン</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ExecutionStatus" xml:space="preserve"><value>実行状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SearchModulesFunctionsOrWorkflows" xml:space="preserve"><value>モジュール、Function、Workflowを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Module" xml:space="preserve"><value>モジュール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ModuleNavigation" xml:space="preserve"><value>モジュールナビゲーション</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ModuleClosed" xml:space="preserve"><value>モジュールは停止中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ModuleStatus" xml:space="preserve"><value>モジュール状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ModuleStatusUnavailable" xml:space="preserve"><value>モジュール状態：利用不可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ModuleStatusAll" xml:space="preserve"><value>モジュール状態：すべて</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ModuleStatusAvailable" xml:space="preserve"><value>モジュール状態：利用可能</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NoMatchingNeuCharPivot" xml:space="preserve"><value>一致するNeuCharPivotがありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Aggregate" xml:space="preserve"><value>集約</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ThisModuleIsNotInstalledOrEnabledFunctionsRetainTheirConfigurationBut" xml:space="preserve"><value>このモジュールは未インストールまたは無効です。Functionの設定は保持されますが、実行できません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AdjustTheFiltersOrOpenSettingsExecuteNeuCharPivotInAnyModuleTo" xml:space="preserve"><value>フィルターを調整するか、任意のモジュールで「設定/実行 → NeuCharPivot」を開き、先に操作パネルを生成してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ResetFilters" xml:space="preserve"><value>フィルターをリセット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ReviewModulePanelsParameterizedFunctionsLoopTaskCountdownsAndWorkflowsTriggeredAfterCompletion" xml:space="preserve"><value>モジュールパネル、パラメーター付きFunction、LoopTaskのカウントダウン、完了後に起動するWorkflowをまとめて確認します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.GlobalFunctionProvitAccessControl" xml:space="preserve"><value>FunctionのグローバルProvitアクセス制御</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.FunctionNoLongerExistsPolicyRetainedAsRedundant" xml:space="preserve"><value>Functionは存在しません。ポリシーは冗長な設定として保持されます</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ApplyTheRestrictedPolicyToFunctionsInRestrictedModeOnlyBoundUsers" xml:space="preserve"><value>Functionに「制限付き」ポリシーを適用します。制限モードでは、紐付けられたユーザー、ロール、権限コードだけがグローバルProvitにアクセスできます。少なくとも1つを紐付けてください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ConfigureDatabaseAccessPoliciesForFunctionsInAnyXNCFModuleByBinding" xml:space="preserve"><value>任意のXNCFモジュールのFunctionに、ユーザー、ロール、権限コードを紐付けたデータベースアクセスポリシーを設定します。データベースポリシーはコード属性を上書きします。モジュール削除後もポリシーは冗長設定として残り、再インストール後に自動的に再び有効になります。手動で削除した場合のみ消去されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CodeBaseline" xml:space="preserve"><value>コードの基準</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CodeBaselineFunctionRenderAttribute" xml:space="preserve"><value>コードの基準（FunctionRenderAttribute）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AnySignedInAdministrator" xml:space="preserve"><value>ログイン済みの管理者</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SavePolicy" xml:space="preserve"><value>ポリシーを保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AllowedPermissionCodes" xml:space="preserve"><value>許可する権限コード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AllowedUsers" xml:space="preserve"><value>許可するユーザー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AllowedRoles" xml:space="preserve"><value>許可するロール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Restricted" xml:space="preserve"><value>制限付き</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ApplyToSelected" xml:space="preserve"><value>選択項目に適用</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NoDatabasePolicyIsConfiguredTheCodeBaselineIsCurrentlyApplied" xml:space="preserve"><value>データベースポリシーは未設定です。現在はコードの基準に従います。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ExistingBindings" xml:space="preserve"><value>既存のバインド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Apply" xml:space="preserve"><value>適用</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Open" xml:space="preserve"><value>公開</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CurrentDatabasePolicy" xml:space="preserve"><value>現在のデータベースポリシー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.BulkRestricted" xml:space="preserve"><value>一括制限</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.BulkRestrictedSettings" xml:space="preserve"><value>一括制限設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.BulkOpen" xml:space="preserve"><value>一括公開</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.BulkRestoreInheritance" xml:space="preserve"><value>継承を一括復元</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.BulkClear" xml:space="preserve"><value>一括クリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.BulkDisable" xml:space="preserve"><value>一括無効化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SearchModuleFunction" xml:space="preserve"><value>モジュール / Functionを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.DatabasePolicy" xml:space="preserve"><value>データベースポリシー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NotSetCodeBaseline" xml:space="preserve"><value>未設定（コードの基準）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ModuleUnavailable" xml:space="preserve"><value>モジュール利用不可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ModuleCleared" xml:space="preserve"><value>モジュールをクリア済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ModuleClearedTheCodeBaselineCannotBeReadSoTheDatabaseRecord" xml:space="preserve"><value>モジュールはクリア済みでコードの基準を読み取れないため、データベース記録を基準にします。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Mode" xml:space="preserve"><value>モード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Clear" xml:space="preserve"><value>クリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.EffectivePolicy" xml:space="preserve"><value>有効なポリシー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.TargetInformation" xml:space="preserve"><value>対象情報</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.DisabledSupplemental" xml:space="preserve"><value>無効</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.RetainedAsRedundantAfterSavingTakesEffectAutomaticallyAfterModuleReinstall" xml:space="preserve"><value>保存後は冗長設定として保持され、モジュール再インストール後に自動で有効になります</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.PolicyMode" xml:space="preserve"><value>ポリシーモード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.InheritCode" xml:space="preserve"><value>コードを継承</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.RecordTheReasonForThisPolicyChangeForLaterAuditing" xml:space="preserve"><value>後の監査のため、このポリシー変更の理由を記録します</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Settings" xml:space="preserve"><value>設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ConfigureGlobalProvitAccessPolicy" xml:space="preserve"><value>グローバルProvitアクセスポリシーを設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AccessControl" xml:space="preserve"><value>アクセス制御</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.EnterPermissionResourceCodes" xml:space="preserve"><value>権限リソースコードを入力</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.EnterPermissionResourceCodesForExampleSandboxExecuteAnyMatchGrantsAccess" xml:space="preserve"><value>権限リソースコードを入力（例：sandbox.execute。いずれかに一致すれば許可）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SelectAdminUsers" xml:space="preserve"><value>管理者ユーザーを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SelectAdminUsersAnyMatchGrantsAccess" xml:space="preserve"><value>管理者ユーザーを選択（いずれかに一致すれば許可）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SelectOrEnterRoleCodes" xml:space="preserve"><value>ロールコードを選択または入力</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SelectOrEnterRoleCodesAnyMatchGrantsAccess" xml:space="preserve"><value>ロールコードを選択または入力（いずれかに一致すれば許可）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.None" xml:space="preserve"><value>（なし）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ChatEditing" xml:space="preserve"><value>Chat編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ChatAgentCurrentXNCFModule" xml:space="preserve"><value>ChatAgent · 現在のXNCFモジュール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ChatAgentSummarizesAllFunctionsIntoADeclarativeQuickActionPanelItDoes" xml:space="preserve"><value>ChatAgentはすべてのFunctionを宣言型のクイック操作パネルにまとめます。AIが生成したスクリプトや任意の内部メソッドは実行しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NeuBellNotification" xml:space="preserve"><value>NeuBell通知</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.FunctionCallingIsDisabledDuringNeuCharPivotGenerationFullAdminChatStillLoadsOnly" xml:space="preserve"><value>NeuCharPivotの生成中はFunction Callingを無効にします。完全なAdminChatでは、セッションに明示的に関連付けられたモジュールが公開登録したFunctionRenderだけを読み込みます。Pivot/Workflowの実行時にもサーバー側の許可リストとモジュール状態を再確認します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NotLinked" xml:space="preserve"><value>未連携</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ForExamplePutFrequentActionsInTheFirstGroupAndExposeOnly" xml:space="preserve"><value>例：よく使う操作を最初のグループに置き、必要なパラメーターだけを公開する</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SendAndUpdatePivot" xml:space="preserve"><value>送信してPivotを更新</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AllRequiredParametersAreCheckedAgainBeforeEnablingNothingRunsWhenThe" xml:space="preserve"><value>有効化前にすべての必須パラメーターを再検証します。モジュールが無効またはFunctionが削除済みの場合は実行しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.TriggerWorkflowAfterCompletion" xml:space="preserve"><value>完了後にWorkflowを起動</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CurrentReference" xml:space="preserve"><value>現在の参照：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.OpenFullAdminChat" xml:space="preserve"><value>完全なAdminChatを開く</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.TheModuleIsNotInstalledOrEnabledAllPivotFunctionsAndScheduled" xml:space="preserve"><value>モジュールが未インストールまたは無効のため、すべてのPivot Functionとスケジュールタスクを基盤で無効化しています。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.GenerateNeuCharPivotForThisModule" xml:space="preserve"><value>このモジュールのNeuCharPivotを生成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.GenerateInterface" xml:space="preserve"><value>インターフェースを生成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AutomaticExecution" xml:space="preserve"><value>自動実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SelectAICompute" xml:space="preserve"><value>AI計算リソースを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.IntervalSeconds" xml:space="preserve"><value>間隔（秒）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.WorkflowCapabilityIsNotEnabledTheListRemainsVisibleButMobileCommands" xml:space="preserve"><value>Workflow機能は現在有効ではありません。リストは表示されますが、モバイルコマンドは動作しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.PersonalWeChatBot" xml:space="preserve"><value>個人WeChat Bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.PersonalWeChatIntegration" xml:space="preserve"><value>個人WeChat連携</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.PersonalWeChatIntegrationIsDisabledMobileCommandsWillNotEnterAdmin" xml:space="preserve"><value>個人WeChat連携は現在無効です。モバイルコマンドはAdminに入りません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CreateBindingConfiguration" xml:space="preserve"><value>バインド設定を作成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AvailableWorkflows" xml:space="preserve"><value>利用可能なWorkflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CommandPrefixModelPageDataCommandPrefixModelPageDataRequireCommandPrefixRequiredOptional" xml:space="preserve"><value>コマンドプレフィックス @Model.PageData.CommandPrefix@(Model.PageData.RequireCommandPrefix ? " · 必須" : " · 任意")</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CompleteBindingInWeChat" xml:space="preserve"><value>WeChatでバインドを完了</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Copy" xml:space="preserve"><value>コピー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CurrentAdminUserID" xml:space="preserve"><value>現在のAdminユーザーID</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NoWorkflowIsAvailableForTheCurrentAdministrator" xml:space="preserve"><value>現在の管理者が利用できるWorkflowはありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CurrentCapabilities" xml:space="preserve"><value>現在の機能</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.MobileCommands" xml:space="preserve"><value>モバイルコマンド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.OpenPersonalWeChatBot" xml:space="preserve"><value>個人WeChat Botを開く</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.BindTheCurrentAdministratorToAWeChatAccountToQueryAndRun" xml:space="preserve"><value>現在の管理者をWeChatアカウントにバインドすると、スマートフォンからWorkflowを確認・実行できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SendTheBindingCodeToTheOtherPerson" xml:space="preserve"><value>バインドコードを相手に送信</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.QueryByTheCurrentAdministratorIDModelPageDataWorkflowUserIdSendingGetWorkflow" xml:space="preserve"><value>現在の管理者ID @Model.PageData.WorkflowUserId で検索します。スマートフォンで「Workflow一覧を取得」を送ると同じ結果が返ります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SearchIDOrName" xml:space="preserve"><value>IDまたは名前を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.DatabaseBindingConfiguration" xml:space="preserve"><value>データベースバインド設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.EnabledSupplemental" xml:space="preserve"><value>有効</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.TheSystemStoresOnlyAnIrreversibleHashAfterCreationOrModificationSucceeds" xml:space="preserve"><value>システムには不可逆ハッシュのみ保存されます。作成または変更に成功したら、平文のバインドコードを対応するWeChatユーザーにすぐ送信してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AskTheOtherPersonToSendBindWeChatAccountAfterBindingSend" xml:space="preserve"><value>相手に「WeChatアカウントをバインド」を送ってもらいます。バインド後、「Workflow一覧を取得」を送ると、このページと同じ一覧を確認できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NoEnabledBindingConfigurationExistsCreateABindingForTheWeChatAccount" xml:space="preserve"><value>有効なバインド設定がありません。まず個人WeChat BotでWeChatアカウントのバインドを作成すると、スマートフォンが管理者を識別できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.IntegrationStatus" xml:space="preserve"><value>連携状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.FirstBinding" xml:space="preserve"><value>初回バインド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.PivotBlockIsNotInitialized" xml:space="preserve"><value>Pivot Blockは未初期化です</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.OpenModuleNeuCharPivotSettings" xml:space="preserve"><value>モジュールのNeuCharPivot設定を開く</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.OpenPanelSettingsAndPrefillTheCode" xml:space="preserve"><value>パネル設定を開き、コードを事前入力</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.TheFunctionReferencedByThisBlockWasNotFoundInTheDatabase" xml:space="preserve"><value>このブロックが参照するFunctionがデータベースにありません。Functionを初期化または復元してから、パネル設定に戻って再選択してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ManagePanels" xml:space="preserve"><value>パネルを管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Text" xml:space="preserve"><value>日本語</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SimplifiedChinese" xml:space="preserve"><value>簡体字中国語</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SuzhouSenparcNetworkTechnologyCoLtd" xml:space="preserve"><value>蘇州盛派ネットワークテクノロジー有限公司</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.FunctionCallingParameters" xml:space="preserve"><value>Function Callingパラメーター</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.XNCFModule" xml:space="preserve"><value>XNCFモジュール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AcceptsRegularInputParametersOnly" xml:space="preserve"><value>通常のinputパラメーターのみ受け取る</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.OpenAlternate" xml:space="preserve"><value>開く</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SearchWorkflowNameDescriptionParameters" xml:space="preserve"><value>Workflow名 / 説明 / パラメーターを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NoEnabledWorkflowIsAvailable" xml:space="preserve"><value>利用可能な有効Workflowはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ClearSelection" xml:space="preserve"><value>選択をクリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AIQuickChat" xml:space="preserve"><value>AIクイックチャット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AdminChatQuickChat" xml:space="preserve"><value>Admin Chatクイックチャット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NeuBellReminder" xml:space="preserve"><value>NeuBell通知</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ShowsOnlyBrowserLogsCapturedAfterThisPageLoadedServerStdoutIs" xml:space="preserve"><value>このページの読み込み後に取得したブラウザーログのみ表示し、サーバーstdoutは含みません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CloseAll" xml:space="preserve"><value>すべて閉じる</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SwitchToTheFullPage" xml:space="preserve"><value>正式ページに切り替え</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NoModuleCurrentlyProvidesNeuBellInformation" xml:space="preserve"><value>現在、NeuBell情報を提供するモジュールはありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NoLogs" xml:space="preserve"><value>ログはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ServerTime" xml:space="preserve"><value>サーバー時刻</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.BrowserConsole" xml:space="preserve"><value>ブラウザーConsole</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Consume" xml:space="preserve"><value>消費</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ConsumeAll" xml:space="preserve"><value>すべて消費</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ClearAlternate" xml:space="preserve"><value>クリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ChooseModuleRemindersToShowInTheFooterTheSettingIsSaved" xml:space="preserve"><value>Footerに表示するモジュール通知を選択します。設定はこのアカウントのブラウザーに保存されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SupportsPlainTextAndATagsWithAbsoluteHttpHttpsLinksOther" xml:space="preserve"><value>通常のテキストと絶対http/httpsリンクを持つ&lt;a&gt;タグに対応し、それ以外のHTMLはエンコードされます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.OneHour" xml:space="preserve"><value>1時間</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.24Hours" xml:space="preserve"><value>24時間</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SevenDays" xml:space="preserve"><value>7日間</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AdminChatCommand" xml:space="preserve"><value>AdminChatコマンド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AnonymousHTMLSnapshotSharing" xml:space="preserve"><value>匿名HTMLスナップショット共有</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.HarnessTaskTrace" xml:space="preserve"><value>Harnessタスクトレース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.WorkspacePDFPreview" xml:space="preserve"><value>Workspace PDFプレビュー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.WorkspaceName" xml:space="preserve"><value>Workspace名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.WorkspaceFilesAndPaths" xml:space="preserve"><value>Workspaceファイルとパス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.WorkspaceAssets" xml:space="preserve"><value>Workspaceアセット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.PreviousSection" xml:space="preserve"><value>前のセクション</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.UploadMaterials" xml:space="preserve"><value>資料をアップロード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NextSection" xml:space="preserve"><value>次のセクション</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.DownloadSaveAs" xml:space="preserve"><value>ダウンロード / 名前を付けて保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.DownloadCurrentDirectoryZip" xml:space="preserve"><value>現在のディレクトリをダウンロード（.zip）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.DoNotUseWorkspace" xml:space="preserve"><value>Workspaceを使用しない</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.StartDirectlyWithoutReferencingModules" xml:space="preserve"><value>モジュールを参照せずに開始</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AddCallableModulesOrWorkflowsToTheCurrentConversation" xml:space="preserve"><value>現在の会話に呼び出し可能なモジュールまたはWorkflowを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SelectAWorkspaceForTheCurrentConversation" xml:space="preserve"><value>現在の会話のWorkspaceを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AuthorizeSendingACompressedImageToTheVisionModelForThisTurn" xml:space="preserve"><value>このターンのみ圧縮画像をビジョンモデルに送信することを許可します。追加Tokenが発生する場合があります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.RemoveFromThisTurnAndDeleteWorkspaceFiles" xml:space="preserve"><value>このターンから削除し、Workspaceファイルも削除</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AnyoneWithTheLinkCanViewThisSnapshot" xml:space="preserve"><value>リンクを持つ全員がこのスナップショットを閲覧できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.TaskTrace" xml:space="preserve"><value>タスクトレース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ForExampleYieldCSampleProject" xml:space="preserve"><value>例：Yield C#サンプルプロジェクト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SaveFile" xml:space="preserve"><value>ファイルを保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Allow" xml:space="preserve"><value>許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AllowAIToWriteFiles" xml:space="preserve"><value>AIによるファイル書き込みを許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AllowAIToExecutePython" xml:space="preserve"><value>AIによるPython実行を許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CloseAssetPanel" xml:space="preserve"><value>アセットパネルを閉じる</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ShareExpiration" xml:space="preserve"><value>共有の有効期限</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CreateReadOnlySnapshotLink" xml:space="preserve"><value>読み取り専用スナップショットリンクを作成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AnonymousSnapshotLink" xml:space="preserve"><value>匿名スナップショットリンク</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CancelEditing" xml:space="preserve"><value>編集をキャンセル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Writable" xml:space="preserve"><value>書き込み可能</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CLIExecutable" xml:space="preserve"><value>実行可能CLI</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.OptionalAddANoteOrRejectionReason" xml:space="preserve"><value>任意：補足説明または拒否理由を入力</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.OpenInExternalBrowserReadOnly" xml:space="preserve"><value>外部ブラウザーで開く（読み取り専用）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ExpandToTheMaximumAvailableWidth" xml:space="preserve"><value>利用可能な最大幅まで展開</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ReferencedModules" xml:space="preserve"><value>参照モジュール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CurrentSession" xml:space="preserve"><value>現在のセッション</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CurrentDirectoryIsEmpty" xml:space="preserve"><value>現在のディレクトリは空です</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Reject" xml:space="preserve"><value>拒否</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SearchModels" xml:space="preserve"><value>モデルを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Undo" xml:space="preserve"><value>元に戻す</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CreateWorkspace" xml:space="preserve"><value>Workspaceを新規作成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NoHarnessTraces" xml:space="preserve"><value>Harnessトレースはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Unsaved" xml:space="preserve"><value>未保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ViewLiveExecution" xml:space="preserve"><value>リアルタイム実行を表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SearchTracesToolsOrResults" xml:space="preserve"><value>トレース、ツール、結果を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.FindingWorkspace" xml:space="preserve"><value>Workspaceを検索中…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.TextPreviewIsNotSupportedForThisFileType" xml:space="preserve"><value>このファイル形式はテキストプレビューに対応していません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NoMatchingFilesOrPaths" xml:space="preserve"><value>一致するファイルまたはパスがありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ManageAnonymousSharing" xml:space="preserve"><value>匿名共有を管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.EditFile" xml:space="preserve"><value>ファイルを編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Vision" xml:space="preserve"><value>ビジョン</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Assets" xml:space="preserve"><value>アセット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.GoTo" xml:space="preserve"><value>移動</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.GoToLine" xml:space="preserve"><value>行へ移動</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.TheDefaultSystemPromptIsManagedByPromptRangeTheCurrentTextContains" xml:space="preserve"><value>既定のシステムプロンプトはPromptRangeで管理されます。現在のテキストは個人またはテナントの追加設定です。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ReferenceFileOrPath" xml:space="preserve"><value>、@@でファイルまたはパスを参照</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.EnterToReferenceAFileOrPath" xml:space="preserve"><value>、@@を入力してファイルまたはパスを参照</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SupportsPlainTextAndATagsWithAbsoluteHttpHttpsLinksOtherAlternate" xml:space="preserve"><value>通常のテキストと絶対http/httpsリンクを持つ&lt;a&gt;タグに対応し、それ以外のHTMLはエンコードされます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Fork" xml:space="preserve"><value>フォーク</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Thinking" xml:space="preserve"><value>思考中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.WaitingForToolConfirmation" xml:space="preserve"><value>ツールの確認待ち</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ReplayEventValue" xml:space="preserve"><value>再生イベント #{0} ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.PressCtrlEnterOrCmdEnterToStart" xml:space="preserve"><value>Ctrl + EnterまたはCmd + Enterで開始</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="Frontend.Admin.NoValidShares" xml:space="preserve"><value>有効な共有はありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ValueMoreItems" xml:space="preserve"><value>残り{0}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ViewPreview" xml:space="preserve"><value>プレビューを表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ReturnToText" xml:space="preserve"><value>テキストに戻る</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.TreeView" xml:space="preserve"><value>ツリー表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ViewSource" xml:space="preserve"><value>ソースを表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.LoadingPreview" xml:space="preserve"><value>プレビューを読み込み中…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.MissingFunction" xml:space="preserve"><value>Functionがありません：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SelectAllFilteredResults" xml:space="preserve"><value>現在のフィルター結果をすべて選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.SelectedValueValue" xml:space="preserve"><value>選択済み {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.NeuBellWebHookSettingsAlternate" xml:space="preserve"><value>NeuBell · WebHook設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.EditWebHook" xml:space="preserve"><value>WebHookを編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AddWebHookAlternate" xml:space="preserve"><value>WebHookを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="Frontend.Admin.NoMatchingWorkflow" xml:space="preserve"><value>一致するWorkflowはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.DatabasePoliciesValue" xml:space="preserve"><value>データベースポリシー {0}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.OrphanPoliciesValue" xml:space="preserve"><value>孤立ポリシー {0}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.AvailableWorkflowsAlternate" xml:space="preserve"><value>利用可能なWorkflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Panels" xml:space="preserve"><value>パネル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.UpToValueFiles" xml:space="preserve"><value>最大{0}ファイル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ShowUnavailableModulesValue" xml:space="preserve"><value>利用できないモジュールを表示（{0}）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ModuleVersion" xml:space="preserve"><value>モジュールバージョン</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="Frontend.Admin.ValueTotal" xml:space="preserve"><value>合計{0}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ValuePerPage" xml:space="preserve"><value>{0}件/ページ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.GoToAlternate" xml:space="preserve"><value>移動</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Page" xml:space="preserve"><value>ページ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.TenPerPage" xml:space="preserve"><value>10件/ページ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.20PerPage" xml:space="preserve"><value>20件/ページ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.30PerPage" xml:space="preserve"><value>30件/ページ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.40PerPage" xml:space="preserve"><value>40件/ページ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CommandPrefixValueRequired" xml:space="preserve"><value>コマンドプレフィックス {0} · 必須</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CommandPrefixValueOptional" xml:space="preserve"><value>コマンドプレフィックス {0} · 任意</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.HarnessDisabled" xml:space="preserve"><value>Harnessは無効です</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.BindWeChatAccount" xml:space="preserve"><value>WeChatアカウントをバインド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.GetWorkflowList" xml:space="preserve"><value>Workflow一覧を取得</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.TheCurrentCommandPrefixIs" xml:space="preserve"><value>現在のコマンドプレフィックス：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ValueValueItems" xml:space="preserve"><value>{0} / {1}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.Input" xml:space="preserve"><value>入力内容</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.ValueNewMessages" xml:space="preserve"><value>新着メッセージ{0}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Admin.CommandPrefix" xml:space="preserve"><value>コマンドプレフィックス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 
   <data name="WeixinClaw.Workflow.IntegrationDisabled" xml:space="preserve"><value>Workflow integration is disabled or the host has not loaded the NeuCharWorkflow module.</value></data>
   <data name="WeixinClaw.Workflow.NoAvailable" xml:space="preserve"><value>No Workflows are currently available.</value></data>
@@ -1363,193 +1387,193 @@
   <data name="WeixinClaw.Workflow.HelpList" xml:space="preserve"><value>{0}workflow - List available Workflows and Workflow IDs</value></data>
   <data name="WeixinClaw.Workflow.HelpExecute" xml:space="preserve"><value>{0}workflow &lt;WorkflowId&gt; &lt;input&gt; - Execute the specified Workflow</value></data>
 
-  <data name="Frontend.500" xml:space="preserve"><value>NeuCharPivot · アクセス制御</value></data>
+  <data name="Frontend.Admin.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot · アクセス制御</value></data>
 
-  <data name="Frontend.501" xml:space="preserve"><value>アクセス制御</value></data>
 
-  <data name="Frontend.502" xml:space="preserve"><value>FunctionのグローバルProvitアクセス制御</value></data>
 
-  <data name="Frontend.503" xml:space="preserve"><value>任意のXNCFモジュールのFunctionに、ユーザー、ロール、権限コードを紐付けたデータベースアクセスポリシーを設定します。データベースポリシーはコード属性を上書きします。モジュールをクリアした後も保持され、再インストール後に再び有効になります。手動で削除した場合のみ消去されます。</value></data>
 
-  <data name="Frontend.504" xml:space="preserve"><value>モジュール / Functionを検索</value></data>
 
-  <data name="Frontend.505" xml:space="preserve"><value>更新</value></data>
+  <data name="Frontend.Admin.ConfigureDatabaseAccessPoliciesForFunctionsInAnyXNCFModuleByBindingAlternate" xml:space="preserve"><value>任意のXNCFモジュールのFunctionに、ユーザー、ロール、権限コードを紐付けたデータベースアクセスポリシーを設定します。データベースポリシーはコード属性を上書きします。モジュールをクリアした後も保持され、再インストール後に再び有効になります。手動で削除した場合のみ消去されます。</value></data>
 
-  <data name="Frontend.506" xml:space="preserve"><value>Function {0}個</value></data>
 
-  <data name="Frontend.507" xml:space="preserve"><value>データベースポリシー {0}件</value></data>
 
-  <data name="Frontend.508" xml:space="preserve"><value>孤立ポリシー {0}件</value></data>
+  <data name="Frontend.Admin.RefreshAlternate" xml:space="preserve"><value>更新</value></data>
 
-  <data name="Frontend.509" xml:space="preserve"><value>一括公開</value></data>
+  <data name="Frontend.Admin.ValueFunctions" xml:space="preserve"><value>Function {0}個</value></data>
 
-  <data name="Frontend.510" xml:space="preserve"><value>一括制限</value></data>
 
-  <data name="Frontend.511" xml:space="preserve"><value>一括無効化</value></data>
 
-  <data name="Frontend.512" xml:space="preserve"><value>継承を一括復元</value></data>
 
-  <data name="Frontend.513" xml:space="preserve"><value>一括クリア</value></data>
 
-  <data name="Frontend.514" xml:space="preserve"><value>モジュール</value></data>
 
-  <data name="Frontend.515" xml:space="preserve"><value>モジュールをクリア済み</value></data>
 
-  <data name="Frontend.516" xml:space="preserve"><value>モジュール利用不可</value></data>
 
-  <data name="Frontend.517" xml:space="preserve"><value>コードの基準</value></data>
 
-  <data name="Frontend.518" xml:space="preserve"><value>グローバルアクセスを許可</value></data>
 
-  <data name="Frontend.519" xml:space="preserve"><value>グローバルアクセス未宣言</value></data>
 
-  <data name="Frontend.520" xml:space="preserve"><value>ログイン済みの管理者</value></data>
 
-  <data name="Frontend.521" xml:space="preserve"><value>データベースポリシー</value></data>
 
-  <data name="Frontend.522" xml:space="preserve"><value>出典：データベースポリシー</value></data>
 
-  <data name="Frontend.523" xml:space="preserve"><value>再インストール後に有効</value></data>
 
-  <data name="Frontend.524" xml:space="preserve"><value>出典：コード属性</value></data>
 
-  <data name="Frontend.525" xml:space="preserve"><value>有効なポリシー</value></data>
 
-  <data name="Frontend.526" xml:space="preserve"><value>操作</value></data>
 
-  <data name="Frontend.527" xml:space="preserve"><value>設定</value></data>
 
-  <data name="Frontend.528" xml:space="preserve"><value>クリア</value></data>
 
-  <data name="Frontend.529" xml:space="preserve"><value>グローバルProvitアクセスポリシーを設定</value></data>
 
-  <data name="Frontend.530" xml:space="preserve"><value>対象情報</value></data>
 
-  <data name="Frontend.531" xml:space="preserve"><value>不明なバージョン</value></data>
 
-  <data name="Frontend.532" xml:space="preserve"><value>保存後は孤立設定として保持され、モジュール再インストール後に有効になります</value></data>
+  <data name="Frontend.Admin.GlobalAccessAllowed" xml:space="preserve"><value>グローバルアクセスを許可</value></data>
 
-  <data name="Frontend.533" xml:space="preserve"><value>Functionは存在しません。ポリシーは孤立設定として保持されます</value></data>
+  <data name="Frontend.Admin.GlobalAccessNotDeclared" xml:space="preserve"><value>グローバルアクセス未宣言</value></data>
 
-  <data name="Frontend.534" xml:space="preserve"><value>（なし）</value></data>
 
-  <data name="Frontend.535" xml:space="preserve"><value>説明</value></data>
 
-  <data name="Frontend.536" xml:space="preserve"><value>コードの基準（FunctionRenderAttribute）</value></data>
 
-  <data name="Frontend.537" xml:space="preserve"><value>グローバルProvitで許可</value></data>
 
-  <data name="Frontend.538" xml:space="preserve"><value>グローバルProvitで不許可</value></data>
+  <data name="Frontend.Admin.SourceDatabasePolicy" xml:space="preserve"><value>出典：データベースポリシー</value></data>
 
-  <data name="Frontend.539" xml:space="preserve"><value>モジュールはクリア済みでコードの基準を読み取れないため、データベースポリシーを基準にします。</value></data>
+  <data name="Frontend.Admin.EffectiveAfterReinstall" xml:space="preserve"><value>再インストール後に有効</value></data>
 
-  <data name="Frontend.540" xml:space="preserve"><value>現在のデータベースポリシー</value></data>
+  <data name="Frontend.Admin.SourceCodeAttributes" xml:space="preserve"><value>出典：コード属性</value></data>
 
-  <data name="Frontend.541" xml:space="preserve"><value>モード</value></data>
 
-  <data name="Frontend.542" xml:space="preserve"><value>作成日時</value></data>
 
-  <data name="Frontend.543" xml:space="preserve"><value>既存のバインド</value></data>
+  <data name="Frontend.Admin.ActionsAlternate" xml:space="preserve"><value>操作</value></data>
 
-  <data name="Frontend.544" xml:space="preserve"><value>メモ</value></data>
 
-  <data name="Frontend.545" xml:space="preserve"><value>データベースポリシーは未設定です。現在はコードの基準に従います。</value></data>
 
-  <data name="Frontend.546" xml:space="preserve"><value>ポリシーモード</value></data>
 
-  <data name="Frontend.547" xml:space="preserve"><value>コードを継承</value></data>
 
-  <data name="Frontend.548" xml:space="preserve"><value>公開</value></data>
 
-  <data name="Frontend.549" xml:space="preserve"><value>制限付き</value></data>
 
-  <data name="Frontend.550" xml:space="preserve"><value>無効</value></data>
 
-  <data name="Frontend.551" xml:space="preserve"><value>ロールコードを選択または入力（いずれかに一致すれば許可）</value></data>
 
-  <data name="Frontend.552" xml:space="preserve"><value>許可するロール</value></data>
+  <data name="Frontend.Admin.UnknownVersion" xml:space="preserve"><value>不明なバージョン</value></data>
 
-  <data name="Frontend.553" xml:space="preserve"><value>許可する権限コード</value></data>
+  <data name="Frontend.Admin.RetainedAsAnOrphanAfterSavingBecomesEffectiveAfterModuleReinstall" xml:space="preserve"><value>保存後は孤立設定として保持され、モジュール再インストール後に有効になります</value></data>
 
-  <data name="Frontend.554" xml:space="preserve"><value>権限コードを入力（例：sandbox.execute。いずれかに一致すれば許可）</value></data>
+  <data name="Frontend.Admin.TheFunctionNoLongerExistsThePolicyRemainsAsAnOrphan" xml:space="preserve"><value>Functionは存在しません。ポリシーは孤立設定として保持されます</value></data>
 
-  <data name="Frontend.555" xml:space="preserve"><value>許可するユーザー</value></data>
 
-  <data name="Frontend.556" xml:space="preserve"><value>管理者ユーザーを選択（いずれかに一致すれば許可）</value></data>
 
-  <data name="Frontend.557" xml:space="preserve"><value>後の監査のため、このポリシー変更の理由を記録します</value></data>
+  <data name="Frontend.Admin.DescriptionAlternate" xml:space="preserve"><value>説明</value></data>
 
-  <data name="Frontend.558" xml:space="preserve"><value>キャンセル</value></data>
 
-  <data name="Frontend.559" xml:space="preserve"><value>ポリシーを保存</value></data>
 
-  <data name="Frontend.560" xml:space="preserve"><value>一括制限設定</value></data>
+  <data name="Frontend.Admin.AllowedInGlobalProvit" xml:space="preserve"><value>グローバルProvitで許可</value></data>
 
-  <data name="Frontend.561" xml:space="preserve"><value>選択した{0}個のFunctionに「制限付き」ポリシーを適用します。制限モードでは、紐付けられたユーザー、ロール、権限コードのいずれかだけがグローバルProvitにアクセスできます。少なくとも1つを紐付けてください。</value></data>
+  <data name="Frontend.Admin.NotAllowedInGlobalProvit" xml:space="preserve"><value>グローバルProvitで不許可</value></data>
 
-  <data name="Frontend.562" xml:space="preserve"><value>ロールコードを選択または入力</value></data>
+  <data name="Frontend.Admin.TheModuleWasClearedSoTheCodeBaselineCannotBeReadThe" xml:space="preserve"><value>モジュールはクリア済みでコードの基準を読み取れないため、データベースポリシーを基準にします。</value></data>
 
-  <data name="Frontend.563" xml:space="preserve"><value>権限リソースコードを入力</value></data>
 
-  <data name="Frontend.564" xml:space="preserve"><value>管理者ユーザーを選択</value></data>
 
-  <data name="Frontend.565" xml:space="preserve"><value>適用</value></data>
 
-  <data name="Frontend.566" xml:space="preserve"><value>不明</value></data>
 
-  <data name="Frontend.567" xml:space="preserve"><value>再インストール後に有効</value></data>
+  <data name="Frontend.Admin.CreatedAt" xml:space="preserve"><value>作成日時</value></data>
 
-  <data name="Frontend.568" xml:space="preserve"><value>データベースポリシーを使用せず、コード属性（AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes）だけに従います。</value></data>
 
-  <data name="Frontend.569" xml:space="preserve"><value>ログイン済みの管理者は誰でもグローバルProvit経由でこのFunctionにアクセスできます（コードの制約を上書きするため注意してください）。</value></data>
 
-  <data name="Frontend.570" xml:space="preserve"><value>下記で紐付けられたユーザー、ロール、権限コードのいずれかに一致する場合のみアクセスできます。それ以外のアカウントは拒否されます。</value></data>
+  <data name="Frontend.Admin.NotesAlternate" xml:space="preserve"><value>メモ</value></data>
 
-  <data name="Frontend.571" xml:space="preserve"><value>コード属性が許可していても、すべてのグローバルProvitアクセスを明示的に拒否します。</value></data>
 
-  <data name="Frontend.572" xml:space="preserve"><value>ポリシーを保存しました</value></data>
 
-  <data name="Frontend.573" xml:space="preserve"><value>保存に失敗しました</value></data>
 
-  <data name="Frontend.574" xml:space="preserve"><value>{0} / {1} のデータベースポリシーを削除しますか？削除後はコードの基準に戻ります。</value></data>
 
-  <data name="Frontend.575" xml:space="preserve"><value>ポリシーを削除</value></data>
 
-  <data name="Frontend.576" xml:space="preserve"><value>ポリシーを削除しました</value></data>
 
-  <data name="Frontend.577" xml:space="preserve"><value>削除に失敗しました</value></data>
 
-  <data name="Frontend.578" xml:space="preserve"><value>選択した{0}個のFunctionをすべて「公開」しますか？（ログイン済みの管理者は誰でもアクセスできます）</value></data>
 
-  <data name="Frontend.579" xml:space="preserve"><value>選択した{0}個のFunctionをすべて「無効」にしますか？（グローバルProvitアクセスを常に拒否します）</value></data>
 
-  <data name="Frontend.580" xml:space="preserve"><value>選択した{0}個のFunctionを「コードを継承」に戻しますか？（データベースポリシーはコードの基準を上書きしなくなります）</value></data>
 
-  <data name="Frontend.581" xml:space="preserve"><value>選択した{0}個のFunctionのデータベースポリシーを削除しますか？コードの基準に戻り、元に戻せません。</value></data>
 
-  <data name="Frontend.582" xml:space="preserve"><value>実行しますか？</value></data>
 
-  <data name="Frontend.583" xml:space="preserve"><value>一括操作</value></data>
 
-  <data name="Frontend.584" xml:space="preserve"><value>確認</value></data>
 
-  <data name="Frontend.585" xml:space="preserve"><value>一括操作が完了しました。影響を受けたポリシー：{0}</value></data>
 
-  <data name="Frontend.586" xml:space="preserve"><value>一括操作に失敗しました</value></data>
 
-  <data name="Frontend.600" xml:space="preserve"><value>Footerに表示するモジュール通知を選択します。設定はこのアカウントのブラウザーに保存されます。</value></data>
-  <data name="Frontend.601" xml:space="preserve"><value>現在、NeuBell情報を提供するモジュールはありません。</value></data>
-  <data name="Frontend.602" xml:space="preserve"><value>すべて消費</value></data>
-  <data name="Frontend.603" xml:space="preserve"><value>消費</value></data>
-  <data name="Frontend.604" xml:space="preserve"><value>NeuBell通知</value></data>
-  <data name="Frontend.605" xml:space="preserve"><value>すべて閉じる</value></data>
-  <data name="Frontend.606" xml:space="preserve"><value>折りたたむ</value></data>
-  <data name="Frontend.607" xml:space="preserve"><value>残り{0}件。クリックして展開</value></data>
-  <data name="Frontend.608" xml:space="preserve"><value>NeuBellテスト通知</value></data>
-  <data name="Frontend.609" xml:space="preserve"><value>Functionから送信。Functionでこの通知を消費するか、現在の購読の通知をすべて消去できます。</value></data>
-  <data name="Frontend.610" xml:space="preserve"><value>DesktopBridgeリモート接続審査</value></data>
-  <data name="Frontend.611" xml:space="preserve"><value>処理待ちのデバイスペアリング要求が{0}件あります。</value></data>
-  <data name="Frontend.612" xml:space="preserve"><value>処理待ちのデバイスペアリング要求はありません。</value></data>
+
+
+  <data name="Frontend.Admin.EnterPermissionCodesForExampleSandboxExecuteAnyMatchGrantsAccess" xml:space="preserve"><value>権限コードを入力（例：sandbox.execute。いずれかに一致すれば許可）</value></data>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <data name="Frontend.Admin.ApplyTheRestrictedPolicyToTheValueSelectedFunctionsInRestrictedMode" xml:space="preserve"><value>選択した{0}個のFunctionに「制限付き」ポリシーを適用します。制限モードでは、紐付けられたユーザー、ロール、権限コードのいずれかだけがグローバルProvitにアクセスできます。少なくとも1つを紐付けてください。</value></data>
+
+
+
+
+
+
+
+
+
+  <data name="Frontend.Admin.UnknownAlternate" xml:space="preserve"><value>不明</value></data>
+
+  <data name="Frontend.Admin.EffectiveAfterReinstallAlternate" xml:space="preserve"><value>再インストール後に有効</value></data>
+
+  <data name="Frontend.Admin.DoNotUseDatabasePoliciesFollowCodeAttributesOnlyAllowGlobalPivotGlobalPivotRoleCodesGlobalPivotPermi" xml:space="preserve"><value>データベースポリシーを使用せず、コード属性（AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes）だけに従います。</value></data>
+
+  <data name="Frontend.Admin.AnySignedInAdminCanAccessThisFunctionThroughGlobalProvitOverrides" xml:space="preserve"><value>ログイン済みの管理者は誰でもグローバルProvit経由でこのFunctionにアクセスできます（コードの制約を上書きするため注意してください）。</value></data>
+
+  <data name="Frontend.Admin.OnlyUsersRolesOrPermissionCodesBoundBelowAnyMatchMayAccess" xml:space="preserve"><value>下記で紐付けられたユーザー、ロール、権限コードのいずれかに一致する場合のみアクセスできます。それ以外のアカウントは拒否されます。</value></data>
+
+  <data name="Frontend.Admin.ExplicitlyDenyAllGlobalProvitAccessEvenWhenCodeAttributesAllowIt" xml:space="preserve"><value>コード属性が許可していても、すべてのグローバルProvitアクセスを明示的に拒否します。</value></data>
+
+  <data name="Frontend.Admin.PolicySaved" xml:space="preserve"><value>ポリシーを保存しました</value></data>
+
+  <data name="Frontend.Admin.SaveFailed" xml:space="preserve"><value>保存に失敗しました</value></data>
+
+  <data name="Frontend.Admin.ClearTheDatabasePolicyForValueValueTheCodeBaselineWillApply" xml:space="preserve"><value>{0} / {1} のデータベースポリシーを削除しますか？削除後はコードの基準に戻ります。</value></data>
+
+  <data name="Frontend.Admin.ClearPolicy" xml:space="preserve"><value>ポリシーを削除</value></data>
+
+  <data name="Frontend.Admin.PolicyCleared" xml:space="preserve"><value>ポリシーを削除しました</value></data>
+
+  <data name="Frontend.Admin.ClearFailed" xml:space="preserve"><value>削除に失敗しました</value></data>
+
+  <data name="Frontend.Admin.OpenAllValueSelectedFunctionsAnySignedInAdministratorCanAccessThem" xml:space="preserve"><value>選択した{0}個のFunctionをすべて「公開」しますか？（ログイン済みの管理者は誰でもアクセスできます）</value></data>
+
+  <data name="Frontend.Admin.DisableAllValueSelectedFunctionsGlobalProvitAccessWillAlwaysBeDenied" xml:space="preserve"><value>選択した{0}個のFunctionをすべて「無効」にしますか？（グローバルProvitアクセスを常に拒否します）</value></data>
+
+  <data name="Frontend.Admin.RestoreValueSelectedFunctionsToInheritCodeDatabasePoliciesWillNoLonger" xml:space="preserve"><value>選択した{0}個のFunctionを「コードを継承」に戻しますか？（データベースポリシーはコードの基準を上書きしなくなります）</value></data>
+
+  <data name="Frontend.Admin.ClearDatabasePoliciesForValueSelectedFunctionsRestoreTheCodeBaselineThis" xml:space="preserve"><value>選択した{0}個のFunctionのデータベースポリシーを削除しますか？コードの基準に戻り、元に戻せません。</value></data>
+
+  <data name="Frontend.Admin.ConfirmOperation" xml:space="preserve"><value>実行しますか？</value></data>
+
+  <data name="Frontend.Admin.BulkOperation" xml:space="preserve"><value>一括操作</value></data>
+
+  <data name="Frontend.Admin.ConfirmSupplemental" xml:space="preserve"><value>確認</value></data>
+
+  <data name="Frontend.Admin.BulkOperationCompletedValuePoliciesAffected" xml:space="preserve"><value>一括操作が完了しました。影響を受けたポリシー：{0}</value></data>
+
+  <data name="Frontend.Admin.BulkOperationFailed" xml:space="preserve"><value>一括操作に失敗しました</value></data>
+
+  <data name="Frontend.Admin.ChooseWhichModuleRemindersAppearInTheFooterTheSettingIsSaved" xml:space="preserve"><value>Footerに表示するモジュール通知を選択します。設定はこのアカウントのブラウザーに保存されます。</value></data>
+
+
+
+  <data name="Frontend.Admin.NeuBellReminders" xml:space="preserve"><value>NeuBell通知</value></data>
+
+  <data name="Frontend.Admin.Collapse" xml:space="preserve"><value>折りたたむ</value></data>
+  <data name="Frontend.Admin.ValueMoreClickToExpand" xml:space="preserve"><value>残り{0}件。クリックして展開</value></data>
+  <data name="Frontend.Admin.NeuBellTestReminder" xml:space="preserve"><value>NeuBellテスト通知</value></data>
+  <data name="Frontend.Admin.SentByAFunctionConsumeThisItemInFunctionOrClearAll" xml:space="preserve"><value>Functionから送信。Functionでこの通知を消費するか、現在の購読の通知をすべて消去できます。</value></data>
+  <data name="Frontend.Admin.DesktopBridgeRemoteConnectionReview" xml:space="preserve"><value>DesktopBridgeリモート接続審査</value></data>
+  <data name="Frontend.Admin.ValueDevicePairingRequestsAreWaitingForReview" xml:space="preserve"><value>処理待ちのデバイスペアリング要求が{0}件あります。</value></data>
+  <data name="Frontend.Admin.ThereAreNoPendingDevicePairingRequests" xml:space="preserve"><value>処理待ちのデバイスペアリング要求はありません。</value></data>
   <data name="AdminChat.WorkflowCreation.Capabilities.Description" xml:space="preserve"><value>AI による Workflow 作成で利用できる安全なトリガー、ノード、FunctionRender を一覧します。グラフ設計の前に呼び出してください。</value></data>
   <data name="AdminChat.WorkflowCreation.Validate.Description" xml:space="preserve"><value>保存せずに安全な Workflow グラフ案を検証します。手動トリガーと終了ノードが 1 つずつ必要です。</value></data>
   <data name="AdminChat.WorkflowCreation.Create.Description" xml:space="preserve"><value>検証済み Workflow を作成し、要求に応じて有効化します。この操作には管理者の明示的な承認が必要です。</value></data>
@@ -1558,4 +1582,35 @@
   <data name="AdminChat.WorkflowCreation.Trigger" xml:space="preserve"><value>AI 作成 Workflow は現在、手動トリガーのみ対応します。</value></data>
   <data name="AdminChat.WorkflowCreation.Graph" xml:space="preserve"><value>nodes と edges を含む JSON グラフ。workflow_get_creation_capabilities が返すノード種別と FunctionRender 参照を使用してください。</value></data>
   <data name="AdminChat.WorkflowCreation.Enabled" xml:space="preserve"><value>作成後に有効化するか。手動 Workflow も管理者の実行操作が必要です。</value></data>
+  <data name="AdminChat.OllamaToolSupportRequired" xml:space="preserve"><value>Ollama モデル {0} はツール呼び出しに対応していません。シンプルチャットモードに切り替えるか、tools capability を宣言しているモデルを選択してください。</value></data>
+  <data name="AdminChat.PromptShotting" xml:space="preserve"><value>プロンプト射撃</value></data>
+  <data name="AdminChat.PromptShotting.Range" xml:space="preserve"><value>射場を選択</value></data>
+  <data name="AdminChat.PromptShotting.ExistingRange" xml:space="preserve"><value>既存の射場</value></data>
+  <data name="AdminChat.PromptShotting.NewRange" xml:space="preserve"><value>新しい射場</value></data>
+  <data name="AdminChat.PromptShotting.SelectRange" xml:space="preserve"><value>射場を選択してください</value></data>
+  <data name="AdminChat.PromptShotting.RangeNamePlaceholder" xml:space="preserve"><value>新しい射場名を入力</value></data>
+  <data name="AdminChat.PromptShotting.RangeCount" xml:space="preserve"><value>{0} 個のプロンプト</value></data>
+  <data name="AdminChat.PromptShotting.Prompt" xml:space="preserve"><value>プロンプト</value></data>
+  <data name="AdminChat.PromptShotting.Model" xml:space="preserve"><value>AI モデル</value></data>
+  <data name="AdminChat.PromptShotting.DefaultParameters" xml:space="preserve"><value>現在のセッションの AI モデルと既定値（TopP 0.5、Temperature 0.5、MaxToken 2000）を使用します。</value></data>
+  <data name="AdminChat.PromptShotting.Save" xml:space="preserve"><value>保存</value></data>
+  <data name="AdminChat.PromptShotting.SaveAndRun" xml:space="preserve"><value>保存して射撃</value></data>
+  <data name="AdminChat.PromptShotting.SaveSuccess" xml:space="preserve"><value>{0} に保存しました</value></data>
+  <data name="AdminChat.PromptShotting.ShotSuccess" xml:space="preserve"><value>{0} を完了しました</value></data>
+  <data name="AdminChat.PromptShotting.Result" xml:space="preserve"><value>{0} の実行結果</value></data>
+  <data name="AdminChat.PromptShotting.OpenTarget" xml:space="preserve"><value>ターゲットを開いて移動</value></data>
+  <data name="AdminChat.PromptShotting.Unavailable" xml:space="preserve"><value>PromptRange を利用できません。</value></data>
+  <data name="AdminChat.PromptShotting.LoadFailed" xml:space="preserve"><value>射場の読み込みに失敗しました。</value></data>
+  <data name="AdminChat.PromptShotting.SaveFailed" xml:space="preserve"><value>プロンプトの保存に失敗しました。</value></data>
+  <data name="AdminChat.PromptShotting.PromptRequired" xml:space="preserve"><value>プロンプトを入力してください。</value></data>
+  <data name="AdminChat.PromptShotting.RangeRequired" xml:space="preserve"><value>射場を選択するか、新しい射場名を入力してください。</value></data>
+  <data name="AdminChat.PromptPreview.Preview" xml:space="preserve"><value>プレビュー</value></data>
+  <data name="AdminChat.PromptPreview.Source" xml:space="preserve"><value>ソース</value></data>
+  <data name="AdminChat.PromptPreview.Download" xml:space="preserve"><value>ダウンロード</value></data>
+  <data name="AdminChat.PromptPreview.Title" xml:space="preserve"><value>{0} 安全プレビュー</value></data>
+  <data name="AdminChat.Copied" xml:space="preserve"><value>コピーしました</value></data>
+  <data name="AdminChat.WorkspaceArtifact.Preview" xml:space="preserve"><value>右側でプレビュー：{0}</value></data>
+  <data name="AdminChat.WorkspaceArtifact.Download" xml:space="preserve"><value>元ファイルをダウンロード：{0}</value></data>
+  <data name="AdminChat.Workspace3D.Loading" xml:space="preserve"><value>安全な 3D プレビューを読み込み中…</value></data>
+  <data name="AdminChat.Workspace3D.LoadError" xml:space="preserve"><value>3D プレビューの読み込みに失敗しました</value></data>
 </root>

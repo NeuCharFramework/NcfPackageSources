@@ -78,268 +78,268 @@
   <data name="Parameter.Power.Cube.Help" xml:space="preserve">
     <value>上の結果を 3 乗します</value>
   </data>
-  <data name="Frontend.001" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.AddProperty" xml:space="preserve">
     <value>+ プロパティを追加</value>
   </data>
-  <data name="Frontend.002" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.AddTag" xml:space="preserve">
     <value>+ タグを追加</value>
   </data>
-  <data name="Frontend.003" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.UploadFile" xml:space="preserve">
     <value>ファイルをアップロード</value>
   </data>
-  <data name="Frontend.004" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.UploadTime" xml:space="preserve">
     <value>アップロード日時</value>
   </data>
-  <data name="Frontend.005" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.RecalledPassages" xml:space="preserve">
     <value>件の取得パッセージ</value>
   </data>
-  <data name="Frontend.006" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.LearnMoreAboutRetrievalMethods" xml:space="preserve">
     <value>検索方法の詳細を見る。</value>
   </data>
-  <data name="Frontend.007" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Save" xml:space="preserve">
     <value>保存する</value>
   </data>
-  <data name="Frontend.008" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.InvertedIndex" xml:space="preserve">
     <value>転置インデックス</value>
   </data>
-  <data name="Frontend.009" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.AnInvertedIndexIsAStructureForEfficientRetrievalItIsOrganized" xml:space="preserve">
     <value>転置インデックスは、効率よく検索するための構造です。用語ごとに整理され、各用語はそれを含む文書やウェブページを指します。</value>
   </data>
-  <data name="Frontend.010" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Keywords" xml:space="preserve">
     <value>キーワード</value>
   </data>
-  <data name="Frontend.011" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Close" xml:space="preserve">
     <value>閉じる</value>
   </data>
-  <data name="Frontend.012" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Content" xml:space="preserve">
     <value>コンテンツ</value>
   </data>
-  <data name="Frontend.013" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.ContentType" xml:space="preserve">
     <value>コンテンツタイプ</value>
   </data>
-  <data name="Frontend.014" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Delete" xml:space="preserve">
     <value>削除</value>
   </data>
-  <data name="Frontend.015" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Cancel" xml:space="preserve">
     <value>キャンセル</value>
   </data>
-  <data name="Frontend.016" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.RecallTest" xml:space="preserve">
     <value>検索テスト</value>
   </data>
-  <data name="Frontend.017" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.RecallRate" xml:space="preserve">
     <value>検索率</value>
   </data>
-  <data name="Frontend.018" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Name" xml:space="preserve">
     <value>名前</value>
   </data>
-  <data name="Frontend.019" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Vectorize" xml:space="preserve">
     <value>ベクトル化</value>
   </data>
-  <data name="Frontend.020" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.VectorizationResult" xml:space="preserve">
     <value>ベクトル化結果</value>
   </data>
-  <data name="Frontend.021" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.VectorizationProgress" xml:space="preserve">
     <value>ベクトル化の進捗</value>
   </data>
-  <data name="Frontend.022" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Characters" xml:space="preserve">
     <value>文字</value>
   </data>
-  <data name="Frontend.023" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.PropertyName" xml:space="preserve">
     <value>プロパティ名</value>
   </data>
-  <data name="Frontend.024" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.PropertyManagement" xml:space="preserve">
     <value>プロパティ管理</value>
   </data>
-  <data name="Frontend.025" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Selected" xml:space="preserve">
     <value>選択済み：</value>
   </data>
-  <data name="Frontend.026" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.ValueRowsSelected" xml:space="preserve">
     <value>{0} 行を選択中</value>
   </data>
-  <data name="Frontend.027" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Open" xml:space="preserve">
     <value>開く</value>
   </data>
-  <data name="Frontend.028" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.ExtensionModules" xml:space="preserve">
     <value>拡張モジュール</value>
   </data>
-  <data name="Frontend.029" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.DeleteSelected" xml:space="preserve">
     <value>選択を削除</value>
   </data>
-  <data name="Frontend.030" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Search" xml:space="preserve">
     <value>検索</value>
   </data>
-  <data name="Frontend.031" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Actions" xml:space="preserve">
     <value>アクション</value>
   </data>
-  <data name="Frontend.032" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.DataSource" xml:space="preserve">
     <value>データソース</value>
   </data>
-  <data name="Frontend.033" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.FileList" xml:space="preserve">
     <value>ファイル一覧</value>
   </data>
-  <data name="Frontend.034" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.FileName" xml:space="preserve">
     <value>ファイル名</value>
   </data>
-  <data name="Frontend.035" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.FileNameAlternate" xml:space="preserve">
     <value>ファイル名</value>
   </data>
-  <data name="Frontend.036" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.FileSize" xml:space="preserve">
     <value>ファイルサイズ</value>
   </data>
-  <data name="Frontend.037" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Add" xml:space="preserve">
     <value>追加</value>
   </data>
-  <data name="Frontend.038" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.NewFile" xml:space="preserve">
     <value>新規ファイル</value>
   </data>
-  <data name="Frontend.039" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Time" xml:space="preserve">
     <value>時間 ↓</value>
   </data>
-  <data name="Frontend.040" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.NoRecallResultsYetSelectAKnowledgeBaseEnterSourceTextAnd" xml:space="preserve">
     <value>リコール結果はまだありません。ナレッジベースを選び、元テキストを入力して「テスト」をクリックしてください。</value>
   </data>
-  <data name="Frontend.041" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.SearchAlternate" xml:space="preserve">
     <value>検索</value>
   </data>
-  <data name="Frontend.042" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.QueryContent" xml:space="preserve">
     <value>クエリ内容</value>
   </data>
-  <data name="Frontend.043" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.TagName" xml:space="preserve">
     <value>タグ名</value>
   </data>
-  <data name="Frontend.044" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.TagManagement" xml:space="preserve">
     <value>タグ管理</value>
   </data>
-  <data name="Frontend.045" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.TestKnowledgeRecallWithTheGivenQueryText" xml:space="preserve">
     <value>指定したクエリテキストで、ナレッジのリコール精度をテストします。</value>
   </data>
-  <data name="Frontend.046" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.RetrievalMethod" xml:space="preserve">
     <value>検索方法</value>
   </data>
-  <data name="Frontend.047" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.RetrievalSettings" xml:space="preserve">
     <value>検索設定</value>
   </data>
-  <data name="Frontend.048" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.PassageDetails" xml:space="preserve">
     <value>パッセージの詳細</value>
   </data>
-  <data name="Frontend.049" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Test" xml:space="preserve">
     <value>テスト</value>
   </data>
-  <data name="Frontend.050" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.AddedTime" xml:space="preserve">
     <value>追加日時</value>
   </data>
-  <data name="Frontend.051" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.SourceText" xml:space="preserve">
     <value>ソーステキスト</value>
   </data>
-  <data name="Frontend.052" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.KnowledgeBase" xml:space="preserve">
     <value>ナレッジベース</value>
   </data>
-  <data name="Frontend.053" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseManagement" xml:space="preserve">
     <value>ナレッジベース管理</value>
   </data>
-  <data name="Frontend.054" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseList" xml:space="preserve">
     <value>ナレッジベース一覧</value>
   </data>
-  <data name="Frontend.055" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseManagementAlternate" xml:space="preserve">
     <value>ナレッジベース管理</value>
   </data>
-  <data name="Frontend.056" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Confirm" xml:space="preserve">
     <value>確認</value>
   </data>
-  <data name="Frontend.057" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.ConfirmAlternate" xml:space="preserve">
     <value>確認</value>
   </data>
-  <data name="Frontend.058" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.DeleteThisKnowledgeBase" xml:space="preserve">
     <value>このナレッジベースを削除しますか？</value>
   </data>
-  <data name="Frontend.059" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.FilterColumns" xml:space="preserve">
     <value>列を絞り込む</value>
   </data>
-  <data name="Frontend.060" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Edit" xml:space="preserve">
     <value>編集</value>
   </data>
-  <data name="Frontend.061" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Records" xml:space="preserve">
     <value>件</value>
   </data>
-  <data name="Frontend.062" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.PleaseFillIn" xml:space="preserve">
     <value>記入してください</value>
   </data>
-  <data name="Frontend.063" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EnterAKeyword" xml:space="preserve">
     <value>キーワードを入力してください</value>
   </data>
-  <data name="Frontend.064" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EnterText" xml:space="preserve">
     <value>内容を入力</value>
   </data>
-  <data name="Frontend.065" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EnterAName" xml:space="preserve">
     <value>名前を入力</value>
   </data>
-  <data name="Frontend.066" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EnterQueryText" xml:space="preserve">
     <value>検索テキストを入力</value>
   </data>
-  <data name="Frontend.067" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.SelectContentType" xml:space="preserve">
     <value>コンテンツ種別を選択</value>
   </data>
-  <data name="Frontend.068" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EnterKeywordsToSearchAndSelectAKnowledgeBase" xml:space="preserve">
     <value>キーワードを入力してナレッジベースを検索し、選択してください</value>
   </data>
-  <data name="Frontend.069" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.SelectAnEmbeddingModel" xml:space="preserve">
     <value>Embedding モデルを選択</value>
   </data>
-  <data name="Frontend.070" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.SelectVectorDatabase" xml:space="preserve">
     <value>ベクトルデータベースを選択</value>
   </data>
-  <data name="Frontend.071" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.SelectChatModel" xml:space="preserve">
     <value>チャットモデルを選択</value>
   </data>
-  <data name="Frontend.072" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.SelectFile" xml:space="preserve">
     <value>ファイルを選択</value>
   </data>
-  <data name="Frontend.073" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.SelectedFilesAreUploadedToFileManagementCheckThemInTheList" xml:space="preserve">
     <value>ファイルを選ぶとファイル管理へアップロードされます。下の一覧でチェックすると、現在のナレッジベースに関連付けられます。</value>
   </data>
-  <data name="Frontend.074" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Configure" xml:space="preserve">
     <value>構成</value>
   </data>
-  <data name="Frontend.075" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Reset" xml:space="preserve">
     <value>リセット</value>
   </data>
-  <data name="Frontend.076" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.FailedToLoadTheList" xml:space="preserve">
     <value>リストの読み込みに失敗</value>
   </data>
-  <data name="Frontend.077" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.ModulesAddedSuccessfully" xml:space="preserve">
     <value>追加に成功しました</value>
   </data>
-  <data name="Frontend.078" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.AddFailed" xml:space="preserve">
     <value>追加に失敗しました</value>
   </data>
-  <data name="Frontend.079" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.UpdatedSuccessfully" xml:space="preserve">
     <value>更新しました</value>
   </data>
-  <data name="Frontend.080" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.UpdateFailed" xml:space="preserve">
     <value>編集に失敗しました</value>
   </data>
-  <data name="Frontend.081" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.DeletedSuccessfully" xml:space="preserve">
     <value>削除しました</value>
   </data>
-  <data name="Frontend.082" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.DeleteFailed" xml:space="preserve">
     <value>削除に失敗しました</value>
   </data>
-  <data name="Frontend.083" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.UploadedSuccessfully" xml:space="preserve">
     <value>アップロード完了</value>
   </data>
-  <data name="Frontend.084" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.UploadFailed" xml:space="preserve">
     <value>アップロード失敗</value>
   </data>
-  <data name="Frontend.085" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.VectorizationFailed" xml:space="preserve">
     <value>ベクトル化失敗</value>
   </data>
-  <data name="Frontend.086" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.FailedToLoad" xml:space="preserve">
     <value>読み込み失敗</value>
   </data>
-  <data name="Frontend.087" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.NoData" xml:space="preserve">
     <value>データなし</value>
   </data>
-  <data name="Frontend.088" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Notice" xml:space="preserve">
     <value>お知らせ</value>
   </data>
   <data name="Page.EditKnowledgeBase" xml:space="preserve">
@@ -348,264 +348,258 @@
   <data name="Page.CreateKnowledgeBase" xml:space="preserve">
     <value>ナレッジベースを作成</value>
   </data>
-  <data name="Frontend.089" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Kind" xml:space="preserve">
     <value>種類</value>
   </data>
-  <data name="Frontend.090" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Source" xml:space="preserve">
     <value>ソース</value>
   </data>
-  <data name="Frontend.091" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Important" xml:space="preserve">
     <value>重要</value>
   </data>
-  <data name="Frontend.092" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.PendingReview" xml:space="preserve">
     <value>審査待ち</value>
   </data>
-  <data name="Frontend.093" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Demo" xml:space="preserve">
     <value>デモ</value>
   </data>
-  <data name="Frontend.094" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.SegmentValue" xml:space="preserve">
     <value>セグメント-{0}</value>
   </data>
-  <data name="Frontend.095" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseValue" xml:space="preserve">
     <value>ナレッジベース-{0}</value>
   </data>
-  <data name="Frontend.096" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.RetrievalSettingsSaved" xml:space="preserve">
     <value>検索設定を保存しました</value>
   </data>
-  <data name="Frontend.097" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EnterAnAttributeName" xml:space="preserve">
     <value>属性名を入力</value>
   </data>
-  <data name="Frontend.098" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.SavedSuccessfully" xml:space="preserve">
     <value>保存しました</value>
   </data>
-  <data name="Frontend.099" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.DeleteThisProperty" xml:space="preserve">
     <value>この属性を削除しますか？</value>
   </data>
-  <data name="Frontend.100" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Deleted" xml:space="preserve">
     <value>削除済み</value>
   </data>
-  <data name="Frontend.101" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EnterATagName" xml:space="preserve">
     <value>タグ名を入力</value>
   </data>
-  <data name="Frontend.102" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.DeleteThisTag" xml:space="preserve">
     <value>このタグを削除しますか？</value>
   </data>
-  <data name="Frontend.103" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.SelectAKnowledgeBaseFirst" xml:space="preserve">
     <value>先にナレッジベースを選択してください</value>
   </data>
-  <data name="Frontend.104" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.RetrievalExampleOne" xml:space="preserve">
     <value>[検索の例1]</value>
   </data>
-  <data name="Frontend.105" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.OfflineEvaluationRetrievalCompleted" xml:space="preserve">
     <value>オフライン評価の検索が完了しました</value>
   </data>
-  <data name="Frontend.106" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.OnlineEvaluationRetrievalCompleted" xml:space="preserve">
     <value>オンライン評価の検索が完了しました</value>
   </data>
-  <data name="Frontend.107" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Error" xml:space="preserve">
     <value>エラー</value>
   </data>
-  <data name="Frontend.108" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.VectorizationFailedPleaseCheckTheConfiguration" xml:space="preserve">
     <value>ベクトル化に失敗しました。設定を確認してください。</value>
   </data>
-  <data name="Frontend.109" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Home" xml:space="preserve">
     <value>ホーム</value>
   </data>
-  <data name="Frontend.110" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseListPage" xml:space="preserve">
     <value>ナレッジベース一覧ページ</value>
   </data>
-  <data name="Frontend.111" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EmbeddingModelId" xml:space="preserve">
     <value>Embedding モデル Id</value>
   </data>
-  <data name="Frontend.112" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.VectorDatabaseId" xml:space="preserve">
     <value>ベクトルデータベースId</value>
   </data>
-  <data name="Frontend.113" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.ChatModelId" xml:space="preserve">
     <value>チャットモデルId</value>
   </data>
-  <data name="Frontend.114" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EnterTheEmbeddingModelId" xml:space="preserve">
     <value>Embedding モデルの Id を入力してください</value>
   </data>
-  <data name="Frontend.115" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EnterVectorDatabaseId" xml:space="preserve">
     <value>ベクトルデータベースIdを入力</value>
   </data>
-  <data name="Frontend.116" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EnterChatModelId" xml:space="preserve">
     <value>チャットモデルIdを入力</value>
   </data>
-  <data name="Frontend.117" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EditKnowledgeBaseAssociation" xml:space="preserve">
     <value>ナレッジベース関連を編集</value>
   </data>
-  <data name="Frontend.118" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.AddKnowledgeBaseAssociation" xml:space="preserve">
     <value>ナレッジベース関連を追加</value>
   </data>
-  <data name="Frontend.119" xml:space="preserve">
-    <value>{0} 行を選択中</value>
-  </data>
-  <data name="Frontend.120" xml:space="preserve">
-    <value>開く</value>
-  </data>
-  <data name="Frontend.121" xml:space="preserve">
+
+
+  <data name="Frontend.KnowledgeBase.NumberOfRetrievedSegments" xml:space="preserve">
     <value>検索で返された断片数</value>
   </data>
-  <data name="Frontend.122" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseId" xml:space="preserve">
     <value>ナレッジベースId</value>
   </data>
-  <data name="Frontend.123" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Input" xml:space="preserve">
     <value>入力</value>
   </data>
-  <data name="Frontend.124" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.File" xml:space="preserve">
     <value>ファイル</value>
   </data>
-  <data name="Frontend.125" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.CollectExternalData" xml:space="preserve">
     <value>外部データを収集</value>
   </data>
-  <data name="Frontend.126" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.AddKnowledgeBaseDetails" xml:space="preserve">
     <value>ナレッジベース詳細を追加</value>
   </data>
-  <data name="Frontend.127" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseManagementDetailNameIsRequired" xml:space="preserve">
     <value>ナレッジベース管理の詳細名は必須です</value>
   </data>
-  <data name="Frontend.128" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseDetailsRecord" xml:space="preserve">
     <value>ナレッジベース詳細の詳細</value>
   </data>
-  <data name="Frontend.129" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Success" xml:space="preserve">
     <value>成功しました</value>
   </data>
-  <data name="Frontend.130" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.CongratulationsUploadSucceeded" xml:space="preserve">
     <value>アップロードに成功しました</value>
   </data>
-  <data name="Frontend.131" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Failed" xml:space="preserve">
     <value>失敗</value>
   </data>
-  <data name="Frontend.132" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.UploadFailedPleaseUploadAgain" xml:space="preserve">
     <value>アップロードに失敗しました。再度アップロードしてください</value>
   </data>
-  <data name="Frontend.133" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EditKnowledgeBaseDetails" xml:space="preserve">
     <value>ナレッジベース詳細を編集</value>
   </data>
-  <data name="Frontend.134" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Preparing" xml:space="preserve">
     <value>準備しています...</value>
   </data>
-  <data name="Frontend.135" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.AddKnowledgeBase" xml:space="preserve">
     <value>ナレッジベースを追加</value>
   </data>
-  <data name="Frontend.136" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseNameIsRequired" xml:space="preserve">
     <value>ナレッジベース名は必須です</value>
   </data>
-  <data name="Frontend.137" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseDetails" xml:space="preserve">
     <value>ナレッジベース詳細</value>
   </data>
-  <data name="Frontend.138" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Select" xml:space="preserve">
     <value>選択してください</value>
   </data>
-  <data name="Frontend.139" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.FileUploadedToFileManagement" xml:space="preserve">
     <value>ファイルをファイル管理にアップロードしました</value>
   </data>
-  <data name="Frontend.140" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.UploadFailedPleaseTryAgain" xml:space="preserve">
     <value>アップロードに失敗しました。再試行してください</value>
   </data>
-  <data name="Frontend.141" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EditKnowledgeBase" xml:space="preserve">
     <value>ナレッジベースを編集</value>
   </data>
-  <data name="Frontend.142" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.SelectAtLeastOneFileBeforeSaving" xml:space="preserve">
     <value>保存する前にファイルを 1 つ以上選択してください</value>
   </data>
-  <data name="Frontend.143" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.TheFileIsLinkedToTheKnowledgeBaseAndAnEntryWas" xml:space="preserve">
     <value>ファイルをナレッジベースに関連付け、エントリを書き込みました</value>
   </data>
-  <data name="Frontend.144" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.FileImportFailed" xml:space="preserve">
     <value>ファイルのインポートに失敗</value>
   </data>
-  <data name="Frontend.145" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.FileImportFailedLabel" xml:space="preserve">
     <value>ファイルのインポートに失敗：</value>
   </data>
-  <data name="Frontend.146" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Saved" xml:space="preserve">
     <value>保存済み</value>
   </data>
-  <data name="Frontend.147" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseSavedSuccessfully" xml:space="preserve">
     <value>ナレッジベースを保存しました</value>
   </data>
-  <data name="Frontend.148" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.SaveFailedPleaseCheckTheData" xml:space="preserve">
     <value>保存に失敗しました。データを確認してください</value>
   </data>
-  <data name="Frontend.149" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.ErrorWhileSaving" xml:space="preserve">
     <value>保存エラー：</value>
   </data>
-  <data name="Frontend.150" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.DeleteFileValueTheDatabaseRecordAndThePhysicalFileWillBoth" xml:space="preserve">
     <value>ファイル「{0}」を削除しますか？削除すると、データベース上の記録と物理ファイルの両方が除去されます。</value>
   </data>
-  <data name="Frontend.151" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.DeleteConfirmation" xml:space="preserve">
     <value>削除の確認</value>
   </data>
-  <data name="Frontend.152" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.SelectTheFilesToDeleteFirst" xml:space="preserve">
     <value>先に削除するファイルを選択してください</value>
   </data>
-  <data name="Frontend.153" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.DeleteTheValueSelectedFilesTheDatabaseRecordsAndThePhysicalFiles" xml:space="preserve">
     <value>選択した {0} 件のファイルを削除しますか？削除すると、データベース上の記録と物理ファイルの両方が除去されます。</value>
   </data>
-  <data name="Frontend.154" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.ConfirmBulkDeletion" xml:space="preserve">
     <value>一括削除の確認</value>
   </data>
-  <data name="Frontend.155" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.PartiallyCompleted" xml:space="preserve">
     <value>一部完了</value>
   </data>
-  <data name="Frontend.156" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.DeletedValueValueFiles" xml:space="preserve">
     <value>{0}/{1} 件のファイルを削除しました</value>
   </data>
-  <data name="Frontend.157" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.FileDeleted" xml:space="preserve">
     <value>ファイル削除済み</value>
   </data>
-  <data name="Frontend.158" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.DeletionFailed" xml:space="preserve">
     <value>削除に失敗：</value>
   </data>
-  <data name="Frontend.159" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.ConfirmVectorization" xml:space="preserve">
     <value>ベクトル化を確認</value>
   </data>
-  <data name="Frontend.160" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.Vectorizing" xml:space="preserve">
     <value>ベクトル化しています...</value>
   </data>
-  <data name="Frontend.161" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.VectorizationCompleted" xml:space="preserve">
     <value>ベクトル化完了</value>
   </data>
-  <data name="Frontend.162" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.VectorizationOfKnowledgeBaseValueIsComplete" xml:space="preserve">
     <value>ナレッジベース「{0}」のベクトル化が完了しました。</value>
   </data>
-  <data name="Frontend.163" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.ProcessingError" xml:space="preserve">
     <value>処理エラー：</value>
   </data>
-  <data name="Frontend.164" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.CloseNow" xml:space="preserve">
     <value>今すぐ閉じますか？</value>
   </data>
-  <data name="Frontend.165" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.ExceptionThrowTestParametersPassedValueValue" xml:space="preserve">
     <value>例外を送出するテスト。引き渡しパラメーター：{0} {1}</value>
   </data>
-  <data name="Frontend.166" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.DivisorCannotBeZero" xml:space="preserve">
     <value>除数は0にできません！</value>
   </data>
-  <data name="Frontend.167" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.UnknownOperatorValue" xml:space="preserve">
     <value>不明な演算子：{0}</value>
   </data>
-  <data name="Frontend.168" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseValueHasNoEmbeddingModelConfiguredSelectAModelIn" xml:space="preserve">
     <value>ナレッジベース '{0}' には Embedding モデルが設定されていません。先に「設定」でモデルを選択してください。</value>
   </data>
-  <data name="Frontend.169" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EmbeddingModelIDValueDoesNotExist" xml:space="preserve">
     <value>Embedding モデル ID {0} は存在しません。</value>
   </data>
-  <data name="Frontend.170" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EmbeddingVectorStoreIDValueDoesNotExist" xml:space="preserve">
     <value>Embedding ベクトルストア ID {0} は存在しません。</value>
   </data>
-  <data name="Frontend.171" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.EmbeddingModelAIKernelModelWasNotFoundValue" xml:space="preserve">
     <value>Embedding モデルの AIKernel モデルが見つかりません：{0}。</value>
   </data>
-  <data name="Frontend.172" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseValueVectorizationIsComplete" xml:space="preserve">
     <value>ナレッジベース '{0}' のベクトル化が完了しました！</value>
   </data>
-  <data name="Frontend.173" xml:space="preserve">
+  <data name="Frontend.KnowledgeBase.NoDataAlternate" xml:space="preserve">
     <value>データなし</value>
   </data>
-  <data name="Frontend.174" xml:space="preserve">
-    <value>保存しました</value>
-  </data>
+
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>サンプル関数</value>
   </data>
@@ -614,131 +608,131 @@
   </data>
 
 
-  <data name="Frontend.175" xml:space="preserve"><value>* チャンク戦略、サイズ、オーバーラップの変更は、コンテンツまたは資料を保存して再度ベクトル化した後に反映されます。再ランキングの変更はすぐに反映され、構築済みのベクトルは変更しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.176" xml:space="preserve"><value>* ベクトルストアはRedis / Qdrantのみをサポートします。Memoryはリクエスト間で永続化できません。保存後、構成で資料を関連付けてベクトル化してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.177" xml:space="preserve"><value>埋め込みモデル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.178" xml:space="preserve"><value>LLM再ランキング</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.179" xml:space="preserve"><value>LLM再ランキング（チャットモデルを使用）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.180" xml:space="preserve"><value>ナレッジベース資料をアップロード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.181" xml:space="preserve"><value>候補（先に候補を取得し、その後Top Kまで再ランキング）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.182" xml:space="preserve"><value>安全に抽出できるテキストとOfficeファイルのみ対応しています。アップロードしたファイルは自動的に選択されます。現在のドロワーで「確認」を選ぶとナレッジベースに関連付けられます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.183" xml:space="preserve"><value>ユーザーガイド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.184" xml:space="preserve"><value>手順：ベクトル化済みのナレッジベースを選択 → 現実的なユーザー質問を入力 → ソースと類似度を確認 → 必要に応じて構成に戻り、資料を調整して再度ベクトル化します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.185" xml:space="preserve"><value>例：新しいナレッジベースを作成するには？</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.186" xml:space="preserve"><value>資料の関連付けを保存すると、構築済みのベクトルは無効になります。リストに戻り、「ベクトル化」を選択してから検索テストを実行してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.187" xml:space="preserve"><value>まず5から始めます。結果が少なすぎる場合は増やし、広すぎる場合は減らしてください。このページの後続テストにのみ影響します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.188" xml:space="preserve"><value>オフ（既定）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.189" xml:space="preserve"><value>左側の検索テストを開き、このナレッジベースを選択して現実的な質問を入力し、ソースと類似度を確認してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.190" xml:space="preserve"><value>チャンクサイズ / オーバーラップ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.191" xml:space="preserve"><value>チャンク分割戦略</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.192" xml:space="preserve"><value>再読み込み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.193" xml:space="preserve"><value>テストを実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.194" xml:space="preserve"><value>選択をクリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.195" xml:space="preserve"><value>取得したフラグメントの詳細</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.196" xml:space="preserve"><value>利用可能な資料</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.197" xml:space="preserve"><value>ベクトル化の状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.198" xml:space="preserve"><value>ベクトルデータベース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.199" xml:space="preserve"><value>固定長（既定）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.200" xml:space="preserve"><value>リストの「構成」を選択してテキストを関連付けるか、資料ファイルをアップロード/選択し、関連付けを確認します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.201" xml:space="preserve"><value>文字数 · オーバーラップ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.202" xml:space="preserve"><value>完了</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.203" xml:space="preserve"><value>チャットモデル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.204" xml:space="preserve"><value>単一のキーワードではなく、実際のユーザーが尋ねそうな完全な質問を入力してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.205" xml:space="preserve"><value>ベクトル化済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.206" xml:space="preserve"><value>選択した資料：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.207" xml:space="preserve"><value>テストを開始</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.208" xml:space="preserve"><value>永続ベクトルストアが利用できません。まずAIKernelでRedisまたはQdrantを構成してください。ナレッジベースではMemoryを使用できません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.209" xml:space="preserve"><value>オープンソース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.210" xml:space="preserve"><value>ファイル名で検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.211" xml:space="preserve"><value>段落単位</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.212" xml:space="preserve"><value>ヒント：資料の関連付けを変更すると構築済みのベクトルが無効になります。必ず再度ベクトル化してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.213" xml:space="preserve"><value>ベクトル化済みのナレッジベースを検索して選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.214" xml:space="preserve"><value>ナレッジベース名を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.215" xml:space="preserve"><value>新しいナレッジベース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.216" xml:space="preserve"><value>開始するには：ナレッジベースを作成し、埋め込みとベクトルストアを構成 → 構成で資料を関連付け → ベクトル化を選択 → 検索テストで結果を確認します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.217" xml:space="preserve"><value>ナレッジベースはまだありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.218" xml:space="preserve"><value>その他</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.219" xml:space="preserve"><value>最高類似度</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.220" xml:space="preserve"><value>未ベクトル化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.221" xml:space="preserve"><value>このページのテスト記録</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.222" xml:space="preserve"><value>全文を表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.223" xml:space="preserve"><value>検索とチャンク分割</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.224" xml:space="preserve"><value>検索方法</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.225" xml:space="preserve"><value>テスト時刻</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.226" xml:space="preserve"><value>テスト結果</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.227" xml:space="preserve"><value>テスト質問</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.228" xml:space="preserve"><value>選択をクリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.229" xml:space="preserve"><value>「ベクトル化」を選択して完了を待ちます。成功すると状態が「ベクトル化済み」に変わります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.230" xml:space="preserve"><value>「新しいナレッジベース」を選択し、名前を入力して、埋め込みモデル、ベクトルデータベース、チャットモデルを選択します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.231" xml:space="preserve"><value>現実的な質問を使って返された資料フラグメントを確認します。類似度スコアは順位付けに使用され、検索率を示すパーセンテージではありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.232" xml:space="preserve"><value>このナレッジベースのチャットモデルを使用する場合は空欄にします</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.233" xml:space="preserve"><value>ナレッジベースガイド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.234" xml:space="preserve"><value>ナレッジベース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.235" xml:space="preserve"><value>ナレッジベース資料を管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.236" xml:space="preserve"><value>システムは質問と資料フラグメントをベクトル化し、意味的類似度で順位付けします。スコア範囲はモデルとストアによって異なるため、固定パーセンテージや検索率ではありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.237" xml:space="preserve"><value>結果がよくない場合は構成に戻り、資料を調整して再度ベクトル化し、もう一度テストしてください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.238" xml:space="preserve"><value>語彙の重み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.239" xml:space="preserve"><value>語彙ハイブリッド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.240" xml:space="preserve"><value>語彙ハイブリッド（追加のモデル呼び出しなし）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.241" xml:space="preserve"><value>意味ベースのベクトル検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.242" xml:space="preserve"><value>内容を入力（任意）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.243" xml:space="preserve"><value>ナレッジベース名を入力</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.244" xml:space="preserve"><value>埋め込みモデルを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.245" xml:space="preserve"><value>RedisまたはQdrantのベクトルストアを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.246" xml:space="preserve"><value>チャンク分割戦略を選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.247" xml:space="preserve"><value>チャットモデルを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.248" xml:space="preserve"><value>再ランキングモードを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.249" xml:space="preserve"><value>ナレッジベース設定に従う</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.250" xml:space="preserve"><value>返されたフラグメント</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.251" xml:space="preserve"><value>返されたフラグメント数（Top K）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.252" xml:space="preserve"><value>テスト結果はまだありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.253" xml:space="preserve"><value>ナレッジベースを選択して質問を入力すると、ここに結果が表示されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.254" xml:space="preserve"><value>ナレッジベース資料を選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.255" xml:space="preserve"><value>資料ファイルを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.256" xml:space="preserve"><value>再帰構造（長い文書に推奨）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.257" xml:space="preserve"><value>再ランキング候補数</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.258" xml:space="preserve"><value>再ランキングモデル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.259" xml:space="preserve"><value>再ランキング</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.260" xml:space="preserve"><value>再ランキング（このテスト）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.261" xml:space="preserve"><value>最大{0}個のフラグメントを返す</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.262" xml:space="preserve"><value>{0}個のフラグメント</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.263" xml:space="preserve"><value>所要時間：{0} ms</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.264" xml:space="preserve"><value>項目 {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.265" xml:space="preserve"><value>再ランキングスコア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.266" xml:space="preserve"><value>元の順位 #{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.267" xml:space="preserve"><value>ソース：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.268" xml:space="preserve"><value>統合スコアに占める語彙スコアの割合</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.269" xml:space="preserve"><value>{0}個の資料を選択中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.270" xml:space="preserve"><value>処理済み {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.271" xml:space="preserve"><value>失敗 {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.272" xml:space="preserve"><value>処理中 {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.273" xml:space="preserve"><value>[{1}]へのリクエストは{0}に開始されました</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.274" xml:space="preserve"><value>処理済み {0}、成功 {1}、失敗 {2}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.275" xml:space="preserve"><value>現在のナレッジベース構成：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.276" xml:space="preserve"><value>項目 {0} · 類似度</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.277" xml:space="preserve"><value>· 元の再ランキング位置 {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.278" xml:space="preserve"><value>リクエストが完了しませんでした。ナレッジベースとモデルの設定を確認してください。</value></data>
-  <data name="Frontend.279" xml:space="preserve"><value>ナレッジベース一覧の取得に失敗しました：{0}</value></data>
-  <data name="Frontend.280" xml:space="preserve"><value>このナレッジベースはまだベクトル化されていません。管理ページに戻り、先にベクトル化を実行してください。</value></data>
-  <data name="Frontend.281" xml:space="preserve"><value>テストする質問を入力してください</value></data>
-  <data name="Frontend.282" xml:space="preserve"><value>サービスから有効な検索結果が返されませんでした。</value></data>
-  <data name="Frontend.283" xml:space="preserve"><value>検索テストが完了しました。ソースと内容を確認してください。</value></data>
-  <data name="Frontend.284" xml:space="preserve"><value>テストは完了しましたが、一致する文章が返されませんでした。</value></data>
-  <data name="Frontend.285" xml:space="preserve"><value>検索が完了しませんでした</value></data>
-  <data name="Frontend.286" xml:space="preserve"><value>選択された資料はありません</value></data>
-  <data name="Frontend.287" xml:space="preserve"><value>現在のナレッジベースの未保存の関連付けだけを取り消します。ファイルは削除されません。続行しますか？</value></data>
-  <data name="Frontend.288" xml:space="preserve"><value>選択をクリア</value></data>
-  <data name="Frontend.289" xml:space="preserve"><value>保存せずに閉じますか？</value></data>
-  <data name="Frontend.290" xml:space="preserve"><value>外部データ収集には、取得、権限、クリーンアップの個別設定が必要です。このバージョンでは保存成功を偽装しません。</value></data>
-  <data name="Frontend.291" xml:space="preserve"><value>項目</value></data>
-  <data name="Frontend.292" xml:space="preserve"><value>開く知識ベースが見つかりません。削除されたか、現在のアカウントに権限がない可能性があります。</value></data>
-  <data name="Frontend.293" xml:space="preserve"><value>資料一覧の読み込みに失敗しました。後でもう一度お試しください。</value></data>
-  <data name="Frontend.294" xml:space="preserve"><value>エラー</value></data>
-  <data name="Frontend.295" xml:space="preserve"><value>知識ベースを保存しました</value></data>
-  <data name="Frontend.296" xml:space="preserve"><value>保存に失敗しました。データを確認してください。</value></data>
-  <data name="Frontend.297" xml:space="preserve"><value>保存エラー</value></data>
-  <data name="Frontend.298" xml:space="preserve"><value>保存できませんでした。後でもう一度お試しください。</value></data>
-  <data name="Frontend.299" xml:space="preserve"><value>成功</value></data>
-  <data name="Frontend.300" xml:space="preserve"><value>削除しました</value></data>
-  <data name="Frontend.301" xml:space="preserve"><value>知識ベース「{0}」をベクトル化しますか？</value></data>
+  <data name="Frontend.KnowledgeBase.ChangesToChunkingStrategySizeOverlapTakeEffectAfterSavingTheContent" xml:space="preserve"><value>* チャンク戦略、サイズ、オーバーラップの変更は、コンテンツまたは資料を保存して再度ベクトル化した後に反映されます。再ランキングの変更はすぐに反映され、構築済みのベクトルは変更しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.VectorStoresSupportRedisQdrantOnlyMemoryCannotPersistAcrossRequestsAfter" xml:space="preserve"><value>* ベクトルストアはRedis / Qdrantのみをサポートします。Memoryはリクエスト間で永続化できません。保存後、構成で資料を関連付けてベクトル化してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.EmbeddingModel" xml:space="preserve"><value>埋め込みモデル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.LLMReranking" xml:space="preserve"><value>LLM再ランキング</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.LLMRerankingUsingAChatModel" xml:space="preserve"><value>LLM再ランキング（チャットモデルを使用）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.UploadKnowledgeBaseMaterials" xml:space="preserve"><value>ナレッジベース資料をアップロード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.CandidatesRetrieveCandidatesFirstThenRerankToTopK" xml:space="preserve"><value>候補（先に候補を取得し、その後Top Kまで再ランキング）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.OnlySafelyExtractableTextAndOfficeFilesAreSupportedUploadedFilesAre" xml:space="preserve"><value>安全に抽出できるテキストとOfficeファイルのみ対応しています。アップロードしたファイルは自動的に選択されます。現在のドロワーで「確認」を選ぶとナレッジベースに関連付けられます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.UserGuide" xml:space="preserve"><value>ユーザーガイド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.StepsSelectAVectorizedKnowledgeBaseEnterARealisticUserQuestionInspect" xml:space="preserve"><value>手順：ベクトル化済みのナレッジベースを選択 → 現実的なユーザー質問を入力 → ソースと類似度を確認 → 必要に応じて構成に戻り、資料を調整して再度ベクトル化します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ExampleHowDoICreateANewKnowledgeBase" xml:space="preserve"><value>例：新しいナレッジベースを作成するには？</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.AfterSavingMaterialAssociationsBuiltVectorsBecomeInvalidReturnToTheList" xml:space="preserve"><value>資料の関連付けを保存すると、構築済みのベクトルは無効になります。リストに戻り、「ベクトル化」を選択してから検索テストを実行してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.StartAtFiveIncreaseItWhenResultsAreTooFewOrLower" xml:space="preserve"><value>まず5から始めます。結果が少なすぎる場合は増やし、広すぎる場合は減らしてください。このページの後続テストにのみ影響します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.OffDefault" xml:space="preserve"><value>オフ（既定）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.OpenRecallTestOnTheLeftSelectThisKnowledgeBaseAndEnter" xml:space="preserve"><value>左側の検索テストを開き、このナレッジベースを選択して現実的な質問を入力し、ソースと類似度を確認してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ChunkSizeOverlap" xml:space="preserve"><value>チャンクサイズ / オーバーラップ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ChunkingStrategy" xml:space="preserve"><value>チャンク分割戦略</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.Refresh" xml:space="preserve"><value>再読み込み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.RunATest" xml:space="preserve"><value>テストを実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ClearSelection" xml:space="preserve"><value>選択をクリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.RetrievedFragmentDetails" xml:space="preserve"><value>取得したフラグメントの詳細</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.AvailableMaterials" xml:space="preserve"><value>利用可能な資料</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.VectorizationStatus" xml:space="preserve"><value>ベクトル化の状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.VectorDatabase" xml:space="preserve"><value>ベクトルデータベース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.FixedLengthDefault" xml:space="preserve"><value>固定長（既定）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ChooseConfigurationInTheListToAssociateTextOrUploadSelectMaterial" xml:space="preserve"><value>リストの「構成」を選択してテキストを関連付けるか、資料ファイルをアップロード/選択し、関連付けを確認します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.CharactersOverlap" xml:space="preserve"><value>文字数 · オーバーラップ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.Done" xml:space="preserve"><value>完了</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ChatModel" xml:space="preserve"><value>チャットモデル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.EnterACompleteQuestionARealUserMightAskInsteadOfA" xml:space="preserve"><value>単一のキーワードではなく、実際のユーザーが尋ねそうな完全な質問を入力してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.Vectorized" xml:space="preserve"><value>ベクトル化済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.SelectedMaterials" xml:space="preserve"><value>選択した資料：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.StartTest" xml:space="preserve"><value>テストを開始</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.NoPersistentVectorStoreIsAvailableConfigureRedisOrQdrantInAIKernel" xml:space="preserve"><value>永続ベクトルストアが利用できません。まずAIKernelでRedisまたはQdrantを構成してください。ナレッジベースではMemoryを使用できません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.OpenSource" xml:space="preserve"><value>オープンソース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.SearchByFileName" xml:space="preserve"><value>ファイル名で検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ByParagraph" xml:space="preserve"><value>段落単位</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.TipChangingMaterialAssociationsInvalidatesBuiltVectorsBeSureToVectorizeAgain" xml:space="preserve"><value>ヒント：資料の関連付けを変更すると構築済みのベクトルが無効になります。必ず再度ベクトル化してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.SearchAndSelectAVectorizedKnowledgeBase" xml:space="preserve"><value>ベクトル化済みのナレッジベースを検索して選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.SearchKnowledgeBaseName" xml:space="preserve"><value>ナレッジベース名を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.NewKnowledgeBase" xml:space="preserve"><value>新しいナレッジベース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.GettingStartedCreateAKnowledgeBaseAndConfigureEmbeddingAndAVector" xml:space="preserve"><value>開始するには：ナレッジベースを作成し、埋め込みとベクトルストアを構成 → 構成で資料を関連付け → ベクトル化を選択 → 検索テストで結果を確認します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.NoKnowledgeBasesYet" xml:space="preserve"><value>ナレッジベースはまだありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.More" xml:space="preserve"><value>その他</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.HighestSimilarity" xml:space="preserve"><value>最高類似度</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.NotVectorized" xml:space="preserve"><value>未ベクトル化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.TestRecordsOnThisPage" xml:space="preserve"><value>このページのテスト記録</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ViewFullText" xml:space="preserve"><value>全文を表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.RetrievalAndChunking" xml:space="preserve"><value>検索とチャンク分割</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.RetrievalMethodAlternate" xml:space="preserve"><value>検索方法</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.TestTime" xml:space="preserve"><value>テスト時刻</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.TestResult" xml:space="preserve"><value>テスト結果</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.TestQuestion" xml:space="preserve"><value>テスト質問</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ClearSelectionAlternate" xml:space="preserve"><value>選択をクリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ChooseVectorizeAndWaitForCompletionTheStatusChangesToVectorizedWhen" xml:space="preserve"><value>「ベクトル化」を選択して完了を待ちます。成功すると状態が「ベクトル化済み」に変わります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ChooseNewKnowledgeBaseEnterANameAndSelectAnEmbeddingModel" xml:space="preserve"><value>「新しいナレッジベース」を選択し、名前を入力して、埋め込みモデル、ベクトルデータベース、チャットモデルを選択します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.UseARealisticQuestionToInspectReturnedMaterialFragmentsSimilarityScoresHelp" xml:space="preserve"><value>現実的な質問を使って返された資料フラグメントを確認します。類似度スコアは順位付けに使用され、検索率を示すパーセンテージではありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.LeaveEmptyToUseThisKnowledgeBaseSChatModel" xml:space="preserve"><value>このナレッジベースのチャットモデルを使用する場合は空欄にします</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseGuide" xml:space="preserve"><value>ナレッジベースガイド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.KnowledgeBases" xml:space="preserve"><value>ナレッジベース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ManageKnowledgeBaseMaterials" xml:space="preserve"><value>ナレッジベース資料を管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.TheSystemVectorizesQuestionsAndMaterialFragmentsThenRanksThemBySemantic" xml:space="preserve"><value>システムは質問と資料フラグメントをベクトル化し、意味的類似度で順位付けします。スコア範囲はモデルとストアによって異なるため、固定パーセンテージや検索率ではありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.IfResultsArePoorReturnToConfigurationAdjustMaterialsVectorizeAgainAnd" xml:space="preserve"><value>結果がよくない場合は構成に戻り、資料を調整して再度ベクトル化し、もう一度テストしてください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.LexicalWeight" xml:space="preserve"><value>語彙の重み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.LexicalHybrid" xml:space="preserve"><value>語彙ハイブリッド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.LexicalHybridNoExtraModelCall" xml:space="preserve"><value>語彙ハイブリッド（追加のモデル呼び出しなし）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.SemanticVectorRetrieval" xml:space="preserve"><value>意味ベースのベクトル検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.EnterContentOptional" xml:space="preserve"><value>内容を入力（任意）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.EnterAKnowledgeBaseName" xml:space="preserve"><value>ナレッジベース名を入力</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.SelectAnEmbeddingModelAlternate" xml:space="preserve"><value>埋め込みモデルを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.SelectARedisOrQdrantVectorStore" xml:space="preserve"><value>RedisまたはQdrantのベクトルストアを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.SelectAChunkingStrategy" xml:space="preserve"><value>チャンク分割戦略を選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.SelectAChatModel" xml:space="preserve"><value>チャットモデルを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.SelectARerankingMode" xml:space="preserve"><value>再ランキングモードを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.FollowKnowledgeBaseSettings" xml:space="preserve"><value>ナレッジベース設定に従う</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ReturnedFragments" xml:space="preserve"><value>返されたフラグメント</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ReturnedFragmentCountTopK" xml:space="preserve"><value>返されたフラグメント数（Top K）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.NoTestResultsYet" xml:space="preserve"><value>テスト結果はまだありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ResultsAppearHereAfterSelectingAKnowledgeBaseAndEnteringAQuestion" xml:space="preserve"><value>ナレッジベースを選択して質問を入力すると、ここに結果が表示されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.SelectKnowledgeBaseMaterials" xml:space="preserve"><value>ナレッジベース資料を選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.SelectMaterialFiles" xml:space="preserve"><value>資料ファイルを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.RecursiveStructureRecommendedForLongDocuments" xml:space="preserve"><value>再帰構造（長い文書に推奨）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.RerankingCandidateCount" xml:space="preserve"><value>再ランキング候補数</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.RerankingModel" xml:space="preserve"><value>再ランキングモデル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.Reranking" xml:space="preserve"><value>再ランキング</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.RerankingThisTest" xml:space="preserve"><value>再ランキング（このテスト）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ReturnUpToValueSegments" xml:space="preserve"><value>最大{0}個のフラグメントを返す</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ValueSegments" xml:space="preserve"><value>{0}個のフラグメント</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.DurationValueMs" xml:space="preserve"><value>所要時間：{0} ms</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ItemValue" xml:space="preserve"><value>項目 {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.RerankingScore" xml:space="preserve"><value>再ランキングスコア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.OriginalRankValue" xml:space="preserve"><value>元の順位 #{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.SourceLabel" xml:space="preserve"><value>ソース：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.LexicalScoreShareOfTheFusedScore" xml:space="preserve"><value>統合スコアに占める語彙スコアの割合</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ValueMaterialsSelected" xml:space="preserve"><value>{0}個の資料を選択中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ProcessedValue" xml:space="preserve"><value>処理済み {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.FailedValue" xml:space="preserve"><value>失敗 {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ProcessingValue" xml:space="preserve"><value>処理中 {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.YourRequestForValueWasStartedAtValue" xml:space="preserve"><value>[{1}]へのリクエストは{0}に開始されました</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ProcessedValueSucceededValueFailedValue" xml:space="preserve"><value>処理済み {0}、成功 {1}、失敗 {2}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.CurrentKnowledgeBaseConfiguration" xml:space="preserve"><value>現在のナレッジベース構成：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.ItemValueSimilarity" xml:space="preserve"><value>項目 {0} · 類似度</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.OriginalRerankPositionValue" xml:space="preserve"><value>· 元の再ランキング位置 {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.KnowledgeBase.TheRequestDidNotCompleteCheckTheKnowledgeBaseAndModelConfiguration" xml:space="preserve"><value>リクエストが完了しませんでした。ナレッジベースとモデルの設定を確認してください。</value></data>
+  <data name="Frontend.KnowledgeBase.FailedToLoadTheKnowledgeBaseListValue" xml:space="preserve"><value>ナレッジベース一覧の取得に失敗しました：{0}</value></data>
+  <data name="Frontend.KnowledgeBase.ThisKnowledgeBaseHasNotBeenVectorizedReturnToTheKnowledgeBase" xml:space="preserve"><value>このナレッジベースはまだベクトル化されていません。管理ページに戻り、先にベクトル化を実行してください。</value></data>
+  <data name="Frontend.KnowledgeBase.EnterTheQuestionToTest" xml:space="preserve"><value>テストする質問を入力してください</value></data>
+  <data name="Frontend.KnowledgeBase.TheServiceDidNotReturnValidRecallResults" xml:space="preserve"><value>サービスから有効な検索結果が返されませんでした。</value></data>
+  <data name="Frontend.KnowledgeBase.RecallTestCompletedCheckTheSourcesAndContent" xml:space="preserve"><value>検索テストが完了しました。ソースと内容を確認してください。</value></data>
+  <data name="Frontend.KnowledgeBase.TestCompletedButNoMatchingPassagesWereReturned" xml:space="preserve"><value>テストは完了しましたが、一致する文章が返されませんでした。</value></data>
+  <data name="Frontend.KnowledgeBase.RecallDidNotComplete" xml:space="preserve"><value>検索が完了しませんでした</value></data>
+  <data name="Frontend.KnowledgeBase.NoMaterialsAreSelected" xml:space="preserve"><value>選択された資料はありません</value></data>
+  <data name="Frontend.KnowledgeBase.ThisOnlyCancelsTheUnsavedAssociationForTheCurrentKnowledgeBaseFiles" xml:space="preserve"><value>現在のナレッジベースの未保存の関連付けだけを取り消します。ファイルは削除されません。続行しますか？</value></data>
+  <data name="Frontend.KnowledgeBase.ClearSelectionSupplemental" xml:space="preserve"><value>選択をクリア</value></data>
+  <data name="Frontend.KnowledgeBase.CloseWithoutSaving" xml:space="preserve"><value>保存せずに閉じますか？</value></data>
+  <data name="Frontend.KnowledgeBase.ExternalCollectionRequiresSeparateCrawlerPermissionAndCleaningConfigurationThisVersionWill" xml:space="preserve"><value>外部データ収集には、取得、権限、クリーンアップの個別設定が必要です。このバージョンでは保存成功を偽装しません。</value></data>
+  <data name="Frontend.KnowledgeBase.Option" xml:space="preserve"><value>項目</value></data>
+  <data name="Frontend.KnowledgeBase.TheKnowledgeBaseCouldNotBeFoundItMayHaveBeenDeleted" xml:space="preserve"><value>開く知識ベースが見つかりません。削除されたか、現在のアカウントに権限がない可能性があります。</value></data>
+  <data name="Frontend.KnowledgeBase.FailedToLoadTheResourceListPleaseTryAgainLater" xml:space="preserve"><value>資料一覧の読み込みに失敗しました。後でもう一度お試しください。</value></data>
+
+  <data name="Frontend.KnowledgeBase.KnowledgeBaseSavedSuccessfullyAlternate" xml:space="preserve"><value>知識ベースを保存しました</value></data>
+  <data name="Frontend.KnowledgeBase.SaveFailedPleaseCheckTheDataAlternate" xml:space="preserve"><value>保存に失敗しました。データを確認してください。</value></data>
+  <data name="Frontend.KnowledgeBase.SaveError" xml:space="preserve"><value>保存エラー</value></data>
+  <data name="Frontend.KnowledgeBase.CouldNotSavePleaseTryAgainLater" xml:space="preserve"><value>保存できませんでした。後でもう一度お試しください。</value></data>
+  <data name="Frontend.KnowledgeBase.SuccessAlternate" xml:space="preserve"><value>成功</value></data>
+  <data name="Frontend.KnowledgeBase.DeletedSuccessfullyAlternate" xml:space="preserve"><value>削除しました</value></data>
+  <data name="Frontend.KnowledgeBase.VectorizeKnowledgeBaseValue" xml:space="preserve"><value>知識ベース「{0}」をベクトル化しますか？</value></data>
 </root>

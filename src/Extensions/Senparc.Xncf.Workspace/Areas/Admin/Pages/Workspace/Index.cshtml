@@ -13,9 +13,9 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@XR["Frontend.001"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.Workspace.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>Workspace</el-breadcrumb-item>
-    <el-breadcrumb-item>@XR["Frontend.002"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.Workspace.RemoteEditing"]</el-breadcrumb-item>
 }
 
 <div class="workspace-shell">
@@ -25,8 +25,8 @@
     <div class="workspace-hero">
         <div class="workspace-hero-icon"><i class="fa fa-code"></i></div>
         <div>
-            <h1>@XR["Frontend.003"]</h1>
-            <p>@XR["Frontend.036"]</p>
+            <h1>@XR["Frontend.Workspace.SecureRemoteWorkspace"]</h1>
+            <p>@XR["Frontend.Workspace.FilesAreStoredInIsolatedDirectoriesSharedByAdminChatVSCodeAnd"]</p>
         </div>
     </div>
 
@@ -41,44 +41,44 @@
 
     <section class="ws-metrics" v-if="report.actorId">
         <article class="ws-metric">
-            <span class="ws-metric-kicker">{{ ncfST('Frontend.004') }}</span>
+            <span class="ws-metric-kicker">{{ ncfST('Frontend.Workspace.MyWorkspaces') }}</span>
             <strong>{{ report.ownSummary.workspaceCount }}</strong>
             <span class="ws-metric-detail">{{ ncfST('{0} 个文件 · {1}', report.ownSummary.fileCount, formatFileSize(report.ownSummary.usedBytes)) }}</span>
         </article>
         <article class="ws-metric is-other" v-if="report.isSuperAdmin">
-            <span class="ws-metric-kicker">{{ ncfST('Frontend.005') }}</span>
+            <span class="ws-metric-kicker">{{ ncfST('Frontend.Workspace.OtherAdministrators') }}</span>
             <strong>{{ report.otherSummary.workspaceCount }}</strong>
             <span class="ws-metric-detail">{{ ncfST('{0} 个文件 · {1}', report.otherSummary.fileCount, formatFileSize(report.otherSummary.usedBytes)) }}</span>
         </article>
         <article class="ws-metric is-total" v-if="report.isSuperAdmin">
-            <span class="ws-metric-kicker">{{ ncfST('Frontend.006') }}</span>
+            <span class="ws-metric-kicker">{{ ncfST('Frontend.Workspace.CurrentTenantTotal') }}</span>
             <strong>{{ report.visibleSummary.workspaceCount }}</strong>
             <span class="ws-metric-detail">{{ ncfST('{0} 个文件 · {1}', report.visibleSummary.fileCount, formatFileSize(report.visibleSummary.usedBytes)) }}</span>
         </article>
     </section>
     <p class="ws-note" v-if="report.actorId">
-        {{ ncfST('Frontend.037', report.actorId, formatFileSize(report.quotaBytes)) }}
-        <span v-if="report.isSuperAdmin">{{ ncfST('Frontend.038') }}</span>
+        {{ ncfST('Frontend.Workspace.CurrentAccountValuePerWorkspaceQuotaValueFileCountsAndUsageExclude', report.actorId, formatFileSize(report.quotaBytes)) }}
+        <span v-if="report.isSuperAdmin">{{ ncfST('Frontend.Workspace.OtherAdministratorsIncludeOnlyWorkspacesInTheCurrentTenantThatAreNot') }}</span>
     </p>
 
     <section class="ws-section">
         <div class="ws-section-head">
-            <h2>{{ ncfST('Frontend.004') }}<ncf-doc-help topic="workspace.manage"></ncf-doc-help></h2>
-            <span class="count-pill">{{ ncfST('Frontend.039', report.ownWorkspaces.length) }}</span>
+            <h2>{{ ncfST('Frontend.Workspace.MyWorkspaces') }}<ncf-doc-help topic="workspace.manage"></ncf-doc-help></h2>
+            <span class="count-pill">{{ ncfST('Frontend.Workspace.Value', report.ownWorkspaces.length) }}</span>
         </div>
 
         <form method="post" asp-page-handler="Create" class="ws-create">
             <input type="hidden" name="Uid" value="@Model.Uid" />
-            <el-input name="NewWorkspaceName" :placeholder="ncfST('Frontend.040')" maxlength="100" show-word-limit></el-input>
+            <el-input name="NewWorkspaceName" :placeholder="ncfST('Frontend.Workspace.NameTheNewTaskForExampleOrderSystemRefactor')" maxlength="100" show-word-limit></el-input>
             <button type="submit" class="ws-create-btn">
-                <i class="fa fa-plus"></i>{{ ncfST('Frontend.007') }}
+                <i class="fa fa-plus"></i>{{ ncfST('Frontend.Workspace.CreateWorkspace') }}
             </button>
         </form>
 
         <div class="ws-empty" v-if="!report.ownWorkspaces.length">
             <i class="fa fa-folder-o"></i>
-            <h3>{{ ncfST('Frontend.008') }}</h3>
-            <p>{{ ncfST('Frontend.018') }}</p>
+            <h3>{{ ncfST('Frontend.Workspace.NoWorkspacesYet') }}</h3>
+            <p>{{ ncfST('Frontend.Workspace.EnterANameAndChooseCreateWorkspaceToShareFilesSecurelyBetween') }}</p>
         </div>
 
         <div class="ws-board" v-if="report.ownWorkspaces.length">
@@ -87,13 +87,13 @@
                     <div class="ws-card-icon"><i class="fa fa-cube"></i></div>
                     <div class="ws-card-title">
                         <h3 :title="ws.name">{{ ws.name }}</h3>
-                        <span class="ws-badge is-own" v-if="report.isSuperAdmin">{{ ncfST('Frontend.054') }}</span>
+                        <span class="ws-badge is-own" v-if="report.isSuperAdmin">{{ ncfST('Frontend.Workspace.Mine') }}</span>
                     </div>
                 </header>
                 <div class="ws-card-figures">
-                    <div><span>{{ ncfST('Frontend.013') }}</span><strong>{{ ws.fileCount }}</strong></div>
-                    <div><span>{{ ncfST('Frontend.014') }}</span><strong>{{ ws.directoryCount }}</strong></div>
-                    <div><span>{{ ncfST('Frontend.015') }}</span><strong>{{ formatFileSize(ws.usedBytes) }}</strong></div>
+                    <div><span>{{ ncfST('Frontend.Workspace.Files') }}</span><strong>{{ ws.fileCount }}</strong></div>
+                    <div><span>{{ ncfST('Frontend.Workspace.Directories') }}</span><strong>{{ ws.directoryCount }}</strong></div>
+                    <div><span>{{ ncfST('Frontend.Workspace.Used') }}</span><strong>{{ formatFileSize(ws.usedBytes) }}</strong></div>
                 </div>
                 <div class="ws-card-usage">
                     <el-progress :percentage="usagePercent(ws)" :stroke-width="6" :show-text="false" :status="usageStatus(ws)"></el-progress>
@@ -101,8 +101,8 @@
                 </div>
                 <footer class="ws-card-foot">
                     <div class="ws-card-time">
-                        <span :title="formatDate(ws.createdUtc)">{{ ncfST('Frontend.041', relativeTime(ws.createdUtc)) }}</span>
-                        <span :title="formatDate(ws.lastAccessedUtc)">{{ ncfST('Frontend.042', relativeTime(ws.lastAccessedUtc)) }}</span>
+                        <span :title="formatDate(ws.createdUtc)">{{ ncfST('Frontend.Workspace.CreatedValue', relativeTime(ws.createdUtc)) }}</span>
+                        <span :title="formatDate(ws.lastAccessedUtc)">{{ ncfST('Frontend.Workspace.AccessedValue', relativeTime(ws.lastAccessedUtc)) }}</span>
                     </div>
                     <div class="ws-card-actions">
                         <el-button
@@ -111,7 +111,7 @@
                             :loading="manualUploadWorkspaceId === ws.id && manualUploading"
                             :disabled="manualUploading || clearing"
                             @@click="chooseWorkspaceUpload(ws.id)">
-                            <i class="el-icon-upload2"></i>{{ ncfST('Frontend.016') }}
+                            <i class="el-icon-upload2"></i>{{ ncfST('Frontend.Workspace.Upload') }}
                         </el-button>
                         <el-button
                             type="danger"
@@ -119,7 +119,7 @@
                             plain
                             :disabled="manualUploading || clearing"
                             @@click="clearWorkspace(ws)">
-                            <i class="fa fa-eraser"></i>{{ ncfST('Frontend.017') }}
+                            <i class="fa fa-eraser"></i>{{ ncfST('Frontend.Workspace.Clear') }}
                         </el-button>
                     </div>
                 </footer>
@@ -129,14 +129,14 @@
 
     <section class="ws-section" v-if="report.isSuperAdmin">
         <div class="ws-section-head">
-            <h2>{{ ncfST('Frontend.009') }}</h2>
-            <span class="count-pill">{{ ncfST('Frontend.039', report.otherWorkspaces.length) }}</span>
+            <h2>{{ ncfST('Frontend.Workspace.OtherAdministratorsWorkspaces') }}</h2>
+            <span class="count-pill">{{ ncfST('Frontend.Workspace.Value', report.otherWorkspaces.length) }}</span>
         </div>
-        <p class="ws-note">{{ ncfST('Frontend.043') }}</p>
+        <p class="ws-note">{{ ncfST('Frontend.Workspace.TheseWorkspacesAreNotOwnedByTheCurrentAccountSuperAdministratorsCan') }}</p>
         <div class="ws-empty" v-if="!report.otherWorkspaces.length">
             <i class="fa fa-folder-o"></i>
-            <h3>{{ ncfST('Frontend.019') }}</h3>
-            <p>{{ ncfST('Frontend.044') }}</p>
+            <h3>{{ ncfST('Frontend.Workspace.NoOtherAdministratorWorkspacesExistInTheCurrentTenant') }}</h3>
+            <p>{{ ncfST('Frontend.Workspace.OnlyWorkspacesInTheSameTenantWithAnotherOwnerAreShownHere') }}</p>
         </div>
         <div class="ws-board" v-if="report.otherWorkspaces.length">
             <article class="ws-card is-other" v-for="ws in report.otherWorkspaces" :key="ws.id">
@@ -144,13 +144,13 @@
                     <div class="ws-card-icon"><i class="fa fa-cube"></i></div>
                     <div class="ws-card-title">
                         <h3 :title="ws.name">{{ ws.name }}</h3>
-                        <span class="ws-badge is-other">{{ ncfST('Frontend.045', ws.ownerId) }}</span>
+                        <span class="ws-badge is-other">{{ ncfST('Frontend.Workspace.AdministratorValue', ws.ownerId) }}</span>
                     </div>
                 </header>
                 <div class="ws-card-figures">
-                    <div><span>{{ ncfST('Frontend.013') }}</span><strong>{{ ws.fileCount }}</strong></div>
-                    <div><span>{{ ncfST('Frontend.014') }}</span><strong>{{ ws.directoryCount }}</strong></div>
-                    <div><span>{{ ncfST('Frontend.015') }}</span><strong>{{ formatFileSize(ws.usedBytes) }}</strong></div>
+                    <div><span>{{ ncfST('Frontend.Workspace.Files') }}</span><strong>{{ ws.fileCount }}</strong></div>
+                    <div><span>{{ ncfST('Frontend.Workspace.Directories') }}</span><strong>{{ ws.directoryCount }}</strong></div>
+                    <div><span>{{ ncfST('Frontend.Workspace.Used') }}</span><strong>{{ formatFileSize(ws.usedBytes) }}</strong></div>
                 </div>
                 <div class="ws-card-usage">
                     <el-progress :percentage="usagePercent(ws)" :stroke-width="6" :show-text="false" :status="usageStatus(ws)"></el-progress>
@@ -158,8 +158,8 @@
                 </div>
                 <footer class="ws-card-foot">
                     <div class="ws-card-time">
-                        <span :title="formatDate(ws.createdUtc)">{{ ncfST('Frontend.041', relativeTime(ws.createdUtc)) }}</span>
-                        <span :title="formatDate(ws.lastAccessedUtc)">{{ ncfST('Frontend.042', relativeTime(ws.lastAccessedUtc)) }}</span>
+                        <span :title="formatDate(ws.createdUtc)">{{ ncfST('Frontend.Workspace.CreatedValue', relativeTime(ws.createdUtc)) }}</span>
+                        <span :title="formatDate(ws.lastAccessedUtc)">{{ ncfST('Frontend.Workspace.AccessedValue', relativeTime(ws.lastAccessedUtc)) }}</span>
                     </div>
                     <div class="ws-card-actions">
                         <el-button
@@ -168,7 +168,7 @@
                             plain
                             :disabled="manualUploading || clearing"
                             @@click="clearWorkspace(ws)">
-                            <i class="fa fa-eraser"></i>{{ ncfST('Frontend.017') }}
+                            <i class="fa fa-eraser"></i>{{ ncfST('Frontend.Workspace.Clear') }}
                         </el-button>
                     </div>
                 </footer>
@@ -178,22 +178,22 @@
 
     <section class="ws-section">
         <div class="ws-section-head">
-            <h2>{{ ncfST('Frontend.010') }}</h2>
+            <h2>{{ ncfST('Frontend.Workspace.ConnectionGuide') }}</h2>
         </div>
         <div class="ws-guide">
             <div>
-                <h3><i class="fa fa-desktop"></i>{{ ncfST('Frontend.011') }}</h3>
+                <h3><i class="fa fa-desktop"></i>{{ ncfST('Frontend.Workspace.ConnectInVSCodeCursor') }}</h3>
                 <ol class="step-list">
-                    <li data-step="1">{{ ncfST('Frontend.046') }}</li>
-                    <li data-step="2">{{ ncfST('Frontend.047') }}</li>
-                    <li data-step="3">{{ ncfST('Frontend.048') }}</li>
-                    <li data-step="4">{{ ncfST('Frontend.049') }}</li>
+                    <li data-step="1">{{ ncfST('Frontend.Workspace.InstallTheNCFWorkspaceExtension') }}</li>
+                    <li data-step="2">{{ ncfST('Frontend.Workspace.RunNCFConnectWorkspace') }}</li>
+                    <li data-step="3">{{ ncfST('Frontend.Workspace.EnterTheSiteAddressAndConfirmPairingInTheBrowser') }}</li>
+                    <li data-step="4">{{ ncfST('Frontend.Workspace.ChooseAWorkspaceItsFilesOpenAsARemoteFolder') }}</li>
                 </ol>
             </div>
             <div class="ws-guide-side">
-                <p>{{ ncfST('Frontend.052') }}</p>
+                <p>{{ ncfST('Frontend.Workspace.DeviceNotPairedOpenDeviceSessionsToCompletePairing') }}</p>
                 <a class="el-button ws-pair-btn el-button--default el-button--small" href="/Admin/DesktopBridge/Index?uid=E9A9D870-A285-4BCE-9D4D-26A219C41252">
-                    <i class="fa fa-desktop"></i><span>{{ ncfST('Frontend.012') }}</span>
+                    <i class="fa fa-desktop"></i><span>{{ ncfST('Frontend.Workspace.ManageDevicePairing') }}</span>
                 </a>
             </div>
         </div>

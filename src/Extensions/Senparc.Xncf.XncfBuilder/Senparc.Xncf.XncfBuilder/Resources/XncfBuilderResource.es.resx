@@ -464,97 +464,97 @@
   </data>
 
 
-  <data name="Frontend.001" xml:space="preserve"><value>Sesiones de vista previa del módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.002" xml:space="preserve"><value>Trabajos de vista previa de desarrollo aislado / Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.003" xml:space="preserve"><value>La IA solo puede escribir en el workspace aislado; aplicar cambios requiere una frase de confirmación del administrador.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.004" xml:space="preserve"><value>Host detenido / ExitCode:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Host iniciado / correcto:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.006" xml:space="preserve"><value>Monitor de vista previa XNCF</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.007" xml:space="preserve"><value>Descartar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.008" xml:space="preserve"><value>Aplicar manualmente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.009" xml:space="preserve"><value>ID de sesión:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.010" xml:space="preserve"><value>Total de sesiones</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.011" xml:space="preserve"><value>Procesando / en cola</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.012" xml:space="preserve"><value>Fallido / interrumpido</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.013" xml:space="preserve"><value>Iniciado / actualizado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.014" xml:space="preserve"><value>Etapa actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.015" xml:space="preserve"><value>Abrir vista previa de Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.016" xml:space="preserve"><value>Módulo de extensión</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.017" xml:space="preserve"><value>Acciones</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.018" xml:space="preserve"><value>Salida reciente (hasta 300 líneas)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.019" xml:space="preserve"><value>Solución de origen para esta compilación:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.020" xml:space="preserve"><value>Módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.021" xml:space="preserve"><value>SHA-256 de la DLL del módulo:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.022" xml:space="preserve"><value>Modo / etapa</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.023" xml:space="preserve"><value>Progreso de la canalización</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.024" xml:space="preserve"><value>SHA-256 del origen:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.025" xml:space="preserve"><value>Cuando termine la generación o modificación del origen, elige Iniciar vista previa aislada de XNCF para entrar en esta cola; la huella del origen demuestra la instantánea exacta utilizada por la compilación.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.026" xml:space="preserve"><value>Estado y diferencias</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.027" xml:space="preserve"><value>Entorno:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.028" xml:space="preserve"><value>Actualización automática: 2 segundos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.029" xml:space="preserve"><value>Ruta / Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.030" xml:space="preserve"><value>En ejecución</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.031" xml:space="preserve"><value>Proceso</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.032" xml:space="preserve"><value>La persistencia del trabajo de desarrollo aislado aún no está lista</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.033" xml:space="preserve"><value>Canalización de vista previa aislada</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.034" xml:space="preserve"><value>La persistencia del estado de la vista previa aún no está lista</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.035" xml:space="preserve"><value>Monitor de vista previa</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.036" xml:space="preserve"><value>Directorio de implementación (publicación) de la vista previa:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.037" xml:space="preserve"><value>El usuario detuvo la vista previa.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.038" xml:space="preserve"><value>El proceso de vista previa terminó inesperadamente.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.039" xml:space="preserve"><value>La tarea de vista previa falló.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.040" xml:space="preserve"><value>Sesiones de vista previa del módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.041" xml:space="preserve"><value>No hay tareas de desarrollo aislado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.042" xml:space="preserve"><value>Última actualización: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.043" xml:space="preserve"><value>Cada tarea valida las referencias del host, realiza una compilación aislada, inicia una nueva vista previa, ejecuta una comprobación de salud y reemplaza la vista previa de forma atómica. La vista previa actual permanece disponible hasta que la nueva supere sus comprobaciones.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.044" xml:space="preserve"><value>Abrir</value></data>
-  <data name="Frontend.045" xml:space="preserve"><value>Detener</value></data>
-  <data name="Frontend.046" xml:space="preserve"><value>Tareas de desarrollo aislado / vista previa de Sandbox</value></data>
-  <data name="Frontend.047" xml:space="preserve"><value>La IA solo puede escribir en el espacio aislado; aplicar cambios requiere una frase de confirmación del administrador.</value></data>
-  <data name="Frontend.048" xml:space="preserve"><value>No hay tareas de desarrollo aislado</value></data>
-  <data name="Frontend.049" xml:space="preserve"><value>Módulo</value></data>
-  <data name="Frontend.050" xml:space="preserve"><value>Modo / etapa</value></data>
-  <data name="Frontend.051" xml:space="preserve"><value>Estado y diferencias</value></data>
-  <data name="Frontend.052" xml:space="preserve"><value>Aún no se ha generado el resumen de diferencias</value></data>
-  <data name="Frontend.053" xml:space="preserve"><value>Ruta / Sandbox</value></data>
-  <data name="Frontend.054" xml:space="preserve"><value>Objetivo:</value></data>
-  <data name="Frontend.055" xml:space="preserve"><value>Aislado:</value></data>
-  <data name="Frontend.056" xml:space="preserve"><value>Sandbox:</value></data>
-  <data name="Frontend.057" xml:space="preserve"><value>Abrir vista previa de Sandbox</value></data>
-  <data name="Frontend.058" xml:space="preserve"><value>Acciones</value></data>
-  <data name="Frontend.059" xml:space="preserve"><value>Integrar manualmente</value></data>
-  <data name="Frontend.060" xml:space="preserve"><value>Descartar</value></data>
-  <data name="Frontend.061" xml:space="preserve"><value>Después de generar o modificar el código fuente, usa «Iniciar vista previa XNCF aislada» para entrar en esta cola; la huella del código demuestra la instantánea exacta usada por la compilación.</value></data>
-  <data name="Frontend.062" xml:space="preserve"><value>No se pudo leer el estado.</value></data>
-  <data name="Frontend.063" xml:space="preserve"><value>Sin salida.</value></data>
-  <data name="Frontend.064" xml:space="preserve"><value>No se pudieron leer los registros.</value></data>
-  <data name="Frontend.065" xml:space="preserve"><value>Detener vista previa</value></data>
-  <data name="Frontend.066" xml:space="preserve"><value>Cancelar</value></data>
-  <data name="Frontend.067" xml:space="preserve"><value>No se pudo detener la vista previa.</value></data>
-  <data name="Frontend.068" xml:space="preserve"><value>Integrar manualmente el módulo XNCF</value></data>
-  <data name="Frontend.069" xml:space="preserve"><value>Integrar</value></data>
-  <data name="Frontend.070" xml:space="preserve"><value>La frase de confirmación debe coincidir exactamente: {0}</value></data>
-  <data name="Frontend.071" xml:space="preserve"><value>Error de integración.</value></data>
-  <data name="Frontend.072" xml:space="preserve"><value>Descartar tarea de desarrollo aislado</value></data>
-  <data name="Frontend.073" xml:space="preserve"><value>No se pudo descartar.</value></data>
-  <data name="Frontend.074" xml:space="preserve"><value>Módulo nuevo</value></data>
-  <data name="Frontend.075" xml:space="preserve"><value>Modificar módulo existente</value></data>
-  <data name="Frontend.076" xml:space="preserve"><value>Tomando instantánea</value></data>
-  <data name="Frontend.077" xml:space="preserve"><value>Editable</value></data>
-  <data name="Frontend.078" xml:space="preserve"><value>Validando</value></data>
-  <data name="Frontend.079" xml:space="preserve"><value>Vista previa de Sandbox</value></data>
-  <data name="Frontend.080" xml:space="preserve"><value>Pendiente de revisión</value></data>
-  <data name="Frontend.081" xml:space="preserve"><value>Pendiente de integración manual</value></data>
-  <data name="Frontend.082" xml:space="preserve"><value>Integrado</value></data>
-  <data name="Frontend.083" xml:space="preserve"><value>Descartado</value></data>
-  <data name="Frontend.084" xml:space="preserve"><value>Fallido</value></data>
-  <data name="Frontend.085" xml:space="preserve"><value>Desconocido</value></data>
-  <data name="Frontend.086" xml:space="preserve"><value>No creado</value></data>
-  <data name="Frontend.087" xml:space="preserve"><value> leyendo la salida reciente…</value></data>
-  <data name="Frontend.088" xml:space="preserve"><value>¿Detener la tarea de vista previa de {0}?</value></data>
-  <data name="Frontend.089" xml:space="preserve"><value>Revisa primero el espacio aislado, las diferencias y la vista previa de Sandbox. Introduce {0} para escribir las diferencias controladas en el código objetivo.</value></data>
-  <data name="Frontend.090" xml:space="preserve"><value>Esto detendrá la vista previa de Sandbox relacionada y eliminará el espacio aislado sin cambiar el código objetivo. ¿Descartar {0}?</value></data>
-  <data name="Frontend.091" xml:space="preserve"><value> Motivo: </value></data>
+  <data name="Frontend.XncfBuilder.ModulePreviewSessions" xml:space="preserve"><value>Sesiones de vista previa del módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.IsolatedDevelopmentSandboxPreviewJobs" xml:space="preserve"><value>Trabajos de vista previa de desarrollo aislado / Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.AICanWriteOnlyToTheIsolatedWorkspaceApplyingChangesRequiresAn" xml:space="preserve"><value>La IA solo puede escribir en el workspace aislado; aplicar cambios requiere una frase de confirmación del administrador.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.HostStoppedExitCode" xml:space="preserve"><value>Host detenido / ExitCode:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.HostStartedHealthy" xml:space="preserve"><value>Host iniciado / correcto:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.XNCFPreviewMonitor" xml:space="preserve"><value>Monitor de vista previa XNCF</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.Discard" xml:space="preserve"><value>Descartar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.ApplyManually" xml:space="preserve"><value>Aplicar manualmente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.SessionID" xml:space="preserve"><value>ID de sesión:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.TotalSessions" xml:space="preserve"><value>Total de sesiones</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.ProcessingQueued" xml:space="preserve"><value>Procesando / en cola</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.FailedInterrupted" xml:space="preserve"><value>Fallido / interrumpido</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.StartedUpdated" xml:space="preserve"><value>Iniciado / actualizado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.CurrentStage" xml:space="preserve"><value>Etapa actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.OpenSandboxPreview" xml:space="preserve"><value>Abrir vista previa de Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.ExtensionModule" xml:space="preserve"><value>Módulo de extensión</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.Actions" xml:space="preserve"><value>Acciones</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.RecentOutputUpTo300Lines" xml:space="preserve"><value>Salida reciente (hasta 300 líneas)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.SourceSolutionForThisBuild" xml:space="preserve"><value>Solución de origen para esta compilación:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.Module" xml:space="preserve"><value>Módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.ModuleDLLSHA256" xml:space="preserve"><value>SHA-256 de la DLL del módulo:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.ModeStage" xml:space="preserve"><value>Modo / etapa</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.PipelineProgress" xml:space="preserve"><value>Progreso de la canalización</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.SourceSHA256" xml:space="preserve"><value>SHA-256 del origen:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.AfterSourceGenerationOrModificationCompletesChooseStartXNCFIsolatedPreviewTo" xml:space="preserve"><value>Cuando termine la generación o modificación del origen, elige Iniciar vista previa aislada de XNCF para entrar en esta cola; la huella del origen demuestra la instantánea exacta utilizada por la compilación.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.StatusAndDiff" xml:space="preserve"><value>Estado y diferencias</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.Environment" xml:space="preserve"><value>Entorno:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.AutoRefreshTwoSeconds" xml:space="preserve"><value>Actualización automática: 2 segundos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.PathSandbox" xml:space="preserve"><value>Ruta / Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.Running" xml:space="preserve"><value>En ejecución</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.Process" xml:space="preserve"><value>Proceso</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.IsolatedDevelopmentJobPersistenceIsNotReady" xml:space="preserve"><value>La persistencia del trabajo de desarrollo aislado aún no está lista</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.IsolatedPreviewPipeline" xml:space="preserve"><value>Canalización de vista previa aislada</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.PreviewStatusPersistenceIsNotReady" xml:space="preserve"><value>La persistencia del estado de la vista previa aún no está lista</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.PreviewMonitor" xml:space="preserve"><value>Monitor de vista previa</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.PreviewDeploymentPublishDirectory" xml:space="preserve"><value>Directorio de implementación (publicación) de la vista previa:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.PreviewStoppedByTheUser" xml:space="preserve"><value>El usuario detuvo la vista previa.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.ThePreviewProcessExitedUnexpectedly" xml:space="preserve"><value>El proceso de vista previa terminó inesperadamente.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.ThePreviewTaskFailed" xml:space="preserve"><value>La tarea de vista previa falló.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.ModulePreviewSessionsAlternate" xml:space="preserve"><value>Sesiones de vista previa del módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.NoIsolatedDevelopmentTasks" xml:space="preserve"><value>No hay tareas de desarrollo aislado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.LastUpdatedValue" xml:space="preserve"><value>Última actualización: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.EachTaskValidatesHostReferencesPerformsAnIsolatedBuildStartsANew" xml:space="preserve"><value>Cada tarea valida las referencias del host, realiza una compilación aislada, inicia una nueva vista previa, ejecuta una comprobación de salud y reemplaza la vista previa de forma atómica. La vista previa actual permanece disponible hasta que la nueva supere sus comprobaciones.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.XncfBuilder.Open" xml:space="preserve"><value>Abrir</value></data>
+  <data name="Frontend.XncfBuilder.Stop" xml:space="preserve"><value>Detener</value></data>
+  <data name="Frontend.XncfBuilder.IsolatedDevelopmentSandboxPreviewJobsAlternate" xml:space="preserve"><value>Tareas de desarrollo aislado / vista previa de Sandbox</value></data>
+  <data name="Frontend.XncfBuilder.AICanWriteOnlyToTheIsolatedWorkspaceApplyingChangesRequiresAnAlternate" xml:space="preserve"><value>La IA solo puede escribir en el espacio aislado; aplicar cambios requiere una frase de confirmación del administrador.</value></data>
+  <data name="Frontend.XncfBuilder.NoIsolatedDevelopmentJobs" xml:space="preserve"><value>No hay tareas de desarrollo aislado</value></data>
+
+
+
+  <data name="Frontend.XncfBuilder.DiffSummaryNotGeneratedYet" xml:space="preserve"><value>Aún no se ha generado el resumen de diferencias</value></data>
+
+  <data name="Frontend.XncfBuilder.Target" xml:space="preserve"><value>Objetivo:</value></data>
+  <data name="Frontend.XncfBuilder.Isolated" xml:space="preserve"><value>Aislado:</value></data>
+  <data name="Frontend.XncfBuilder.Sandbox" xml:space="preserve"><value>Sandbox:</value></data>
+  <data name="Frontend.XncfBuilder.OpenSandboxPreviewAlternate" xml:space="preserve"><value>Abrir vista previa de Sandbox</value></data>
+
+  <data name="Frontend.XncfBuilder.MergeManually" xml:space="preserve"><value>Integrar manualmente</value></data>
+  <data name="Frontend.XncfBuilder.DiscardAlternate" xml:space="preserve"><value>Descartar</value></data>
+  <data name="Frontend.XncfBuilder.AfterSourceGenerationOrModificationUseStartIsolatedXNCFPreviewToEnter" xml:space="preserve"><value>Después de generar o modificar el código fuente, usa «Iniciar vista previa XNCF aislada» para entrar en esta cola; la huella del código demuestra la instantánea exacta usada por la compilación.</value></data>
+  <data name="Frontend.XncfBuilder.FailedToReadStatus" xml:space="preserve"><value>No se pudo leer el estado.</value></data>
+  <data name="Frontend.XncfBuilder.NoOutput" xml:space="preserve"><value>Sin salida.</value></data>
+  <data name="Frontend.XncfBuilder.FailedToReadLogs" xml:space="preserve"><value>No se pudieron leer los registros.</value></data>
+  <data name="Frontend.XncfBuilder.StopPreview" xml:space="preserve"><value>Detener vista previa</value></data>
+  <data name="Frontend.XncfBuilder.Cancel" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="Frontend.XncfBuilder.FailedToStopPreview" xml:space="preserve"><value>No se pudo detener la vista previa.</value></data>
+  <data name="Frontend.XncfBuilder.MergeXNCFModuleManually" xml:space="preserve"><value>Integrar manualmente el módulo XNCF</value></data>
+  <data name="Frontend.XncfBuilder.Merge" xml:space="preserve"><value>Integrar</value></data>
+  <data name="Frontend.XncfBuilder.ConfirmationPhraseMustExactlyMatchValue" xml:space="preserve"><value>La frase de confirmación debe coincidir exactamente: {0}</value></data>
+  <data name="Frontend.XncfBuilder.MergeFailed" xml:space="preserve"><value>Error de integración.</value></data>
+  <data name="Frontend.XncfBuilder.DiscardIsolatedDevelopmentJob" xml:space="preserve"><value>Descartar tarea de desarrollo aislado</value></data>
+  <data name="Frontend.XncfBuilder.FailedToDiscard" xml:space="preserve"><value>No se pudo descartar.</value></data>
+  <data name="Frontend.XncfBuilder.NewModule" xml:space="preserve"><value>Módulo nuevo</value></data>
+  <data name="Frontend.XncfBuilder.ModifyExistingModule" xml:space="preserve"><value>Modificar módulo existente</value></data>
+  <data name="Frontend.XncfBuilder.Snapshotting" xml:space="preserve"><value>Tomando instantánea</value></data>
+  <data name="Frontend.XncfBuilder.Writable" xml:space="preserve"><value>Editable</value></data>
+  <data name="Frontend.XncfBuilder.Validating" xml:space="preserve"><value>Validando</value></data>
+  <data name="Frontend.XncfBuilder.SandboxPreview" xml:space="preserve"><value>Vista previa de Sandbox</value></data>
+  <data name="Frontend.XncfBuilder.AwaitingReview" xml:space="preserve"><value>Pendiente de revisión</value></data>
+  <data name="Frontend.XncfBuilder.AwaitingManualMerge" xml:space="preserve"><value>Pendiente de integración manual</value></data>
+  <data name="Frontend.XncfBuilder.Merged" xml:space="preserve"><value>Integrado</value></data>
+  <data name="Frontend.XncfBuilder.Discarded" xml:space="preserve"><value>Descartado</value></data>
+  <data name="Frontend.XncfBuilder.Failed" xml:space="preserve"><value>Fallido</value></data>
+  <data name="Frontend.XncfBuilder.Unknown" xml:space="preserve"><value>Desconocido</value></data>
+  <data name="Frontend.XncfBuilder.NotCreated" xml:space="preserve"><value>No creado</value></data>
+  <data name="Frontend.XncfBuilder.ReadingRecentOutput" xml:space="preserve"><value> leyendo la salida reciente…</value></data>
+  <data name="Frontend.XncfBuilder.StopThePreviewJobForValue" xml:space="preserve"><value>¿Detener la tarea de vista previa de {0}?</value></data>
+  <data name="Frontend.XncfBuilder.ReviewTheIsolatedWorkspaceDiffAndSandboxPreviewFirstEnterValueTo" xml:space="preserve"><value>Revisa primero el espacio aislado, las diferencias y la vista previa de Sandbox. Introduce {0} para escribir las diferencias controladas en el código objetivo.</value></data>
+  <data name="Frontend.XncfBuilder.ThisStopsTheRelatedSandboxPreviewAndDeletesTheIsolatedWorkspaceWithout" xml:space="preserve"><value>Esto detendrá la vista previa de Sandbox relacionada y eliminará el espacio aislado sin cambiar el código objetivo. ¿Descartar {0}?</value></data>
+  <data name="Frontend.XncfBuilder.Reason" xml:space="preserve"><value> Motivo: </value></data>
   <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>Crear tarea de desarrollo XNCF aislada</value></data>
   <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>Crea una instantánea del código en un espacio aislado. Los módulos nuevos usan la plantilla local instalada; los existentes se copian antes de modificarse. Nunca se escribe en el código objetivo.</value></data>
   <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>Leer archivo XNCF aislado</value></data>

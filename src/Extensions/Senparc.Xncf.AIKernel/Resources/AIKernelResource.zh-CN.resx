@@ -164,43 +164,43 @@
   <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Token 输出速度</value></data>
   <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>用户满意度</value></data>
   <data name="Dashboard.TotalMessages" xml:space="preserve"><value>全部消息数</value></data>
-  <data name="Frontend.001" xml:space="preserve">
+  <data name="Frontend.AIKernel.ThisEntityWasDeletedOrDoesNotExist" xml:space="preserve">
     <value>当前实体已删除或不存在!</value>
   </data>
-  <data name="Frontend.002" xml:space="preserve">
+  <data name="Frontend.AIKernel.ErrorNoNeuCharDeveloperAccountIsConfiguredGoToTheSystemManagement" xml:space="preserve">
     <value>错误：当前系统未配置 NeuChar 开发者账号，请到【系统管理】模块，设置页面，使用【更新 NeuChar 云账户信息】绑定 NeuChar 开发者账号！</value>
   </data>
-  <data name="Frontend.003" xml:space="preserve">
+  <data name="Frontend.AIKernel.AppKeyOrAppSecretIsIncorrectPleaseSetThemAgain" xml:space="preserve">
     <value>AppKey 或 AppSecret 错误！请重新设置！</value>
   </data>
-  <data name="Frontend.004" xml:space="preserve">
+  <data name="Frontend.AIKernel.TheProvidedDeveloperIdDoesNotMatchTheAppKeyConfiguredInTheSystem" xml:space="preserve">
     <value>所提供和 DeveloperId 和系统配置的 AppKey 不一致，请检查或更新后重试！</value>
   </data>
-  <data name="Frontend.005" xml:space="preserve">
+  <data name="Frontend.AIKernel.UpdatedSuccessfully" xml:space="preserve">
     <value>更新成功！</value>
   </data>
-  <data name="Frontend.006" xml:space="preserve">
+  <data name="Frontend.AIKernel.EntityNotFound" xml:space="preserve">
     <value>未查询到实体!</value>
   </data>
-  <data name="Frontend.007" xml:space="preserve">
+  <data name="Frontend.AIKernel.NotSupportedYetHandlingOfModelValueInBuildSenparcAiSetting" xml:space="preserve">
     <value>尚未支持：{0} 模型在 BuildSenparcAiSetting 中的处理</value>
   </data>
-  <data name="Frontend.008" xml:space="preserve">
+  <data name="Frontend.AIKernel.SenparcXncfAIKernelDoesNotSupportTheValueTypeYet" xml:space="preserve">
     <value>Senparc.Xncf.AIKernel 暂时不支持 {0} 类型</value>
   </data>
-  <data name="Frontend.009" xml:space="preserve">
+  <data name="Frontend.AIKernel.SenparcAiSettingCannotBeEmpty" xml:space="preserve">
     <value>SenparcAiSetting 不能为空</value>
   </data>
-  <data name="Frontend.010" xml:space="preserve">
+  <data name="Frontend.AIKernel.ModelDataDoesNotExistCheckWhetherItIsDeployedAndWhether" xml:space="preserve">
     <value>模型数据不存在，请检查是否已部署，或是否具备权限！</value>
   </data>
-  <data name="Frontend.011" xml:space="preserve">
+  <data name="Frontend.AIKernel.SuccessfullyAddedValueModelsAndUpdatedValueModelRecords" xml:space="preserve">
     <value>已成功添加 {0} 个模型，更新 {1} 个模型信息。</value>
   </data>
-  <data name="Frontend.012" xml:space="preserve">
+  <data name="Frontend.AIKernel.PromptRangeDoesNotSupportTheValueTypeYet" xml:space="preserve">
     <value>PromptRange 暂时不支持 {0} 类型</value>
   </data>
-  <data name="Frontend.013" xml:space="preserve">
+  <data name="Frontend.AIKernel.AtLeastOneChatModelMustBeSetBeforeAutomaticScoringIn" xml:space="preserve">
     <value>必须至少设置一个 Chat 类型的模型才能自动打分（在 AIKernel 模块中）</value>
   </data>
   <data name="Area.AIKernel.TokenMonitor" xml:space="preserve">
@@ -918,10 +918,10 @@
   <data name="FineTuning.Optional" xml:space="preserve"><value>可选</value></data>
 
 
-  <data name="Frontend.400" xml:space="preserve"><value>从 NeuChar AI 导入（DevId:{0}）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.AIKernel.ImportedFromNeuCharAIDevIdValue" xml:space="preserve"><value>从 NeuChar AI 导入（DevId:{0}）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
 
-  <data name="Frontend.100" xml:space="preserve"><value>创建微调任务</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>使用已批准的本地模型、数据集和训练参数创建微调任务。Worker、模型和数据集会自动载入，训练参数带有默认值，Workflow 可以按这些默认值直接运行。</value></data>
+  <data name="Frontend.AIKernel.CreateFineTuningTask" xml:space="preserve"><value>创建微调任务</value></data>
+  <data name="Frontend.AIKernel.CreateAFineTuningTaskWithAnApprovedLocalModelDatasetAnd" xml:space="preserve"><value>使用已批准的本地模型、数据集和训练参数创建微调任务。Worker、模型和数据集会自动载入，训练参数带有默认值，Workflow 可以按这些默认值直接运行。</value></data>
   <data name="Function.FineTuning.CheckWorker.Name" xml:space="preserve"><value>检查微调 Worker</value></data>
   <data name="Function.FineTuning.CheckWorker.Description" xml:space="preserve"><value>检查指定微调 Worker 的健康状态、能力和队列情况。只配置了一个可用 Worker 时会自动选中。</value></data>
   <data name="Function.FineTuning.CheckEnvironment.Name" xml:space="preserve"><value>检查微调环境</value></data>

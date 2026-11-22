@@ -27,7 +27,7 @@
                  @@click.stop>
             <header>
                 <span class="workflow-node-preview-kind">{{nodePreviewDetails.kind}}</span>
-                <el-button type="text" icon="el-icon-close" :title="ncfST('Frontend.179')" :aria-label="ncfST('Frontend.179')" @@click="dismissNodePreview"></el-button>
+                <el-button type="text" icon="el-icon-close" :title="ncfST('Frontend.NeuCharWorkflow.CloseNodeDetails')" :aria-label="ncfST('Frontend.NeuCharWorkflow.CloseNodeDetails')" @@click="dismissNodePreview"></el-button>
             </header>
             <h2>{{nodePreviewDetails.title}}</h2>
             <p v-if="nodePreviewDetails.description" class="workflow-node-preview-description">{{nodePreviewDetails.description}}</p>
@@ -38,7 +38,7 @@
                 </div>
             </dl>
             <footer>
-                <span>{{nodePreview.mode==='click'?ncfST('Frontend.493'):ncfST('Frontend.492')}}</span>
+                <span>{{nodePreview.mode==='click'?ncfST('Frontend.NeuCharWorkflow.ClickElsewhereToCloseOrItClosesAutomaticallyAfter15Seconds'):ncfST('Frontend.NeuCharWorkflow.CloseWhenThePointerLeavesTheNode')}}</span>
                 <strong>{{nodePreviewDetails.actionText}}</strong>
             </footer>
         </section>
@@ -46,30 +46,30 @@
     <div :class="['workflow-shell',shellClasses]">
         <aside class="workflow-list-pane">
             <div class="workflow-list-heading">
-                <strong v-show="!listCollapsed">{{ ncfST('Frontend.011') }}</strong>
+                <strong v-show="!listCollapsed">{{ ncfST('Frontend.NeuCharWorkflow.Workflow') }}</strong>
                 <span v-show="!listCollapsed" class="workflow-list-actions">
                     <el-button type="text"
                                icon="el-icon-refresh"
-                               :title="ncfST('Frontend.186')"
-                               :aria-label="ncfST('Frontend.186')"
+                               :title="ncfST('Frontend.NeuCharWorkflow.RefreshWorkflowList')"
+                               :aria-label="ncfST('Frontend.NeuCharWorkflow.RefreshWorkflowList')"
                                :disabled="editingLocked"
                                @@click="refreshWorkflowList"></el-button>
                     <el-button type="primary"
                                plain
                                size="mini"
                                icon="el-icon-plus"
-                               :title="ncfST('Frontend.280')"
-                               :aria-label="ncfST('Frontend.280')"
+                               :title="ncfST('Frontend.NeuCharWorkflow.NewWorkflow')"
+                               :aria-label="ncfST('Frontend.NeuCharWorkflow.NewWorkflow')"
                                :disabled="editingLocked"
                                @@click="createWorkflow"></el-button>
                 </span>
                 <el-button type="text"
                            :icon="listCollapsed?'el-icon-s-unfold':'el-icon-s-fold'"
-                           :title="listCollapsed?ncfST('Frontend.186'):ncfST('Frontend.480')"
+                           :title="listCollapsed?ncfST('Frontend.NeuCharWorkflow.RefreshWorkflowList'):ncfST('Frontend.NeuCharWorkflow.WorkflowShortcuts')"
                            @@click="listCollapsed=!listCollapsed"></el-button>
             </div>
             <template v-if="!listCollapsed">
-                        <el-input v-model="keyword" size="small" clearable prefix-icon="el-icon-search" :placeholder="ncfST('Frontend.272')"></el-input>
+                        <el-input v-model="keyword" size="small" clearable prefix-icon="el-icon-search" :placeholder="ncfST('Frontend.NeuCharWorkflow.SearchWorkflows')"></el-input>
                 <div v-if="filteredWorkflows.length" class="workflow-list">
                     <button v-for="item in filteredWorkflows"
                             :key="item.id"
@@ -79,7 +79,7 @@
                         <span class="workflow-list-name" :title="item.name">{{item.name}}</span>
                         <span class="workflow-list-badges">
                             <el-tag size="mini" effect="plain" :type="workflowTriggerTagType(item)">{{workflowTriggerLabel(item)}}</el-tag>
-                            <el-tag size="mini" :type="item.enabled?'success':'info'">{{item.enabled ? ncfST('Frontend.044') : ncfST('Frontend.606') }}</el-tag>
+                            <el-tag size="mini" :type="item.enabled?'success':'info'">{{item.enabled ? ncfST('Frontend.NeuCharWorkflow.RunOverview') : ncfST('Frontend.NeuCharWorkflow.Pause') }}</el-tag>
                         </span>
                         <small :class="{'workflow-next-run':isIntervalWorkflow(item)}"
                                :title="workflowScheduleTitle(item)">
@@ -88,7 +88,7 @@
                         </small>
                     </button>
                 </div>
-                <div v-else class="workflow-list-empty">{{ ncfST('Frontend.282') }}</div>
+                <div v-else class="workflow-list-empty">{{ ncfST('Frontend.NeuCharWorkflow.NoWorkflows') }}</div>
             </template>
         </aside>
 
@@ -96,88 +96,88 @@
             <template v-if="editing">
                 <div class="workflow-command-bar">
                     <div class="workflow-command-identity">
-                        <el-input v-model="form.name" size="small" :disabled="editingLocked" maxlength="200" :placeholder="ncfST('Frontend.225')"></el-input>
-                        <el-tag size="mini" effect="plain">{{form.triggerType==='webhook'?ncfST('Frontend.470'):(form.triggerType==='interval'?ncfST('Frontend.471'):(form.triggerType==='chat'?ncfST('Frontend.132'):ncfST('Frontend.248')))}}</el-tag>
+                        <el-input v-model="form.name" size="small" :disabled="editingLocked" maxlength="200" :placeholder="ncfST('Frontend.NeuCharWorkflow.WorkflowName')"></el-input>
+                        <el-tag size="mini" effect="plain">{{form.triggerType==='webhook'?ncfST('Frontend.NeuCharWorkflow.WebhookTrigger'):(form.triggerType==='interval'?ncfST('Frontend.NeuCharWorkflow.ScheduledTrigger'):(form.triggerType==='chat'?ncfST('Frontend.NeuCharWorkflow.ChatTrigger'):ncfST('Frontend.NeuCharWorkflow.ManualTrigger')))}}</el-tag>
                         <span :class="['workflow-save-status',{'is-dirty':saveDirty,'is-error':saveState.status==='error'}]" :title="saveStatusText">{{saveStatusText}}</span>
                     </div>
-                    <div class="workflow-command-actions" :aria-label="ncfST('Frontend.480')">
+                    <div class="workflow-command-actions" :aria-label="ncfST('Frontend.NeuCharWorkflow.WorkflowShortcuts')">
                         <el-button type="primary"
                                    size="small"
                                    icon="el-icon-check"
                                    :loading="saveState.saving"
                                    :disabled="editingLocked || (form.id && !saveDirty)"
-                                   :title="ncfST('Frontend.170')"
-                                   @@click="saveWorkflow({source:'manual'})">{{ ncfST('Frontend.166') }}</el-button>
+                                   :title="ncfST('Frontend.NeuCharWorkflow.SaveCommandCtrlS')"
+                                   @@click="saveWorkflow({source:'manual'})">{{ ncfST('Frontend.NeuCharWorkflow.Save') }}</el-button>
                         <el-button size="small"
                                    icon="el-icon-video-play"
                                    :disabled="!form.id || editingLocked || disconnectedNodes.length>0"
-                                   :title="disconnectedNodes.length?ncfST('Frontend.457'):ncfST('Frontend.292')"
-                                   @@click="startWorkflow">{{ ncfST('Frontend.292') }}</el-button>
+                                   :title="disconnectedNodes.length?ncfST('Frontend.NeuCharWorkflow.EndAndTriggerNodesCannotBeInsertedIntoAnExistingConnection'):ncfST('Frontend.NeuCharWorkflow.ValidateAndRun')"
+                                   @@click="startWorkflow">{{ ncfST('Frontend.NeuCharWorkflow.ValidateAndRun') }}</el-button>
                         <el-button v-if="form.id"
                                    size="small"
                                    icon="el-icon-tickets"
-                                   @@click="openWorkflowTasks">{{ ncfST('Frontend.070') }}</el-button>
+                                   @@click="openWorkflowTasks">{{ ncfST('Frontend.NeuCharWorkflow.WorkflowTaskList') }}</el-button>
                         <el-button v-if="form.id && form.triggerType==='chat'"
                                    size="small"
                                    icon="el-icon-chat-dot-round"
-                                   :title="ncfST('Frontend.254')"
-                                   @@click="openChatPage">{{ ncfST('Frontend.334') }}</el-button>
+                                   :title="ncfST('Frontend.NeuCharWorkflow.OpenTheChatPageAvailableToSignedInUsersAndGuests')"
+                                   @@click="openChatPage">{{ ncfST('Frontend.NeuCharWorkflow.ChatPage') }}</el-button>
                         <el-button v-if="form.id"
                                    size="small"
                                    icon="el-icon-data-analysis"
-                                   @@click="openWorkflowAnalytics">{{ ncfST('Frontend.031') }}</el-button>
+                                   @@click="openWorkflowAnalytics">{{ ncfST('Frontend.NeuCharWorkflow.WorkflowAnalytics') }}</el-button>
                         <el-dropdown v-if="form.id" size="small" @@command="exportWorkflow">
-                            <el-button size="small" icon="el-icon-download">{{ ncfST('Frontend.055') }}<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+                            <el-button size="small" icon="el-icon-download">{{ ncfST('Frontend.NeuCharWorkflow.Calls') }}<i class="el-icon-arrow-down el-icon--right"></i></el-button>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="json">JSON</el-dropdown-item>
                                 <el-dropdown-item command="yaml">YAML</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
-                        <el-button size="small" icon="el-icon-upload2" :disabled="editingLocked" @@click="chooseWorkflowImport">{{ ncfST('Frontend.054') }}</el-button>
+                        <el-button size="small" icon="el-icon-upload2" :disabled="editingLocked" @@click="chooseWorkflowImport">{{ ncfST('Frontend.NeuCharWorkflow.Resource') }}</el-button>
                         <input ref="workflowImportInput" type="file" accept=".json,.yaml,.yml,application/json,application/yaml,text/yaml" style="display:none" @@change="importWorkflowFile">
                         <el-button v-if="form.id"
                                    size="small"
                                    type="warning"
                                    plain
                                    icon="el-icon-loading"
-                                   :title="ncfST('Frontend.070')"
-                                   @@click="openWorkflowTasks('running')">{{ ncfST('Frontend.077') }} {{form.runningCount}}</el-button>
+                                   :title="ncfST('Frontend.NeuCharWorkflow.WorkflowTaskList')"
+                                   @@click="openWorkflowTasks('running')">{{ ncfST('Frontend.NeuCharWorkflow.RunningAlternate') }} {{form.runningCount}}</el-button>
                         <el-button v-if="run.running"
                                    size="small"
                                    type="danger"
                                    plain
                                    icon="el-icon-circle-close"
                                    :loading="run.aborting"
-                                   @@click="abortWorkflow">{{ ncfST('Frontend.509') }}</el-button>
+                                   @@click="abortWorkflow">{{ ncfST('Frontend.NeuCharWorkflow.ConfirmAbort') }}</el-button>
                         <el-button size="small"
                                    plain
                                    icon="el-icon-plus"
                                    :disabled="editingLocked"
-                                   :title="ncfST('Frontend.256')"
-                                   @@click="paletteCollapsed=false">{{ ncfST('Frontend.305') }}</el-button>
+                                   :title="ncfST('Frontend.NeuCharWorkflow.OpenAddNodePanel')"
+                                   @@click="paletteCollapsed=false">{{ ncfST('Frontend.NeuCharWorkflow.AddNodeAlternate') }}</el-button>
                         <el-dropdown trigger="click" @@command="handleWorkflowAction">
-                            <el-button size="small" plain icon="el-icon-more" :title="ncfST('Frontend.283')" :aria-label="ncfST('Frontend.283')"></el-button>
+                            <el-button size="small" plain icon="el-icon-more" :title="ncfST('Frontend.NeuCharWorkflow.MoreWorkflowActions')" :aria-label="ncfST('Frontend.NeuCharWorkflow.MoreWorkflowActions')"></el-button>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="new" :disabled="editingLocked || saveState.saving">
-                                    <i class="el-icon-plus"></i> {{ ncfST('Frontend.280') }}
+                                    <i class="el-icon-plus"></i> {{ ncfST('Frontend.NeuCharWorkflow.NewWorkflow') }}
                                 </el-dropdown-item>
                                 <el-dropdown-item command="settings" :disabled="editingLocked">
-                                    <i class="el-icon-setting"></i> {{ ncfST('Frontend.481') }}
+                                    <i class="el-icon-setting"></i> {{ ncfST('Frontend.NeuCharWorkflow.WorkflowSettingsAlternate') }}
                                 </el-dropdown-item>
                                 <el-dropdown-item command="auto-layout" :disabled="editingLocked">
-                                    <i class="el-icon-magic-stick"></i> {{ ncfST('Frontend.266') }}
+                                    <i class="el-icon-magic-stick"></i> {{ ncfST('Frontend.NeuCharWorkflow.AutoLayoutBySettings') }}
                                 </el-dropdown-item>
                                 <el-dropdown-item command="align-grid" :disabled="editingLocked">
-                                    <i class="el-icon-s-grid"></i> {{ ncfST('Frontend.221') }}
+                                    <i class="el-icon-s-grid"></i> {{ ncfST('Frontend.NeuCharWorkflow.SnapToNearbyGrid') }}
                                 </el-dropdown-item>
                                 <el-dropdown-item command="fit-canvas">
-                                    <i class="el-icon-full-screen"></i> {{ ncfST('Frontend.363') }}
+                                    <i class="el-icon-full-screen"></i> {{ ncfST('Frontend.NeuCharWorkflow.FitCanvas') }}
                                 </el-dropdown-item>
                                 <el-dropdown-item command="tasks">
-                                    <i class="el-icon-document"></i> {{ ncfST('Frontend.070') }}
+                                    <i class="el-icon-document"></i> {{ ncfST('Frontend.NeuCharWorkflow.WorkflowTaskList') }}
                                 </el-dropdown-item>
                                 <el-dropdown-item v-if="form.id" command="delete" divided :disabled="editingLocked">
-                                    <i class="el-icon-delete"></i> {{ ncfST('Frontend.026') }}
+                                    <i class="el-icon-delete"></i> {{ ncfST('Frontend.NeuCharWorkflow.InputParameters') }}
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
@@ -186,8 +186,8 @@
 
                 <section v-if="validationIssues.length" class="workflow-validation-panel" role="alert" aria-live="assertive">
                     <div class="workflow-validation-panel-header">
-                            <strong><i class="el-icon-warning"></i> {{ ncfST('Frontend.340') }}</strong>
-                        <el-button type="text" size="mini" @@click="clearValidationIssue">{{ ncfST('Frontend.034') }}</el-button>
+                            <strong><i class="el-icon-warning"></i> {{ ncfST('Frontend.NeuCharWorkflow.NodeValidationFailed') }}</strong>
+                        <el-button type="text" size="mini" @@click="clearValidationIssue">{{ ncfST('Frontend.NeuCharWorkflow.To') }}</el-button>
                     </div>
                     <button v-for="issue in validationIssues"
                             :key="(issue.nodeId || 'workflow') + '-' + issue.message"
@@ -201,35 +201,35 @@
                     </button>
                 </section>
 
-                <el-dialog :title="ncfST('Frontend.481')"
+                <el-dialog :title="ncfST('Frontend.NeuCharWorkflow.WorkflowSettingsAlternate')"
                            :visible.sync="workflowSettingsVisible"
                            :close-on-click-modal="false"
                            width="min(720px, calc(100vw - 32px))"
                            append-to-body>
                     <el-form label-position="top" size="small" :class="{'form-locked':editingLocked}">
-                        <el-form-item :label="ncfST('Frontend.346')">
-                            <el-input v-model="form.description" :disabled="editingLocked" :placeholder="ncfST('Frontend.312')"></el-input>
+                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.Description')">
+                            <el-input v-model="form.description" :disabled="editingLocked" :placeholder="ncfST('Frontend.NeuCharWorkflow.DescribeThisWorkflowInOneSentence')"></el-input>
                         </el-form-item>
                         <div class="workflow-settings-grid">
-                            <el-form-item :label="ncfST('Frontend.343')">
+                            <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.TriggerMode')">
                                 <el-select v-model="form.triggerType" :disabled="editingLocked" @@change="syncTriggerNode">
-                                    <el-option :label="ncfST('Frontend.248')" value="manual"></el-option>
-                                    <el-option :label="ncfST('Frontend.373')" value="interval"></el-option>
+                                    <el-option :label="ncfST('Frontend.NeuCharWorkflow.ManualTrigger')" value="manual"></el-option>
+                                    <el-option :label="ncfST('Frontend.NeuCharWorkflow.IntervalTrigger')" value="interval"></el-option>
                                     <el-option label="Webhook" value="webhook"></el-option>
-                                    <el-option :label="ncfST('Frontend.132')" value="chat"></el-option>
+                                    <el-option :label="ncfST('Frontend.NeuCharWorkflow.ChatTrigger')" value="chat"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item v-if="form.triggerType==='interval'" :label="ncfST('Frontend.372')">
+                            <el-form-item v-if="form.triggerType==='interval'" :label="ncfST('Frontend.NeuCharWorkflow.IntervalSeconds')">
                                 <el-input-number v-model="form.intervalSeconds" :disabled="editingLocked" :min="60" :max="31536000" :step="60"></el-input-number>
                             </el-form-item>
-                            <el-form-item :label="ncfST('Frontend.359')">
-                                <el-switch v-model="form.enabled" :disabled="editingLocked" :active-text="ncfST('Frontend.650')"></el-switch>
+                            <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.RunStatus')">
+                                <el-switch v-model="form.enabled" :disabled="editingLocked" :active-text="ncfST('Frontend.NeuCharWorkflow.RunManuallyByTheUser')"></el-switch>
                             </el-form-item>
-                            <el-form-item :label="ncfST('Frontend.336')" :title="ncfST('Frontend.196')">
+                            <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.AutoSave')" :title="ncfST('Frontend.NeuCharWorkflow.RunOnlyWhenTheCurrentPageIsOpenAndItsContentChanges')">
                                 <div class="workflow-auto-save">
                                     <el-switch :value="form.autoSaveMinutes>0"
                                                :disabled="editingLocked || saveState.saving"
-                                               :active-text="ncfST('Frontend.336')"
+                                               :active-text="ncfST('Frontend.NeuCharWorkflow.AutoSave')"
                                                @@change="setAutoSaveEnabled"></el-switch>
                                     <el-input-number v-if="form.autoSaveMinutes>0"
                                                      v-model="form.autoSaveMinutes"
@@ -239,42 +239,42 @@
                                                      :step="1"
                                                      :precision="0"
                                                      controls-position="right"></el-input-number>
-                                <span v-if="form.autoSaveMinutes>0">{{ ncfST('Frontend.181') }}</span>
+                                <span v-if="form.autoSaveMinutes>0">{{ ncfST('Frontend.NeuCharWorkflow.Minutes') }}</span>
                                 </div>
                             </el-form-item>
-                            <el-form-item :label="ncfST('Frontend.338')" :title="ncfST('Frontend.236')">
+                            <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.AutoLayoutDirection')" :title="ncfST('Frontend.NeuCharWorkflow.AffectsTheHierarchyReadingDirectionOfAutoLayoutBySettingsVerticalBy')">
                                 <el-radio-group v-model="form.graph.layout.direction" :disabled="editingLocked">
                                     <el-radio-button label="vertical">Vertical</el-radio-button>
                                     <el-radio-button label="horizontal">Horizontal</el-radio-button>
                                 </el-radio-group>
                             </el-form-item>
-                            <el-form-item :label="ncfST('Frontend.315')">
+                            <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.CanvasAlignment')">
                                 <div class="workflow-layout-actions">
                                     <el-button size="small"
                                                icon="el-icon-magic-stick"
                                                :disabled="editingLocked"
-                                               @@click="autoLayout()">{{ ncfST('Frontend.265') }}</el-button>
+                                               @@click="autoLayout()">{{ ncfST('Frontend.NeuCharWorkflow.RearrangeByDirection') }}</el-button>
                                     <el-button size="small"
                                                icon="el-icon-s-grid"
                                                :disabled="editingLocked"
-                                               @@click="alignToNearbyGrid()">{{ ncfST('Frontend.221') }}</el-button>
+                                               @@click="alignToNearbyGrid()">{{ ncfST('Frontend.NeuCharWorkflow.SnapToNearbyGrid') }}</el-button>
                                 </div>
-                                <p class="workflow-layout-help">{{ ncfST('Frontend.222') }}</p>
+                                <p class="workflow-layout-help">{{ ncfST('Frontend.NeuCharWorkflow.NearbyGridAlignmentOnlyAppliesLimitedDistanceSnappingAndOverlapPreventionIt') }}</p>
                             </el-form-item>
                         </div>
 
                         <section class="workflow-variable-settings">
                             <div class="workflow-variable-settings-heading">
                                 <div>
-                                    <strong>{{ ncfST('Frontend.224') }}</strong>
-                                    <p>{{ ncfST('Frontend.208') }} <code v-pre>{{= vars.variableName }}</code> {{ ncfST('Frontend.351') }}</p>
+                                    <strong>{{ ncfST('Frontend.NeuCharWorkflow.WorkflowVariables') }}</strong>
+                                    <p>{{ ncfST('Frontend.NeuCharWorkflow.DeclareTheDefaultValueHereForLaterRestrictedFormulas') }} <code v-pre>{{= vars.variableName }}</code> {{ ncfST('Frontend.NeuCharWorkflow.ReadTheSafeCodeNodeCanAssignItAgainDuringThisRun') }}</p>
                                 </div>
                                 <el-button size="small"
                                            icon="el-icon-plus"
                                            :disabled="editingLocked || form.graph.variables.length>=30"
-                                           @@click="addWorkflowVariable">{{ ncfST('Frontend.304') }}</el-button>
+                                           @@click="addWorkflowVariable">{{ ncfST('Frontend.NeuCharWorkflow.AddVariable') }}</el-button>
                             </div>
-                            <el-alert :title="ncfST('Frontend.194')"
+                            <el-alert :title="ncfST('Frontend.NeuCharWorkflow.VariableNamesMayUseOnlyLettersNumbersAndUnderscoresAndMustStart')"
                                       type="info"
                                       :closable="false"></el-alert>
                             <div v-if="form.graph.variables.length" class="workflow-variable-list">
@@ -282,97 +282,97 @@
                                     <el-input v-model="variable.name"
                                               :disabled="editingLocked"
                                               maxlength="64"
-                                              :placeholder="ncfST('Frontend.195')"></el-input>
+                                              :placeholder="ncfST('Frontend.NeuCharWorkflow.VariableNameForExampleCustomerName')"></el-input>
                                     <workflow-rich-text-input v-model="variable.value"
                                                               multiline
                                                               :rows="2"
                                                               :disabled="editingLocked"
                                                               :editable="false"
                                                               :maxlength="8000"
-                                                              :help-text="ncfST('Frontend.194')"></workflow-rich-text-input>
+                                                              :help-text="ncfST('Frontend.NeuCharWorkflow.VariableNamesMayUseOnlyLettersNumbersAndUnderscoresAndMustStart')"></workflow-rich-text-input>
                                     <el-button type="text"
                                                class="workflow-variable-remove"
                                                :disabled="editingLocked"
-                                               @@click="removeWorkflowVariable(index)">{{ ncfST('Frontend.026') }}</el-button>
+                                               @@click="removeWorkflowVariable(index)">{{ ncfST('Frontend.NeuCharWorkflow.InputParameters') }}</el-button>
                                 </div>
                             </div>
-                            <p v-else class="workflow-variable-empty">{{ ncfST('Frontend.219') }}</p>
+                            <p v-else class="workflow-variable-empty">{{ ncfST('Frontend.NeuCharWorkflow.NoVariablesDeclaredYetAddAVariableBeforeAssigningItInThe') }}</p>
                         </section>
 
                         <div v-if="form.triggerType==='webhook'" class="workflow-webhook-config">
                             <div class="webhook-config-heading">
-                                <strong>{{ ncfST('Frontend.146') }}</strong>
-                                <el-button type="text" size="mini" icon="el-icon-question" @@click="webhookHelpVisible=true">{{ ncfST('Frontend.162') }}</el-button>
+                                <strong>{{ ncfST('Frontend.NeuCharWorkflow.WebhookTriggerConfiguration') }}</strong>
+                                <el-button type="text" size="mini" icon="el-icon-question" @@click="webhookHelpVisible=true">{{ ncfST('Frontend.NeuCharWorkflow.UsageInstructions') }}</el-button>
                             </div>
                             <div class="webhook-config-row">
-                                <label>{{ ncfST('Frontend.350') }}</label>
+                                <label>{{ ncfST('Frontend.NeuCharWorkflow.RequestMethod') }}</label>
                                 <el-select v-model="form.webhookMethod" :disabled="editingLocked" size="small">
-                                    <el-option :label="ncfST('Frontend.151')" value="any"></el-option>
+                                    <el-option :label="ncfST('Frontend.NeuCharWorkflow.UnrestrictedGETPOSTAndOthers')" value="any"></el-option>
                                     <el-option label="GET" value="get"></el-option>
                                     <el-option label="POST" value="post"></el-option>
                                 </el-select>
-                                <label>{{ ncfST('Frontend.345') }}</label>
-                                <el-input v-model="form.webhookToken" size="small" readonly :placeholder="ncfST('Frontend.169')">
-                                    <el-button slot="append" icon="el-icon-document-copy" :title="ncfST('Frontend.211')" @@click="copyText(form.webhookToken)"></el-button>
+                                <label>{{ ncfST('Frontend.NeuCharWorkflow.AccessKey') }}</label>
+                                <el-input v-model="form.webhookToken" size="small" readonly :placeholder="ncfST('Frontend.NeuCharWorkflow.GeneratedAutomaticallyAfterSaving')">
+                                    <el-button slot="append" icon="el-icon-document-copy" :title="ncfST('Frontend.NeuCharWorkflow.CopyAccessKey')" @@click="copyText(form.webhookToken)"></el-button>
                                 </el-input>
-                                <el-button size="small" icon="el-icon-document-copy" :disabled="!form.id" @@click="copyText(webhookUrl)">{{ ncfST('Frontend.210') }}</el-button>
+                                <el-button size="small" icon="el-icon-document-copy" :disabled="!form.id" @@click="copyText(webhookUrl)">{{ ncfST('Frontend.NeuCharWorkflow.CopyURL') }}</el-button>
                             </div>
                             <div class="webhook-parameters-heading">
-                                <span>{{ ncfST('Frontend.381', form.webhookParameters.length) }}</span>
-                                <el-button type="text" size="small" :disabled="editingLocked || form.webhookParameters.length>=50" @@click="addWebhookParameter">{{ ncfST('Frontend.303') }}</el-button>
+                                <span>{{ ncfST('Frontend.NeuCharWorkflow.ParametersValue50', form.webhookParameters.length) }}</span>
+                                <el-button type="text" size="small" :disabled="editingLocked || form.webhookParameters.length>=50" @@click="addWebhookParameter">{{ ncfST('Frontend.NeuCharWorkflow.AddParameter') }}</el-button>
                             </div>
                             <div v-if="form.webhookParameters.length" class="webhook-parameters">
                                 <div v-for="(parameter,index) in form.webhookParameters" :key="parameter._id" class="webhook-parameter-row">
-                                    <el-input v-model="parameter.name" size="small" :placeholder="ncfST('Frontend.190')" :disabled="editingLocked"></el-input>
-                                    <el-checkbox v-model="parameter.required" :disabled="editingLocked">{{ ncfST('Frontend.239') }}</el-checkbox>
-                                    <el-input v-model="parameter.description" size="small" :placeholder="ncfST('Frontend.347')" :disabled="editingLocked"></el-input>
-                                    <el-button type="text" class="webhook-parameter-remove" :disabled="editingLocked" @@click="removeWebhookParameter(index)">{{ ncfST('Frontend.183') }}</el-button>
+                                    <el-input v-model="parameter.name" size="small" :placeholder="ncfST('Frontend.NeuCharWorkflow.ParameterNameForExampleUserId')" :disabled="editingLocked"></el-input>
+                                    <el-checkbox v-model="parameter.required" :disabled="editingLocked">{{ ncfST('Frontend.NeuCharWorkflow.Required') }}</el-checkbox>
+                                    <el-input v-model="parameter.description" size="small" :placeholder="ncfST('Frontend.NeuCharWorkflow.DescriptionOptional')" :disabled="editingLocked"></el-input>
+                                    <el-button type="text" class="webhook-parameter-remove" :disabled="editingLocked" @@click="removeWebhookParameter(index)">{{ ncfST('Frontend.NeuCharWorkflow.Delete') }}</el-button>
                                 </div>
                             </div>
-                            <div v-else class="webhook-parameters-empty">{{ ncfST('Frontend.287') }}</div>
+                            <div v-else class="webhook-parameters-empty">{{ ncfST('Frontend.NeuCharWorkflow.NoParametersConfiguredAcceptsAllQueryFormAndJSONFields') }}</div>
                         </div>
 
                         <div v-if="form.triggerType==='chat'" class="workflow-webhook-config workflow-chat-config">
                             <div class="webhook-config-heading">
-                                <strong>{{ ncfST('Frontend.133') }}</strong>
+                                <strong>{{ ncfST('Frontend.NeuCharWorkflow.ChatTriggerConfiguration') }}</strong>
                             </div>
                             <div class="webhook-config-row">
-                                <label>{{ ncfST('Frontend.373') }}</label>
-                                <el-input v-model="form.chatTitle" :disabled="editingLocked" size="small" maxlength="100" :placeholder="ncfST('Frontend.316')"></el-input>
-                                <el-checkbox v-model="form.chatAllowGuest" :disabled="editingLocked">{{ ncfST('Frontend.174') }}</el-checkbox>
+                                <label>{{ ncfST('Frontend.NeuCharWorkflow.IntervalTrigger') }}</label>
+                                <el-input v-model="form.chatTitle" :disabled="editingLocked" size="small" maxlength="100" :placeholder="ncfST('Frontend.NeuCharWorkflow.UseTheWorkflowNameWhenEmpty')"></el-input>
+                                <el-checkbox v-model="form.chatAllowGuest" :disabled="editingLocked">{{ ncfST('Frontend.NeuCharWorkflow.AllowGuestsNotLoggedIn') }}</el-checkbox>
                             </div>
                             <div class="webhook-config-row">
-                                <label>{{ ncfST('Frontend.297') }}</label>
-                                <el-input v-model="form.chatGreeting" :disabled="editingLocked" size="small" type="textarea" :rows="2" maxlength="500" :placeholder="ncfST('Frontend.375')"></el-input>
+                                <label>{{ ncfST('Frontend.NeuCharWorkflow.WelcomeMessage') }}</label>
+                                <el-input v-model="form.chatGreeting" :disabled="editingLocked" size="small" type="textarea" :rows="2" maxlength="500" :placeholder="ncfST('Frontend.NeuCharWorkflow.GreetingShownWhenTheChatPageOpensForTheFirstTimeLeave')"></el-input>
                             </div>
                             <div class="webhook-config-row">
-                                <label>{{ ncfST('Frontend.334') }}</label>
-                                <el-input v-model="chatUrl" size="small" readonly :placeholder="ncfST('Frontend.168')"></el-input>
-                                <el-button size="small" icon="el-icon-document-copy" :disabled="!form.id" @@click="copyText(chatUrl,'Chat')">{{ ncfST('Frontend.210') }}</el-button>
-                                <el-button size="small" type="primary" plain icon="el-icon-chat-dot-round" :disabled="!form.id" @@click="openChatPage">{{ ncfST('Frontend.178') }}</el-button>
+                                <label>{{ ncfST('Frontend.NeuCharWorkflow.ChatPage') }}</label>
+                                <el-input v-model="chatUrl" size="small" readonly :placeholder="ncfST('Frontend.NeuCharWorkflow.AccessibleAfterSaving')"></el-input>
+                                <el-button size="small" icon="el-icon-document-copy" :disabled="!form.id" @@click="copyText(chatUrl,'Chat')">{{ ncfST('Frontend.NeuCharWorkflow.CopyURL') }}</el-button>
+                                <el-button size="small" type="primary" plain icon="el-icon-chat-dot-round" :disabled="!form.id" @@click="openChatPage">{{ ncfST('Frontend.NeuCharWorkflow.Close') }}</el-button>
                             </div>
-                            <div class="webhook-parameters-empty">{{ ncfST('Frontend.314') }}</div>
+                            <div class="webhook-parameters-empty">{{ ncfST('Frontend.NeuCharWorkflow.EachUserMessageStartsOneWorkflowRunAsInputWhenAllowGuests') }}</div>
                         </div>
                     </el-form>
                     <span slot="footer" class="dialog-footer">
-                        <el-button @@click="workflowSettingsVisible=false">{{ ncfST('Frontend.178') }}</el-button>
+                        <el-button @@click="workflowSettingsVisible=false">{{ ncfST('Frontend.NeuCharWorkflow.Close') }}</el-button>
                     </span>
                 </el-dialog>
 
-                <el-dialog :title="ncfST('Frontend.145')"
+                <el-dialog :title="ncfST('Frontend.NeuCharWorkflow.WebhookUsageNotes')"
                            :visible.sync="webhookHelpVisible"
                            width="min(620px, calc(100vw - 32px))"
                            append-to-body>
                     <div class="workflow-webhook-help">
-                        <p>{{ ncfST('Frontend.175') }}</p>
+                        <p>{{ ncfST('Frontend.NeuCharWorkflow.SaveTheWorkflowFirstToGenerateTheCallURLAndAccessKey') }}</p>
                         <template v-if="form.id">
-                            <p>{{ ncfST('Frontend.352') }}<code>{{webhookUrl}}</code></p>
-                            <p>{{ ncfST('Frontend.160') }} <code>X-NeuChar-Webhook-Token</code></p>
+                            <p>{{ ncfST('Frontend.NeuCharWorkflow.CallURL') }}<code>{{webhookUrl}}</code></p>
+                            <p>{{ ncfST('Frontend.NeuCharWorkflow.PassTheAccessKeyQueryParametersAreAlsoSupported') }} <code>X-NeuChar-Webhook-Token</code></p>
                         </template>
-                        <p>{{ ncfST('Frontend.229') }}</p>
+                        <p>{{ ncfST('Frontend.NeuCharWorkflow.DefinedParametersCanBeReadFromQueryFormOrAJSONRequest') }}</p>
                     </div>
                     <span slot="footer" class="dialog-footer">
-                        <el-button @@click="webhookHelpVisible=false">{{ ncfST('Frontend.178') }}</el-button>
+                        <el-button @@click="webhookHelpVisible=false">{{ ncfST('Frontend.NeuCharWorkflow.Close') }}</el-button>
                     </span>
                 </el-dialog>
 
@@ -384,7 +384,7 @@
                            @@mouseup.native.stop
                            width="min(760px, calc(100vw - 32px))"
                            append-to-body>
-                    <p class="template-editor-help">{{ ncfST('Frontend.176') }}</p>
+                    <p class="template-editor-help">{{ ncfST('Frontend.NeuCharWorkflow.EnterFixedTextFirstThenChooseAFormulaOnTheRightOr') }}</p>
                     <el-alert :title="templateExpressionHelp"
                               type="warning"
                               :closable="false"
@@ -402,14 +402,14 @@
                                       @@keyup.native="captureTemplateSelection"
                                       @@select.native="captureTemplateSelection"></el-input>
                             <div v-if="templateEditor.allowBindings" class="template-editor-picker">
-                        <span>{{ ncfST('Frontend.271') }}</span>
+                        <span>{{ ncfST('Frontend.NeuCharWorkflow.InsertUpstreamValue') }}</span>
                         <el-cascader :value="templateEditor.pendingSelection"
                                      :options="upstreamOutputOptions(null)"
                                      :disabled="editingLocked || !upstreamOutputOptions(null).length"
                                      :props="{expandTrigger:'hover'}"
                                      clearable
                                      filterable
-                                     :placeholder="ncfST('Frontend.368')"
+                                     :placeholder="ncfST('Frontend.NeuCharWorkflow.SelectANodeOutputOrPreloadedInputSelection')"
                                      @@change="appendTemplateBinding"></el-cascader>
                     </div>
                     <div v-if="templateEditor.allowBindings && templateEditor.bindings.length" class="template-binding-tags">
@@ -427,7 +427,7 @@
                                              :step="1"
                                              size="mini"
                                              controls-position="right"
-                                             :placeholder="ncfST('Frontend.182')"></el-input-number>
+                                             :placeholder="ncfST('Frontend.NeuCharWorkflow.ListIndex')"></el-input-number>
                         </div>
                     </div>
                     <el-alert :title="templateEditorBindingHelpText"
@@ -437,8 +437,8 @@
                         </div>
                         <aside class="template-editor-formulas">
                             <div class="template-editor-formulas-heading">
-                                <strong>{{ ncfST('Frontend.273') }}</strong>
-                                <small>{{ ncfST('Frontend.310') }}</small>
+                                <strong>{{ ncfST('Frontend.NeuCharWorkflow.SupportedFormulas') }}</strong>
+                                <small>{{ ncfST('Frontend.NeuCharWorkflow.ClickToInsert') }}</small>
                             </div>
                             <div v-for="group in templateEditorFormulaGroups" :key="group.category" class="template-editor-formula-group">
                                 <span class="template-editor-formula-category">{{group.category}}</span>
@@ -460,18 +460,18 @@
                         </aside>
                     </div>
                     <span slot="footer" class="dialog-footer">
-                        <el-button @@click="templateEditor.visible=false">{{ ncfST('Frontend.193') }}</el-button>
-                        <el-button type="primary" :disabled="editingLocked" @@click="saveParameterTemplate">{{ ncfST('Frontend.232') }}</el-button>
+                        <el-button @@click="templateEditor.visible=false">{{ ncfST('Frontend.NeuCharWorkflow.Cancel') }}</el-button>
+                        <el-button type="primary" :disabled="editingLocked" @@click="saveParameterTemplate">{{ ncfST('Frontend.NeuCharWorkflow.Apply') }}</el-button>
                     </span>
                 </el-dialog>
 
                 <div class="workflow-designer">
                     <aside ref="palette" class="workflow-palette">
                         <div class="pane-heading">
-                            <strong v-show="!paletteCollapsed">{{ ncfST('Frontend.305') }}</strong>
+                            <strong v-show="!paletteCollapsed">{{ ncfST('Frontend.NeuCharWorkflow.AddNodeAlternate') }}</strong>
                             <el-button type="text"
                                        :icon="paletteCollapsed?'el-icon-s-unfold':'el-icon-s-fold'"
-                                       :title="paletteCollapsed?ncfST('Frontend.305'):ncfST('Frontend.480')"
+                                       :title="paletteCollapsed?ncfST('Frontend.NeuCharWorkflow.AddNodeAlternate'):ncfST('Frontend.NeuCharWorkflow.WorkflowShortcuts')"
                                        @@click="paletteCollapsed=!paletteCollapsed"></el-button>
                         </div>
                         <div v-show="!paletteCollapsed" class="palette-content">
@@ -509,7 +509,7 @@
                                     </defs>
                                     <g v-for="edge in form.graph.edges" :key="edge.id" :class="{'edge-insert-candidate':activeInsertionEdgeId===edge.id,'loop-scope-edge-highlight':isLoopScopeEdgeHighlighted(edge)}">
                                         <path :d="edgePath(edge)" marker-end="url(#workflow-arrow)"></path>
-                                        <text v-if="['true','false','break'].includes(edge.sourceHandle)" :x="edgeLabelX(edge)" :y="edgeLabelY(edge)">{{edge.sourceHandle==='true'?ncfST('Frontend.317'):(edge.sourceHandle==='false'?ncfST('Frontend.172'):'break')}}</text>
+                                        <text v-if="['true','false','break'].includes(edge.sourceHandle)" :x="edgeLabelX(edge)" :y="edgeLabelY(edge)">{{edge.sourceHandle==='true'?ncfST('Frontend.NeuCharWorkflow.True'):(edge.sourceHandle==='false'?ncfST('Frontend.NeuCharWorkflow.False'):'break')}}</text>
                                     </g>
                                     <path v-if="connectionDraft.sourceId" class="draft-wire" :d="draftEdgePath()"></path>
                                 </svg>
@@ -521,7 +521,7 @@
                                         class="edge-delete"
                                         :style="edgeDeletePosition(edge)"
                                         :disabled="editingLocked"
-                                        :title="ncfST('Frontend.184')"
+                                        :title="ncfST('Frontend.NeuCharWorkflow.DeleteConnection')"
                                         @@mousedown.stop
                                         @@click.stop="removeEdge(edge)">×</button>
                                 <button v-for="edge in form.graph.edges"
@@ -530,8 +530,8 @@
                                         class="edge-insert"
                                         :style="edgeInsertPosition(edge)"
                                         :disabled="editingLocked"
-                                        :title="ncfST('Frontend.207')"
-                                        :aria-label="ncfST('Frontend.207')"
+                                        :title="ncfST('Frontend.NeuCharWorkflow.InsertANodeOnTheConnection')"
+                                        :aria-label="ncfST('Frontend.NeuCharWorkflow.InsertANodeOnTheConnection')"
                                         @@mousedown.stop
                                         @@click.stop="openEdgeInsertMenu(edge)">+</button>
 
@@ -542,10 +542,10 @@
                                          @@click.stop
                                          @@wheel.stop>
                                     <header class="workflow-edge-insert-heading">
-                                        <span><i class="el-icon-plus"></i> {{ ncfST('Frontend.207') }}</span>
-                                        <el-button type="text" icon="el-icon-close" :title="ncfST('Frontend.178')" @@click="closeEdgeInsertMenu"></el-button>
+                                        <span><i class="el-icon-plus"></i> {{ ncfST('Frontend.NeuCharWorkflow.InsertANodeOnTheConnection') }}</span>
+                                        <el-button type="text" icon="el-icon-close" :title="ncfST('Frontend.NeuCharWorkflow.Close')" @@click="closeEdgeInsertMenu"></el-button>
                                     </header>
-                                    <p>{{ ncfST('Frontend.188') }}</p>
+                                    <p>{{ ncfST('Frontend.NeuCharWorkflow.TheOriginalConnectionWillBeReplacedWithUpstreamNewNodeDownstream') }}</p>
                                     <workflow-node-picker :functions="functions"
                                                           :objects="workflowObjects"
                                                           :pinned-function-keys="pinnedFunctions"
@@ -568,10 +568,10 @@
                                          @@click.stop
                                          @@wheel.stop>
                                     <header class="workflow-edge-insert-heading">
-                                        <span><i class="el-icon-plus"></i> {{ ncfST('Frontend.206') }}</span>
-                                        <el-button type="text" icon="el-icon-close" :title="ncfST('Frontend.178')" @@click="closeCanvasNodeInsertMenu"></el-button>
+                                        <span><i class="el-icon-plus"></i> {{ ncfST('Frontend.NeuCharWorkflow.AddANodeHere') }}</span>
+                                        <el-button type="text" icon="el-icon-close" :title="ncfST('Frontend.NeuCharWorkflow.Close')" @@click="closeCanvasNodeInsertMenu"></el-button>
                                     </header>
-                                    <p>{{ ncfST('Frontend.192') }}</p>
+                                    <p>{{ ncfST('Frontend.NeuCharWorkflow.DoubleClickANodeToAddItAtTheRightClickSelection') }}</p>
                                     <workflow-node-picker :functions="functions"
                                                           :objects="workflowObjects"
                                                           :pinned-function-keys="pinnedFunctions"
@@ -595,14 +595,14 @@
                                          @@mousedown.stop="startDrag($event,node)"
                                          @@contextmenu.stop.prevent="openNodeContextMenu($event,node)">
                                     <template v-if="node.type==='loop-end'">
-                                        <button type="button" class="node-port node-input node-input-continue" :class="{ready:!!connectionDraft.sourceId}" :title="ncfST('Frontend.362')" @@mousedown.stop @@mouseup.stop="completeConnection(node,'continue')">continue</button>
-                                        <button type="button" class="node-port node-input node-input-break" :class="{ready:!!connectionDraft.sourceId}" :title="ncfST('Frontend.361')" @@mousedown.stop @@mouseup.stop="completeConnection(node,'break')">break</button>
+                                        <button type="button" class="node-port node-input node-input-continue" :class="{ready:!!connectionDraft.sourceId}" :title="ncfST('Frontend.NeuCharWorkflow.ConnectToContinueInput')" @@mousedown.stop @@mouseup.stop="completeConnection(node,'continue')">continue</button>
+                                        <button type="button" class="node-port node-input node-input-break" :class="{ready:!!connectionDraft.sourceId}" :title="ncfST('Frontend.NeuCharWorkflow.ConnectToBreakInput')" @@mousedown.stop @@mouseup.stop="completeConnection(node,'break')">break</button>
                                     </template>
                                     <button v-else-if="!node.type.endsWith('trigger')"
                                             type="button"
                                             class="node-port node-input"
                                             :class="{ready:!!connectionDraft.sourceId}"
-                                            :title="ncfST('Frontend.260')"
+                                            :title="ncfST('Frontend.NeuCharWorkflow.DragHereToCompleteTheConnection')"
                                             @@mousedown.stop
                                             @@mouseup.stop="completeConnection(node)"></button>
                                     <div class="workflow-node-body">
@@ -618,31 +618,31 @@
                                         </span>
                                         <el-button v-else-if="!node.type.endsWith('trigger')" type="text" icon="el-icon-delete" :disabled="editingLocked" @@click.stop="removeNode(node)"></el-button>
                                     </div>
-                                    <span v-if="nodeValidationError(node)" class="workflow-node-validation-badge" :title="nodeValidationError(node)" :aria-label="ncfST('Frontend.340')">!</span>
+                                    <span v-if="nodeValidationError(node)" class="workflow-node-validation-badge" :title="nodeValidationError(node)" :aria-label="ncfST('Frontend.NeuCharWorkflow.NodeValidationFailed')">!</span>
                                     <template v-if="node.type==='condition'">
-                                        <button type="button" class="node-port node-output node-output-true" :title="ncfST('Frontend.263')" @@mousedown.stop="beginConnection($event,node,'true')">{{ ncfST('Frontend.317') }}</button>
-                                        <button type="button" class="node-port node-output node-output-false" :title="ncfST('Frontend.262')" @@mousedown.stop="beginConnection($event,node,'false')">{{ ncfST('Frontend.172') }}</button>
-                                        <button type="button" class="node-port node-output node-output-break" :title="ncfST('Frontend.261')" @@mousedown.stop="beginConnection($event,node,'break')">break</button>
+                                        <button type="button" class="node-port node-output node-output-true" :title="ncfST('Frontend.NeuCharWorkflow.DragTrueBranch')" @@mousedown.stop="beginConnection($event,node,'true')">{{ ncfST('Frontend.NeuCharWorkflow.True') }}</button>
+                                        <button type="button" class="node-port node-output node-output-false" :title="ncfST('Frontend.NeuCharWorkflow.DragFalseBranch')" @@mousedown.stop="beginConnection($event,node,'false')">{{ ncfST('Frontend.NeuCharWorkflow.False') }}</button>
+                                        <button type="button" class="node-port node-output node-output-break" :title="ncfST('Frontend.NeuCharWorkflow.DragBreakToExitTheCurrentLoop')" @@mousedown.stop="beginConnection($event,node,'break')">break</button>
                                     </template>
                                     <button v-else-if="node.type!=='end'"
                                             type="button"
                                             class="node-port node-output node-output-default"
-                                            :title="ncfST('Frontend.264')"
+                                            :title="ncfST('Frontend.NeuCharWorkflow.DragToConnectTheNextNode')"
                                             @@mousedown.stop="beginConnection($event,node,'default')"></button>
                                 </article>
-                                <div v-if="connectionDraft.sourceId" class="connection-hint">{{ ncfST('Frontend.681', connectionSourceName, layoutDirection==='horizontal'?ncfST('Frontend.682'):ncfST('Frontend.683')) }}</div>
+                                <div v-if="connectionDraft.sourceId" class="connection-hint">{{ ncfST('Frontend.NeuCharWorkflow.DragFromValueToTheValuePortOfTheTargetNodeRelease', connectionSourceName, layoutDirection==='horizontal'?ncfST('Frontend.NeuCharWorkflow.Left'):ncfST('Frontend.NeuCharWorkflow.Top')) }}</div>
                             </div>
                         </div>
                         <div class="canvas-zoom-controls" :style="canvasZoomControlsStyle" @@mousedown.stop @@wheel.stop>
-                            <button type="button" :title="ncfST('Frontend.332')" :aria-label="ncfST('Frontend.333')" :disabled="canvasZoom<=0.02" @@click.stop="changeCanvasZoom(-.1)"><i class="el-icon-minus"></i></button>
+                            <button type="button" :title="ncfST('Frontend.NeuCharWorkflow.ZoomOut')" :aria-label="ncfST('Frontend.NeuCharWorkflow.ZoomCanvasOut')" :disabled="canvasZoom<=0.02" @@click.stop="changeCanvasZoom(-.1)"><i class="el-icon-minus"></i></button>
                             <input type="range" min="0.02" max="2" step="0.01" :value="canvasZoom" :aria-valuetext="canvasZoomPercent+'%'" @@input="onCanvasZoomInput" @@click.stop>
-                            <button type="button" :title="ncfST('Frontend.276')" :aria-label="ncfST('Frontend.277')" :disabled="canvasZoom>=2" @@click.stop="changeCanvasZoom(.1)"><i class="el-icon-plus"></i></button>
+                            <button type="button" :title="ncfST('Frontend.NeuCharWorkflow.ZoomIn')" :aria-label="ncfST('Frontend.NeuCharWorkflow.ZoomCanvas')" :disabled="canvasZoom>=2" @@click.stop="changeCanvasZoom(.1)"><i class="el-icon-plus"></i></button>
                             <button type="button" class="canvas-zoom-reset" title="100%" @@click.stop="resetCanvasZoom">{{canvasZoomPercent}}%</button>
                         </div>
                         <div v-if="showMinimap" class="canvas-minimap" :style="minimapStyle" @@mousedown.stop @@wheel.stop>
                             <div class="canvas-minimap-surface"
                                  :style="{width:minimapMetrics.width+'px',height:minimapMetrics.height+'px'}"
-                                 :title="ncfST('Frontend.309')"
+                                 :title="ncfST('Frontend.NeuCharWorkflow.ClickToLocateOnCanvas')"
                                  @@click.stop="moveCanvasFromMinimap">
                                 <svg class="canvas-minimap-wires" :width="minimapMetrics.width" :height="minimapMetrics.height" aria-hidden="true">
                                     <line v-for="edge in form.graph.edges"
@@ -664,13 +664,13 @@
                              :style="{left:contextMenu.x+'px',top:contextMenu.y+'px'}"
                              @@mousedown.stop
                              @@click.stop>
-                            <span v-if="selectedNodeIds.length>1" class="workflow-context-menu-summary">{{ ncfST('Frontend.382', selectedNodeIds.length) }}</span>
+                            <span v-if="selectedNodeIds.length>1" class="workflow-context-menu-summary">{{ ncfST('Frontend.NeuCharWorkflow.ValueNodesSelected', selectedNodeIds.length) }}</span>
                             <button type="button"
                                     :disabled="editingLocked || !selectedDuplicableNodes.length"
-                                    @@click="duplicateContextNode">{{ ncfST('Frontend.209') }}</button>
+                                    @@click="duplicateContextNode">{{ ncfST('Frontend.NeuCharWorkflow.Copy') }}</button>
                             <button type="button"
                                     :disabled="editingLocked || !selectedDeletableNodes.length"
-                                    @@click="removeContextNode">{{ ncfST('Frontend.183') }}</button>
+                                    @@click="removeContextNode">{{ ncfST('Frontend.NeuCharWorkflow.Delete') }}</button>
                         </div>
                         <div v-if="canvasContextMenu.visible"
                              class="workflow-context-menu workflow-canvas-context-menu"
@@ -679,68 +679,68 @@
                              @@click.stop>
                             <button type="button"
                                     :disabled="editingLocked"
-                                    @@click="openCanvasNodeInsertMenu"><i class="el-icon-plus"></i> {{ ncfST('Frontend.279') }}</button>
+                                    @@click="openCanvasNodeInsertMenu"><i class="el-icon-plus"></i> {{ ncfST('Frontend.NeuCharWorkflow.AddNode') }}</button>
                             <span class="workflow-context-menu-divider"></span>
-                            <button type="button" :disabled="editingLocked" @@click="autoLayoutFromCanvasMenu"><i class="el-icon-magic-stick"></i> {{ ncfST('Frontend.266') }}</button>
-                            <button type="button" :disabled="editingLocked" @@click="alignGridFromCanvasMenu"><i class="el-icon-s-grid"></i> {{ ncfST('Frontend.221') }}</button>
-                            <button type="button" @@click="fitCanvasFromCanvasMenu"><i class="el-icon-full-screen"></i> {{ ncfST('Frontend.363') }}</button>
+                            <button type="button" :disabled="editingLocked" @@click="autoLayoutFromCanvasMenu"><i class="el-icon-magic-stick"></i> {{ ncfST('Frontend.NeuCharWorkflow.AutoLayoutBySettings') }}</button>
+                            <button type="button" :disabled="editingLocked" @@click="alignGridFromCanvasMenu"><i class="el-icon-s-grid"></i> {{ ncfST('Frontend.NeuCharWorkflow.SnapToNearbyGrid') }}</button>
+                            <button type="button" @@click="fitCanvasFromCanvasMenu"><i class="el-icon-full-screen"></i> {{ ncfST('Frontend.NeuCharWorkflow.FitCanvas') }}</button>
                         </div>
                     </section>
 
                     <aside ref="inspector" class="workflow-inspector">
                         <div class="pane-heading">
-                            <strong v-show="!inspectorCollapsed">{{ ncfST('Frontend.341') }}</strong>
+                            <strong v-show="!inspectorCollapsed">{{ ncfST('Frontend.NeuCharWorkflow.NodeSettings') }}</strong>
                             <el-button type="text"
                                        :icon="inspectorCollapsed?'el-icon-s-unfold':'el-icon-s-fold'"
-                                       :title="inspectorCollapsed?ncfST('Frontend.341'):ncfST('Frontend.480')"
+                                       :title="inspectorCollapsed?ncfST('Frontend.NeuCharWorkflow.NodeSettings'):ncfST('Frontend.NeuCharWorkflow.WorkflowShortcuts')"
                                        @@click="inspectorCollapsed=!inspectorCollapsed"></el-button>
                         </div>
                         <div v-show="!inspectorCollapsed" class="inspector-content">
                             <template v-if="selectedNode">
                                 <el-form label-position="top" size="small" :class="{'form-locked':editingLocked}">
-                                    <el-form-item :label="ncfST('Frontend.225')"><el-input v-model="selectedNode.name" :disabled="editingLocked"></el-input></el-form-item>
+                                    <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.WorkflowName')"><el-input v-model="selectedNode.name" :disabled="editingLocked"></el-input></el-form-item>
 
                                     <template v-if="selectedNode.type==='condition'">
-                                        <el-form-item :label="ncfST('Frontend.472')">
-                                            <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'true')" :placeholder="ncfST('Frontend.264')" @@change="setTarget(selectedNode,'true',$event)">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.WhenTheConditionIsTrue')">
+                                            <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'true')" :placeholder="ncfST('Frontend.NeuCharWorkflow.DragToConnectTheNextNode')" @@change="setTarget(selectedNode,'true',$event)">
                                                 <el-option v-for="target in availableTargets(selectedNode,'true')" :key="target.id" :label="target.name" :value="target.id"></el-option>
                                             </el-select>
                                         </el-form-item>
-                                        <el-form-item :label="ncfST('Frontend.473')">
-                                            <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'false')" :placeholder="ncfST('Frontend.264')" @@change="setTarget(selectedNode,'false',$event)">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.WhenTheConditionIsFalse')">
+                                            <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'false')" :placeholder="ncfST('Frontend.NeuCharWorkflow.DragToConnectTheNextNode')" @@change="setTarget(selectedNode,'false',$event)">
                                                 <el-option v-for="target in availableTargets(selectedNode,'false')" :key="target.id" :label="target.name" :value="target.id"></el-option>
                                             </el-select>
                                         </el-form-item>
-                                        <el-form-item :label="ncfST('Frontend.474')">
-                                            <el-select v-model="selectedNode.config.breakOn" :disabled="editingLocked" clearable :placeholder="ncfST('Frontend.281')">
-                                                <el-option :label="ncfST('Frontend.149')" value=""></el-option>
-                                                <el-option :label="ncfST('Frontend.472')" value="true"></el-option>
-                                                <el-option :label="ncfST('Frontend.473')" value="false"></el-option>
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.LoopControlOptional')">
+                                            <el-select v-model="selectedNode.config.breakOn" :disabled="editingLocked" clearable :placeholder="ncfST('Frontend.NeuCharWorkflow.RegularCondition')">
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.DoNotEnableBreak')" value=""></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.WhenTheConditionIsTrue')" value="true"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.WhenTheConditionIsFalse')" value="false"></el-option>
                                             </el-select>
-                                            <p class="node-config-help">{{ ncfST('Frontend.204') }}</p>
+                                            <p class="node-config-help">{{ ncfST('Frontend.NeuCharWorkflow.WhenEnabledConnectTheNodesBreakPortToTheCurrentLoopEnd') }}</p>
                                         </el-form-item>
-                                        <el-form-item :label="ncfST('Frontend.148')">
-                                            <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'break')" :placeholder="ncfST('Frontend.155')" @@change="setTarget(selectedNode,'break',$event)">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.NodesAfterBreak')">
+                                            <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'break')" :placeholder="ncfST('Frontend.NeuCharWorkflow.UsedOnlyWhenLoopControlIsEnabled')" @@change="setTarget(selectedNode,'break',$event)">
                                                 <el-option v-for="target in availableTargets(selectedNode,'break')" :key="target.id" :label="target.name" :value="target.id"></el-option>
                                             </el-select>
                                         </el-form-item>
                                     </template>
-                                    <el-form-item v-else-if="selectedNode.type==='parallel'" :label="ncfST('Frontend.230')">
+                                    <el-form-item v-else-if="selectedNode.type==='parallel'" :label="ncfST('Frontend.NeuCharWorkflow.ParallelBranch')">
                                         <div class="workflow-parallel-branches">
-                                            <strong>{{ ncfST('Frontend.383', outgoingEdges(selectedNode.id).length) }}</strong>
-                                            <span>{{ ncfST('Frontend.348') }}</span>
+                                            <strong>{{ ncfST('Frontend.NeuCharWorkflow.ValueFollowingBranches', outgoingEdges(selectedNode.id).length) }}</strong>
+                                            <span>{{ ncfST('Frontend.NeuCharWorkflow.DragFromTheNodesRightOutputPortToEachNodeThatShould') }}</span>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item v-else-if="selectedNode.type!=='end'" :label="ncfST('Frontend.203')">
-                                        <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'default')" :placeholder="ncfST('Frontend.264')" @@change="setTarget(selectedNode,'default',$event)">
+                                    <el-form-item v-else-if="selectedNode.type!=='end'" :label="ncfST('Frontend.NeuCharWorkflow.NextNodes')">
+                                        <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'default')" :placeholder="ncfST('Frontend.NeuCharWorkflow.DragToConnectTheNextNode')" @@change="setTarget(selectedNode,'default',$event)">
                                             <el-option v-for="target in availableTargets(selectedNode,'default')" :key="target.id" :label="target.name" :value="target.id"></el-option>
                                         </el-select>
                                     </el-form-item>
 
                                     <template v-if="selectedNode.type==='function' && selectedFunction">
-                                        <el-alert v-if="!selectedFunction.moduleAvailable" :title="ncfST('Frontend.293')" type="warning" :closable="false"></el-alert>
-                                        <el-alert v-if="selectedFunction.catalogError" :title="ncfST('Frontend.189')" type="warning" :closable="false"></el-alert>
-                                        <el-alert v-if="incomingEdges(selectedNode.id).length>1" :title="ncfST('Frontend.298')" type="info" :closable="false"></el-alert>
+                                        <el-alert v-if="!selectedFunction.moduleAvailable" :title="ncfST('Frontend.NeuCharWorkflow.ModuleIsNotInstalledOrEnabledTheNodeCannotRun')" type="warning" :closable="false"></el-alert>
+                                        <el-alert v-if="selectedFunction.catalogError" :title="ncfST('Frontend.NeuCharWorkflow.ParameterMetadataError')" type="warning" :closable="false"></el-alert>
+                                        <el-alert v-if="incomingEdges(selectedNode.id).length>1" :title="ncfST('Frontend.NeuCharWorkflow.ThisFunctionHasMultipleUpstreamNodesAnyValidSourceCanTriggerIt')" type="info" :closable="false"></el-alert>
                                         <div class="workflow-object-card workflow-function-card">
                                             <div class="workflow-object-card-header">
                                                 <div>
@@ -754,14 +754,14 @@
                                                                size="mini"
                                                                icon="el-icon-setting"
                                                                :disabled="editingLocked"
-                                                               @@click="openFunctionPage(selectedFunction,'settings')">{{ ncfST('Frontend.344') }}</el-button>
+                                                               @@click="openFunctionPage(selectedFunction,'settings')">{{ ncfST('Frontend.NeuCharWorkflow.Settings') }}</el-button>
                                                     <el-button v-if="functionPageUrl(selectedFunction,'run')"
                                                                type="success"
                                                                plain
                                                                size="mini"
                                                                icon="el-icon-video-play"
                                                                :disabled="editingLocked"
-                                                               @@click="openFunctionPage(selectedFunction,'run')">{{ ncfST('Frontend.257') }}</el-button>
+                                                               @@click="openFunctionPage(selectedFunction,'run')">{{ ncfST('Frontend.NeuCharWorkflow.Run') }}</el-button>
                                                 </div>
                                             </div>
                                         </div>
@@ -773,15 +773,15 @@
                                                             effect="dark"
                                                             placement="top-start"
                                                             :content="parameterDescription(parameter)">
-                                                    <i class="el-icon-info parameter-description-icon" :aria-label="ncfST('Frontend.026')"></i>
+                                                    <i class="el-icon-info parameter-description-icon" :aria-label="ncfST('Frontend.NeuCharWorkflow.InputParameters')"></i>
                                                 </el-tooltip>
                                                 <el-tooltip v-if="parameter.metadataError"
                                                             effect="dark"
                                                             placement="top-start"
                                                             :content="parameter.metadataError">
-                                                    <i class="el-icon-warning-outline parameter-metadata-warning" :aria-label="ncfST('Frontend.189')"></i>
+                                                    <i class="el-icon-warning-outline parameter-metadata-warning" :aria-label="ncfST('Frontend.NeuCharWorkflow.ParameterMetadataError')"></i>
                                                 </el-tooltip>
-                                                <em v-if="parameter.required">{{ ncfST('Frontend.446') }}</em>
+                                                <em v-if="parameter.required">{{ ncfST('Frontend.NeuCharWorkflow.RequiredParameters') }}</em>
                                             </label>
 
                                             <template v-if="isTemplateValue(selectedNode.config.parameters[parameter.name])">
@@ -801,8 +801,8 @@
                                                         </el-tag>
                                                     </div>
                                                     <div class="parameter-template-actions">
-                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openParameterTemplateEditor(selectedNode,parameter)">{{ ncfST('Frontend.330') }}</el-button>
-                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetParameterManual(selectedNode,parameter)">{{ ncfST('Frontend.275') }}</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openParameterTemplateEditor(selectedNode,parameter)">{{ ncfST('Frontend.NeuCharWorkflow.EditTextAndVariables') }}</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetParameterManual(selectedNode,parameter)">{{ ncfST('Frontend.NeuCharWorkflow.SwitchToManualInput') }}</el-button>
                                                     </div>
                                                 </div>
                                             </template>
@@ -812,7 +812,7 @@
                                                                           :disabled="editingLocked"
                                                                           :editable="canUseTemplate(parameter)"
                                                                           :help-text="functionParameterFormulaHelp(parameter)"
-                                                                          :placeholder="ncfST('Frontend.250')"
+                                                                          :placeholder="ncfST('Frontend.NeuCharWorkflow.ManualInputFormulaOrInsertedVariable')"
                                                                           @@edit-template="openParameterTemplateEditor(selectedNode,parameter)"></workflow-rich-text-input>
                                                 <div v-if="formulaParameterCompatibility(parameter,selectedNode.config.parameters[parameter.name])"
                                                      :class="['parameter-formula-compatibility','binding-'+formulaParameterCompatibility(parameter,selectedNode.config.parameters[parameter.name]).level]">
@@ -822,13 +822,13 @@
                                                           type="password"
                                                           :disabled="editingLocked"
                                                           v-model="selectedNode.config.parameters[parameter.name]"
-                                                          :placeholder="ncfST('Frontend.249')"></el-input>
+                                                          :placeholder="ncfST('Frontend.NeuCharWorkflow.ManualInput')"></el-input>
                                                 <el-input v-else-if="parameter.parameterType===5"
                                                           type="textarea"
                                                           :rows="8"
                                                           :disabled="editingLocked"
                                                           v-model="selectedNode.config.parameters[parameter.name]"
-                                                          :placeholder="ncfST('Frontend.249')"
+                                                          :placeholder="ncfST('Frontend.NeuCharWorkflow.ManualInput')"
                                                           show-word-limit
                                                           :maxlength="parameter.maxLength || 20000"></el-input>
                                                 <el-select v-else-if="parameter.parameterType===1"
@@ -848,13 +848,13 @@
                                                            :accept="parameter.accept || ''"
                                                            :disabled="editingLocked"
                                                            @@change="handleWorkflowFileSelection($event, selectedNode, parameter)" />
-                                                    <small v-if="parameter.maxFiles">{{ ncfST('Frontend.384', parameter.maxFiles) }}</small>
+                                                    <small v-if="parameter.maxFiles">{{ ncfST('Frontend.NeuCharWorkflow.UpToValueFiles', parameter.maxFiles) }}</small>
                                                     <ul v-if="workflowFileSelections[selectedNode.id] && workflowFileSelections[selectedNode.id][parameter.name]">
                                                         <li v-for="file in workflowFileSelections[selectedNode.id][parameter.name]" :key="file.fileId">
                                                             {{file.fileName}}（{{formatFileSize(file.length)}}）
                                                         </li>
                                                     </ul>
-                                                    <small v-else-if="selectedNode.config.parameters[parameter.name]">{{ ncfST('Frontend.684') }}{{selectedNode.config.parameters[parameter.name]}}</small>
+                                                    <small v-else-if="selectedNode.config.parameters[parameter.name]">{{ ncfST('Frontend.NeuCharWorkflow.SavedFileReference') }}{{selectedNode.config.parameters[parameter.name]}}</small>
                                                 </div>
                                             </template>
 
@@ -863,7 +863,7 @@
                                                     <i class="el-icon-connection"></i>
                                                     {{bindingCompatibility(selectedNode,parameter).text}}
                                                 </div>
-                                                <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetParameterManual(selectedNode,parameter)">{{ ncfST('Frontend.275') }}</el-button>
+                                                <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetParameterManual(selectedNode,parameter)">{{ ncfST('Frontend.NeuCharWorkflow.SwitchToManualInput') }}</el-button>
                                                 <el-input-number v-if="resolvedBindingFor(selectedNode,parameter).requiresIndex"
                                                                  v-model="selectedNode.config.parameters[parameter.name].$source.collectionIndex"
                                                                  :disabled="editingLocked"
@@ -871,7 +871,7 @@
                                                                  :step="1"
                                                                  size="mini"
                                                                  controls-position="right"
-                                                                 :placeholder="ncfST('Frontend.364')"></el-input-number>
+                                                                 :placeholder="ncfST('Frontend.NeuCharWorkflow.SelectWorkflowVariable')"></el-input-number>
                                                 <el-input-number v-if="resolvedBindingFor(selectedNode,parameter).isArray && !expectedShape(parameter).isArray"
                                                                  v-model="selectedNode.config.parameters[parameter.name].$source.itemIndex"
                                                                  :disabled="editingLocked"
@@ -879,65 +879,65 @@
                                                                  :step="1"
                                                                  size="mini"
                                                                  controls-position="right"
-                                                                 :placeholder="ncfST('Frontend.364')"></el-input-number>
+                                                                 :placeholder="ncfST('Frontend.NeuCharWorkflow.SelectWorkflowVariable')"></el-input-number>
                                             </div>
 
                                             <div class="upstream-picker">
-                                                <span>{{ ncfST('Frontend.368') }}</span>
+                                                <span>{{ ncfST('Frontend.NeuCharWorkflow.SelectANodeOutputOrPreloadedInputSelection') }}</span>
                                                 <el-cascader :value="bindingSelection(selectedNode,parameter)"
                                                              :options="upstreamOutputOptions(parameter)"
                                                              :disabled="editingLocked || !upstreamOutputOptions(parameter).length"
                                                              :props="{expandTrigger:'hover'}"
                                                              clearable
                                                              filterable
-                                                             :placeholder="ncfST('Frontend.368')"
+                                                             :placeholder="ncfST('Frontend.NeuCharWorkflow.SelectANodeOutputOrPreloadedInputSelection')"
                                                              @@change="setParameterBinding(selectedNode,parameter,$event)"></el-cascader>
                                             </div>
                                         </div>
                                     </template>
 
                                     <template v-if="selectedNode.type==='condition'">
-                                        <el-form-item :label="ncfST('Frontend.228')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.LeftHandValue')">
                                             <workflow-rich-text-input v-if="!isBinding(selectedNode.config.left)"
                                                                       v-model="selectedNode.config.left"
                                                                       :disabled="editingLocked"
-                                                                      :help-text="ncfST('Frontend.685')"
-                                                                      :placeholder="ncfST('Frontend.250')"
-                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'left',{fieldLabel:ncfST('Frontend.228')})"></workflow-rich-text-input>
-                                            <el-cascader :value="configBindingSelection(selectedNode,'left')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable :placeholder="ncfST('Frontend.177')" @@change="setConfigBinding(selectedNode,'left',$event)"></el-cascader>
+                                                                      :help-text="ncfST('Frontend.NeuCharWorkflow.YouCanUseValueOrRestrictedFormulasAndInsertUpstreamOutputAs')"
+                                                                      :placeholder="ncfST('Frontend.NeuCharWorkflow.ManualInputFormulaOrInsertedVariable')"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'left',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.LeftHandValue')})"></workflow-rich-text-input>
+                                            <el-cascader :value="configBindingSelection(selectedNode,'left')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable :placeholder="ncfST('Frontend.NeuCharWorkflow.BindUpstreamOutput')" @@change="setConfigBinding(selectedNode,'left',$event)"></el-cascader>
                                         </el-form-item>
-                                        <el-form-item :label="ncfST('Frontend.414')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.ConditionAdditional')">
                                             <el-select v-model="selectedNode.config.operator" :disabled="editingLocked">
-                                                <el-option :label="ncfST('Frontend.321')" value="equals"></el-option><el-option :label="ncfST('Frontend.187')" value="contains"></el-option><el-option :label="ncfST('Frontend.150')" value="not-equals"></el-option><el-option :label="ncfST('Frontend.233')" value="starts-with"></el-option><el-option :label="ncfST('Frontend.324')" value="ends-with"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.Equals')" value="equals"></el-option><el-option :label="ncfST('Frontend.NeuCharWorkflow.Contains')" value="contains"></el-option><el-option :label="ncfST('Frontend.NeuCharWorkflow.NotEqual')" value="not-equals"></el-option><el-option :label="ncfST('Frontend.NeuCharWorkflow.StartsWith')" value="starts-with"></el-option><el-option :label="ncfST('Frontend.NeuCharWorkflow.EndsWith')" value="ends-with"></el-option>
                                             </el-select>
                                         </el-form-item>
-                                        <el-form-item :label="ncfST('Frontend.200')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.RightHandValue')">
                                             <workflow-rich-text-input v-if="!isBinding(selectedNode.config.right)"
                                                                       v-model="selectedNode.config.right"
                                                                       :disabled="editingLocked"
-                                                                      :help-text="ncfST('Frontend.685')"
-                                                                      :placeholder="ncfST('Frontend.250')"
-                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'right',{fieldLabel:ncfST('Frontend.200')})"></workflow-rich-text-input>
-                                            <el-cascader :value="configBindingSelection(selectedNode,'right')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable :placeholder="ncfST('Frontend.177')" @@change="setConfigBinding(selectedNode,'right',$event)"></el-cascader>
+                                                                      :help-text="ncfST('Frontend.NeuCharWorkflow.YouCanUseValueOrRestrictedFormulasAndInsertUpstreamOutputAs')"
+                                                                      :placeholder="ncfST('Frontend.NeuCharWorkflow.ManualInputFormulaOrInsertedVariable')"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'right',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.RightHandValue')})"></workflow-rich-text-input>
+                                            <el-cascader :value="configBindingSelection(selectedNode,'right')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable :placeholder="ncfST('Frontend.NeuCharWorkflow.BindUpstreamOutput')" @@change="setConfigBinding(selectedNode,'right',$event)"></el-cascader>
                                         </el-form-item>
                                     </template>
-                                    <el-form-item v-if="selectedNode.type==='delay'" :label="ncfST('Frontend.322')">
+                                    <el-form-item v-if="selectedNode.type==='delay'" :label="ncfST('Frontend.NeuCharWorkflow.WaitSecondsMaximum30SecondsPerNode')">
                                         <el-input-number v-model="selectedNode.config.seconds" :disabled="editingLocked" :min="0" :max="30"></el-input-number>
                                     </el-form-item>
                                     <template v-if="selectedNode.type==='loop'">
-                                        <el-form-item :label="ncfST('Frontend.371')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.RepeatCountFor')">
                                             <div v-if="isTemplateValue(selectedNode.config.count)" class="workflow-loop-count-binding workflow-loop-count-formula">
-                                                <strong>{{ ncfST('Frontend.331') }}：{{parameterTemplateSummary(selectedNode.config.count)}}</strong>
-                                                <span>{{ ncfST('Frontend.357') }} <code v-pre>{{= toInt(input) }}</code> {{ ncfST('Frontend.246') }}</span>
+                                                <strong>{{ ncfST('Frontend.NeuCharWorkflow.EditSyntax') }}：{{parameterTemplateSummary(selectedNode.config.count)}}</strong>
+                                                <span>{{ ncfST('Frontend.NeuCharWorkflow.TheRuntimeResultMustBeAnIntegerFromOneTo100000You') }} <code v-pre>{{= toInt(input) }}</code> {{ ncfST('Frontend.NeuCharWorkflow.OrInsertUpstreamOutput') }}</span>
                                                 <div class="parameter-template-actions">
-                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'count',{fieldLabel:ncfST('Frontend.443')})">{{ ncfST('Frontend.331') }}</el-button>
-                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'count')">{{ ncfST('Frontend.274') }}</el-button>
+                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'count',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.RepeatCount')})">{{ ncfST('Frontend.NeuCharWorkflow.EditSyntax') }}</el-button>
+                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'count')">{{ ncfST('Frontend.NeuCharWorkflow.UseAFixedCount') }}</el-button>
                                                 </div>
                                             </div>
                                             <div v-else-if="isBinding(selectedNode.config.count)" class="workflow-loop-count-binding">
-                                                <strong>{{ ncfST('Frontend.271') }}：{{loopCountSourceLabel(selectedNode)}}</strong>
-                                                <span>{{ ncfST('Frontend.358') }}</span>
-                                                <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetLoopCountManual(selectedNode)">{{ ncfST('Frontend.274') }}</el-button>
+                                                <strong>{{ ncfST('Frontend.NeuCharWorkflow.InsertUpstreamValue') }}：{{loopCountSourceLabel(selectedNode)}}</strong>
+                                                <span>{{ ncfST('Frontend.NeuCharWorkflow.ReadAtRuntimeItMustBeAnIntegerFromOneTo100000') }}</span>
+                                                <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetLoopCountManual(selectedNode)">{{ ncfST('Frontend.NeuCharWorkflow.UseAFixedCount') }}</el-button>
                                             </div>
                                             <el-input-number v-else v-model="selectedNode.config.count" :disabled="editingLocked" :min="1" :max="100000" :step="1" :precision="0"></el-input-number>
                                             <el-button v-if="!isBinding(selectedNode.config.count) && !isTemplateValue(selectedNode.config.count)"
@@ -945,35 +945,35 @@
                                                        size="mini"
                                                        icon="el-icon-magic-stick"
                                                        :disabled="editingLocked"
-                                                       @@click="openNodeTemplateEditor(selectedNode,'count',{fieldLabel:ncfST('Frontend.443')})">{{ ncfST('Frontend.161') }}</el-button>
+                                                       @@click="openNodeTemplateEditor(selectedNode,'count',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.RepeatCount')})">{{ ncfST('Frontend.NeuCharWorkflow.UseSyntaxEditor') }}</el-button>
                                             <el-cascader :value="configBindingSelection(selectedNode,'count')"
                                                          :options="loopCountOutputOptions()"
                                                          :disabled="editingLocked || !loopCountOutputOptions().length"
                                                          clearable
                                                          filterable
-                                                         :placeholder="ncfST('Frontend.245')"
+                                                         :placeholder="ncfST('Frontend.NeuCharWorkflow.OrReferenceUpstreamCount1100000')"
                                                          @@change="setLoopCountBinding(selectedNode,$event)"></el-cascader>
-                                            <p class="node-config-help">{{ ncfST('Frontend.296') }}</p>
+                                            <p class="node-config-help">{{ ncfST('Frontend.NeuCharWorkflow.TheCountCanBeFixedReferenceASingleUpstreamValueOrUse') }}</p>
                                         </el-form-item>
-                                        <el-alert :title="ncfST('Frontend.370')"
+                                        <el-alert :title="ncfST('Frontend.NeuCharWorkflow.LimitsOneLoopSupportsAtMost100000IterationsOneRunAllows')"
                                                   type="info"
                                                   :closable="false"></el-alert>
                                     </template>
                                     <el-alert v-else-if="selectedNode.type==='loop-end'"
-                                              :title="ncfST('Frontend.237')"
-                                              :description="ncfST('Frontend.610')"
+                                              :title="ncfST('Frontend.NeuCharWorkflow.LoopBodyBoundary')"
+                                              :description="ncfST('Frontend.NeuCharWorkflow.PassTheSameInputToTheLoopBodyTheSpecifiedNumberOf')"
                                               type="success"
                                               :closable="false"></el-alert>
                                     <template v-if="selectedNode.type==='loop-end'">
-                                        <el-form-item :label="ncfST('Frontend.247')">
-                                            <el-select v-model="selectedNode.config.loopId" :disabled="editingLocked" clearable :placeholder="ncfST('Frontend.339')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.OwningLoop')">
+                                            <el-select v-model="selectedNode.config.loopId" :disabled="editingLocked" clearable :placeholder="ncfST('Frontend.NeuCharWorkflow.AutomaticDetectionSingleLevelLoop')">
                                                 <el-option v-for="loop in loopOwnerOptions(selectedNode)" :key="loop.id" :label="loop.name" :value="loop.id"></el-option>
                                             </el-select>
-                                            <p class="node-config-help">{{ ncfST('Frontend.223') }}</p>
+                                            <p class="node-config-help">{{ ncfST('Frontend.NeuCharWorkflow.ForNestedLoopsSelectTheCorrespondingLoopNodeSoTheInnerLoop') }}</p>
                                         </el-form-item>
                                     </template>
                                     <template v-if="selectedNode.type==='neubell'">
-                                        <el-form-item :label="ncfST('Frontend.269')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.ReminderTitle')">
                                             <template v-if="isTemplateValue(selectedNode.config.title)">
                                                 <div class="parameter-template-card workflow-rich-text-template-card">
                                                     <div class="parameter-template-summary">{{parameterTemplateSummary(selectedNode.config.title)}}</div>
@@ -981,8 +981,8 @@
                                                         <el-tag v-for="item in parameterTemplateBindings(selectedNode.config.title)" :key="item.token" size="mini" :title="templateBindingLabel(item.source)">{{templatePlaceholder(item.token)}}</el-tag>
                                                     </div>
                                                     <div class="parameter-template-actions">
-                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'title',{fieldLabel:ncfST('Frontend.269')})">{{ ncfST('Frontend.329') }}</el-button>
-                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'title')">{{ ncfST('Frontend.275') }}</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'title',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.ReminderTitle')})">{{ ncfST('Frontend.NeuCharWorkflow.EditFormulaText') }}</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'title')">{{ ncfST('Frontend.NeuCharWorkflow.SwitchToManualInput') }}</el-button>
                                                     </div>
                                                 </div>
                                             </template>
@@ -991,11 +991,11 @@
                                                                       :disabled="editingLocked"
                                                                       :maxlength="200"
                                                                       :show-word-limit="true"
-                                                                      :help-text="ncfST('Frontend.268')"
-                                                                      :placeholder="ncfST('Frontend.163')"
-                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'title',{fieldLabel:ncfST('Frontend.269')})"></workflow-rich-text-input>
+                                                                      :help-text="ncfST('Frontend.NeuCharWorkflow.ReminderContent')"
+                                                                      :placeholder="ncfST('Frontend.NeuCharWorkflow.ForExampleTheWorkflowNeedsToProcess')"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'title',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.ReminderTitle')})"></workflow-rich-text-input>
                                         </el-form-item>
-                                        <el-form-item :label="ncfST('Frontend.268')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.ReminderContent')">
                                             <template v-if="isTemplateValue(selectedNode.config.summary)">
                                                 <div class="parameter-template-card workflow-rich-text-template-card">
                                                     <div class="parameter-template-summary">{{parameterTemplateSummary(selectedNode.config.summary)}}</div>
@@ -1003,8 +1003,8 @@
                                                         <el-tag v-for="item in parameterTemplateBindings(selectedNode.config.summary)" :key="item.token" size="mini" :title="templateBindingLabel(item.source)">{{templatePlaceholder(item.token)}}</el-tag>
                                                     </div>
                                                     <div class="parameter-template-actions">
-                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'summary',{fieldLabel:ncfST('Frontend.268')})">{{ ncfST('Frontend.329') }}</el-button>
-                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'summary')">{{ ncfST('Frontend.275') }}</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'summary',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.ReminderContent')})">{{ ncfST('Frontend.NeuCharWorkflow.EditFormulaText') }}</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'summary')">{{ ncfST('Frontend.NeuCharWorkflow.SwitchToManualInput') }}</el-button>
                                                     </div>
                                                 </div>
                                             </template>
@@ -1015,71 +1015,71 @@
                                                                       :disabled="editingLocked"
                                                                       :maxlength="4000"
                                                                       :show-word-limit="true"
-                                                                      :help-text="ncfST('Frontend.268')"
+                                                                      :help-text="ncfST('Frontend.NeuCharWorkflow.ReminderContent')"
                                                                       placeholder="{{input}}"
-                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'summary',{fieldLabel:ncfST('Frontend.268')})"></workflow-rich-text-input>
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'summary',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.ReminderContent')})"></workflow-rich-text-input>
                                         </el-form-item>
-                                        <el-form-item :label="ncfST('Frontend.255')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.ConsumptionModeAfterOpeningTheTask')">
                                             <el-select v-model="selectedNode.config.consumeMode" :disabled="editingLocked">
-                                                <el-option :label="ncfST('Frontend.198')" value="none"></el-option>
-                                                <el-option :label="ncfST('Frontend.301')" value="item"></el-option>
-                                                <el-option :label="ncfST('Frontend.302')" value="provider"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.ViewTasksOnlyDoNotConsumeAutomatically')" value="none"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.ConsumeThisReminder')" value="item"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.ConsumeAllRemindersInThisSubscription')" value="provider"></el-option>
                                             </el-select>
-                                            <p class="node-config-help">{{ ncfST('Frontend.313') }}</p>
+                                            <p class="node-config-help">{{ ncfST('Frontend.NeuCharWorkflow.UseForScenariosWhereViewingMarksTheItemAsReadChooseView') }}</p>
                                         </el-form-item>
                                     </template>
                                     <template v-if="selectedNode.type==='human-input'">
-                                        <el-form-item :label="ncfST('Frontend.269')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.ReminderTitle')">
                                             <workflow-rich-text-input v-model="selectedNode.config.title"
                                                                       :disabled="editingLocked"
                                                                       :maxlength="200"
                                                                       :show-word-limit="true"
-                                                                      :help-text="ncfST('Frontend.500')"
-                                                                      :placeholder="ncfST('Frontend.164')"
-                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'title',{fieldLabel:ncfST('Frontend.269')})"></workflow-rich-text-input>
+                                                                      :help-text="ncfST('Frontend.NeuCharWorkflow.WaitForHumanInputOrExternalAPIResume')"
+                                                                      :placeholder="ncfST('Frontend.NeuCharWorkflow.ForExamplePleaseAddApprovalComments')"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'title',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.ReminderTitle')})"></workflow-rich-text-input>
                                         </el-form-item>
-                                        <el-form-item :label="ncfST('Frontend.154')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.HumanInputPrompt')">
                                             <workflow-rich-text-input v-model="selectedNode.config.prompt"
                                                                       multiline
                                                                       :rows="4"
                                                                       :disabled="editingLocked"
                                                                       :maxlength="4000"
                                                                       :show-word-limit="true"
-                                                                      :help-text="ncfST('Frontend.154')"
-                                                                      :placeholder="ncfST('Frontend.165')"
-                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:ncfST('Frontend.154')})"></workflow-rich-text-input>
+                                                                      :help-text="ncfST('Frontend.NeuCharWorkflow.HumanInputPrompt')"
+                                                                      :placeholder="ncfST('Frontend.NeuCharWorkflow.ForExampleExplainTheApprovalConclusionAndNextHandlingStep')"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.HumanInputPrompt')})"></workflow-rich-text-input>
                                         </el-form-item>
-                                        <el-form-item :label="ncfST('Frontend.173')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.AllowExternalRecovery')">
                                             <el-switch v-model="selectedNode.config.externalResumeEnabled"
                                                        :disabled="editingLocked"
-                                                       :active-text="ncfST('Frontend.385')"
-                                                       :inactive-text="ncfST('Frontend.386')"></el-switch>
+                                                       :active-text="ncfST('Frontend.NeuCharWorkflow.AllowExternalProgramsHoldingTheKeyToSubmitInput')"
+                                                       :inactive-text="ncfST('Frontend.NeuCharWorkflow.AllowAdminUsersOnly')"></el-switch>
                                         </el-form-item>
                                         <template v-if="selectedNode.config.externalResumeEnabled">
-                                            <el-form-item :label="ncfST('Frontend.212')">
+                                            <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.ExternalRecoveryKey')">
                                                 <el-input v-model="selectedNode.config.externalResumeKey"
                                                           type="password"
                                                           show-password
                                                           :disabled="editingLocked"
                                                           maxlength="512"
                                                           autocomplete="new-password"
-                                                          :placeholder="ncfST('Frontend.167')"></el-input>
+                                                          :placeholder="ncfST('Frontend.NeuCharWorkflow.ItWillNotBeReturnedAfterSavingLeaveEmptyToKeepThe')"></el-input>
                                                 <el-button size="mini"
                                                            icon="el-icon-key"
                                                            :disabled="editingLocked"
-                                                           @@click="generateHumanInputExternalKey(selectedNode)">{{ ncfST('Frontend.311') }}</el-button>
-                                                <p class="node-config-help">{{ ncfST('Frontend.213') }}</p>
+                                                           @@click="generateHumanInputExternalKey(selectedNode)">{{ ncfST('Frontend.NeuCharWorkflow.GenerateNewKey') }}</el-button>
+                                                <p class="node-config-help">{{ ncfST('Frontend.NeuCharWorkflow.TheExternalEndpointAcceptsOnlyThisNodeKeyItIsStoredEncrypted') }}</p>
                                             </el-form-item>
-                                            <el-alert :title="ncfST('Frontend.180')"
+                                            <el-alert :title="ncfST('Frontend.NeuCharWorkflow.InternalWebAPINoAdminLoginRequired')"
                                                       type="warning"
                                                       :closable="false"
                                                       show-icon>
                                                 <p v-pre>GET /api/Senparc.Xncf.NeuCharWorkflow/neuchar-workflow/human-input/pending/{workflowId}</p>
                                                 <p v-pre>POST /api/Senparc.Xncf.NeuCharWorkflow/neuchar-workflow/human-input/{requestId}</p>
-                                                <p>{{ ncfST('Frontend.349') }} <code>X-NeuChar-Workflow-Resume-Key</code>{{ ncfST('Frontend.377') }} <code>{{ ncfST('Frontend.201') }}</code>。</p>
+                                                <p>{{ ncfST('Frontend.NeuCharWorkflow.RequestHeaderUsage') }} <code>X-NeuChar-Workflow-Resume-Key</code>{{ ncfST('Frontend.NeuCharWorkflow.POSTJSONMustProvideAtLeast') }} <code>{{ ncfST('Frontend.NeuCharWorkflow.Value') }}</code>。</p>
                                             </el-alert>
                                         </template>
-                                        <el-alert :title="ncfST('Frontend.354')"
+                                        <el-alert :title="ncfST('Frontend.NeuCharWorkflow.ReachingThisNodeCreatesANeuBellAndPausesTheCurrentBranchQuick')"
                                                   type="info"
                                                   :closable="false"></el-alert>
                                     </template>
@@ -1088,7 +1088,7 @@
                                             <div class="workflow-object-card-header">
                                                 <div>
                                                     <strong>{{selectedWorkflowObject ? selectedWorkflowObject.name : selectedNode.name}}</strong>
-                                                    <small>{{selectedWorkflowObject ? (selectedWorkflowObject.kind==='a2a'?ncfST('Frontend.448'):selectedWorkflowObject.kind==='agent-group'?ncfST('Frontend.117'):ncfST('Frontend.449')) : ncfST('Frontend.450')}}</small>
+                                                    <small>{{selectedWorkflowObject ? (selectedWorkflowObject.kind==='a2a'?ncfST('Frontend.NeuCharWorkflow.RemoteATwoAAgent'):selectedWorkflowObject.kind==='agent-group'?ncfST('Frontend.NeuCharWorkflow.AgentGroup'):ncfST('Frontend.NeuCharWorkflow.StandaloneAgent')) : ncfST('Frontend.NeuCharWorkflow.ObjectUnavailable')}}</small>
                                                 </div>
                                                 <el-button v-if="selectedWorkflowObject && workflowObjectEditUrl(selectedWorkflowObject)"
                                                            type="primary"
@@ -1096,10 +1096,10 @@
                                                            size="mini"
                                                            icon="el-icon-edit"
                                                            :disabled="editingLocked"
-                                                           @@click="openWorkflowObjectEditor(selectedWorkflowObject)">{{ ncfST('Frontend.060') }}</el-button>
+                                                           @@click="openWorkflowObjectEditor(selectedWorkflowObject)">{{ ncfST('Frontend.NeuCharWorkflow.Runs') }}</el-button>
                                             </div>
                                             <el-alert v-if="!selectedWorkflowObject"
-                                                      :title="ncfST('Frontend.130')"
+                                                      :title="ncfST('Frontend.NeuCharWorkflow.TheAgentOrATwoAConnectionDoesNotExistItsModule')"
                                                       type="warning"
                                                       :closable="false"></el-alert>
                                             <dl v-else class="workflow-object-details">
@@ -1118,8 +1118,8 @@
                                                     <el-tag v-for="item in parameterTemplateBindings(selectedNode.config.prompt)" :key="item.token" size="mini" :title="templateBindingLabel(item.source)">{{templatePlaceholder(item.token)}}</el-tag>
                                                 </div>
                                                 <div class="parameter-template-actions">
-                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:'Prompt'})">{{ ncfST('Frontend.330') }}</el-button>
-                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'prompt')">{{ ncfST('Frontend.275') }}</el-button>
+                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:'Prompt'})">{{ ncfST('Frontend.NeuCharWorkflow.EditTextAndVariables') }}</el-button>
+                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'prompt')">{{ ncfST('Frontend.NeuCharWorkflow.SwitchToManualInput') }}</el-button>
                                                 </div>
                                             </div>
                                         </template>
@@ -1128,19 +1128,19 @@
                                                                   multiline
                                                                   :rows="6"
                                                                   :disabled="editingLocked"
-                                                                  :help-text="ncfST('Frontend.199')"
-                                                                  :placeholder="ncfST('Frontend.250')"
+                                                                  :help-text="ncfST('Frontend.NeuCharWorkflow.InputPlaceholdersFormulasOrInsertedVariablesCanBeUsed')"
+                                                                  :placeholder="ncfST('Frontend.NeuCharWorkflow.ManualInputFormulaOrInsertedVariable')"
                                                                   @@edit-template="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:'Prompt'})"></workflow-rich-text-input>
-                                            <el-cascader :value="configBindingSelection(selectedNode,'prompt')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable :placeholder="ncfST('Frontend.177')" @@change="setConfigBinding(selectedNode,'prompt',$event)"></el-cascader>
+                                            <el-cascader :value="configBindingSelection(selectedNode,'prompt')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable :placeholder="ncfST('Frontend.NeuCharWorkflow.BindUpstreamOutput')" @@change="setConfigBinding(selectedNode,'prompt',$event)"></el-cascader>
                                     </el-form-item>
                                     <template v-if="selectedNode.type==='agent' || selectedNode.type==='agent-group'">
-                                        <el-divider content-position="left">{{ ncfST('Frontend.294') }}</el-divider>
-                                        <el-form-item :label="ncfST('Frontend.158')">
+                                        <el-divider content-position="left">{{ ncfST('Frontend.NeuCharWorkflow.Model') }}</el-divider>
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.TaskModel')">
                                             <el-select v-model="selectedNode.config.aiModelId"
                                                        :disabled="editingLocked"
                                                        clearable
                                                        filterable
-                                                       :placeholder="ncfST('Frontend.285')">
+                                                       :placeholder="ncfST('Frontend.NeuCharWorkflow.UseTheGroupDefaultModelWhenNotSelected')">
                                                 <el-option v-for="model in chatModels"
                                                            :key="model.id"
                                                            :label="workflowModelLabel(model)"
@@ -1152,61 +1152,61 @@
                                                     </span>
                                                 </el-option>
                                             </el-select>
-                                            <p class="node-config-help">{{ ncfST('Frontend.286') }}</p>
+                                            <p class="node-config-help">{{ ncfST('Frontend.NeuCharWorkflow.WhenUnselectedAgentGroupFirstInheritsTheGroupOwnersPromptRangeModelItFalls') }}</p>
                                         </el-form-item>
-                                        <el-form-item :label="ncfST('Frontend.152')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.PersonalizedAgentModel')">
                                             <el-switch v-model="selectedNode.config.personality"
                                                        :disabled="editingLocked"
-                                                       :active-text="ncfST('Frontend.669')"
-                                                       :inactive-text="ncfST('Frontend.670')"></el-switch>
+                                                       :active-text="ncfST('Frontend.NeuCharWorkflow.UseEachAgentSModelBinding')"
+                                                       :inactive-text="ncfST('Frontend.NeuCharWorkflow.UseThisTaskModelForAllAgents')"></el-switch>
                                         </el-form-item>
                                     </template>
                                     <template v-if="(selectedNode.type==='agent' || selectedNode.type==='agent-group') && selectedWorkflowObject && String(selectedWorkflowObject.metadata && selectedWorkflowObject.metadata.supportsHumanInTheLoop).toLowerCase()==='true'">
                                         <el-divider content-position="left">Human-in-the-Loop</el-divider>
-                                        <el-form-item v-if="selectedNode.type==='agent'" :label="ncfST('Frontend.129')">
+                                        <el-form-item v-if="selectedNode.type==='agent'" :label="ncfST('Frontend.NeuCharWorkflow.AgentTool')">
                                             <el-switch v-model="selectedNode.config.allowFunctionCalls"
                                                        :disabled="editingLocked"
-                                                       :active-text="ncfST('Frontend.387')"
-                                                       :inactive-text="ncfST('Frontend.671')"></el-switch>
+                                                       :active-text="ncfST('Frontend.NeuCharWorkflow.AllowConfiguredPluginsAndMCPTools')"
+                                                       :inactive-text="ncfST('Frontend.NeuCharWorkflow.DoNotExposeToolsToTheModel')"></el-switch>
                                         </el-form-item>
                                         <el-form-item label="HIL level">
                                             <el-select v-model="selectedNode.config.humanInTheLoopLevel"
                                                        :disabled="editingLocked"
                                                        style="width:100%;">
-                                                <el-option :label="ncfST('Frontend.140')" :value="0"></el-option>
-                                                <el-option :label="ncfST('Frontend.141')" :value="1"></el-option>
-                                                <el-option :label="ncfST('Frontend.142')" :value="2"></el-option>
-                                                <el-option v-if="selectedNode.type==='agent-group'" :label="ncfST('Frontend.143')" :value="3"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.LZeroFullyAutomatic')" :value="0"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.LOneRiskBasedApprovalMCPDefaultApproval')" :value="1"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.LTwoApprovalBeforeEveryToolCall')" :value="2"></el-option>
+                                                <el-option v-if="selectedNode.type==='agent-group'" :label="ncfST('Frontend.NeuCharWorkflow.LThreeHumanParticipantToolApproval')" :value="3"></el-option>
                                             </el-select>
                                         </el-form-item>
-                                        <el-form-item :label="ncfST('Frontend.270')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.PluginToolPermissions')">
                                             <el-select v-model="selectedNode.config.pluginToolPermission"
                                                        :disabled="editingLocked"
                                                        style="width:100%;">
-                                                <el-option :label="ncfST('Frontend.468')" :value="0"></el-option>
-                                                <el-option :label="ncfST('Frontend.470')" :value="1"></el-option>
-                                                <el-option :label="ncfST('Frontend.412')" :value="2"></el-option>
-                                                <el-option :label="ncfST('Frontend.455')" :value="3"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.History')" :value="0"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.WebhookTrigger')" :value="1"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.ConditionAlternate')" :value="2"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.BuiltInWorkflowNode')" :value="3"></el-option>
                                             </el-select>
                                         </el-form-item>
-                                        <el-form-item :label="ncfST('Frontend.349')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.RequestHeaderUsage')">
                                             <el-select v-model="selectedNode.config.mcpToolPermission"
                                                        :disabled="editingLocked"
                                                        style="width:100%;">
-                                                <el-option :label="ncfST('Frontend.326')" :value="0"></el-option>
-                                                <el-option :label="ncfST('Frontend.337')" :value="1"></el-option>
-                                                <el-option :label="ncfST('Frontend.258')" :value="2"></el-option>
-                                                <el-option :label="ncfST('Frontend.318')" :value="3"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.InheritHILLevel')" :value="0"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.AutomaticExecution')" :value="1"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.ApprovalBeforeExecution')" :value="2"></el-option>
+                                                <el-option :label="ncfST('Frontend.NeuCharWorkflow.Prohibited')" :value="3"></el-option>
                                             </el-select>
                                         </el-form-item>
                                         <el-form-item v-if="selectedNode.type==='agent-group' && String(selectedWorkflowObject.metadata && selectedWorkflowObject.metadata.supportsHumanParticipant).toLowerCase()==='true'"
-                                                      :label="ncfST('Frontend.137')">
+                                                      :label="ncfST('Frontend.NeuCharWorkflow.HumanParticipant')">
                                             <el-switch v-model="selectedNode.config.includeHumanParticipant"
                                                        :disabled="editingLocked"
-                                                       :active-text="ncfST('Frontend.672')"
-                                                       :inactive-text="ncfST('Frontend.673')"></el-switch>
+                                                       :active-text="ncfST('Frontend.NeuCharWorkflow.AllowConfiguredHumanParticipantsInThisGroup')"
+                                                       :inactive-text="ncfST('Frontend.NeuCharWorkflow.SkipHumanMembersForThisRun')"></el-switch>
                                         </el-form-item>
-                                        <el-form-item v-if="selectedNode.type==='agent-group'" :label="ncfST('Frontend.284')">
+                                        <el-form-item v-if="selectedNode.type==='agent-group'" :label="ncfST('Frontend.NeuCharWorkflow.MaximumChatRounds')">
                                             <el-input-number v-model="selectedNode.config.chatMaxRound"
                                                              :disabled="editingLocked"
                                                              :min="1"
@@ -1215,19 +1215,19 @@
                                                              controls-position="right"></el-input-number>
                                         </el-form-item>
                                         <el-alert v-if="selectedNode.type==='agent' && !selectedNode.config.allowFunctionCalls"
-                                                  :title="ncfST('Frontend.234')"
+                                                  :title="ncfST('Frontend.NeuCharWorkflow.NoToolsAreCurrentlyExposedToTheStandaloneAgentToolPermissionsAnd')"
                                                   type="info"
                                                   :closable="false"></el-alert>
                                     </template>
                                     <template v-if="selectedNode.type==='sub-workflow'">
-                                        <el-form-item :label="ncfST('Frontend.342')" required>
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.WorkflowToCall')" required>
                                             <el-select v-model="selectedNode.config.workflowId"
                                                        :disabled="editingLocked"
                                                        filterable
-                                                       :placeholder="ncfST('Frontend.365')">
+                                                       :placeholder="ncfST('Frontend.NeuCharWorkflow.SelectSavedWorkflow')">
                                                 <el-option v-for="workflow in subWorkflowTargets"
                                                            :key="workflow.id"
-                                                           :label="workflow.name + (workflow.enabled ? '' : ' (' + ncfST('Frontend.318') + ')')"
+                                                           :label="workflow.name + (workflow.enabled ? '' : ' (' + ncfST('Frontend.NeuCharWorkflow.Prohibited') + ')')"
                                                            :value="workflow.id"
                                                            :disabled="!workflow.enabled"></el-option>
                                             </el-select>
@@ -1235,33 +1235,33 @@
                                                        size="mini"
                                                        icon="el-icon-view"
                                                        :disabled="editingLocked"
-                                                       @@click="openSubWorkflow(selectedNode.config.workflowId)">{{ ncfST('Frontend.242') }}</el-button>
-                                            <p class="node-config-help">{{ ncfST('Frontend.197') }}</p>
+                                                       @@click="openSubWorkflow(selectedNode.config.workflowId)">{{ ncfST('Frontend.NeuCharWorkflow.QuickView') }}</el-button>
+                                            <p class="node-config-help">{{ ncfST('Frontend.NeuCharWorkflow.ShowsOnlyWorkflowsSavedByTheCurrentUserMultiLevelReferencesAre') }}</p>
                                         </el-form-item>
-                                        <el-form-item :label="ncfST('Frontend.159')">
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.InputPassedToTheChildWorkflow')">
                                             <workflow-rich-text-input v-model="selectedNode.config.prompt"
                                                                       multiline
                                                                       :rows="4"
                                                                       :disabled="editingLocked"
-                                                                      :help-text="ncfST('Frontend.612')"
+                                                                      :help-text="ncfST('Frontend.NeuCharWorkflow.PassTheCurrentInputToAnotherEnabledWorkflowAndReturnItsFinal')"
                                                                       placeholder="{{input}}"
-                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:ncfST('Frontend.159')})"></workflow-rich-text-input>
-                                            <el-cascader :value="configBindingSelection(selectedNode,'prompt')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable :placeholder="ncfST('Frontend.177')" @@change="setConfigBinding(selectedNode,'prompt',$event)"></el-cascader>
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.InputPassedToTheChildWorkflow')})"></workflow-rich-text-input>
+                                            <el-cascader :value="configBindingSelection(selectedNode,'prompt')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable :placeholder="ncfST('Frontend.NeuCharWorkflow.BindUpstreamOutput')" @@change="setConfigBinding(selectedNode,'prompt',$event)"></el-cascader>
                                         </el-form-item>
-                                        <el-alert :title="ncfST('Frontend.214')" type="info" :closable="false"></el-alert>
+                                        <el-alert :title="ncfST('Frontend.NeuCharWorkflow.TheChildWorkflowRunsAsAnIndependentExecutionRecordTheParentReceives')" type="info" :closable="false"></el-alert>
                                     </template>
                                     <template v-if="selectedNode.type==='code'">
-                                        <el-form-item :label="ncfST('Frontend.477')" required>
-                                            <p class="node-config-help">{{ ncfST('Frontend.360') }} <code v-pre>{{input}}</code>、<code v-pre>{{= vars.variableName }}</code> {{ ncfST('Frontend.205') }}</p>
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.SafeCodeVariableAssignmentAlternate')" required>
+                                            <p class="node-config-help">{{ ncfST('Frontend.NeuCharWorkflow.ThisIsNotArbitraryJavaScriptEachLineIsARestrictedAssignmentAvailable') }} <code v-pre>{{input}}</code>、<code v-pre>{{= vars.variableName }}</code> {{ ncfST('Frontend.NeuCharWorkflow.AndAllFormulaFunctionsAssignmentsAffectOnlyThisRun') }}</p>
                                             <div v-if="selectedNode.config.assignments && selectedNode.config.assignments.length" class="workflow-code-assignments">
                                                 <div v-for="(assignment,index) in selectedNode.config.assignments" :key="'code-assignment-'+index" class="workflow-code-assignment-row">
                                                     <el-select v-model="assignment.name"
                                                                :disabled="editingLocked"
                                                                filterable
-                                                               :placeholder="ncfST('Frontend.364')">
+                                                               :placeholder="ncfST('Frontend.NeuCharWorkflow.SelectWorkflowVariable')">
                                                         <el-option v-for="variable in form.graph.variables"
                                                                    :key="variable.name || ('variable-'+index)"
-                                                                   :label="variable.name || ncfST('Frontend.674')"
+                                                                   :label="variable.name || ncfST('Frontend.NeuCharWorkflow.UnnamedVariable')"
                                                                    :value="variable.name"
                                                                    :disabled="!variable.name"></el-option>
                                                     </el-select>
@@ -1272,30 +1272,30 @@
                                                                               :disabled="editingLocked"
                                                                               :editable="true"
                                                                               :maxlength="8000"
-                                                                              :edit-label="ncfST('Frontend.328')"
-                                                                              :help-text="ncfST('Frontend.675')"
+                                                                              :edit-label="ncfST('Frontend.NeuCharWorkflow.EditFormula')"
+                                                                              :help-text="ncfST('Frontend.NeuCharWorkflow.ForExampleValueUseVarsVariableNameToReadTheCurrentVariableValue')"
                                                                               @@edit-template="openCodeAssignmentTemplateEditor(selectedNode,index)"></workflow-rich-text-input>
                                                     <el-button type="text"
                                                                :disabled="editingLocked"
-                                                                              @@click="removeCodeAssignment(selectedNode,index)">{{ ncfST('Frontend.183') }}</el-button>
+                                                                              @@click="removeCodeAssignment(selectedNode,index)">{{ ncfST('Frontend.NeuCharWorkflow.Delete') }}</el-button>
                                                 </div>
                                             </div>
-                                            <p v-else class="workflow-variable-empty">{{ ncfST('Frontend.220') }}</p>
+                                            <p v-else class="workflow-variable-empty">{{ ncfST('Frontend.NeuCharWorkflow.NoAssignmentsConfiguredYetAddAtLeastOne') }}</p>
                                             <el-button size="small"
                                                        icon="el-icon-plus"
                                                        :disabled="editingLocked || !form.graph.variables.length || (selectedNode.config.assignments || []).length>=30"
-                                                       @@click="addCodeAssignment(selectedNode)">{{ ncfST('Frontend.306') }}</el-button>
+                                                       @@click="addCodeAssignment(selectedNode)">{{ ncfST('Frontend.NeuCharWorkflow.AddAssignment') }}</el-button>
                                         </el-form-item>
-                                        <el-alert :title="ncfST('Frontend.215')" type="info" :closable="false"></el-alert>
+                                        <el-alert :title="ncfST('Frontend.NeuCharWorkflow.TheSafeCodeNodeAlwaysPassesThroughTheOriginalInputItOnly')" type="info" :closable="false"></el-alert>
                                     </template>
                                     <template v-if="selectedNode.type==='aggregate'">
-                                        <el-form-item :label="ncfST('Frontend.299')" required>
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.AggregateOutput')" required>
                                             <template v-if="isTemplateValue(selectedNode.config.outputTemplate)">
                                                 <div class="parameter-template-card workflow-rich-text-template-card">
                                                     <div class="parameter-template-summary">{{parameterTemplateSummary(selectedNode.config.outputTemplate)}}</div>
                                                     <div class="parameter-template-actions">
-                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'outputTemplate',{fieldLabel:ncfST('Frontend.299'),allowBindings:false})">{{ ncfST('Frontend.329') }}</el-button>
-                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'outputTemplate')">{{ ncfST('Frontend.275') }}</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'outputTemplate',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.AggregateOutput'),allowBindings:false})">{{ ncfST('Frontend.NeuCharWorkflow.EditFormulaText') }}</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'outputTemplate')">{{ ncfST('Frontend.NeuCharWorkflow.SwitchToManualInput') }}</el-button>
                                                     </div>
                                                 </div>
                                             </template>
@@ -1306,18 +1306,18 @@
                                                                       :disabled="editingLocked"
                                                                       :maxlength="8000"
                                                                       :show-word-limit="true"
-                                                                      :help-text="ncfST('Frontend.320')"
-                                                                      :edit-label="ncfST('Frontend.328')"
-                                                                      :placeholder="ncfST('Frontend.388')"
-                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'outputTemplate',{fieldLabel:ncfST('Frontend.299'),allowBindings:false})"></workflow-rich-text-input>
-                                            <p v-pre class="node-config-help">{{ ncfST('Frontend.240') }} <code>{{input}}</code> {{ ncfST('Frontend.171') }} <code>{{= length(input) }}</code>、<code>{{= join(input, '，') }}</code> {{ ncfST('Frontend.320') }}</p>
+                                                                      :help-text="ncfST('Frontend.NeuCharWorkflow.AndSimilarRestrictedExpressionsArbitraryJavaScriptIsNotExecuted')"
+                                                                      :edit-label="ncfST('Frontend.NeuCharWorkflow.EditFormula')"
+                                                                      :placeholder="ncfST('Frontend.NeuCharWorkflow.ForExampleValueItems')"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'outputTemplate',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.AggregateOutput'),allowBindings:false})"></workflow-rich-text-input>
+                                            <p v-pre class="node-config-help">{{ ncfST('Frontend.NeuCharWorkflow.MustBeConfigured') }} <code>{{input}}</code> {{ ncfST('Frontend.NeuCharWorkflow.KeepTheAggregateArray') }} <code>{{= length(input) }}</code>、<code>{{= join(input, '，') }}</code> {{ ncfST('Frontend.NeuCharWorkflow.AndSimilarRestrictedExpressionsArbitraryJavaScriptIsNotExecuted') }}</p>
                                         </el-form-item>
-                                        <el-alert :title="ncfST('Frontend.335')" type="info" :closable="false"></el-alert>
+                                        <el-alert :title="ncfST('Frontend.NeuCharWorkflow.AggregateWaitsForAllActivatedUpstreamBranchesToFinishAggregatesThemBy')" type="info" :closable="false"></el-alert>
                                     </template>
-                                    <el-alert v-if="selectedNode.type==='merge'" :title="ncfST('Frontend.369')" type="info" :closable="false"></el-alert>
-                                    <el-alert v-if="selectedNode.type==='parallel'" :title="ncfST('Frontend.231')" type="info" :closable="false"></el-alert>
+                                    <el-alert v-if="selectedNode.type==='merge'" :title="ncfST('Frontend.NeuCharWorkflow.ItemByItemMergeDoesNotWaitForAllInputsEachInput')" type="info" :closable="false"></el-alert>
+                                    <el-alert v-if="selectedNode.type==='parallel'" :title="ncfST('Frontend.NeuCharWorkflow.TheParallelNodeSendsTheSameInputToAllFollowingBranchesAt')" type="info" :closable="false"></el-alert>
                                     <template v-if="selectedNode.type==='console'">
-                                        <el-form-item :label="ncfST('Frontend.426')" >
+                                        <el-form-item :label="ncfST('Frontend.NeuCharWorkflow.ConsoleOutputContent')" >
                                             <template v-if="isTemplateValue(selectedNode.config.printTemplate)">
                                                 <div class="parameter-template-card workflow-rich-text-template-card">
                                                     <div class="parameter-template-summary">{{parameterTemplateSummary(selectedNode.config.printTemplate)}}</div>
@@ -1325,8 +1325,8 @@
                                                         <el-tag v-for="item in parameterTemplateBindings(selectedNode.config.printTemplate)" :key="item.token" size="mini" :title="templateBindingLabel(item.source)">{{templatePlaceholder(item.token)}}</el-tag>
                                                     </div>
                                                     <div class="parameter-template-actions">
-                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'printTemplate',{fieldLabel:ncfST('Frontend.426')})">{{ ncfST('Frontend.329') }}</el-button>
-                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'printTemplate')">{{ ncfST('Frontend.275') }}</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'printTemplate',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.ConsoleOutputContent')})">{{ ncfST('Frontend.NeuCharWorkflow.EditFormulaText') }}</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'printTemplate')">{{ ncfST('Frontend.NeuCharWorkflow.SwitchToManualInput') }}</el-button>
                                                     </div>
                                                 </div>
                                             </template>
@@ -1337,17 +1337,17 @@
                                                                       :disabled="editingLocked"
                                                                       :maxlength="8000"
                                                                       :show-word-limit="true"
-                                                                      :help-text="ncfST('Frontend.252')"
+                                                                      :help-text="ncfST('Frontend.NeuCharWorkflow.PrintTheCurrentInputThisOnlyAffectsConsoleDisplayTheNodeStill')"
                                                                       placeholder="{{input}}"
-                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'printTemplate',{fieldLabel:ncfST('Frontend.426')})"></workflow-rich-text-input>
-                                            <p v-pre class="node-config-help">{{ ncfST('Frontend.252') }}</p>
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'printTemplate',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.ConsoleOutputContent')})"></workflow-rich-text-input>
+                                            <p v-pre class="node-config-help">{{ ncfST('Frontend.NeuCharWorkflow.PrintTheCurrentInputThisOnlyAffectsConsoleDisplayTheNodeStill') }}</p>
                                         </el-form-item>
-                                        <el-alert :title="ncfST('Frontend.355')" type="info" :closable="false"></el-alert>
+                                        <el-alert :title="ncfST('Frontend.NeuCharWorkflow.WhenThisNodeRunsItPrintsTheContentUsingTheTemplateAbove')" type="info" :closable="false"></el-alert>
                                     </template>
-                                    <el-alert v-if="selectedNode.type==='neubell'" :title="ncfST('Frontend.356')" type="info" :closable="false"></el-alert>
+                                    <el-alert v-if="selectedNode.type==='neubell'" :title="ncfST('Frontend.NeuCharWorkflow.AWorkflowNeuBellReminderIsCreatedAtRuntimeClickingItInThe')" type="info" :closable="false"></el-alert>
                                 </el-form>
                             </template>
-                            <div v-else class="inspector-empty">{{ ncfST('Frontend.367') }}</div>
+                            <div v-else class="inspector-empty">{{ ncfST('Frontend.NeuCharWorkflow.SelectACanvasNodeToConfigure') }}</div>
                         </div>
                     </aside>
                 </div>
@@ -1357,32 +1357,32 @@
                         <span class="run-status-dot"></span>
                         <strong>{{runStatusText}}</strong>
                         <span v-if="run.error" class="run-error">{{run.error}}</span>
-                        <el-input v-model="run.input" :disabled="editingLocked" size="small" :placeholder="ncfST('Frontend.300')"></el-input>
-                        <el-button type="primary" size="small" icon="el-icon-video-play" :loading="run.validating || run.running" :disabled="!form.id" @@click="startWorkflow">{{ ncfST('Frontend.292') }}</el-button>
-                        <el-button v-if="run.running" type="danger" size="small" plain icon="el-icon-circle-close" :loading="run.aborting" @@click="abortWorkflow">{{ ncfST('Frontend.510') }}</el-button>
+                        <el-input v-model="run.input" :disabled="editingLocked" size="small" :placeholder="ncfST('Frontend.NeuCharWorkflow.TestInputPassedToTrigger')"></el-input>
+                        <el-button type="primary" size="small" icon="el-icon-video-play" :loading="run.validating || run.running" :disabled="!form.id" @@click="startWorkflow">{{ ncfST('Frontend.NeuCharWorkflow.ValidateAndRun') }}</el-button>
+                        <el-button v-if="run.running" type="danger" size="small" plain icon="el-icon-circle-close" :loading="run.aborting" @@click="abortWorkflow">{{ ncfST('Frontend.NeuCharWorkflow.Abort') }}</el-button>
                         <el-button type="text" size="small" :icon="run.consoleOpen?'el-icon-arrow-down':'el-icon-arrow-up'" @@click="run.consoleOpen=!run.consoleOpen">Console</el-button>
                     </div>
                     <div v-if="run.humanInteractions.length" class="workflow-human-quick-panel">
                         <div class="workflow-human-quick-copy">
                             <i class="el-icon-user-solid"></i>
-                            <span><strong>{{ ncfST('Frontend.147') }}</strong> · {{ ncfST('Frontend.389', run.humanInteractions.length) }}</span>
+                            <span><strong>{{ ncfST('Frontend.NeuCharWorkflow.WorkflowWaitingForHuman') }}</strong> · {{ ncfST('Frontend.NeuCharWorkflow.ValuePendingRequests', run.humanInteractions.length) }}</span>
                             <small v-if="run.humanInteractions[0].prompt">{{run.humanInteractions[0].prompt}}</small>
                         </div>
-                        <el-button type="warning" size="small" plain @@click="openHumanInteraction(run.humanInteractions[0])">{{ ncfST('Frontend.241') }}</el-button>
+                        <el-button type="warning" size="small" plain @@click="openHumanInteraction(run.humanInteractions[0])">{{ ncfST('Frontend.NeuCharWorkflow.QuickActions') }}</el-button>
                     </div>
-                    <el-dialog :title="ncfST('Frontend.676')"
+                    <el-dialog :title="ncfST('Frontend.NeuCharWorkflow.WorkflowHumanInTheLoop')"
                                :visible.sync="run.humanReplyVisible"
                                width="560px"
                                append-to-body
                                @@close="closeHumanInteractionDialog">
                         <template v-if="run.humanReplyRequest">
                             <el-alert v-if="requiresHumanTextInput(run.humanReplyRequest)"
-                                      :title="ncfST('Frontend.235')"
+                                      :title="ncfST('Frontend.NeuCharWorkflow.ThisTurnRequiresHumanInputAfterSubmissionTheWorkflowContinuesWaitingOr')"
                                       type="info"
                                       :closable="false"
                                       show-icon></el-alert>
                             <el-alert v-else
-                                      :title="ncfST('Frontend.131')"
+                                      :title="ncfST('Frontend.NeuCharWorkflow.AgentRequestsToExecuteAToolConfirmWhetherToAllowThisCall')"
                                       type="warning"
                                       :closable="false"
                                       show-icon></el-alert>
@@ -1394,24 +1394,24 @@
                                       :rows="5"
                                       maxlength="8000"
                                       show-word-limit
-                                      :placeholder="ncfST('Frontend.353')"></el-input>
+                                      :placeholder="ncfST('Frontend.NeuCharWorkflow.EnterHumanReply')"></el-input>
                         </template>
                         <span slot="footer" class="dialog-footer">
-                            <el-button @@click="closeHumanInteractionDialog">{{ ncfST('Frontend.319') }}</el-button>
+                            <el-button @@click="closeHumanInteractionDialog">{{ ncfST('Frontend.NeuCharWorkflow.HandleLater') }}</el-button>
                             <el-button v-if="run.humanReplyRequest && !requiresHumanTextInput(run.humanReplyRequest)"
                                        type="danger"
                                        plain
                                        :loading="run.humanReplySubmitting"
-                                       @@click="resolveHumanInteraction(false)">{{ ncfST('Frontend.259') }}</el-button>
+                                       @@click="resolveHumanInteraction(false)">{{ ncfST('Frontend.NeuCharWorkflow.Reject') }}</el-button>
                             <el-button type="primary"
                                        :loading="run.humanReplySubmitting"
-                                       @@click="resolveHumanInteraction(true)">{{run.humanReplyRequest && requiresHumanTextInput(run.humanReplyRequest)?ncfST('Frontend.677'):ncfST('Frontend.678')}}</el-button>
+                                       @@click="resolveHumanInteraction(true)">{{run.humanReplyRequest && requiresHumanTextInput(run.humanReplyRequest)?ncfST('Frontend.NeuCharWorkflow.SubmitAndContinue'):ncfST('Frontend.NeuCharWorkflow.ApproveAndContinue')}}</el-button>
                         </span>
                     </el-dialog>
                     <div v-show="run.consoleOpen" class="workflow-console">
                         <div class="console-toolbar">
-                            <span>{{ ncfST('Frontend.404') }} · {{run.events.length}}</span>
-                            <el-button type="text" size="mini" :disabled="run.running" @@click="clearConsole">{{ ncfST('Frontend.307') }}</el-button>
+                            <span>{{ ncfST('Frontend.NeuCharWorkflow.ConsoleOutputAlternate') }} · {{run.events.length}}</span>
+                            <el-button type="text" size="mini" :disabled="run.running" @@click="clearConsole">{{ ncfST('Frontend.NeuCharWorkflow.Clear') }}</el-button>
                         </div>
                         <div ref="consoleLog" class="console-log">
                             <div v-for="(event,index) in run.events" :key="event.sequence+'-'+index" :class="['console-line','console-'+event.status]">
@@ -1422,18 +1422,18 @@
                                            type="text"
                                            size="mini"
                                            icon="el-icon-chat-dot-round"
-                                           @@click="openAgentGroupConversation(event.objectReference)">{{ ncfST('Frontend.095') }}</el-button>
+                                           @@click="openAgentGroupConversation(event.objectReference)">{{ ncfST('Frontend.NeuCharWorkflow.ViewAgentGroupConversation') }}</el-button>
                                 <pre v-if="event.output">{{event.output}}</pre>
                             </div>
-                            <div v-if="!run.events.length" class="console-empty">{{ ncfST('Frontend.379') }}</div>
+                            <div v-if="!run.events.length" class="console-empty">{{ ncfST('Frontend.NeuCharWorkflow.AfterARunThisAreaShowsValidationResultsTheCurrentNodeExecution') }}</div>
                         </div>
                     </div>
                 </section>
             </template>
             <div v-else class="neuchar-empty">
                 <i class="fa fa-random fa-3x"></i>
-                <h3>{{ ncfST('Frontend.366') }}</h3>
-                <p>{{ ncfST('Frontend.156') }}</p>
+                <h3>{{ ncfST('Frontend.NeuCharWorkflow.SelectOrCreateAWorkflow') }}</h3>
+                <p>{{ ncfST('Frontend.NeuCharWorkflow.StartAddingNodesFromTheTriggerNodesSupportDragLayoutPortConnections') }}</p>
             </div>
         </main>
     </div>
@@ -1447,16 +1447,16 @@
     <script type="text/x-template" id="workflow-node-picker-template">
         <div class="workflow-node-picker" :class="{'is-edge-insert':edgeInsert}">
             <div class="workflow-node-picker-filters">
-                <el-input v-model="keyword" size="small" clearable prefix-icon="el-icon-search" :placeholder="ncfST('Frontend.433')"></el-input>
-                <el-select v-model="module" size="small" clearable filterable :placeholder="ncfST('Frontend.434')">
+                <el-input v-model="keyword" size="small" clearable prefix-icon="el-icon-search" :placeholder="ncfST('Frontend.NeuCharWorkflow.SearchNodesFunctionsModulesOrObjects')"></el-input>
+                <el-select v-model="module" size="small" clearable filterable :placeholder="ncfST('Frontend.NeuCharWorkflow.AllModules')">
                     <el-option v-for="name in moduleNames" :key="name" :label="name" :value="name"></el-option>
                 </el-select>
             </div>
 
             <template v-if="filteredSystemNodes.length">
-                <el-divider>{{ ncfST('Frontend.431') }}</el-divider>
+                <el-divider>{{ ncfST('Frontend.NeuCharWorkflow.SystemNodes') }}</el-divider>
                 <div class="palette-system-grid">
-                    <el-button v-for="node in filteredSystemNodes" :key="node.type" plain :icon="node.icon" :class="['node-picker-system-button','node-picker-'+node.type]" :disabled="locked || (edgeInsert && node.type === 'end')" :title="edgeInsert && node.type === 'end'?ncfST('Frontend.496'):''" draggable="true" @@dragstart.native="startSystemDrag($event,node)" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem(node,'hover',$event)" @@mouseleave.native="hideNodePreview('system',node)" @@click="previewSystem(node,'click',$event)" @@dblclick.native="selectSystem(node)">{{node.label}}</el-button>
+                    <el-button v-for="node in filteredSystemNodes" :key="node.type" plain :icon="node.icon" :class="['node-picker-system-button','node-picker-'+node.type]" :disabled="locked || (edgeInsert && node.type === 'end')" :title="edgeInsert && node.type === 'end'?ncfST('Frontend.NeuCharWorkflow.EndNodesCannotBeInsertedIntoConnections'):''" draggable="true" @@dragstart.native="startSystemDrag($event,node)" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem(node,'hover',$event)" @@mouseleave.native="hideNodePreview('system',node)" @@click="previewSystem(node,'click',$event)" @@dblclick.native="selectSystem(node)">{{node.label}}</el-button>
                 </div>
             </template>
 
@@ -1476,12 +1476,12 @@
                         @@dblclick="selectFunction(fn)">
                     <span class="palette-item-copy">
                         <strong>{{fn.functionName}}</strong>
-                        <small>{{fn.moduleName}} · {{fn.moduleAvailable?ncfST('Frontend.435'):ncfST('Frontend.437')}}</small>
-                        <small v-if="fn.catalogError" class="palette-error">{{ ncfST('Frontend.505') }}</small>
+                        <small>{{fn.moduleName}} · {{fn.moduleAvailable?ncfST('Frontend.NeuCharWorkflow.Available'):ncfST('Frontend.NeuCharWorkflow.ModuleNotInstalledOrEnabled')}}</small>
+                        <small v-if="fn.catalogError" class="palette-error">{{ ncfST('Frontend.NeuCharWorkflow.TheSelectedFunctionParameterWasRemovedOrBecameUnavailableAfterTheModule') }}</small>
                     </span>
                     <span role="button"
                           :class="['palette-pin',{active:isPinned(fn)}]"
-                          :title="isPinned(fn)?ncfST('Frontend.679'):ncfST('Frontend.680')"
+                          :title="isPinned(fn)?ncfST('Frontend.NeuCharWorkflow.Unpin'):ncfST('Frontend.NeuCharWorkflow.Pin')"
                           @@click.stop="$emit('toggle-pin', fn)">
                         <i :class="isPinned(fn)?'el-icon-star-on':'el-icon-star-off'"></i>
                     </span>
@@ -1504,12 +1504,12 @@
                         @@dblclick="selectObject(object)">
                     <span class="palette-item-copy">
                         <strong>{{object.name}}</strong>
-                        <small>{{objectKindLabel(object)}} · {{object.enabled?ncfST('Frontend.435'):ncfST('Frontend.436')}}</small>
+                        <small>{{objectKindLabel(object)}} · {{object.enabled?ncfST('Frontend.NeuCharWorkflow.Available'):ncfST('Frontend.NeuCharWorkflow.Unavailable')}}</small>
                     </span>
                     <el-tag v-if="object.kind==='a2a'" size="mini" type="warning" effect="plain">A2A</el-tag>
                 </button>
             </template>
-            <div v-if="!filteredSystemNodes.length && !filteredFunctions.length && !filteredObjects.length" class="palette-empty">{{ ncfST('Frontend.456') }}</div>
+            <div v-if="!filteredSystemNodes.length && !filteredFunctions.length && !filteredObjects.length" class="palette-empty">{{ ncfST('Frontend.NeuCharWorkflow.UnableToInsertNode') }}</div>
         </div>
     </script>
     <script src="~/js/NeuCharWorkflow/common.js"></script>
