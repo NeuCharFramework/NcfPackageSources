@@ -2,6 +2,7 @@
 @model Senparc.Areas.Admin.Areas.Admin.Pages.SenparcTrace_DateLogModel
 @{
     ViewData["Title"] = AR["Trace.日志"];
+    ViewData["AdminFooterAiInitialMessage"] = $"/analyze-system-logs --date={Model.Date} ";
     Layout = "_Layout_Vue";
 }
 

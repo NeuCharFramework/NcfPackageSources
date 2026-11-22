@@ -729,6 +729,15 @@
   <data name="Trace.TypePostRequest" xml:space="preserve"><value>POST request</value></data>
   <data name="Trace.TypeGetRequest" xml:space="preserve"><value>GET request</value></data>
   <data name="Trace.TypeException" xml:space="preserve"><value>Exception</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs" xml:space="preserve"><value>Analyze system logs</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogsHint" xml:space="preserve"><value>Specify --date=yyyyMMdd and enter an analysis question</value></data>
+  <data name="AdminChat.Command.HelpSummary" xml:space="preserve"><value>/mode simple|plan|execute · /maxiterations 1-64 · /harness &lt;capability&gt; on|off · /maxtoken 256-8000 · /analyze-system-logs --date=yyyyMMdd</value></data>
+  <data name="Trace.AI.OverviewName" xml:space="preserve"><value>Get system log overview</value></data>
+  <data name="Trace.AI.OverviewDescription" xml:space="preserve"><value>Return redacted totals, types, grouped exceptions, and time range for a date; use as the first analysis step.</value></data>
+  <data name="Trace.AI.SearchName" xml:space="preserve"><value>Search system logs</value></data>
+  <data name="Trace.AI.SearchDescription" xml:space="preserve"><value>Search redacted log summaries by date, keyword, type, exception state, and thread; return at most 30 rows.</value></data>
+  <data name="Trace.AI.EvidenceName" xml:space="preserve"><value>Read system log evidence</value></data>
+  <data name="Trace.AI.EvidenceDescription" xml:space="preserve"><value>Read one redacted evidence entry by date and line, capped at 8000 characters.</value></data>
   <data name="AdminChat.AddReferenceModule" xml:space="preserve"><value>Add reference modules</value></data>
   <data name="AdminChat.SearchModulePlaceholder" xml:space="preserve"><value>Search module name / description / UID</value></data>
   <data name="AdminChat.SelectFiltered" xml:space="preserve"><value>Select all filtered results</value></data>

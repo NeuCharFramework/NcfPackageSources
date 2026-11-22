@@ -727,6 +727,15 @@
   <data name="Trace.TypePostRequest" xml:space="preserve"><value>Requête POST</value></data>
   <data name="Trace.TypeGetRequest" xml:space="preserve"><value>Requête GET</value></data>
   <data name="Trace.TypeException" xml:space="preserve"><value>Exception</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs" xml:space="preserve"><value>Analyser les journaux système</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogsHint" xml:space="preserve"><value>Indiquez --date=yyyyMMdd puis votre question d’analyse</value></data>
+  <data name="AdminChat.Command.HelpSummary" xml:space="preserve"><value>/mode simple|plan|execute · /maxiterations 1-64 · /harness &lt;capacité&gt; on|off · /maxtoken 256-8000 · /analyze-system-logs --date=yyyyMMdd</value></data>
+  <data name="Trace.AI.OverviewName" xml:space="preserve"><value>Obtenir un aperçu des journaux</value></data>
+  <data name="Trace.AI.OverviewDescription" xml:space="preserve"><value>Renvoie les totaux masqués, types, exceptions regroupées et période; à utiliser en premier.</value></data>
+  <data name="Trace.AI.SearchName" xml:space="preserve"><value>Rechercher dans les journaux</value></data>
+  <data name="Trace.AI.SearchDescription" xml:space="preserve"><value>Recherche des résumés masqués par date, mot-clé, type, exception et thread; 30 lignes maximum.</value></data>
+  <data name="Trace.AI.EvidenceName" xml:space="preserve"><value>Lire une preuve de journal</value></data>
+  <data name="Trace.AI.EvidenceDescription" xml:space="preserve"><value>Lit une preuve masquée par date et ligne, limitée à 8000 caractères.</value></data>
   <data name="AdminChat.AddReferenceModule" xml:space="preserve"><value>Ajouter des modules de référence</value></data>
   <data name="AdminChat.SearchModulePlaceholder" xml:space="preserve"><value>Rechercher par nom / description / UID</value></data>
   <data name="AdminChat.SelectFiltered" xml:space="preserve"><value>Sélectionner tous les résultats filtrés</value></data>

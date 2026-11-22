@@ -727,6 +727,15 @@
   <data name="Trace.TypePostRequest" xml:space="preserve"><value>Solicitud POST</value></data>
   <data name="Trace.TypeGetRequest" xml:space="preserve"><value>Solicitud GET</value></data>
   <data name="Trace.TypeException" xml:space="preserve"><value>Excepción</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs" xml:space="preserve"><value>Analizar registros del sistema</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogsHint" xml:space="preserve"><value>Especifica --date=yyyyMMdd e introduce una pregunta de análisis</value></data>
+  <data name="AdminChat.Command.HelpSummary" xml:space="preserve"><value>/mode simple|plan|execute · /maxiterations 1-64 · /harness &lt;capacidad&gt; on|off · /maxtoken 256-8000 · /analyze-system-logs --date=yyyyMMdd</value></data>
+  <data name="Trace.AI.OverviewName" xml:space="preserve"><value>Obtener resumen de registros</value></data>
+  <data name="Trace.AI.OverviewDescription" xml:space="preserve"><value>Devuelve totales, tipos, excepciones agrupadas y rango temporal ocultando datos sensibles; úsalo primero.</value></data>
+  <data name="Trace.AI.SearchName" xml:space="preserve"><value>Buscar registros del sistema</value></data>
+  <data name="Trace.AI.SearchDescription" xml:space="preserve"><value>Busca resúmenes ocultos por fecha, palabra clave, tipo, excepción e hilo; devuelve como máximo 30 filas.</value></data>
+  <data name="Trace.AI.EvidenceName" xml:space="preserve"><value>Leer evidencia de registro</value></data>
+  <data name="Trace.AI.EvidenceDescription" xml:space="preserve"><value>Lee una evidencia oculta por fecha y línea, limitada a 8000 caracteres.</value></data>
   <data name="AdminChat.AddReferenceModule" xml:space="preserve"><value>Añadir módulos de referencia</value></data>
   <data name="AdminChat.SearchModulePlaceholder" xml:space="preserve"><value>Buscar nombre / descripción / UID</value></data>
   <data name="AdminChat.SelectFiltered" xml:space="preserve"><value>Seleccionar todos los resultados filtrados</value></data>

@@ -729,6 +729,15 @@
   <data name="Trace.TypePostRequest" xml:space="preserve"><value>POST 请求</value></data>
   <data name="Trace.TypeGetRequest" xml:space="preserve"><value>GET 请求</value></data>
   <data name="Trace.TypeException" xml:space="preserve"><value>异常</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs" xml:space="preserve"><value>分析系统日志</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogsHint" xml:space="preserve"><value>指定 --date=yyyyMMdd，并输入分析问题</value></data>
+  <data name="AdminChat.Command.HelpSummary" xml:space="preserve"><value>/mode simple|plan|execute · /maxiterations 1-64 · /harness &lt;能力&gt; on|off · /maxtoken 256-8000 · /analyze-system-logs --date=yyyyMMdd</value></data>
+  <data name="Trace.AI.OverviewName" xml:space="preserve"><value>获取系统日志概览</value></data>
+  <data name="Trace.AI.OverviewDescription" xml:space="preserve"><value>按日期返回脱敏后的日志总量、类型、异常聚合和时间范围；适合作为分析的第一步。</value></data>
+  <data name="Trace.AI.SearchName" xml:space="preserve"><value>搜索系统日志</value></data>
+  <data name="Trace.AI.SearchDescription" xml:space="preserve"><value>按日期、关键字、类型、异常状态和线程检索脱敏日志摘要，每次最多返回 30 条。</value></data>
+  <data name="Trace.AI.EvidenceName" xml:space="preserve"><value>读取系统日志证据</value></data>
+  <data name="Trace.AI.EvidenceDescription" xml:space="preserve"><value>按日期和行号读取单条脱敏证据；内容最多 8000 字符，用于支持分析结论。</value></data>
   <data name="AdminChat.AddReferenceModule" xml:space="preserve"><value>添加引用模块</value></data>
   <data name="AdminChat.SearchModulePlaceholder" xml:space="preserve"><value>搜索模块名称 / 描述 / UID</value></data>
   <data name="AdminChat.SelectFiltered" xml:space="preserve"><value>当前筛选结果全选</value></data>

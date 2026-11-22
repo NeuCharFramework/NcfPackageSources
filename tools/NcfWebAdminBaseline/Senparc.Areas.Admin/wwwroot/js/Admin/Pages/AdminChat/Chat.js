@@ -320,7 +320,8 @@ var chatApp = new Vue({
         { command: '/help', label: adminChatText('AdminChat.Command.Help', 'Show available commands'), hint: 'Display command help', values: [] },
         { command: '/maxtoken', label: adminChatText('AdminChat.Command.MaxToken', 'Set output limit'), hint: 'Recommended 256–8000', values: [] },
         { command: '/maxiterations', label: adminChatText('AdminChat.Command.MaxIterations', 'Set Harness max iterations'), hint: '1–64', values: [] },
-        { command: '/harness', label: adminChatText('AdminChat.Command.Harness', 'Set Harness capabilities'), hint: 'todo / compact / file-memory / skills / web', values: [] }
+        { command: '/harness', label: adminChatText('AdminChat.Command.Harness', 'Set Harness capabilities'), hint: 'todo / compact / file-memory / skills / web', values: [] },
+        { command: '/analyze-system-logs', label: adminChatText('AdminChat.Command.AnalyzeSystemLogs', 'Analyze system logs'), hint: adminChatText('AdminChat.Command.AnalyzeSystemLogsHint', '--date=yyyyMMdd plus your question'), values: [] }
       ],
       chatCommandSuggestionsFor: 'inputMessage',
       trajectoryDialogVisible: false,
@@ -684,7 +685,11 @@ var chatApp = new Vue({
       
       if (window.INITIAL_DATA.initialMessage) {
         const initialMessage = decodeURIComponent(window.INITIAL_DATA.initialMessage);
-        if (this.currentSessionId > 0) {
+        const shouldTypeInitialMessage = new URLSearchParams(window.location.search || '')
+          .get('typeInitialMessage') === '1';
+        if (shouldTypeInitialMessage) {
+          this.typeInitialMessage(initialMessage);
+        } else if (this.currentSessionId > 0) {
           this.inputMessage = initialMessage;
         } else {
           this.chatInputText = initialMessage;
@@ -768,6 +773,35 @@ var chatApp = new Vue({
     this.unbindPromptShottingSelectionDismiss();
   },
   methods: {
+    typeInitialMessage(message) {
+      const value = String(message || '');
+      const target = this.currentSessionId > 0 ? 'inputMessage' : 'chatInputText';
+      this[target] = '';
+      const characters = Array.from(value);
+      let index = 0;
+      this.$nextTick(() => {
+        const refName = target === 'inputMessage' ? 'promptMessageInput' : 'promptLauncherInput';
+        const component = this.$refs[refName];
+        const textarea = component && component.$el
+          ? component.$el.querySelector('textarea')
+          : null;
+        if (textarea) textarea.focus();
+        const typeNext = () => {
+          if (index >= characters.length) {
+            if (textarea) {
+              textarea.focus();
+              textarea.setSelectionRange(value.length, value.length);
+            }
+            return;
+          }
+          const chunkSize = Math.random() > .7 ? 2 : 1;
+          this[target] += characters.slice(index, index + chunkSize).join('');
+          index += chunkSize;
+          window.setTimeout(typeNext, 18 + Math.random() * 28);
+        };
+        window.setTimeout(typeNext, 180);
+      });
+    },
     bindPromptShottingSelectionDismiss() {
       if (this.promptShottingDismissHandler) return;
       this.promptShottingDismissHandler = (event) => {
@@ -3094,7 +3128,9 @@ var chatApp = new Vue({
         this.chatCommandMenuOpen = false;
         if (field === 'chatInputText') this.chatInputText = '';
         else this.inputMessage = '';
-        this.$message.info('/mode simple|plan|execute · /maxiterations 1-64 · /harness <能力> on|off · /maxtoken 256-8000');
+        this.$message.info(ncfT(
+          'AdminChat.Command.HelpSummary',
+          '/mode simple|plan|execute · /maxiterations 1-64 · /harness <capability> on|off · /maxtoken 256-8000 · /analyze-system-logs --date=yyyyMMdd'));
         event.preventDefault();
         return true;
       }
@@ -3112,6 +3148,10 @@ var chatApp = new Vue({
         this.$message.success(`后续普通对话的输出上限已设为 ${value} tokens。`);
         event.preventDefault();
         return true;
+      }
+      if (command === '/analyze-system-logs') {
+        this.chatCommandMenuOpen = false;
+        return false;
       }
       this.$message.error(`未知命令：${command}。输入 /help 查看可用命令。`);
       event.preventDefault();

@@ -727,6 +727,15 @@
   <data name="Trace.TypePostRequest" xml:space="preserve"><value>POST リクエスト</value></data>
   <data name="Trace.TypeGetRequest" xml:space="preserve"><value>GET リクエスト</value></data>
   <data name="Trace.TypeException" xml:space="preserve"><value>例外</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs" xml:space="preserve"><value>システムログを分析</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogsHint" xml:space="preserve"><value>--date=yyyyMMdd を指定し、分析したい内容を入力してください</value></data>
+  <data name="AdminChat.Command.HelpSummary" xml:space="preserve"><value>/mode simple|plan|execute · /maxiterations 1-64 · /harness &lt;機能&gt; on|off · /maxtoken 256-8000 · /analyze-system-logs --date=yyyyMMdd</value></data>
+  <data name="Trace.AI.OverviewName" xml:space="preserve"><value>システムログ概要を取得</value></data>
+  <data name="Trace.AI.OverviewDescription" xml:space="preserve"><value>マスク済みの件数、種類、例外集計、期間を返します。分析の最初に使用します。</value></data>
+  <data name="Trace.AI.SearchName" xml:space="preserve"><value>システムログを検索</value></data>
+  <data name="Trace.AI.SearchDescription" xml:space="preserve"><value>日付、キーワード、種類、例外状態、スレッドでマスク済み概要を検索し、最大 30 件返します。</value></data>
+  <data name="Trace.AI.EvidenceName" xml:space="preserve"><value>ログ証拠を読み取る</value></data>
+  <data name="Trace.AI.EvidenceDescription" xml:space="preserve"><value>日付と行番号でマスク済みの単一証拠を読み取り、8000 文字以内に制限します。</value></data>
   <data name="AdminChat.AddReferenceModule" xml:space="preserve"><value>参照モジュールを追加</value></data>
   <data name="AdminChat.SearchModulePlaceholder" xml:space="preserve"><value>モジュール名 / 説明 / UID を検索</value></data>
   <data name="AdminChat.SelectFiltered" xml:space="preserve"><value>絞り込み結果をすべて選択</value></data>

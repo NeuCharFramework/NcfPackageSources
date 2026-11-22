@@ -727,6 +727,15 @@
   <data name="Trace.TypePostRequest" xml:space="preserve"><value>Запрос POST</value></data>
   <data name="Trace.TypeGetRequest" xml:space="preserve"><value>Запрос GET</value></data>
   <data name="Trace.TypeException" xml:space="preserve"><value>Исключение</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs" xml:space="preserve"><value>Анализ системных журналов</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogsHint" xml:space="preserve"><value>Укажите --date=yyyyMMdd и вопрос для анализа</value></data>
+  <data name="AdminChat.Command.HelpSummary" xml:space="preserve"><value>/mode simple|plan|execute · /maxiterations 1-64 · /harness &lt;возможность&gt; on|off · /maxtoken 256-8000 · /analyze-system-logs --date=yyyyMMdd</value></data>
+  <data name="Trace.AI.OverviewName" xml:space="preserve"><value>Получить обзор системного журнала</value></data>
+  <data name="Trace.AI.OverviewDescription" xml:space="preserve"><value>Возвращает скрытые итоги, типы, сгруппированные ошибки и период; используйте первым шагом.</value></data>
+  <data name="Trace.AI.SearchName" xml:space="preserve"><value>Поиск в системных журналах</value></data>
+  <data name="Trace.AI.SearchDescription" xml:space="preserve"><value>Ищет скрытые сведения по дате, ключу, типу, ошибке и потоку; не более 30 строк.</value></data>
+  <data name="Trace.AI.EvidenceName" xml:space="preserve"><value>Читать доказательство из журнала</value></data>
+  <data name="Trace.AI.EvidenceDescription" xml:space="preserve"><value>Читает одну скрытую запись по дате и строке, не более 8000 символов.</value></data>
   <data name="AdminChat.AddReferenceModule" xml:space="preserve"><value>Добавить справочные модули</value></data>
   <data name="AdminChat.SearchModulePlaceholder" xml:space="preserve"><value>Поиск по имени / описанию / UID</value></data>
   <data name="AdminChat.SelectFiltered" xml:space="preserve"><value>Выбрать все результаты фильтра</value></data>

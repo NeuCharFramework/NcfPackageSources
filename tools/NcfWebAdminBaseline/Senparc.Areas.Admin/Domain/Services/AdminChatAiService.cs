@@ -76,6 +76,7 @@ using Senparc.AI.AgentKernel;
 using Senparc.AI.AgentKernel.Harness;
 using Senparc.AI.AgentKernel.Handlers;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
+using Senparc.Areas.Admin.OHS.Local.AppService;
 using Senparc.Areas.Admin.Domain.Services.AIPlugins;
 using Senparc.Areas.Admin;
 using Senparc.CO2NET.Extensions;
@@ -188,6 +189,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             IReadOnlyList<AdminChatAttachment> attachments = null)
         {
             var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
+            var systemLogMode = IsSystemLogAnalysisCommand(userMessage);
 
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
@@ -207,19 +209,37 @@ namespace Senparc.Areas.Admin.Domain.Services
                     "Ollama 模型不支持工具调用，AdminChat 将使用纯聊天模式：Model={Model}",
                     ResolveModelIdentifier(setting));
             }
-            var build = await BuildAdminChatFunctionsAsync(setting, agentAiHandler, sessionId, userId, modules, workflows, functionInvocationEnabled);
+            if (systemLogMode && !functionInvocationEnabled)
+            {
+                throw new NcfExceptionBase("系统日志分析需要支持 Function Calling 的 AI 模型。请切换模型后重试。");
+            }
+            var build = await BuildAdminChatFunctionsAsync(
+                setting,
+                agentAiHandler,
+                sessionId,
+                userId,
+                modules,
+                workflows,
+                functionInvocationEnabled,
+                includeSystemLogFunctions: systemLogMode);
             var aiFunctions = build.Functions;
             var moduleUids = modules.Where(z => !z.XncfModuleUid.IsNullOrEmpty()).Select(z => z.XncfModuleUid).ToList();
             var importedFunctionCount = build.ImportedFunctionCount;
             var importedWorkflowCount = build.ImportedWorkflowCount;
             var importedPluginNames = build.PluginNames;
             var importedFunctionSignatures = build.Signatures;
+            if (systemLogMode && !importedFunctionSignatures.Any(
+                    signature => signature.Contains("GetSystemLogOverview", StringComparison.Ordinal)))
+            {
+                throw new NcfExceptionBase("系统日志分析工具未成功加载，请检查 Admin 模块注册后重试。");
+            }
             var memoryContext = generationOptions == null
                 ? await Memory.BeginAsync(userId, sessionId, userMessage, cancellationToken, ResolveModelIdentifier(setting)) : null;
             var defaultSystemMessage = await BuildSystemMessageAsync(modules, cancellationToken);
             var systemInstructions = LimitSystemInstructions(
                 generationOptions?.SystemInstructions ?? defaultSystemMessage)
-                + (memoryContext?.Instructions ?? "");
+                + (memoryContext?.Instructions ?? "")
+                + (systemLogMode ? BuildSystemLogAnalysisInstructions() : string.Empty);
 
             async Task<IWantToRun> BuildChatRunnerAsync(IReadOnlyCollection<AIFunction> functions)
             {
@@ -486,13 +506,23 @@ namespace Senparc.Areas.Admin.Domain.Services
             CancellationToken cancellationToken = default)
         {
             var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
+            var systemLogMode = IsSystemLogAnalysisCommand(userMessage);
 
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
             var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
 
             var agentAiHandler = new AgentAiHandler(setting);
-            var build = await BuildAdminChatFunctionsAsync(setting, agentAiHandler, sessionId, userId, modules, workflows, functionInvocationEnabled: true);
+            var build = await BuildAdminChatFunctionsAsync(
+                setting,
+                agentAiHandler,
+                sessionId,
+                userId,
+                modules,
+                workflows,
+                functionInvocationEnabled: true,
+                includeSystemLogFunctions: systemLogMode);
+            EnsureSystemLogFunctionsAvailable(systemLogMode, build);
 
             var effectiveMaxSteps = maxSteps > 0 ? maxSteps : 8;
             var effectiveTimeout = timeout ?? TimeSpan.FromSeconds(120);
@@ -501,7 +531,9 @@ namespace Senparc.Areas.Admin.Domain.Services
 #pragma warning disable MEAI001 //Legacy comment translated to English.
             var defaultSystemMessage = await BuildSystemMessageAsync(modules, cancellationToken);
             var systemInstructions = LimitSystemInstructions(
-                defaultSystemMessage + AdminChatHarnessExecutor.BuildProtocolInstructions()) + memoryContext.Instructions;
+                defaultSystemMessage + AdminChatHarnessExecutor.BuildProtocolInstructions())
+                + memoryContext.Instructions
+                + (systemLogMode ? BuildSystemLogAnalysisInstructions() : string.Empty);
             var firstTurnPrompt = AdminChatPromptBuilder.BuildUserPrompt(messages, userMessage) + AdminChatHarnessExecutor.BuildStartTail();
             LogPromptContextSize(sessionId, userId, systemInstructions, firstTurnPrompt, build.Functions, messages?.Count ?? 0);
             var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChatHarness-{userId}-{sessionId}", new ChatClientAgentOptions()
@@ -605,6 +637,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             var effectiveHarnessOptions = AdminChatHarnessOptions.Normalize(harnessOptions, maxIterations);
             maxIterations = effectiveHarnessOptions.MaxIterations;
             var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
+            var systemLogMode = IsSystemLogAnalysisCommand(userMessage);
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
             var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
@@ -623,10 +656,13 @@ namespace Senparc.Areas.Admin.Domain.Services
                 modules,
                 workflows,
                 true,
-                includeWorkflowManagement: true);
+                includeWorkflowManagement: true,
+                includeSystemLogFunctions: systemLogMode);
+            EnsureSystemLogFunctionsAvailable(systemLogMode, build);
             var memoryContext = await Memory.BeginAsync(userId, sessionId, userMessage, cancellationToken, ResolveModelIdentifier(setting));
             var nativeSystemInstructions = await BuildSystemMessageAsync(modules, cancellationToken)
-                + memoryContext.Instructions;
+                + memoryContext.Instructions
+                + (systemLogMode ? BuildSystemLogAnalysisInstructions() : string.Empty);
             var nativePrompt = AdminChatPromptBuilder.BuildUserPrompt(messages, userMessage, attachments);
             var attachmentMessages = attachments?.Any(attachment => attachment.UseVision) == true
                 ? await BuildAttachmentMessagesAsync(sessionId, userId, nativePrompt, attachments, cancellationToken)
@@ -1533,6 +1569,42 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
         }
 
+        private static bool IsSystemLogAnalysisCommand(string userMessage)
+        {
+            var command = (userMessage ?? string.Empty).TrimStart();
+            return command.StartsWith("/analyze-system-logs", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static void EnsureSystemLogFunctionsAvailable(
+            bool systemLogMode,
+            AdminChatFunctionBuild build)
+        {
+            if (systemLogMode && !build.Signatures.Any(
+                    signature => signature.Contains("GetSystemLogOverview", StringComparison.Ordinal)))
+            {
+                throw new NcfExceptionBase("系统日志分析工具未成功加载，请检查 Admin 模块注册后重试。");
+            }
+        }
+
+        private static string BuildSystemLogAnalysisInstructions()
+        {
+            return """
+
+[System Log Analysis Mode]
+The user explicitly requested SenparcTrace analysis. Follow this evidence-driven and token-bounded workflow:
+1. Parse date and question from the command. If date is missing, use today's yyyyMMdd date.
+2. Your first tool action MUST be GetSystemLogOverview. Do not ask where the logs are or how exceptions are defined; SenparcTrace conventions are already known.
+3. Use SearchSystemLogs for focused records; request at most 30 rows per call and prefer exception/type/thread/keyword filters.
+4. Call GetSystemLogEvidence only for line numbers that are directly relevant to the conclusion, at most 6 records and 4000 characters per record unless the user explicitly asks for more.
+5. Never ask to read the entire log file and never infer from missing data.
+6. Every finding must cite date, time, line, thread and the matching tool evidence.
+7. Secrets, tokens, passwords and cookies returned by tools are already redacted; do not reconstruct or request original values.
+8. Separate observed facts, likely causes and recommended actions. Do not execute write operations.
+9. If a query returns too many rows, refine filters before loading more.
+10. For a question that can be answered by overview counts, answer directly after that tool result; do not ask clarification.
+""";
+        }
+
         private async Task<AdminChatFunctionBuild> BuildAdminChatFunctionsAsync(
             SenparcAiSetting setting,
             AgentAiHandler agentAiHandler,
@@ -1541,7 +1613,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             List<AdminChatSessionModule> modules,
             List<AdminChatSessionWorkflow> workflows,
             bool functionInvocationEnabled,
-            bool includeWorkflowManagement = false)
+            bool includeWorkflowManagement = false,
+            bool includeSystemLogFunctions = false)
         {
             var modulePlugin = new ModuleAssistantPlugin(modules);
             var aiFunctions = functionInvocationEnabled
@@ -1619,6 +1692,16 @@ namespace Senparc.Areas.Admin.Domain.Services
                                 && z.FunctionRenderAttribute?.AllowAiInvocation != false)
                     .ToList()
                 : new List<FunctionRenderBag>();
+            if (functionInvocationEnabled && includeSystemLogFunctions)
+            {
+                functionRenderBags = functionRenderBags
+                    .Concat(Senparc.Ncf.XncfBase.Register.FunctionRenderCollection
+                        .GetByRegisterType(typeof(Register))
+                        .Where(z => z.MethodInfo?.DeclaringType == typeof(SystemLogAnalysisAppService)))
+                    .GroupBy(z => z.Key)
+                    .Select(group => group.First())
+                    .ToList();
+            }
 
             var functionPluginGroups = functionRenderBags
                 .GroupBy(z => z.MethodInfo.DeclaringType)
