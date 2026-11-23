@@ -931,4 +931,6 @@
   <data name="AdminChat.Function.StartWorkflowDescription" xml:space="preserve"><value>启动当前管理员拥有的一条已保存工作流，并返回异步运行 ID。</value></data>
   <data name="AdminChat.Function.InspectWorkflow" xml:space="preserve"><value>检查工作流编辑上下文</value></data>
   <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>只读返回已脱敏的工作流图、版本和节点上下文；不会保存修改。</value></data>
+  <data name="AdminChat.Function.ApplyWorkflowEdit" xml:space="preserve"><value>应用工作流编辑</value></data>
+  <data name="AdminChat.Function.ApplyWorkflowEditDescription" xml:space="preserve"><value>使用已检查的 Revision 保存一次明确的最小 GraphJson 修改，并保留现有密钥、触发器和启用状态。</value></data>
 </root>

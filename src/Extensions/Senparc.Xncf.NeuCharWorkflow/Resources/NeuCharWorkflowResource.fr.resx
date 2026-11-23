@@ -932,4 +932,6 @@
   <data name="AdminChat.Function.StartWorkflowDescription" xml:space="preserve"><value>Démarre un Workflow enregistré appartenant à l’administrateur actuel et renvoie l’ID d’exécution asynchrone.</value></data>
   <data name="AdminChat.Function.InspectWorkflow" xml:space="preserve"><value>Examiner le contexte d’édition</value></data>
   <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>Lit le graphe masqué, la révision et les nœuds sans enregistrer de modification.</value></data>
+  <data name="AdminChat.Function.ApplyWorkflowEdit" xml:space="preserve"><value>Appliquer la modification du Workflow</value></data>
+  <data name="AdminChat.Function.ApplyWorkflowEditDescription" xml:space="preserve"><value>Enregistre une modification minimale avec la révision vérifiée tout en conservant secrets, déclencheur et état d’activation.</value></data>
 </root>

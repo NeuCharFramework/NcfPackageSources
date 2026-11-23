@@ -932,4 +932,6 @@
   <data name="AdminChat.Function.StartWorkflowDescription" xml:space="preserve"><value>Запускает сохранённый процесс текущего администратора и возвращает ID асинхронного выполнения.</value></data>
   <data name="AdminChat.Function.InspectWorkflow" xml:space="preserve"><value>Проверить контекст редактирования</value></data>
   <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>Читает замаскированный граф, ревизию и узлы без сохранения изменений.</value></data>
+  <data name="AdminChat.Function.ApplyWorkflowEdit" xml:space="preserve"><value>Применить изменение процесса</value></data>
+  <data name="AdminChat.Function.ApplyWorkflowEditDescription" xml:space="preserve"><value>Сохраняет одно явное минимальное изменение с проверенной ревизией, сохраняя секреты, триггер и состояние.</value></data>
 </root>

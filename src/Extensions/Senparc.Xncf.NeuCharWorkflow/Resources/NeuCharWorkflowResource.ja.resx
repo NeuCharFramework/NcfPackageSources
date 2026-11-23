@@ -932,4 +932,6 @@
   <data name="AdminChat.Function.StartWorkflowDescription" xml:space="preserve"><value>現在の管理者が所有する保存済み Workflow を開始し、非同期実行 ID を返します。</value></data>
   <data name="AdminChat.Function.InspectWorkflow" xml:space="preserve"><value>編集コンテキストを確認</value></data>
   <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>変更を保存せず、マスク済みグラフ、リビジョン、ノード情報を読み取ります。</value></data>
+  <data name="AdminChat.Function.ApplyWorkflowEdit" xml:space="preserve"><value>Workflow の編集を適用</value></data>
+  <data name="AdminChat.Function.ApplyWorkflowEditDescription" xml:space="preserve"><value>確認済みリビジョンで明示的な最小変更を保存し、シークレット、トリガー、有効状態を保持します。</value></data>
 </root>

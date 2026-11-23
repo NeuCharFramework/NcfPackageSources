@@ -136,6 +136,63 @@ public sealed class NeuCharWorkflowChatToolAppService(
             return logger.GetLogs();
         });
     }
+
+    [FunctionRender(
+        typeof(NeuCharWorkflowResource),
+        "AdminChat.Function.ApplyWorkflowEdit",
+        "AdminChat.Function.ApplyWorkflowEditDescription",
+        typeof(Register))]
+    public Task<StringAppResponse> ApplyWorkflowEdit(WorkflowChatApplyEditRequest request)
+    {
+        return this.GetStringResponseAsync(async (_, logger) =>
+        {
+            if (request?.WorkflowId <= 0)
+            {
+                return "WorkflowId must be greater than 0.";
+            }
+            if (string.IsNullOrWhiteSpace(request.GraphJson))
+            {
+                return "GraphJson is required.";
+            }
+            if (request.ExpectedRevision <= 0)
+            {
+                return "ExpectedRevision must come from InspectWorkflow.";
+            }
+
+            var userId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
+            var workflow = await _workflowAppService.GetDetailAsync(request.WorkflowId, userId)
+                .ConfigureAwait(false)
+                ?? throw new WorkflowNotFoundException();
+            if (workflow.Revision != request.ExpectedRevision)
+            {
+                return $"Revision conflict: expected {request.ExpectedRevision}, current {workflow.Revision}. Inspect the latest graph and retry.";
+            }
+
+            var saved = await _workflowAppService.SaveAsync(
+                    new SaveWorkflowCommand(
+                        workflow.Id,
+                        workflow.Name,
+                        workflow.Description,
+                        request.GraphJson,
+                        workflow.Enabled,
+                        workflow.TriggerType,
+                        workflow.TriggerConfigJson,
+                        workflow.AutoSaveMinutes,
+                        request.ExpectedRevision,
+                        "admin-chat-ai"),
+                    userId)
+                .ConfigureAwait(false);
+            logger.Append(JsonSerializer.Serialize(new
+            {
+                saved.Id,
+                saved.Name,
+                saved.Revision,
+                Status = "saved",
+                Instruction = "Reload the Workflow editor before making any further page edits."
+            }));
+            return logger.GetLogs();
+        });
+    }
 }
 
 public sealed class WorkflowChatSearchRequest
@@ -153,4 +210,11 @@ public sealed class WorkflowChatInspectRequest
 {
     public int WorkflowId { get; set; }
     public int MaxCharacters { get; set; } = 20_000;
+}
+
+public sealed class WorkflowChatApplyEditRequest
+{
+    public int WorkflowId { get; set; }
+    public string? GraphJson { get; set; }
+    public int ExpectedRevision { get; set; }
 }

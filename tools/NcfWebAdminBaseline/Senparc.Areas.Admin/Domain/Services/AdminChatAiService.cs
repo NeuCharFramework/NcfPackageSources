@@ -1602,8 +1602,9 @@ namespace Senparc.Areas.Admin.Domain.Services
             bool includeWorkflowManagement = false,
             IReadOnlyCollection<ChatToolDefinition> chatTools = null)
         {
+            var chatToolMode = chatTools?.Count > 0;
             var modulePlugin = new ModuleAssistantPlugin(modules);
-            var aiFunctions = functionInvocationEnabled
+            var aiFunctions = functionInvocationEnabled && !chatToolMode
                 ? agentAiHandler.GetAITools(modulePlugin)
                 : new List<AIFunction>();
 
@@ -1612,6 +1613,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 ? null
                 : await sessionService.GetSessionByIdAsync(sessionId, userId).ConfigureAwait(false);
             if (functionInvocationEnabled
+                && !chatToolMode
                 && session != null
                 && !string.IsNullOrWhiteSpace(session.WorkspaceId))
             {
@@ -1648,7 +1650,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
 
             var importedPluginNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            if (functionInvocationEnabled)
+            if (functionInvocationEnabled && !chatToolMode)
             {
                 importedPluginNames.Add("ModuleAssistant");
                 var skillCatalog = _serviceProvider.GetService<ISkillCatalog>();
@@ -1667,7 +1669,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             //Legacy comment translated to English.
             var moduleUids = modules.Where(z => !z.XncfModuleUid.IsNullOrEmpty()).Select(z => z.XncfModuleUid).ToList();
-            var functionRenderBags = functionInvocationEnabled
+            var functionRenderBags = functionInvocationEnabled && !chatToolMode
                 ? moduleUids
                     .SelectMany(uid => Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.GetByModuleUid(uid))
                     // FunctionRender is also used by the normal Admin UI. AI exposure is an
@@ -1678,21 +1680,18 @@ namespace Senparc.Areas.Admin.Domain.Services
                                 && z.FunctionRenderAttribute?.AllowAiInvocation != false)
                     .ToList()
                 : new List<FunctionRenderBag>();
-            if (functionInvocationEnabled && chatTools?.Count > 0)
+            if (functionInvocationEnabled && chatToolMode)
             {
                 var selectedFunctions = chatTools
                     .SelectMany(tool => tool.Functions)
                     .GroupBy(function => (function.DeclaringType, function.MethodName))
                     .Select(group => group.Key)
                     .ToHashSet();
-                functionRenderBags = functionRenderBags
-                    .Concat(Senparc.Ncf.XncfBase.Register.FunctionRenderCollection
+                functionRenderBags = Senparc.Ncf.XncfBase.Register.FunctionRenderCollection
                         .SelectMany(group => group.Value.Values)
                         .Where(bag => bag.MethodInfo != null
                                       && selectedFunctions.Contains(
-                                          (bag.MethodInfo.DeclaringType, bag.MethodInfo.Name))))
-                    .GroupBy(z => z.Key)
-                    .Select(group => group.First())
+                                          (bag.MethodInfo.DeclaringType, bag.MethodInfo.Name)))
                     .ToList();
             }
 
@@ -1784,7 +1783,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 }
             }
 
-            var workflowProvider = functionInvocationEnabled
+            var workflowProvider = functionInvocationEnabled && !chatToolMode
                 ? _serviceProvider.GetService<IWorkflowFunctionCallingProvider>()
                 : null;
             if (workflowProvider != null && workflows.Count > 0)
@@ -1820,7 +1819,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 }
             }
 
-            if (includeWorkflowManagement && functionInvocationEnabled)
+            if (includeWorkflowManagement && functionInvocationEnabled && !chatToolMode)
             {
                 var workflowCreationProvider = _serviceProvider.GetService<IWorkflowCreationProvider>();
                 if (workflowCreationProvider != null)

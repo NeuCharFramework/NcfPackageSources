@@ -932,4 +932,6 @@
   <data name="AdminChat.Function.StartWorkflowDescription" xml:space="preserve"><value>Inicia un flujo guardado del administrador actual y devuelve su ID de ejecución asíncrona.</value></data>
   <data name="AdminChat.Function.InspectWorkflow" xml:space="preserve"><value>Inspeccionar contexto de edición</value></data>
   <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>Lee el grafo enmascarado, la revisión y los nodos sin guardar cambios.</value></data>
+  <data name="AdminChat.Function.ApplyWorkflowEdit" xml:space="preserve"><value>Aplicar edición del flujo</value></data>
+  <data name="AdminChat.Function.ApplyWorkflowEditDescription" xml:space="preserve"><value>Guarda una edición mínima explícita con la revisión inspeccionada y conserva secretos, desencadenador y estado.</value></data>
 </root>

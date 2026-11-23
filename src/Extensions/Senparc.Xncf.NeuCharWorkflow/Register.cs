@@ -145,17 +145,24 @@ The user asked to start an existing NeuChar Workflow owned by the current admini
                     {
                         DeclaringType = typeof(NeuCharWorkflowChatToolAppService),
                         MethodName = nameof(NeuCharWorkflowChatToolAppService.InspectWorkflow)
+                    },
+                    new ChatToolFunctionDefinition
+                    {
+                        DeclaringType = typeof(NeuCharWorkflowChatToolAppService),
+                        MethodName = nameof(NeuCharWorkflowChatToolAppService.ApplyWorkflowEdit)
                     }
                 },
                 Instructions = """
 
 [Workflow Editing Assistant]
-Help the user edit an existing NeuChar Workflow. This command is read-only.
-1. Resolve the workflow by explicit --id or SearchWorkflows, then call InspectWorkflow for the selected workflow.
+Help the user edit an existing NeuChar Workflow. Only this command's explicit tools are available.
+1. Resolve the workflow by explicit --id and optional --revision, or SearchWorkflows, then call InspectWorkflow.
 2. Review the masked graph and the current revision. Never reconstruct protected parameter values.
-3. Return a concrete, minimal patch or replacement instructions tied to node IDs and edge IDs.
-4. Do not claim the graph was saved, do not call StartWorkflow, and do not ask for secrets.
-5. Warn when a proposed change requires re-running validation or may break disabled/disconnected functions.
+3. For a clear, concrete request, produce the smallest valid graph change and call ApplyWorkflowEdit with the inspected revision exactly once.
+4. If the requested change is ambiguous, or if a revision conflict occurs, stop and ask; do not create another workflow.
+5. Preserve masked secret placeholders and existing workflow identity, trigger, enabled state, variables and unrelated nodes.
+6. Never call StartWorkflow from this command. After saving, report the new revision and tell the user to reload the editor.
+7. Never ask for or synthesize credentials or external-resume secrets.
 """
             }
         };

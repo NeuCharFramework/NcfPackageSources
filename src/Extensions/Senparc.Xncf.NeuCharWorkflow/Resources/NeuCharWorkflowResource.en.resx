@@ -932,4 +932,6 @@
   <data name="AdminChat.Function.StartWorkflowDescription" xml:space="preserve"><value>Start one saved workflow owned by the current administrator and return its asynchronous run ID.</value></data>
   <data name="AdminChat.Function.InspectWorkflow" xml:space="preserve"><value>Inspect Workflow edit context</value></data>
   <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>Read the masked graph, revision, and node context without saving changes.</value></data>
+  <data name="AdminChat.Function.ApplyWorkflowEdit" xml:space="preserve"><value>Apply Workflow edit</value></data>
+  <data name="AdminChat.Function.ApplyWorkflowEditDescription" xml:space="preserve"><value>Save one explicit minimal GraphJson edit using an inspected revision while preserving secrets, trigger, and enabled state.</value></data>
 </root>

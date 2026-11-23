@@ -1126,7 +1126,7 @@ new Vue({
                     autoSaveMinutes: Number(item.autoSaveMinutes ?? 3),
                     revision: Number(item.revision || 0)
                 };
-                window.NCF_ADMIN_FOOTER_AI_INITIAL_MESSAGE = `/edit-workflow --id=${Number(item.id || id)} `;
+                window.NCF_ADMIN_FOOTER_AI_INITIAL_MESSAGE = `/edit-workflow --id=${Number(item.id || id)} --revision=${Number(item.revision || 0)} `;
                 this.observedOutputSchemas = Array.isArray(item.observedOutputSchemas)
                     ? item.observedOutputSchemas
                     : [];
@@ -3797,6 +3797,8 @@ new Vue({
         applySavedWorkflow(saved) {
             this.form.id = Number(saved.id || this.form.id || 0);
             this.form.revision = Number(saved.revision || this.form.revision || 0);
+            window.NCF_ADMIN_FOOTER_AI_INITIAL_MESSAGE =
+                `/edit-workflow --id=${this.form.id} --revision=${this.form.revision} `;
             this.form.autoSaveMinutes = Number(saved.autoSaveMinutes ?? this.form.autoSaveMinutes ?? 3);
             if (typeof saved.enabled === 'boolean') this.form.enabled = saved.enabled;
             if (saved.triggerType) this.form.triggerType = saved.triggerType;
