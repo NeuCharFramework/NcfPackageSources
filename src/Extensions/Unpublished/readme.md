@@ -1,3 +1,3 @@
-## Unpublished 文件夹说明
+## Unpublished folder
 
-当前文件夹下的所有项目暂不发布，也不需要生成 Nuget 包。
+Projects here are not published and do not produce NuGet packages.

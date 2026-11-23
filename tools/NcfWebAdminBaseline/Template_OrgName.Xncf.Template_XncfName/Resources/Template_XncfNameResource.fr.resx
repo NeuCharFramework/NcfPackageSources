@@ -125,201 +125,204 @@
   <data name="Function.Api.ExceptionHandled" xml:space="preserve">
     <value>Exception traitée : {0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.ColorDatabaseManagement" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ColorDatabaseManagement" xml:space="preserve">
     <value>Gestion de la base de données Color</value>
   </data>
-  <data name="Frontend.AdminTemplate.ExtensionModules" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ExtensionModules" xml:space="preserve">
     <value>Modules d’extension</value>
   </data>
-  <data name="Frontend.AdminTemplate.AddColor" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.AddColor" xml:space="preserve">
     <value>Ajouter une couleur</value>
   </data>
-  <data name="Frontend.AdminTemplate.Refresh" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Refresh" xml:space="preserve">
     <value>Actualiser</value>
   </data>
-  <data name="Frontend.AdminTemplate.DebugInformation" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.DebugInformation" xml:space="preserve">
     <value>Informations de débogage</value>
   </data>
-  <data name="Frontend.AdminTemplate.DebugInformationLabel" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.DebugInformationLabel" xml:space="preserve">
     <value>Informations de débogage :</value>
   </data>
-  <data name="Frontend.AdminTemplate.TableDataLength" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.TableDataLength" xml:space="preserve">
     <value>Longueur de tableData :</value>
   </data>
-  <data name="Frontend.AdminTemplate.VueInstanceOK" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.VueInstanceOK" xml:space="preserve">
     <value>Instance Vue valide :</value>
   </data>
-  <data name="Frontend.AdminTemplate.Yes" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Yes" xml:space="preserve">
     <value>Oui</value>
   </data>
-  <data name="Frontend.AdminTemplate.No" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.No" xml:space="preserve">
     <value>Non</value>
   </data>
-  <data name="Frontend.AdminTemplate.FirstItem" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.FirstItem" xml:space="preserve">
     <value>Premier élément :</value>
   </data>
-  <data name="Frontend.AdminTemplate.SimplifiedDataDisplayTest" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.SimplifiedDataDisplayTest" xml:space="preserve">
     <value>Test d'affichage simplifié des données :</value>
   </data>
-  <data name="Frontend.AdminTemplate.Time" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Time" xml:space="preserve">
     <value>Heure :</value>
   </data>
-  <data name="Frontend.AdminTemplate.NoDataToDisplay" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.NoDataToDisplay" xml:space="preserve">
     <value>Aucune donnée à afficher !</value>
   </data>
-  <data name="Frontend.AdminTemplate.RedValueR" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.RedValueR" xml:space="preserve">
     <value>Valeur du rouge (R)</value>
   </data>
-  <data name="Frontend.AdminTemplate.GreenValueG" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.GreenValueG" xml:space="preserve">
     <value>Valeur du vert (G)</value>
   </data>
-  <data name="Frontend.AdminTemplate.BlueValueB" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.BlueValueB" xml:space="preserve">
     <value>Valeur du bleu (B)</value>
   </data>
-  <data name="Frontend.AdminTemplate.ColorPreview" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ColorPreview" xml:space="preserve">
     <value>Aperçu de la couleur</value>
   </data>
-  <data name="Frontend.AdminTemplate.Created" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Created" xml:space="preserve">
     <value>Créé</value>
   </data>
-  <data name="Frontend.AdminTemplate.UpdatedAt" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.UpdatedAt" xml:space="preserve">
     <value>Mis à jour le</value>
   </data>
-  <data name="Frontend.AdminTemplate.Actions" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
-  <data name="Frontend.AdminTemplate.Edit" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Edit" xml:space="preserve">
     <value>Modifier</value>
   </data>
-  <data name="Frontend.AdminTemplate.Random" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Random" xml:space="preserve">
     <value>Aléatoire</value>
   </data>
-  <data name="Frontend.AdminTemplate.Delete" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Delete" xml:space="preserve">
     <value>Supprimer</value>
   </data>
-  <data name="Frontend.AdminTemplate.AdditionalNote" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.AdditionalNote" xml:space="preserve">
     <value>Remarque supplémentaire</value>
   </data>
-  <data name="Frontend.AdminTemplate.EnterAdditionalNotesForTheColor" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.EnterAdditionalNotesForTheColor" xml:space="preserve">
     <value>Saisissez des remarques supplémentaires sur la couleur...</value>
   </data>
-  <data name="Frontend.AdminTemplate.RandomColor" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.RandomColor" xml:space="preserve">
     <value>Couleur aléatoire</value>
   </data>
-  <data name="Frontend.AdminTemplate.Cancel" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Cancel" xml:space="preserve">
     <value>Annuler</value>
   </data>
-  <data name="Frontend.AdminTemplate.OK" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.OK" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="Frontend.AdminTemplate.EditColor" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.EditColor" xml:space="preserve">
     <value>Modifier la couleur</value>
   </data>
-  <data name="Frontend.AdminTemplate.SetTheRedValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.SetTheRedValue" xml:space="preserve">
     <value>Définissez la valeur du rouge</value>
   </data>
-  <data name="Frontend.AdminTemplate.RedValueMustBeBetweenZeroAnd255" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.RedValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>La valeur du rouge doit être comprise entre 0 et 255</value>
   </data>
-  <data name="Frontend.AdminTemplate.SetTheGreenValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.SetTheGreenValue" xml:space="preserve">
     <value>Définissez la valeur du vert</value>
   </data>
-  <data name="Frontend.AdminTemplate.GreenValueMustBeBetweenZeroAnd255" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.GreenValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>La valeur du vert doit être comprise entre 0 et 255</value>
   </data>
-  <data name="Frontend.AdminTemplate.SetTheBlueValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.SetTheBlueValue" xml:space="preserve">
     <value>Définissez la valeur du bleu</value>
   </data>
-  <data name="Frontend.AdminTemplate.BlueValueMustBeBetweenZeroAnd255" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.BlueValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>La valeur du bleu doit être comprise entre 0 et 255</value>
   </data>
-  <data name="Frontend.AdminTemplate.FailedToLoadDataValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.FailedToLoadDataValue" xml:space="preserve">
     <value>Échec du chargement des données : {0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.OperationCompleted" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.OperationCompleted" xml:space="preserve">
     <value>Opération terminée</value>
   </data>
-  <data name="Frontend.AdminTemplate.CreationFailed" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.CreationFailed" xml:space="preserve">
     <value>Échec de la création</value>
   </data>
-  <data name="Frontend.AdminTemplate.UpdateFailed" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.UpdateFailed" xml:space="preserve">
     <value>Échec de la mise à jour</value>
   </data>
-  <data name="Frontend.AdminTemplate.ThisWillPermanentlyDeleteThisColorContinue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ThisWillPermanentlyDeleteThisColorContinue" xml:space="preserve">
     <value>Cela supprimera définitivement cette couleur. Continuer ?</value>
   </data>
-  <data name="Frontend.AdminTemplate.Notice" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Notice" xml:space="preserve">
     <value>Information</value>
   </data>
-  <data name="Frontend.AdminTemplate.Confirm" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Confirm" xml:space="preserve">
     <value>Confirmer</value>
   </data>
-  <data name="Frontend.AdminTemplate.CancelAlternate" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.CancelAlternate" xml:space="preserve">
     <value>Annuler</value>
   </data>
-  <data name="Frontend.AdminTemplate.DeleteFailed" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.DeleteFailed" xml:space="preserve">
     <value>Échec de la suppression</value>
   </data>
-  <data name="Frontend.AdminTemplate.DeletionCancelled" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.DeletionCancelled" xml:space="preserve">
     <value>Suppression annulée</value>
   </data>
-  <data name="Frontend.AdminTemplate.RandomizationFailed" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.RandomizationFailed" xml:space="preserve">
     <value>Échec de la randomisation</value>
   </data>
-  <data name="Frontend.AdminTemplate.DataLoadedSuccessfully" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.DataLoadedSuccessfully" xml:space="preserve">
     <value>Données chargées</value>
   </data>
 
-  <data name="Frontend.AdminTemplate.RequestParametersCannotBeEmpty" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.RequestParametersCannotBeEmpty" xml:space="preserve">
     <value>Les paramètres de la requête ne peuvent pas être vides</value>
   </data>
-  <data name="Frontend.AdminTemplate.ColorCreatedSuccessfully" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ColorCreatedSuccessfully" xml:space="preserve">
     <value>Couleur créée</value>
   </data>
-  <data name="Frontend.AdminTemplate.FailedToCreateValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.FailedToCreateValue" xml:space="preserve">
     <value>Échec de la création : {0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.TheColorDoesNotExist" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.TheColorDoesNotExist" xml:space="preserve">
     <value>La couleur n'existe pas.</value>
   </data>
-  <data name="Frontend.AdminTemplate.ColorUpdatedSuccessfully" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ColorUpdatedSuccessfully" xml:space="preserve">
     <value>Couleur mise à jour</value>
   </data>
-  <data name="Frontend.AdminTemplate.UpdateFailedValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.UpdateFailedValue" xml:space="preserve">
     <value>Échec de la mise à jour : {0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.ColorDeletedSuccessfully" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ColorDeletedSuccessfully" xml:space="preserve">
     <value>Couleur supprimée</value>
   </data>
-  <data name="Frontend.AdminTemplate.FailedToDeleteValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.FailedToDeleteValue" xml:space="preserve">
     <value>Échec de la suppression : {0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.ColorRandomizedSuccessfully" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ColorRandomizedSuccessfully" xml:space="preserve">
     <value>Couleur aléatoire appliquée</value>
   </data>
-  <data name="Frontend.AdminTemplate.RandomizationFailedValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.RandomizationFailedValue" xml:space="preserve">
     <value>Échec de la randomisation : {0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.FailedToLoadValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.FailedToLoadValue" xml:space="preserve">
     <value>Échec du chargement : {0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.DivisorCannotBeZero" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.DivisorCannotBeZero" xml:space="preserve">
     <value>Le diviseur ne peut pas être 0 !</value>
   </data>
-  <data name="Frontend.AdminTemplate.UnknownOperatorValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.UnknownOperatorValue" xml:space="preserve">
     <value>Opérateur inconnu : {0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.ExceptionThrowTestParametersPassedValueValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ExceptionThrowTestParametersPassedValueValue" xml:space="preserve">
     <value>Test de levée d'exception, paramètres transmis : {0} {1}</value>
   </data>
-  <data name="Frontend.AdminTemplate.TheRedValueMustBeBetweenZeroAnd255" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.TheRedValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>La valeur de rouge doit être comprise entre 0 et 255</value>
   </data>
-  <data name="Frontend.AdminTemplate.TheGreenValueMustBeBetweenZeroAnd255" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.TheGreenValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>La valeur de vert doit être comprise entre 0 et 255</value>
   </data>
-  <data name="Frontend.AdminTemplate.TheBlueValueMustBeBetweenZeroAnd255" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.TheBlueValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>La valeur de bleu doit être comprise entre 0 et 255</value>
+  </data>
+  <data name="Frontend.Template_XncfName.MoreActions" xml:space="preserve">
+    <value>Plus d’actions</value>
   </data>
 
 </root>

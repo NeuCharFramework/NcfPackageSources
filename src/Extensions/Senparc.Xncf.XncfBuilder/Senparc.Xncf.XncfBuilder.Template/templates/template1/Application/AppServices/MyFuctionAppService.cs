@@ -98,7 +98,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
                         return null;
                 }
 
-                logger.Append($"进行运算：{request.Number1} {theOperator} {request.Number2} = {calcResult}");
+                logger.Append($"Calculation: {request.Number1} {theOperator} {request.Number2} = {calcResult}");
 
                 Action<int> raisePower = power =>
                 {
@@ -106,7 +106,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
                     {
                         var oldValue = calcResult;
                         calcResult = Math.Pow(calcResult, power);
-                        logger.Append($"进行{power}次方运算：{oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
+                        logger.Append($"Power {power}: {oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
                     }
                 };
 

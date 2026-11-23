@@ -11,7 +11,7 @@
     Change description: v1.1.0 Updated module behavior and related support.
 
     Modified by: Senparc - 20261119
-    Change description: v1.1.15 Updated module behavior, localization metadata, and English source comments
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 using Senparc.CO2NET;
@@ -83,7 +83,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
                         {
                             response.Success = false;
                             response.ErrorMessage = Template_XncfNameResource.Get(
-                                "Frontend.AdminTemplate.DivisorCannotBeZero",
+                                "Frontend.Template_XncfName.DivisorCannotBeZero",
                                 "The divisor cannot be zero.");
                             return null;
                         }
@@ -92,13 +92,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
                     default:
                         response.Success = false;
                         response.ErrorMessage = Template_XncfNameResource.Format(
-                            "Frontend.AdminTemplate.UnknownOperatorValue",
+                            "Frontend.Template_XncfName.UnknownOperatorValue",
                             "Unknown operator: {0}",
                             theOperator);
                         return null;
                 }
 
-                logger.Append($"进行运算：{request.Number1} {theOperator} {request.Number2} = {calcResult}");
+                logger.Append($"Calculation: {request.Number1} {theOperator} {request.Number2} = {calcResult}");
 
                 Action<int> raisePower = power =>
                 {
@@ -106,7 +106,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
                     {
                         var oldValue = calcResult;
                         calcResult = Math.Pow(calcResult, power);
-                        logger.Append($"进行{power}次方运算：{oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
+                        logger.Append($"Power {power}: {oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
                     }
                 };
 

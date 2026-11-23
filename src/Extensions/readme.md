@@ -1,4 +1,3 @@
-## 扩展包
+## Extension packages
 
-## 扩展包
-用于  [NCF（NeuCharFramework）](https://github.com/NeuCharFramework/NCF) 项目的扩展包，以 `Senparc.Xncf.`开头
+Packages that extend [NeuCharFramework (NCF)](https://github.com/NeuCharFramework/NCF). Names start with `Senparc.Xncf.`.

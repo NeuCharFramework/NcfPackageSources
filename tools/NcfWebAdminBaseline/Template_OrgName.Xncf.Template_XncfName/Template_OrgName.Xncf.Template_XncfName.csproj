@@ -69,7 +69,7 @@
         [2026-11-11] v1.1.14 Updated module behavior and related support.
         1. Updated module behavior and related support.
         2. Updated module behavior and related support.
-        [2026-11-19] v1.1.15 Updated module behavior, localization metadata, and English source comments
+        [2026-11-19] v1.1.15 Localized XNCF Builder tools and template surfaces
         1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
         2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
     </PackageReleaseNotes>

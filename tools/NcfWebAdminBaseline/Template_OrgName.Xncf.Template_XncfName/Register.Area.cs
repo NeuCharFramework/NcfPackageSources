@@ -7,7 +7,7 @@
     Created by: Senparc - 20200819
 
     Modified by: Senparc - 20261119
-    Change description: v1.1.15 Updated module behavior, localization metadata, and English source comments
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 

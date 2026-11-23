@@ -27,30 +27,30 @@ var app = new Vue({
             total: 0,
             addRules: {
                 red: [
-                    { required: true, message: '请设置红色值', trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: '红色值范围为0-255', trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheRedValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.RedValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ],
                 green: [
-                    { required: true, message: '请设置绿色值', trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: '绿色值范围为0-255', trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheGreenValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.GreenValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ],
                 blue: [
-                    { required: true, message: '请设置蓝色值', trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: '蓝色值范围为0-255', trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheBlueValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.BlueValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ]
             },
             editRules: {
                 red: [
-                    { required: true, message: '请设置红色值', trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: '红色值范围为0-255', trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheRedValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.RedValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ],
                 green: [
-                    { required: true, message: '请设置绿色值', trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: '绿色值范围为0-255', trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheGreenValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.GreenValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ],
                 blue: [
-                    { required: true, message: '请设置蓝色值', trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: '蓝色值范围为0-255', trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheBlueValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.BlueValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ]
             }
         }
@@ -102,38 +102,38 @@ var app = new Vue({
                         //Legacy comment translated to English.
                         dataList = res.data.data.data.list;
                         totalCount = res.data.data.data.totalCount || 0;
-                        dataSource = 'NCF标准格式: res.data.data.data.list';
-                        console.log('✅ 使用NCF标准格式: res.data.data.data.list');
-                        console.log('✅ List数据:', dataList);
+                        dataSource = 'NCF standard format: res.data.data.data.list';
+                        console.log('✅ UsingNCF standard format: res.data.data.data.list');
+                        console.log('✅ List data:', dataList);
                         console.log('✅ TotalCount:', totalCount);
                     } else if (res.data && res.data.data && res.data.data.list) {
                         //Legacy comment translated to English.
                         dataList = res.data.data.list;
                         totalCount = res.data.data.totalCount || 0;
-                        dataSource = '简单格式: res.data.data.list';
-                        console.log('✅ 使用简单格式: res.data.data.list');
+                        dataSource = 'simple format: res.data.data.list';
+                        console.log('✅ Usingsimple format: res.data.data.list');
                     } else if (res.data && Array.isArray(res.data)) {
                         //Legacy comment translated to English.
                         dataList = res.data;
                         totalCount = res.data.length;
-                        dataSource = '数组格式: res.data (array)';
-                        console.log('✅ 使用数组格式: res.data (array)');
+                        dataSource = 'array format: res.data (array)';
+                        console.log('✅ Usingarray format: res.data (array)');
                     } else if (res && res.list) {
                         //Legacy comment translated to English.
                         dataList = res.list;
                         totalCount = res.totalCount || 0;
-                        dataSource = '顶层格式: res.list';
-                        console.log('✅ 使用顶层格式: res.list');
+                        dataSource = 'top-level format: res.list';
+                        console.log('✅ Usingtop-level format: res.list');
                     } else {
-                        console.error('❌ 无法识别的数据格式:', res);
-                        console.log('🔍 尝试的路径:');
+                        console.error('❌ unrecognized data format:', res);
+                        console.log('🔍 Tried paths:');
                         console.log('- res.data.data.list:', res.data && res.data.data ? res.data.data.list : 'not found');
                         console.log('- res.data.list:', res.data ? res.data.list : 'not found');
                         console.log('- res.data (array):', res.data && Array.isArray(res.data) ? 'is array' : 'not array');
                         console.log('- res.list:', res.list ? res.list : 'not found');
                         dataList = [];
                         totalCount = 0;
-                        dataSource = '无法识别格式';
+                        dataSource = 'unrecognized format';
                     }
 
                     console.log('🎯 Final dataList:', dataList);
@@ -141,33 +141,33 @@ var app = new Vue({
                     console.log('🎯 Data source:', dataSource);
 
                     //Legacy comment translated to English.
-                    console.log('📋 赋值前 tableData:', this.tableData);
-                    console.log('📋 赋值前 total:', this.total);
+                    console.log('📋 before assignment tableData:', this.tableData);
+                    console.log('📋 before assignment total:', this.total);
 
                     this.tableData = dataList || [];
                     this.total = totalCount;
 
                     //Legacy comment translated to English.
-                    console.log('📋 赋值后 tableData:', this.tableData);
-                    console.log('📋 赋值后 tableData.length:', this.tableData.length);
-                    console.log('📋 赋值后 total:', this.total);
+                    console.log('📋 after assignment tableData:', this.tableData);
+                    console.log('📋 after assignment tableData.length:', this.tableData.length);
+                    console.log('📋 after assignment total:', this.total);
 
                     //Legacy comment translated to English.
                     this.$forceUpdate();
-                    console.log('🔄 Vue已强制更新');
+                    console.log('🔄 Vueforce-updated by Vue');
 
                     //Legacy comment translated to English.
                     setTimeout(() => {
-                        console.log('⏰ 延迟检查 tableData:', this.tableData);
-                        console.log('⏰ 延迟检查 tableData.length:', this.tableData ? this.tableData.length : 'null');
+                        console.log('⏰ delayed check tableData:', this.tableData);
+                        console.log('⏰ delayed check tableData.length:', this.tableData ? this.tableData.length : 'null');
                     }, 100);
 
                     this.tableLoading = false
                 })
                 .catch(error => {
-                    console.error('获取数据失败:', error);
+                    console.error('Failed to load data:', error);
                     this.tableLoading = false;
-                    this.$message.error('获取数据失败: ' + (error.message || error));
+                    this.$message.error(ncfST('Frontend.Template_XncfName.FailedToLoadDataValue', error.message || error));
                 });
         },
         addColor() {
@@ -179,7 +179,7 @@ var app = new Vue({
         async addColorSubmit() {
             this.$refs.addForm.validate(async (valid) => {
                 if (valid) {
-                    console.log('📤 发送创建请求:', {
+                    console.log('📤 Sending create request:', {
                         red: this.addForm.red,
                         green: this.addForm.green,
                         blue: this.addForm.blue,
@@ -197,12 +197,12 @@ var app = new Vue({
                         }
                     })
                         .then(res => {
-                            console.log('📥 创建响应:', res);
+                            console.log('📥 Create response:', res);
                             // support the nested response format used by the NCF framework
                             const responseData = res.data.data || res.data;
                             this.$message({
                                 type: responseData.success ? 'success' : 'error',
-                                message: responseData.message || '操作完成'
+                                message: responseData.message || ncfST('Frontend.Template_XncfName.OperationCompleted')
                             });
                             if (responseData.success) {
                                 this.getDataList()
@@ -211,8 +211,8 @@ var app = new Vue({
                             }
                         })
                         .catch(error => {
-                            console.error('创建失败:', error);
-                            this.$message.error('创建失败');
+                            console.error('Create failed:', error);
+                            this.$message.error(ncfST('Frontend.Template_XncfName.CreationFailed'));
                         });
                 } else {
                     return false;
@@ -245,7 +245,7 @@ var app = new Vue({
         async editColorSubmit() {
             this.$refs.editForm.validate(async (valid) => {
                 if (valid) {
-                    console.log('📤 发送更新请求:', {
+                    console.log('📤 Sending update request:', {
                         id: this.editForm.id,
                         red: this.editForm.red,
                         green: this.editForm.green,
@@ -265,12 +265,12 @@ var app = new Vue({
                         }
                     })
                         .then(res => {
-                            console.log('📥 更新响应:', res);
+                            console.log('📥 Update response:', res);
                             // support the nested response format used by the NCF framework
                             const responseData = res.data.data || res.data;
                             this.$message({
                                 type: responseData.success ? 'success' : 'error',
-                                message: responseData.message || '操作完成'
+                                message: responseData.message || ncfST('Frontend.Template_XncfName.OperationCompleted')
                             });
                             if (responseData.success) {
                                 this.getDataList()
@@ -279,8 +279,8 @@ var app = new Vue({
                             }
                         })
                         .catch(error => {
-                            console.error('更新失败:', error);
-                            this.$message.error('更新失败');
+                            console.error('Update failed:', error);
+                            this.$message.error(ncfST('Frontend.Template_XncfName.UpdateFailed'));
                         });
                 } else {
                     return false;
@@ -309,7 +309,7 @@ var app = new Vue({
 
                 return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
             } catch (error) {
-                console.warn('日期格式化错误:', error, '原始值:', date);
+                console.warn('Date formatting failed:', error, 'Original value:', date);
                 return date; //Legacy comment translated to English.
             }
         },
@@ -324,12 +324,12 @@ var app = new Vue({
             this.editFormDialogVisible = true;
         },
         deleteColor(row) {
-            this.$confirm('此操作将永久删除该颜色, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            this.$confirm(ncfST('Frontend.Template_XncfName.ThisWillPermanentlyDeleteThisColorContinue'), ncfST('Frontend.Template_XncfName.Notice'), {
+                confirmButtonText: ncfST('Frontend.Template_XncfName.Confirm'),
+                cancelButtonText: ncfST('Frontend.Template_XncfName.CancelAlternate'),
                 type: 'warning'
             }).then(async () => {
-                console.log('📤 发送删除请求:', { id: row.id });
+                console.log('📤 Sending delete request:', { id: row.id });
 
                 await service.post('/Admin/Template_XncfName/DatabaseSampleIndex?handler=DeleteColor', {
                     id: row.id
@@ -339,30 +339,30 @@ var app = new Vue({
                     }
                 })
                     .then(res => {
-                        console.log('📥 删除响应:', res);
+                        console.log('📥 Delete response:', res);
                         // support the nested response format used by the NCF framework
                         const responseData = res.data.data || res.data;
                         this.$message({
                             type: responseData.success ? 'success' : 'error',
-                            message: responseData.message || '操作完成'
+                            message: responseData.message || ncfST('Frontend.Template_XncfName.OperationCompleted')
                         });
                         if (responseData.success) {
                             this.getDataList();
                         }
                     })
                     .catch(error => {
-                        console.error('删除失败:', error);
-                        this.$message.error('删除失败');
+                        console.error('Delete failed:', error);
+                        this.$message.error(ncfST('Frontend.Template_XncfName.DeleteFailed'));
                     });
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消删除'
+                    message: ncfST('Frontend.Template_XncfName.DeletionCancelled')
                 });
             });
         },
         async randomizeColor(row) {
-            console.log('📤 发送随机化请求:', { id: row.id });
+            console.log('📤 Sending randomization request:', { id: row.id });
 
             await service.post('/Admin/Template_XncfName/DatabaseSampleIndex?handler=RandomizeColor', {
                 id: row.id
@@ -372,20 +372,20 @@ var app = new Vue({
                 }
             })
                 .then(res => {
-                    console.log('📥 随机化响应:', res);
+                    console.log('📥 Randomization response:', res);
                     // support the nested response format used by the NCF framework
                     const responseData = res.data.data || res.data;
                     this.$message({
                         type: responseData.success ? 'success' : 'error',
-                        message: responseData.message || '操作完成'
+                        message: responseData.message || ncfST('Frontend.Template_XncfName.OperationCompleted')
                     });
                     if (responseData.success) {
                         this.getDataList();
                     }
                 })
                 .catch(error => {
-                    console.error('随机化失败:', error);
-                    this.$message.error('随机化失败');
+                    console.error('Randomization failed:', error);
+                    this.$message.error(ncfST('Frontend.Template_XncfName.RandomizationFailed'));
                 });
         },
         randomizeForm() {
@@ -412,13 +412,13 @@ var app = new Vue({
 
             //Legacy comment translated to English.
             if (this.tableData && this.tableData.length === 0) {
-                console.log('测试：添加假数据');
+                console.log('Test: adding mock data');
                 this.tableData = [
                     {id: 999, red: 255, green: 0, blue: 0, addTime: new Date().toISOString(), lastUpdateTime: new Date().toISOString(), remark: 'test'}
                 ];
                 this.total = 1;
                 setTimeout(() => {
-                    console.log('2秒后清除假数据');
+                    console.log('2Clearing mock data after 2 seconds');
                     this.tableData = [];
                     this.total = 0;
                 }, 2000);

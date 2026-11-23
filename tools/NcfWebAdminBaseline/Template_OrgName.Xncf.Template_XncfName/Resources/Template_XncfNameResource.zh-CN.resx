@@ -125,201 +125,204 @@
   <data name="Function.Api.ExceptionHandled" xml:space="preserve">
     <value>正在处理异常，信息：{0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.ColorDatabaseManagement" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ColorDatabaseManagement" xml:space="preserve">
     <value>Color 数据库管理</value>
   </data>
-  <data name="Frontend.AdminTemplate.ExtensionModules" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ExtensionModules" xml:space="preserve">
     <value>扩展模块</value>
   </data>
-  <data name="Frontend.AdminTemplate.AddColor" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.AddColor" xml:space="preserve">
     <value>添加颜色</value>
   </data>
-  <data name="Frontend.AdminTemplate.Refresh" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Refresh" xml:space="preserve">
     <value>刷新</value>
   </data>
-  <data name="Frontend.AdminTemplate.DebugInformation" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.DebugInformation" xml:space="preserve">
     <value>调试信息</value>
   </data>
-  <data name="Frontend.AdminTemplate.DebugInformationLabel" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.DebugInformationLabel" xml:space="preserve">
     <value>调试信息：</value>
   </data>
-  <data name="Frontend.AdminTemplate.TableDataLength" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.TableDataLength" xml:space="preserve">
     <value>tableData长度:</value>
   </data>
-  <data name="Frontend.AdminTemplate.VueInstanceOK" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.VueInstanceOK" xml:space="preserve">
     <value>Vue实例是否正常:</value>
   </data>
-  <data name="Frontend.AdminTemplate.Yes" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Yes" xml:space="preserve">
     <value>是</value>
   </data>
-  <data name="Frontend.AdminTemplate.No" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.No" xml:space="preserve">
     <value>否</value>
   </data>
-  <data name="Frontend.AdminTemplate.FirstItem" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.FirstItem" xml:space="preserve">
     <value>第一条数据:</value>
   </data>
-  <data name="Frontend.AdminTemplate.SimplifiedDataDisplayTest" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.SimplifiedDataDisplayTest" xml:space="preserve">
     <value>简化数据显示测试:</value>
   </data>
-  <data name="Frontend.AdminTemplate.Time" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Time" xml:space="preserve">
     <value>时间:</value>
   </data>
-  <data name="Frontend.AdminTemplate.NoDataToDisplay" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.NoDataToDisplay" xml:space="preserve">
     <value>没有数据显示！</value>
   </data>
-  <data name="Frontend.AdminTemplate.RedValueR" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.RedValueR" xml:space="preserve">
     <value>红色值 (R)</value>
   </data>
-  <data name="Frontend.AdminTemplate.GreenValueG" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.GreenValueG" xml:space="preserve">
     <value>绿色值 (G)</value>
   </data>
-  <data name="Frontend.AdminTemplate.BlueValueB" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.BlueValueB" xml:space="preserve">
     <value>蓝色值 (B)</value>
   </data>
-  <data name="Frontend.AdminTemplate.ColorPreview" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ColorPreview" xml:space="preserve">
     <value>颜色预览</value>
   </data>
-  <data name="Frontend.AdminTemplate.Created" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Created" xml:space="preserve">
     <value>创建时间</value>
   </data>
-  <data name="Frontend.AdminTemplate.UpdatedAt" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.UpdatedAt" xml:space="preserve">
     <value>更新时间</value>
   </data>
-  <data name="Frontend.AdminTemplate.Actions" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Actions" xml:space="preserve">
     <value>操作</value>
   </data>
-  <data name="Frontend.AdminTemplate.Edit" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Edit" xml:space="preserve">
     <value>编辑</value>
   </data>
-  <data name="Frontend.AdminTemplate.Random" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Random" xml:space="preserve">
     <value>随机</value>
   </data>
-  <data name="Frontend.AdminTemplate.Delete" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Delete" xml:space="preserve">
     <value>删除</value>
   </data>
-  <data name="Frontend.AdminTemplate.AdditionalNote" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.AdditionalNote" xml:space="preserve">
     <value>附加备注</value>
   </data>
-  <data name="Frontend.AdminTemplate.EnterAdditionalNotesForTheColor" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.EnterAdditionalNotesForTheColor" xml:space="preserve">
     <value>请输入颜色的附加备注信息...</value>
   </data>
-  <data name="Frontend.AdminTemplate.RandomColor" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.RandomColor" xml:space="preserve">
     <value>随机颜色</value>
   </data>
-  <data name="Frontend.AdminTemplate.Cancel" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Cancel" xml:space="preserve">
     <value>取 消</value>
   </data>
-  <data name="Frontend.AdminTemplate.OK" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.OK" xml:space="preserve">
     <value>确 定</value>
   </data>
-  <data name="Frontend.AdminTemplate.EditColor" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.EditColor" xml:space="preserve">
     <value>编辑颜色</value>
   </data>
-  <data name="Frontend.AdminTemplate.SetTheRedValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.SetTheRedValue" xml:space="preserve">
     <value>请设置红色值</value>
   </data>
-  <data name="Frontend.AdminTemplate.RedValueMustBeBetweenZeroAnd255" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.RedValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>红色值范围为0-255</value>
   </data>
-  <data name="Frontend.AdminTemplate.SetTheGreenValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.SetTheGreenValue" xml:space="preserve">
     <value>请设置绿色值</value>
   </data>
-  <data name="Frontend.AdminTemplate.GreenValueMustBeBetweenZeroAnd255" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.GreenValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>绿色值范围为0-255</value>
   </data>
-  <data name="Frontend.AdminTemplate.SetTheBlueValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.SetTheBlueValue" xml:space="preserve">
     <value>请设置蓝色值</value>
   </data>
-  <data name="Frontend.AdminTemplate.BlueValueMustBeBetweenZeroAnd255" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.BlueValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>蓝色值范围为0-255</value>
   </data>
-  <data name="Frontend.AdminTemplate.FailedToLoadDataValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.FailedToLoadDataValue" xml:space="preserve">
     <value>获取数据失败: {0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.OperationCompleted" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.OperationCompleted" xml:space="preserve">
     <value>操作完成</value>
   </data>
-  <data name="Frontend.AdminTemplate.CreationFailed" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.CreationFailed" xml:space="preserve">
     <value>创建失败</value>
   </data>
-  <data name="Frontend.AdminTemplate.UpdateFailed" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.UpdateFailed" xml:space="preserve">
     <value>更新失败</value>
   </data>
-  <data name="Frontend.AdminTemplate.ThisWillPermanentlyDeleteThisColorContinue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ThisWillPermanentlyDeleteThisColorContinue" xml:space="preserve">
     <value>此操作将永久删除该颜色, 是否继续?</value>
   </data>
-  <data name="Frontend.AdminTemplate.Notice" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Notice" xml:space="preserve">
     <value>提示</value>
   </data>
-  <data name="Frontend.AdminTemplate.Confirm" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.Confirm" xml:space="preserve">
     <value>确定</value>
   </data>
-  <data name="Frontend.AdminTemplate.CancelAlternate" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.CancelAlternate" xml:space="preserve">
     <value>取消</value>
   </data>
-  <data name="Frontend.AdminTemplate.DeleteFailed" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.DeleteFailed" xml:space="preserve">
     <value>删除失败</value>
   </data>
-  <data name="Frontend.AdminTemplate.DeletionCancelled" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.DeletionCancelled" xml:space="preserve">
     <value>已取消删除</value>
   </data>
-  <data name="Frontend.AdminTemplate.RandomizationFailed" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.RandomizationFailed" xml:space="preserve">
     <value>随机化失败</value>
   </data>
-  <data name="Frontend.AdminTemplate.DataLoadedSuccessfully" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.DataLoadedSuccessfully" xml:space="preserve">
     <value>数据获取成功</value>
   </data>
 
-  <data name="Frontend.AdminTemplate.RequestParametersCannotBeEmpty" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.RequestParametersCannotBeEmpty" xml:space="preserve">
     <value>请求参数不能为空</value>
   </data>
-  <data name="Frontend.AdminTemplate.ColorCreatedSuccessfully" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ColorCreatedSuccessfully" xml:space="preserve">
     <value>颜色创建成功</value>
   </data>
-  <data name="Frontend.AdminTemplate.FailedToCreateValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.FailedToCreateValue" xml:space="preserve">
     <value>创建失败：{0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.TheColorDoesNotExist" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.TheColorDoesNotExist" xml:space="preserve">
     <value>颜色不存在</value>
   </data>
-  <data name="Frontend.AdminTemplate.ColorUpdatedSuccessfully" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ColorUpdatedSuccessfully" xml:space="preserve">
     <value>颜色更新成功</value>
   </data>
-  <data name="Frontend.AdminTemplate.UpdateFailedValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.UpdateFailedValue" xml:space="preserve">
     <value>更新失败：{0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.ColorDeletedSuccessfully" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ColorDeletedSuccessfully" xml:space="preserve">
     <value>颜色删除成功</value>
   </data>
-  <data name="Frontend.AdminTemplate.FailedToDeleteValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.FailedToDeleteValue" xml:space="preserve">
     <value>删除失败：{0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.ColorRandomizedSuccessfully" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ColorRandomizedSuccessfully" xml:space="preserve">
     <value>颜色随机化成功</value>
   </data>
-  <data name="Frontend.AdminTemplate.RandomizationFailedValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.RandomizationFailedValue" xml:space="preserve">
     <value>随机化失败：{0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.FailedToLoadValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.FailedToLoadValue" xml:space="preserve">
     <value>获取失败：{0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.DivisorCannotBeZero" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.DivisorCannotBeZero" xml:space="preserve">
     <value>被除数不能为0！</value>
   </data>
-  <data name="Frontend.AdminTemplate.UnknownOperatorValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.UnknownOperatorValue" xml:space="preserve">
     <value>未知的运算符：{0}</value>
   </data>
-  <data name="Frontend.AdminTemplate.ExceptionThrowTestParametersPassedValueValue" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.ExceptionThrowTestParametersPassedValueValue" xml:space="preserve">
     <value>抛出异常测试，传输参数：{0} {1}</value>
   </data>
-  <data name="Frontend.AdminTemplate.TheRedValueMustBeBetweenZeroAnd255" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.TheRedValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>红色值必须在0-255之间</value>
   </data>
-  <data name="Frontend.AdminTemplate.TheGreenValueMustBeBetweenZeroAnd255" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.TheGreenValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>绿色值必须在0-255之间</value>
   </data>
-  <data name="Frontend.AdminTemplate.TheBlueValueMustBeBetweenZeroAnd255" xml:space="preserve">
+  <data name="Frontend.Template_XncfName.TheBlueValueMustBeBetweenZeroAnd255" xml:space="preserve">
     <value>蓝色值必须在0-255之间</value>
+  </data>
+  <data name="Frontend.Template_XncfName.MoreActions" xml:space="preserve">
+    <value>更多操作</value>
   </data>
 
 </root>

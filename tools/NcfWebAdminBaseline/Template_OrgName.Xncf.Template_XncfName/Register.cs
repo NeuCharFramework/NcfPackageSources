@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
 
     Copyright (C) 2026 Senparc
 
@@ -17,7 +17,7 @@
     Change description: v1.1.14 unify XNCF Register display metadata and localization resource keys
 
     Modified by: Senparc - 20261119
-    Change description: v1.1.15 Updated module behavior, localization metadata, and English source comments
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Enums;
@@ -59,9 +59,9 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override string Name => "Template_OrgName.Xncf.Template_XncfName";
 
-        public override string Uid => "C5852057-BF1D-492B-A22E-64F3C5F91D38";//Legacy comment translated to English.
+        public override string Uid => "Template_Guid";//Legacy comment translated to English.
 
-        public override string Version => "1.0.0";//the version number is required
+        public override string Version => "Template_Version";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
