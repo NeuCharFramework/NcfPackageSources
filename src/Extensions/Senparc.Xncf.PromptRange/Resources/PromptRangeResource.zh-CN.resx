@@ -916,9 +916,6 @@
   <data name="Frontend.PromptRange.OrganizationID" xml:space="preserve">
     <value>Organization Id</value>
   </data>
-  <data name="Frontend.PromptRange.EnterOrganizationID" xml:space="preserve">
-    <value>请输入Organization Id</value>
-  </data>
   <data name="Frontend.PromptRange.Temperature" xml:space="preserve">
     <value>Temperature</value>
   </data>

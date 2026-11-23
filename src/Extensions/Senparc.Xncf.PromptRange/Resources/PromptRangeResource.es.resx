@@ -652,7 +652,6 @@ Nuevo Prompt: {0}</value></data>
   <data name="Frontend.PromptRange.Endpoint" xml:space="preserve"><value>Endpoint</value></data>
   <data name="Frontend.PromptRange.EnterAnEndpoint" xml:space="preserve"><value>Introduzca un Endpoint</value></data>
   <data name="Frontend.PromptRange.OrganizationID" xml:space="preserve"><value>ID de organización</value></data>
-  <data name="Frontend.PromptRange.EnterOrganizationID" xml:space="preserve"><value>Ingrese el ID de la organización</value></data>
   <data name="Frontend.PromptRange.Temperature" xml:space="preserve"><value>Temperatura</value></data>
   <data name="Frontend.PromptRange.MaxTokenCount" xml:space="preserve"><value>Número máximo de Token</value></data>
   <data name="Frontend.PromptRange.TopPSamplingValue" xml:space="preserve"><value>Valor de muestreo Top P</value></data>

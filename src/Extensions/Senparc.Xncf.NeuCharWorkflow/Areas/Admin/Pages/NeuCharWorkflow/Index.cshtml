@@ -1311,7 +1311,7 @@
                                                                       :edit-label="ncfST('Frontend.NeuCharWorkflow.EditFormula')"
                                                                       :placeholder="ncfST('Frontend.NeuCharWorkflow.ForExampleValueItems')"
                                                                       @@edit-template="openNodeTemplateEditor(selectedNode,'outputTemplate',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.AggregateOutput'),allowBindings:false})"></workflow-rich-text-input>
-                                            <p v-pre class="node-config-help">{{ ncfST('Frontend.NeuCharWorkflow.MustBeConfigured') }} <code>{{input}}</code> {{ ncfST('Frontend.NeuCharWorkflow.KeepTheAggregateArray') }} <code>{{= length(input) }}</code>、<code>{{= join(input, '，') }}</code> {{ ncfST('Frontend.NeuCharWorkflow.AndSimilarRestrictedExpressionsArbitraryJavaScriptIsNotExecuted') }}</p>
+                                            <p class="node-config-help">{{ ncfST('Frontend.NeuCharWorkflow.MustBeConfigured') }} <code v-pre>{{input}}</code> {{ ncfST('Frontend.NeuCharWorkflow.KeepTheAggregateArray') }} <code v-pre>{{= length(input) }}</code>、<code v-pre>{{= join(input, '，') }}</code> {{ ncfST('Frontend.NeuCharWorkflow.AndSimilarRestrictedExpressionsArbitraryJavaScriptIsNotExecuted') }}</p>
                                         </el-form-item>
                                         <el-alert :title="ncfST('Frontend.NeuCharWorkflow.AggregateWaitsForAllActivatedUpstreamBranchesToFinishAggregatesThemBy')" type="info" :closable="false"></el-alert>
                                     </template>
@@ -1341,7 +1341,6 @@
                                                                       :help-text="ncfST('Frontend.NeuCharWorkflow.PrintTheCurrentInputThisOnlyAffectsConsoleDisplayTheNodeStill')"
                                                                       placeholder="{{input}}"
                                                                       @@edit-template="openNodeTemplateEditor(selectedNode,'printTemplate',{fieldLabel:ncfST('Frontend.NeuCharWorkflow.ConsoleOutputContent')})"></workflow-rich-text-input>
-                                            <p v-pre class="node-config-help">{{ ncfST('Frontend.NeuCharWorkflow.PrintTheCurrentInputThisOnlyAffectsConsoleDisplayTheNodeStill') }}</p>
                                         </el-form-item>
                                         <el-alert :title="ncfST('Frontend.NeuCharWorkflow.WhenThisNodeRunsItPrintsTheContentUsingTheTemplateAbove')" type="info" :closable="false"></el-alert>
                                     </template>

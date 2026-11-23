@@ -652,7 +652,6 @@
   <data name="Frontend.PromptRange.Endpoint" xml:space="preserve"><value>Конечная точка</value></data>
   <data name="Frontend.PromptRange.EnterAnEndpoint" xml:space="preserve"><value>Введите Endpoint</value></data>
   <data name="Frontend.PromptRange.OrganizationID" xml:space="preserve"><value>ID организации</value></data>
-  <data name="Frontend.PromptRange.EnterOrganizationID" xml:space="preserve"><value>Введите ID организации</value></data>
   <data name="Frontend.PromptRange.Temperature" xml:space="preserve"><value>Температура</value></data>
   <data name="Frontend.PromptRange.MaxTokenCount" xml:space="preserve"><value>Максимальное число Token</value></data>
   <data name="Frontend.PromptRange.TopPSamplingValue" xml:space="preserve"><value>Значение выборки Top P</value></data>

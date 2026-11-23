@@ -9,6 +9,25 @@ This skill guides the complete process of creating the `Developer-Multi-Language
 
 ---
 
+## NCF/XNCF runtime localization rule
+
+Do not confuse source/document translation with runtime UI localization.
+
+When creating or maintaining an NCF/XNCF module, all user-facing text must use the module's `.resx` resources:
+
+- Keep `<ModuleName>Resource.cs` and seven synchronized resource files: the neutral resource, `zh-CN`, `en`, `es`, `fr`, `ja`, and `ru`.
+- Treat Chinese as the source language. Put Chinese in both the neutral and `zh-CN` resources, and provide the corresponding translation in every other culture.
+- Add, rename, or delete the same key in all seven files in one change. Never leave an untranslated duplicate language or omit a culture.
+- Resolve text through `IStringLocalizer<<ModuleName>Resource>`, the module's existing `ResourceStringLocalizer` helper, or the established Function/Razor resource metadata pattern.
+- Frontend JavaScript text must use the module's resource catalog and a uniquely named localization partial; do not add runtime literals to scripts.
+- Preserve format placeholders such as `{0}` and `{1:F2}`, escapes, and the `||` parameter-name/help separator exactly. Do not translate protocol values, route/model/enum names, persisted values, URLs, or user data.
+- Do not add a new supported culture globally for an ordinary module edit. Only update `NcfLocalizationOptions.SupportedCultures` when a language is intentionally being added to NCF itself.
+- Verify key-set equality across all seven files, no new hard-coded UI text, and successful lookup in Chinese plus at least one non-Chinese culture.
+
+The repository's detailed XNCF rule is maintained in [develop-and-maintain.md](../../../skills/develop-xncf-modules/references/develop-and-maintain.md#本地化). Follow it for runtime localization work rather than translating runtime string literals in place.
+
+---
+
 ## Phase 0: Branch Setup
 
 Before any translation work begins:
@@ -47,6 +66,7 @@ Before any translation work begins:
 - Translate comment content from Chinese to natural, idiomatic English.
 - Preserve all code logic, formatting, indentation, and comment markers exactly.
 - Do **not** alter any code, variable names, string values used at runtime, or file structure.
+- If a runtime user-facing string is hard-coded, move it to the module resource workflow above instead of translating it in place.
 - Do **not** modify `.csproj` or any other config/project metadata files.
 - If a comment is already in English (or another language), leave it unchanged.
 
@@ -136,6 +156,7 @@ Use the following prefixes for all commits in this workflow:
 
 - **Never** modify `.csproj`, `.json`, `.xml`, `.yaml`, `.yml` configuration files for translation purposes.
 - **Never** change runtime string values, enum names, method names, variable names, or any logic.
+- **Never** treat the neutral or `zh-CN` `.resx` file alone as a complete runtime localization change; all seven module resource files must remain synchronized.
 - **Never** remove the `.cn.md` Chinese backup files — they are permanent parallel files.
 - **Always** commit after completing each module or document group rather than batching everything into one large commit.
 - **Always** run a compilation check after translating any `.cs` files to catch accidental syntax corruption early.

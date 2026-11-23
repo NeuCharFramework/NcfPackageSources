@@ -20,7 +20,7 @@ description: Add and maintain NeuCharFramework XNCF use cases, entities, EF migr
 2. 在 `Application/AppServices` 编排用例，输入输出放在 `Application/DTOs`。AppService 继承 `AppServiceBase`，返回 `GetResponseAsync` 或 `GetStringResponseAsync`。
 3. 有数据库变更时，为宿主已经引用的 `Senparc.Ncf.Database.*` 提供者生成迁移。`dotnet ef` 的启动项目是该站点的 `Senparc.Web.csproj`。
 4. 页面、Function、动态 WebApi 只做适配。Areas 不直接访问仓储或 `DbContext`。只有必须手写 HTTP 形状时才在 `OHS/Local` 或 `OHS/Remote` 加 Controller。
-5. 在 `AddXncfModule` 注册服务。菜单、权限和首页放在 `Register.Area.cs`。用户可见文案进入模块资源，不写死在页面或特性里。
+5. 在 `AddXncfModule` 注册服务。菜单、权限和首页放在 `Register.Area.cs`。用户可见文案进入模块资源，不写死在 C#、Razor、JavaScript、HTML 属性或特性参数里。修改或删除一个资源键时，同时修改默认、`zh-CN`、`en`、`es`、`fr`、`ja`、`ru` 七个文件；中文为基准，保留格式占位符和 `||` 参数分隔符。执行细则见 [develop-and-maintain.md](../develop-xncf-modules/references/develop-and-maintain.md#本地化)。
 6. 为不变量和用例补最低层的测试。注册、路由、迁移、授权或 EventBus 有变化时再补宿主侧验证。
 
 ## 必须守住的行为
@@ -33,7 +33,7 @@ description: Add and maintain NeuCharFramework XNCF use cases, entities, EF migr
 
 ## 验证
 
-先编译被改的模块和它的测试项目，再编译宿主。数据库形状变了就检查六个迁移目录都有同一次变更。界面变了就检查资源键在默认、`zh-CN`、`en`、`es`、`fr`、`ja`、`ru` 资源里都存在。
+先编译被改的模块和它的测试项目，再编译宿主。数据库形状变了就检查六个迁移目录都有同一次变更。界面变了就检查七个资源文件的键集合完全一致、没有新增用户可见硬编码，并验证中文和至少一种非中文文化的读取及带参数格式化。不要把“能编译”当成本地化完整或语言切换正常。
 
 ```bash
 python3 skills/develop-xncf-modules/scripts/inspect_xncf.py <NCF站点根> --module <项目名> --layers

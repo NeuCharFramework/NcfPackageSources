@@ -652,7 +652,6 @@
   <data name="Frontend.PromptRange.Endpoint" xml:space="preserve"><value>エンドポイント</value></data>
   <data name="Frontend.PromptRange.EnterAnEndpoint" xml:space="preserve"><value>Endpointを入力</value></data>
   <data name="Frontend.PromptRange.OrganizationID" xml:space="preserve"><value>組織 ID</value></data>
-  <data name="Frontend.PromptRange.EnterOrganizationID" xml:space="preserve"><value>組織 ID を入力</value></data>
   <data name="Frontend.PromptRange.Temperature" xml:space="preserve"><value>温度</value></data>
   <data name="Frontend.PromptRange.MaxTokenCount" xml:space="preserve"><value>Tokenの最大数</value></data>
   <data name="Frontend.PromptRange.TopPSamplingValue" xml:space="preserve"><value>Top P サンプリング値</value></data>

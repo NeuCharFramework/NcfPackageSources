@@ -17,6 +17,8 @@ description: Route NeuCharFramework XNCF work across creation, integration, feat
 
 设计判断读 [references/architecture.md](references/architecture.md)。拆分、合并、上下文地图读 [references/bounded-context-splitting.md](references/bounded-context-splitting.md)。验证证据的边界读 [references/creation-and-validation.md](references/creation-and-validation.md)。
 
+无论创建还是维护，用户可见文案统一按 [references/develop-and-maintain.md](references/develop-and-maintain.md#本地化) 的资源编辑规则执行：使用模块资源类，不在 C#、Razor、JavaScript 或特性中硬编码；同步维护七个资源文件并验证键集合一致。
+
 ## 先定边界，再定项目
 
 一个 XNCF 对应一组共享语言、不变量、数据所有者和发布节奏的能力。页面、表、控制器、目录大小都不是拆分理由。一个聚合的写事务只属于一个 XNCF。

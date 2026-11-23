@@ -650,7 +650,6 @@
   <data name="Frontend.PromptRange.Endpoint" xml:space="preserve"><value>Endpoint</value></data>
   <data name="Frontend.PromptRange.EnterAnEndpoint" xml:space="preserve"><value>Enter an Endpoint</value></data>
   <data name="Frontend.PromptRange.OrganizationID" xml:space="preserve"><value>Organization ID</value></data>
-  <data name="Frontend.PromptRange.EnterOrganizationID" xml:space="preserve"><value>Enter organization ID</value></data>
   <data name="Frontend.PromptRange.Temperature" xml:space="preserve"><value>Temperature</value></data>
   <data name="Frontend.PromptRange.MaxTokenCount" xml:space="preserve"><value>Max Token count</value></data>
   <data name="Frontend.PromptRange.TopPSamplingValue" xml:space="preserve"><value>Top P sampling value</value></data>

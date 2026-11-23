@@ -71,6 +71,7 @@ rg -n "Template_|WrongGuid" <新项目目录> -g '!**/bin/**' -g '!**/obj/**'
 2. 打开数据库时替换 Color 示例，包括种子数据、死菜单和卸载删表演示。
 3. 把指向站点外部的 `ProjectReference` 改成 JSON 里 `packages` 的 `PackageReference`。删掉不存在的 `OutputPath` 和图标路径。
 4. 把项目加入宿主解决方案的 `XncfModules`，并 `dotnet add` 到 `host.webProject`。
+5. 保留模板生成的 `<模块名>Resource.cs` 和默认、`zh-CN`、`en`、`es`、`fr`、`ja`、`ru` 七个 `.resx` 文件。模块元数据、菜单、Function、页面和脚本中的用户可见文案必须使用这些资源，不能在清理模板时改回硬编码。具体规则见 [develop-and-maintain.md](../develop-xncf-modules/references/develop-and-maintain.md#本地化)。
 
 ## 5. 验证
 
@@ -81,3 +82,5 @@ dotnet build <host.webProject> --no-restore
 ```
 
 报告要分开写：模板包安装、项目生成、包引用修正、模块编译、宿主编译。生成成功不等于模块已在站点里安装，也不等于迁移已执行。
+
+本地化另行验证：七个资源文件的键集合一致，模块名称、菜单和 Function 元数据至少能在中文与英文环境读取；新增脚本文案时验证该模块专属 localization partial 已被 Razor 编译。
