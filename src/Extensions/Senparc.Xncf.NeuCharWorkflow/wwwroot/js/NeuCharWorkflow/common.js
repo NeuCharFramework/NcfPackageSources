@@ -165,6 +165,38 @@
         });
     }
 
+    function openPage(url, title) {
+        const target = String(url || '').trim();
+        if (!target) return false;
+        if (global !== global.top && typeof global.ncfOpenAdminPage === 'function') {
+            if (global.ncfOpenAdminPage(target, title)) return true;
+        }
+        global.location.assign(target);
+        return true;
+    }
+
+    function setPageTitle(title) {
+        const normalized = String(title || '').replace(/\s+/g, ' ').trim();
+        if (!normalized) return false;
+        if (global.document) global.document.title = normalized;
+        if (global !== global.top && typeof global.ncfSetAdminPageTitle === 'function') {
+            global.ncfSetAdminPageTitle(normalized);
+        }
+        return true;
+    }
+
+    function returnToSource(fallbackUrl) {
+        if (global !== global.top && typeof global.ncfReturnToAdminPageSource === 'function' &&
+            global.ncfReturnToAdminPageSource()) {
+            return true;
+        }
+        if (fallbackUrl) {
+            openPage(fallbackUrl);
+            return true;
+        }
+        return false;
+    }
+
     global.NeuCharWorkflowUi = Object.freeze({
         parseJson,
         unwrap,
@@ -172,6 +204,9 @@
         createParameterValues,
         defaultParameterValue,
         firstMissingRequired,
-        sanitizeHtml
+        sanitizeHtml,
+        openPage,
+        setPageTitle,
+        returnToSource
     });
 })(window);

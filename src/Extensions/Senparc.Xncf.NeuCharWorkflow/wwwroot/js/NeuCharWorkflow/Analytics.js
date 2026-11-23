@@ -155,23 +155,31 @@ new Vue({
         openRun(run) {
             if (!run || !run.workflowId) return;
             if (run.status === 'running' && run.runId) {
-                window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${encodeURIComponent(run.workflowId)}&runId=${encodeURIComponent(run.runId)}`);
+                NeuCharWorkflowUi.openPage(
+                    `/Admin/NeuCharWorkflow/Index?workflowId=${encodeURIComponent(run.workflowId)}&runId=${encodeURIComponent(run.runId)}`,
+                    ncfST('Frontend.NeuCharWorkflow.Workflow'));
                 return;
             }
             if (run.executionLogId && run.replayAvailable) {
-                window.location.assign(`/Admin/NeuCharWorkflow/Replay?executionLogId=${encodeURIComponent(run.executionLogId)}`);
+                NeuCharWorkflowUi.openPage(
+                    `/Admin/NeuCharWorkflow/Replay?executionLogId=${encodeURIComponent(run.executionLogId)}`,
+                    ncfST('Frontend.NeuCharWorkflow.RunReplay'));
                 return;
             }
             this.openTasks();
         },
         openTasks() {
             const params = this.taskQuery();
-            window.location.assign(`/Admin/NeuCharWorkflow/Tasks${params.toString() ? `?${params.toString()}` : ''}`);
+            NeuCharWorkflowUi.openPage(
+                `/Admin/NeuCharWorkflow/Tasks${params.toString() ? `?${params.toString()}` : ''}`,
+                ncfST('Frontend.NeuCharWorkflow.WorkflowTaskList'));
         },
         openWorkflow(workflowId) {
             const id = Number(workflowId || 0);
             if (!Number.isInteger(id) || id <= 0) return;
-            window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${encodeURIComponent(id)}`);
+            NeuCharWorkflowUi.openPage(
+                `/Admin/NeuCharWorkflow/Index?workflowId=${encodeURIComponent(id)}`,
+                ncfST('Frontend.NeuCharWorkflow.Workflow'));
         },
         taskQuery() {
             const params = new URLSearchParams();

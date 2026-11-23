@@ -631,6 +631,7 @@ new Vue({
     },
     watch: {
         'form.autoSaveMinutes'() { this.scheduleAutoSave(); },
+        'form.name'() { this.updateWorkflowPageTitle(); },
         listCollapsed() { this.refreshCanvasViewport(); },
         paletteCollapsed() { this.refreshCanvasViewportAfterPaneTransition(); },
         inspectorCollapsed() { this.refreshCanvasViewportAfterPaneTransition(); }
@@ -965,13 +966,14 @@ new Vue({
             if (!Number.isInteger(workflowId) || workflowId <= 0) return;
 
             try {
-                await this.editWorkflow(workflowId);
+                await this.editWorkflow(workflowId, { runId });
                 if (Number(this.form.id) !== workflowId || !runId) return;
                 this.run.consoleOpen = true;
                 this.run.runId = runId;
                 this.run.running = true;
                 this.run.status = 'running';
                 this.run.lastSequence = 0;
+                this.syncWorkflowRoute(this.form.id, this.run.runId);
                 this.pollRun();
             } catch (error) {
                 this.$notify({ title: ncfWorkflowText('Frontend.NeuCharWorkflow.UnableToOpenTask'), message: this.errorMessage(error, ncfWorkflowText('Frontend.NeuCharWorkflow.TheTaskOrWorkflowNoLongerExists')), type: 'warning' });
@@ -981,20 +983,23 @@ new Vue({
             const id = Number(workflowId || 0);
             if (!Number.isInteger(id) || id <= 0) return;
             const url = '/Admin/NeuCharWorkflow/Index?workflowId=' + encodeURIComponent(id);
-            const viewer = window.open(url, '_blank', 'noopener,noreferrer');
-            if (viewer) viewer.opener = null;
+            NeuCharWorkflowUi.openPage(url, ncfWorkflowText('Frontend.NeuCharWorkflow.Workflow'));
         },
         openWorkflowTasks(status) {
             const workflowId = Number(this.form && this.form.id || 0);
             if (!Number.isInteger(workflowId) || workflowId <= 0) return;
             const query = new URLSearchParams({ workflowId: String(workflowId) });
             if (status) query.set('status', status);
-            window.location.assign(`/Admin/NeuCharWorkflow/Tasks?${query.toString()}`);
+            NeuCharWorkflowUi.openPage(
+                `/Admin/NeuCharWorkflow/Tasks?${query.toString()}`,
+                ncfWorkflowText('Frontend.NeuCharWorkflow.WorkflowTaskList'));
         },
         openWorkflowAnalytics() {
             const workflowId = Number(this.form && this.form.id || 0);
             if (!Number.isInteger(workflowId) || workflowId <= 0) return;
-            window.location.assign(`/Admin/NeuCharWorkflow/Analytics?workflowId=${encodeURIComponent(workflowId)}`);
+            NeuCharWorkflowUi.openPage(
+                `/Admin/NeuCharWorkflow/Analytics?workflowId=${encodeURIComponent(workflowId)}`,
+                ncfWorkflowText('Frontend.NeuCharWorkflow.WorkflowAnalytics'));
         },
         exportWorkflow(format) {
             const workflowId = Number(this.form && this.form.id || 0);
@@ -1058,12 +1063,15 @@ new Vue({
             if (!Number.isInteger(chatTaskId) || chatTaskId <= 0) return;
             const query = new URLSearchParams({ tab: 'second', taskId: String(chatTaskId) });
             if (Number.isInteger(chatGroupId) && chatGroupId > 0) query.set('groupId', String(chatGroupId));
-            const viewer = window.open(`/Admin/AgentsManager/Index#${query.toString()}`, '_blank', 'noopener,noreferrer');
-            if (viewer) viewer.opener = null;
+            NeuCharWorkflowUi.openPage(
+                `/Admin/AgentsManager/Index#${query.toString()}`,
+                ncfWorkflowText('Frontend.NeuCharWorkflow.ViewAgentGroupConversation'));
         },
         async createWorkflow() {
             if (this.editingLocked || this.saveState.saving || !await this.confirmDiscardChanges(ncfWorkflowText('Frontend.NeuCharWorkflow.NewWorkflow'))) return;
             this.form = this.emptyForm();
+            this.syncWorkflowRoute();
+            this.updateWorkflowPageTitle();
             this.observedOutputSchemas = [];
             this.editing = true;
             this.workflowSettingsVisible = false;
@@ -1077,7 +1085,7 @@ new Vue({
             this.syncTriggerNode();
             this.$nextTick(this.autoLayout);
         },
-        async editWorkflow(id) {
+        async editWorkflow(id, routeOptions) {
             if (this.editingLocked || this.saveState.saving || Number(id) === Number(this.form.id)) return;
             if (!await this.confirmDiscardChanges(ncfWorkflowText('Frontend.NeuCharWorkflow.Workflow'))) return;
             this.workflowSettingsVisible = false;
@@ -1138,6 +1146,8 @@ new Vue({
                 this.closeEdgeInsertMenu();
                 this.resetRunState();
                 this.markSaved();
+                this.syncWorkflowRoute(item.id || id, routeOptions && routeOptions.runId);
+                this.updateWorkflowPageTitle();
                 this.$nextTick(() => {
                     if (graph.nodes.length > 1 && graph.nodes.every(node => Number(node.x) === 0)) {
                         this.autoLayout();
@@ -3826,6 +3836,21 @@ new Vue({
                 this.form.graph = graph;
             }
             this.markSaved();
+            this.syncWorkflowRoute(this.form.id);
+            this.updateWorkflowPageTitle();
+        },
+        syncWorkflowRoute(workflowId, runId) {
+            const url = new URL(window.location.href);
+            if (Number(workflowId) > 0) url.searchParams.set('workflowId', String(workflowId));
+            else url.searchParams.delete('workflowId');
+            if (runId) url.searchParams.set('runId', String(runId));
+            else url.searchParams.delete('runId');
+            window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
+        },
+        updateWorkflowPageTitle() {
+            const workflowName = String(this.form && this.form.name || '').trim();
+            const pageName = ncfWorkflowText('Frontend.NeuCharWorkflow.Workflow');
+            NeuCharWorkflowUi.setPageTitle(workflowName ? `${pageName} · ${workflowName}` : pageName);
         },
         async saveWorkflow(options) {
             options = options || {};
@@ -3958,12 +3983,14 @@ new Vue({
                 this.run.running = false;
                 this.run.aborting = false;
                 this.run.status = snapshot.succeeded ? 'success' : 'failed';
+                this.syncWorkflowRoute(this.form.id);
                 this.run.finalOutput = snapshot.finalOutput || '';
                 this.run.error = snapshot.errorMessage || '';
                 this.appendConsole('workflow', snapshot.succeeded ? ncfWorkflowText('Frontend.NeuCharWorkflow.WorkflowRunCompleted') : (snapshot.errorMessage || ncfWorkflowText('Frontend.NeuCharWorkflow.WorkflowRunFailed')), snapshot.succeeded ? 'success' : 'failed', snapshot.finalOutput);
             } catch (error) {
                 this.run.running = false; this.run.aborting = false; this.run.status = 'failed';
                 this.run.error = this.errorMessage(error, ncfWorkflowText('Frontend.NeuCharWorkflow.FailedToReadRunStatus'));
+                this.syncWorkflowRoute(this.form.id);
                 this.appendConsole('workflow', this.run.error, 'failed');
             }
         },
@@ -4098,7 +4125,11 @@ new Vue({
                 return;
             }
             if (action === 'tasks') {
-                if (await this.confirmDiscardChanges(ncfWorkflowText('Frontend.NeuCharWorkflow.WorkflowTaskList'))) window.location.assign('/Admin/NeuCharWorkflow/Tasks');
+                if (await this.confirmDiscardChanges(ncfWorkflowText('Frontend.NeuCharWorkflow.WorkflowTaskList'))) {
+                    NeuCharWorkflowUi.openPage(
+                        '/Admin/NeuCharWorkflow/Tasks',
+                        ncfWorkflowText('Frontend.NeuCharWorkflow.WorkflowTaskList'));
+                }
                 return;
             }
             if (action !== 'delete' || !this.form.id || this.editingLocked || this.saveState.saving) return;
@@ -4120,6 +4151,8 @@ new Vue({
             if (!this.form.id || this.editingLocked || this.saveState.saving) return;
             await service.post('/Admin/NeuCharWorkflow/Index?handler=Delete', { id: this.form.id }, { customAlert: true });
             this.form = this.emptyForm(); this.observedOutputSchemas = []; this.editing = false; this.resetSaveState(); this.resetRunState(); await this.refreshWorkflowList();
+            this.syncWorkflowRoute();
+            this.updateWorkflowPageTitle();
         }
     }
 });

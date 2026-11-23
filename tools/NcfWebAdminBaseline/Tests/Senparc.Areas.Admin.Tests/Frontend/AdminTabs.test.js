@@ -155,11 +155,11 @@ test('刷新后保留 XNCF 标签的模块上下文和 accent 色', function () 
     assert.equal(tab.accentColor, tabs.accentColorFromUid('sandbox'));
 });
 
-test('直接链接先使用短路径标题，加载后可用页面 title 替换，菜单标题保持优先', function () {
+test('直接链接保留明确标题，加载后可替换；菜单标题默认保持优先', function () {
     let state = initial();
     state = tabs.openTab(state, '/Admin/NeuCharWorkflow/Index?uid=workflow', 'Go to NeuChar Workflow home', null, 20, shellHref).state;
     let tab = state.tabs.find(function (item) { return !item.isShell; });
-    assert.equal(tab.title, 'Index');
+    assert.equal(tab.title, 'Go to NeuChar Workflow home');
     const titled = tabs.updateTabPageTitle(state, tab.id, 'NeuChar Workflow');
     assert.equal(titled.changed, true);
     assert.equal(titled.tab.title, 'NeuChar Workflow');
@@ -169,6 +169,21 @@ test('直接链接先使用短路径标题，加载后可用页面 title 替换�
     const menuTitled = tabs.updateTabPageTitle(state, tab.id, 'PromptRange Prompt');
     assert.equal(menuTitled.changed, false);
     assert.equal(menuTitled.tab.title, 'Prompt page');
+});
+
+test('页面可主动覆盖菜单标题以展示当前业务对象', function () {
+    const state = tabs.openTab(
+        initial(),
+        '/Admin/NeuCharWorkflow/Index?uid=workflow',
+        'Workflow',
+        42,
+        20,
+        shellHref).state;
+    const tab = state.tabs.find(function (item) { return !item.isShell; });
+    const titled = tabs.updateTabPageTitle(state, tab.id, 'Workflow · 发布审批', true);
+    assert.equal(titled.changed, true);
+    assert.equal(titled.tab.title, 'Workflow · 发布审批');
+    assert.equal(titled.tab.titleSource, 'page');
 });
 
 test('新标签记录来源标签，并可以返回来源', function () {
@@ -269,6 +284,31 @@ test('刷新时带会话锚点会回到原来的 AdminChat 标签', function () 
     assert.equal(chats[0].frameUrl.includes('#session-15'), true);
     assert.equal(chats[0].frameUrl.includes('embedded=1'), true);
     assert.equal(tabs.shellAddress(chats[0]), '/Admin/Index?ncfShell=1#/Admin/AdminChat/Chat?mode=1&sessionId=15#session-15');
+});
+
+test('Workflow 当前设计器地址刷新后仍恢复选中的工作流', function () {
+    let state = tabs.openTab(
+        initial(),
+        '/Admin/NeuCharWorkflow/Index',
+        'Workflow',
+        42,
+        20,
+        shellHref).state;
+    const live = 'http://localhost:5080/Admin/NeuCharWorkflow/Index?embedded=1&ncfTab=1&workflowId=27';
+    const remembered = tabs.rememberTabAddress(state, live, live);
+    assert.equal(remembered.changed, true);
+    assert.equal(
+        tabs.shellAddress(remembered.tab),
+        '/Admin/Index?ncfShell=1#/Admin/NeuCharWorkflow/Index?workflowId=27');
+
+    state = initial({
+        storedTabs: remembered.state.tabs,
+        activeId: remembered.tab.id,
+        openUrl: '/Admin/NeuCharWorkflow/Index?workflowId=27'
+    });
+    const workflow = state.tabs.find(function (tab) { return !tab.isShell; });
+    assert.equal(state.activeId, workflow.id);
+    assert.equal(workflow.frameUrl.includes('workflowId=27'), true);
 });
 
 test('超出上限时关闭最早且不是当前、也不是首页的标签', function () {

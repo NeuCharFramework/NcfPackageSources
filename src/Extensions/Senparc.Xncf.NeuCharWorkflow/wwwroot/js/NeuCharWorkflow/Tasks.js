@@ -236,14 +236,18 @@ new Vue({
                     this.$message.warning(ncfST('Frontend.NeuCharWorkflow.ThisRunHasNoLiveRunIdentifierPossiblyLeftByAnExited'));
                     return;
                 }
-                window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${encodeURIComponent(task.workflowId)}&runId=${encodeURIComponent(task.runId)}`);
+                NeuCharWorkflowUi.openPage(
+                    `/Admin/NeuCharWorkflow/Index?workflowId=${encodeURIComponent(task.workflowId)}&runId=${encodeURIComponent(task.runId)}`,
+                    ncfST('Frontend.NeuCharWorkflow.Workflow'));
                 return;
             }
             if (!task.replayAvailable || !task.executionLogId) {
                 this.$message.warning(ncfST('Frontend.NeuCharWorkflow.ThisTaskHasNoAvailableRunSnapshotItMayPredateReplaySupport'));
                 return;
             }
-            window.location.assign(`/Admin/NeuCharWorkflow/Replay?executionLogId=${encodeURIComponent(task.executionLogId)}`);
+            NeuCharWorkflowUi.openPage(
+                `/Admin/NeuCharWorkflow/Replay?executionLogId=${encodeURIComponent(task.executionLogId)}`,
+                ncfST('Frontend.NeuCharWorkflow.RunReplay'));
         },
         async abortTask(task) {
             if (!task || task.status !== 'running' || this.abortingTaskId) return;
@@ -346,7 +350,9 @@ new Vue({
             if (this.statusFilter) query.set('status', this.statusFilter);
             if (this.fromDate) query.set('from', this.fromDate);
             if (this.toDate) query.set('to', this.toDate);
-            window.location.assign(`/Admin/NeuCharWorkflow/Analytics${query.toString() ? `?${query.toString()}` : ''}`);
+            NeuCharWorkflowUi.openPage(
+                `/Admin/NeuCharWorkflow/Analytics${query.toString() ? `?${query.toString()}` : ''}`,
+                ncfST('Frontend.NeuCharWorkflow.WorkflowAnalytics'));
         },
         taskRowClass({ row }) {
             return this.focusedRunId && String(row.runId || '').replace(/-/g, '').toLowerCase() ===

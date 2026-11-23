@@ -289,7 +289,9 @@ new Vue({
                 }, { customAlert: true });
                 const workflow = NeuCharWorkflowUi.unwrap(response);
                 if (!workflow || !workflow.id) throw new Error(ncfWorkflowText('Frontend.NeuCharWorkflow.FailedToCopyTheWorkflow'));
-                window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${workflow.id}`);
+                NeuCharWorkflowUi.openPage(
+                    `/Admin/NeuCharWorkflow/Index?workflowId=${workflow.id}`,
+                    ncfST('Frontend.NeuCharWorkflow.Workflow'));
             } catch (error) {
                 this.$message.error(this.errorMessage(error, ncfWorkflowText('Frontend.NeuCharWorkflow.CannotCreateAWorkflowDraftFromTheCurrentReplay')));
             } finally {
@@ -298,17 +300,23 @@ new Vue({
         },
         openLatestWorkflow() {
             if (this.replay && this.replay.workflowId) {
-                window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${this.replay.workflowId}`);
+                NeuCharWorkflowUi.openPage(
+                    `/Admin/NeuCharWorkflow/Index?workflowId=${this.replay.workflowId}`,
+                    ncfST('Frontend.NeuCharWorkflow.Workflow'));
             }
         },
         openWorkflowTasks() {
             if (this.replay && this.replay.workflowId) {
-                window.location.assign(`/Admin/NeuCharWorkflow/Tasks?workflowId=${encodeURIComponent(this.replay.workflowId)}`);
+                NeuCharWorkflowUi.openPage(
+                    `/Admin/NeuCharWorkflow/Tasks?workflowId=${encodeURIComponent(this.replay.workflowId)}`,
+                    ncfST('Frontend.NeuCharWorkflow.WorkflowTaskList'));
             }
         },
         openWorkflowAnalytics() {
             if (this.replay && this.replay.workflowId) {
-                window.location.assign(`/Admin/NeuCharWorkflow/Analytics?workflowId=${encodeURIComponent(this.replay.workflowId)}`);
+                NeuCharWorkflowUi.openPage(
+                    `/Admin/NeuCharWorkflow/Analytics?workflowId=${encodeURIComponent(this.replay.workflowId)}`,
+                    ncfST('Frontend.NeuCharWorkflow.WorkflowAnalytics'));
             }
         },
         hasAgentGroupConversation(event) {
@@ -321,10 +329,13 @@ new Vue({
             if (!Number.isInteger(chatTaskId) || chatTaskId <= 0) return;
             const query = new URLSearchParams({ tab: 'second', taskId: String(chatTaskId) });
             if (Number.isInteger(chatGroupId) && chatGroupId > 0) query.set('groupId', String(chatGroupId));
-            const viewer = window.open(`/Admin/AgentsManager/Index#${query.toString()}`, '_blank', 'noopener,noreferrer');
-            if (viewer) viewer.opener = null;
+            NeuCharWorkflowUi.openPage(
+                `/Admin/AgentsManager/Index#${query.toString()}`,
+                ncfST('Frontend.NeuCharWorkflow.ViewAgentGroupConversation'));
         },
-        backToTasks() { window.location.assign('/Admin/NeuCharWorkflow/Tasks'); },
+        backToTasks() {
+            NeuCharWorkflowUi.returnToSource('/Admin/NeuCharWorkflow/Tasks');
+        },
         errorMessage(error, fallback) {
             const data = error && error.response && error.response.data;
             return String((data && (data.title || data.detail || data)) || (error && error.message) || fallback);
