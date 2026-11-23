@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.16</Version>
+    <Version>0.20.17</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -176,6 +176,8 @@
         [2026-11-19] v0.20.16 Localized PromptRange administration and runtime surfaces
         1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
         2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
+        [2026-11-24] v0.20.17 Align PromptRange neutral resource entries
+        1. Remove obsolete duplicate resource keys across locale files for consistent frontend localization lookups.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

@@ -84,6 +84,14 @@ class Program
 
             bool templateOnly = remainingArgs.Any(z =>
                 z.Equals("--template-only", StringComparison.OrdinalIgnoreCase));
+            bool nonInteractive = remainingArgs.Any(z =>
+                z.Equals("--non-interactive", StringComparison.OrdinalIgnoreCase)
+                || z.Equals("--yes", StringComparison.OrdinalIgnoreCase));
+            if (nonInteractive)
+            {
+                _autoOverwriteChoice = ConsoleKey.Y;
+                _autoUpdateChoice = ConsoleKey.U;
+            }
             string sourceDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..","..", "..", "..", "..", "NcfWebAdminBaseline"));
             string targetDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..","..", "..", "..", "..", "..", "..", "NCF", "src", "back-end"));
 

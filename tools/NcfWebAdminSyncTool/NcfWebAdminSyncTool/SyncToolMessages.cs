@@ -5,6 +5,11 @@
     File name: SyncToolMessages.cs
     File description: Localized console strings for NcfWebAdminSyncTool.
 
+    Created by: Senparc - 20261124
+
+    Modified by: Senparc - 20261124
+    Change description: v0.0.3 Added bilingual sync tool message catalog.
+
 ----------------------------------------------------------------*/
 
 sealed class SyncToolMessages
