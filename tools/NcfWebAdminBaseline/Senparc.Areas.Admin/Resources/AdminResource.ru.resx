@@ -729,7 +729,7 @@
   <data name="Trace.TypeException" xml:space="preserve"><value>Исключение</value></data>
   <data name="AdminChat.Command.AnalyzeSystemLogs" xml:space="preserve"><value>Анализ системных журналов</value></data>
   <data name="AdminChat.Command.AnalyzeSystemLogsHint" xml:space="preserve"><value>Укажите --date=yyyyMMdd и вопрос для анализа</value></data>
-  <data name="AdminChat.Command.HelpSummary" xml:space="preserve"><value>/mode simple|plan|execute · /maxiterations 1-64 · /harness &lt;возможность&gt; on|off · /maxtoken 256-8000 · /analyze-system-logs --date=yyyyMMdd</value></data>
+  <data name="AdminChat.Command.HelpSummary" xml:space="preserve"><value>/mode simple|plan|execute · /maxiterations 1-64 · /harness &lt;возможность&gt; on|off · /maxtoken 256-8000</value></data>
   <data name="Trace.AI.OverviewName" xml:space="preserve"><value>Получить обзор системного журнала</value></data>
   <data name="Trace.AI.OverviewDescription" xml:space="preserve"><value>Возвращает скрытые итоги, типы, сгруппированные ошибки и период; используйте первым шагом.</value></data>
   <data name="Trace.AI.SearchName" xml:space="preserve"><value>Поиск в системных журналах</value></data>

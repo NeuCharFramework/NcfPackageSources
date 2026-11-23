@@ -1775,4 +1775,6 @@
   <data name="Frontend.AgentsManager.ContinueNavigation" xml:space="preserve"><value>Continuer la navigation</value></data>
   <data name="Frontend.AgentsManager.KnowledgeBaseStatusRefreshed" xml:space="preserve"><value>État de la base de connaissances actualisé</value></data>
   <data name="Frontend.AgentsManager.FailedToRefreshKnowledgeBaseStatus" xml:space="preserve"><value>Échec de l’actualisation de l’état de la base de connaissances</value></data>
+  <data name="AdminChat.Command.RunAgentGroup" xml:space="preserve"><value>Exécuter un groupe d’agents</value></data>
+  <data name="AdminChat.Command.RunAgentGroupHint" xml:space="preserve"><value>Décrivez la tâche et réutilisez le groupe existant le plus pertinent</value></data>
 </root>

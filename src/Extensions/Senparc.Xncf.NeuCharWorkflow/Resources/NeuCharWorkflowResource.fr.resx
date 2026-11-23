@@ -922,4 +922,14 @@
   <data name="Frontend.NeuCharWorkflow.ConsumedTheCurrentReminder" xml:space="preserve"><value>La notification actuelle a été consommée.</value></data>
   <data name="Frontend.NeuCharWorkflow.ThisReminderWasAlreadyConsumedOrNoLongerBelongsToTheCurrent" xml:space="preserve"><value>La notification a déjà été consommée ou n’appartient plus au compte actuel.</value></data>
   <data name="Frontend.NeuCharWorkflow.TheReminderCouldNotBeConsumedAutomaticallyItsBusinessStateWasPreserved" xml:space="preserve"><value>La notification n’a pas pu être consommée automatiquement ; son état métier a été conservé. Traitez-la dans la page correspondante.</value></data>
+  <data name="AdminChat.Command.RunWorkflow" xml:space="preserve"><value>Exécuter un Workflow</value></data>
+  <data name="AdminChat.Command.RunWorkflowHint" xml:space="preserve"><value>Décrivez la tâche ou indiquez --id=&lt;workflowId&gt;</value></data>
+  <data name="AdminChat.Command.EditWorkflow" xml:space="preserve"><value>Aider à modifier un Workflow</value></data>
+  <data name="AdminChat.Command.EditWorkflowHint" xml:space="preserve"><value>Indiquez --id=&lt;workflowId&gt; et la modification demandée</value></data>
+  <data name="AdminChat.Function.SearchWorkflows" xml:space="preserve"><value>Rechercher des Workflows</value></data>
+  <data name="AdminChat.Function.SearchWorkflowsDescription" xml:space="preserve"><value>Recherche les Workflows de l’administrateur actuel par nom ou description ; 20 résultats maximum.</value></data>
+  <data name="AdminChat.Function.StartWorkflow" xml:space="preserve"><value>Démarrer un Workflow</value></data>
+  <data name="AdminChat.Function.StartWorkflowDescription" xml:space="preserve"><value>Démarre un Workflow enregistré appartenant à l’administrateur actuel et renvoie l’ID d’exécution asynchrone.</value></data>
+  <data name="AdminChat.Function.InspectWorkflow" xml:space="preserve"><value>Examiner le contexte d’édition</value></data>
+  <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>Lit le graphe masqué, la révision et les nœuds sans enregistrer de modification.</value></data>
 </root>

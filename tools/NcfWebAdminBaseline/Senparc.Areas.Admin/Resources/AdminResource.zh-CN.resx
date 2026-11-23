@@ -729,7 +729,7 @@
   <data name="Trace.TypeException" xml:space="preserve"><value>异常</value></data>
   <data name="AdminChat.Command.AnalyzeSystemLogs" xml:space="preserve"><value>分析系统日志</value></data>
   <data name="AdminChat.Command.AnalyzeSystemLogsHint" xml:space="preserve"><value>指定 --date=yyyyMMdd，并输入分析问题</value></data>
-  <data name="AdminChat.Command.HelpSummary" xml:space="preserve"><value>/mode simple|plan|execute · /maxiterations 1-64 · /harness &lt;能力&gt; on|off · /maxtoken 256-8000 · /analyze-system-logs --date=yyyyMMdd</value></data>
+  <data name="AdminChat.Command.HelpSummary" xml:space="preserve"><value>/mode simple|plan|execute · /maxiterations 1-64 · /harness &lt;能力&gt; on|off · /maxtoken 256-8000</value></data>
   <data name="Trace.AI.OverviewName" xml:space="preserve"><value>获取系统日志概览</value></data>
   <data name="Trace.AI.OverviewDescription" xml:space="preserve"><value>按日期返回脱敏后的日志总量、类型、异常聚合和时间范围；适合作为分析的第一步。</value></data>
   <data name="Trace.AI.SearchName" xml:space="preserve"><value>搜索系统日志</value></data>

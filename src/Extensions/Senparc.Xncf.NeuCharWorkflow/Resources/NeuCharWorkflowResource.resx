@@ -921,4 +921,14 @@
   <data name="Frontend.NeuCharWorkflow.ConsumedTheCurrentReminder" xml:space="preserve"><value>已消费当前这一条纽铃提醒。</value></data>
   <data name="Frontend.NeuCharWorkflow.ThisReminderWasAlreadyConsumedOrNoLongerBelongsToTheCurrent" xml:space="preserve"><value>该纽铃提醒已被消费，或不再属于当前账号。</value></data>
   <data name="Frontend.NeuCharWorkflow.TheReminderCouldNotBeConsumedAutomaticallyItsBusinessStateWasPreserved" xml:space="preserve"><value>纽铃提醒无法自动消费；已保留业务状态，请在对应页面处理。</value></data>
+  <data name="AdminChat.Command.RunWorkflow" xml:space="preserve"><value>启动工作流</value></data>
+  <data name="AdminChat.Command.RunWorkflowHint" xml:space="preserve"><value>描述任务，或提供 --id=&lt;workflowId&gt;</value></data>
+  <data name="AdminChat.Command.EditWorkflow" xml:space="preserve"><value>协助编辑工作流</value></data>
+  <data name="AdminChat.Command.EditWorkflowHint" xml:space="preserve"><value>提供 --id=&lt;workflowId&gt; 和修改要求</value></data>
+  <data name="AdminChat.Function.SearchWorkflows" xml:space="preserve"><value>搜索工作流</value></data>
+  <data name="AdminChat.Function.SearchWorkflowsDescription" xml:space="preserve"><value>按名称或说明搜索当前管理员拥有的工作流，最多返回 20 项。</value></data>
+  <data name="AdminChat.Function.StartWorkflow" xml:space="preserve"><value>启动工作流</value></data>
+  <data name="AdminChat.Function.StartWorkflowDescription" xml:space="preserve"><value>启动当前管理员拥有的一条已保存工作流，并返回异步运行 ID。</value></data>
+  <data name="AdminChat.Function.InspectWorkflow" xml:space="preserve"><value>检查工作流编辑上下文</value></data>
+  <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>只读返回已脱敏的工作流图、版本和节点上下文；不会保存修改。</value></data>
 </root>

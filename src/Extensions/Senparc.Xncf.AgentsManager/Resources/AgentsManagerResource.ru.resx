@@ -1775,4 +1775,6 @@
   <data name="Frontend.AgentsManager.ContinueNavigation" xml:space="preserve"><value>Продолжить переход</value></data>
   <data name="Frontend.AgentsManager.KnowledgeBaseStatusRefreshed" xml:space="preserve"><value>Состояние базы знаний обновлено</value></data>
   <data name="Frontend.AgentsManager.FailedToRefreshKnowledgeBaseStatus" xml:space="preserve"><value>Не удалось обновить состояние базы знаний</value></data>
+  <data name="AdminChat.Command.RunAgentGroup" xml:space="preserve"><value>Запустить группу агентов</value></data>
+  <data name="AdminChat.Command.RunAgentGroupHint" xml:space="preserve"><value>Опишите задачу; система повторно использует подходящую существующую группу</value></data>
 </root>

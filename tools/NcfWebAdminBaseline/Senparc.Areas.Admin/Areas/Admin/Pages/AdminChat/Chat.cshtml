@@ -729,6 +729,9 @@
                                 @@mousedown.prevent="selectSlashCommand('inputMessage', option)">
                             <strong>{{ option.value }}</strong>
                             <span>{{ option.label }}</span>
+                            <em v-if="option.moduleName"
+                                class="chat-command-module"
+                                :style="{ '--chat-command-accent': option.accentColor || '#909399' }">{{ option.moduleName }}</em>
                             <small>{{ option.hint }}</small>
                         </button>
                     </div>
@@ -923,6 +926,9 @@
                                                 @@mousedown.prevent="selectSlashCommand('chatInputText', option)">
                                             <strong>{{ option.value }}</strong>
                                             <span>{{ option.label }}</span>
+                                            <em v-if="option.moduleName"
+                                                class="chat-command-module"
+                                                :style="{ '--chat-command-accent': option.accentColor || '#909399' }">{{ option.moduleName }}</em>
                                             <small>{{ option.hint }}</small>
                                         </button>
                                     </div>
@@ -1885,7 +1891,8 @@
             initialMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.InitialMessage ?? string.Empty)),
             currentUserId: @Model.CurrentUserId,
             isSuperAdmin: @(Model.IsSuperAdmin ? "true" : "false"),
-            moduleUids: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ModuleUids ?? string.Empty))
+            moduleUids: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ModuleUids ?? string.Empty)),
+            chatTools: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChatTools))
         };
     </script>
     <script src="~/js/Admin/Pages/AdminChat/Chat.js" asp-append-version="true"></script>

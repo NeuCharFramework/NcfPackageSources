@@ -1205,4 +1205,6 @@
   <data name="Frontend.AgentsManager.ContinueNavigation" xml:space="preserve"><value>仍要跳转</value></data>
   <data name="Frontend.AgentsManager.KnowledgeBaseStatusRefreshed" xml:space="preserve"><value>知识库状态已刷新</value></data>
   <data name="Frontend.AgentsManager.FailedToRefreshKnowledgeBaseStatus" xml:space="preserve"><value>知识库状态刷新失败</value></data>
+  <data name="AdminChat.Command.RunAgentGroup" xml:space="preserve"><value>启动 Agent 小组</value></data>
+  <data name="AdminChat.Command.RunAgentGroupHint" xml:space="preserve"><value>描述任务；优先语义匹配并复用现有小组</value></data>
 </root>

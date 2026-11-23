@@ -1775,4 +1775,6 @@
   <data name="Frontend.AgentsManager.ContinueNavigation" xml:space="preserve"><value>移動を続行</value></data>
   <data name="Frontend.AgentsManager.KnowledgeBaseStatusRefreshed" xml:space="preserve"><value>ナレッジベースの状態を更新しました</value></data>
   <data name="Frontend.AgentsManager.FailedToRefreshKnowledgeBaseStatus" xml:space="preserve"><value>ナレッジベースの状態を更新できませんでした</value></data>
+  <data name="AdminChat.Command.RunAgentGroup" xml:space="preserve"><value>Agent グループを実行</value></data>
+  <data name="AdminChat.Command.RunAgentGroupHint" xml:space="preserve"><value>タスクを説明し、一致する既存グループを再利用します</value></data>
 </root>

@@ -3309,7 +3309,7 @@ body.is-resizing-chat-sidebar iframe {
 
 .admin-chat-container .chat-command-option {
     display: grid;
-    grid-template-columns: minmax(110px, auto) minmax(90px, auto) 1fr;
+    grid-template-columns: minmax(110px, auto) minmax(90px, auto) auto minmax(120px, 1fr);
     align-items: center;
     gap: 10px;
     min-height: 36px;
@@ -3342,6 +3342,31 @@ body.is-resizing-chat-sidebar iframe {
     font-size: 12px;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.admin-chat-container .chat-command-option:not(:has(.chat-command-module)) small {
+    grid-column: 3 / -1;
+}
+
+.admin-chat-container .chat-command-module {
+    display: inline-flex;
+    align-items: center;
+    max-width: 150px;
+    padding: 2px 7px;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--chat-command-accent) 38%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--chat-command-accent) 12%, white);
+    color: color-mix(in srgb, var(--chat-command-accent) 78%, #1f2937);
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-chat-container .chat-command-module:only-of-type {
+    grid-column: 3;
 }
 
 .admin-chat-container .input-actions {

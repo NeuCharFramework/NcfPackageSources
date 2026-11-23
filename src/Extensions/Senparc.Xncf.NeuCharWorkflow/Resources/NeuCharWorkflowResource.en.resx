@@ -922,4 +922,14 @@
   <data name="Frontend.NeuCharWorkflow.ConsumedTheCurrentReminder" xml:space="preserve"><value>Consumed the current reminder.</value></data>
   <data name="Frontend.NeuCharWorkflow.ThisReminderWasAlreadyConsumedOrNoLongerBelongsToTheCurrent" xml:space="preserve"><value>This reminder was already consumed or no longer belongs to the current account.</value></data>
   <data name="Frontend.NeuCharWorkflow.TheReminderCouldNotBeConsumedAutomaticallyItsBusinessStateWasPreserved" xml:space="preserve"><value>The reminder could not be consumed automatically; its business state was preserved. Handle it on the related page.</value></data>
+  <data name="AdminChat.Command.RunWorkflow" xml:space="preserve"><value>Run a Workflow</value></data>
+  <data name="AdminChat.Command.RunWorkflowHint" xml:space="preserve"><value>Describe the task or provide --id=&lt;workflowId&gt;</value></data>
+  <data name="AdminChat.Command.EditWorkflow" xml:space="preserve"><value>Assist with Workflow editing</value></data>
+  <data name="AdminChat.Command.EditWorkflowHint" xml:space="preserve"><value>Provide --id=&lt;workflowId&gt; and the requested change</value></data>
+  <data name="AdminChat.Function.SearchWorkflows" xml:space="preserve"><value>Search Workflows</value></data>
+  <data name="AdminChat.Function.SearchWorkflowsDescription" xml:space="preserve"><value>Search workflows owned by the current administrator by name or description; return at most 20 items.</value></data>
+  <data name="AdminChat.Function.StartWorkflow" xml:space="preserve"><value>Start Workflow</value></data>
+  <data name="AdminChat.Function.StartWorkflowDescription" xml:space="preserve"><value>Start one saved workflow owned by the current administrator and return its asynchronous run ID.</value></data>
+  <data name="AdminChat.Function.InspectWorkflow" xml:space="preserve"><value>Inspect Workflow edit context</value></data>
+  <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>Read the masked graph, revision, and node context without saving changes.</value></data>
 </root>

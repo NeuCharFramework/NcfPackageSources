@@ -83,6 +83,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase;
+using Senparc.Ncf.XncfBase.ChatTools;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Models.Usage;
 using Senparc.Xncf.AIKernel.Domain.Services;
@@ -189,7 +190,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             IReadOnlyList<AdminChatAttachment> attachments = null)
         {
             var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
-            var systemLogMode = IsSystemLogAnalysisCommand(userMessage);
+            var chatTools = ChatToolRegistry.Match(userMessage);
 
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
@@ -209,9 +210,9 @@ namespace Senparc.Areas.Admin.Domain.Services
                     "Ollama 模型不支持工具调用，AdminChat 将使用纯聊天模式：Model={Model}",
                     ResolveModelIdentifier(setting));
             }
-            if (systemLogMode && !functionInvocationEnabled)
+            if (chatTools.Count > 0 && !functionInvocationEnabled)
             {
-                throw new NcfExceptionBase("系统日志分析需要支持 Function Calling 的 AI 模型。请切换模型后重试。");
+                throw new NcfExceptionBase("当前命令需要支持 Function Calling 的 AI 模型。请切换模型后重试。");
             }
             var build = await BuildAdminChatFunctionsAsync(
                 setting,
@@ -221,25 +222,21 @@ namespace Senparc.Areas.Admin.Domain.Services
                 modules,
                 workflows,
                 functionInvocationEnabled,
-                includeSystemLogFunctions: systemLogMode);
+                chatTools: chatTools);
             var aiFunctions = build.Functions;
             var moduleUids = modules.Where(z => !z.XncfModuleUid.IsNullOrEmpty()).Select(z => z.XncfModuleUid).ToList();
             var importedFunctionCount = build.ImportedFunctionCount;
             var importedWorkflowCount = build.ImportedWorkflowCount;
             var importedPluginNames = build.PluginNames;
             var importedFunctionSignatures = build.Signatures;
-            if (systemLogMode && !importedFunctionSignatures.Any(
-                    signature => signature.Contains("GetSystemLogOverview", StringComparison.Ordinal)))
-            {
-                throw new NcfExceptionBase("系统日志分析工具未成功加载，请检查 Admin 模块注册后重试。");
-            }
+            EnsureChatToolsAvailable(chatTools, build);
             var memoryContext = generationOptions == null
                 ? await Memory.BeginAsync(userId, sessionId, userMessage, cancellationToken, ResolveModelIdentifier(setting)) : null;
             var defaultSystemMessage = await BuildSystemMessageAsync(modules, cancellationToken);
             var systemInstructions = LimitSystemInstructions(
                 generationOptions?.SystemInstructions ?? defaultSystemMessage)
                 + (memoryContext?.Instructions ?? "")
-                + (systemLogMode ? BuildSystemLogAnalysisInstructions() : string.Empty);
+                + BuildChatToolInstructions(chatTools);
 
             async Task<IWantToRun> BuildChatRunnerAsync(IReadOnlyCollection<AIFunction> functions)
             {
@@ -506,7 +503,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             CancellationToken cancellationToken = default)
         {
             var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
-            var systemLogMode = IsSystemLogAnalysisCommand(userMessage);
+            var chatTools = ChatToolRegistry.Match(userMessage);
 
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
@@ -521,8 +518,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                 modules,
                 workflows,
                 functionInvocationEnabled: true,
-                includeSystemLogFunctions: systemLogMode);
-            EnsureSystemLogFunctionsAvailable(systemLogMode, build);
+                chatTools: chatTools);
+            EnsureChatToolsAvailable(chatTools, build);
 
             var effectiveMaxSteps = maxSteps > 0 ? maxSteps : 8;
             var effectiveTimeout = timeout ?? TimeSpan.FromSeconds(120);
@@ -533,7 +530,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             var systemInstructions = LimitSystemInstructions(
                 defaultSystemMessage + AdminChatHarnessExecutor.BuildProtocolInstructions())
                 + memoryContext.Instructions
-                + (systemLogMode ? BuildSystemLogAnalysisInstructions() : string.Empty);
+                + BuildChatToolInstructions(chatTools);
             var firstTurnPrompt = AdminChatPromptBuilder.BuildUserPrompt(messages, userMessage) + AdminChatHarnessExecutor.BuildStartTail();
             LogPromptContextSize(sessionId, userId, systemInstructions, firstTurnPrompt, build.Functions, messages?.Count ?? 0);
             var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChatHarness-{userId}-{sessionId}", new ChatClientAgentOptions()
@@ -637,7 +634,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             var effectiveHarnessOptions = AdminChatHarnessOptions.Normalize(harnessOptions, maxIterations);
             maxIterations = effectiveHarnessOptions.MaxIterations;
             var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
-            var systemLogMode = IsSystemLogAnalysisCommand(userMessage);
+            var chatTools = ChatToolRegistry.Match(userMessage);
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
             var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
@@ -657,12 +654,12 @@ namespace Senparc.Areas.Admin.Domain.Services
                 workflows,
                 true,
                 includeWorkflowManagement: true,
-                includeSystemLogFunctions: systemLogMode);
-            EnsureSystemLogFunctionsAvailable(systemLogMode, build);
+                chatTools: chatTools);
+            EnsureChatToolsAvailable(chatTools, build);
             var memoryContext = await Memory.BeginAsync(userId, sessionId, userMessage, cancellationToken, ResolveModelIdentifier(setting));
             var nativeSystemInstructions = await BuildSystemMessageAsync(modules, cancellationToken)
                 + memoryContext.Instructions
-                + (systemLogMode ? BuildSystemLogAnalysisInstructions() : string.Empty);
+                + BuildChatToolInstructions(chatTools);
             var nativePrompt = AdminChatPromptBuilder.BuildUserPrompt(messages, userMessage, attachments);
             var attachmentMessages = attachments?.Any(attachment => attachment.UseVision) == true
                 ? await BuildAttachmentMessagesAsync(sessionId, userId, nativePrompt, attachments, cancellationToken)
@@ -1569,40 +1566,29 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
         }
 
-        private static bool IsSystemLogAnalysisCommand(string userMessage)
-        {
-            var command = (userMessage ?? string.Empty).TrimStart();
-            return command.StartsWith("/analyze-system-logs", StringComparison.OrdinalIgnoreCase);
-        }
-
-        private static void EnsureSystemLogFunctionsAvailable(
-            bool systemLogMode,
+        private static void EnsureChatToolsAvailable(
+            IReadOnlyCollection<ChatToolDefinition> chatTools,
             AdminChatFunctionBuild build)
         {
-            if (systemLogMode && !build.Signatures.Any(
-                    signature => signature.Contains("GetSystemLogOverview", StringComparison.Ordinal)))
+            var missingMethod = chatTools
+                .SelectMany(tool => tool.Functions)
+                .Select(function => function.MethodName)
+                .FirstOrDefault(method => !build.Signatures.Any(
+                    signature => signature.Contains(method, StringComparison.Ordinal)));
+            if (!string.IsNullOrWhiteSpace(missingMethod))
             {
-                throw new NcfExceptionBase("系统日志分析工具未成功加载，请检查 Admin 模块注册后重试。");
+                throw new NcfExceptionBase(
+                    $"聊天工具未成功加载：{missingMethod}。请检查对应 XNCF 模块注册后重试。");
             }
         }
 
-        private static string BuildSystemLogAnalysisInstructions()
+        private static string BuildChatToolInstructions(
+            IReadOnlyCollection<ChatToolDefinition> chatTools)
         {
-            return """
-
-[System Log Analysis Mode]
-The user explicitly requested SenparcTrace analysis. Follow this evidence-driven and token-bounded workflow:
-1. Parse date and question from the command. If date is missing, use today's yyyyMMdd date.
-2. Your first tool action MUST be GetSystemLogOverview. Do not ask where the logs are or how exceptions are defined; SenparcTrace conventions are already known.
-3. Use SearchSystemLogs for focused records; request at most 30 rows per call and prefer exception/type/thread/keyword filters.
-4. Call GetSystemLogEvidence only for line numbers that are directly relevant to the conclusion, at most 6 records and 4000 characters per record unless the user explicitly asks for more.
-5. Never ask to read the entire log file and never infer from missing data.
-6. Every finding must cite date, time, line, thread and the matching tool evidence.
-7. Secrets, tokens, passwords and cookies returned by tools are already redacted; do not reconstruct or request original values.
-8. Separate observed facts, likely causes and recommended actions. Do not execute write operations.
-9. If a query returns too many rows, refine filters before loading more.
-10. For a question that can be answered by overview counts, answer directly after that tool result; do not ask clarification.
-""";
+            return string.Concat(
+                chatTools
+                    .Select(tool => tool.Instructions ?? string.Empty)
+                    .Where(instructions => !string.IsNullOrWhiteSpace(instructions)));
         }
 
         private async Task<AdminChatFunctionBuild> BuildAdminChatFunctionsAsync(
@@ -1614,7 +1600,7 @@ The user explicitly requested SenparcTrace analysis. Follow this evidence-driven
             List<AdminChatSessionWorkflow> workflows,
             bool functionInvocationEnabled,
             bool includeWorkflowManagement = false,
-            bool includeSystemLogFunctions = false)
+            IReadOnlyCollection<ChatToolDefinition> chatTools = null)
         {
             var modulePlugin = new ModuleAssistantPlugin(modules);
             var aiFunctions = functionInvocationEnabled
@@ -1692,12 +1678,19 @@ The user explicitly requested SenparcTrace analysis. Follow this evidence-driven
                                 && z.FunctionRenderAttribute?.AllowAiInvocation != false)
                     .ToList()
                 : new List<FunctionRenderBag>();
-            if (functionInvocationEnabled && includeSystemLogFunctions)
+            if (functionInvocationEnabled && chatTools?.Count > 0)
             {
+                var selectedFunctions = chatTools
+                    .SelectMany(tool => tool.Functions)
+                    .GroupBy(function => (function.DeclaringType, function.MethodName))
+                    .Select(group => group.Key)
+                    .ToHashSet();
                 functionRenderBags = functionRenderBags
                     .Concat(Senparc.Ncf.XncfBase.Register.FunctionRenderCollection
-                        .GetByRegisterType(typeof(Register))
-                        .Where(z => z.MethodInfo?.DeclaringType == typeof(SystemLogAnalysisAppService)))
+                        .SelectMany(group => group.Value.Values)
+                        .Where(bag => bag.MethodInfo != null
+                                      && selectedFunctions.Contains(
+                                          (bag.MethodInfo.DeclaringType, bag.MethodInfo.Name))))
                     .GroupBy(z => z.Key)
                     .Select(group => group.First())
                     .ToList();

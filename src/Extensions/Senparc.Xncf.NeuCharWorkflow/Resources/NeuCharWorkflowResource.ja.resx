@@ -922,4 +922,14 @@
   <data name="Frontend.NeuCharWorkflow.ConsumedTheCurrentReminder" xml:space="preserve"><value>現在の通知を消費しました。</value></data>
   <data name="Frontend.NeuCharWorkflow.ThisReminderWasAlreadyConsumedOrNoLongerBelongsToTheCurrent" xml:space="preserve"><value>この通知は消費済みか、現在のアカウントに属していません。</value></data>
   <data name="Frontend.NeuCharWorkflow.TheReminderCouldNotBeConsumedAutomaticallyItsBusinessStateWasPreserved" xml:space="preserve"><value>通知を自動消費できませんでした。業務状態は保持されています。対応するページで処理してください。</value></data>
+  <data name="AdminChat.Command.RunWorkflow" xml:space="preserve"><value>Workflow を実行</value></data>
+  <data name="AdminChat.Command.RunWorkflowHint" xml:space="preserve"><value>タスクを説明するか --id=&lt;workflowId&gt; を指定します</value></data>
+  <data name="AdminChat.Command.EditWorkflow" xml:space="preserve"><value>Workflow 編集を支援</value></data>
+  <data name="AdminChat.Command.EditWorkflowHint" xml:space="preserve"><value>--id=&lt;workflowId&gt; と変更内容を指定します</value></data>
+  <data name="AdminChat.Function.SearchWorkflows" xml:space="preserve"><value>Workflow を検索</value></data>
+  <data name="AdminChat.Function.SearchWorkflowsDescription" xml:space="preserve"><value>現在の管理者が所有する Workflow を名前または説明で検索し、最大 20 件返します。</value></data>
+  <data name="AdminChat.Function.StartWorkflow" xml:space="preserve"><value>Workflow を開始</value></data>
+  <data name="AdminChat.Function.StartWorkflowDescription" xml:space="preserve"><value>現在の管理者が所有する保存済み Workflow を開始し、非同期実行 ID を返します。</value></data>
+  <data name="AdminChat.Function.InspectWorkflow" xml:space="preserve"><value>編集コンテキストを確認</value></data>
+  <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>変更を保存せず、マスク済みグラフ、リビジョン、ノード情報を読み取ります。</value></data>
 </root>

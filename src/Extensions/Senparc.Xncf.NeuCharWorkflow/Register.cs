@@ -46,6 +46,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using Senparc.Ncf.XncfBase;
+using Senparc.Ncf.XncfBase.ChatTools;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.NeuCharWorkflow.ACL;
 using Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
@@ -53,6 +54,7 @@ using Senparc.Xncf.NeuCharWorkflow.Application.Events;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 using Senparc.Xncf.NeuCharWorkflow.Models;
+using Senparc.Xncf.NeuCharWorkflow.OHS.Local.AppService;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using System;
 using System.Linq;
@@ -63,7 +65,7 @@ namespace Senparc.Xncf.NeuCharWorkflow;
 
 [XncfRegister]
 [XncfOrder(5890)]
-public partial class Register : XncfRegisterBase, IXncfRegister
+public partial class Register : XncfRegisterBase, IXncfRegister, IChatTool
 {
         private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<NeuCharWorkflowResource>(
             "Module",
@@ -81,6 +83,83 @@ public partial class Register : XncfRegisterBase, IXncfRegister
     public override string Icon => "fa fa-random";
 
     public override string Description => RegisterText.Description;
+
+    public IReadOnlyCollection<ChatToolDefinition> GetChatTools()
+    {
+        return new[]
+        {
+            new ChatToolDefinition
+            {
+                Command = "/run-workflow",
+                Label = NeuCharWorkflowResource.Get(
+                    "AdminChat.Command.RunWorkflow",
+                    "Run a Workflow"),
+                Hint = NeuCharWorkflowResource.Get(
+                    "AdminChat.Command.RunWorkflowHint",
+                    "Describe the task or provide --id=<workflowId>"),
+                ModuleName = MenuName,
+                ModuleUid = Uid,
+                Functions = new[]
+                {
+                    new ChatToolFunctionDefinition
+                    {
+                        DeclaringType = typeof(NeuCharWorkflowChatToolAppService),
+                        MethodName = nameof(NeuCharWorkflowChatToolAppService.SearchWorkflows)
+                    },
+                    new ChatToolFunctionDefinition
+                    {
+                        DeclaringType = typeof(NeuCharWorkflowChatToolAppService),
+                        MethodName = nameof(NeuCharWorkflowChatToolAppService.StartWorkflow)
+                    }
+                },
+                Instructions = """
+
+[Workflow Run Command]
+The user asked to start an existing NeuChar Workflow owned by the current administrator.
+1. Parse an explicit --id value or use SearchWorkflows to find a semantic match by name and description.
+2. If more than one candidate is plausible, show the candidates and ask which one to use.
+3. Pass the user's remaining text as workflow input and call StartWorkflow exactly once.
+4. Report the workflow name and run ID; the workflow runs asynchronously, so do not claim it completed.
+5. Do not create, edit, delete, or import a workflow in this command.
+"""
+            },
+            new ChatToolDefinition
+            {
+                Command = "/edit-workflow",
+                Label = NeuCharWorkflowResource.Get(
+                    "AdminChat.Command.EditWorkflow",
+                    "Assist with Workflow editing"),
+                Hint = NeuCharWorkflowResource.Get(
+                    "AdminChat.Command.EditWorkflowHint",
+                    "Provide --id=<workflowId> and describe the change"),
+                ModuleName = MenuName,
+                ModuleUid = Uid,
+                Functions = new[]
+                {
+                    new ChatToolFunctionDefinition
+                    {
+                        DeclaringType = typeof(NeuCharWorkflowChatToolAppService),
+                        MethodName = nameof(NeuCharWorkflowChatToolAppService.SearchWorkflows)
+                    },
+                    new ChatToolFunctionDefinition
+                    {
+                        DeclaringType = typeof(NeuCharWorkflowChatToolAppService),
+                        MethodName = nameof(NeuCharWorkflowChatToolAppService.InspectWorkflow)
+                    }
+                },
+                Instructions = """
+
+[Workflow Editing Assistant]
+Help the user edit an existing NeuChar Workflow. This command is read-only.
+1. Resolve the workflow by explicit --id or SearchWorkflows, then call InspectWorkflow for the selected workflow.
+2. Review the masked graph and the current revision. Never reconstruct protected parameter values.
+3. Return a concrete, minimal patch or replacement instructions tied to node IDs and edge IDs.
+4. Do not claim the graph was saved, do not call StartWorkflow, and do not ask for secrets.
+5. Warn when a proposed change requires re-running validation or may break disabled/disconnected functions.
+"""
+            }
+        };
+    }
 
     public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {

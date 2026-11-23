@@ -1126,6 +1126,7 @@ new Vue({
                     autoSaveMinutes: Number(item.autoSaveMinutes ?? 3),
                     revision: Number(item.revision || 0)
                 };
+                window.NCF_ADMIN_FOOTER_AI_INITIAL_MESSAGE = `/edit-workflow --id=${Number(item.id || id)} `;
                 this.observedOutputSchemas = Array.isArray(item.observedOutputSchemas)
                     ? item.observedOutputSchemas
                     : [];

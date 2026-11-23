@@ -922,4 +922,14 @@
   <data name="Frontend.NeuCharWorkflow.ConsumedTheCurrentReminder" xml:space="preserve"><value>Текущее уведомление обработано.</value></data>
   <data name="Frontend.NeuCharWorkflow.ThisReminderWasAlreadyConsumedOrNoLongerBelongsToTheCurrent" xml:space="preserve"><value>Это уведомление уже обработано или больше не принадлежит текущей учётной записи.</value></data>
   <data name="Frontend.NeuCharWorkflow.TheReminderCouldNotBeConsumedAutomaticallyItsBusinessStateWasPreserved" xml:space="preserve"><value>Не удалось автоматически обработать уведомление; его состояние сохранено. Обработайте его на соответствующей странице.</value></data>
+  <data name="AdminChat.Command.RunWorkflow" xml:space="preserve"><value>Запустить рабочий процесс</value></data>
+  <data name="AdminChat.Command.RunWorkflowHint" xml:space="preserve"><value>Опишите задачу или укажите --id=&lt;workflowId&gt;</value></data>
+  <data name="AdminChat.Command.EditWorkflow" xml:space="preserve"><value>Помочь изменить рабочий процесс</value></data>
+  <data name="AdminChat.Command.EditWorkflowHint" xml:space="preserve"><value>Укажите --id=&lt;workflowId&gt; и требуемое изменение</value></data>
+  <data name="AdminChat.Function.SearchWorkflows" xml:space="preserve"><value>Найти рабочие процессы</value></data>
+  <data name="AdminChat.Function.SearchWorkflowsDescription" xml:space="preserve"><value>Ищет процессы текущего администратора по имени или описанию; возвращает не более 20.</value></data>
+  <data name="AdminChat.Function.StartWorkflow" xml:space="preserve"><value>Запустить рабочий процесс</value></data>
+  <data name="AdminChat.Function.StartWorkflowDescription" xml:space="preserve"><value>Запускает сохранённый процесс текущего администратора и возвращает ID асинхронного выполнения.</value></data>
+  <data name="AdminChat.Function.InspectWorkflow" xml:space="preserve"><value>Проверить контекст редактирования</value></data>
+  <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>Читает замаскированный граф, ревизию и узлы без сохранения изменений.</value></data>
 </root>

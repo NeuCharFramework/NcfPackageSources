@@ -1775,4 +1775,6 @@
   <data name="Frontend.AgentsManager.ContinueNavigation" xml:space="preserve"><value>Continue navigation</value></data>
   <data name="Frontend.AgentsManager.KnowledgeBaseStatusRefreshed" xml:space="preserve"><value>Knowledge base status refreshed</value></data>
   <data name="Frontend.AgentsManager.FailedToRefreshKnowledgeBaseStatus" xml:space="preserve"><value>Failed to refresh knowledge base status</value></data>
+  <data name="AdminChat.Command.RunAgentGroup" xml:space="preserve"><value>Run an Agent group</value></data>
+  <data name="AdminChat.Command.RunAgentGroupHint" xml:space="preserve"><value>Describe the task; semantically reuse an existing matching group</value></data>
 </root>

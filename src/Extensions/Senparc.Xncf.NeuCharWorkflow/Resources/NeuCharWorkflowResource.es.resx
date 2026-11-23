@@ -922,4 +922,14 @@
   <data name="Frontend.NeuCharWorkflow.ConsumedTheCurrentReminder" xml:space="preserve"><value>Se consumió el aviso actual.</value></data>
   <data name="Frontend.NeuCharWorkflow.ThisReminderWasAlreadyConsumedOrNoLongerBelongsToTheCurrent" xml:space="preserve"><value>El aviso ya se consumió o ya no pertenece a la cuenta actual.</value></data>
   <data name="Frontend.NeuCharWorkflow.TheReminderCouldNotBeConsumedAutomaticallyItsBusinessStateWasPreserved" xml:space="preserve"><value>No se pudo consumir el aviso automáticamente; se conservó su estado. Gestiónalo en la página correspondiente.</value></data>
+  <data name="AdminChat.Command.RunWorkflow" xml:space="preserve"><value>Ejecutar un flujo de trabajo</value></data>
+  <data name="AdminChat.Command.RunWorkflowHint" xml:space="preserve"><value>Describe la tarea o indica --id=&lt;workflowId&gt;</value></data>
+  <data name="AdminChat.Command.EditWorkflow" xml:space="preserve"><value>Ayudar a editar un flujo de trabajo</value></data>
+  <data name="AdminChat.Command.EditWorkflowHint" xml:space="preserve"><value>Indica --id=&lt;workflowId&gt; y el cambio solicitado</value></data>
+  <data name="AdminChat.Function.SearchWorkflows" xml:space="preserve"><value>Buscar flujos de trabajo</value></data>
+  <data name="AdminChat.Function.SearchWorkflowsDescription" xml:space="preserve"><value>Busca por nombre o descripción entre los flujos del administrador actual; devuelve como máximo 20.</value></data>
+  <data name="AdminChat.Function.StartWorkflow" xml:space="preserve"><value>Iniciar flujo de trabajo</value></data>
+  <data name="AdminChat.Function.StartWorkflowDescription" xml:space="preserve"><value>Inicia un flujo guardado del administrador actual y devuelve su ID de ejecución asíncrona.</value></data>
+  <data name="AdminChat.Function.InspectWorkflow" xml:space="preserve"><value>Inspeccionar contexto de edición</value></data>
+  <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>Lee el grafo enmascarado, la revisión y los nodos sin guardar cambios.</value></data>
 </root>

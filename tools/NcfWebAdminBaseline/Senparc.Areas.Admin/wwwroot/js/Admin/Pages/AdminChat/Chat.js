@@ -2,6 +2,26 @@
   return typeof ncfT === 'function' ? ncfT(key) : fallback;
 }
 
+function adminChatModuleCommands() {
+  return ((window.INITIAL_DATA && window.INITIAL_DATA.chatTools) || [])
+    .map(item => {
+      const moduleUid = item.moduleUid || item.ModuleUid || '';
+      const accentColor = window.NcfAdminTabs && typeof window.NcfAdminTabs.accentColorFromUid === 'function'
+        ? window.NcfAdminTabs.accentColorFromUid(moduleUid)
+        : '#909399';
+      return {
+        command: item.command || item.Command,
+        label: item.label || item.Label,
+        hint: item.hint || item.Hint,
+        moduleName: item.moduleName || item.ModuleName,
+        moduleUid,
+        accentColor,
+        values: []
+      };
+    })
+    .filter(item => item.command && item.label);
+}
+
 function workspaceCodeWords(text, ignoreCase) {
   const values = text.split(/\s+/).filter(Boolean);
   return new Set(ignoreCase ? values.map(value => value.toLowerCase()) : values);
@@ -320,9 +340,8 @@ var chatApp = new Vue({
         { command: '/help', label: adminChatText('AdminChat.Command.Help', 'Show available commands'), hint: 'Display command help', values: [] },
         { command: '/maxtoken', label: adminChatText('AdminChat.Command.MaxToken', 'Set output limit'), hint: 'Recommended 256–8000', values: [] },
         { command: '/maxiterations', label: adminChatText('AdminChat.Command.MaxIterations', 'Set Harness max iterations'), hint: '1–64', values: [] },
-        { command: '/harness', label: adminChatText('AdminChat.Command.Harness', 'Set Harness capabilities'), hint: 'todo / compact / file-memory / skills / web', values: [] },
-        { command: '/analyze-system-logs', label: adminChatText('AdminChat.Command.AnalyzeSystemLogs', 'Analyze system logs'), hint: adminChatText('AdminChat.Command.AnalyzeSystemLogsHint', '--date=yyyyMMdd plus your question'), values: [] }
-      ],
+        { command: '/harness', label: adminChatText('AdminChat.Command.Harness', 'Set Harness capabilities'), hint: 'todo / compact / file-memory / skills / web', values: [] }
+      ].concat(adminChatModuleCommands()),
       chatCommandSuggestionsFor: 'inputMessage',
       trajectoryDialogVisible: false,
       trajectoryLoading: false,
@@ -3036,7 +3055,13 @@ var chatApp = new Vue({
       const prefix = command;
       return this.chatCommandSuggestions
         .filter(item => item.command.startsWith(prefix))
-        .map(item => ({ value: item.command, label: item.label, hint: item.hint }));
+        .map(item => ({
+          value: item.command,
+          label: item.label,
+          hint: item.hint,
+          moduleName: item.moduleName || '',
+          accentColor: item.accentColor || ''
+        }));
     },
 
     updateSlashCommandMenu(field) {
@@ -3128,9 +3153,14 @@ var chatApp = new Vue({
         this.chatCommandMenuOpen = false;
         if (field === 'chatInputText') this.chatInputText = '';
         else this.inputMessage = '';
-        this.$message.info(ncfT(
+        const moduleCommands = this.chatCommandSuggestions
+          .filter(item => item.moduleName)
+          .map(item => `${item.command} [${item.moduleName}]`)
+          .join(' · ');
+        const coreHelp = ncfT(
           'AdminChat.Command.HelpSummary',
-          '/mode simple|plan|execute · /maxiterations 1-64 · /harness <capability> on|off · /maxtoken 256-8000 · /analyze-system-logs --date=yyyyMMdd'));
+          '/mode simple|plan|execute · /maxiterations 1-64 · /harness <capability> on|off · /maxtoken 256-8000');
+        this.$message.info(moduleCommands ? `${coreHelp} · ${moduleCommands}` : coreHelp);
         event.preventDefault();
         return true;
       }
@@ -3149,7 +3179,8 @@ var chatApp = new Vue({
         event.preventDefault();
         return true;
       }
-      if (command === '/analyze-system-logs') {
+      if (this.chatCommandSuggestions.some(item =>
+        item.moduleName && item.command.toLowerCase() === command)) {
         this.chatCommandMenuOpen = false;
         return false;
       }
