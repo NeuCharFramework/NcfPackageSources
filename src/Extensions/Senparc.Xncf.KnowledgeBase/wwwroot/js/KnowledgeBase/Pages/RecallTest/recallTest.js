@@ -8,7 +8,7 @@
   }
 
   function errorMessage(error) {
-    return ncfST('Frontend.278');
+    return ncfST('Frontend.KnowledgeBase.TheRequestDidNotCompleteCheckTheKnowledgeBaseAndModelConfiguration');
   }
 
   new Vue({
@@ -60,13 +60,13 @@
             const ready = !!(item.vectorCollectionName && item.embeddedTime);
             return {
               id: item.id,
-              name: item.name || (ncfST('Frontend.234') + '-' + item.id),
+              name: item.name || (ncfST('Frontend.KnowledgeBase.KnowledgeBases') + '-' + item.id),
               ready: ready,
-              label: (item.name || (ncfST('Frontend.234') + '-' + item.id)) + (ready ? '' : '（' + ncfST('Frontend.220') + '）')
+              label: (item.name || (ncfST('Frontend.KnowledgeBase.KnowledgeBases') + '-' + item.id)) + (ready ? '' : '（' + ncfST('Frontend.KnowledgeBase.NotVectorized') + '）')
             };
           });
         } catch (error) {
-          this.$message.error(ncfST('Frontend.279', errorMessage(error)));
+          this.$message.error(ncfST('Frontend.KnowledgeBase.FailedToLoadTheKnowledgeBaseListValue', errorMessage(error)));
         }
       },
       formatScore: function (score) {
@@ -88,15 +88,15 @@
         const knowledgeBase = this.selectedKnowledgeBase;
         const content = (this.recallContent || '').trim();
         if (!knowledgeBase) {
-          this.$message.warning(ncfST('Frontend.103'));
+          this.$message.warning(ncfST('Frontend.KnowledgeBase.SelectAKnowledgeBaseFirst'));
           return;
         }
         if (!knowledgeBase.ready) {
-          this.$message.warning(ncfST('Frontend.280'));
+          this.$message.warning(ncfST('Frontend.KnowledgeBase.ThisKnowledgeBaseHasNotBeenVectorizedReturnToTheKnowledgeBase'));
           return;
         }
         if (!content) {
-          this.$message.warning(ncfST('Frontend.281'));
+          this.$message.warning(ncfST('Frontend.KnowledgeBase.EnterTheQuestionToTest'));
           return;
         }
 
@@ -110,7 +110,7 @@
             topK: this.topK
           });
           const results = unwrap(response);
-          if (!Array.isArray(results)) throw new Error(ncfST('Frontend.282'));
+          if (!Array.isArray(results)) throw new Error(ncfST('Frontend.KnowledgeBase.TheServiceDidNotReturnValidRecallResults'));
 
           this.recallResults = results.map(function (item, index) {
             return Object.assign({}, item, {
@@ -130,9 +130,9 @@
             time: new Date().toLocaleString(document.documentElement.lang || undefined, { hour12: false })
           });
           this.recordPage = 1;
-          this.$message.success(this.recallResults.length ? ncfST('Frontend.283') : ncfST('Frontend.284'));
+          this.$message.success(this.recallResults.length ? ncfST('Frontend.KnowledgeBase.RecallTestCompletedCheckTheSourcesAndContent') : ncfST('Frontend.KnowledgeBase.TestCompletedButNoMatchingPassagesWereReturned'));
         } catch (error) {
-          this.$notify({ title: ncfST('Frontend.285'), message: errorMessage(error), type: 'error', duration: 6000 });
+          this.$notify({ title: ncfST('Frontend.KnowledgeBase.RecallDidNotComplete'), message: errorMessage(error), type: 'error', duration: 6000 });
         } finally {
           this.recallLoading = false;
         }

@@ -210,6 +210,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             //Legacy comment translated to English.
             var model = promptItem.AIModelDto
+                ?? (promptItem.ModelId <= 0
+                    ? BuildModelDtoFromDefaultSetting(Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting)
+                    : null)
                 ?? throw new NcfExceptionBase($"找不到 PromptItem（{promptItem.FullVersion}）对应的 AI 模型配置");
 
             #region Legacy section

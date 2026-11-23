@@ -31,6 +31,9 @@ public class PromptRangeLocalizationTests
             Assert.AreEqual("新增模型", localized.Value);
             Assert.AreEqual("登录已过期，请重新登录", localizer["Auth.SessionExpired"].Value);
             Assert.AreEqual("无权访问当前功能", localizer["Auth.AccessDenied"].Value);
+            Assert.AreEqual("输入", localizer["Frontend.PromptRange.Input"].Value);
+            Assert.AreEqual("输出", localizer["Frontend.PromptRange.Output"].Value);
+            Assert.AreEqual("AI评分:", localizer["Frontend.PromptRange.AIScore"].Value);
             Assert.IsTrue(localizer.GetAllStrings(includeParentCultures: true)
                 .Any(item => item.Name == "Dashboard.AddModel" && item.Value == "新增模型"));
         }

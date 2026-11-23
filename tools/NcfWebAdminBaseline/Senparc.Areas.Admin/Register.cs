@@ -103,6 +103,7 @@ using Senparc.Areas.Admin.Domain.Dto;
 using Senparc.Areas.Admin.Domain.Models;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Services;
+using Senparc.Areas.Admin.OHS.Local.AppService;
 using Senparc.Areas.Admin.WeixinClawIntegration;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
@@ -121,6 +122,7 @@ using Senparc.Ncf.Shared.Abstractions.ChatAgent;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
+using Senparc.Ncf.XncfBase.ChatTools;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Ncf.XncfBase.Functions.Files;
 using System;
@@ -139,7 +141,8 @@ namespace Senparc.Areas.Admin
     public class Register : XncfRegisterBase,
         IXncfRegister, //Legacy comment translated to English.
         IAreaRegister, //register the XNCF page interface (optional)
-        IXncfDatabase  //register the XNCF module database (optional)
+        IXncfDatabase,  //register the XNCF module database (optional)
+        IChatTool
                        //Legacy comment translated to English.
     {
         private static readonly XncfRegisterText RegisterText =
@@ -164,6 +167,59 @@ namespace Senparc.Areas.Admin
 
         public override string Description => RegisterText.Description;
 
+        public IReadOnlyCollection<ChatToolDefinition> GetChatTools()
+        {
+            return new[]
+            {
+                new ChatToolDefinition
+                {
+                    Command = "/analyze-system-logs",
+                    Label = ResourceStringLocalizer.Get(
+                        typeof(AdminResource),
+                        "AdminChat.Command.AnalyzeSystemLogs",
+                        "Analyze system logs"),
+                    Hint = ResourceStringLocalizer.Get(
+                        typeof(AdminResource),
+                        "AdminChat.Command.AnalyzeSystemLogsHint",
+                        "--date=yyyyMMdd plus your question"),
+                    ModuleName = MenuName,
+                    ModuleUid = Uid,
+                    Functions = new[]
+                    {
+                        new ChatToolFunctionDefinition
+                        {
+                            DeclaringType = typeof(SystemLogAnalysisAppService),
+                            MethodName = nameof(SystemLogAnalysisAppService.GetSystemLogOverview)
+                        },
+                        new ChatToolFunctionDefinition
+                        {
+                            DeclaringType = typeof(SystemLogAnalysisAppService),
+                            MethodName = nameof(SystemLogAnalysisAppService.SearchSystemLogs)
+                        },
+                        new ChatToolFunctionDefinition
+                        {
+                            DeclaringType = typeof(SystemLogAnalysisAppService),
+                            MethodName = nameof(SystemLogAnalysisAppService.GetSystemLogEvidence)
+                        }
+                    },
+                    Instructions = """
+
+[System Log Analysis Mode]
+The user explicitly requested SenparcTrace analysis. Follow this evidence-driven and token-bounded workflow:
+1. Parse date and question from the command. If date is missing, use today's yyyyMMdd date.
+2. Your first tool action MUST be GetSystemLogOverview. Do not ask where the logs are or how exceptions are defined; SenparcTrace conventions are already known.
+3. Use SearchSystemLogs for focused records; request at most 30 rows per call and prefer exception/type/thread/keyword filters.
+4. Call GetSystemLogEvidence only for line numbers that are directly relevant to the conclusion, at most 6 records and 4000 characters per record unless the user explicitly asks for more.
+5. Never ask to read the entire log file and never infer from missing data.
+6. Every finding must cite date, time, line, thread and the matching tool evidence.
+7. Secrets, tokens, passwords and cookies returned by tools are already redacted; do not reconstruct or request original values.
+8. Separate observed facts, likely causes and recommended actions. Do not execute write operations.
+9. If a query returns too many rows, refine filters before loading more.
+10. For a question that can be answered by overview counts, answer directly after that tool result; do not ask clarification.
+"""
+                }
+            };
+        }
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
@@ -277,6 +333,9 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatTrajectoryService>();
             services.AddScoped<AdminChatTrajectoryEventService>();
             services.AddScoped<AdminChatAiService>();
+            services.AddSingleton<OllamaModelCapabilityService>();
+            services.AddHttpClient(OllamaModelCapabilityService.HttpClientName, client =>
+                client.Timeout = TimeSpan.FromSeconds(5));
             services.AddSingleton<AdminChatRunRegistry>();
             services.AddSingleton<AdminChatMemoryStore>();
             services.AddScoped<IAdminChatMemoryStore>(provider => new AdminChatMemoryDatabaseStore(
@@ -287,6 +346,7 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatWorkspaceAssetService>();
             services.AddSingleton<WorkspaceAssetPreviewBuilder>();
             services.AddSingleton<WorkspaceAssetShareStore>();
+            services.AddSingleton<WorkspaceAssetCapabilityStore>();
             services.AddSingleton<WorkspaceDocumentReader>();
             services.AddScoped<AdminChatAttachmentService>();
             services.AddScoped<IWeixinClawAdminBindingRepository, WeixinClawAdminBindingRepository>();

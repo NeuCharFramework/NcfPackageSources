@@ -451,102 +451,102 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>{{ncfST('Frontend.002')}}</el-breadcrumb-item>
+    <el-breadcrumb-item>{{ncfST('Frontend.Template_XncfName.ExtensionModules')}}</el-breadcrumb-item>
     <el-breadcrumb-item>Template_MenuName</el-breadcrumb-item>
-    <el-breadcrumb-item>{{ncfST('Frontend.001')}}</el-breadcrumb-item>
+    <el-breadcrumb-item>{{ncfST('Frontend.Template_XncfName.ColorDatabaseManagement')}}</el-breadcrumb-item>
 }
 
 <div>
     <div class=""filter-container"">
-        <el-button type=""primary"" icon=""el-icon-plus"" size=""small"" @@click=""addColor"">{{ncfST('Frontend.003')}}</el-button>
-        <el-button type=""success"" icon=""el-icon-refresh"" size=""small"" @@click=""refreshList"">{{ncfST('Frontend.004')}}</el-button>
-        <el-button type=""info"" icon=""el-icon-info"" size=""small"" @@click=""debugInfo"">{{ncfST('Frontend.005')}}</el-button>
+        <el-button type=""primary"" icon=""el-icon-plus"" size=""small"" @@click=""addColor"">{{ncfST('Frontend.Template_XncfName.AddColor')}}</el-button>
+        <el-button type=""success"" icon=""el-icon-refresh"" size=""small"" @@click=""refreshList"">{{ncfST('Frontend.Template_XncfName.Refresh')}}</el-button>
+        <el-button type=""info"" icon=""el-icon-info"" size=""small"" @@click=""debugInfo"">{{ncfST('Frontend.Template_XncfName.DebugInformation')}}</el-button>
     </div>
 
     <!-- Debug information display -->
     <div v-if=""showDebug"" style=""background: #f0f9ff; border: 1px solid #0ea5e9; padding: 10px; margin: 10px 0; border-radius: 4px;"">
-        <h4>{{ncfST('Frontend.006')}}</h4>
-        <p><strong>{{ncfST('Frontend.007')}}</strong> {{ tableData ? tableData.length : 'null/undefined' }}</p>
+        <h4>{{ncfST('Frontend.Template_XncfName.DebugInformationLabel')}}</h4>
+        <p><strong>{{ncfST('Frontend.Template_XncfName.TableDataLength')}}</strong> {{ tableData ? tableData.length : 'null/undefined' }}</p>
         <p><strong>total:</strong> {{ total }}</p>
         <p><strong>tableLoading:</strong> {{ tableLoading }}</p>
-        <p><strong>{{ncfST('Frontend.008')}}</strong> {{ $el ? ncfST('Frontend.009') : ncfST('Frontend.010') }}</p>
+        <p><strong>{{ncfST('Frontend.Template_XncfName.VueInstanceOK')}}</strong> {{ $el ? ncfST('Frontend.Template_XncfName.Yes') : ncfST('Frontend.Template_XncfName.No') }}</p>
         <div v-if=""tableData && tableData.length > 0"">
-            <strong>{{ncfST('Frontend.011')}}</strong>
+            <strong>{{ncfST('Frontend.Template_XncfName.FirstItem')}}</strong>
             <pre>{{ JSON.stringify(tableData[0], null, 2) }}</pre>
         </div>
-        
+
         <!-- Simplified data display test -->
         <div style=""background: #fff3cd; border: 1px solid #ffc107; padding: 10px; margin: 10px 0; border-radius: 4px;"">
-            <h5>{{ncfST('Frontend.012')}}</h5>
+            <h5>{{ncfST('Frontend.Template_XncfName.SimplifiedDataDisplayTest')}}</h5>
             <div v-for=""(item, index) in tableData"" :key=""item.id || index"" style=""border: 1px solid #ccc; margin: 5px 0; padding: 5px;"">
-                <strong>ID:</strong> {{item.id}} | 
-                <strong>RGB:</strong> {{item.red}},{{item.green}},{{item.blue}} | 
-                <strong>{{ncfST('Frontend.013')}}</strong> {{item.addTime}}
+                <strong>ID:</strong> {{item.id}} |
+                <strong>RGB:</strong> {{item.red}},{{item.green}},{{item.blue}} |
+                <strong>{{ncfST('Frontend.Template_XncfName.Time')}}</strong> {{item.addTime}}
             </div>
             <p v-if=""!tableData || tableData.length === 0"" style=""color: red;"">
-                <strong>{{ncfST('Frontend.014')}}</strong>
+                <strong>{{ncfST('Frontend.Template_XncfName.NoDataToDisplay')}}</strong>
             </p>
         </div>
     </div>
 
     <el-table :data=""tableData"" v-loading=""tableLoading"" border>
         <el-table-column prop=""id"" label=""ID"" width=""auto""></el-table-column>
-        <el-table-column prop=""red"" :label=""ncfST('Frontend.015')"" width=""auto"">
+        <el-table-column prop=""red"" :label=""ncfST('Frontend.Template_XncfName.RedValueR')"" width=""auto"">
             <template slot-scope=""scope"">
                 <el-tag :style=""{backgroundColor: `rgb(${scope.row.red}, 0, 0)`, color: 'white'}"">
                     {{scope.row.red}}
                 </el-tag>
             </template>
         </el-table-column>
-        <el-table-column prop=""green"" :label=""ncfST('Frontend.016')"" width=""auto"">
+        <el-table-column prop=""green"" :label=""ncfST('Frontend.Template_XncfName.GreenValueG')"" width=""auto"">
             <template slot-scope=""scope"">
                 <el-tag :style=""{backgroundColor: `rgb(0, ${scope.row.green}, 0)`, color: 'white'}"">
                     {{scope.row.green}}
                 </el-tag>
             </template>
         </el-table-column>
-        <el-table-column prop=""blue"" :label=""ncfST('Frontend.017')"" width=""auto"">
+        <el-table-column prop=""blue"" :label=""ncfST('Frontend.Template_XncfName.BlueValueB')"" width=""auto"">
             <template slot-scope=""scope"">
                 <el-tag :style=""{backgroundColor: `rgb(0, 0, ${scope.row.blue})`, color: 'white'}"">
                     {{scope.row.blue}}
                 </el-tag>
             </template>
         </el-table-column>
-        <el-table-column :label=""ncfST('Frontend.018')"" width=""auto"">
+        <el-table-column :label=""ncfST('Frontend.Template_XncfName.ColorPreview')"" width=""auto"">
             <template slot-scope=""scope"">
                 <div class=""color-preview"" :style=""{backgroundColor: `rgb(${scope.row.red}, ${scope.row.green}, ${scope.row.blue})`}"">
                     RGB({{scope.row.red}}, {{scope.row.green}}, {{scope.row.blue}})
                 </div>
             </template>
         </el-table-column>
-        <el-table-column prop=""addTime"" :label=""ncfST('Frontend.019')"" width=""auto"">
+        <el-table-column prop=""addTime"" :label=""ncfST('Frontend.Template_XncfName.Created')"" width=""auto"">
             <template slot-scope=""scope"">
                 {{ dateformatter(scope.row.addTime) }}
             </template>
         </el-table-column>
-        <el-table-column prop=""lastUpdateTime"" :label=""ncfST('Frontend.020')"" width=""auto"">
+        <el-table-column prop=""lastUpdateTime"" :label=""ncfST('Frontend.Template_XncfName.UpdatedAt')"" width=""auto"">
             <template slot-scope=""scope"">
                 {{ dateformatter(scope.row.lastUpdateTime) }}
             </template>
         </el-table-column>
-        <el-table-column :label=""ncfST('Frontend.021')"" width=""auto"" class-name=""ncf-table-actions-column"">
+        <el-table-column :label=""ncfST('Frontend.Template_XncfName.Actions')"" width=""auto"" class-name=""ncf-table-actions-column"">
             <template slot-scope=""scope"">
-                <el-button type=""primary"" icon=""el-icon-edit"" size=""mini"" @@click=""editColor(scope.row)"">{{ncfST('Frontend.022')}}</el-button>
-                <el-tooltip :content=""ncfST('Frontend.067')"" placement=""top"" :open-delay=""180"">
+                <el-button type=""primary"" icon=""el-icon-edit"" size=""mini"" @@click=""editColor(scope.row)"">{{ncfST('Frontend.Template_XncfName.Edit')}}</el-button>
+                <el-tooltip :content=""ncfST('Frontend.Template_XncfName.MoreActions')"" placement=""top"" :open-delay=""180"">
                     <el-dropdown trigger=""click"" placement=""bottom-end"">
                         <el-button type=""text"" size=""mini"" icon=""el-icon-more""
-                            class=""ncf-table-action-more"" :title=""ncfST('Frontend.067')"" :aria-label=""ncfST('Frontend.067')""></el-button>
+                            class=""ncf-table-action-more"" :title=""ncfST('Frontend.Template_XncfName.MoreActions')"" :aria-label=""ncfST('Frontend.Template_XncfName.MoreActions')""></el-button>
                         <el-dropdown-menu slot=""dropdown"">
-                            <el-dropdown-item icon=""el-icon-refresh"" @@click.native=""randomizeColor(scope.row)"">{{ncfST('Frontend.023')}}</el-dropdown-item>
+                            <el-dropdown-item icon=""el-icon-refresh"" @@click.native=""randomizeColor(scope.row)"">{{ncfST('Frontend.Template_XncfName.Random')}}</el-dropdown-item>
                             <el-dropdown-item divided icon=""el-icon-delete"" class=""ncf-table-action-danger""
-                                @@click.native=""deleteColor(scope.row)"">{{ncfST('Frontend.024')}}</el-dropdown-item>
+                                @@click.native=""deleteColor(scope.row)"">{{ncfST('Frontend.Template_XncfName.Delete')}}</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </el-tooltip>
             </template>
         </el-table-column>
     </el-table>
-    
+
     <div class=""pagination-container"">
         <el-pagination @@current-change=""handleCurrentChange""
                        @@size-change=""handleSizeChange""
@@ -561,62 +561,62 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
     </div>
 
     @* Dialog for adding a color *@
-    <el-dialog :title=""ncfST('Frontend.003')"" :visible.sync=""addFormDialogVisible"" width=""50%"" :close-on-click-modal=""false"">
+    <el-dialog :title=""ncfST('Frontend.Template_XncfName.AddColor')"" :visible.sync=""addFormDialogVisible"" width=""50%"" :close-on-click-modal=""false"">
         <el-form :model=""addForm"" label-width=""120px"" :rules=""addRules"" ref=""addForm"">
-            <el-form-item :label=""ncfST('Frontend.015')"" prop=""red"">
+            <el-form-item :label=""ncfST('Frontend.Template_XncfName.RedValueR')"" prop=""red"">
                 <el-slider v-model=""addForm.red"" :min=""0"" :max=""255"" show-input></el-slider>
             </el-form-item>
-            <el-form-item :label=""ncfST('Frontend.016')"" prop=""green"">
+            <el-form-item :label=""ncfST('Frontend.Template_XncfName.GreenValueG')"" prop=""green"">
                 <el-slider v-model=""addForm.green"" :min=""0"" :max=""255"" show-input></el-slider>
             </el-form-item>
-            <el-form-item :label=""ncfST('Frontend.017')"" prop=""blue"">
+            <el-form-item :label=""ncfST('Frontend.Template_XncfName.BlueValueB')"" prop=""blue"">
                 <el-slider v-model=""addForm.blue"" :min=""0"" :max=""255"" show-input></el-slider>
             </el-form-item>
-            <el-form-item :label=""ncfST('Frontend.018')"">
+            <el-form-item :label=""ncfST('Frontend.Template_XncfName.ColorPreview')"">
                 <div class=""color-preview-large"" :style=""{backgroundColor: `rgb(${addForm.red}, ${addForm.green}, ${addForm.blue})`}"">
                     RGB({{addForm.red}}, {{addForm.green}}, {{addForm.blue}})
                 </div>
             </el-form-item>
-            <el-form-item :label=""ncfST('Frontend.025')"" prop=""additionNote"">
-                <el-input v-model=""addForm.additionNote"" type=""textarea"" :rows=""3"" :placeholder=""ncfST('Frontend.026')""></el-input>
+            <el-form-item :label=""ncfST('Frontend.Template_XncfName.AdditionalNote')"" prop=""additionNote"">
+                <el-input v-model=""addForm.additionNote"" type=""textarea"" :rows=""3"" :placeholder=""ncfST('Frontend.Template_XncfName.EnterAdditionalNotesForTheColor')""></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button @@click=""randomizeForm"" type=""info"">{{ncfST('Frontend.027')}}</el-button>
+                <el-button @@click=""randomizeForm"" type=""info"">{{ncfST('Frontend.Template_XncfName.RandomColor')}}</el-button>
             </el-form-item>
         </el-form>
         <span slot=""footer"" class=""dialog-footer"">
-            <el-button @@click=""addFormDialogVisible = false"">{{ncfST('Frontend.028')}}</el-button>
-            <el-button type=""primary"" @@click=""addColorSubmit"">{{ncfST('Frontend.029')}}</el-button>
+            <el-button @@click=""addFormDialogVisible = false"">{{ncfST('Frontend.Template_XncfName.Cancel')}}</el-button>
+            <el-button type=""primary"" @@click=""addColorSubmit"">{{ncfST('Frontend.Template_XncfName.OK')}}</el-button>
         </span>
     </el-dialog>
 
     @* Dialog for editing a color *@
-    <el-dialog :title=""ncfST('Frontend.030')"" :visible.sync=""editFormDialogVisible"" width=""50%"" :close-on-click-modal=""false"">
+    <el-dialog :title=""ncfST('Frontend.Template_XncfName.EditColor')"" :visible.sync=""editFormDialogVisible"" width=""50%"" :close-on-click-modal=""false"">
         <el-form :model=""editForm"" label-width=""120px"" :rules=""editRules"" ref=""editForm"">
-            <el-form-item :label=""ncfST('Frontend.015')"" prop=""red"">
+            <el-form-item :label=""ncfST('Frontend.Template_XncfName.RedValueR')"" prop=""red"">
                 <el-slider v-model=""editForm.red"" :min=""0"" :max=""255"" show-input></el-slider>
             </el-form-item>
-            <el-form-item :label=""ncfST('Frontend.016')"" prop=""green"">
+            <el-form-item :label=""ncfST('Frontend.Template_XncfName.GreenValueG')"" prop=""green"">
                 <el-slider v-model=""editForm.green"" :min=""0"" :max=""255"" show-input></el-slider>
             </el-form-item>
-            <el-form-item :label=""ncfST('Frontend.017')"" prop=""blue"">
+            <el-form-item :label=""ncfST('Frontend.Template_XncfName.BlueValueB')"" prop=""blue"">
                 <el-slider v-model=""editForm.blue"" :min=""0"" :max=""255"" show-input></el-slider>
             </el-form-item>
-            <el-form-item :label=""ncfST('Frontend.018')"">
+            <el-form-item :label=""ncfST('Frontend.Template_XncfName.ColorPreview')"">
                 <div class=""color-preview-large"" :style=""{backgroundColor: `rgb(${editForm.red}, ${editForm.green}, ${editForm.blue})`}"">
                     RGB({{editForm.red}}, {{editForm.green}}, {{editForm.blue}})
                 </div>
             </el-form-item>
-            <el-form-item :label=""ncfST('Frontend.025')"" prop=""additionNote"">
-                <el-input v-model=""editForm.additionNote"" type=""textarea"" :rows=""3"" :placeholder=""ncfST('Frontend.026')""></el-input>
+            <el-form-item :label=""ncfST('Frontend.Template_XncfName.AdditionalNote')"" prop=""additionNote"">
+                <el-input v-model=""editForm.additionNote"" type=""textarea"" :rows=""3"" :placeholder=""ncfST('Frontend.Template_XncfName.EnterAdditionalNotesForTheColor')""></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button @@click=""randomizeEditForm"" type=""info"">{{ncfST('Frontend.027')}}</el-button>
+                <el-button @@click=""randomizeEditForm"" type=""info"">{{ncfST('Frontend.Template_XncfName.RandomColor')}}</el-button>
             </el-form-item>
         </el-form>
         <span slot=""footer"" class=""dialog-footer"">
-            <el-button @@click=""editFormDialogVisible = false"">{{ncfST('Frontend.028')}}</el-button>
-            <el-button type=""primary"" @@click=""editColorSubmit"">{{ncfST('Frontend.029')}}</el-button>
+            <el-button @@click=""editFormDialogVisible = false"">{{ncfST('Frontend.Template_XncfName.Cancel')}}</el-button>
+            <el-button type=""primary"" @@click=""editColorSubmit"">{{ncfST('Frontend.Template_XncfName.OK')}}</el-button>
         </span>
     </el-dialog>
 </div>
@@ -695,7 +695,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                 var result = new
                 {
                     success = true,
-                    message = Template_XncfNameResource.Get(""Frontend.048"", ""Data loaded successfully""),
+                    message = Template_XncfNameResource.Get(""Frontend.Template_XncfName.DataLoadedSuccessfully"", ""Data loaded successfully""),
                     data = new {
                         totalCount = response.TotalCount,
                         pageIndex = response.PageIndex,
@@ -723,7 +723,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                 System.Diagnostics.Debug.WriteLine($""ColorList API Error: {ex.Message}"");
                 return Ok(new {
                     success = false,
-                    message = Template_XncfNameResource.Format(""Frontend.037"", ""Failed to load data: {0}"", ex.Message),
+                    message = Template_XncfNameResource.Format(""Frontend.Template_XncfName.FailedToLoadDataValue"", ""Failed to load data: {0}"", ex.Message),
                     totalCount = 0,
                     pageIndex = pageIndex,
                     list = new object[0]
@@ -745,18 +745,18 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
 
                 if (request == null)
                 {
-                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.050"", ""Request parameters are required"") });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.Template_XncfName.RequestParametersCannotBeEmpty"", ""Request parameters are required"") });
                 }
 
                 var color = new Color(request.Red, request.Green, request.Blue, request.AdditionNote);
                 await _colorService.SaveObjectAsync(color);
 
-                return Ok(new { success = true, message = Template_XncfNameResource.Get(""Frontend.051"", ""Color created""), data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.AddTime, color.LastUpdateTime } });
+                return Ok(new { success = true, message = Template_XncfNameResource.Get(""Frontend.Template_XncfName.ColorCreatedSuccessfully"", ""Color created""), data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.AddTime, color.LastUpdateTime } });
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($""CreateColor API Error: {ex.Message}"");
-                return Ok(new { success = false, message = Template_XncfNameResource.Format(""Frontend.052"", ""Create failed: {0}"", ex.Message) });
+                return Ok(new { success = false, message = Template_XncfNameResource.Format(""Frontend.Template_XncfName.FailedToCreateValue"", ""Create failed: {0}"", ex.Message) });
             }
         }
 
@@ -774,13 +774,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
 
                 if (request == null)
                 {
-                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.050"", ""Request parameters are required"") });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.Template_XncfName.RequestParametersCannotBeEmpty"", ""Request parameters are required"") });
                 }
 
                 var color = await _colorService.GetObjectAsync(c => c.Id == request.Id);
                 if (color == null)
                 {
-                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.053"", ""Color not found"") });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.Template_XncfName.TheColorDoesNotExist"", ""Color not found"") });
                 }
 
                 // update
@@ -788,12 +788,12 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
 
                 await _colorService.SaveObjectAsync(color);
 
-                return Ok(new { success = true, message = Template_XncfNameResource.Get(""Frontend.054"", ""Color updated""), data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.LastUpdateTime } });
+                return Ok(new { success = true, message = Template_XncfNameResource.Get(""Frontend.Template_XncfName.ColorUpdatedSuccessfully"", ""Color updated""), data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.LastUpdateTime } });
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($""UpdateColor API Error: {ex.Message}"");
-                return Ok(new { success = false, message = Template_XncfNameResource.Format(""Frontend.055"", ""Update failed: {0}"", ex.Message) });
+                return Ok(new { success = false, message = Template_XncfNameResource.Format(""Frontend.Template_XncfName.UpdateFailedValue"", ""Update failed: {0}"", ex.Message) });
             }
         }
 
@@ -811,22 +811,22 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
 
                 if (request == null)
                 {
-                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.050"", ""Request parameters are required"") });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.Template_XncfName.RequestParametersCannotBeEmpty"", ""Request parameters are required"") });
                 }
 
                 var color = await _colorService.GetObjectAsync(c => c.Id == request.Id);
                 if (color == null)
                 {
-                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.053"", ""Color not found"") });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.Template_XncfName.TheColorDoesNotExist"", ""Color not found"") });
                 }
 
                 await _colorService.DeleteObjectAsync(color);
-                return Ok(new { success = true, message = Template_XncfNameResource.Get(""Frontend.056"", ""Color deleted"") });
+                return Ok(new { success = true, message = Template_XncfNameResource.Get(""Frontend.Template_XncfName.ColorDeletedSuccessfully"", ""Color deleted"") });
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($""DeleteColor API Error: {ex.Message}"");
-                return Ok(new { success = false, message = Template_XncfNameResource.Format(""Frontend.057"", ""Delete failed: {0}"", ex.Message) });
+                return Ok(new { success = false, message = Template_XncfNameResource.Format(""Frontend.Template_XncfName.FailedToDeleteValue"", ""Delete failed: {0}"", ex.Message) });
             }
         }
 
@@ -844,24 +844,24 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
 
                 if (request == null)
                 {
-                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.050"", ""Request parameters are required"") });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.Template_XncfName.RequestParametersCannotBeEmpty"", ""Request parameters are required"") });
                 }
 
                 var color = await _colorService.GetObjectAsync(c => c.Id == request.Id);
                 if (color == null)
                 {
-                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.053"", ""Color not found"") });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.Template_XncfName.TheColorDoesNotExist"", ""Color not found"") });
                 }
 
                 color.Random();
                 await _colorService.SaveObjectAsync(color);
 
-                return Ok(new { success = true, message = Template_XncfNameResource.Get(""Frontend.058"", ""Color randomized""), data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.LastUpdateTime } });
+                return Ok(new { success = true, message = Template_XncfNameResource.Get(""Frontend.Template_XncfName.ColorRandomizedSuccessfully"", ""Color randomized""), data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.LastUpdateTime } });
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($""RandomizeColor API Error: {ex.Message}"");
-                return Ok(new { success = false, message = Template_XncfNameResource.Format(""Frontend.059"", ""Randomization failed: {0}"", ex.Message) });
+                return Ok(new { success = false, message = Template_XncfNameResource.Format(""Frontend.Template_XncfName.RandomizationFailedValue"", ""Randomization failed: {0}"", ex.Message) });
             }
         }
 
@@ -877,14 +877,14 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                 var color = await _colorService.GetObjectAsync(c => c.Id == id);
                 if (color == null)
                 {
-                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.053"", ""Color not found"") });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get(""Frontend.Template_XncfName.TheColorDoesNotExist"", ""Color not found"") });
                 }
 
                 return Ok(new { success = true, data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.AddTime, color.LastUpdateTime, color.Remark } });
             }
             catch (Exception ex)
             {
-                return Ok(new { success = false, message = Template_XncfNameResource.Format(""Frontend.060"", ""Load failed: {0}"", ex.Message) });
+                return Ok(new { success = false, message = Template_XncfNameResource.Format(""Frontend.Template_XncfName.FailedToLoadValue"", ""Load failed: {0}"", ex.Message) });
             }
         }
     }
@@ -928,30 +928,30 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             total: 0,
             addRules: {
                 red: [
-                    { required: true, message: ncfST('Frontend.031'), trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.032'), trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheRedValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.RedValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ],
                 green: [
-                    { required: true, message: ncfST('Frontend.033'), trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.034'), trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheGreenValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.GreenValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ],
                 blue: [
-                    { required: true, message: ncfST('Frontend.035'), trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.036'), trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheBlueValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.BlueValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ]
             },
             editRules: {
                 red: [
-                    { required: true, message: ncfST('Frontend.031'), trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.032'), trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheRedValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.RedValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ],
                 green: [
-                    { required: true, message: ncfST('Frontend.033'), trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.034'), trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheGreenValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.GreenValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ],
                 blue: [
-                    { required: true, message: ncfST('Frontend.035'), trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.036'), trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheBlueValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.BlueValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ]
             }
         }
@@ -1068,7 +1068,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                 .catch(error => {
                     console.error('Failed to load data:', error);
                     this.tableLoading = false;
-                    this.$message.error(ncfST('Frontend.037', error.message || error));
+                    this.$message.error(ncfST('Frontend.Template_XncfName.FailedToLoadDataValue', error.message || error));
                 });
         },
         addColor() {
@@ -1103,7 +1103,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                             const responseData = res.data.data || res.data;
                             this.$message({
                                 type: responseData.success ? 'success' : 'error',
-                                message: responseData.message || ncfST('Frontend.038')
+                                message: responseData.message || ncfST('Frontend.Template_XncfName.OperationCompleted')
                             });
                             if (responseData.success) {
                                 this.getDataList()
@@ -1113,7 +1113,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                         })
                         .catch(error => {
                             console.error('Create failed:', error);
-                            this.$message.error(ncfST('Frontend.039'));
+                            this.$message.error(ncfST('Frontend.Template_XncfName.CreationFailed'));
                         });
                 } else {
                     return false;
@@ -1171,7 +1171,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                             const responseData = res.data.data || res.data;
                             this.$message({
                                 type: responseData.success ? 'success' : 'error',
-                                message: responseData.message || ncfST('Frontend.038')
+                                message: responseData.message || ncfST('Frontend.Template_XncfName.OperationCompleted')
                             });
                             if (responseData.success) {
                                 this.getDataList()
@@ -1181,7 +1181,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                         })
                         .catch(error => {
                             console.error('Update failed:', error);
-                            this.$message.error(ncfST('Frontend.040'));
+                            this.$message.error(ncfST('Frontend.Template_XncfName.UpdateFailed'));
                         });
                 } else {
                     return false;
@@ -1225,9 +1225,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             this.editFormDialogVisible = true;
         },
         deleteColor(row) {
-            this.$confirm(ncfST('Frontend.041'), ncfST('Frontend.042'), {
-                confirmButtonText: ncfST('Frontend.043'),
-                cancelButtonText: ncfST('Frontend.044'),
+            this.$confirm(ncfST('Frontend.Template_XncfName.ThisWillPermanentlyDeleteThisColorContinue'), ncfST('Frontend.Template_XncfName.Notice'), {
+                confirmButtonText: ncfST('Frontend.Template_XncfName.Confirm'),
+                cancelButtonText: ncfST('Frontend.Template_XncfName.CancelAlternate'),
                 type: 'warning'
             }).then(async () => {
                 console.log('📤 Sending delete request:', { id: row.id });
@@ -1245,7 +1245,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                         const responseData = res.data.data || res.data;
                         this.$message({
                             type: responseData.success ? 'success' : 'error',
-                            message: responseData.message || ncfST('Frontend.038')
+                            message: responseData.message || ncfST('Frontend.Template_XncfName.OperationCompleted')
                         });
                         if (responseData.success) {
                             this.getDataList();
@@ -1253,12 +1253,12 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                     })
                     .catch(error => {
                         console.error('Delete failed:', error);
-                        this.$message.error(ncfST('Frontend.045'));
+                        this.$message.error(ncfST('Frontend.Template_XncfName.DeleteFailed'));
                     });
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: ncfST('Frontend.046')
+                    message: ncfST('Frontend.Template_XncfName.DeletionCancelled')
                 });
             });
         },
@@ -1278,7 +1278,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                     const responseData = res.data.data || res.data;
                     this.$message({
                         type: responseData.success ? 'success' : 'error',
-                        message: responseData.message || ncfST('Frontend.038')
+                        message: responseData.message || ncfST('Frontend.Template_XncfName.OperationCompleted')
                     });
                     if (responseData.success) {
                         this.getDataList();
@@ -1286,7 +1286,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                 })
                 .catch(error => {
                     console.error('Randomization failed:', error);
-                    this.$message.error(ncfST('Frontend.047'));
+                    this.$message.error(ncfST('Frontend.Template_XncfName.RandomizationFailed'));
                 });
         },
         randomizeForm() {

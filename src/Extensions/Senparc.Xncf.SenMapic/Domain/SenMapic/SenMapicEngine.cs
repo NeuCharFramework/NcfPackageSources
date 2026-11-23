@@ -71,6 +71,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         private int _maxPageCount = 500;//Legacy comment translated to English.
         private List<UrlPathCollection> _urlPath;//path
         private int _requestPageCount = 0;//Legacy comment translated to English.
+        private int _currentRequestReservationCount;
         private long _requestPageTicks = 0;//Legacy comment translated to English.
         private int _threadInUsing = 0;//Legacy comment translated to English.
 
@@ -211,6 +212,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     _currentOriginalFullDomain = this.GetFullDomain(_currentUrl);//Legacy comment translated to English.
                     _currentDeep = -1;//Legacy comment translated to English.
                     _currentPageCount = 0;//Legacy comment translated to English.
+                    _currentRequestReservationCount = 0;
                     //Legacy comment translated to English.
                     _currentAvaliableUrlTemp = new Dictionary<string, AvailableUrl>(StringComparer.OrdinalIgnoreCase);
                     _currentUrls = new Dictionary<string, UrlData>(StringComparer.OrdinalIgnoreCase);//Legacy comment translated to English.

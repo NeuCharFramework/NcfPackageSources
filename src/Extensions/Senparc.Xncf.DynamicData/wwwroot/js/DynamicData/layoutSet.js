@@ -114,7 +114,7 @@ var app = new Vue({
 
             layoutMenuList: [
                 {
-                    name: ncfST('Frontend.276'),
+                    name: ncfST('Frontend.DynamicData.MenuOne'),
                     isEditName: false,
                     layoutList: []
                 }
@@ -209,12 +209,12 @@ var app = new Vue({
                 interactive: '',
                 page: '',
                 popupForm: {
-                    popupTitleText: ncfST('Frontend.278'),
-                    popupCancelText: ncfST('Frontend.034'),
-                    popupConfirmText: ncfST('Frontend.152'),
-                    popupPromptContent: ncfST('Frontend.279'),
+                    popupTitleText: ncfST('Frontend.DynamicData.ConfirmDeletingThisRecord'),
+                    popupCancelText: ncfST('Frontend.DynamicData.Cancel'),
+                    popupConfirmText: ncfST('Frontend.DynamicData.Confirm'),
+                    popupPromptContent: ncfST('Frontend.DynamicData.DeletedSuccessfullyAlternate'),
                     popupPromptOften: '1600', // ms
-                    popupClosePage: ncfST('Frontend.280')
+                    popupClosePage: ncfST('Frontend.DynamicData.CloseCurrentPage')
                 }
             },
             //Legacy comment translated to English.
@@ -229,39 +229,39 @@ var app = new Vue({
             //Legacy comment translated to English.
             formItemOpt: [
                 {
-                    label: ncfST('Frontend.281'),
+                    label: ncfST('Frontend.DynamicData.Input'),
                     value: 'input',
                     disabled: false,
                     children: [
                         {
-                            label: ncfST('Frontend.282'),
+                            label: ncfST('Frontend.DynamicData.TextInput'),
                             value: 'text',
                             disabled: false,
                         },
                         {
-                            label: ncfST('Frontend.283'),
+                            label: ncfST('Frontend.DynamicData.TextArea'),
                             value: 'textarea',
                             disabled: false,
                         },
                         {
-                            label: ncfST('Frontend.284'),
+                            label: ncfST('Frontend.DynamicData.NumberInput'),
                             value: 'number',
                             disabled: false,
                         }
                     ]
                 },
                 {
-                    label: ncfST('Frontend.285'),
+                    label: ncfST('Frontend.DynamicData.Switch'),
                     value: 'switch',
                     disabled: false,
                 },
                 {
-                    label: ncfST('Frontend.286'),
+                    label: ncfST('Frontend.DynamicData.Selector'),
                     value: 'select',
                     disabled: false,
                 },
                 {
-                    label: ncfST('Frontend.287'),
+                    label: ncfST('Frontend.DynamicData.AnyTimePicker'),
                     value: 'timePicker',
                     disabled: false,
                 },
@@ -271,55 +271,55 @@ var app = new Vue({
                 //     disabled: false,
                 // },
                 {
-                    label: ncfST('Frontend.288'),
+                    label: ncfST('Frontend.DynamicData.DatePicker'),
                     value: 'date',
                     disabled: false,
                     children: [
                         // datetimerange/daterange/monthrange
                         {
-                            label: ncfST('Frontend.289'),
+                            label: ncfST('Frontend.DynamicData.YearPicker'),
                             value: 'year',
                             format: '',
                             disabled: false,
                         },
                         {
-                            label: ncfST('Frontend.290'),
+                            label: ncfST('Frontend.DynamicData.YearPickerMultiple'),
                             value: 'years',
                             format: '',
                             disabled: false,
                         },
                         {
-                            label: ncfST('Frontend.291'),
+                            label: ncfST('Frontend.DynamicData.MonthPicker'),
                             value: 'month',
                             format: '',
                             disabled: false,
                         },
                         {
-                            label: ncfST('Frontend.292'),
+                            label: ncfST('Frontend.DynamicData.MonthPickerMultiple'),
                             value: 'months',
                             format: '',
                             disabled: false,
                         },
                         {
-                            label: ncfST('Frontend.288'),
+                            label: ncfST('Frontend.DynamicData.DatePicker'),
                             value: 'date',
                             format: '',
                             disabled: false,
                         },
                         {
-                            label: ncfST('Frontend.293'),
+                            label: ncfST('Frontend.DynamicData.DatePickerMultiple'),
                             value: 'dates',
                             format: '',
                             disabled: false,
                         },
                         {
-                            label: ncfST('Frontend.294'),
+                            label: ncfST('Frontend.DynamicData.WeekPicker'),
                             value: 'week',
-                            format: ncfST('Frontend.295'),
+                            format: ncfST('Frontend.DynamicData.YyyyWeekWW'),
                             disabled: false,
                         },
                         {
-                            label: ncfST('Frontend.296'),
+                            label: ncfST('Frontend.DynamicData.DateAndTimePicker'),
                             value: 'datetime',
                             format: '',
                             disabled: false,
@@ -328,12 +328,12 @@ var app = new Vue({
                     ]
                 },
                 {
-                    label: ncfST('Frontend.297'),
+                    label: ncfST('Frontend.DynamicData.Checkbox'),
                     value: 'checkbox',
                     disabled: false,
                 },
                 {
-                    label: ncfST('Frontend.298'),
+                    label: ncfST('Frontend.DynamicData.RadioButton'),
                     value: 'radio',
                     disabled: false,
                 }
@@ -426,7 +426,7 @@ var app = new Vue({
                                 columnkey: this.layoutComponentActive,
                                 ...item
                             })
-                            tableMockItem[item.field] = ncfST('Frontend.299')
+                            tableMockItem[item.field] = ncfST('Frontend.DynamicData.MockData')
                         }
                     })
 
@@ -541,7 +541,7 @@ var app = new Vue({
                 if (isNumber(this.layoutComponentActive) && isNumber(this.columnActiveIndex)) {
                     //Legacy comment translated to English.
                     const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
-                    // 
+                    //
                     const tableColumnItem = layoutComponentItem.columnData[this.columnActiveIndex]
 
                     // handlingdata
@@ -861,7 +861,7 @@ var app = new Vue({
             if (this.loadingAddMenu) return
             this.loadingAddMenu = true
             this.layoutMenuList.push({
-                name: ncfST('Frontend.277', this.layoutMenuList.length + 1),
+                name: ncfST('Frontend.DynamicData.MenuValue', this.layoutMenuList.length + 1),
                 isEditName: false,
                 layoutList: []
             })
@@ -1079,7 +1079,7 @@ var app = new Vue({
         handleAddSortingRules() {
             this.dataSetForm.sortingRules.push({
                 field: '',
-                sort: ncfST('Frontend.031')
+                sort: ncfST('Frontend.DynamicData.Ascending')
             })
         },
         //Legacy comment translated to English.
@@ -1135,12 +1135,12 @@ var app = new Vue({
                 interactive: '',
                 page: '',
                 popupForm: {
-                    popupTitleText: ncfST('Frontend.278'),
-                    popupCancelText: ncfST('Frontend.034'),
-                    popupConfirmText: ncfST('Frontend.152'),
-                    popupPromptContent: ncfST('Frontend.279'),
+                    popupTitleText: ncfST('Frontend.DynamicData.ConfirmDeletingThisRecord'),
+                    popupCancelText: ncfST('Frontend.DynamicData.Cancel'),
+                    popupConfirmText: ncfST('Frontend.DynamicData.Confirm'),
+                    popupPromptContent: ncfST('Frontend.DynamicData.DeletedSuccessfullyAlternate'),
                     popupPromptOften: '1600', // ms
-                    popupClosePage: ncfST('Frontend.280')
+                    popupClosePage: ncfST('Frontend.DynamicData.CloseCurrentPage')
                 }
             })
         },

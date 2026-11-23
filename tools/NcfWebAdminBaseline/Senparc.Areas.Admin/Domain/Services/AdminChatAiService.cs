@@ -76,12 +76,14 @@ using Senparc.AI.AgentKernel;
 using Senparc.AI.AgentKernel.Harness;
 using Senparc.AI.AgentKernel.Handlers;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
+using Senparc.Areas.Admin.OHS.Local.AppService;
 using Senparc.Areas.Admin.Domain.Services.AIPlugins;
 using Senparc.Areas.Admin;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase;
+using Senparc.Ncf.XncfBase.ChatTools;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Models.Usage;
 using Senparc.Xncf.AIKernel.Domain.Services;
@@ -188,6 +190,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             IReadOnlyList<AdminChatAttachment> attachments = null)
         {
             var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
+            var chatTools = ChatToolRegistry.Match(userMessage);
 
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
@@ -197,39 +200,68 @@ namespace Senparc.Areas.Admin.Domain.Services
 
 
             var functionInvocationEnabled = generationOptions?.AllowFunctionInvocation != false;
-            var build = await BuildAdminChatFunctionsAsync(setting, agentAiHandler, sessionId, userId, modules, workflows, functionInvocationEnabled);
+            var capabilityService = _serviceProvider.GetService<OllamaModelCapabilityService>();
+            if (functionInvocationEnabled
+                && capabilityService != null
+                && await capabilityService.SupportsToolsAsync(setting, cancellationToken) == false)
+            {
+                functionInvocationEnabled = false;
+                _logger.LogInformation(
+                    "Ollama 模型不支持工具调用，AdminChat 将使用纯聊天模式：Model={Model}",
+                    ResolveModelIdentifier(setting));
+            }
+            if (chatTools.Count > 0 && !functionInvocationEnabled)
+            {
+                throw new NcfExceptionBase("当前命令需要支持 Function Calling 的 AI 模型。请切换模型后重试。");
+            }
+            var build = await BuildAdminChatFunctionsAsync(
+                setting,
+                agentAiHandler,
+                sessionId,
+                userId,
+                modules,
+                workflows,
+                functionInvocationEnabled,
+                chatTools: chatTools);
             var aiFunctions = build.Functions;
             var moduleUids = modules.Where(z => !z.XncfModuleUid.IsNullOrEmpty()).Select(z => z.XncfModuleUid).ToList();
             var importedFunctionCount = build.ImportedFunctionCount;
             var importedWorkflowCount = build.ImportedWorkflowCount;
             var importedPluginNames = build.PluginNames;
             var importedFunctionSignatures = build.Signatures;
+            EnsureChatToolsAvailable(chatTools, build);
             var memoryContext = generationOptions == null
                 ? await Memory.BeginAsync(userId, sessionId, userMessage, cancellationToken, ResolveModelIdentifier(setting)) : null;
             var defaultSystemMessage = await BuildSystemMessageAsync(modules, cancellationToken);
             var systemInstructions = LimitSystemInstructions(
                 generationOptions?.SystemInstructions ?? defaultSystemMessage)
-                + (memoryContext?.Instructions ?? "");
+                + (memoryContext?.Instructions ?? "")
+                + BuildChatToolInstructions(chatTools);
 
-#pragma warning disable MEAI001 //Legacy comment translated to English.
-            var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChat-{userId}-{sessionId}", new ChatClientAgentOptions()
+            async Task<IWantToRun> BuildChatRunnerAsync(IReadOnlyCollection<AIFunction> functions)
             {
-                ChatOptions = new ChatOptions()
+#pragma warning disable MEAI001 //Legacy comment translated to English.
+                return await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChat-{userId}-{sessionId}", new ChatClientAgentOptions()
                 {
-                    Instructions = systemInstructions,
-                    MaxOutputTokens = Math.Clamp(generationOptions?.MaxOutputTokens ?? 2000, 256, 8000),
-                    TopP = 0.9f,
-                    Temperature = Math.Clamp(generationOptions?.Temperature ?? 0.6f, 0f, 1.5f),
-                    AllowMultipleToolCalls = aiFunctions.Count > 0,
-                    Tools = aiFunctions.Count > 0 ? aiFunctions.Cast<AITool>().ToList() : null
-                },
-                ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions
-                {
-                    ChatReducer = new MessageCountingChatReducer(20)
-                })
-            }
+                    ChatOptions = new ChatOptions()
+                    {
+                        Instructions = systemInstructions,
+                        MaxOutputTokens = Math.Clamp(generationOptions?.MaxOutputTokens ?? 2000, 256, 8000),
+                        TopP = 0.9f,
+                        Temperature = Math.Clamp(generationOptions?.Temperature ?? 0.6f, 0f, 1.5f),
+                        AllowMultipleToolCalls = functions.Count > 0,
+                        Tools = functions.Count > 0 ? functions.Cast<AITool>().ToList() : null
+                    },
+                    ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions
+                    {
+                        ChatReducer = new MessageCountingChatReducer(20)
+                    })
+                }
                 ).BuildKernelWithAgentSessionAsync();
 #pragma warning restore MEAI001 //Legacy comment translated to English.
+            }
+
+            var iWantToRun = await BuildChatRunnerAsync(aiFunctions);
 
 
             if (importedFunctionCount == 0)
@@ -265,32 +297,32 @@ namespace Senparc.Areas.Admin.Domain.Services
             //Legacy comment translated to English.
             //Legacy comment translated to English.
             var hasStreamedChunk = false;
-            string responseText;
             var aiModelService = _serviceProvider.GetService<AIModelService>();
-            if (attachments?.Any(attachment => attachment.UseVision) == true)
+            async Task<string> ExecuteChatAsync(IWantToRun runner)
             {
-                var inputs = await BuildAttachmentMessagesAsync(sessionId, userId, prompt, attachments, cancellationToken);
-                var agent = iWantToRun.Kernel.ChatClientAgent
-                    ?? throw new InvalidOperationException("当前模型没有可用的多模态 Chat Agent。");
-                void ProcessImageUpdate(AgentResponseUpdate update)
+                if (attachments?.Any(attachment => attachment.UseVision) == true)
                 {
-                    if (update.Contents?.OfType<UsageContent>().FirstOrDefault()?.Details is { } usage)
-                        onUsage?.Invoke(AIModelService.BuildUsageSnapshot(usage));
-                    if (!string.IsNullOrEmpty(update.Text))
+                    var inputs = await BuildAttachmentMessagesAsync(sessionId, userId, prompt, attachments, cancellationToken);
+                    var agent = runner.Kernel.ChatClientAgent
+                        ?? throw new InvalidOperationException("当前模型没有可用的多模态 Chat Agent。");
+                    void ProcessImageUpdate(AgentResponseUpdate update)
                     {
-                        hasStreamedChunk = true;
-                        onChunk?.Invoke(update.Text);
+                        if (update.Contents?.OfType<UsageContent>().FirstOrDefault()?.Details is { } usage)
+                            onUsage?.Invoke(AIModelService.BuildUsageSnapshot(usage));
+                        if (!string.IsNullOrEmpty(update.Text))
+                        {
+                            hasStreamedChunk = true;
+                            onChunk?.Invoke(update.Text);
+                        }
                     }
-                }
-                if (aiModelService != null)
-                {
-                    var updates = await aiModelService.RunAgentStreamingWithUsageAsync(agent, inputs,
-                        null, cancellationToken, ProcessImageUpdate,
-                        source: "AdminChat.Vision", modelAlias: modelIdentifier);
-                    responseText = string.Concat(updates.Select(update => update.Text));
-                }
-                else
-                {
+                    if (aiModelService != null)
+                    {
+                        var updates = await aiModelService.RunAgentStreamingWithUsageAsync(agent, inputs,
+                            null, cancellationToken, ProcessImageUpdate,
+                            source: "AdminChat.Vision", modelAlias: modelIdentifier);
+                        return string.Concat(updates.Select(update => update.Text));
+                    }
+
                     var output = new StringBuilder();
                     await foreach (var update in agent.RunStreamingAsync(inputs, null,
                                        cancellationToken: cancellationToken))
@@ -298,40 +330,56 @@ namespace Senparc.Areas.Admin.Domain.Services
                         ProcessImageUpdate(update);
                         output.Append(update.Text);
                     }
-                    responseText = output.ToString();
+                    return output.ToString();
                 }
-            }
-            else if (onChunk == null)
-            {
-                var skResult = aiModelService == null
-                    ? await iWantToRun.RunChatAsync(prompt)
-                    : await aiModelService.RunChatWithUsageAsync(
-                        iWantToRun,
-                        prompt,
-                        modelAlias: modelIdentifier,
-                        source: "AdminChat.GenerateResponse");
-                responseText = skResult?.OutputString;
-            }
-            else
-            {
-                responseText = await ExecuteRunnerWithSessionRetryAsync(
-                    iWantToRun,
-                    prompt,
-                    update =>
-                    {
-                        var updateText = update?.Text;
-                        if (string.IsNullOrEmpty(updateText))
-                        {
-                            return;
-                        }
 
-                        hasStreamedChunk = true;
-                        onChunk(updateText);
-                    },
-                    cancellationToken,
-                    aiModelService,
-                    modelIdentifier,
-                    onUsage);
+                if (onChunk == null)
+                {
+                    var skResult = aiModelService == null
+                        ? await runner.RunChatAsync(prompt)
+                        : await aiModelService.RunChatWithUsageAsync(
+                            runner,
+                            prompt,
+                            modelAlias: modelIdentifier,
+                            source: "AdminChat.GenerateResponse");
+                    return skResult?.OutputString;
+                }
+
+                return await ExecuteRunnerWithSessionRetryAsync(
+                        runner,
+                        prompt,
+                        update =>
+                        {
+                            var updateText = update?.Text;
+                            if (string.IsNullOrEmpty(updateText))
+                            {
+                                return;
+                            }
+
+                            hasStreamedChunk = true;
+                            onChunk(updateText);
+                        },
+                        cancellationToken,
+                        aiModelService,
+                        modelIdentifier,
+                        onUsage);
+            }
+
+            string responseText;
+            try
+            {
+                responseText = await ExecuteChatAsync(iWantToRun);
+            }
+            catch (Exception exception) when (setting.AiPlatform == AiPlatform.Ollama
+                && aiFunctions.Count > 0
+                && IsToolUnsupportedException(exception))
+            {
+                _logger.LogWarning(
+                    exception,
+                    "Ollama rejected tool calling; retrying AdminChat without tools. Model={Model}",
+                    ResolveModelIdentifier(setting));
+                iWantToRun = await BuildChatRunnerAsync(Array.Empty<AIFunction>());
+                responseText = await ExecuteChatAsync(iWantToRun);
             }
 
             var result = responseText?.Trim() ?? string.Empty;
@@ -455,13 +503,23 @@ namespace Senparc.Areas.Admin.Domain.Services
             CancellationToken cancellationToken = default)
         {
             var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
+            var chatTools = ChatToolRegistry.Match(userMessage);
 
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
             var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
 
             var agentAiHandler = new AgentAiHandler(setting);
-            var build = await BuildAdminChatFunctionsAsync(setting, agentAiHandler, sessionId, userId, modules, workflows, functionInvocationEnabled: true);
+            var build = await BuildAdminChatFunctionsAsync(
+                setting,
+                agentAiHandler,
+                sessionId,
+                userId,
+                modules,
+                workflows,
+                functionInvocationEnabled: true,
+                chatTools: chatTools);
+            EnsureChatToolsAvailable(chatTools, build);
 
             var effectiveMaxSteps = maxSteps > 0 ? maxSteps : 8;
             var effectiveTimeout = timeout ?? TimeSpan.FromSeconds(120);
@@ -470,7 +528,9 @@ namespace Senparc.Areas.Admin.Domain.Services
 #pragma warning disable MEAI001 //Legacy comment translated to English.
             var defaultSystemMessage = await BuildSystemMessageAsync(modules, cancellationToken);
             var systemInstructions = LimitSystemInstructions(
-                defaultSystemMessage + AdminChatHarnessExecutor.BuildProtocolInstructions()) + memoryContext.Instructions;
+                defaultSystemMessage + AdminChatHarnessExecutor.BuildProtocolInstructions())
+                + memoryContext.Instructions
+                + BuildChatToolInstructions(chatTools);
             var firstTurnPrompt = AdminChatPromptBuilder.BuildUserPrompt(messages, userMessage) + AdminChatHarnessExecutor.BuildStartTail();
             LogPromptContextSize(sessionId, userId, systemInstructions, firstTurnPrompt, build.Functions, messages?.Count ?? 0);
             var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChatHarness-{userId}-{sessionId}", new ChatClientAgentOptions()
@@ -574,10 +634,17 @@ namespace Senparc.Areas.Admin.Domain.Services
             var effectiveHarnessOptions = AdminChatHarnessOptions.Normalize(harnessOptions, maxIterations);
             maxIterations = effectiveHarnessOptions.MaxIterations;
             var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
+            var chatTools = ChatToolRegistry.Match(userMessage);
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
             var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
             var agentAiHandler = new AgentAiHandler(setting);
+            var capabilityService = _serviceProvider.GetService<OllamaModelCapabilityService>();
+            if (capabilityService != null
+                && await capabilityService.SupportsToolsAsync(setting, cancellationToken) == false)
+            {
+                throw CreateOllamaToolSupportException(setting);
+            }
             var build = await BuildAdminChatFunctionsAsync(
                 setting,
                 agentAiHandler,
@@ -586,10 +653,13 @@ namespace Senparc.Areas.Admin.Domain.Services
                 modules,
                 workflows,
                 true,
-                includeWorkflowManagement: true);
+                includeWorkflowManagement: true,
+                chatTools: chatTools);
+            EnsureChatToolsAvailable(chatTools, build);
             var memoryContext = await Memory.BeginAsync(userId, sessionId, userMessage, cancellationToken, ResolveModelIdentifier(setting));
             var nativeSystemInstructions = await BuildSystemMessageAsync(modules, cancellationToken)
-                + memoryContext.Instructions;
+                + memoryContext.Instructions
+                + BuildChatToolInstructions(chatTools);
             var nativePrompt = AdminChatPromptBuilder.BuildUserPrompt(messages, userMessage, attachments);
             var attachmentMessages = attachments?.Any(attachment => attachment.UseVision) == true
                 ? await BuildAttachmentMessagesAsync(sessionId, userId, nativePrompt, attachments, cancellationToken)
@@ -639,15 +709,24 @@ namespace Senparc.Areas.Admin.Domain.Services
                 cancellationToken: cancellationToken);
             await ApplyHarnessModeAsync(harnessAgent, requestedMode, cancellationToken);
 
-            var result = await ExecuteNativeHarnessAsync(
-                trajectory,
-                harnessAgent,
-                nativePrompt,
-                timeout ?? TimeSpan.FromMinutes(10),
-                cancellationToken,
-                modelAlias: modelIdentifier,
-                messages: attachmentMessages,
-                onLiveEvent: onLiveEvent);
+            AdminChatHarnessResult result;
+            try
+            {
+                result = await ExecuteNativeHarnessAsync(
+                    trajectory,
+                    harnessAgent,
+                    nativePrompt,
+                    timeout ?? TimeSpan.FromMinutes(10),
+                    cancellationToken,
+                    modelAlias: modelIdentifier,
+                    messages: attachmentMessages,
+                    onLiveEvent: onLiveEvent);
+            }
+            catch (Exception exception) when (setting.AiPlatform == AiPlatform.Ollama
+                && IsToolUnsupportedException(exception))
+            {
+                throw CreateOllamaToolSupportException(setting, exception);
+            }
 
             if (result.Completed || result.Status == AdminChatTrajectoryStatus.WaitingForApproval)
                 await Memory.CompleteAsync(memoryContext, userMessage, aiModelId,
@@ -1487,6 +1566,31 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
         }
 
+        private static void EnsureChatToolsAvailable(
+            IReadOnlyCollection<ChatToolDefinition> chatTools,
+            AdminChatFunctionBuild build)
+        {
+            var missingMethod = chatTools
+                .SelectMany(tool => tool.Functions)
+                .Select(function => function.MethodName)
+                .FirstOrDefault(method => !build.Signatures.Any(
+                    signature => signature.Contains(method, StringComparison.Ordinal)));
+            if (!string.IsNullOrWhiteSpace(missingMethod))
+            {
+                throw new NcfExceptionBase(
+                    $"聊天工具未成功加载：{missingMethod}。请检查对应 XNCF 模块注册后重试。");
+            }
+        }
+
+        private static string BuildChatToolInstructions(
+            IReadOnlyCollection<ChatToolDefinition> chatTools)
+        {
+            return string.Concat(
+                chatTools
+                    .Select(tool => tool.Instructions ?? string.Empty)
+                    .Where(instructions => !string.IsNullOrWhiteSpace(instructions)));
+        }
+
         private async Task<AdminChatFunctionBuild> BuildAdminChatFunctionsAsync(
             SenparcAiSetting setting,
             AgentAiHandler agentAiHandler,
@@ -1495,10 +1599,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             List<AdminChatSessionModule> modules,
             List<AdminChatSessionWorkflow> workflows,
             bool functionInvocationEnabled,
-            bool includeWorkflowManagement = false)
+            bool includeWorkflowManagement = false,
+            IReadOnlyCollection<ChatToolDefinition> chatTools = null)
         {
+            var chatToolMode = chatTools?.Count > 0;
             var modulePlugin = new ModuleAssistantPlugin(modules);
-            var aiFunctions = functionInvocationEnabled
+            var aiFunctions = functionInvocationEnabled && !chatToolMode
                 ? agentAiHandler.GetAITools(modulePlugin)
                 : new List<AIFunction>();
 
@@ -1507,6 +1613,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 ? null
                 : await sessionService.GetSessionByIdAsync(sessionId, userId).ConfigureAwait(false);
             if (functionInvocationEnabled
+                && !chatToolMode
                 && session != null
                 && !string.IsNullOrWhiteSpace(session.WorkspaceId))
             {
@@ -1543,7 +1650,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
 
             var importedPluginNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            if (functionInvocationEnabled)
+            if (functionInvocationEnabled && !chatToolMode)
             {
                 importedPluginNames.Add("ModuleAssistant");
                 var skillCatalog = _serviceProvider.GetService<ISkillCatalog>();
@@ -1562,7 +1669,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             //Legacy comment translated to English.
             var moduleUids = modules.Where(z => !z.XncfModuleUid.IsNullOrEmpty()).Select(z => z.XncfModuleUid).ToList();
-            var functionRenderBags = functionInvocationEnabled
+            var functionRenderBags = functionInvocationEnabled && !chatToolMode
                 ? moduleUids
                     .SelectMany(uid => Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.GetByModuleUid(uid))
                     // FunctionRender is also used by the normal Admin UI. AI exposure is an
@@ -1573,6 +1680,20 @@ namespace Senparc.Areas.Admin.Domain.Services
                                 && z.FunctionRenderAttribute?.AllowAiInvocation != false)
                     .ToList()
                 : new List<FunctionRenderBag>();
+            if (functionInvocationEnabled && chatToolMode)
+            {
+                var selectedFunctions = chatTools
+                    .SelectMany(tool => tool.Functions)
+                    .GroupBy(function => (function.DeclaringType, function.MethodName))
+                    .Select(group => group.Key)
+                    .ToHashSet();
+                functionRenderBags = Senparc.Ncf.XncfBase.Register.FunctionRenderCollection
+                        .SelectMany(group => group.Value.Values)
+                        .Where(bag => bag.MethodInfo != null
+                                      && selectedFunctions.Contains(
+                                          (bag.MethodInfo.DeclaringType, bag.MethodInfo.Name)))
+                    .ToList();
+            }
 
             var functionPluginGroups = functionRenderBags
                 .GroupBy(z => z.MethodInfo.DeclaringType)
@@ -1662,7 +1783,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 }
             }
 
-            var workflowProvider = functionInvocationEnabled
+            var workflowProvider = functionInvocationEnabled && !chatToolMode
                 ? _serviceProvider.GetService<IWorkflowFunctionCallingProvider>()
                 : null;
             if (workflowProvider != null && workflows.Count > 0)
@@ -1698,7 +1819,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 }
             }
 
-            if (includeWorkflowManagement && functionInvocationEnabled)
+            if (includeWorkflowManagement && functionInvocationEnabled && !chatToolMode)
             {
                 var workflowCreationProvider = _serviceProvider.GetService<IWorkflowCreationProvider>();
                 if (workflowCreationProvider != null)
@@ -1820,6 +1941,36 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
 
             return result;
+        }
+
+        private static bool IsToolUnsupportedException(Exception exception)
+        {
+            for (var current = exception; current != null; current = current.InnerException)
+            {
+                var message = current.Message;
+                if (!string.IsNullOrWhiteSpace(message)
+                    && (message.Contains("does not support tools", StringComparison.OrdinalIgnoreCase)
+                        || message.Contains("doesn't support tools", StringComparison.OrdinalIgnoreCase)
+                        || message.Contains("tools are not supported", StringComparison.OrdinalIgnoreCase)))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private NcfExceptionBase CreateOllamaToolSupportException(
+            SenparcAiSetting setting,
+            Exception innerException = null)
+        {
+            var localizer = _serviceProvider.GetRequiredService<IStringLocalizer<AdminResource>>();
+            var message = localizer[
+                "AdminChat.OllamaToolSupportRequired",
+                ResolveModelIdentifier(setting)].Value;
+            return innerException == null
+                ? new NcfExceptionBase(message)
+                : new NcfExceptionBase(message, innerException);
         }
 
         private static async Task<IReadOnlyList<AgentResponseUpdate>> CollectChatStreamingUpdatesAsync(
@@ -2050,6 +2201,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                             ?? setting.AzureOpenAIKeys?.DeploymentName
                             ?? setting.OpenAIKeys?.ModelName?.Chat
                             ?? setting.HuggingFaceKeys?.ModelName?.Chat
+                            ?? setting.FastAPIKeys?.ModelName?.Chat
+                            ?? setting.OllamaKeys?.ModelName?.Chat
                             ?? setting.DeepSeekKeys?.ModelName?.Chat
                             ?? "unknown";
 

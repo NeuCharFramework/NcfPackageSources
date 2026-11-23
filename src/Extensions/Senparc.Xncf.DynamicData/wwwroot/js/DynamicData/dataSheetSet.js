@@ -5,7 +5,7 @@ var app = new Vue({
             devHost: 'http://pr-felixj.frp.senparc.com',
             elSize: 'medium', //Legacy comment translated to English.
             //Legacy comment translated to English.
-            dataSheetList: [], 
+            dataSheetList: [],
             dataSheetTotal: 0,
             queryDataSheet: {
                 page: 1,
@@ -36,22 +36,22 @@ var app = new Vue({
             },
             newFieldFormRules: {
                 name: [
-                    { required: true, message: ncfST('Frontend.187'), trigger: 'blur' },
+                    { required: true, message: ncfST('Frontend.DynamicData.EnterAName'), trigger: 'blur' },
                 ],
                 identificationId: [
-                    { required: true, message: ncfST('Frontend.188'), trigger: 'blur' },
+                    { required: true, message: ncfST('Frontend.DynamicData.EnterIdentifierId'), trigger: 'blur' },
                 ],
                 dataType: [
-                    { required: true, message: ncfST('Frontend.216'), trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.DynamicData.SelectDataType'), trigger: 'change' },
                 ],
                 format: [
-                    { required: true, message: ncfST('Frontend.218'), trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.DynamicData.SelectAFormat'), trigger: 'change' },
                 ],
                 requir: [
-                    { required: true, message: ncfST('Frontend.264'), trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.DynamicData.SelectWhetherRequired'), trigger: 'change' },
                 ],
                 primaryKey: [
-                    { required: true, message: ncfST('Frontend.265'), trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.DynamicData.SelectWhetherUnique'), trigger: 'change' },
                 ],
                 //event: [
                 //Legacy comment translated to English.
@@ -194,11 +194,11 @@ var app = new Vue({
             const { name, description } = this.sheetForm
             let messageText = ''
             if (!name && !description) {
-                messageText = ncfST('Frontend.270')
+                messageText = ncfST('Frontend.DynamicData.EnterANameAndDescription')
             } else if (!name) {
-                this.$message.error(ncfST('Frontend.195'));
+                this.$message.error(ncfST('Frontend.DynamicData.EnterANameAlternate'));
             } else if (!description) {
-                messageText = ncfST('Frontend.199')
+                messageText = ncfST('Frontend.DynamicData.EnterADescription')
             }
             if (messageText) {
                 this.$message.error(messageText);
@@ -225,7 +225,7 @@ var app = new Vue({
                 this.dataSheetTotal += 1
                 this.sheetSelectId = simulationId
             }
-            
+
             this.sheetFormEidt = true
             // todo invokeinterface create this.sheetSelectId
             //Legacy comment translated to English.
@@ -237,7 +237,7 @@ var app = new Vue({
         //}
         //Legacy comment translated to English.
         handleNewFieldDrawerClose(done) {
-            this.$confirm(ncfST('Frontend.271'))
+            this.$confirm(ncfST('Frontend.DynamicData.CloseNow'))
                 .then(_ => {
                     this.resetNewField(false)
                     this.$nextTick(() => {
@@ -260,14 +260,14 @@ var app = new Vue({
         },
         //Legacy comment translated to English.
         newFieldsDelete(row) {
-            this.$confirm(ncfST('Frontend.272'), ncfST('Frontend.273'), {
-                confirmButtonText: ncfST('Frontend.152'),
-                cancelButtonText: ncfST('Frontend.034'),
+            this.$confirm(ncfST('Frontend.DynamicData.ThisWillPermanentlyDeleteThisFileContinue'), ncfST('Frontend.DynamicData.Notice'), {
+                confirmButtonText: ncfST('Frontend.DynamicData.Confirm'),
+                cancelButtonText: ncfST('Frontend.DynamicData.Cancel'),
                 type: 'warning'
             }).then(() => {
                 this.$message({
                     type: 'success',
-                    message: ncfST('Frontend.274')
+                    message: ncfST('Frontend.DynamicData.DeletedSuccessfully')
                 });
                 // todo invokedeleteinterface
                 //Legacy comment translated to English.
@@ -275,7 +275,7 @@ var app = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: ncfST('Frontend.275')
+                    message: ncfST('Frontend.DynamicData.DeletionCancelled')
                 });
             });
         },
@@ -302,7 +302,7 @@ var app = new Vue({
                         })
                         this.tableFieldTotal += 1
                     }
-                   
+
                     //Legacy comment translated to English.
                     // this.getTableFieldListData()
                     //Legacy comment translated to English.
@@ -320,7 +320,7 @@ var app = new Vue({
             if (isClose) {
                 this.newFieldDrawer = false
             }
-             
+
         },
         //Legacy comment translated to English.
         createLayout() {

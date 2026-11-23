@@ -341,8 +341,8 @@ public class AIFineTuningAppService : AppServiceBase
 
     [FunctionRender(
         typeof(AIKernelResource),
-        "Frontend.100",
-        "Frontend.101",
+        "Frontend.AIKernel.CreateFineTuningTask",
+        "Frontend.AIKernel.CreateAFineTuningTaskWithAnApprovedLocalModelDatasetAnd",
         typeof(Register),
         "Create fine-tuning task",
         "Create a fine-tuning task with an approved local model, dataset, and training parameters.",

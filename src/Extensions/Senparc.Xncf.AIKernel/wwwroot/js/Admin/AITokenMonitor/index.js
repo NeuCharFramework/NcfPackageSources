@@ -170,7 +170,7 @@ var app = new Vue({
             this.$confirm(ncfT('AIKernel.TokenMonitor.ConfirmDelete'), ncfT('Vector.Delete'), { type: "warning" }).then(() => {
                 service.delete('/api/Senparc.Xncf.AIKernel/AITokenMonitorAppService/Xncf.AIKernel_AITokenMonitorAppService.DeleteAsync', { id: row.id })
                     .then(() => {
-                        this.$message.success(ncfT('AIKernel.Frontend.005'));
+                        this.$message.success(ncfT('AIKernel.Frontend.AIKernel.UpdatedSuccessfully'));
                         this.refreshAll();
                     });
             }).catch(() => { });

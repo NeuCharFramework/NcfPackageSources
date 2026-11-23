@@ -164,19 +164,19 @@
   <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Token 出力速度</value></data>
   <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>ユーザー満足度</value></data>
   <data name="Dashboard.TotalMessages" xml:space="preserve"><value>全メッセージ数</value></data>
-  <data name="Frontend.001" xml:space="preserve"><value>このエンティティは削除されたか存在しません！</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>エラー：このシステムには NeuChar 開発者アカウントが設定されていません。【システム管理】モジュールの設定ページで、【NeuChar クラウドアカウント情報を更新】を使い、NeuChar 開発者アカウントを紐付けてください！</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>AppKey または AppSecret が正しくありません！設定し直してください！</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>指定された DeveloperId が、システムに設定された AppKey と一致しません。確認または更新してから再試行してください！</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>更新しました。</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>エンティティが見つかりません！</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>未対応：BuildSenparcAiSetting での {0} モデルの処理</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>Senparc.Xncf.AIKernel は、現在 {0} タイプに対応していません</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>SenparcAiSetting は空にできません</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>モデルデータが存在しません。デプロイ済みか、権限があるかを確認してください！</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>モデルを {0} 件追加し、{1} 件のモデル情報を更新しました。</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>PromptRange は、現在 {0} タイプに対応していません</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>自動採点には、Chat タイプのモデルを少なくとも 1 つ設定する必要があります（AIKernel モジュール内）</value></data>
+  <data name="Frontend.AIKernel.ThisEntityWasDeletedOrDoesNotExist" xml:space="preserve"><value>このエンティティは削除されたか存在しません！</value></data>
+  <data name="Frontend.AIKernel.ErrorNoNeuCharDeveloperAccountIsConfiguredGoToTheSystemManagement" xml:space="preserve"><value>エラー：このシステムには NeuChar 開発者アカウントが設定されていません。【システム管理】モジュールの設定ページで、【NeuChar クラウドアカウント情報を更新】を使い、NeuChar 開発者アカウントを紐付けてください！</value></data>
+  <data name="Frontend.AIKernel.AppKeyOrAppSecretIsIncorrectPleaseSetThemAgain" xml:space="preserve"><value>AppKey または AppSecret が正しくありません！設定し直してください！</value></data>
+  <data name="Frontend.AIKernel.TheProvidedDeveloperIdDoesNotMatchTheAppKeyConfiguredInTheSystem" xml:space="preserve"><value>指定された DeveloperId が、システムに設定された AppKey と一致しません。確認または更新してから再試行してください！</value></data>
+  <data name="Frontend.AIKernel.UpdatedSuccessfully" xml:space="preserve"><value>更新しました。</value></data>
+  <data name="Frontend.AIKernel.EntityNotFound" xml:space="preserve"><value>エンティティが見つかりません！</value></data>
+  <data name="Frontend.AIKernel.NotSupportedYetHandlingOfModelValueInBuildSenparcAiSetting" xml:space="preserve"><value>未対応：BuildSenparcAiSetting での {0} モデルの処理</value></data>
+  <data name="Frontend.AIKernel.SenparcXncfAIKernelDoesNotSupportTheValueTypeYet" xml:space="preserve"><value>Senparc.Xncf.AIKernel は、現在 {0} タイプに対応していません</value></data>
+  <data name="Frontend.AIKernel.SenparcAiSettingCannotBeEmpty" xml:space="preserve"><value>SenparcAiSetting は空にできません</value></data>
+  <data name="Frontend.AIKernel.ModelDataDoesNotExistCheckWhetherItIsDeployedAndWhether" xml:space="preserve"><value>モデルデータが存在しません。デプロイ済みか、権限があるかを確認してください！</value></data>
+  <data name="Frontend.AIKernel.SuccessfullyAddedValueModelsAndUpdatedValueModelRecords" xml:space="preserve"><value>モデルを {0} 件追加し、{1} 件のモデル情報を更新しました。</value></data>
+  <data name="Frontend.AIKernel.PromptRangeDoesNotSupportTheValueTypeYet" xml:space="preserve"><value>PromptRange は、現在 {0} タイプに対応していません</value></data>
+  <data name="Frontend.AIKernel.AtLeastOneChatModelMustBeSetBeforeAutomaticScoringIn" xml:space="preserve"><value>自動採点には、Chat タイプのモデルを少なくとも 1 つ設定する必要があります（AIKernel モジュール内）</value></data>
   <data name="Area.AIKernel.TokenMonitor" xml:space="preserve"><value>Token モニター</value></data>
   <data name="TokenMonitor.Title" xml:space="preserve"><value>Token モニター</value></data>
   <data name="TokenMonitor.TotalTokens" xml:space="preserve"><value>合計 Token</value></data>
@@ -532,10 +532,10 @@
   <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>キーファイルは既に存在するため、変更していません。</value><comment>この言語向けに翻訳済み。</comment></data>
   <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>先に保存し、キーを生成してからworkerを開始してください。</value><comment>この言語向けに翻訳済み。</comment></data>
   <data name="FineTuning.Optional" xml:space="preserve"><value>任意</value><comment>この言語向けに翻訳済み。</comment></data>
-  <data name="Frontend.400" xml:space="preserve"><value>NeuChar AIからインポート（DevId: {0}）</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="Frontend.AIKernel.ImportedFromNeuCharAIDevIdValue" xml:space="preserve"><value>NeuChar AIからインポート（DevId: {0}）</value><comment>この言語向けに翻訳済み。</comment></data>
 
-  <data name="Frontend.100" xml:space="preserve"><value>ファインチューニングタスクを作成</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>承認済みのローカルモデル、データセット、学習パラメーターを使用してファインチューニングタスクを作成します。Worker、モデル、データセットは自動的に読み込まれ、学習パラメーターには既定値が設定されます。Workflowはその値で実行できます。</value></data>
+  <data name="Frontend.AIKernel.CreateFineTuningTask" xml:space="preserve"><value>ファインチューニングタスクを作成</value></data>
+  <data name="Frontend.AIKernel.CreateAFineTuningTaskWithAnApprovedLocalModelDatasetAnd" xml:space="preserve"><value>承認済みのローカルモデル、データセット、学習パラメーターを使用してファインチューニングタスクを作成します。Worker、モデル、データセットは自動的に読み込まれ、学習パラメーターには既定値が設定されます。Workflowはその値で実行できます。</value></data>
   <data name="Function.FineTuning.CheckWorker.Name" xml:space="preserve"><value>ファインチューニング Worker を確認</value></data>
   <data name="Function.FineTuning.CheckWorker.Description" xml:space="preserve"><value>指定したファインチューニング Worker の状態、能力、キューを確認します。利用可能な Worker が 1 つだけの場合は自動選択します。</value></data>
   <data name="Function.FineTuning.CheckEnvironment.Name" xml:space="preserve"><value>ファインチューニング環境を確認</value></data>

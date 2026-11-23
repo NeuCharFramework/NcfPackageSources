@@ -292,8 +292,8 @@ const commonSandbox = {
     console,
     ncfST(key, ...args) {
         const translations = {
-            'Frontend.099': '参数 {0}',
-            'Frontend.100': 'Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。'
+            'Frontend.NeuCharWorkflow.ParameterValue': '参数 {0}',
+            'Frontend.NeuCharWorkflow.FunctionParameterMetadataIsMissingAFieldNameOnlyDraftsCanBe': 'Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。'
         };
         return (translations[key] || key).replace(/\{(\d+)\}/g, (match, index) =>
             typeof args[index] === 'undefined' ? match : args[index]);

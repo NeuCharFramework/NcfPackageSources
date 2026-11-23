@@ -23,82 +23,82 @@
   <data name="Auth.Forbidden" xml:space="preserve"><value>No tiene permiso para acceder a este recurso.</value></data>
 
 
-  <data name="Frontend.900" xml:space="preserve"><value>Inspeccionar el Worker de ajuste fino</value></data>
-  <data name="Frontend.901" xml:space="preserve"><value>Inspecciona la salud, las capacidades y la cola del Worker de ajuste fino seleccionado. Si solo hay un Worker disponible, se selecciona automáticamente.</value></data>
-  <data name="Frontend.902" xml:space="preserve"><value>Inspeccionar el entorno de ajuste fino</value></data>
-  <data name="Frontend.903" xml:space="preserve"><value>Inspecciona los interruptores, secretos, Workers, directorios de modelos y el estado de FileManager del ajuste fino sin instalar ni ejecutar comandos. Si solo hay un Worker disponible, se selecciona automáticamente.</value></data>
-  <data name="Frontend.904" xml:space="preserve"><value>Cargar archivo de conjunto de datos de ajuste fino</value></data>
-  <data name="Frontend.905" xml:space="preserve"><value>Guarda y carga como flujo un conjunto de datos JSONL de ajuste fino para archivos grandes.</value></data>
-  <data name="Frontend.906" xml:space="preserve"><value>Crear conjunto de datos de ajuste fino</value></data>
-  <data name="Frontend.907" xml:space="preserve"><value>Guarda un conjunto de datos JSONL de ajuste fino validado por el Worker. El Worker se carga automáticamente; es adecuado para enviar texto JSONL pequeño desde Workflow.</value></data>
-  <data name="Frontend.908" xml:space="preserve"><value>Crear tarea de ajuste fino</value></data>
-  <data name="Frontend.909" xml:space="preserve"><value>Crea una tarea de ajuste fino con un modelo local, un conjunto de datos y parámetros de entrenamiento aprobados. El Worker, el modelo y el conjunto de datos se cargan automáticamente, y Workflow puede ejecutarse con los parámetros predeterminados.</value></data>
-  <data name="Frontend.910" xml:space="preserve"><value>Validar adaptador de ajuste fino</value></data>
-  <data name="Frontend.911" xml:space="preserve"><value>Ejecuta un prompt de prueba sin conexión y restringido para una tarea de ajuste fino correcta mediante el backend CPU, CUDA o MLX seleccionado; se requiere confirmación explícita si difiere del registro de la tarea.</value></data>
-  <data name="Frontend.912" xml:space="preserve"><value>Crear tarea aislada de desarrollo XNCF</value></data>
-  <data name="Frontend.913" xml:space="preserve"><value>Crea una instantánea del código fuente. Los módulos nuevos se generan desde plantillas instaladas localmente en un Workspace aislado; los módulos existentes se copian antes de modificarlos. El código fuente objetivo nunca se escribe.</value></data>
-  <data name="Frontend.914" xml:space="preserve"><value>Leer archivo XNCF aislado</value></data>
-  <data name="Frontend.915" xml:space="preserve"><value>Lee archivos de texto y valores SHA-256 de un módulo en el Workspace aislado; no se puede leer el código fuente objetivo ni archivos fuera del Workspace.</value></data>
-  <data name="Frontend.916" xml:space="preserve"><value>Escribir archivo XNCF aislado</value></data>
-  <data name="Frontend.917" xml:space="preserve"><value>Escribe atómicamente archivos de código en el Workspace aislado. No se pueden modificar archivos de proyecto, NuGet, MSBuild ni configuración de la aplicación; devuelve el SHA-256 leído cuando sea posible.</value></data>
-  <data name="Frontend.918" xml:space="preserve"><value>Validar tarea aislada de desarrollo XNCF</value></data>
-  <data name="Frontend.919" xml:space="preserve"><value>Valida la ruta del módulo aislado y la referencia directa del proyecto Senparc.Web, y genera un resumen de diferencias controlado.</value></data>
-  <data name="Frontend.920" xml:space="preserve"><value>Iniciar vista previa Sandbox de XNCF</value></data>
-  <data name="Frontend.921" xml:space="preserve"><value>Compila y ejecuta en Sandbox la copia limpia del Workspace aislado. Si Sandbox no está disponible, falla de forma segura y nunca recurre al proceso del sitio principal.</value></data>
-  <data name="Frontend.922" xml:space="preserve"><value>Obtener estado de la tarea aislada de desarrollo XNCF</value></data>
-  <data name="Frontend.923" xml:space="preserve"><value>Devuelve el Workspace aislado, las diferencias, la validación, la vista previa Sandbox y el estado de aprobación humana.</value></data>
-  <data name="Frontend.924" xml:space="preserve"><value>Solicitar integración humana de la tarea XNCF</value></data>
-  <data name="Frontend.925" xml:space="preserve"><value>Congela las diferencias del Workspace aislado actual y solicita la aprobación del administrador. Esta operación no escribe en el código fuente objetivo.</value></data>
-  <data name="Frontend.926" xml:space="preserve"><value>Descartar tarea aislada de desarrollo XNCF</value></data>
-  <data name="Frontend.927" xml:space="preserve"><value>Detiene la vista previa Sandbox correspondiente y recupera el Workspace aislado; el código fuente objetivo no se modifica.</value></data>
-  <data name="Frontend.928" xml:space="preserve"><value>Crear Sandbox</value></data>
-  <data name="Frontend.929" xml:space="preserve"><value>Crea una sesión Sandbox aislada desde una plantilla (Docker / Wasm Stub).</value></data>
-  <data name="Frontend.930" xml:space="preserve"><value>Listar Sandboxes</value></data>
-  <data name="Frontend.931" xml:space="preserve"><value>Muestra las sesiones Sandbox recientes.</value></data>
-  <data name="Frontend.932" xml:space="preserve"><value>Obtener estado del Sandbox</value></data>
-  <data name="Frontend.933" xml:space="preserve"><value>Consulta por SessionId.</value></data>
-  <data name="Frontend.934" xml:space="preserve"><value>Ejecutar código</value></data>
-  <data name="Frontend.935" xml:space="preserve"><value>Ejecuta un fragmento de código en una sesión de plantilla Exec.</value></data>
-  <data name="Frontend.936" xml:space="preserve"><value>Ejecutar comando Lab</value></data>
-  <data name="Frontend.937" xml:space="preserve"><value>Ejecuta durante un tiempo limitado un comando Shell en un Workspace JupyterLab persistente en ejecución.</value></data>
-  <data name="Frontend.938" xml:space="preserve"><value>Cargar archivo Lab</value></data>
-  <data name="Frontend.939" xml:space="preserve"><value>Escribe el contenido de un archivo Base64 en un Workspace JupyterLab persistente en ejecución.</value></data>
-  <data name="Frontend.940" xml:space="preserve"><value>Cargar archivos Lab</value></data>
-  <data name="Frontend.941" xml:space="preserve"><value>Escribe varios archivos cargados como flujo en un Workspace JupyterLab persistente en ejecución.</value></data>
-  <data name="Frontend.942" xml:space="preserve"><value>Descargar archivo Lab</value></data>
-  <data name="Frontend.943" xml:space="preserve"><value>Lee un archivo de un Workspace JupyterLab persistente en ejecución y devuelve su contenido Base64.</value></data>
-  <data name="Frontend.944" xml:space="preserve"><value>Listar archivos Lab</value></data>
-  <data name="Frontend.945" xml:space="preserve"><value>Enumera los archivos de un Workspace JupyterLab persistente en ejecución.</value></data>
-  <data name="Frontend.946" xml:space="preserve"><value>Crear Notebook</value></data>
-  <data name="Frontend.947" xml:space="preserve"><value>Crea un archivo .ipynb de Python o C# en un Workspace JupyterLab persistente en ejecución.</value></data>
-  <data name="Frontend.948" xml:space="preserve"><value>Actualizar alias</value></data>
-  <data name="Frontend.949" xml:space="preserve"><value>Establece o elimina el alias de una sesión Sandbox (déjalo vacío para eliminarlo).</value></data>
-  <data name="Frontend.950" xml:space="preserve"><value>Destruir Sandbox</value></data>
-  <data name="Frontend.951" xml:space="preserve"><value>Detiene y limpia la sesión especificada.</value></data>
-  <data name="Frontend.952" xml:space="preserve"><value>Eliminar registro Sandbox</value></data>
-  <data name="Frontend.953" xml:space="preserve"><value>Elimina permanentemente el registro de una sesión detenida, caducada o limpiada.</value></data>
-  <data name="Frontend.954" xml:space="preserve"><value>Actualizar TTL</value></data>
-  <data name="Frontend.955" xml:space="preserve"><value>Amplía, acorta o establece la conservación permanente.</value></data>
-  <data name="Frontend.956" xml:space="preserve"><value>Inicio de sesión del administrador</value></data>
-  <data name="Frontend.957" xml:space="preserve"><value>Prueba el inicio de sesión del administrador actual.</value></data>
-  <data name="Frontend.958" xml:space="preserve"><value>Configurar canal digital</value></data>
-  <data name="Frontend.959" xml:space="preserve"><value>Configura la visualización del canal digital.</value></data>
-  <data name="Frontend.960" xml:space="preserve"><value>Ver configuración de caducidad de inicio de sesión</value></data>
-  <data name="Frontend.961" xml:space="preserve"><value>Muestra la caducidad del inicio de sesión web y del JWT en el módulo Admin.</value></data>
-  <data name="Frontend.962" xml:space="preserve"><value>Configurar caducidad de inicio de sesión</value></data>
-  <data name="Frontend.963" xml:space="preserve"><value>Configura en minutos la duración del inicio de sesión web y la caducidad del JWT.</value></data>
-  <data name="Frontend.964" xml:space="preserve"><value>Probar recordatorios visibles de NeuBell</value></data>
-  <data name="Frontend.965" xml:space="preserve"><value>Envía o consume recordatorios de prueba de NeuBell mostrados en el popup y la insignia del Footer de Admin; configura la URL, el método y la plantilla de cuerpo multilínea del WebHook, y registra la solicitud y el resultado de forma asíncrona.</value></data>
-  <data name="Frontend.966" xml:space="preserve"><value>Probar caché</value></data>
-  <data name="Frontend.967" xml:space="preserve"><value>Prueba el tipo de caché actual y el bloqueo distribuido.</value></data>
-  <data name="Frontend.968" xml:space="preserve"><value>Gestionar plantillas de Agent</value></data>
-  <data name="Frontend.969" xml:space="preserve"><value>Gestiona las plantillas de Agent.</value></data>
-  <data name="Frontend.970" xml:space="preserve"><value>Configurar parámetros</value></data>
-  <data name="Frontend.971" xml:space="preserve"><value>Configura el intervalo de copia de seguridad, la ruta de copia y los parámetros relacionados.</value></data>
-  <data name="Frontend.972" xml:space="preserve"><value>Configurar Agent</value></data>
-  <data name="Frontend.973" xml:space="preserve"><value>Prueba valores simples y metadatos de selección.</value></data>
-  <data name="Frontend.974" xml:space="preserve"><value>Configurar parámetros multilínea</value></data>
-  <data name="Frontend.975" xml:space="preserve"><value>Prueba los metadatos de parámetros de texto multilínea.</value></data>
-  <data name="Frontend.976" xml:space="preserve"><value>Mi función</value></data>
-  <data name="Frontend.977" xml:space="preserve"><value>Descripción de mi función.</value></data>
+  <data name="Global.InspectFineTuningWorker" xml:space="preserve"><value>Inspeccionar el Worker de ajuste fino</value></data>
+  <data name="Global.InspectTheSelectedFineTuningWorkerHealthCapabilitiesAndQueueASingle" xml:space="preserve"><value>Inspecciona la salud, las capacidades y la cola del Worker de ajuste fino seleccionado. Si solo hay un Worker disponible, se selecciona automáticamente.</value></data>
+  <data name="Global.InspectFineTuningEnvironment" xml:space="preserve"><value>Inspeccionar el entorno de ajuste fino</value></data>
+  <data name="Global.InspectFineTuningSwitchesSecretsWorkersModelDirectoriesAndFileManagerStatusWithout" xml:space="preserve"><value>Inspecciona los interruptores, secretos, Workers, directorios de modelos y el estado de FileManager del ajuste fino sin instalar ni ejecutar comandos. Si solo hay un Worker disponible, se selecciona automáticamente.</value></data>
+  <data name="Global.UploadFineTuningDatasetFile" xml:space="preserve"><value>Cargar archivo de conjunto de datos de ajuste fino</value></data>
+  <data name="Global.SaveAndUploadAJSONLFineTuningDatasetAsAStreamFor" xml:space="preserve"><value>Guarda y carga como flujo un conjunto de datos JSONL de ajuste fino para archivos grandes.</value></data>
+  <data name="Global.CreateFineTuningDataset" xml:space="preserve"><value>Crear conjunto de datos de ajuste fino</value></data>
+  <data name="Global.SaveAJSONLFineTuningDatasetValidatedByTheWorkerTheWorker" xml:space="preserve"><value>Guarda un conjunto de datos JSONL de ajuste fino validado por el Worker. El Worker se carga automáticamente; es adecuado para enviar texto JSONL pequeño desde Workflow.</value></data>
+  <data name="Global.CreateFineTuningTask" xml:space="preserve"><value>Crear tarea de ajuste fino</value></data>
+  <data name="Global.CreateAFineTuningTaskWithAnApprovedLocalModelDatasetAnd" xml:space="preserve"><value>Crea una tarea de ajuste fino con un modelo local, un conjunto de datos y parámetros de entrenamiento aprobados. El Worker, el modelo y el conjunto de datos se cargan automáticamente, y Workflow puede ejecutarse con los parámetros predeterminados.</value></data>
+  <data name="Global.ValidateFineTuningAdapter" xml:space="preserve"><value>Validar adaptador de ajuste fino</value></data>
+  <data name="Global.RunARestrictedOfflineTestPromptForASuccessfulFineTuningTask" xml:space="preserve"><value>Ejecuta un prompt de prueba sin conexión y restringido para una tarea de ajuste fino correcta mediante el backend CPU, CUDA o MLX seleccionado; se requiere confirmación explícita si difiere del registro de la tarea.</value></data>
+  <data name="Global.CreateIsolatedXNCFDevelopmentTask" xml:space="preserve"><value>Crear tarea aislada de desarrollo XNCF</value></data>
+  <data name="Global.CreateASourceSnapshotNewModulesAreGeneratedFromLocallyInstalledTemplates" xml:space="preserve"><value>Crea una instantánea del código fuente. Los módulos nuevos se generan desde plantillas instaladas localmente en un Workspace aislado; los módulos existentes se copian antes de modificarlos. El código fuente objetivo nunca se escribe.</value></data>
+  <data name="Global.ReadIsolatedXNCFFile" xml:space="preserve"><value>Leer archivo XNCF aislado</value></data>
+  <data name="Global.ReadTextFilesAndSHA256ValuesForAModuleInThe" xml:space="preserve"><value>Lee archivos de texto y valores SHA-256 de un módulo en el Workspace aislado; no se puede leer el código fuente objetivo ni archivos fuera del Workspace.</value></data>
+  <data name="Global.WriteIsolatedXNCFFile" xml:space="preserve"><value>Escribir archivo XNCF aislado</value></data>
+  <data name="Global.AtomicallyWriteCodeFilesInTheIsolatedWorkspaceProjectNuGetMSBuildAnd" xml:space="preserve"><value>Escribe atómicamente archivos de código en el Workspace aislado. No se pueden modificar archivos de proyecto, NuGet, MSBuild ni configuración de la aplicación; devuelve el SHA-256 leído cuando sea posible.</value></data>
+  <data name="Global.ValidateIsolatedXNCFDevelopmentTask" xml:space="preserve"><value>Validar tarea aislada de desarrollo XNCF</value></data>
+  <data name="Global.ValidateTheIsolatedModulePathAndSenparcWebDirectProjectReferenceThen" xml:space="preserve"><value>Valida la ruta del módulo aislado y la referencia directa del proyecto Senparc.Web, y genera un resumen de diferencias controlado.</value></data>
+  <data name="Global.StartSandboxXNCFPreview" xml:space="preserve"><value>Iniciar vista previa Sandbox de XNCF</value></data>
+  <data name="Global.BuildAndRunTheCleanedIsolatedWorkspaceCopyInSandboxFailSafely" xml:space="preserve"><value>Compila y ejecuta en Sandbox la copia limpia del Workspace aislado. Si Sandbox no está disponible, falla de forma segura y nunca recurre al proceso del sitio principal.</value></data>
+  <data name="Global.GetIsolatedXNCFDevelopmentTaskStatus" xml:space="preserve"><value>Obtener estado de la tarea aislada de desarrollo XNCF</value></data>
+  <data name="Global.ReturnIsolatedWorkspaceDiffValidationSandboxPreviewAndHumanApprovalStatus" xml:space="preserve"><value>Devuelve el Workspace aislado, las diferencias, la validación, la vista previa Sandbox y el estado de aprobación humana.</value></data>
+  <data name="Global.RequestHumanMergeForXNCFTask" xml:space="preserve"><value>Solicitar integración humana de la tarea XNCF</value></data>
+  <data name="Global.FreezeTheCurrentIsolatedWorkspaceDiffAndRequestAdministratorApprovalThisOperation" xml:space="preserve"><value>Congela las diferencias del Workspace aislado actual y solicita la aprobación del administrador. Esta operación no escribe en el código fuente objetivo.</value></data>
+  <data name="Global.DiscardIsolatedXNCFDevelopmentTask" xml:space="preserve"><value>Descartar tarea aislada de desarrollo XNCF</value></data>
+  <data name="Global.StopTheCorrespondingSandboxPreviewAndReclaimTheIsolatedWorkspaceTargetSource" xml:space="preserve"><value>Detiene la vista previa Sandbox correspondiente y recupera el Workspace aislado; el código fuente objetivo no se modifica.</value></data>
+  <data name="Global.CreateSandbox" xml:space="preserve"><value>Crear Sandbox</value></data>
+  <data name="Global.CreateAnIsolatedSandboxSessionFromATemplateDockerWasmStub" xml:space="preserve"><value>Crea una sesión Sandbox aislada desde una plantilla (Docker / Wasm Stub).</value></data>
+  <data name="Global.ListSandboxes" xml:space="preserve"><value>Listar Sandboxes</value></data>
+  <data name="Global.ViewRecentSandboxSessions" xml:space="preserve"><value>Muestra las sesiones Sandbox recientes.</value></data>
+  <data name="Global.GetSandboxStatus" xml:space="preserve"><value>Obtener estado del Sandbox</value></data>
+  <data name="Global.QueryBySessionId" xml:space="preserve"><value>Consulta por SessionId.</value></data>
+  <data name="Global.ExecuteCode" xml:space="preserve"><value>Ejecutar código</value></data>
+  <data name="Global.RunACodeSnippetInAnExecTemplateSession" xml:space="preserve"><value>Ejecuta un fragmento de código en una sesión de plantilla Exec.</value></data>
+  <data name="Global.ExecuteLabCommand" xml:space="preserve"><value>Ejecutar comando Lab</value></data>
+  <data name="Global.RunATimeLimitedShellCommandInARunningPersistentJupyterLabWorkspace" xml:space="preserve"><value>Ejecuta durante un tiempo limitado un comando Shell en un Workspace JupyterLab persistente en ejecución.</value></data>
+  <data name="Global.UploadLabFile" xml:space="preserve"><value>Cargar archivo Lab</value></data>
+  <data name="Global.WriteBase64FileContentToARunningPersistentJupyterLabWorkspace" xml:space="preserve"><value>Escribe el contenido de un archivo Base64 en un Workspace JupyterLab persistente en ejecución.</value></data>
+  <data name="Global.UploadLabFiles" xml:space="preserve"><value>Cargar archivos Lab</value></data>
+  <data name="Global.WriteMultipleUploadedFilesAsAStreamToARunningPersistentJupyterLab" xml:space="preserve"><value>Escribe varios archivos cargados como flujo en un Workspace JupyterLab persistente en ejecución.</value></data>
+  <data name="Global.DownloadLabFile" xml:space="preserve"><value>Descargar archivo Lab</value></data>
+  <data name="Global.ReadAFileFromARunningPersistentJupyterLabWorkspaceAndReturnBase" xml:space="preserve"><value>Lee un archivo de un Workspace JupyterLab persistente en ejecución y devuelve su contenido Base64.</value></data>
+  <data name="Global.ListLabFiles" xml:space="preserve"><value>Listar archivos Lab</value></data>
+  <data name="Global.ListFilesInARunningPersistentJupyterLabWorkspace" xml:space="preserve"><value>Enumera los archivos de un Workspace JupyterLab persistente en ejecución.</value></data>
+  <data name="Global.CreateNotebook" xml:space="preserve"><value>Crear Notebook</value></data>
+  <data name="Global.CreateAPythonOrCIpynbFileInARunningJupyterLabWorkspace" xml:space="preserve"><value>Crea un archivo .ipynb de Python o C# en un Workspace JupyterLab persistente en ejecución.</value></data>
+  <data name="Global.UpdateAlias" xml:space="preserve"><value>Actualizar alias</value></data>
+  <data name="Global.SetOrClearTheSandboxSessionAliasLeaveEmptyToClearIt" xml:space="preserve"><value>Establece o elimina el alias de una sesión Sandbox (déjalo vacío para eliminarlo).</value></data>
+  <data name="Global.DestroySandbox" xml:space="preserve"><value>Destruir Sandbox</value></data>
+  <data name="Global.StopAndCleanUpTheSpecifiedSession" xml:space="preserve"><value>Detiene y limpia la sesión especificada.</value></data>
+  <data name="Global.DeleteSandboxRecord" xml:space="preserve"><value>Eliminar registro Sandbox</value></data>
+  <data name="Global.PermanentlyDeleteAStoppedExpiredOrCleanedSessionRecord" xml:space="preserve"><value>Elimina permanentemente el registro de una sesión detenida, caducada o limpiada.</value></data>
+  <data name="Global.UpdateTTL" xml:space="preserve"><value>Actualizar TTL</value></data>
+  <data name="Global.ExtendShortenOrSetPermanentRetention" xml:space="preserve"><value>Amplía, acorta o establece la conservación permanente.</value></data>
+  <data name="Global.AdministratorLogin" xml:space="preserve"><value>Inicio de sesión del administrador</value></data>
+  <data name="Global.TestTheCurrentAdministratorLogin" xml:space="preserve"><value>Prueba el inicio de sesión del administrador actual.</value></data>
+  <data name="Global.ConfigureDigitalPipe" xml:space="preserve"><value>Configurar canal digital</value></data>
+  <data name="Global.ConfigureDigitalPipeDisplay" xml:space="preserve"><value>Configura la visualización del canal digital.</value></data>
+  <data name="Global.ViewLoginExpirationSettings" xml:space="preserve"><value>Ver configuración de caducidad de inicio de sesión</value></data>
+  <data name="Global.ViewWebLoginAndJWTExpirationSettingsInTheAdminModule" xml:space="preserve"><value>Muestra la caducidad del inicio de sesión web y del JWT en el módulo Admin.</value></data>
+  <data name="Global.ConfigureLoginExpirationSettings" xml:space="preserve"><value>Configurar caducidad de inicio de sesión</value></data>
+  <data name="Global.ConfigureWebLoginDurationAndJWTExpirationInMinutes" xml:space="preserve"><value>Configura en minutos la duración del inicio de sesión web y la caducidad del JWT.</value></data>
+  <data name="Global.TestVisibleNeuBellReminders" xml:space="preserve"><value>Probar recordatorios visibles de NeuBell</value></data>
+  <data name="Global.SendOrConsumeNeuBellTestRemindersShownInTheAdminFooterPopup" xml:space="preserve"><value>Envía o consume recordatorios de prueba de NeuBell mostrados en el popup y la insignia del Footer de Admin; configura la URL, el método y la plantilla de cuerpo multilínea del WebHook, y registra la solicitud y el resultado de forma asíncrona.</value></data>
+  <data name="Global.TestCache" xml:space="preserve"><value>Probar caché</value></data>
+  <data name="Global.TestTheCurrentCacheTypeAndDistributedLock" xml:space="preserve"><value>Prueba el tipo de caché actual y el bloqueo distribuido.</value></data>
+  <data name="Global.ManageAgentTemplates" xml:space="preserve"><value>Gestionar plantillas de Agent</value></data>
+  <data name="Global.ManageAgentTemplatesAlternate" xml:space="preserve"><value>Gestiona las plantillas de Agent.</value></data>
+  <data name="Global.ConfigureParameters" xml:space="preserve"><value>Configurar parámetros</value></data>
+  <data name="Global.ConfigureBackupIntervalBackupPathAndRelatedParameters" xml:space="preserve"><value>Configura el intervalo de copia de seguridad, la ruta de copia y los parámetros relacionados.</value></data>
+  <data name="Global.ConfigureAgent" xml:space="preserve"><value>Configurar Agent</value></data>
+  <data name="Global.TestSimpleValuesAndSelectionMetadata" xml:space="preserve"><value>Prueba valores simples y metadatos de selección.</value></data>
+  <data name="Global.ConfigureMultilineParameters" xml:space="preserve"><value>Configurar parámetros multilínea</value></data>
+  <data name="Global.TestMultilineTextParameterMetadata" xml:space="preserve"><value>Prueba los metadatos de parámetros de texto multilínea.</value></data>
+  <data name="Global.MyFunction" xml:space="preserve"><value>Mi función</value></data>
+  <data name="Global.DescriptionOfMyFunction" xml:space="preserve"><value>Descripción de mi función.</value></data>
 </root>

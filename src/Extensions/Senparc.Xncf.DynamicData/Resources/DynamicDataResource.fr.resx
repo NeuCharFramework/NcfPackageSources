@@ -99,928 +99,916 @@
   <data name="Page.Random" xml:space="preserve">
     <value>Aléatoire</value>
   </data>
-  <data name="Frontend.001" xml:space="preserve">
+  <data name="Frontend.DynamicData.ZeroFields" xml:space="preserve">
     <value>0 champs</value>
   </data>
-  <data name="Frontend.002" xml:space="preserve">
+  <data name="Frontend.DynamicData.Conditions" xml:space="preserve">
     <value>conditions</value>
   </data>
-  <data name="Frontend.003" xml:space="preserve">
+  <data name="Frontend.DynamicData.CenterAlignOne" xml:space="preserve">
     <value>Centrer 1</value>
   </data>
-  <data name="Frontend.004" xml:space="preserve">
+  <data name="Frontend.DynamicData.Events" xml:space="preserve">
     <value>Événements</value>
   </data>
-  <data name="Frontend.005" xml:space="preserve">
+  <data name="Frontend.DynamicData.EventSettings" xml:space="preserve">
     <value>Réglages de l'événement</value>
   </data>
-  <data name="Frontend.006" xml:space="preserve">
+  <data name="Frontend.DynamicData.ViewCode" xml:space="preserve">
     <value>Voir le code</value>
   </data>
-  <data name="Frontend.007" xml:space="preserve">
+  <data name="Frontend.DynamicData.Position" xml:space="preserve">
     <value>Position</value>
   </data>
-  <data name="Frontend.008" xml:space="preserve">
+  <data name="Frontend.DynamicData.AllowDelete" xml:space="preserve">
     <value>Autoriser la suppression</value>
   </data>
-  <data name="Frontend.009" xml:space="preserve">
+  <data name="Frontend.DynamicData.AllowExport" xml:space="preserve">
     <value>Autoriser l'export</value>
   </data>
-  <data name="Frontend.010" xml:space="preserve">
+  <data name="Frontend.DynamicData.AllowSorting" xml:space="preserve">
     <value>Autoriser le tri</value>
   </data>
-  <data name="Frontend.011" xml:space="preserve">
+  <data name="Frontend.DynamicData.AllowEdit" xml:space="preserve">
     <value>Autoriser la modification</value>
   </data>
-  <data name="Frontend.012" xml:space="preserve">
+  <data name="Frontend.DynamicData.InputParameters" xml:space="preserve">
     <value>Paramètres d'entrée</value>
   </data>
-  <data name="Frontend.013" xml:space="preserve">
+  <data name="Frontend.DynamicData.AllFields" xml:space="preserve">
     <value>Tous les champs</value>
   </data>
-  <data name="Frontend.014" xml:space="preserve">
+  <data name="Frontend.DynamicData.ClosePage" xml:space="preserve">
     <value>Fermer la page</value>
   </data>
-  <data name="Frontend.015" xml:space="preserve">
+  <data name="Frontend.DynamicData.OutputParameters" xml:space="preserve">
     <value>Paramètres de sortie</value>
   </data>
-  <data name="Frontend.016" xml:space="preserve">
+  <data name="Frontend.DynamicData.PaginationSettings" xml:space="preserve">
     <value>Réglages de pagination</value>
   </data>
-  <data name="Frontend.017" xml:space="preserve">
+  <data name="Frontend.DynamicData.ColumnName" xml:space="preserve">
     <value>Nom de colonne</value>
   </data>
-  <data name="Frontend.018" xml:space="preserve">
+  <data name="Frontend.DynamicData.ColumnWidth" xml:space="preserve">
     <value>Largeur de colonne</value>
   </data>
-  <data name="Frontend.019" xml:space="preserve">
+  <data name="Frontend.DynamicData.ColumnProperties" xml:space="preserve">
     <value>Propriétés de colonne</value>
   </data>
-  <data name="Frontend.020" xml:space="preserve">
+  <data name="Frontend.DynamicData.ColumnPropertySettings" xml:space="preserve">
     <value>Paramètres des propriétés de colonne</value>
   </data>
-  <data name="Frontend.021" xml:space="preserve">
+  <data name="Frontend.DynamicData.ColumnTitle" xml:space="preserve">
     <value>Titre de colonne</value>
   </data>
-  <data name="Frontend.022" xml:space="preserve">
+  <data name="Frontend.DynamicData.ColumnManagement" xml:space="preserve">
     <value>Gestion des colonnes</value>
   </data>
-  <data name="Frontend.023" xml:space="preserve">
+  <data name="Frontend.DynamicData.ColumnSelection" xml:space="preserve">
     <value>Sélection de colonnes</value>
   </data>
-  <data name="Frontend.024" xml:space="preserve">
+  <data name="Frontend.DynamicData.CreateOne" xml:space="preserve">
     <value>Créer un élément</value>
   </data>
-  <data name="Frontend.025" xml:space="preserve">
+  <data name="Frontend.DynamicData.CreateLayout" xml:space="preserve">
     <value>Créer une disposition</value>
   </data>
-  <data name="Frontend.026" xml:space="preserve">
+  <data name="Frontend.DynamicData.Delete" xml:space="preserve">
     <value>Supprimer</value>
   </data>
-  <data name="Frontend.027" xml:space="preserve">
+  <data name="Frontend.DynamicData.DeleteOne" xml:space="preserve">
     <value>Supprimer un élément</value>
   </data>
-  <data name="Frontend.028" xml:space="preserve">
+  <data name="Frontend.DynamicData.DeleteOneRecord" xml:space="preserve">
     <value>Supprimer un enregistrement</value>
   </data>
-  <data name="Frontend.029" xml:space="preserve">
+  <data name="Frontend.DynamicData.DeleteLayout" xml:space="preserve">
     <value>Supprimer la disposition</value>
   </data>
-  <data name="Frontend.030" xml:space="preserve">
+  <data name="Frontend.DynamicData.DynamicDataFoundation" xml:space="preserve">
     <value>Fondation de données dynamiques</value>
   </data>
-  <data name="Frontend.031" xml:space="preserve">
+  <data name="Frontend.DynamicData.Ascending" xml:space="preserve">
     <value>Croissant</value>
   </data>
-  <data name="Frontend.032" xml:space="preserve">
+  <data name="Frontend.DynamicData.DoubleClick" xml:space="preserve">
     <value>Double-clic</value>
   </data>
-  <data name="Frontend.033" xml:space="preserve">
+  <data name="Frontend.DynamicData.Publish" xml:space="preserve">
     <value>Publier</value>
   </data>
-  <data name="Frontend.034" xml:space="preserve">
+  <data name="Frontend.DynamicData.Cancel" xml:space="preserve">
     <value>Annuler</value>
   </data>
-  <data name="Frontend.035" xml:space="preserve">
+  <data name="Frontend.DynamicData.CancelButtonText" xml:space="preserve">
     <value>Texte du bouton Annuler</value>
   </data>
-  <data name="Frontend.036" xml:space="preserve">
+  <data name="Frontend.DynamicData.CancelActionSettings" xml:space="preserve">
     <value>Paramètres de l'action Annuler</value>
   </data>
-  <data name="Frontend.037" xml:space="preserve">
+  <data name="Frontend.DynamicData.HideWhenOnlyOnePage" xml:space="preserve">
     <value>Masquer s'il n'y a qu'une page</value>
   </data>
-  <data name="Frontend.038" xml:space="preserve">
+  <data name="Frontend.DynamicData.Right" xml:space="preserve">
     <value>Droite</value>
   </data>
-  <data name="Frontend.039" xml:space="preserve">
+  <data name="Frontend.DynamicData.AlignRight" xml:space="preserve">
     <value>Aligner à droite</value>
   </data>
-  <data name="Frontend.040" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnablePagination" xml:space="preserve">
     <value>Activer la pagination</value>
   </data>
-  <data name="Frontend.041" xml:space="preserve">
+  <data name="Frontend.DynamicData.FixedColumn" xml:space="preserve">
     <value>Colonne fixe</value>
   </data>
-  <data name="Frontend.042" xml:space="preserve">
+  <data name="Frontend.DynamicData.FixedDirection" xml:space="preserve">
     <value>Direction fixe</value>
   </data>
-  <data name="Frontend.043" xml:space="preserve">
+  <data name="Frontend.DynamicData.Filled" xml:space="preserve">
     <value>Rempli</value>
   </data>
-  <data name="Frontend.044" xml:space="preserve">
+  <data name="Frontend.DynamicData.CopyLayout" xml:space="preserve">
     <value>Copier la disposition</value>
   </data>
-  <data name="Frontend.045" xml:space="preserve">
+  <data name="Frontend.DynamicData.GreaterThan" xml:space="preserve">
     <value>Supérieur à</value>
   </data>
-  <data name="Frontend.046" xml:space="preserve">
+  <data name="Frontend.DynamicData.Name" xml:space="preserve">
     <value>Nom</value>
   </data>
-  <data name="Frontend.047" xml:space="preserve">
+  <data name="Frontend.DynamicData.ChildComponent" xml:space="preserve">
     <value>Composant enfant</value>
   </data>
-  <data name="Frontend.048" xml:space="preserve">
+  <data name="Frontend.DynamicData.ChildComponentEnableLayout" xml:space="preserve">
     <value>Activation et disposition des sous-composants</value>
   </data>
-  <data name="Frontend.049" xml:space="preserve">
+  <data name="Frontend.DynamicData.Field" xml:space="preserve">
     <value>Champ</value>
   </data>
-  <data name="Frontend.050" xml:space="preserve">
+  <data name="Frontend.DynamicData.FieldName" xml:space="preserve">
     <value>Nom du champ</value>
   </data>
-  <data name="Frontend.051" xml:space="preserve">
+  <data name="Frontend.DynamicData.FieldDescription" xml:space="preserve">
     <value>Description du champ</value>
   </data>
-  <data name="Frontend.052" xml:space="preserve">
+  <data name="Frontend.DynamicData.FieldQueryScope" xml:space="preserve">
     <value>Portée de requête du champ</value>
   </data>
-  <data name="Frontend.053" xml:space="preserve">
+  <data name="Frontend.DynamicData.Alignment" xml:space="preserve">
     <value>Alignement</value>
   </data>
-  <data name="Frontend.054" xml:space="preserve">
+  <data name="Frontend.DynamicData.Import" xml:space="preserve">
     <value>Importer</value>
   </data>
-  <data name="Frontend.055" xml:space="preserve">
+  <data name="Frontend.DynamicData.Export" xml:space="preserve">
     <value>Exporter</value>
   </data>
-  <data name="Frontend.056" xml:space="preserve">
+  <data name="Frontend.DynamicData.LessThan" xml:space="preserve">
     <value>Inférieur à</value>
   </data>
-  <data name="Frontend.057" xml:space="preserve">
+  <data name="Frontend.DynamicData.DisplayContent" xml:space="preserve">
     <value>Contenu affiché</value>
   </data>
-  <data name="Frontend.058" xml:space="preserve">
+  <data name="Frontend.DynamicData.DisplayContentText" xml:space="preserve">
     <value>Texte du contenu affiché</value>
   </data>
-  <data name="Frontend.059" xml:space="preserve">
+  <data name="Frontend.DynamicData.DisplayContentTextOne" xml:space="preserve">
     <value>Texte du contenu affiché 1</value>
   </data>
-  <data name="Frontend.060" xml:space="preserve">
+  <data name="Frontend.DynamicData.DisplayType" xml:space="preserve">
     <value>Type d'affichage</value>
   </data>
-  <data name="Frontend.061" xml:space="preserve">
+  <data name="Frontend.DynamicData.Properties" xml:space="preserve">
     <value>Propriétés</value>
   </data>
-  <data name="Frontend.062" xml:space="preserve">
+  <data name="Frontend.DynamicData.Left" xml:space="preserve">
     <value>Gauche</value>
   </data>
-  <data name="Frontend.063" xml:space="preserve">
+  <data name="Frontend.DynamicData.AlignLeft" xml:space="preserve">
     <value>Aligner à gauche</value>
   </data>
-  <data name="Frontend.064" xml:space="preserve">
+  <data name="Frontend.DynamicData.IncludeId" xml:space="preserve">
     <value>Inclure l'id</value>
   </data>
-  <data name="Frontend.065" xml:space="preserve">
+  <data name="Frontend.DynamicData.Age" xml:space="preserve">
     <value>Âge</value>
   </data>
-  <data name="Frontend.066" xml:space="preserve">
+  <data name="Frontend.DynamicData.DialogSettings" xml:space="preserve">
     <value>Réglages du dialogue</value>
   </data>
-  <data name="Frontend.067" xml:space="preserve">
+  <data name="Frontend.DynamicData.Dialog" xml:space="preserve">
     <value>Dialogue</value>
   </data>
-  <data name="Frontend.068" xml:space="preserve">
+  <data name="Frontend.DynamicData.DialogSettingsAlternate" xml:space="preserve">
     <value>Réglages du dialogue</value>
   </data>
-  <data name="Frontend.069" xml:space="preserve">
+  <data name="Frontend.DynamicData.ThisModuleWasGeneratedAutomatically" xml:space="preserve">
     <value>Ce module a été généré automatiquement</value>
   </data>
-  <data name="Frontend.070" xml:space="preserve">
+  <data name="Frontend.DynamicData.OpenDialog" xml:space="preserve">
     <value>Ouvrir le dialogue</value>
   </data>
-  <data name="Frontend.071" xml:space="preserve">
+  <data name="Frontend.DynamicData.OpenDialogAlternate" xml:space="preserve">
     <value>Ouvrir le dialogue</value>
   </data>
-  <data name="Frontend.072" xml:space="preserve">
+  <data name="Frontend.DynamicData.OpenPage" xml:space="preserve">
     <value>Ouvrir la page</value>
   </data>
-  <data name="Frontend.073" xml:space="preserve">
+  <data name="Frontend.DynamicData.ExecutableMethods" xml:space="preserve">
     <value>Méthodes exécutables</value>
   </data>
-  <data name="Frontend.074" xml:space="preserve">
+  <data name="Frontend.DynamicData.ExtensionModules" xml:space="preserve">
     <value>Modules d’extension</value>
   </data>
-  <data name="Frontend.075" xml:space="preserve">
+  <data name="Frontend.DynamicData.Button" xml:space="preserve">
     <value>Bouton</value>
   </data>
-  <data name="Frontend.076" xml:space="preserve">
+  <data name="Frontend.DynamicData.ButtonEvent" xml:space="preserve">
     <value>Événement du bouton</value>
   </data>
-  <data name="Frontend.077" xml:space="preserve">
+  <data name="Frontend.DynamicData.ButtonName" xml:space="preserve">
     <value>Nom du bouton</value>
   </data>
-  <data name="Frontend.078" xml:space="preserve">
+  <data name="Frontend.DynamicData.ButtonProperties" xml:space="preserve">
     <value>Propriétés du bouton</value>
   </data>
-  <data name="Frontend.079" xml:space="preserve">
+  <data name="Frontend.DynamicData.ButtonType" xml:space="preserve">
     <value>Type de bouton</value>
   </data>
-  <data name="Frontend.080" xml:space="preserve">
+  <data name="Frontend.DynamicData.ButtonSettings" xml:space="preserve">
     <value>Réglages du bouton</value>
   </data>
-  <data name="Frontend.081" xml:space="preserve">
+  <data name="Frontend.DynamicData.Sort" xml:space="preserve">
     <value>Trier</value>
   </data>
-  <data name="Frontend.082" xml:space="preserve">
+  <data name="Frontend.DynamicData.SortField" xml:space="preserve">
     <value>Champ de tri</value>
   </data>
-  <data name="Frontend.083" xml:space="preserve">
+  <data name="Frontend.DynamicData.SortOrder" xml:space="preserve">
     <value>Ordre de tri</value>
   </data>
-  <data name="Frontend.084" xml:space="preserve">
+  <data name="Frontend.DynamicData.SortSettings" xml:space="preserve">
     <value>Réglages de tri</value>
   </data>
-  <data name="Frontend.085" xml:space="preserve">
+  <data name="Frontend.DynamicData.Outlined" xml:space="preserve">
     <value>Contour</value>
   </data>
-  <data name="Frontend.086" xml:space="preserve">
+  <data name="Frontend.DynamicData.Description" xml:space="preserve">
     <value>Description</value>
   </data>
-  <data name="Frontend.087" xml:space="preserve">
+  <data name="Frontend.DynamicData.Submit" xml:space="preserve">
     <value>Envoyer</value>
   </data>
-  <data name="Frontend.088" xml:space="preserve">
+  <data name="Frontend.DynamicData.SubmitFailureStateSettings" xml:space="preserve">
     <value>Réglages de l'état d'échec d'envoi</value>
   </data>
-  <data name="Frontend.089" xml:space="preserve">
+  <data name="Frontend.DynamicData.SubmitSuccessStateSettings" xml:space="preserve">
     <value>Réglages de l'état de succès d'envoi</value>
   </data>
-  <data name="Frontend.090" xml:space="preserve">
+  <data name="Frontend.DynamicData.MessageContent" xml:space="preserve">
     <value>Contenu du message</value>
   </data>
-  <data name="Frontend.091" xml:space="preserve">
+  <data name="Frontend.DynamicData.HintText" xml:space="preserve">
     <value>Texte d'aide</value>
   </data>
-  <data name="Frontend.092" xml:space="preserve">
+  <data name="Frontend.DynamicData.MessageDuration" xml:space="preserve">
     <value>Durée du message</value>
   </data>
-  <data name="Frontend.093" xml:space="preserve">
+  <data name="Frontend.DynamicData.MessageDurationAlternate" xml:space="preserve">
     <value>Durée du message</value>
   </data>
-  <data name="Frontend.094" xml:space="preserve">
+  <data name="Frontend.DynamicData.TipYouCanAddFieldsOnlyAfterAddingADataTable" xml:space="preserve">
     <value>Remarque : vous ne pouvez ajouter des champs qu'après avoir ajouté une table de données</value>
   </data>
-  <data name="Frontend.095" xml:space="preserve">
+  <data name="Frontend.DynamicData.Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
-  <data name="Frontend.096" xml:space="preserve">
+  <data name="Frontend.DynamicData.ActionColumn" xml:space="preserve">
     <value>Colonne d'actions</value>
   </data>
-  <data name="Frontend.097" xml:space="preserve">
+  <data name="Frontend.DynamicData.DataFormat" xml:space="preserve">
     <value>Format de données</value>
   </data>
-  <data name="Frontend.098" xml:space="preserve">
+  <data name="Frontend.DynamicData.DataFormatText" xml:space="preserve">
     <value>Texte de format de données</value>
   </data>
-  <data name="Frontend.099" xml:space="preserve">
+  <data name="Frontend.DynamicData.DataFormatTextOne" xml:space="preserve">
     <value>Texte du format de données 1</value>
   </data>
-  <data name="Frontend.100" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnglishIdentifierOfTheDataModelItUniquelyIdentifiesTheDataModel" xml:space="preserve">
     <value>Identifiant anglais du modèle de données. Il identifie le modèle de façon unique et ne peut pas être dupliqué.</value>
   </data>
-  <data name="Frontend.101" xml:space="preserve">
+  <data name="Frontend.DynamicData.DataFiltering" xml:space="preserve">
     <value>Filtrage des données</value>
   </data>
-  <data name="Frontend.102" xml:space="preserve">
+  <data name="Frontend.DynamicData.DataType" xml:space="preserve">
     <value>Type de données</value>
   </data>
-  <data name="Frontend.103" xml:space="preserve">
+  <data name="Frontend.DynamicData.DataTable" xml:space="preserve">
     <value>Table de données</value>
   </data>
-  <data name="Frontend.104" xml:space="preserve">
+  <data name="Frontend.DynamicData.DataTableText" xml:space="preserve">
     <value>Texte de table de données</value>
   </data>
-  <data name="Frontend.105" xml:space="preserve">
+  <data name="Frontend.DynamicData.DataTableTextOne" xml:space="preserve">
     <value>Texte de table de données 1</value>
   </data>
-  <data name="Frontend.106" xml:space="preserve">
+  <data name="Frontend.DynamicData.DataGrid" xml:space="preserve">
     <value>Grille de données</value>
   </data>
-  <data name="Frontend.107" xml:space="preserve">
+  <data name="Frontend.DynamicData.DataTableSettings" xml:space="preserve">
     <value>Paramètres de la table de données</value>
   </data>
-  <data name="Frontend.108" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectDataTable" xml:space="preserve">
     <value>Sélectionner une table de données</value>
   </data>
-  <data name="Frontend.109" xml:space="preserve">
+  <data name="Frontend.DynamicData.DataSettings" xml:space="preserve">
     <value>Réglages des données</value>
   </data>
-  <data name="Frontend.110" xml:space="preserve">
+  <data name="Frontend.DynamicData.DataDetails" xml:space="preserve">
     <value>Détails des données</value>
   </data>
-  <data name="Frontend.111" xml:space="preserve">
+  <data name="Frontend.DynamicData.Datasets" xml:space="preserve">
     <value>Jeux de données</value>
   </data>
-  <data name="Frontend.112" xml:space="preserve">
+  <data name="Frontend.DynamicData.Text" xml:space="preserve">
     <value>Texte</value>
   </data>
-  <data name="Frontend.113" xml:space="preserve">
+  <data name="Frontend.DynamicData.Add" xml:space="preserve">
     <value>Ajouter</value>
   </data>
-  <data name="Frontend.114" xml:space="preserve">
+  <data name="Frontend.DynamicData.AddField" xml:space="preserve">
     <value>Ajouter un champ</value>
   </data>
-  <data name="Frontend.115" xml:space="preserve">
+  <data name="Frontend.DynamicData.AddDataTable" xml:space="preserve">
     <value>Ajouter une table de données</value>
   </data>
-  <data name="Frontend.116" xml:space="preserve">
+  <data name="Frontend.DynamicData.AddInterface" xml:space="preserve">
     <value>Ajouter une interface</value>
   </data>
-  <data name="Frontend.117" xml:space="preserve">
+  <data name="Frontend.DynamicData.AddMenu" xml:space="preserve">
     <value>Ajouter un menu</value>
   </data>
-  <data name="Frontend.118" xml:space="preserve">
+  <data name="Frontend.DynamicData.AddPage" xml:space="preserve">
     <value>Ajouter une page</value>
   </data>
-  <data name="Frontend.119" xml:space="preserve">
+  <data name="Frontend.DynamicData.AddABackgroundColorToPaginationButtons" xml:space="preserve">
     <value>Ajouter une couleur de fond aux boutons de pagination</value>
   </data>
-  <data name="Frontend.120" xml:space="preserve">
+  <data name="Frontend.DynamicData.UseCompactPagination" xml:space="preserve">
     <value>Utiliser une pagination compacte</value>
   </data>
-  <data name="Frontend.121" xml:space="preserve">
+  <data name="Frontend.DynamicData.Unique" xml:space="preserve">
     <value>Unique</value>
   </data>
-  <data name="Frontend.122" xml:space="preserve">
+  <data name="Frontend.DynamicData.Required" xml:space="preserve">
     <value>Obligatoire</value>
   </data>
-  <data name="Frontend.123" xml:space="preserve">
+  <data name="Frontend.DynamicData.ShowZebraStripes" xml:space="preserve">
     <value>Afficher les bandes zébrées</value>
   </data>
-  <data name="Frontend.124" xml:space="preserve">
+  <data name="Frontend.DynamicData.ShowMessage" xml:space="preserve">
     <value>Afficher le message</value>
   </data>
-  <data name="Frontend.125" xml:space="preserve">
+  <data name="Frontend.DynamicData.ShowHeader" xml:space="preserve">
     <value>Afficher l'en-tête</value>
   </data>
-  <data name="Frontend.126" xml:space="preserve">
+  <data name="Frontend.DynamicData.ShowBorder" xml:space="preserve">
     <value>Afficher la bordure</value>
   </data>
-  <data name="Frontend.127" xml:space="preserve">
+  <data name="Frontend.DynamicData.StandardColumn" xml:space="preserve">
     <value>Colonne standard</value>
   </data>
-  <data name="Frontend.128" xml:space="preserve">
+  <data name="Frontend.DynamicData.MaximumLength" xml:space="preserve">
     <value>Longueur maximale</value>
   </data>
-  <data name="Frontend.129" xml:space="preserve">
+  <data name="Frontend.DynamicData.MaximumPageButtons" xml:space="preserve">
     <value>Nombre maximal de boutons de page</value>
   </data>
-  <data name="Frontend.130" xml:space="preserve">
+  <data name="Frontend.DynamicData.MinimumLength" xml:space="preserve">
     <value>Longueur minimale</value>
   </data>
-  <data name="Frontend.131" xml:space="preserve">
+  <data name="Frontend.DynamicData.ViewLayout" xml:space="preserve">
     <value>Voir la mise en page</value>
   </data>
-  <data name="Frontend.132" xml:space="preserve">
+  <data name="Frontend.DynamicData.IdentifierId" xml:space="preserve">
     <value>Identifiant id</value>
   </data>
-  <data name="Frontend.133" xml:space="preserve">
+  <data name="Frontend.DynamicData.TitleContent" xml:space="preserve">
     <value>Contenu du titre</value>
   </data>
-  <data name="Frontend.134" xml:space="preserve">
+  <data name="Frontend.DynamicData.TitleText" xml:space="preserve">
     <value>Texte du titre</value>
   </data>
-  <data name="Frontend.135" xml:space="preserve">
+  <data name="Frontend.DynamicData.Style" xml:space="preserve">
     <value>Style</value>
   </data>
-  <data name="Frontend.136" xml:space="preserve">
+  <data name="Frontend.DynamicData.StyleSettings" xml:space="preserve">
     <value>Paramètres de style</value>
   </data>
-  <data name="Frontend.137" xml:space="preserve">
+  <data name="Frontend.DynamicData.Format" xml:space="preserve">
     <value>Format</value>
   </data>
-  <data name="Frontend.138" xml:space="preserve">
+  <data name="Frontend.DynamicData.FormatText" xml:space="preserve">
     <value>Texte de format</value>
   </data>
-  <data name="Frontend.139" xml:space="preserve">
+  <data name="Frontend.DynamicData.FormatTextTwo" xml:space="preserve">
     <value>Texte de format 2</value>
   </data>
-  <data name="Frontend.140" xml:space="preserve">
+  <data name="Frontend.DynamicData.ItemsPerPage" xml:space="preserve">
     <value>Éléments par page</value>
   </data>
-  <data name="Frontend.141" xml:space="preserve">
+  <data name="Frontend.DynamicData.AddAlternate" xml:space="preserve">
     <value>Ajouter</value>
   </data>
-  <data name="Frontend.142" xml:space="preserve">
+  <data name="Frontend.DynamicData.AddColumn" xml:space="preserve">
     <value>Ajouter une colonne</value>
   </data>
-  <data name="Frontend.143" xml:space="preserve">
+  <data name="Frontend.DynamicData.AddButton" xml:space="preserve">
     <value>Ajouter un bouton</value>
   </data>
-  <data name="Frontend.144" xml:space="preserve">
+  <data name="Frontend.DynamicData.AddSortRule" xml:space="preserve">
     <value>Ajouter une règle de tri</value>
   </data>
-  <data name="Frontend.145" xml:space="preserve">
+  <data name="Frontend.DynamicData.AddFilterCondition" xml:space="preserve">
     <value>Ajouter une condition de filtre</value>
   </data>
-  <data name="Frontend.146" xml:space="preserve">
+  <data name="Frontend.DynamicData.AddOption" xml:space="preserve">
     <value>Ajouter une option</value>
   </data>
-  <data name="Frontend.147" xml:space="preserve">
+  <data name="Frontend.DynamicData.RenderLayoutPage" xml:space="preserve">
     <value>Afficher la page de mise en page</value>
   </data>
-  <data name="Frontend.148" xml:space="preserve">
+  <data name="Frontend.DynamicData.Click" xml:space="preserve">
     <value>Clic</value>
   </data>
-  <data name="Frontend.149" xml:space="preserve">
+  <data name="Frontend.DynamicData.ClickTheRightSideToAddAProperty" xml:space="preserve">
     <value>Cliquez à droite pour ajouter une propriété</value>
   </data>
-  <data name="Frontend.150" xml:space="preserve">
+  <data name="Frontend.DynamicData.ClickTheRightSideToAddAComponent" xml:space="preserve">
     <value>Cliquez à droite pour ajouter un composant</value>
   </data>
-  <data name="Frontend.151" xml:space="preserve">
+  <data name="Frontend.DynamicData.PageSettings" xml:space="preserve">
     <value>Paramètres d’interface</value>
   </data>
-  <data name="Frontend.152" xml:space="preserve">
+  <data name="Frontend.DynamicData.Confirm" xml:space="preserve">
     <value>Confirmer</value>
   </data>
-  <data name="Frontend.153" xml:space="preserve">
+  <data name="Frontend.DynamicData.ConfirmAlternate" xml:space="preserve">
     <value>Confirmer</value>
   </data>
-  <data name="Frontend.154" xml:space="preserve">
+  <data name="Frontend.DynamicData.ConfirmButtonText" xml:space="preserve">
     <value>Texte du bouton de confirmation</value>
   </data>
-  <data name="Frontend.155" xml:space="preserve">
+  <data name="Frontend.DynamicData.ConfirmActionSettings" xml:space="preserve">
     <value>Paramètres de l'action de confirmation</value>
   </data>
-  <data name="Frontend.156" xml:space="preserve">
+  <data name="Frontend.DynamicData.Disabled" xml:space="preserve">
     <value>Désactivé</value>
   </data>
-  <data name="Frontend.157" xml:space="preserve">
+  <data name="Frontend.DynamicData.Equals" xml:space="preserve">
     <value>Égal à</value>
   </data>
-  <data name="Frontend.158" xml:space="preserve">
+  <data name="Frontend.DynamicData.Filter" xml:space="preserve">
     <value>Filtre</value>
   </data>
-  <data name="Frontend.159" xml:space="preserve">
+  <data name="Frontend.DynamicData.FilterSettings" xml:space="preserve">
     <value>Paramètres du filtre</value>
   </data>
-  <data name="Frontend.160" xml:space="preserve">
+  <data name="Frontend.DynamicData.FilterConditionSettings" xml:space="preserve">
     <value>Paramètres des conditions de filtre</value>
   </data>
-  <data name="Frontend.161" xml:space="preserve">
+  <data name="Frontend.DynamicData.TypeText" xml:space="preserve">
     <value>Texte de type</value>
   </data>
-  <data name="Frontend.162" xml:space="preserve">
+  <data name="Frontend.DynamicData.TypeTextOne" xml:space="preserve">
     <value>Texte de type 1</value>
   </data>
-  <data name="Frontend.163" xml:space="preserve">
+  <data name="Frontend.DynamicData.Component" xml:space="preserve">
     <value>Composant</value>
   </data>
-  <data name="Frontend.164" xml:space="preserve">
+  <data name="Frontend.DynamicData.ComponentName" xml:space="preserve">
     <value>Nom du composant</value>
   </data>
-  <data name="Frontend.165" xml:space="preserve">
+  <data name="Frontend.DynamicData.ComponentType" xml:space="preserve">
     <value>Type de composant</value>
   </data>
-  <data name="Frontend.166" xml:space="preserve">
+  <data name="Frontend.DynamicData.BoundField" xml:space="preserve">
     <value>Champ lié</value>
   </data>
-  <data name="Frontend.167" xml:space="preserve">
+  <data name="Frontend.DynamicData.BoundFieldText" xml:space="preserve">
     <value>Texte du champ lié</value>
   </data>
-  <data name="Frontend.168" xml:space="preserve">
+  <data name="Frontend.DynamicData.BoundFieldTextOne" xml:space="preserve">
     <value>Texte du champ lié 1</value>
   </data>
-  <data name="Frontend.169" xml:space="preserve">
+  <data name="Frontend.DynamicData.Edit" xml:space="preserve">
     <value>Modifier</value>
   </data>
-  <data name="Frontend.170" xml:space="preserve">
+  <data name="Frontend.DynamicData.EditPage" xml:space="preserve">
     <value>Modifier la page</value>
   </data>
-  <data name="Frontend.171" xml:space="preserve">
+  <data name="Frontend.DynamicData.GeneratedAutomatically" xml:space="preserve">
     <value>Généré automatiquement</value>
   </data>
-  <data name="Frontend.172" xml:space="preserve">
+  <data name="Frontend.DynamicData.Custom" xml:space="preserve">
     <value>Personnalisé</value>
   </data>
-  <data name="Frontend.173" xml:space="preserve">
+  <data name="Frontend.DynamicData.CustomIDName" xml:space="preserve">
     <value>Nom d'ID personnalisé</value>
   </data>
-  <data name="Frontend.174" xml:space="preserve">
+  <data name="Frontend.DynamicData.CustomColumnSettings" xml:space="preserve">
     <value>Paramètres de colonnes personnalisées</value>
   </data>
-  <data name="Frontend.175" xml:space="preserve">
+  <data name="Frontend.DynamicData.CustomButton" xml:space="preserve">
     <value>Bouton personnalisé</value>
   </data>
-  <data name="Frontend.176" xml:space="preserve">
+  <data name="Frontend.DynamicData.Form" xml:space="preserve">
     <value>Formulaire</value>
   </data>
-  <data name="Frontend.177" xml:space="preserve">
+  <data name="Frontend.DynamicData.FormPropertySettings" xml:space="preserve">
     <value>Paramètres des propriétés du formulaire</value>
   </data>
-  <data name="Frontend.178" xml:space="preserve">
+  <data name="Frontend.DynamicData.FormExecutionMethod" xml:space="preserve">
     <value>Méthode d'exécution du formulaire</value>
   </data>
-  <data name="Frontend.179" xml:space="preserve">
+  <data name="Frontend.DynamicData.Table" xml:space="preserve">
     <value>Tableau</value>
   </data>
-  <data name="Frontend.180" xml:space="preserve">
+  <data name="Frontend.DynamicData.TableColumns" xml:space="preserve">
     <value>Colonnes du tableau</value>
   </data>
-  <data name="Frontend.181" xml:space="preserve">
+  <data name="Frontend.DynamicData.TableSize" xml:space="preserve">
     <value>Taille du tableau</value>
   </data>
-  <data name="Frontend.182" xml:space="preserve">
+  <data name="Frontend.DynamicData.TableStyleSettings" xml:space="preserve">
     <value>Paramètres de style du tableau</value>
   </data>
-  <data name="Frontend.183" xml:space="preserve">
+  <data name="Frontend.DynamicData.Settings" xml:space="preserve">
     <value>Réglages</value>
   </data>
-  <data name="Frontend.184" xml:space="preserve">
+  <data name="Frontend.DynamicData.VisitorEditPage" xml:space="preserve">
     <value>Page d'édition visiteur</value>
   </data>
-  <data name="Frontend.185" xml:space="preserve">
+  <data name="Frontend.DynamicData.Details" xml:space="preserve">
     <value>Détails</value>
   </data>
-  <data name="Frontend.186" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectADataTableBeforeYouCanConfigureItsFields" xml:space="preserve">
     <value>Sélectionnez d'abord une table de données pour configurer ses champs</value>
   </data>
-  <data name="Frontend.187" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterAName" xml:space="preserve">
     <value>Saisissez un nom</value>
   </data>
-  <data name="Frontend.188" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterIdentifierId" xml:space="preserve">
     <value>Saisissez l'id de l'identifiant</value>
   </data>
-  <data name="Frontend.189" xml:space="preserve">
+  <data name="Frontend.DynamicData.PleaseEnter" xml:space="preserve">
     <value>Saisissez</value>
   </data>
-  <data name="Frontend.190" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterClosePage" xml:space="preserve">
     <value>Saisissez la page de fermeture</value>
   </data>
-  <data name="Frontend.191" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterText" xml:space="preserve">
     <value>Saisissez du contenu</value>
   </data>
-  <data name="Frontend.192" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterColumnWidth" xml:space="preserve">
     <value>Saisissez la largeur de colonne</value>
   </data>
-  <data name="Frontend.193" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterAColumnTitle" xml:space="preserve">
     <value>Saisissez le titre de la colonne</value>
   </data>
-  <data name="Frontend.194" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterCancelButtonText" xml:space="preserve">
     <value>Saisissez le texte du bouton Annuler</value>
   </data>
-  <data name="Frontend.195" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterANameAlternate" xml:space="preserve">
     <value>Saisissez un nom</value>
   </data>
-  <data name="Frontend.196" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterFieldName" xml:space="preserve">
     <value>Saisissez le nom du champ</value>
   </data>
-  <data name="Frontend.197" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterLayoutName" xml:space="preserve">
     <value>Saisissez le nom de la mise en page</value>
   </data>
-  <data name="Frontend.198" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterButtonName" xml:space="preserve">
     <value>Saisissez le nom du bouton</value>
   </data>
-  <data name="Frontend.199" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterADescription" xml:space="preserve">
     <value>Saisissez une description</value>
   </data>
-  <data name="Frontend.200" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterPromptContent" xml:space="preserve">
     <value>Saisissez le contenu de l'invite</value>
   </data>
-  <data name="Frontend.201" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterHintText" xml:space="preserve">
     <value>Saisissez le texte d'aide</value>
   </data>
-  <data name="Frontend.202" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterPromptDuration" xml:space="preserve">
     <value>Saisissez la durée de l'invite</value>
   </data>
-  <data name="Frontend.203" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterTitleText" xml:space="preserve">
     <value>Saisissez le texte du titre</value>
   </data>
-  <data name="Frontend.204" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterConfirmButtonText" xml:space="preserve">
     <value>Saisissez le texte du bouton de confirmation</value>
   </data>
-  <data name="Frontend.205" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterMenuName" xml:space="preserve">
     <value>Saisissez le nom du menu</value>
   </data>
-  <data name="Frontend.206" xml:space="preserve">
+  <data name="Frontend.DynamicData.Select" xml:space="preserve">
     <value>Sélectionnez</value>
   </data>
-  <data name="Frontend.207" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectAnEvent" xml:space="preserve">
     <value>Sélectionnez un événement</value>
   </data>
-  <data name="Frontend.208" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectAnInteraction" xml:space="preserve">
     <value>Sélectionnez une interaction</value>
   </data>
-  <data name="Frontend.209" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectAPosition" xml:space="preserve">
     <value>Sélectionnez une position</value>
   </data>
-  <data name="Frontend.210" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectAlignment" xml:space="preserve">
     <value>Sélectionnez l'alignement</value>
   </data>
-  <data name="Frontend.211" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectDisplayContent" xml:space="preserve">
     <value>Sélectionnez le contenu affiché</value>
   </data>
-  <data name="Frontend.212" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectButtonEvent" xml:space="preserve">
     <value>Sélectionnez l'événement du bouton</value>
   </data>
-  <data name="Frontend.213" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectButtonProperty" xml:space="preserve">
     <value>Sélectionnez la propriété du bouton</value>
   </data>
-  <data name="Frontend.214" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectButtonType" xml:space="preserve">
     <value>Sélectionnez le type de bouton</value>
   </data>
-  <data name="Frontend.215" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectDataFormat" xml:space="preserve">
     <value>Sélectionnez le format de données</value>
   </data>
-  <data name="Frontend.216" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectDataType" xml:space="preserve">
     <value>Sélectionnez le type de données</value>
   </data>
-  <data name="Frontend.217" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectADataTable" xml:space="preserve">
     <value>Sélectionnez une table de données</value>
   </data>
-  <data name="Frontend.218" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectAFormat" xml:space="preserve">
     <value>Sélectionnez un format</value>
   </data>
-  <data name="Frontend.219" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectItemsPerPage" xml:space="preserve">
     <value>Sélectionnez le nombre par page</value>
   </data>
-  <data name="Frontend.220" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectAComponent" xml:space="preserve">
     <value>Sélectionnez un composant</value>
   </data>
-  <data name="Frontend.221" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectComponentName" xml:space="preserve">
     <value>Sélectionnez le nom du composant</value>
   </data>
-  <data name="Frontend.222" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectComponentType" xml:space="preserve">
     <value>Sélectionnez le type de composant</value>
   </data>
-  <data name="Frontend.223" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectBoundField" xml:space="preserve">
     <value>Sélectionnez le champ lié</value>
   </data>
-  <data name="Frontend.224" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectAPage" xml:space="preserve">
     <value>Sélectionnez une page</value>
   </data>
-  <data name="Frontend.225" xml:space="preserve">
+  <data name="Frontend.DynamicData.CallDataSourceMethod" xml:space="preserve">
     <value>Appeler la méthode de la source de données</value>
   </data>
-  <data name="Frontend.226" xml:space="preserve">
+  <data name="Frontend.DynamicData.OpenLink" xml:space="preserve">
     <value>Ouvrir le lien</value>
   </data>
-  <data name="Frontend.227" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectInteraction" xml:space="preserve">
     <value>Sélectionner l'interaction</value>
   </data>
-  <data name="Frontend.228" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectComponent" xml:space="preserve">
     <value>Sélectionner un composant</value>
   </data>
-  <data name="Frontend.229" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectPage" xml:space="preserve">
     <value>Sélectionner une page</value>
   </data>
-  <data name="Frontend.230" xml:space="preserve">
+  <data name="Frontend.DynamicData.Options" xml:space="preserve">
     <value>Options</value>
   </data>
-  <data name="Frontend.231" xml:space="preserve">
+  <data name="Frontend.DynamicData.OptionLabel" xml:space="preserve">
     <value>Libellé d'option</value>
   </data>
-  <data name="Frontend.232" xml:space="preserve">
+  <data name="Frontend.DynamicData.OptionValue" xml:space="preserve">
     <value>Valeur d'option</value>
   </data>
-  <data name="Frontend.233" xml:space="preserve">
+  <data name="Frontend.DynamicData.OptionSettings" xml:space="preserve">
     <value>Paramètres des options</value>
   </data>
-  <data name="Frontend.234" xml:space="preserve">
+  <data name="Frontend.DynamicData.Link" xml:space="preserve">
     <value>Lien</value>
   </data>
-  <data name="Frontend.235" xml:space="preserve">
+  <data name="Frontend.DynamicData.Length" xml:space="preserve">
     <value>Longueur</value>
   </data>
-  <data name="Frontend.236" xml:space="preserve">
+  <data name="Frontend.DynamicData.Descending" xml:space="preserve">
     <value>Décroissant</value>
   </data>
-  <data name="Frontend.237" xml:space="preserve">
+  <data name="Frontend.DynamicData.AlignTop" xml:space="preserve">
     <value>Aligner en haut</value>
   </data>
-  <data name="Frontend.238" xml:space="preserve">
+  <data name="Frontend.DynamicData.Color" xml:space="preserve">
     <value>Couleur</value>
   </data>
-  <data name="Frontend.239" xml:space="preserve">
+  <data name="Frontend.DynamicData.Home" xml:space="preserve">
     <value>Accueil</value>
   </data>
-  <data name="Frontend.240" xml:space="preserve">
+  <data name="Frontend.DynamicData.LableFontColor" xml:space="preserve">
     <value>Couleur de police lable</value>
   </data>
-  <data name="Frontend.241" xml:space="preserve">
+  <data name="Frontend.DynamicData.MinLengthMaxLength" xml:space="preserve">
     <value>Longueur min. : Longueur max. :</value>
   </data>
-  <data name="Frontend.242" xml:space="preserve">
+  <data name="Frontend.DynamicData.AddOnTheRight" xml:space="preserve">
     <value>Ajouter à droite</value>
   </data>
-  <data name="Frontend.243" xml:space="preserve">
+  <data name="Frontend.DynamicData.DynamicDataDataTableSettings" xml:space="preserve">
     <value>Paramètres des tables de données DynamicData</value>
   </data>
-  <data name="Frontend.244" xml:space="preserve">
+  <data name="Frontend.DynamicData.NameAlternate" xml:space="preserve">
     <value>Nom</value>
   </data>
-  <data name="Frontend.245" xml:space="preserve">
+  <data name="Frontend.DynamicData.Yes" xml:space="preserve">
     <value>Oui</value>
   </data>
-  <data name="Frontend.246" xml:space="preserve">
+  <data name="Frontend.DynamicData.No" xml:space="preserve">
     <value>Non</value>
   </data>
-  <data name="Frontend.247" xml:space="preserve">
+  <data name="Frontend.DynamicData.EventText" xml:space="preserve">
     <value>Texte de l'événement</value>
   </data>
-  <data name="Frontend.248" xml:space="preserve">
+  <data name="Frontend.DynamicData.EventTextTwo" xml:space="preserve">
     <value>Texte d'événement 2</value>
   </data>
-  <data name="Frontend.249" xml:space="preserve">
+  <data name="Frontend.DynamicData.CreateDynamicDataLayout" xml:space="preserve">
     <value>Création de mise en page DynamicData</value>
   </data>
-  <data name="Frontend.250" xml:space="preserve">
+  <data name="Frontend.DynamicData.AddAnOption" xml:space="preserve">
     <value>Ajoutez une option</value>
   </data>
-  <data name="Frontend.251" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectSortField" xml:space="preserve">
     <value>Sélectionnez le champ de tri</value>
   </data>
-  <data name="Frontend.252" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterANameSupplemental" xml:space="preserve">
     <value>Saisissez un nom</value>
   </data>
-  <data name="Frontend.253" xml:space="preserve">
-    <value>Paramètres d'entrée</value>
-  </data>
-  <data name="Frontend.254" xml:space="preserve">
-    <value>Paramètres de sortie</value>
-  </data>
-  <data name="Frontend.255" xml:space="preserve">
-    <value>Texte du bouton Annuler</value>
-  </data>
-  <data name="Frontend.256" xml:space="preserve">
-    <value>Texte du bouton de confirmation</value>
-  </data>
-  <data name="Frontend.257" xml:space="preserve">
-    <value>Durée du message</value>
-  </data>
-  <data name="Frontend.258" xml:space="preserve">
-    <value>Méthode d'exécution du formulaire</value>
-  </data>
-  <data name="Frontend.259" xml:space="preserve">
+
+
+
+
+
+
+  <data name="Frontend.DynamicData.DynamicDataHome" xml:space="preserve">
     <value>Accueil DynamicData</value>
   </data>
-  <data name="Frontend.260" xml:space="preserve">
+  <data name="Frontend.DynamicData.DynamicDataInterfaceSettings" xml:space="preserve">
     <value>Paramètres de l'interface DynamicData</value>
   </data>
-  <data name="Frontend.261" xml:space="preserve">
+  <data name="Frontend.DynamicData.Thumbnail" xml:space="preserve">
     <value>Miniature</value>
   </data>
-  <data name="Frontend.262" xml:space="preserve">
+  <data name="Frontend.DynamicData.DynamicDataLayoutRenderPage" xml:space="preserve">
     <value>Page de rendu de la mise en page DynamicData</value>
   </data>
-  <data name="Frontend.263" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterIdentifierIdAlternate" xml:space="preserve">
     <value>Saisissez l'Id de l'identifiant</value>
   </data>
-  <data name="Frontend.264" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectWhetherRequired" xml:space="preserve">
     <value>Indiquez si le champ est obligatoire</value>
   </data>
-  <data name="Frontend.265" xml:space="preserve">
+  <data name="Frontend.DynamicData.SelectWhetherUnique" xml:space="preserve">
     <value>Indiquez si la valeur est unique</value>
   </data>
-  <data name="Frontend.266" xml:space="preserve">
+  <data name="Frontend.DynamicData.DeviceManagementCertificateSpotCheckasd" xml:space="preserve">
     <value>Certificat de gestion des appareils (spot_checkasd)</value>
   </data>
-  <data name="Frontend.267" xml:space="preserve">
+  <data name="Frontend.DynamicData.BindDataTableOneBindDataTableTwoBindDataTableThree" xml:space="preserve">
     <value>Lier la table de données 1, lier la table de données 2, lier la table de données 3Lier la table de données 1, lier la table de données 2, lier la table de données 3Lier la table de données 1, lier la table de données 2, lier la table de données 3</value>
   </data>
-  <data name="Frontend.268" xml:space="preserve">
+  <data name="Frontend.DynamicData.TestNameOne" xml:space="preserve">
     <value>Nom de test 1</value>
   </data>
-  <data name="Frontend.269" xml:space="preserve">
+  <data name="Frontend.DynamicData.DescriptionText" xml:space="preserve">
     <value>Texte de description</value>
   </data>
-  <data name="Frontend.270" xml:space="preserve">
+  <data name="Frontend.DynamicData.EnterANameAndDescription" xml:space="preserve">
     <value>Saisissez un nom et une description</value>
   </data>
-  <data name="Frontend.271" xml:space="preserve">
+  <data name="Frontend.DynamicData.CloseNow" xml:space="preserve">
     <value>Fermer maintenant ?</value>
   </data>
-  <data name="Frontend.272" xml:space="preserve">
+  <data name="Frontend.DynamicData.ThisWillPermanentlyDeleteThisFileContinue" xml:space="preserve">
     <value>Cela supprimera définitivement ce fichier. Continuer ?</value>
   </data>
-  <data name="Frontend.273" xml:space="preserve">
+  <data name="Frontend.DynamicData.Notice" xml:space="preserve">
     <value>Information</value>
   </data>
-  <data name="Frontend.274" xml:space="preserve">
+  <data name="Frontend.DynamicData.DeletedSuccessfully" xml:space="preserve">
     <value>Supprimé avec succès !</value>
   </data>
-  <data name="Frontend.275" xml:space="preserve">
+  <data name="Frontend.DynamicData.DeletionCancelled" xml:space="preserve">
     <value>Suppression annulée</value>
   </data>
-  <data name="Frontend.276" xml:space="preserve">
+  <data name="Frontend.DynamicData.MenuOne" xml:space="preserve">
     <value>Menu 1</value>
   </data>
-  <data name="Frontend.277" xml:space="preserve">
+  <data name="Frontend.DynamicData.MenuValue" xml:space="preserve">
     <value>Menu {0}</value>
   </data>
-  <data name="Frontend.278" xml:space="preserve">
+  <data name="Frontend.DynamicData.ConfirmDeletingThisRecord" xml:space="preserve">
     <value>Confirmer la suppression de cet enregistrement</value>
   </data>
-  <data name="Frontend.279" xml:space="preserve">
+  <data name="Frontend.DynamicData.DeletedSuccessfullyAlternate" xml:space="preserve">
     <value>Suppression réussie</value>
   </data>
-  <data name="Frontend.280" xml:space="preserve">
+  <data name="Frontend.DynamicData.CloseCurrentPage" xml:space="preserve">
     <value>Fermer la page actuelle</value>
   </data>
-  <data name="Frontend.281" xml:space="preserve">
+  <data name="Frontend.DynamicData.Input" xml:space="preserve">
     <value>Entrée</value>
   </data>
-  <data name="Frontend.282" xml:space="preserve">
+  <data name="Frontend.DynamicData.TextInput" xml:space="preserve">
     <value>Champ de texte</value>
   </data>
-  <data name="Frontend.283" xml:space="preserve">
+  <data name="Frontend.DynamicData.TextArea" xml:space="preserve">
     <value>Zone de texte</value>
   </data>
-  <data name="Frontend.284" xml:space="preserve">
+  <data name="Frontend.DynamicData.NumberInput" xml:space="preserve">
     <value>Champ numérique</value>
   </data>
-  <data name="Frontend.285" xml:space="preserve">
+  <data name="Frontend.DynamicData.Switch" xml:space="preserve">
     <value>Interrupteur</value>
   </data>
-  <data name="Frontend.286" xml:space="preserve">
+  <data name="Frontend.DynamicData.Selector" xml:space="preserve">
     <value>Sélecteur</value>
   </data>
-  <data name="Frontend.287" xml:space="preserve">
+  <data name="Frontend.DynamicData.AnyTimePicker" xml:space="preserve">
     <value>Sélecteur d'heure libre</value>
   </data>
-  <data name="Frontend.288" xml:space="preserve">
+  <data name="Frontend.DynamicData.DatePicker" xml:space="preserve">
     <value>Sélecteur de date</value>
   </data>
-  <data name="Frontend.289" xml:space="preserve">
+  <data name="Frontend.DynamicData.YearPicker" xml:space="preserve">
     <value>Sélecteur d'année</value>
   </data>
-  <data name="Frontend.290" xml:space="preserve">
+  <data name="Frontend.DynamicData.YearPickerMultiple" xml:space="preserve">
     <value>Sélecteur d'année - multiple</value>
   </data>
-  <data name="Frontend.291" xml:space="preserve">
+  <data name="Frontend.DynamicData.MonthPicker" xml:space="preserve">
     <value>Sélecteur de mois</value>
   </data>
-  <data name="Frontend.292" xml:space="preserve">
+  <data name="Frontend.DynamicData.MonthPickerMultiple" xml:space="preserve">
     <value>Sélecteur de mois - multiple</value>
   </data>
-  <data name="Frontend.293" xml:space="preserve">
+  <data name="Frontend.DynamicData.DatePickerMultiple" xml:space="preserve">
     <value>Sélecteur de date - multiple</value>
   </data>
-  <data name="Frontend.294" xml:space="preserve">
+  <data name="Frontend.DynamicData.WeekPicker" xml:space="preserve">
     <value>Sélecteur de semaine</value>
   </data>
-  <data name="Frontend.295" xml:space="preserve">
+  <data name="Frontend.DynamicData.YyyyWeekWW" xml:space="preserve">
     <value>yyyy semaine WW</value>
   </data>
-  <data name="Frontend.296" xml:space="preserve">
+  <data name="Frontend.DynamicData.DateAndTimePicker" xml:space="preserve">
     <value>Sélecteur de date et d'heure</value>
   </data>
-  <data name="Frontend.297" xml:space="preserve">
+  <data name="Frontend.DynamicData.Checkbox" xml:space="preserve">
     <value>Case à cocher</value>
   </data>
-  <data name="Frontend.298" xml:space="preserve">
+  <data name="Frontend.DynamicData.RadioButton" xml:space="preserve">
     <value>Bouton radio</value>
   </data>
-  <data name="Frontend.299" xml:space="preserve">
+  <data name="Frontend.DynamicData.MockData" xml:space="preserve">
     <value>Données simulées</value>
   </data>
-  <data name="Frontend.300" xml:space="preserve">
+  <data name="Frontend.DynamicData.ThisIsTheLayoutName" xml:space="preserve">
     <value>Ceci est le nom de la mise en page</value>
   </data>
-  <data name="Frontend.301" xml:space="preserve">
+  <data name="Frontend.DynamicData.Enabled" xml:space="preserve">
     <value>Activé</value>
   </data>
-  <data name="Frontend.302" xml:space="preserve">
+  <data name="Frontend.DynamicData.DisabledAlternate" xml:space="preserve">
     <value>Désactivé</value>
   </data>
-  <data name="Frontend.303" xml:space="preserve">
+  <data name="Frontend.DynamicData.LayoutName" xml:space="preserve">
     <value>Nom de la disposition</value>
   </data>
-  <data name="Frontend.304" xml:space="preserve">
+  <data name="Frontend.DynamicData.LayoutNameIsIncorrect" xml:space="preserve">
     <value>Le nom de la mise en page est incorrect</value>
   </data>
-  <data name="Frontend.305" xml:space="preserve">
+  <data name="Frontend.DynamicData.YourLayoutNameIs" xml:space="preserve">
     <value>Le nom de votre mise en page est :</value>
   </data>
-  <data name="Frontend.306" xml:space="preserve">
+  <data name="Frontend.DynamicData.ExceptionThrowTestParametersPassedValueValue" xml:space="preserve">
     <value>Test de levée d'exception, paramètres transmis : {0} {1}</value>
   </data>
-  <data name="Frontend.307" xml:space="preserve">
+  <data name="Frontend.DynamicData.DivisorCannotBeZero" xml:space="preserve">
     <value>Le diviseur ne peut pas être 0 !</value>
   </data>
-  <data name="Frontend.308" xml:space="preserve">
+  <data name="Frontend.DynamicData.UnknownOperatorValue" xml:space="preserve">
     <value>Opérateur inconnu : {0}</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
@@ -1030,26 +1018,26 @@
     <value>Illustre les paramètres et retours FunctionRender</value>
   </data>
 
-  <data name="Frontend.309" xml:space="preserve"><value>Menu déroulant / mosaïque</value></data>
-  <data name="Frontend.310" xml:space="preserve"><value>Personnalisé / jeu de données</value></data>
-  <data name="Frontend.311" xml:space="preserve"><value>Valeur par défaut</value></data>
-  <data name="Frontend.312" xml:space="preserve"><value>Type</value></data>
-  <data name="Frontend.313" xml:space="preserve"><value>Une ligne</value></data>
-  <data name="Frontend.314" xml:space="preserve"><value>Multiligne</value></data>
-  <data name="Frontend.315" xml:space="preserve"><value>Validation</value></data>
-  <data name="Frontend.316" xml:space="preserve"><value>Obligatoire</value></data>
-  <data name="Frontend.317" xml:space="preserve"><value>Interdire les entrées en double</value></data>
-  <data name="Frontend.318" xml:space="preserve"><value>Limiter le nombre de caractères</value></data>
-  <data name="Frontend.319" xml:space="preserve"><value>Minimum</value></data>
-  <data name="Frontend.320" xml:space="preserve"><value>Maximum</value></data>
-  <data name="Frontend.321" xml:space="preserve"><value>Limiter le format de saisie</value></data>
-  <data name="Frontend.322" xml:space="preserve"><value>Proportion de largeur</value></data>
-  <data name="Frontend.323" xml:space="preserve"><value>Type de date</value></data>
-  <data name="Frontend.324" xml:space="preserve"><value>Date</value></data>
-  <data name="Frontend.325" xml:space="preserve"><value>Date et heure</value></data>
-  <data name="Frontend.326" xml:space="preserve"><value>Type d'heure</value></data>
-  <data name="Frontend.327" xml:space="preserve"><value>Format de date</value></data>
-  <data name="Frontend.328" xml:space="preserve"><value>Propriétés du champ</value></data>
-  <data name="Frontend.329" xml:space="preserve"><value>Lecture seule</value></data>
-  <data name="Frontend.330" xml:space="preserve"><value>Masqué</value></data>
+  <data name="Frontend.DynamicData.DropdownTiled" xml:space="preserve"><value>Menu déroulant / mosaïque</value></data>
+  <data name="Frontend.DynamicData.CustomDataset" xml:space="preserve"><value>Personnalisé / jeu de données</value></data>
+  <data name="Frontend.DynamicData.DefaultValue" xml:space="preserve"><value>Valeur par défaut</value></data>
+  <data name="Frontend.DynamicData.Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Frontend.DynamicData.SingleLine" xml:space="preserve"><value>Une ligne</value></data>
+  <data name="Frontend.DynamicData.Multiline" xml:space="preserve"><value>Multiligne</value></data>
+  <data name="Frontend.DynamicData.Validation" xml:space="preserve"><value>Validation</value></data>
+  <data name="Frontend.DynamicData.RequiredAlternate" xml:space="preserve"><value>Obligatoire</value></data>
+  <data name="Frontend.DynamicData.DoNotAllowDuplicateInput" xml:space="preserve"><value>Interdire les entrées en double</value></data>
+  <data name="Frontend.DynamicData.LimitCharacterCount" xml:space="preserve"><value>Limiter le nombre de caractères</value></data>
+  <data name="Frontend.DynamicData.Minimum" xml:space="preserve"><value>Minimum</value></data>
+  <data name="Frontend.DynamicData.Maximum" xml:space="preserve"><value>Maximum</value></data>
+  <data name="Frontend.DynamicData.LimitInputFormat" xml:space="preserve"><value>Limiter le format de saisie</value></data>
+  <data name="Frontend.DynamicData.WidthRatio" xml:space="preserve"><value>Proportion de largeur</value></data>
+  <data name="Frontend.DynamicData.DateType" xml:space="preserve"><value>Type de date</value></data>
+  <data name="Frontend.DynamicData.Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Frontend.DynamicData.DateAndTime" xml:space="preserve"><value>Date et heure</value></data>
+  <data name="Frontend.DynamicData.TimeType" xml:space="preserve"><value>Type d'heure</value></data>
+  <data name="Frontend.DynamicData.DateFormat" xml:space="preserve"><value>Format de date</value></data>
+  <data name="Frontend.DynamicData.FieldProperties" xml:space="preserve"><value>Propriétés du champ</value></data>
+  <data name="Frontend.DynamicData.ReadOnly" xml:space="preserve"><value>Lecture seule</value></data>
+  <data name="Frontend.DynamicData.Hidden" xml:space="preserve"><value>Masqué</value></data>
 </root>

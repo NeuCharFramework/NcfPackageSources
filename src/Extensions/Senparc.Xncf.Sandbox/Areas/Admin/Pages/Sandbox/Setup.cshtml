@@ -4,24 +4,24 @@
 @using Senparc.Xncf.Sandbox
 @inject IStringLocalizer<SandboxResource> XR
 @{
-    ViewData["Title"] = $"{Model.XncfRegister.MenuName} - {XR["Frontend.004"]}";
+    ViewData["Title"] = $"{Model.XncfRegister.MenuName} - {XR["Frontend.Sandbox.EnvironmentSetup"]}";
     Layout = "_Layout_Vue";
 }
 
 @section breadcrumbs{
-    <el-breadcrumb-item>@XR["Frontend.001"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.Sandbox.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>@Model.XncfRegister.MenuName</el-breadcrumb-item>
-    <el-breadcrumb-item>@XR["Frontend.004"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.Sandbox.EnvironmentSetup"]</el-breadcrumb-item>
 }
 
 <div>
     <el-container>
         <el-header class="module-header">
-            <span class="start-title"><i class="fa fa-wrench"></i>&nbsp;<span class="module-header-v">{{ ncfST('Frontend.004') }}</span></span>
+            <span class="start-title"><i class="fa fa-wrench"></i>&nbsp;<span class="module-header-v">{{ ncfST('Frontend.Sandbox.EnvironmentSetup') }}</span></span>
         </el-header>
         <el-main>
             <el-alert
-                :title="dockerAvailable ? ncfST('Frontend.092') : ncfST('Frontend.093')"
+                :title="dockerAvailable ? ncfST('Frontend.Sandbox.DockerIsReadyYouCanContinueCreatingSandboxes') : ncfST('Frontend.Sandbox.DockerIsNotReadyCompleteTheManualInstallationAndPrePullThe')"
                 :type="dockerAvailable ? 'success' : 'warning'"
                 :closable="false"
                 show-icon>
@@ -29,32 +29,32 @@
 
             <el-card shadow="never" style="margin-top:16px;">
                 <div slot="header" class="clearfix">
-                    <span>{{ ncfST('Frontend.051') }}</span>
-                    <el-button style="float:right;padding:3px 0" type="text" @@click="probe">{{ ncfST('Frontend.052') }}</el-button>
+                    <span>{{ ncfST('Frontend.Sandbox.LocalCheck') }}</span>
+                    <el-button style="float:right;padding:3px 0" type="text" @@click="probe">{{ ncfST('Frontend.Sandbox.CheckAgain') }}</el-button>
                 </div>
-                <p><strong>{{ ncfST('Frontend.072') }}</strong>{{ dockerAvailable ? ncfST('Frontend.053') : ncfST('Frontend.054') }}</p>
+                <p><strong>{{ ncfST('Frontend.Sandbox.StatusLabel') }}</strong>{{ dockerAvailable ? ncfST('Frontend.Sandbox.Available') : ncfST('Frontend.Sandbox.Unavailable') }}</p>
                 <p style="color:#666;">{{ statusMessage }}</p>
                 <p style="margin-top:8px;">
-                    <strong>{{ ncfST('Frontend.080') }}</strong>
+                    <strong>{{ ncfST('Frontend.Sandbox.ImageRegistryPrefixLabel') }}</strong>
                     <span v-if="hasRegistryPrefix">{{ registryPrefix }}</span>
-                    <span v-else style="color:#888;">{{ ncfST('Frontend.056') }}</span>
+                    <span v-else style="color:#888;">{{ ncfST('Frontend.Sandbox.NotConfiguredPublicDefaultImagesAreUsedSeeDocumentation') }}</span>
                 </p>
             </el-card>
 
             <el-card shadow="never" style="margin-top:16px;">
-                <div slot="header">{{ ncfST('Frontend.057') }}</div>
+                <div slot="header">{{ ncfST('Frontend.Sandbox.ManualConfigurationChecklistSummary') }}</div>
                 <ol style="line-height:1.8;padding-left:20px;">
-                    <li>{{ ncfST('Frontend.094') }}</li>
-                    <li>{{ ncfST('Frontend.070') }}</li>
-                    <li>{{ ncfST('Frontend.095') }}</li>
-                    <li>{{ ncfST('Frontend.071') }}</li>
+                    <li>{{ ncfST('Frontend.Sandbox.InstallAndStartDockerOrACompatibleCLIOnTheSameMachineAlternate') }}</li>
+                    <li>{{ ncfST('Frontend.Sandbox.PrePullTheRequiredImagesAccordingToTheOfficialDocumentationUseThe') }}</li>
+                    <li>{{ ncfST('Frontend.Sandbox.ForAnInternalRegistryConfigureThePrefixOrOverridesInSenparcXncfSandboxImages') }}</li>
+                    <li>{{ ncfST('Frontend.Sandbox.AfterTheCheckPassesOpenTheModuleFunctionCreateSandboxChoosePython') }}</li>
                 </ol>
                 <p style="margin-top:12px;">
                     <ncf-doc-help topic="sandbox.setup"></ncf-doc-help>
-                    <a class="el-button el-button--default" href="/Admin/Sandbox/Index?uid=@Model.XncfModuleUid">{{ ncfST('Frontend.058') }}</a>
+                    <a class="el-button el-button--default" href="/Admin/Sandbox/Index?uid=@Model.XncfModuleUid">{{ ncfST('Frontend.Sandbox.OpenSandboxPanel') }}</a>
                 </p>
                 <p style="color:#888;font-size:12px;margin-top:8px;">
-                    {{ ncfST('Frontend.059') }}<a :href="docsUrl" target="_blank" rel="noopener">{{ docsUrl }}</a>
+                    {{ ncfST('Frontend.Sandbox.Documentation') }}<a :href="docsUrl" target="_blank" rel="noopener">{{ docsUrl }}</a>
                 </p>
             </el-card>
         </el-main>

@@ -21,6 +21,7 @@
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Ncf.XncfBase;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
@@ -29,6 +30,9 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.PL
 {
     public class MyFunction_SenMapicRequest : FunctionAppRequestBase
     {
+        public const int DefaultPageCount = 20;
+        public const int MaximumPageCount = 100;
+
         [Required]
         [LocalizedDescription(typeof(SenMapicResource), "Parameter.SenMapic.Url")]
         public string Url { get; set; }
@@ -37,10 +41,16 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.PL
         [LocalizedDescription(typeof(SenMapicResource), "Parameter.SenMapic.Depth")]
         public int Deepth { get; set; }
 
-        [Required]
+        [Range(1, MaximumPageCount)]
         [LocalizedDescription(typeof(SenMapicResource), "Parameter.SenMapic.PageCount")]
-        public int PageNumber { get; set; }
+        public int PageNumber { get; set; } = DefaultPageCount;
 
+        public int GetEffectivePageCount()
+        {
+            return PageNumber <= 0
+                ? DefaultPageCount
+                : Math.Min(PageNumber, MaximumPageCount);
+        }
     }
     public class MyFunction_CaculateRequest : FunctionAppRequestBase
     {

@@ -1,7 +1,7 @@
 ﻿@page
 @model Senparc.Xncf.DynamicData.Areas.DynamicData.Pages.Index
 @{
-    ViewData["Title"] = XR["Frontend.259"];
+    ViewData["Title"] = XR["Frontend.DynamicData.DynamicDataHome"];
     Layout = "_Layout_Vue";
 }
 
@@ -28,7 +28,7 @@
             <h3>@Model.XncfRegister.MenuName / @Model.XncfRegister.Name</h3>
             <h4>@Model.XncfRegister.Description</h4>
             <br />
-            <i>{{ ncfST('Frontend.069') }}</i>
+            <i>{{ ncfST('Frontend.DynamicData.ThisModuleWasGeneratedAutomatically') }}</i>
         </el-main>
     </el-container>
 </div>

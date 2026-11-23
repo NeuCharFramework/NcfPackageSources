@@ -164,85 +164,85 @@
   </data>
 
 
-  <data name="Frontend.001" xml:space="preserve"><value>有効なもののみ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.002" xml:space="preserve"><value>このサイトのランタイムによってマッピングされたMCPサービスです。読み取り専用であり、クライアント接続設定ではありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.003" xml:space="preserve"><value>例：1.0（任意）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.004" xml:space="preserve"><value>例：http://localhost:3001/mcp/sse</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.005" xml:space="preserve"><value>保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.006" xml:space="preserve"><value>保存前にテスト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.007" xml:space="preserve"><value>閉じる</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.008" xml:space="preserve"><value>削除</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.009" xml:space="preserve"><value>再読み込み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.010" xml:space="preserve"><value>プロトコルバージョン</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.011" xml:space="preserve"><value>パラメーター</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.012" xml:space="preserve"><value>パラメーター名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.013" xml:space="preserve"><value>パラメーター数</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.014" xml:space="preserve"><value>公開ルート</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.015" xml:space="preserve"><value>キャンセル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.016" xml:space="preserve"><value>任意</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.017" xml:space="preserve"><value>任意。AuthConfig JSONのtokenフィールドとして保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.018" xml:space="preserve"><value>名前</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.019" xml:space="preserve"><value>いいえ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.020" xml:space="preserve"><value>有効</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.021" xml:space="preserve"><value>コピー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.022" xml:space="preserve"><value>クライアント接続設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.023" xml:space="preserve"><value>ツール名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.024" xml:space="preserve"><value>必須</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.025" xml:space="preserve"><value>所有モジュール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.026" xml:space="preserve"><value>説明</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.027" xml:space="preserve"><value>名前 / アドレス / 説明を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.028" xml:space="preserve"><value>サービス / モジュール / アドレスを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.029" xml:space="preserve"><value>操作</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.030" xml:space="preserve"><value>拡大</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.031" xml:space="preserve"><value>エンドポイントを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.032" xml:space="preserve"><value>はい</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.033" xml:space="preserve"><value>最終テスト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.034" xml:space="preserve"><value>サービス名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.035" xml:space="preserve"><value>未テスト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.036" xml:space="preserve"><value>ツール一覧が返されませんでした。エンドポイント、プロトコル、認証を確認して再試行してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.037" xml:space="preserve"><value>タイトル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.038" xml:space="preserve"><value>テスト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.039" xml:space="preserve"><value>現在の構成をテスト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.040" xml:space="preserve"><value>このMCPエンドポイントを一意に識別します</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.041" xml:space="preserve"><value>エンドポイントアドレス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.042" xml:space="preserve"><value>エンドポイントタイプ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.043" xml:space="preserve"><value>タイプ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.044" xml:space="preserve"><value>編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.045" xml:space="preserve"><value>エンドポイントにアクセス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.046" xml:space="preserve"><value>入力スキーマ（JSON）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.047" xml:space="preserve"><value>このサイトが公開したMCPサービス（{0}）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.048" xml:space="preserve"><value>一致するMCPサービスはこのサイトに公開されていません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.049" xml:space="preserve"><value>{0}個のツール（Function）が見つかりました</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.050" xml:space="preserve"><value>接続テスト - {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.051" xml:space="preserve"><value>{0}個のツール（Function）が見つかりました。左側の矢印を選択すると、パラメーターと入力スキーマを表示できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.052" xml:space="preserve"><value>公開、ツール、アクセス権限は所有モジュールが管理します。アドレスは現在のサイトから生成され、匿名アクセスや公開到達性を意味しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.053" xml:space="preserve"><value>ツール {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.054" xml:space="preserve"><value>（なし）</value></data>
-  <data name="Frontend.055" xml:space="preserve"><value>サーバー応答の形式が正しくありません。ログイン状態を確認してページを更新してください。</value></data>
-  <data name="Frontend.056" xml:space="preserve"><value>リクエストに失敗しました</value></data>
-  <data name="Frontend.057" xml:space="preserve"><value>：インターフェースが見つかりません（HTTP 404）。サイトに最新の MCP モジュールが読み込まれていることを確認してください。</value></data>
-  <data name="Frontend.058" xml:space="preserve"><value>：ログインの有効期限が切れているか、アクセス権がありません。再度ログインしてください。</value></data>
-  <data name="Frontend.059" xml:space="preserve"><value>サーバーから不正な接続テスト結果形式が返されました。</value></data>
-  <data name="Frontend.060" xml:space="preserve"><value>MCP エンドポイントを追加</value></data>
-  <data name="Frontend.061" xml:space="preserve"><value>エンドポイント名を入力してください</value></data>
-  <data name="Frontend.062" xml:space="preserve"><value>エンドポイントアドレスを入力してください</value></data>
-  <data name="Frontend.063" xml:space="preserve"><value>サーバーからこのサイトが公開する MCP サービスの不正な一覧が返されました。</value></data>
-  <data name="Frontend.064" xml:space="preserve"><value>このサイトが公開する MCP サービスの読み取りに失敗しました</value></data>
-  <data name="Frontend.065" xml:space="preserve"><value>このブラウザーはクリップボードへのコピーに対応していません。エンドポイントアドレスを手動で選択してコピーしてください。</value></data>
-  <data name="Frontend.066" xml:space="preserve"><value>エンドポイントアドレスをコピーしました</value></data>
-  <data name="Frontend.067" xml:space="preserve"><value>コピーに失敗しました。エンドポイントアドレスを手動で選択してコピーしてください。</value></data>
-  <data name="Frontend.068" xml:space="preserve"><value>サーバーから不正なエンドポイント一覧形式が返されました。</value></data>
-  <data name="Frontend.069" xml:space="preserve"><value>MCP エンドポイント一覧の読み取りに失敗しました</value></data>
-  <data name="Frontend.070" xml:space="preserve"><value>MCP エンドポイントを編集</value></data>
-  <data name="Frontend.071" xml:space="preserve"><value>✓ エンドポイント接続テストに成功しました</value></data>
-  <data name="Frontend.072" xml:space="preserve"><value>✗ エンドポイント接続テストに失敗しました</value></data>
-  <data name="Frontend.073" xml:space="preserve"><value>保存しました</value></data>
-  <data name="Frontend.074" xml:space="preserve"><value>保存に失敗しました</value></data>
-  <data name="Frontend.075" xml:space="preserve"><value>更新に失敗しました</value></data>
-  <data name="Frontend.076" xml:space="preserve"><value>MCP エンドポイント「{0}」を削除しますか？</value></data>
-  <data name="Frontend.077" xml:space="preserve"><value>通知</value></data>
-  <data name="Frontend.078" xml:space="preserve"><value>削除しました</value></data>
-  <data name="Frontend.079" xml:space="preserve"><value>削除に失敗しました</value></data>
-  <data name="Frontend.080" xml:space="preserve"><value>入力スキーマ</value></data>
-  <data name="Frontend.081" xml:space="preserve"><value>（JSON スキーマ情報なし）</value></data>
+  <data name="Frontend.Mcp.EnabledOnly" xml:space="preserve"><value>有効なもののみ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.TheseAreMCPServicesMappedByThisSiteRuntimeTheyAreRead" xml:space="preserve"><value>このサイトのランタイムによってマッピングされたMCPサービスです。読み取り専用であり、クライアント接続設定ではありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ForExampleOneZeroOptional" xml:space="preserve"><value>例：1.0（任意）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ForExampleHttpLocalhost3001McpSse" xml:space="preserve"><value>例：http://localhost:3001/mcp/sse</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Save" xml:space="preserve"><value>保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.TestBeforeSaving" xml:space="preserve"><value>保存前にテスト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Close" xml:space="preserve"><value>閉じる</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Delete" xml:space="preserve"><value>削除</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Refresh" xml:space="preserve"><value>再読み込み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ProtocolVersion" xml:space="preserve"><value>プロトコルバージョン</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Parameters" xml:space="preserve"><value>パラメーター</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ParameterName" xml:space="preserve"><value>パラメーター名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ParameterCount" xml:space="preserve"><value>パラメーター数</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.PublishedRoute" xml:space="preserve"><value>公開ルート</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Cancel" xml:space="preserve"><value>キャンセル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Optional" xml:space="preserve"><value>任意</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.OptionalSaveAsAuthConfigJSONWithATokenField" xml:space="preserve"><value>任意。AuthConfig JSONのtokenフィールドとして保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Name" xml:space="preserve"><value>名前</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.No" xml:space="preserve"><value>いいえ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Enabled" xml:space="preserve"><value>有効</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Copy" xml:space="preserve"><value>コピー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ClientConnectionConfiguration" xml:space="preserve"><value>クライアント接続設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ToolName" xml:space="preserve"><value>ツール名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Required" xml:space="preserve"><value>必須</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.OwningModule" xml:space="preserve"><value>所有モジュール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Description" xml:space="preserve"><value>説明</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.SearchNameAddressDescription" xml:space="preserve"><value>名前 / アドレス / 説明を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.SearchServiceModuleAddress" xml:space="preserve"><value>サービス / モジュール / アドレスを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Actions" xml:space="preserve"><value>操作</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ZoomIn" xml:space="preserve"><value>拡大</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.AddEndpoint" xml:space="preserve"><value>エンドポイントを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Yes" xml:space="preserve"><value>はい</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.LastTested" xml:space="preserve"><value>最終テスト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ServiceName" xml:space="preserve"><value>サービス名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.NotTested" xml:space="preserve"><value>未テスト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.NoToolListWasReturnedCheckTheEndpointProtocolAndAuthenticationThen" xml:space="preserve"><value>ツール一覧が返されませんでした。エンドポイント、プロトコル、認証を確認して再試行してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Title" xml:space="preserve"><value>タイトル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Test" xml:space="preserve"><value>テスト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.TestTheCurrentConfiguration" xml:space="preserve"><value>現在の構成をテスト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.UniquelyIdentifiesThisMCPEndpoint" xml:space="preserve"><value>このMCPエンドポイントを一意に識別します</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.EndpointAddress" xml:space="preserve"><value>エンドポイントアドレス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.EndpointType" xml:space="preserve"><value>エンドポイントタイプ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Type" xml:space="preserve"><value>タイプ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Edit" xml:space="preserve"><value>編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.AccessEndpoint" xml:space="preserve"><value>エンドポイントにアクセス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.InputSchemaJSON" xml:space="preserve"><value>入力スキーマ（JSON）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.MCPServicesPublishedByThisSiteValue" xml:space="preserve"><value>このサイトが公開したMCPサービス（{0}）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.NoMatchingMCPServicePublishedByThisSite" xml:space="preserve"><value>一致するMCPサービスはこのサイトに公開されていません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.FoundValueToolsFunctions" xml:space="preserve"><value>{0}個のツール（Function）が見つかりました</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ConnectionTestValue" xml:space="preserve"><value>接続テスト - {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.FoundValueToolsFunctionsSelectTheArrowOnTheLeftToView" xml:space="preserve"><value>{0}個のツール（Function）が見つかりました。左側の矢印を選択すると、パラメーターと入力スキーマを表示できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.PublishingToolsAndAccessPermissionsAreManagedByTheOwningModuleThe" xml:space="preserve"><value>公開、ツール、アクセス権限は所有モジュールが管理します。アドレスは現在のサイトから生成され、匿名アクセスや公開到達性を意味しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ToolsValue" xml:space="preserve"><value>ツール {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.None" xml:space="preserve"><value>（なし）</value></data>
+  <data name="Frontend.Mcp.TheServerResponseFormatIsInvalidConfirmThatYouAreSignedIn" xml:space="preserve"><value>サーバー応答の形式が正しくありません。ログイン状態を確認してページを更新してください。</value></data>
+  <data name="Frontend.Mcp.RequestFailed" xml:space="preserve"><value>リクエストに失敗しました</value></data>
+  <data name="Frontend.Mcp.TheInterfaceWasNotFoundHTTP404ConfirmThatTheSiteHas" xml:space="preserve"><value>：インターフェースが見つかりません（HTTP 404）。サイトに最新の MCP モジュールが読み込まれていることを確認してください。</value></data>
+  <data name="Frontend.Mcp.YourSignInHasExpiredOrYouDoNotHavePermissionSign" xml:space="preserve"><value>：ログインの有効期限が切れているか、アクセス権がありません。再度ログインしてください。</value></data>
+  <data name="Frontend.Mcp.TheServerReturnedAnInvalidConnectionTestResultFormat" xml:space="preserve"><value>サーバーから不正な接続テスト結果形式が返されました。</value></data>
+  <data name="Frontend.Mcp.AddMCPEndpoint" xml:space="preserve"><value>MCP エンドポイントを追加</value></data>
+  <data name="Frontend.Mcp.EndpointNameCannotBeEmpty" xml:space="preserve"><value>エンドポイント名を入力してください</value></data>
+  <data name="Frontend.Mcp.EndpointAddressCannotBeEmpty" xml:space="preserve"><value>エンドポイントアドレスを入力してください</value></data>
+  <data name="Frontend.Mcp.TheServerReturnedAnInvalidListOfMCPServicesPublishedByThis" xml:space="preserve"><value>サーバーからこのサイトが公開する MCP サービスの不正な一覧が返されました。</value></data>
+  <data name="Frontend.Mcp.FailedToReadMCPServicesPublishedByThisSite" xml:space="preserve"><value>このサイトが公開する MCP サービスの読み取りに失敗しました</value></data>
+  <data name="Frontend.Mcp.ThisBrowserCannotCopyToTheClipboardSelectAndCopyTheEndpoint" xml:space="preserve"><value>このブラウザーはクリップボードへのコピーに対応していません。エンドポイントアドレスを手動で選択してコピーしてください。</value></data>
+  <data name="Frontend.Mcp.EndpointAddressCopied" xml:space="preserve"><value>エンドポイントアドレスをコピーしました</value></data>
+  <data name="Frontend.Mcp.CopyFailedSelectAndCopyTheEndpointAddressManually" xml:space="preserve"><value>コピーに失敗しました。エンドポイントアドレスを手動で選択してコピーしてください。</value></data>
+  <data name="Frontend.Mcp.TheServerReturnedAnInvalidEndpointListFormat" xml:space="preserve"><value>サーバーから不正なエンドポイント一覧形式が返されました。</value></data>
+  <data name="Frontend.Mcp.FailedToReadTheMCPEndpointList" xml:space="preserve"><value>MCP エンドポイント一覧の読み取りに失敗しました</value></data>
+  <data name="Frontend.Mcp.EditMCPEndpoint" xml:space="preserve"><value>MCP エンドポイントを編集</value></data>
+  <data name="Frontend.Mcp.EndpointConnectionTestSucceeded" xml:space="preserve"><value>✓ エンドポイント接続テストに成功しました</value></data>
+  <data name="Frontend.Mcp.EndpointConnectionTestFailed" xml:space="preserve"><value>✗ エンドポイント接続テストに失敗しました</value></data>
+  <data name="Frontend.Mcp.SavedSuccessfully" xml:space="preserve"><value>保存しました</value></data>
+  <data name="Frontend.Mcp.SaveFailed" xml:space="preserve"><value>保存に失敗しました</value></data>
+  <data name="Frontend.Mcp.UpdateFailed" xml:space="preserve"><value>更新に失敗しました</value></data>
+  <data name="Frontend.Mcp.DeleteMCPEndpointValue" xml:space="preserve"><value>MCP エンドポイント「{0}」を削除しますか？</value></data>
+  <data name="Frontend.Mcp.Notice" xml:space="preserve"><value>通知</value></data>
+  <data name="Frontend.Mcp.DeletedSuccessfully" xml:space="preserve"><value>削除しました</value></data>
+  <data name="Frontend.Mcp.DeleteFailed" xml:space="preserve"><value>削除に失敗しました</value></data>
+  <data name="Frontend.Mcp.InputSchema" xml:space="preserve"><value>入力スキーマ</value></data>
+  <data name="Frontend.Mcp.NoJSONSchemaInformation" xml:space="preserve"><value>（JSON スキーマ情報なし）</value></data>
 </root>

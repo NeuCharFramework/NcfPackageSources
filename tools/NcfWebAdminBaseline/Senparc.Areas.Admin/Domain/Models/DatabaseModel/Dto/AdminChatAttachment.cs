@@ -41,6 +41,9 @@ public sealed class AdminChatAttachment
     public string VisionETag { get; set; } = "";
     public bool UseVision { get; set; }
     public bool CanUseVision => !string.IsNullOrEmpty(VisionETag);
+    public bool IsWorkspaceArtifact { get; set; }
+    public string PreviewKind { get; set; } = "";
+    public DateTimeOffset CreatedAt { get; set; }
     public string LocalStatus { get; set; } = "";
     public int SectionCount { get; set; }
     public int ExtractedCharacters { get; set; }

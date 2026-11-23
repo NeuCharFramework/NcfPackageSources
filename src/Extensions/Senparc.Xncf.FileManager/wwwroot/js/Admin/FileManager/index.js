@@ -93,7 +93,7 @@
                 treeFilter: '',
                 fileSearchKeyword: '',
                 orgName: resolveSystemName(),
-                rootFolderName: fileManagerText('Frontend.072', 'Enterprise documents'),
+                rootFolderName: fileManagerText('Frontend.FileManager.EnterpriseDocuments', 'Enterprise documents'),
                 activeNavKey: 'enterprise',
                 dashboard: {
                     capacityRange: '7d',
@@ -105,24 +105,24 @@
                     capacityTrend: [],
                     orgUsages: [
                         { name: resolveSystemName(), size: '0B' },
-                        { name: fileManagerText('Frontend.072', 'Enterprise documents') + ' root', size: '0B' },
-                        { name: fileManagerText('Frontend.149', 'Knowledge-base materials'), size: '0B' }
+                        { name: fileManagerText('Frontend.FileManager.EnterpriseDocuments', 'Enterprise documents') + ' root', size: '0B' },
+                        { name: fileManagerText('Frontend.FileManager.KnowledgeBaseMaterials', 'Knowledge-base materials'), size: '0B' }
                     ],
                     sizeTotalLabel: '0B',
                     countTotalLabel: '0',
                     sizeSlices: [
-                        { name: fileManagerText('Frontend.206', 'Documents'), value: 0, color: '#95de64' },
-                        { name: fileManagerText('Frontend.207', 'Images'), value: 0, color: '#597ef7' },
-                        { name: fileManagerText('Frontend.208', 'Videos'), value: 0, color: '#ffd666' },
-                        { name: fileManagerText('Frontend.209', 'Audio'), value: 0, color: '#ff9c6e' },
-                        { name: fileManagerText('Frontend.210', 'Other'), value: 0, color: '#91d5ff' }
+                        { name: fileManagerText('Frontend.FileManager.Documents', 'Documents'), value: 0, color: '#95de64' },
+                        { name: fileManagerText('Frontend.FileManager.Images', 'Images'), value: 0, color: '#597ef7' },
+                        { name: fileManagerText('Frontend.FileManager.Videos', 'Videos'), value: 0, color: '#ffd666' },
+                        { name: fileManagerText('Frontend.FileManager.Audio', 'Audio'), value: 0, color: '#ff9c6e' },
+                        { name: fileManagerText('Frontend.FileManager.OtherAlternate', 'Other'), value: 0, color: '#91d5ff' }
                     ],
                     countSlices: [
-                        { name: fileManagerText('Frontend.206', 'Documents'), value: 0, color: '#95de64' },
-                        { name: fileManagerText('Frontend.207', 'Images'), value: 0, color: '#597ef7' },
-                        { name: fileManagerText('Frontend.208', 'Videos'), value: 0, color: '#ffd666' },
-                        { name: fileManagerText('Frontend.209', 'Audio'), value: 0, color: '#ff9c6e' },
-                        { name: fileManagerText('Frontend.210', 'Other'), value: 0, color: '#91d5ff' }
+                        { name: fileManagerText('Frontend.FileManager.Documents', 'Documents'), value: 0, color: '#95de64' },
+                        { name: fileManagerText('Frontend.FileManager.Images', 'Images'), value: 0, color: '#597ef7' },
+                        { name: fileManagerText('Frontend.FileManager.Videos', 'Videos'), value: 0, color: '#ffd666' },
+                        { name: fileManagerText('Frontend.FileManager.Audio', 'Audio'), value: 0, color: '#ff9c6e' },
+                        { name: fileManagerText('Frontend.FileManager.OtherAlternate', 'Other'), value: 0, color: '#91d5ff' }
                     ]
                 },
                 _dashboardCharts: null,
@@ -139,7 +139,7 @@
                     treeExpandKey: 0
                 },
                 tagManagerStorageKey: 'ncf.fileManager.tagManager',
-                tagAdminOptions: [fileManagerText('Frontend.153', 'Administrator'), fileManagerText('Frontend.226', 'Current user')],
+                tagAdminOptions: [fileManagerText('Frontend.FileManager.Administrator', 'Administrator'), fileManagerText('Frontend.FileManager.CurrentUser', 'Current user')],
                 tagCategoryDialog: {
                     visible: false,
                     loading: false,
@@ -154,17 +154,17 @@
                 },
                 tagCategoryRules: {
                     name: [
-                        { required: true, message: fileManagerText('Frontend.161', 'Enter a category name, up to 50 characters'), trigger: 'blur' },
-                        { max: 50, message: fileManagerText('Frontend.161', 'Enter a category name, up to 50 characters'), trigger: 'blur' }
+                        { required: true, message: fileManagerText('Frontend.FileManager.EnterACategoryNameUpTo50Characters', 'Enter a category name, up to 50 characters'), trigger: 'blur' },
+                        { max: 50, message: fileManagerText('Frontend.FileManager.EnterACategoryNameUpTo50Characters', 'Enter a category name, up to 50 characters'), trigger: 'blur' }
                     ]
                 },
                 tagCreateRules: {
                     name: [
-                        { required: true, message: fileManagerText('Frontend.163', 'Enter a tag name, up to 30 characters'), trigger: 'blur' },
-                        { max: 30, message: fileManagerText('Frontend.163', 'Enter a tag name, up to 30 characters'), trigger: 'blur' }
+                        { required: true, message: fileManagerText('Frontend.FileManager.EnterATagNameUpTo30Characters', 'Enter a tag name, up to 30 characters'), trigger: 'blur' },
+                        { max: 30, message: fileManagerText('Frontend.FileManager.EnterATagNameUpTo30Characters', 'Enter a tag name, up to 30 characters'), trigger: 'blur' }
                     ],
                     categoryId: [
-                        { required: true, message: fileManagerText('Frontend.171', 'Select category'), trigger: 'change' }
+                        { required: true, message: fileManagerText('Frontend.FileManager.SelectCategory', 'Select category'), trigger: 'change' }
                     ]
                 },
                 recycleBin: {
@@ -201,15 +201,15 @@
                     blockedTypesText: ''
                 },
                 navItems: [
-                    { key: 'home', label: fileManagerText('Frontend.029', 'Home'), icon: 'el-icon-s-home' },
-                    { key: 'favorite', label: fileManagerText('Frontend.119', 'Favorite'), icon: 'el-icon-star-off' },
-                    { key: 'enterprise', label: fileManagerText('Frontend.072', 'Enterprise documents'), icon: 'el-icon-folder', scope: 100 },
-                    { key: 'fine-tuning', label: fileManagerText('Frontend.106', 'Fine-tuning artifacts'), icon: 'el-icon-s-data', scope: 300 },
-                    { key: 'recycle', label: fileManagerText('Frontend.096', 'Recycle bin'), icon: 'el-icon-delete' },
+                    { key: 'home', label: fileManagerText('Frontend.FileManager.Home', 'Home'), icon: 'el-icon-s-home' },
+                    { key: 'favorite', label: fileManagerText('Frontend.FileManager.Favorite', 'Favorite'), icon: 'el-icon-star-off' },
+                    { key: 'enterprise', label: fileManagerText('Frontend.FileManager.EnterpriseDocuments', 'Enterprise documents'), icon: 'el-icon-folder', scope: 100 },
+                    { key: 'fine-tuning', label: fileManagerText('Frontend.FileManager.FineTuningArtifacts', 'Fine-tuning artifacts'), icon: 'el-icon-s-data', scope: 300 },
+                    { key: 'recycle', label: fileManagerText('Frontend.FileManager.RecycleBin', 'Recycle bin'), icon: 'el-icon-delete' },
                     { key: 'divider', label: '', divider: true },
-                    { key: 'dashboard', label: fileManagerText('Frontend.120', 'Data dashboard'), icon: 'el-icon-data-line' },
-                    { key: 'tags', label: fileManagerText('Frontend.143', 'Tag Management'), icon: 'el-icon-price-tag' },
-                    { key: 'settings', label: fileManagerText('Frontend.157', 'Settings'), icon: 'el-icon-setting' }
+                    { key: 'dashboard', label: fileManagerText('Frontend.FileManager.DataDashboard', 'Data dashboard'), icon: 'el-icon-data-line' },
+                    { key: 'tags', label: fileManagerText('Frontend.FileManager.TagManagement', 'Tag Management'), icon: 'el-icon-price-tag' },
+                    { key: 'settings', label: fileManagerText('Frontend.FileManager.Settings', 'Settings'), icon: 'el-icon-setting' }
                 ]
             };
         },
@@ -229,10 +229,10 @@
             isSiteAsset: function () { return this.resourceScope === 200; },
             isFineTuning: function () { return this.resourceScope === 300; },
             resourceScopeName: function () {
-                if (this.isFineTuning) return fileManagerText('Frontend.106', 'Fine-tuning artifacts');
+                if (this.isFineTuning) return fileManagerText('Frontend.FileManager.FineTuningArtifacts', 'Fine-tuning artifacts');
                 return this.isSiteAsset
-                    ? fileManagerText('Frontend.152', 'Site resources')
-                    : fileManagerText('Frontend.149', 'Knowledge-base materials');
+                    ? fileManagerText('Frontend.FileManager.SiteResources', 'Site resources')
+                    : fileManagerText('Frontend.FileManager.KnowledgeBaseMaterials', 'Knowledge-base materials');
             },
             canGoParent: function () { return this.currentFolderId != null; },
             displayTableData: function () {
@@ -245,25 +245,25 @@
             },
             scopeHint: function () {
                 if (this.isFineTuning) {
-                    return fileManagerText('Frontend.193', 'Fine-tuning artifacts are always private.');
+                    return fileManagerText('Frontend.FileManager.FineTuningArtifactsAreAlwaysPrivateTheyAreAvailableOnlyToTraining', 'Fine-tuning artifacts are always private.');
                 }
                 return this.isSiteAsset
-                    ? fileManagerText('Frontend.194', 'Site static resources are private by default.')
-                    : fileManagerText('Frontend.195', 'Knowledge-base source files must be safely extractable text or Office Open XML files.');
+                    ? fileManagerText('Frontend.FileManager.SiteStaticResourcesArePrivateByDefaultAfterPublicationASHA256', 'Site static resources are private by default.')
+                    : fileManagerText('Frontend.FileManager.KnowledgeBaseSourceFilesMustBeSafelyExtractableTextOrOfficeOpen', 'Knowledge-base source files must be safely extractable text or Office Open XML files.');
             },
             uploadExtensionHint: function () {
                 if (this.uploadSettings && this.uploadSettings.allowedTypesText) {
                     const list = this.parseExtensionList(this.uploadSettings.allowedTypesText);
                     if (list.length) {
-                        return fileManagerText('Frontend.196', 'Supports {0}.', list.map(function (ext) { return ext.replace(/^\./, '').toUpperCase(); }).join(', '));
+                        return fileManagerText('Frontend.FileManager.SupportsValue', 'Supports {0}.', list.map(function (ext) { return ext.replace(/^\./, '').toUpperCase(); }).join(', '));
                     }
                 }
                 if (this.isFineTuning) {
-                    return fileManagerText('Frontend.197', 'Supports JSONL, JSON, ZIP and other private artifacts generated by training.');
+                    return fileManagerText('Frontend.FileManager.SupportsJSONLJSONZIPAndOtherPrivateArtifactsGeneratedByTraining', 'Supports JSONL, JSON, ZIP and other private artifacts generated by training.');
                 }
                 return this.isSiteAsset
-                    ? fileManagerText('Frontend.198', 'Supports JPG, PNG, GIF, WebP, AVIF, ICO, audio/video and font formats.')
-                    : fileManagerText('Frontend.199', 'Supports text, JSON/XML/YAML, code, DOCX, XLSX and PPTX.');
+                    ? fileManagerText('Frontend.FileManager.SupportsJPGPNGGIFWebPAVIFICOAudioVideoAndFontFormats', 'Supports JPG, PNG, GIF, WebP, AVIF, ICO, audio/video and font formats.')
+                    : fileManagerText('Frontend.FileManager.SupportsTextJSONXMLYAMLCodeDOCXXLSXAndPPTX', 'Supports text, JSON/XML/YAML, code, DOCX, XLSX and PPTX.');
             },
             uploadTargetText: function () {
                 const currentFolder = this.folderPath.length ? this.folderPath[this.folderPath.length - 1].name : this.rootFolderName;
@@ -271,7 +271,7 @@
             },
             uploadFolderSummary: function () {
                 if (this.uploadDialog.mode !== 'folder' || !this.uploadDialog.fileList.length) return '';
-                return fileManagerText('Frontend.219', 'Selected folder “{0}” with {1} files; the original directory structure will be restored in the left file tree after upload.', this.uploadDialog.folderRootName, this.uploadDialog.fileList.length);
+                return fileManagerText('Frontend.FileManager.SelectedFolderValueWithValueFilesTheOriginalDirectoryStructureWillBe', 'Selected folder “{0}” with {1} files; the original directory structure will be restored in the left file tree after upload.', this.uploadDialog.folderRootName, this.uploadDialog.fileList.length);
             },
             tagCategorySelectOptions: function () {
                 const list = (this.tagManager && this.tagManager.list) || [];
@@ -296,7 +296,7 @@
                 categories.forEach(function (cat) { known[cat.id] = true; });
                 const orphanTags = tags.filter(function (tag) { return !tag.categoryId || !known[tag.categoryId]; });
                 if (orphanTags.length) {
-                    groups.push({ id: '__other__', name: fileManagerText('Frontend.220', 'Uncategorized'), tags: orphanTags });
+                    groups.push({ id: '__other__', name: fileManagerText('Frontend.FileManager.Uncategorized', 'Uncategorized'), tags: orphanTags });
                 }
                 return groups;
             },
@@ -387,7 +387,7 @@
                     return;
                 }
                 this.activeNavKey = item.key;
-                this.$message.info(fileManagerText('Frontend.221', 'The “{0}” feature is coming soon.', item.label));
+                this.$message.info(fileManagerText('Frontend.FileManager.TheValueFeatureIsComingSoon', 'The “{0}” feature is coming soon.', item.label));
             },
             initDashboardDefaults: function () {
                 const end = new Date();
@@ -491,8 +491,8 @@
                 const sizeMb = trend.map(function (x) {
                     return Number(((Number(x.totalSizeBytes || 0)) / (1024 * 1024)).toFixed(2));
                 });
-                const fileCountLabel = fileManagerText('Frontend.121', 'File count');
-                const fileSizeLabel = fileManagerText('Frontend.123', 'File size');
+                const fileCountLabel = fileManagerText('Frontend.FileManager.FileCountStatistics', 'File count');
+                const fileSizeLabel = fileManagerText('Frontend.FileManager.FileSizeStatistics', 'File size');
 
                 const capacityChart = this.getOrCreateChart(this.$refs.capacityChart);
                 if (capacityChart) {
@@ -645,7 +645,7 @@
 
                 categories.forEach(function (cat) {
                     const hasParent = !!(cat.parentId && categoryMap[cat.parentId]);
-                    cat.type = hasParent ? fileManagerText('Frontend.222', 'Subcategory') : fileManagerText('Frontend.223', 'Category');
+                    cat.type = hasParent ? fileManagerText('Frontend.FileManager.Subcategory', 'Subcategory') : fileManagerText('Frontend.FileManager.CategorySupplemental', 'Category');
                     cat.level = hasParent ? 2 : 1;
                     if (hasParent) {
                         categoryMap[cat.parentId].children.push(cat);
@@ -656,7 +656,7 @@
                 (this.tagManager.tags || []).forEach(function (row) {
                     const tag = Object.assign({}, row, {
                         nodeType: 'tag',
-                        type: fileManagerText('Frontend.224', 'Tag'),
+                        type: fileManagerText('Frontend.FileManager.Tag', 'Tag'),
                         tagCount: '-',
                         admin: '-',
                         children: []
@@ -746,7 +746,7 @@
             createTag: function (presetCategoryId) {
                 this.loadTagManagerFromStorage();
                 if (!(this.tagManager.list || []).length) {
-                    this.$message.warning(fileManagerText('Frontend.128', 'Add a category first.'));
+                    this.$message.warning(fileManagerText('Frontend.FileManager.AddCategory', 'Add a category first.'));
                     return;
                 }
                 this.tagCreateDialog = {
@@ -822,9 +822,9 @@
                 if (!row) return;
                 const self = this;
                 const tip = row.nodeType === 'tag'
-                    ? fileManagerText('Frontend.257', 'Delete tag “{0}”?', row.name)
-                    : fileManagerText('Frontend.258', 'Delete category “{0}” and its child tags?', row.name);
-                this.$confirm(tip, fileManagerText('Frontend.259', 'Notice'), { type: 'warning' }).then(function () {
+                    ? fileManagerText('Frontend.FileManager.DeleteTagValue', 'Delete tag “{0}”?', row.name)
+                    : fileManagerText('Frontend.FileManager.DeleteCategoryValueAndItsChildTags', 'Delete category “{0}” and its child tags?', row.name);
+                this.$confirm(tip, fileManagerText('Frontend.FileManager.NoticeAlternate', 'Notice'), { type: 'warning' }).then(function () {
                     if (row.nodeType === 'tag') {
                         self.tagManager.tags = (self.tagManager.tags || []).filter(function (item) { return item.id !== row.id; });
                         const category = (self.tagManager.list || []).find(function (item) { return item.id === row.categoryId; });
@@ -844,7 +844,7 @@
                     self.syncTagCategoryOptions();
                     self.saveTagManagerToStorage();
                     self.searchTags();
-                    self.$message.success(fileManagerText('Frontend.039', 'Deleted successfully'));
+                    self.$message.success(fileManagerText('Frontend.FileManager.DeletedSuccessfully', 'Deleted successfully'));
                 }).catch(function () { /* cancel */ });
             },
             toggleTagRowStatus: function (row) {
@@ -866,13 +866,13 @@
                 this.saveTagManagerToStorage();
                 this.searchTags();
                 this.$message.success(enabled
-                    ? fileManagerText('Frontend.076', 'Disable')
-                    : fileManagerText('Frontend.095', 'Enable'));
+                    ? fileManagerText('Frontend.FileManager.Disable', 'Disable')
+                    : fileManagerText('Frontend.FileManager.Enable', 'Enable'));
             },
             setSelectedTagStatus: function (enabled) {
                 const ids = (this.tagManager && this.tagManager.selectedIds) || [];
                 if (!ids.length) {
-                    this.$message.warning(fileManagerText('Frontend.169', 'Select at least one item'));
+                    this.$message.warning(fileManagerText('Frontend.FileManager.LastYear', 'Select at least one item'));
                     return;
                 }
                 const idMap = {};
@@ -894,8 +894,8 @@
                 this.saveTagManagerToStorage();
                 this.searchTags();
                 this.$message.success(enabled
-                    ? fileManagerText('Frontend.095', 'Enable')
-                    : fileManagerText('Frontend.076', 'Disable'));
+                    ? fileManagerText('Frontend.FileManager.Enable', 'Enable')
+                    : fileManagerText('Frontend.FileManager.Disable', 'Disable'));
             },
             onTagCategoryDialogClosed: function () {
                 if (!this.tagCategoryDialog) return;
@@ -922,11 +922,11 @@
                     const editing = !!self.tagCategoryDialog.editing;
                     const currentId = form.id || '';
                     if (!name) {
-                        self.$message.warning(fileManagerText('Frontend.161', 'Enter a category name, up to 50 characters'));
+                        self.$message.warning(fileManagerText('Frontend.FileManager.EnterACategoryNameUpTo50Characters', 'Enter a category name, up to 50 characters'));
                         return;
                     }
                     if (form.parentId && form.parentId === currentId) {
-                        self.$message.warning(fileManagerText('Frontend.260', 'A category cannot select itself'));
+                        self.$message.warning(fileManagerText('Frontend.FileManager.ACategoryCannotSelectItself', 'A category cannot select itself'));
                         return;
                     }
                     const exists = (self.tagManager.list || []).some(function (row) {
@@ -934,7 +934,7 @@
                         return String(row.name || '').toLowerCase() === name.toLowerCase();
                     });
                     if (exists) {
-                        self.$message.warning(fileManagerText('Frontend.082', 'The category name already exists'));
+                        self.$message.warning(fileManagerText('Frontend.FileManager.CategoryName', 'The category name already exists'));
                         return;
                     }
                     self.tagCategoryDialog.loading = true;
@@ -943,7 +943,7 @@
                         if (editing) {
                             const target = (self.tagManager.list || []).find(function (row) { return row.id === currentId; });
                             if (!target) {
-                                self.$message.error(fileManagerText('Frontend.261', 'Category does not exist'));
+                                self.$message.error(fileManagerText('Frontend.FileManager.CategoryDoesNotExist', 'Category does not exist'));
                                 return;
                             }
                             target.name = name;
@@ -952,7 +952,7 @@
                             target.admin = form.admin || '-';
                             target.updatedAt = now;
                             target.updatedBy = '当前用户';
-                            self.$message.success(fileManagerText('Frontend.033', 'Updated successfully'));
+                            self.$message.success(fileManagerText('Frontend.FileManager.UpdatedSuccessfully', 'Updated successfully'));
                         } else {
                             self.tagManager.list.unshift({
                                 id: 'cat-' + Date.now(),
@@ -966,7 +966,7 @@
                                 updatedBy: '当前用户',
                                 admin: form.admin || '-'
                             });
-                            self.$message.success(fileManagerText('Frontend.041', 'Created successfully'));
+                            self.$message.success(fileManagerText('Frontend.FileManager.CreatedSuccessfully', 'Created successfully'));
                         }
                         self.syncTagCategoryOptions();
                         self.saveTagManagerToStorage();
@@ -989,16 +989,16 @@
                     const editing = !!self.tagCreateDialog.editing;
                     const currentId = form.id || '';
                     if (!name) {
-                        self.$message.warning(fileManagerText('Frontend.163', 'Enter a tag name, up to 30 characters'));
+                        self.$message.warning(fileManagerText('Frontend.FileManager.EnterATagNameUpTo30Characters', 'Enter a tag name, up to 30 characters'));
                         return;
                     }
                     if (!categoryId) {
-                        self.$message.warning(fileManagerText('Frontend.171', 'Select a category'));
+                        self.$message.warning(fileManagerText('Frontend.FileManager.SelectCategory', 'Select a category'));
                         return;
                     }
                     const category = (self.tagManager.list || []).find(function (row) { return row.id === categoryId; });
                     if (!category) {
-                        self.$message.warning(fileManagerText('Frontend.262', 'The selected category does not exist. Select another.'));
+                        self.$message.warning(fileManagerText('Frontend.FileManager.TheSelectedCategoryDoesNotExistSelectAnother', 'The selected category does not exist. Select another.'));
                         return;
                     }
                     const dup = (self.tagManager.tags || []).some(function (tag) {
@@ -1007,7 +1007,7 @@
                             && String(tag.name || '').toLowerCase() === name.toLowerCase();
                     });
                     if (dup) {
-                        self.$message.warning(fileManagerText('Frontend.140', 'A tag with this name already exists in the category'));
+                        self.$message.warning(fileManagerText('Frontend.FileManager.TagName', 'A tag with this name already exists in the category'));
                         return;
                     }
                     self.tagCreateDialog.loading = true;
@@ -1017,7 +1017,7 @@
                         if (editing) {
                             const target = self.tagManager.tags.find(function (tag) { return tag.id === currentId; });
                             if (!target) {
-                                self.$message.error(fileManagerText('Frontend.263', 'Tag does not exist'));
+                                self.$message.error(fileManagerText('Frontend.FileManager.TagDoesNotExist', 'Tag does not exist'));
                                 return;
                             }
                             const oldCategoryId = target.categoryId;
@@ -1033,7 +1033,7 @@
                                 category.tagCount = (category.tagCount || 0) + 1;
                             }
                             category.updatedAt = now;
-                            self.$message.success(fileManagerText('Frontend.033', 'Updated successfully'));
+                            self.$message.success(fileManagerText('Frontend.FileManager.UpdatedSuccessfully', 'Updated successfully'));
                         } else {
                             self.tagManager.tags.unshift({
                                 id: 'tag-' + Date.now(),
@@ -1048,7 +1048,7 @@
                             category.tagCount = (category.tagCount || 0) + 1;
                             category.updatedAt = now;
                             category.updatedBy = '当前用户';
-                            self.$message.success(fileManagerText('Frontend.041', 'Created successfully'));
+                            self.$message.success(fileManagerText('Frontend.FileManager.CreatedSuccessfully', 'Created successfully'));
                         }
                         self.saveTagManagerToStorage();
                         self.searchTags();
@@ -1065,8 +1065,8 @@
             },
             enableSelectedTags: function () { this.setSelectedTagStatus(true); },
             disableSelectedTags: function () { this.setSelectedTagStatus(false); },
-            importTags: function () { this.$message.info(fileManagerText('Frontend.100', 'Import')); },
-            exportTags: function () { this.$message.info(fileManagerText('Frontend.101', 'Export')); },
+            importTags: function () { this.$message.info(fileManagerText('Frontend.FileManager.Import', 'Import')); },
+            exportTags: function () { this.$message.info(fileManagerText('Frontend.FileManager.Export', 'Export')); },
             openTagRowMenu: function (row) {
                 if (!row) return;
                 //Legacy comment translated to English.
@@ -1162,7 +1162,7 @@
             emptyRecycleBin: function () {
                 var list = (this.recycleBin && (this.recycleBin.list || this.recycleBin.displayList)) || [];
                 if (!list.length) {
-                    this.$message.info(fileManagerText('Frontend.133', 'No documents'));
+                    this.$message.info(fileManagerText('Frontend.FileManager.NoDocuments', 'No documents'));
                     return;
                 }
                 if (!this.recycleEmptyDialog) {
@@ -1183,7 +1183,7 @@
                     : (this.recycleBin.displayList || [])).slice();
                 if (!items.length) {
                     if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
-                    this.$message.info(fileManagerText('Frontend.133', 'No documents'));
+                    this.$message.info(fileManagerText('Frontend.FileManager.NoDocuments', 'No documents'));
                     return;
                 }
 
@@ -1211,8 +1211,8 @@
                             deletedCount: successFallback,
                             failedIds: remainingFallback.map(function (x) { return x.id; }),
                             message: remainingFallback.length === 0
-                                ? fileManagerText('Frontend.229', 'Recycle bin emptied successfully')
-                                : fileManagerText('Frontend.230', 'Deleted {0}; failed {1}: {2}', successFallback, remainingFallback.length, lastError || '')
+                                ? fileManagerText('Frontend.FileManager.RecycleBinEmptiedSuccessfully', 'Recycle bin emptied successfully')
+                                : fileManagerText('Frontend.FileManager.DeletedValueFailedValueValue', 'Deleted {0}; failed {1}: {2}', successFallback, remainingFallback.length, lastError || '')
                         };
                     }
 
@@ -1231,14 +1231,14 @@
                     if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
 
                     if (remaining.length === 0) {
-                        this.$message.success((result && result.message) || fileManagerText('Frontend.229', 'Recycle bin emptied successfully'));
+                        this.$message.success((result && result.message) || fileManagerText('Frontend.FileManager.RecycleBinEmptiedSuccessfully', 'Recycle bin emptied successfully'));
                     } else if (remaining.length < items.length) {
-                        this.$message.warning((result && result.message) || fileManagerText('Frontend.231', 'Some files could not be deleted; {0} remain in the recycle bin', remaining.length));
+                        this.$message.warning((result && result.message) || fileManagerText('Frontend.FileManager.SomeFilesCouldNotBeDeletedValueRemainInTheRecycleBin', 'Some files could not be deleted; {0} remain in the recycle bin', remaining.length));
                     } else {
-                        this.$message.error((result && result.message) || fileManagerText('Frontend.232', 'Could not empty the recycle bin completely'));
+                        this.$message.error((result && result.message) || fileManagerText('Frontend.FileManager.CouldNotEmptyTheRecycleBinCompletely', 'Could not empty the recycle bin completely'));
                     }
                 } catch (error) {
-                    this.$message.error(fileManagerText('Frontend.233', 'Failed to empty the recycle bin: {0}', errorMessage(error)));
+                    this.$message.error(fileManagerText('Frontend.FileManager.FailedToEmptyTheRecycleBinValue', 'Failed to empty the recycle bin: {0}', errorMessage(error)));
                 } finally {
                     this.$set(this.recycleBin, 'emptying', false);
                 }
@@ -1286,7 +1286,7 @@
                 } catch (e) { /* ignore quota */ }
             },
             buildFavoritePathText: function () {
-                const segments = [this.rootFolderName || fileManagerText('Frontend.072', 'Enterprise documents'), this.orgName || ''].concat(
+                const segments = [this.rootFolderName || fileManagerText('Frontend.FileManager.EnterpriseDocuments', 'Enterprise documents'), this.orgName || ''].concat(
                     (this.folderPath || []).map(function (item) { return item.name; })
                 ).filter(function (name) { return !!name; });
                 return segments.join(' > ');
@@ -1311,7 +1311,7 @@
                 if (index >= 0) {
                     list.splice(index, 1);
                     this.$set(row, 'isFavorite', false);
-                this.$message.success(fileManagerText('Frontend.090', 'Remove favorite'));
+                this.$message.success(fileManagerText('Frontend.FileManager.RemoveFavorite', 'Remove favorite'));
                 } else {
                     list.unshift({
                         id: row.id,
@@ -1325,7 +1325,7 @@
                         isFavorite: true
                     });
                     this.$set(row, 'isFavorite', true);
-                this.$message.success(fileManagerText('Frontend.119', 'Favorite'));
+                this.$message.success(fileManagerText('Frontend.FileManager.Favorite', 'Favorite'));
                 }
                 this.favoriteList.list = list;
                 this.saveFavoritesToStorage();
@@ -1364,13 +1364,13 @@
             },
             fileTypeLabel: function (fileType) {
                 return ({
-                    0: fileManagerText('Frontend.020', 'Text'),
+                    0: fileManagerText('Frontend.FileManager.Text', 'Text'),
                     1: 'Word',
                     2: 'PowerPoint',
                     3: 'Excel',
-                    4: fileManagerText('Frontend.005', 'Code'),
-                    999: fileManagerText('Frontend.006', 'Other')
-                })[fileType] || fileManagerText('Frontend.006', 'Other');
+                    4: fileManagerText('Frontend.FileManager.Code', 'Code'),
+                    999: fileManagerText('Frontend.FileManager.Other', 'Other')
+                })[fileType] || fileManagerText('Frontend.FileManager.Other', 'Other');
             },
             updatedByLabel: function (row) { return '-'; },
             filterFolderNode: function (value, data) {
@@ -1415,8 +1415,8 @@
                 if (this.$refs.upload) this.$refs.upload.clearFiles();
             },
             getUploadDialogTitle: function () {
-                const segments = [this.rootFolderName || fileManagerText('Frontend.023', 'Root folder')].concat((this.folderPath || []).map(function (item) { return item.name; }));
-                return fileManagerText('Frontend.234', 'Upload files to [/{0}] -- resumable upload supported', segments.join('/'));
+                const segments = [this.rootFolderName || fileManagerText('Frontend.FileManager.Root', 'Root folder')].concat((this.folderPath || []).map(function (item) { return item.name; }));
+                return fileManagerText('Frontend.FileManager.UploadFilesToValueResumableUploadSupported', 'Upload files to [/{0}] -- resumable upload supported', segments.join('/'));
             },
             handleRowCommand: function (command, row) {
                 if (command === 'download') return this.downloadFile(row);
@@ -1464,7 +1464,7 @@
                 const index = list.findIndex(function (item) { return item.id === row.id; });
                 if (index >= 0) {
                     list.splice(index, 1);
-                    this.$message.success(fileManagerText('Frontend.071', 'Remove from Quick Access'));
+                    this.$message.success(fileManagerText('Frontend.FileManager.RemoveFromQuickAccess', 'Remove from Quick Access'));
                 } else {
                     list.unshift({
                         id: row.id,
@@ -1474,7 +1474,7 @@
                         folderPathText: typeof this.buildFavoritePathText === 'function' ? this.buildFavoritePathText() : '',
                         resourceScope: this.resourceScope
                     });
-                    this.$message.success(fileManagerText('Frontend.147', 'Use Quick Access'));
+                    this.$message.success(fileManagerText('Frontend.FileManager.UseQuickAccessFlexiblyForFasterWork', 'Use Quick Access'));
                 }
                 this.saveQuickAccessToStorage();
             },
@@ -1540,9 +1540,9 @@
                             blockedTypesText: this.uploadSettings.blockedTypesText || ''
                         })
                     );
-                    this.$message.success(fileManagerText('Frontend.075', 'Save settings'));
+                    this.$message.success(fileManagerText('Frontend.FileManager.SaveSettings', 'Save settings'));
                 } catch (e) {
-                    this.$message.error(fileManagerText('Frontend.035', 'Save failed'));
+                    this.$message.error(fileManagerText('Frontend.FileManager.ConfirmDeletingThisFile', 'Save failed'));
                 }
             },
             resetUploadSettings: function () {
@@ -1556,9 +1556,9 @@
                             blockedTypesText: this.uploadSettings.blockedTypesText || ''
                         })
                     );
-                    this.$message.success(fileManagerText('Frontend.108', 'Restore defaults'));
+                    this.$message.success(fileManagerText('Frontend.FileManager.RestoreDefaults', 'Restore defaults'));
                 } catch (e) {
-                    this.$message.error(fileManagerText('Frontend.040', 'Delete failed'));
+                    this.$message.error(fileManagerText('Frontend.FileManager.DeleteFailed', 'Delete failed'));
                 }
             },
             getMaxUploadSizeBytes: function () {
@@ -1571,15 +1571,15 @@
                 const ext = extMatch ? extMatch[0].toLowerCase() : '';
                 const blocked = this.parseExtensionList((this.uploadSettings && this.uploadSettings.blockedTypesText) || '');
                 if (ext && blocked.indexOf(ext) !== -1) {
-                    return fileManagerText('Frontend.216', 'File “{0}” with type {1} has been filtered and cannot be uploaded.', name, ext);
+                    return fileManagerText('Frontend.FileManager.FileValueWithTypeValueHasBeenFilteredAndCannotBeUploaded', 'File “{0}” with type {1} has been filtered and cannot be uploaded.', name, ext);
                 }
                 const allowed = this.parseExtensionList((this.uploadSettings && this.uploadSettings.allowedTypesText) || '');
                 if (allowed.length && (!ext || allowed.indexOf(ext) === -1)) {
-                    return fileManagerText('Frontend.217', 'File “{0}” has a type that is not in the allowed upload list.', name);
+                    return fileManagerText('Frontend.FileManager.FileValueHasATypeThatIsNotInTheAllowedUpload', 'File “{0}” has a type that is not in the allowed upload list.', name);
                 }
                 const maxBytes = this.getMaxUploadSizeBytes();
                 if (fileSize > maxBytes) {
-                    return fileManagerText('Frontend.218', 'File “{0}” exceeds {1} MB and cannot be uploaded.', name, Math.round(maxBytes / 1024 / 1024));
+                    return fileManagerText('Frontend.FileManager.FileValueExceedsValueMBAndCannotBeUploaded', 'File “{0}” exceeds {1} MB and cannot be uploaded.', name, Math.round(maxBytes / 1024 / 1024));
                 }
                 return '';
             },
@@ -1588,7 +1588,7 @@
                 if (typeof this.loadFileTagMapFromStorage === 'function') this.loadFileTagMapFromStorage();
                 const catalog = (this.tagManager && this.tagManager.tags) || [];
                 if (!catalog.length) {
-                    this.$message.warning(fileManagerText('Frontend.130', 'Create tags in Tag Management first.'));
+                    this.$message.warning(fileManagerText('Frontend.FileManager.NoTagsAreAvailableAddATagInTagManagementOnThe', 'Create tags in Tag Management first.'));
                 }
                 const existingItems = this.getFileTagItems(row);
                 const selectedIds = existingItems.map(function (item) { return item.id; }).filter(Boolean);
@@ -1691,7 +1691,7 @@
                     this.$set(row, 'tags', items.map(function (item) { return item.name; }));
                     this.$set(row, 'tagIds', items.map(function (item) { return item.id; }));
                     this.fileTagDialog.visible = false;
-                    this.$message.success(items.length ? fileManagerText('Frontend.227', 'File tags updated') : fileManagerText('Frontend.228', 'File tags cleared'));
+                    this.$message.success(items.length ? fileManagerText('Frontend.FileManager.FileTagsUpdated', 'File tags updated') : fileManagerText('Frontend.FileManager.FileTagsCleared', 'File tags cleared'));
                 } finally {
                     this.fileTagDialog.loading = false;
                 }
@@ -1737,7 +1737,7 @@
                     this.syncFavoriteFlagsOnTable();
                     this.applyFileTagsToTable();
                 } catch (error) {
-                    this.$message.error(fileManagerText('Frontend.030', 'Failed to load the list') + ': ' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.FileManager.FailedToLoadTheList', 'Failed to load the list') + ': ' + errorMessage(error));
                 } finally {
                     this.tableLoading = false;
                 }
@@ -1752,7 +1752,7 @@
                         return { id: folder.id, name: folder.name, description: folder.description || '', parentId: folder.parentId, hasChildren: true };
                     }));
                 } catch (error) {
-                    this.$message.error(fileManagerText('Frontend.030', 'Failed to load the list') + ': ' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.FileManager.FailedToLoadTheList', 'Failed to load the list') + ': ' + errorMessage(error));
                     resolve([]);
                 }
             },
@@ -1776,7 +1776,7 @@
                     } catch (error) {
                         this.currentFolderId = null;
                         this.folderPath = [];
-                        this.$message.warning(fileManagerText('Frontend.215', 'The target folder is unavailable. Returned to the root folder.'));
+                        this.$message.warning(fileManagerText('Frontend.FileManager.TheTargetFolderIsUnavailableReturnedToTheRootFolder', 'The target folder is unavailable. Returned to the root folder.'));
                     }
                 } else {
                     this.folderPath = [];
@@ -1803,9 +1803,9 @@
             handleNoteChange: async function (row) {
                 try {
                     await post(pageUrl + '?handler=EditNote', { id: row.id, note: row.description || '' });
-                    this.$message.success(fileManagerText('Frontend.033', 'Updated successfully'));
+                    this.$message.success(fileManagerText('Frontend.FileManager.UpdatedSuccessfully', 'Updated successfully'));
                 } catch (error) {
-                    this.$message.error(fileManagerText('Frontend.034', 'Update failed') + ': ' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.FileManager.UpdateFailed', 'Update failed') + ': ' + errorMessage(error));
                 }
             },
             downloadFile: function (row) { window.location.assign(pageUrl + '?handler=Download&id=' + encodeURIComponent(row.id)); },
@@ -1864,10 +1864,10 @@
             },
             previewFile: async function (row) {
                 if (!row || row.id == null) {
-                    this.$message.warning(fileManagerText('Frontend.131', 'No previewable content'));
+                    this.$message.warning(fileManagerText('Frontend.FileManager.NoPreviewableContent', 'No previewable content'));
                     return;
                 }
-                const fileName = row.fileName || row.name || fileManagerText('Frontend.235', 'Unnamed file');
+                const fileName = row.fileName || row.name || fileManagerText('Frontend.FileManager.UnnamedFile', 'Unnamed file');
                 const kind = this.getPreviewKind(fileName);
                 const previewUrl = this.buildPreviewUrl(row.id);
                 this.filePreviewDialog = {
@@ -1890,19 +1890,19 @@
                     }
                     if (kind === 'legacy-office') {
                         this.filePreviewDialog.mode = 'error';
-                        this.filePreviewDialog.error = fileManagerText('Frontend.200', 'Legacy Office formats cannot be previewed online.');
+                        this.filePreviewDialog.error = fileManagerText('Frontend.FileManager.LegacyOfficeFormatsDocXlsPptCannotBePreviewedOnlineDownloadThe', 'Legacy Office formats cannot be previewed online.');
                         return;
                     }
                     if (kind === 'unsupported') {
                         this.filePreviewDialog.mode = 'error';
-                        this.filePreviewDialog.error = fileManagerText('Frontend.201', 'This file type cannot be previewed online.');
+                        this.filePreviewDialog.error = fileManagerText('Frontend.FileManager.ThisFileTypeCannotBePreviewedOnlineTryDownloadingItInstead', 'This file type cannot be previewed online.');
                         return;
                     }
                     if (kind === 'docx' && typeof mammoth !== 'undefined') {
                         const arrayBuffer = await this.fetchPreviewArrayBuffer(row.id);
                         const result = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
                         this.filePreviewDialog.mode = 'html';
-                        this.filePreviewDialog.html = result.value || '<p>' + fileManagerText('Frontend.202', 'The document is empty.') + '</p>';
+                        this.filePreviewDialog.html = result.value || '<p>' + fileManagerText('Frontend.FileManager.TheDocumentIsEmpty', 'The document is empty.') + '</p>';
                         return;
                     }
                     if (kind === 'xlsx' && typeof XLSX !== 'undefined') {
@@ -1911,7 +1911,7 @@
                         const sheetName = workbook.SheetNames && workbook.SheetNames[0];
                         if (!sheetName) {
                             this.filePreviewDialog.mode = 'error';
-                            this.filePreviewDialog.error = fileManagerText('Frontend.203', 'The Excel file has no previewable worksheets.');
+                            this.filePreviewDialog.error = fileManagerText('Frontend.FileManager.TheExcelFileHasNoPreviewableWorksheets', 'The Excel file has no previewable worksheets.');
                             return;
                         }
                         this.filePreviewDialog.mode = 'excel';
@@ -1946,10 +1946,10 @@
                         return;
                     }
                     this.filePreviewDialog.mode = 'error';
-                    this.filePreviewDialog.error = fileManagerText('Frontend.204', 'This file type does not support online preview.');
+                    this.filePreviewDialog.error = fileManagerText('Frontend.FileManager.ThisFileTypeDoesNotSupportOnlinePreview', 'This file type does not support online preview.');
                 } catch (error) {
                     this.filePreviewDialog.mode = 'error';
-                    this.filePreviewDialog.error = fileManagerText('Frontend.205', 'Preview failed: {0}', errorMessage(error));
+                    this.filePreviewDialog.error = fileManagerText('Frontend.FileManager.PreviewFailedValue', 'Preview failed: {0}', errorMessage(error));
                 } finally {
                     this.filePreviewDialog.loading = false;
                 }
@@ -1958,32 +1958,32 @@
                 try {
                     const shortName = String(row.fileName || '').replace(/\.[^.]+$/, '') || row.fileName;
                     await this.$confirm(
-                        fileManagerText('Frontend.236', 'This will move the file to the recycle bin. Continue?'),
-                        fileManagerText('Frontend.237', 'Delete: {0}', shortName),
-                        { type: 'warning', confirmButtonText: fileManagerText('Frontend.024', 'OK'), cancelButtonText: fileManagerText('Frontend.038', 'Cancel') }
+                        fileManagerText('Frontend.FileManager.ThisWillMoveTheFileToTheRecycleBinContinue', 'This will move the file to the recycle bin. Continue?'),
+                        fileManagerText('Frontend.FileManager.DeleteValue', 'Delete: {0}', shortName),
+                        { type: 'warning', confirmButtonText: fileManagerText('Frontend.FileManager.OK', 'OK'), cancelButtonText: fileManagerText('Frontend.FileManager.CancelAlternate', 'Cancel') }
                     );
                     this.moveFileToRecycleBin(row);
-                    this.$message.success(fileManagerText('Frontend.238', 'Moved to the recycle bin'));
+                    this.$message.success(fileManagerText('Frontend.FileManager.MovedToTheRecycleBin', 'Moved to the recycle bin'));
                 } catch (error) {
-                    if (error !== 'cancel') this.$message.error(fileManagerText('Frontend.239', 'Delete failed: {0}', errorMessage(error)));
+                    if (error !== 'cancel') this.$message.error(fileManagerText('Frontend.FileManager.DeleteFailedValue', 'Delete failed: {0}', errorMessage(error)));
                 }
             },
             setPublication: async function (row, publish) {
                 try {
                     await post(pageUrl + '?handler=SetSiteAssetPublication', { id: row.id, publish: publish });
-                    this.$message.success(publish ? fileManagerText('Frontend.240', 'Resource published') : fileManagerText('Frontend.241', 'Resource made private'));
+                    this.$message.success(publish ? fileManagerText('Frontend.FileManager.ResourcePublished', 'Resource published') : fileManagerText('Frontend.FileManager.ResourceMadePrivate', 'Resource made private'));
                     await this.getList();
                 } catch (error) {
-                    this.$message.error(fileManagerText('Frontend.242', 'Failed to update publication status: {0}', errorMessage(error)));
+                    this.$message.error(fileManagerText('Frontend.FileManager.FailedToUpdatePublicationStatusValue', 'Failed to update publication status: {0}', errorMessage(error)));
                 }
             },
             copyPublicUrl: async function (row) {
                 const url = window.location.origin + row.publicUrl;
                 try {
                     await navigator.clipboard.writeText(url);
-                    this.$message.success(fileManagerText('Frontend.243', 'Public URL copied'));
+                    this.$message.success(fileManagerText('Frontend.FileManager.PublicURLCopied', 'Public URL copied'));
                 } catch (_) {
-                    this.$prompt(fileManagerText('Frontend.244', 'Copy the following public URL'), fileManagerText('Frontend.245', 'Public URL'), { inputValue: url, inputType: 'textarea' });
+                    this.$prompt(fileManagerText('Frontend.FileManager.CopyTheFollowingPublicURL', 'Copy the following public URL'), fileManagerText('Frontend.FileManager.PublicURL', 'Public URL'), { inputValue: url, inputType: 'textarea' });
                 }
             },
             resetUploadDialog: function (visible) {
@@ -2006,7 +2006,7 @@
             chooseUploadFolder: function () {
                 const input = this.$refs.folderUploadInput;
                 if (!input || !('webkitdirectory' in input)) {
-                    this.$message.warning(fileManagerText('Frontend.246', 'This browser does not support folder selection. Use the latest Chrome, Edge or Safari.'));
+                    this.$message.warning(fileManagerText('Frontend.FileManager.ThisBrowserDoesNotSupportFolderSelectionUseTheLatestChromeEdge', 'This browser does not support folder selection. Use the latest Chrome, Edge or Safari.'));
                     return;
                 }
                 input.click();
@@ -2018,7 +2018,7 @@
                 const paths = rawFiles.map(function (file) { return file.webkitRelativePath || ''; });
                 const rootNames = Array.from(new Set(paths.map(function (path) { return path.split('/')[0]; }).filter(Boolean)));
                 if (paths.some(function (path) { return !path; }) || rootNames.length !== 1) {
-                    this.$message.error(fileManagerText('Frontend.247', 'The browser did not provide a complete relative folder path. Select a folder again.'));
+                    this.$message.error(fileManagerText('Frontend.FileManager.TheBrowserDidNotProvideACompleteRelativeFolderPathSelectA', 'The browser did not provide a complete relative folder path. Select a folder again.'));
                     return;
                 }
 
@@ -2050,12 +2050,12 @@
                 let batchBytes = 0;
                 fileList.forEach(function (file) {
                     const rawFile = file.raw || file;
-                    if (!rawFile || !rawFile.size) throw new Error(fileManagerText('Frontend.248', 'Some files could not be read. Select again.'));
+                    if (!rawFile || !rawFile.size) throw new Error(fileManagerText('Frontend.FileManager.SomeFilesCouldNotBeReadSelectAgain', 'Some files could not be read. Select again.'));
                     if (typeof self.validateUploadFile === 'function') {
                         const reason = self.validateUploadFile(file.name || rawFile.name, rawFile.size);
                         if (reason) throw new Error(reason);
                     } else if (rawFile.size > maxBytes) {
-                        throw new Error(fileManagerText('Frontend.218', 'File “{0}” exceeds {1} MB and cannot be uploaded.', file.name, maxMb));
+                        throw new Error(fileManagerText('Frontend.FileManager.FileValueExceedsValueMBAndCannotBeUploaded', 'File “{0}” exceeds {1} MB and cannot be uploaded.', file.name, maxMb));
                     }
                     if (batch.length && (batch.length >= maxFilesPerUpload || batchBytes + rawFile.size > maxTotalUploadBytes)) {
                         batches.push(batch);
@@ -2069,7 +2069,7 @@
                 return batches;
             },
             submitUpload: async function () {
-                if (!this.uploadDialog.fileList.length) { this.$message.warning(fileManagerText('Frontend.211', 'Select files to upload.')); return; }
+                if (!this.uploadDialog.fileList.length) { this.$message.warning(fileManagerText('Frontend.FileManager.SelectFilesToUpload', 'Select files to upload.')); return; }
                 this.uploadDialog.uploading = true;
                 this.uploadDialog.progress = 0;
                 let uploadedCount = 0;
@@ -2093,14 +2093,14 @@
                         this.uploadDialog.progress = Math.round(uploadedCount * 100 / files.length);
                     }
                     this.$message.success(this.uploadDialog.mode === 'folder'
-                        ? fileManagerText('Frontend.212', 'Folder upload completed; the original directory structure was preserved.')
-                        : fileManagerText('Frontend.213', 'Upload succeeded; site static resources must still be explicitly published before the site can reference them.'));
+                        ? fileManagerText('Frontend.FileManager.FolderUploadCompletedTheOriginalDirectoryStructureWasPreserved', 'Folder upload completed; the original directory structure was preserved.')
+                        : fileManagerText('Frontend.FileManager.UploadSucceededSiteStaticResourcesMustStillBeExplicitlyPublishedBeforeThe', 'Upload succeeded; site static resources must still be explicitly published before the site can reference them.'));
                     this.uploadDialog.visible = false;
                     this.reloadFolderTree();
                     await this.getList();
                 } catch (error) {
-                    const partialMessage = uploadedCount > 0 ? fileManagerText('Frontend.290', '{0} files completed', uploadedCount) : '';
-                    this.$message.error(fileManagerText('Frontend.214', 'Upload failed: {0}', partialMessage ? partialMessage + ': ' + errorMessage(error) : errorMessage(error)));
+                    const partialMessage = uploadedCount > 0 ? fileManagerText('Frontend.FileManager.ValueFilesCompleted', '{0} files completed', uploadedCount) : '';
+                    this.$message.error(fileManagerText('Frontend.FileManager.UploadFailedValueAlternate', 'Upload failed: {0}', partialMessage ? partialMessage + ': ' + errorMessage(error) : errorMessage(error)));
                 } finally {
                     this.uploadDialog.uploading = false;
                 }
@@ -2113,7 +2113,7 @@
             },
             submitFolder: async function () {
                 const form = this.folderDialog.form;
-                if (!form.name || !form.name.trim()) { this.$message.warning(fileManagerText('Frontend.249', 'Enter a folder name')); return; }
+                if (!form.name || !form.name.trim()) { this.$message.warning(fileManagerText('Frontend.FileManager.EnterAFolderName', 'Enter a folder name')); return; }
                 this.folderDialog.loading = true;
                 try {
                     if (this.folderDialog.editing) {
@@ -2126,24 +2126,24 @@
                             resourceScope: this.resourceScope
                         });
                     }
-                    this.$message.success(this.folderDialog.editing ? fileManagerText('Frontend.250', 'Folder updated') : fileManagerText('Frontend.251', 'Folder created'));
+                    this.$message.success(this.folderDialog.editing ? fileManagerText('Frontend.FileManager.FolderUpdated', 'Folder updated') : fileManagerText('Frontend.FileManager.FolderCreated', 'Folder created'));
                     this.folderDialog.visible = false;
                     this.reloadFolderTree();
                 } catch (error) {
-                    this.$message.error(fileManagerText('Frontend.252', 'Failed to save the folder: {0}', errorMessage(error)));
+                    this.$message.error(fileManagerText('Frontend.FileManager.FailedToSaveTheFolderValue', 'Failed to save the folder: {0}', errorMessage(error)));
                 } finally {
                     this.folderDialog.loading = false;
                 }
             },
             deleteFolder: async function (folder) {
                 try {
-                    await this.$confirm(fileManagerText('Frontend.253', 'Only empty folders can be deleted. Delete “{0}”?', folder.name), fileManagerText('Frontend.254', 'Confirm deletion'), { type: 'warning' });
+                    await this.$confirm(fileManagerText('Frontend.FileManager.OnlyEmptyFoldersCanBeDeletedDeleteValue', 'Only empty folders can be deleted. Delete “{0}”?', folder.name), fileManagerText('Frontend.FileManager.ConfirmDeletion', 'Confirm deletion'), { type: 'warning' });
                     await post(pageUrl + '?handler=DeleteFolder&id=' + encodeURIComponent(folder.id));
                     if (this.currentFolderId === folder.id) await this.enterFolder(null);
                     this.reloadFolderTree();
-                    this.$message.success(fileManagerText('Frontend.255', 'Folder deleted'));
+                    this.$message.success(fileManagerText('Frontend.FileManager.FolderDeleted', 'Folder deleted'));
                 } catch (error) {
-                    if (error !== 'cancel') this.$message.error(fileManagerText('Frontend.256', 'Failed to delete the folder: {0}', errorMessage(error)));
+                    if (error !== 'cancel') this.$message.error(fileManagerText('Frontend.FileManager.FailedToDeleteTheFolderValue', 'Failed to delete the folder: {0}', errorMessage(error)));
                 }
             }
         }

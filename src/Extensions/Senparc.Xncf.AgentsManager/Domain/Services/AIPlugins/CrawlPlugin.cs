@@ -100,7 +100,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             var senMapicEngine = new SenMapicEngine(
                                 serviceProvider: _serviceProvider,
                                 urls: new[] { targetUri.ToString() },
-                                maxThread: 20,
+                                maxThread: 4,
                                 maxBuildMinutesForSingleSite: 5,
                                 maxDeep: maxDepth,
                                 maxPageCount: maxPageCount);

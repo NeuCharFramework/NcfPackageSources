@@ -54,220 +54,220 @@
   <data name="Common.Submit" xml:space="preserve">
     <value>Envoyer</value>
   </data>
-  <data name="Frontend.001" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ExtensionModules" xml:space="preserve">
     <value>Modules d’extension</value>
   </data>
-  <data name="Frontend.002" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ModuleManagement" xml:space="preserve">
     <value>Gestion des modules</value>
   </data>
-  <data name="Frontend.003" xml:space="preserve">
+  <data name="Frontend.WeixinManager.WeixinManagement" xml:space="preserve">
     <value>Gestion Weixin</value>
   </data>
-  <data name="Frontend.004" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountControlCenter" xml:space="preserve">
     <value>Centre de contrôle du compte officiel</value>
   </data>
-  <data name="Frontend.005" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountCount" xml:space="preserve">
     <value>Nombre de comptes officiels</value>
   </data>
-  <data name="Frontend.006" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountsAlreadyInTheSystem" xml:space="preserve">
     <value>Comptes officiels déjà enregistrés dans le système</value>
   </data>
-  <data name="Frontend.007" xml:space="preserve">
+  <data name="Frontend.WeixinManager.RunningAccountCount" xml:space="preserve">
     <value>Nombre de comptes en cours</value>
   </data>
-  <data name="Frontend.008" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NumberOfAccountsThatAreActiveAndConnectedToTheWeChatServer" xml:space="preserve">
     <value>Nombre de comptes actifs et connectés au serveur WeChat</value>
   </data>
-  <data name="Frontend.009" xml:space="preserve">
+  <data name="Frontend.WeixinManager.TotalWeChatUsers" xml:space="preserve">
     <value>Nombre total d'utilisateurs WeChat</value>
   </data>
-  <data name="Frontend.010" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NumberOfUsersWhoInteractedOnThisPlatformOrWereFetchedAutomatically" xml:space="preserve">
     <value>Nombre d'utilisateurs ayant interagi sur cette plateforme ou récupérés automatiquement comme abonnés</value>
   </data>
-  <data name="Frontend.011" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NewUsersToday" xml:space="preserve">
     <value>Nouveaux utilisateurs aujourd'hui</value>
   </data>
-  <data name="Frontend.012" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NumberOfUsersSyncedOrAddedToThePlatformToday" xml:space="preserve">
     <value>Nombre d'utilisateurs synchronisés ou ajoutés à la plateforme aujourd'hui</value>
   </data>
-  <data name="Frontend.013" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ViewUsers" xml:space="preserve">
     <value>Voir les utilisateurs</value>
   </data>
-  <data name="Frontend.014" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ViewGroups" xml:space="preserve">
     <value>Voir les groupes</value>
   </data>
-  <data name="Frontend.015" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ViewTags" xml:space="preserve">
     <value>Voir les étiquettes</value>
   </data>
-  <data name="Frontend.016" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Conversation" xml:space="preserve">
     <value>Conversation</value>
   </data>
-  <data name="Frontend.017" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Edit" xml:space="preserve">
     <value>Modifier</value>
   </data>
-  <data name="Frontend.018" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AccessTokenCredentialValidity" xml:space="preserve">
     <value>Durée de validité des identifiants AccessToken</value>
   </data>
-  <data name="Frontend.019" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AccessTokenCredentialStatus" xml:space="preserve">
     <value>État des identifiants AccessToken</value>
   </data>
-  <data name="Frontend.020" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountManagement" xml:space="preserve">
     <value>Gestion des comptes officiels</value>
   </data>
-  <data name="Frontend.021" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Add" xml:space="preserve">
     <value>Ajouter</value>
   </data>
-  <data name="Frontend.022" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Delete" xml:space="preserve">
     <value>Supprimer</value>
   </data>
-  <data name="Frontend.023" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Name" xml:space="preserve">
     <value>Nom</value>
   </data>
-  <data name="Frontend.024" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Notes" xml:space="preserve">
     <value>Notes</value>
   </data>
-  <data name="Frontend.025" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Description" xml:space="preserve">
     <value>Description</value>
   </data>
-  <data name="Frontend.026" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AddedTime" xml:space="preserve">
     <value>Date d’ajout</value>
   </data>
-  <data name="Frontend.027" xml:space="preserve">
+  <data name="Frontend.WeixinManager.MessageURL" xml:space="preserve">
     <value>URL du message</value>
   </data>
-  <data name="Frontend.028" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Open" xml:space="preserve">
     <value>Ouvrir</value>
   </data>
-  <data name="Frontend.029" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
-  <data name="Frontend.030" xml:space="preserve">
+  <data name="Frontend.WeixinManager.UserManagement" xml:space="preserve">
     <value>Gestion des utilisateurs</value>
   </data>
-  <data name="Frontend.031" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountName" xml:space="preserve">
     <value>Nom du compte officiel</value>
   </data>
-  <data name="Frontend.032" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ServerAddressURLConfiguredInTheWeChatAdminConsole" xml:space="preserve">
     <value>Adresse du serveur (URL) configurée dans la console d'administration WeChat</value>
   </data>
-  <data name="Frontend.033" xml:space="preserve">
+  <data name="Frontend.WeixinManager.YourDomain" xml:space="preserve">
     <value>[Votre domaine]</value>
   </data>
-  <data name="Frontend.034" xml:space="preserve">
+  <data name="Frontend.WeixinManager.YourDomainAlternate" xml:space="preserve">
     <value>[Votre domaine]</value>
   </data>
-  <data name="Frontend.035" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NoteTheOfficialAccountNameMustMatchTheNameInMpMessageHandlerName" xml:space="preserve">
     <value>Attention : le « nom du compte officiel » doit correspondre au name de [MpMessageHandler(name)] sur le MessageHandler concerné</value>
   </data>
-  <data name="Frontend.036" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Cancel" xml:space="preserve">
     <value>Annuler</value>
   </data>
-  <data name="Frontend.037" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Confirm" xml:space="preserve">
     <value>Confirmer</value>
   </data>
-  <data name="Frontend.038" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EnterOfficialAccountName" xml:space="preserve">
     <value>Saisissez le nom du compte officiel</value>
   </data>
-  <data name="Frontend.039" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EnterAppId" xml:space="preserve">
     <value>Saisissez AppId</value>
   </data>
-  <data name="Frontend.040" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EnterAppSecret" xml:space="preserve">
     <value>Saisissez AppSecret</value>
   </data>
-  <data name="Frontend.041" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EnterToken" xml:space="preserve">
     <value>Saisissez Token</value>
   </data>
-  <data name="Frontend.042" xml:space="preserve">
+  <data name="Frontend.WeixinManager.LengthMustBeBetweenOneAnd100" xml:space="preserve">
     <value>La longueur doit être comprise entre 1 et 100</value>
   </data>
-  <data name="Frontend.043" xml:space="preserve">
+  <data name="Frontend.WeixinManager.LengthMustBeBetweenOneAnd500" xml:space="preserve">
     <value>La longueur doit être comprise entre 1 et 500</value>
   </data>
-  <data name="Frontend.044" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AddOfficialAccount" xml:space="preserve">
     <value>Ajouter un compte officiel</value>
   </data>
-  <data name="Frontend.045" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EditOfficialAccount" xml:space="preserve">
     <value>Modifier le compte officiel</value>
   </data>
-  <data name="Frontend.046" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountAddedSuccessfully" xml:space="preserve">
     <value>Compte officiel ajouté</value>
   </data>
-  <data name="Frontend.047" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountUpdatedSuccessfully" xml:space="preserve">
     <value>Compte officiel mis à jour</value>
   </data>
-  <data name="Frontend.048" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Success" xml:space="preserve">
     <value>Réussi</value>
   </data>
-  <data name="Frontend.049" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Warning" xml:space="preserve">
     <value>Avertissement</value>
   </data>
-  <data name="Frontend.050" xml:space="preserve">
+  <data name="Frontend.WeixinManager.SelectAtLeastOneOfficialAccount" xml:space="preserve">
     <value>Sélectionnez au moins un compte officiel</value>
   </data>
-  <data name="Frontend.051" xml:space="preserve">
+  <data name="Frontend.WeixinManager.DeleteAllSelectedItems" xml:space="preserve">
     <value>Supprimer tous les éléments sélectionnés ?</value>
   </data>
-  <data name="Frontend.052" xml:space="preserve">
+  <data name="Frontend.WeixinManager.SuccessfullyDeletedValueItems" xml:space="preserve">
     <value>{0} éléments supprimés</value>
   </data>
-  <data name="Frontend.053" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AddNewFollowers" xml:space="preserve">
     <value>Ajouter les nouveaux abonnés</value>
   </data>
-  <data name="Frontend.054" xml:space="preserve">
+  <data name="Frontend.WeixinManager.SyncAllFollowers" xml:space="preserve">
     <value>Synchroniser tous les abonnés</value>
   </data>
-  <data name="Frontend.055" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NoteIfThereAreManyUsersThisMayTakeAVeryLong" xml:space="preserve">
     <value>Attention : s'il y a beaucoup d'utilisateurs, cela peut prendre très longtemps !</value>
   </data>
-  <data name="Frontend.056" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Nickname" xml:space="preserve">
     <value>Pseudo</value>
   </data>
-  <data name="Frontend.057" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Avatar" xml:space="preserve">
     <value>Avatar</value>
   </data>
-  <data name="Frontend.058" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Gender" xml:space="preserve">
     <value>Genre</value>
   </data>
-  <data name="Frontend.059" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Male" xml:space="preserve">
     <value>Homme</value>
   </data>
-  <data name="Frontend.060" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Female" xml:space="preserve">
     <value>Femme</value>
   </data>
-  <data name="Frontend.061" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Unknown" xml:space="preserve">
     <value>Inconnu</value>
   </data>
-  <data name="Frontend.062" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Region" xml:space="preserve">
     <value>Région</value>
   </data>
-  <data name="Frontend.063" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Group" xml:space="preserve">
     <value>Groupe</value>
   </data>
-  <data name="Frontend.064" xml:space="preserve">
+  <data name="Frontend.WeixinManager.FollowedAt" xml:space="preserve">
     <value>Date du suivi</value>
   </data>
-  <data name="Frontend.065" xml:space="preserve">
+  <data name="Frontend.WeixinManager.FollowStatus" xml:space="preserve">
     <value>Statut du suivi</value>
   </data>
-  <data name="Frontend.066" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Following" xml:space="preserve">
     <value>Abonné</value>
   </data>
-  <data name="Frontend.067" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NotFollowing" xml:space="preserve">
     <value>Non suivi</value>
   </data>
-  <data name="Frontend.068" xml:space="preserve">
+  <data name="Frontend.WeixinManager.FollowSource" xml:space="preserve">
     <value>Source du suivi</value>
   </data>
-  <data name="Frontend.069" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Tags" xml:space="preserve">
     <value>Étiquettes</value>
   </data>
-  <data name="Frontend.070" xml:space="preserve">
+  <data name="Frontend.WeixinManager.None" xml:space="preserve">
     <value>Aucun</value>
   </data>
-  <data name="Frontend.071" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AllUsers" xml:space="preserve">
     <value>Tous les utilisateurs</value>
   </data>
-  <data name="Frontend.072" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ValueUsers" xml:space="preserve">
     <value>Utilisateurs de {0}</value>
   </data>
   <data name="User.AccountUsers" xml:space="preserve">
@@ -276,10 +276,10 @@
   <data name="User.AllUsers" xml:space="preserve">
     <value>Tous les utilisateurs</value>
   </data>
-  <data name="Frontend.073" xml:space="preserve">
+  <data name="Frontend.WeixinManager.YourDomainWeixinMpValue" xml:space="preserve">
     <value>[Votre domaine]/WeixinMp/{0}</value>
   </data>
-  <data name="Frontend.074" xml:space="preserve">
+  <data name="Frontend.WeixinManager.YourDomainWeixinMpValueAlternate" xml:space="preserve">
     <value>[Votre domaine]/WeixinMp/{0}</value>
   </data>
   <data name="Public.ToggleNavigation" xml:space="preserve">
@@ -314,62 +314,62 @@
   </data>
 
 
-  <data name="Frontend.075" xml:space="preserve"><value>Bot WeChat personnel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.076" xml:space="preserve"><value>Code d'association /bind</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.077" xml:space="preserve"><value>AIModelId (facultatif)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.078" xml:space="preserve"><value>WorkflowId (facultatif)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.079" xml:space="preserve"><value>Compte iLink</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.080" xml:space="preserve"><value>Le token est protégé par Data Protection sur le serveur et ne sera plus jamais affiché.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.081" xml:space="preserve"><value>· Envoi</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.082" xml:space="preserve"><value>· Échec</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.083" xml:space="preserve"><value>· Envoyé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.084" xml:space="preserve"><value>Bot WeChat personnel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.085" xml:space="preserve"><value>Par exemple : superadministrateur</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.086" xml:space="preserve"><value>Par exemple : mon WeChat personnel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.087" xml:space="preserve"><value>Enregistrer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.088" xml:space="preserve"><value>Enregistrer les paramètres de liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.089" xml:space="preserve"><value>Autoriser NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.090" xml:space="preserve"><value>Autoriser Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.091" xml:space="preserve"><value>Tous les messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.092" xml:space="preserve"><value>Fermer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.093" xml:space="preserve"><value>Actualiser</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.094" xml:space="preserve"><value>Actualiser l'état</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.095" xml:space="preserve"><value>Fonctionnalités</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.096" xml:space="preserve"><value>Envoyer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.097" xml:space="preserve"><value>Annuler</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.098" xml:space="preserve"><value>Activer la liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.099" xml:space="preserve"><value>Activer l'interrogation longue</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.100" xml:space="preserve"><value>Image</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.101" xml:space="preserve"><value>Le fichier multimédia n'est pas encore prêt.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.102" xml:space="preserve"><value>WeChat personnel n'est pas encore connecté.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.103" xml:space="preserve"><value>Tous les enregistrements envoyés et reçus pour ce compte</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.104" xml:space="preserve"><value>Aucun code de liaison n'est configuré pour ce compte.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.105" xml:space="preserve"><value>Code QR de connexion WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.106" xml:space="preserve"><value>Ouvrir le lien</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.107" xml:space="preserve"><value>Scannez le code QR pour connecter WeChat personnel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.108" xml:space="preserve"><value>Se connecter par scan</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.109" xml:space="preserve"><value>Fichier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.110" xml:space="preserve"><value>Nouvelle configuration de liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.111" xml:space="preserve"><value>Messages récents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.112" xml:space="preserve"><value>Connexions récentes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.113" xml:space="preserve"><value>État</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.114" xml:space="preserve"><value>État :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.115" xml:space="preserve"><value>Utilisé par le gestionnaire amont ; peut être vide</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.116" xml:space="preserve"><value>Laisser vide pour conserver le token existant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.117" xml:space="preserve"><value>Code de liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.118" xml:space="preserve"><value>Configuration de liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.119" xml:space="preserve"><value>Fichier audio (SILK / MP3)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.120" xml:space="preserve"><value>Scannez le code QR avec WeChat et confirmez la connexion sur votre téléphone.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.121" xml:space="preserve"><value>Saisissez le code de vérification demandé par WeChat, puis actualisez l'état</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.122" xml:space="preserve"><value>Saisissez un message à envoyer à la conversation WeChat actuelle</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.123" xml:space="preserve"><value>Nom de la configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.124" xml:space="preserve"><value>Code de vérification</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.125" xml:space="preserve"><value>Présence WeCom</value></data>
-  <data name="Frontend.126" xml:space="preserve"><value>Récupérer les relevés de présence WeCom</value></data>
-  <data name="Frontend.127" xml:space="preserve"><value>Obtenir les relevés de présence</value></data>
-  <data name="Frontend.128" xml:space="preserve"><value>Récupère les relevés de présence WeCom par compte membre et plage horaire, jusqu'à 30 jours par requête.</value></data>
-  <data name="Frontend.129" xml:space="preserve"><value>Les identifiants WeCom sont valides et peuvent récupérer les relevés de présence.</value></data>
-  <data name="Frontend.130" xml:space="preserve"><value>Le connecteur de présence WeCom ne permet actuellement que la récupération des relevés.</value></data>
+  <data name="Frontend.WeixinManager.PersonalWeChatBot" xml:space="preserve"><value>Bot WeChat personnel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.BindPairingCode" xml:space="preserve"><value>Code d'association /bind</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AIModelIdOptional" xml:space="preserve"><value>AIModelId (facultatif)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.WorkflowIdOptional" xml:space="preserve"><value>WorkflowId (facultatif)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ILinkAccount" xml:space="preserve"><value>Compte iLink</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.TheTokenIsProtectedWithDataProtectionOnTheServerAndIs" xml:space="preserve"><value>Le token est protégé par Data Protection sur le serveur et ne sera plus jamais affiché.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Sending" xml:space="preserve"><value>· Envoi</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Failed" xml:space="preserve"><value>· Échec</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Submitted" xml:space="preserve"><value>· Envoyé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.PersonalWeChatBotAlternate" xml:space="preserve"><value>Bot WeChat personnel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ForExampleSuperAdministrator" xml:space="preserve"><value>Par exemple : superadministrateur</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ForExampleMyPersonalWeChat" xml:space="preserve"><value>Par exemple : mon WeChat personnel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Save" xml:space="preserve"><value>Enregistrer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.SaveBindingSettings" xml:space="preserve"><value>Enregistrer les paramètres de liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AllowNeuBell" xml:space="preserve"><value>Autoriser NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AllowWorkflow" xml:space="preserve"><value>Autoriser Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AllMessages" xml:space="preserve"><value>Tous les messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Close" xml:space="preserve"><value>Fermer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Refresh" xml:space="preserve"><value>Actualiser</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.RefreshStatus" xml:space="preserve"><value>Actualiser l'état</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Features" xml:space="preserve"><value>Fonctionnalités</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Send" xml:space="preserve"><value>Envoyer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.CancelAlternate" xml:space="preserve"><value>Annuler</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.EnableBinding" xml:space="preserve"><value>Activer la liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.EnableLongPolling" xml:space="preserve"><value>Activer l'interrogation longue</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Image" xml:space="preserve"><value>Image</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.TheMediaFileIsNotReadyYet" xml:space="preserve"><value>Le fichier multimédia n'est pas encore prêt.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.PersonalWeChatIsNotConnectedYet" xml:space="preserve"><value>WeChat personnel n'est pas encore connecté.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AllSentAndReceivedRecordsForThisAccount" xml:space="preserve"><value>Tous les enregistrements envoyés et reçus pour ce compte</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.NoBindingCodeHasBeenConfiguredForThisAccount" xml:space="preserve"><value>Aucun code de liaison n'est configuré pour ce compte.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.WeChatLoginQRCode" xml:space="preserve"><value>Code QR de connexion WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.OpenLink" xml:space="preserve"><value>Ouvrir le lien</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ScanTheQRCodeToConnectPersonalWeChat" xml:space="preserve"><value>Scannez le code QR pour connecter WeChat personnel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ConnectByScanning" xml:space="preserve"><value>Se connecter par scan</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.File" xml:space="preserve"><value>Fichier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.NewBindingConfiguration" xml:space="preserve"><value>Nouvelle configuration de liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.RecentMessages" xml:space="preserve"><value>Messages récents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.RecentConnections" xml:space="preserve"><value>Connexions récentes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Status" xml:space="preserve"><value>État</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.StatusLabel" xml:space="preserve"><value>État :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.UsedByTheUpstreamHandlerMayBeEmpty" xml:space="preserve"><value>Utilisé par le gestionnaire amont ; peut être vide</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.LeaveEmptyToKeepTheExistingToken" xml:space="preserve"><value>Laisser vide pour conserver le token existant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.BindingCode" xml:space="preserve"><value>Code de liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.BindingConfiguration" xml:space="preserve"><value>Configuration de liaison</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AudioFileSILKMPThree" xml:space="preserve"><value>Fichier audio (SILK / MP3)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ScanTheQRCodeWithWeChatAndConfirmTheLoginOnYour" xml:space="preserve"><value>Scannez le code QR avec WeChat et confirmez la connexion sur votre téléphone.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.EnterTheVerificationCodeRequestedByWeChatThenRefreshTheStatus" xml:space="preserve"><value>Saisissez le code de vérification demandé par WeChat, puis actualisez l'état</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.EnterAMessageToSendToTheCurrentWeChatConversation" xml:space="preserve"><value>Saisissez un message à envoyer à la conversation WeChat actuelle</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ConfigurationName" xml:space="preserve"><value>Nom de la configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.VerificationCode" xml:space="preserve"><value>Code de vérification</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.WeComAttendance" xml:space="preserve"><value>Présence WeCom</value></data>
+  <data name="Frontend.WeixinManager.RetrieveWeComAttendanceRecords" xml:space="preserve"><value>Récupérer les relevés de présence WeCom</value></data>
+  <data name="Frontend.WeixinManager.GetAttendanceRecords" xml:space="preserve"><value>Obtenir les relevés de présence</value></data>
+  <data name="Frontend.WeixinManager.RetrieveWeComAttendanceRecordsByMemberAccountAndTimeRangeUpTo" xml:space="preserve"><value>Récupère les relevés de présence WeCom par compte membre et plage horaire, jusqu'à 30 jours par requête.</value></data>
+  <data name="Frontend.WeixinManager.TheWeComCredentialIsValidAndCanRetrieveAttendanceRecords" xml:space="preserve"><value>Les identifiants WeCom sont valides et peuvent récupérer les relevés de présence.</value></data>
+  <data name="Frontend.WeixinManager.TheWeComAttendanceConnectorCurrentlyOnlyProvidesAttendanceRecordRetrieval" xml:space="preserve"><value>Le connecteur de présence WeCom ne permet actuellement que la récupération des relevés.</value></data>
   <data name="Connector.WeCom.Name" xml:space="preserve"><value>Présence WeCom</value></data>
   <data name="Connector.WeCom.Description" xml:space="preserve"><value>Utilise le CorpId et le Secret d'une application WeCom pour récupérer les relevés de présence. Après configuration, le connecteur peut être sélectionné dans Chat, Workflow et les modèles Agent.</value></data>
   <data name="Connector.WeCom.CorpId.Label" xml:space="preserve"><value>ID d'entreprise</value></data>
@@ -406,33 +406,33 @@
   <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>L'heure de fin doit être postérieure à l'heure de début.</value></data>
   <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>WeCom autorise au maximum 30 jours de relevés de présence par requête.</value></data>
   <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>Le type de présence doit être 1 (travail), 2 (hors site) ou 3 (tous).</value></data>
-  <data name="Frontend.131" xml:space="preserve"><value>Aucun historique de conversation. Envoyez un texte à WeChat ClawBot depuis votre téléphone.</value></data>
-  <data name="Frontend.132" xml:space="preserve"><value>Ajouter un compte WeChat personnel</value></data>
-  <data name="Frontend.133" xml:space="preserve"><value>Modifier le compte WeChat personnel</value></data>
-  <data name="Frontend.134" xml:space="preserve"><value>Message WeChat reçu</value></data>
-  <data name="Frontend.135" xml:space="preserve"><value>{0} a reçu un nouveau message du téléphone</value></data>
-  <data name="Frontend.136" xml:space="preserve"><value>Impossible d’actualiser l’état de connexion WeChat</value></data>
-  <data name="Frontend.137" xml:space="preserve"><value>Impossible de démarrer la connexion WeChat personnelle</value></data>
-  <data name="Frontend.138" xml:space="preserve"><value>Impossible de consulter l’état de connexion. Cliquez sur Actualiser l’état pour réessayer.</value></data>
-  <data name="Frontend.139" xml:space="preserve"><value>Envoyez d’abord un texte à WeChat ClawBot depuis le téléphone afin d’enregistrer le contexte nécessaire aux réponses.</value></data>
-  <data name="Frontend.140" xml:space="preserve"><value>Configuration de liaison enregistrée.</value></data>
-  <data name="Frontend.141" xml:space="preserve"><value>Impossible d’enregistrer la configuration de liaison</value></data>
-  <data name="Frontend.142" xml:space="preserve"><value>Impossible de supprimer la configuration de liaison</value></data>
-  <data name="Frontend.143" xml:space="preserve"><value>Le média ne peut pas être lu. Téléchargez le fichier original ; consultez les journaux du service pour les erreurs de conversion audio et utilisez un codec vidéo pris en charge par le navigateur.</value></data>
-  <data name="Frontend.144" xml:space="preserve"><value>Message multimédia envoyé.</value></data>
-  <data name="Frontend.145" xml:space="preserve"><value>Impossible d’envoyer le média</value></data>
-  <data name="Frontend.146" xml:space="preserve"><value>Message envoyé avec le contexte de la dernière conversation WeChat.</value></data>
-  <data name="Frontend.147" xml:space="preserve"><value>Message envoyé à WeChat Claw.</value></data>
-  <data name="Frontend.148" xml:space="preserve"><value>Impossible d’envoyer le message WeChat personnel</value></data>
-  <data name="Frontend.149" xml:space="preserve"><value>Téléphone</value></data>
-  <data name="Frontend.150" xml:space="preserve"><value>Système</value></data>
-  <data name="Frontend.151" xml:space="preserve"><value>{0} nouveaux messages</value></data>
-  <data name="Frontend.152" xml:space="preserve"><value>Erreur</value></data>
-  <data name="Frontend.153" xml:space="preserve"><value>Désactivé</value></data>
-  <data name="Frontend.154" xml:space="preserve"><value>Non connecté</value></data>
-  <data name="Frontend.155" xml:space="preserve"><value>Activé</value></data>
-  <data name="Frontend.156" xml:space="preserve"><value>Désactivé</value></data>
-  <data name="Frontend.157" xml:space="preserve"><value>Dernier expéditeur : {0}</value></data>
-  <data name="Frontend.158" xml:space="preserve"><value>Conversation actuelle</value></data>
-  <data name="Frontend.159" xml:space="preserve"><value>{0} messages</value></data>
+  <data name="Frontend.WeixinManager.NoConversationRecordsYetSendATextToWeChatClawBotFromYour" xml:space="preserve"><value>Aucun historique de conversation. Envoyez un texte à WeChat ClawBot depuis votre téléphone.</value></data>
+  <data name="Frontend.WeixinManager.AddPersonalWeChatAccount" xml:space="preserve"><value>Ajouter un compte WeChat personnel</value></data>
+  <data name="Frontend.WeixinManager.EditPersonalWeChatAccount" xml:space="preserve"><value>Modifier le compte WeChat personnel</value></data>
+  <data name="Frontend.WeixinManager.WeChatMessageReceived" xml:space="preserve"><value>Message WeChat reçu</value></data>
+  <data name="Frontend.WeixinManager.ValueReceivedANewPhoneMessage" xml:space="preserve"><value>{0} a reçu un nouveau message du téléphone</value></data>
+  <data name="Frontend.WeixinManager.FailedToRefreshTheWeChatConnectionStatus" xml:space="preserve"><value>Impossible d’actualiser l’état de connexion WeChat</value></data>
+  <data name="Frontend.WeixinManager.FailedToStartPersonalWeChatLogin" xml:space="preserve"><value>Impossible de démarrer la connexion WeChat personnelle</value></data>
+  <data name="Frontend.WeixinManager.FailedToQueryLoginStatusClickRefreshStatusToRetry" xml:space="preserve"><value>Impossible de consulter l’état de connexion. Cliquez sur Actualiser l’état pour réessayer.</value></data>
+  <data name="Frontend.WeixinManager.SendATextToWeChatClawBotFromYourPhoneFirstSoThe" xml:space="preserve"><value>Envoyez d’abord un texte à WeChat ClawBot depuis le téléphone afin d’enregistrer le contexte nécessaire aux réponses.</value></data>
+  <data name="Frontend.WeixinManager.BindingConfigurationSaved" xml:space="preserve"><value>Configuration de liaison enregistrée.</value></data>
+  <data name="Frontend.WeixinManager.FailedToSaveTheBindingConfiguration" xml:space="preserve"><value>Impossible d’enregistrer la configuration de liaison</value></data>
+  <data name="Frontend.WeixinManager.FailedToDeleteTheBindingConfiguration" xml:space="preserve"><value>Impossible de supprimer la configuration de liaison</value></data>
+  <data name="Frontend.WeixinManager.MediaCannotBePlayedDownloadTheOriginalFileCheckTheServiceLogs" xml:space="preserve"><value>Le média ne peut pas être lu. Téléchargez le fichier original ; consultez les journaux du service pour les erreurs de conversion audio et utilisez un codec vidéo pris en charge par le navigateur.</value></data>
+  <data name="Frontend.WeixinManager.MediaMessageSubmitted" xml:space="preserve"><value>Message multimédia envoyé.</value></data>
+  <data name="Frontend.WeixinManager.FailedToSendMedia" xml:space="preserve"><value>Impossible d’envoyer le média</value></data>
+  <data name="Frontend.WeixinManager.MessageSubmittedUsingTheLatestWeChatConversationContext" xml:space="preserve"><value>Message envoyé avec le contexte de la dernière conversation WeChat.</value></data>
+  <data name="Frontend.WeixinManager.MessageSubmittedToWeChatClaw" xml:space="preserve"><value>Message envoyé à WeChat Claw.</value></data>
+  <data name="Frontend.WeixinManager.FailedToSendThePersonalWeChatMessage" xml:space="preserve"><value>Impossible d’envoyer le message WeChat personnel</value></data>
+  <data name="Frontend.WeixinManager.Phone" xml:space="preserve"><value>Téléphone</value></data>
+  <data name="Frontend.WeixinManager.System" xml:space="preserve"><value>Système</value></data>
+  <data name="Frontend.WeixinManager.ValueNewMessages" xml:space="preserve"><value>{0} nouveaux messages</value></data>
+  <data name="Frontend.WeixinManager.Error" xml:space="preserve"><value>Erreur</value></data>
+  <data name="Frontend.WeixinManager.Disabled" xml:space="preserve"><value>Désactivé</value></data>
+  <data name="Frontend.WeixinManager.NotConnected" xml:space="preserve"><value>Non connecté</value></data>
+  <data name="Frontend.WeixinManager.Enabled" xml:space="preserve"><value>Activé</value></data>
+  <data name="Frontend.WeixinManager.DisabledAlternate" xml:space="preserve"><value>Désactivé</value></data>
+  <data name="Frontend.WeixinManager.LastSenderValue" xml:space="preserve"><value>Dernier expéditeur : {0}</value></data>
+  <data name="Frontend.WeixinManager.CurrentConversation" xml:space="preserve"><value>Conversation actuelle</value></data>
+  <data name="Frontend.WeixinManager.ValueMessages" xml:space="preserve"><value>{0} messages</value></data>
 </root>

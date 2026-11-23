@@ -34,17 +34,17 @@
                         <div class="d-flex align-center justify-content-between" style="gap: 5px;margin-bottom: 5px">
                             <div class="d-flex align-center">
                                 <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
-                                <div class="titleContent">{{ ncfST('Frontend.001') }}</div>
+                                <div class="titleContent">{{ ncfST('Frontend.PromptRange.SelectRange') }}</div>
                                 <ncf-doc-help topic="prompts.manage"></ncf-doc-help>
                             </div>
                             <div>
-                                <el-button type="primary" size="mini" @@click="expectedPluginOpen">{{ ncfST('Frontend.002') }}</el-button>
-                                <el-button type="primary" size="mini" @@click="uploadPluginVisible = true">{{ ncfST('Frontend.003') }}</el-button>
-                                <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addPromptField">{{ ncfST('Frontend.004') }}</el-button>
+                                <el-button type="primary" size="mini" @@click="expectedPluginOpen">{{ ncfST('Frontend.PromptRange.ExportPlugins') }}</el-button>
+                                <el-button type="primary" size="mini" @@click="uploadPluginVisible = true">{{ ncfST('Frontend.PromptRange.ImportPlugins') }}</el-button>
+                                <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addPromptField">{{ ncfST('Frontend.PromptRange.AddRange') }}</el-button>
                             </div>
 
                         </div>
-                        <el-select v-model="promptField" filterable :placeholder="ncfST('Frontend.005')" :popper-append-to-body="true" class="selectRow" @@change="promptChangeHandel($event,'promptField')">
+                        <el-select v-model="promptField" filterable :placeholder="ncfST('Frontend.PromptRange.SelectARange')" :popper-append-to-body="true" class="selectRow" @@change="promptChangeHandel($event,'promptField')">
                             <el-option v-for="item in promptFieldOpt"
                                        :key="item.id"
                                        :label="item.label"
@@ -54,8 +54,8 @@
                                     <span>{{ item.label }}</span>
                                     <div>
 
-                                        <el-button type="primary" size="mini" @@click="renameField($event,item)">{{ ncfST('Frontend.006') }}</el-button>
-                                        <el-button type="danger" size="mini" @@click="fieldDeleteHandel($event,item.id)">{{ ncfST('Frontend.007') }}</el-button>
+                                        <el-button type="primary" size="mini" @@click="renameField($event,item)">{{ ncfST('Frontend.PromptRange.RenameRange') }}</el-button>
+                                        <el-button type="danger" size="mini" @@click="fieldDeleteHandel($event,item.id)">{{ ncfST('Frontend.PromptRange.Delete') }}</el-button>
                                     </div>
                                 </div>
                             </el-option>
@@ -66,25 +66,25 @@
                         <div class="d-flex align-center justify-content-between" style="gap: 5px;margin-bottom: 5px">
                             <div class="d-flex align-center" style="gap: 5px;">
                                 <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
-                                <div class="titleContent">{{ ncfST('Frontend.008') }}</div>
+                                <div class="titleContent">{{ ncfST('Frontend.PromptRange.SelectTactic') }}</div>
                             </div>
                             <div class="d-flex align-center" style="gap: 5px;">
                                 <el-button type="primary" size="mini" icon="el-icon-magic-stick" @@click="openOptimizeDialog" 
                                     style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); border: none; font-weight: bold; color: #333;">
-                                    {{ ncfST('Frontend.009') }}
+                                    {{ ncfST('Frontend.PromptRange.Optimize') }}
                                 </el-button>
                                 <el-button type="primary" size="mini" icon="el-icon-s-data" @@click="openMapDialog" 
                                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; font-weight: bold;">
-                                    {{ ncfST('Frontend.010') }}
+                                    {{ ncfST('Frontend.PromptRange.Map') }}
                                 </el-button>
                                 <el-button type="success" size="mini" icon="el-icon-user" @@click="openCreateAgentDialog" :disabled="!promptid"
                                     style="font-weight: bold;">
-                                    {{ ncfST('Frontend.011') }}
+                                    {{ ncfST('Frontend.PromptRange.CreateAgent') }}
                                 </el-button>
                                 <i class="el-icon-document-copy" style="font-size: 1.3rem;cursor: pointer" @@click="copyInfo"></i>
                             </div>
                         </div>
-                        <el-select v-model="promptid" :disabled="!promptField" :popper-append-to-body="true" :placeholder="promptField ? ncfST('Frontend.012') : ncfST('Frontend.013')" class="selectRow" @@change="promptChangeHandel($event,'promptid')">
+                        <el-select v-model="promptid" :disabled="!promptField" :popper-append-to-body="true" :placeholder="promptField ? ncfST('Frontend.PromptRange.SelectATactic') : ncfST('Frontend.PromptRange.SelectARangeFirst')" class="selectRow" @@change="promptChangeHandel($event,'promptid')">
                             <el-option v-for="item in promptOpt"
                                        :key="item.id"
                                        :label="item.label"
@@ -93,10 +93,10 @@
                                 <div class="d-flex justify-content-between align-center" style="gap:20px">
                                     <span>{{ item.label }}</span>
                                     <div style="display: flex; gap: 5px;">
-                                        <el-button type="success" size="mini" icon="el-icon-s-data" @@click="openCompareDialog($event, item)">{{ ncfST('Frontend.014') }}</el-button>
-                                        <el-button type="primary" size="mini" @@click="promptNameField($event,item)">{{ item.nickName ? ncfST('Frontend.015') : ncfST('Frontend.016') }}</el-button>
-                                        <el-button type="primary" size="mini" @@click="promptNameRest($event,item.id)">{{ ncfST('Frontend.017') }}</el-button>
-                                        <el-button type="danger" size="mini" @@click="promptDeleteHandel($event,item.id)">{{ ncfST('Frontend.007') }}</el-button>
+                                        <el-button type="success" size="mini" icon="el-icon-s-data" @@click="openCompareDialog($event, item)">{{ ncfST('Frontend.PromptRange.Compare') }}</el-button>
+                                        <el-button type="primary" size="mini" @@click="promptNameField($event,item)">{{ item.nickName ? ncfST('Frontend.PromptRange.ChangeTacticName') : ncfST('Frontend.PromptRange.SetTacticName') }}</el-button>
+                                        <el-button type="primary" size="mini" @@click="promptNameRest($event,item.id)">{{ ncfST('Frontend.PromptRange.ResetName') }}</el-button>
+                                        <el-button type="danger" size="mini" @@click="promptDeleteHandel($event,item.id)">{{ ncfST('Frontend.PromptRange.Delete') }}</el-button>
                                     </div>
                                 </div>
                             </el-option>
@@ -109,15 +109,15 @@
                 <div class="titleRow" style="padding: 5px">
                     <div class="titleRow_leftBox">
                         <img src="~/image/PromptRange/prompt_selectModel.svg" alt="" class="imgIcon" />
-                        <div class="titleContent">{{ ncfST('Frontend.018') }}</div>
+                        <div class="titleContent">{{ ncfST('Frontend.PromptRange.SelectModel') }}</div>
                     </div>
                     <div class="d-flex" style="gap:5px">
-                        <el-button size="mini" @@click="refreshModelOpt" :loading="waitRefreshModel">{{ ncfST('Frontend.019') }}</el-button>
-                        <el-button type="primary" size="mini" @@click="toAIKernel">{{ ncfST('Frontend.020') }}</el-button>
+                        <el-button size="mini" @@click="refreshModelOpt" :loading="waitRefreshModel">{{ ncfST('Frontend.PromptRange.Refresh') }}</el-button>
+                        <el-button type="primary" size="mini" @@click="toAIKernel">{{ ncfST('Frontend.PromptRange.ManageModels') }}</el-button>
                     </div>
                 </div>
                 <div>
-                    <el-select v-model="modelid" :placeholder="ncfST('Frontend.021')" :disabled="dodgersLoading" class="selectRow model-select" @@change="promptChangeHandel($event,'modelid',modelid)">
+                    <el-select v-model="modelid" :placeholder="ncfST('Frontend.PromptRange.PleaseSelectAModel')" :disabled="dodgersLoading" class="selectRow model-select" @@change="promptChangeHandel($event,'modelid',modelid)">
                         <el-option v-for="item in modelOpt"
                                    :key="item.id"
                                    :label="item.selectLabel || item.displayName || item.alias"
@@ -125,7 +125,7 @@
                                    :disabled="item.disabled">
                             <div class="model-option-content">
                                 <div class="model-name-row">
-                                    <span class="model-name">{{ item.alias || ncfST('Frontend.022') }}</span>
+                                    <span class="model-name">{{ item.alias || ncfST('Frontend.PromptRange.UnnamedModel') }}</span>
                                     <span class="model-type-badge" :class="'model-type-' + (item.configModelTypeName || 'unknown').toLowerCase()">{{ item.configModelTypeName || 'Unknown' }}</span>
                                     <span class="model-version" v-if="item.apiVersion">v{{ item.apiVersion }}</span>
                                 </div>
@@ -141,15 +141,15 @@
                 <div class="prompt-mask" v-if="promptFieldOpt.length===0||!promptField" style="z-index: 1350;">
                     <div class="text-center">
                         <i class="el-icon-lock" style="font-size:2.5rem"></i>
-                        <br>{{ ncfST('Frontend.023') }}
+                        <br>{{ ncfST('Frontend.PromptRange.CreateOrSelectARangeBeforeContinuing') }}
                     </div>
                 </div>
                 @* Batch-run mask. *@
                 <div class="prompt-mask" v-if="dodgersLoading">
                     <div class="text-center">
                         <i class="el-icon-lock" style="font-size:2.5rem"></i>
-                        <br>{{ ncfST('Frontend.024') }}
-                        <br>{{ ncfST('Frontend.025') }}
+                        <br>{{ ncfST('Frontend.PromptRange.BurstModeIsOnAndTheContentIsLocked') }}
+                        <br>{{ ncfST('Frontend.PromptRange.SwitchToAnotherModeToMakeChanges') }}
                     </div>
                 </div>
                 @*Model parameter settings.*@
@@ -157,11 +157,11 @@
                     <div class="titleRow">
                         <div class="titleRow_leftBox">
                             <i class="requirIcon">*</i>
-                            <div class="titleContent">{{ ncfST('Frontend.026') }}</div>
+                            <div class="titleContent">{{ ncfST('Frontend.PromptRange.ModelParameters') }}</div>
                         </div>
                        <div class="titleRow_rightBox">
                             @* parameterViewShow=!parameterViewShow *@
-                            <el-button size="mini" @@click="resetConfigurineParam(true)">{{ ncfST('Frontend.027') }}</el-button>
+                            <el-button size="mini" @@click="resetConfigurineParam(true)">{{ ncfST('Frontend.PromptRange.Reset') }}</el-button>
                             @* <i class="el-icon-caret-top icon" :class="{'rotate':parameterViewShow}" @@click="parameterViewToggle"></i>*@
                         </div>
                     </div>
@@ -187,8 +187,8 @@
                 </div>
                 @* Configure AI scoring criteria. *@
                 <div style="padding-left: 15px; margin-top:25px;">
-                    <el-button type="primary" :disabled=!isAIGrade size="mini" @@click="aiScoreFormOpenDialog">{{ ncfST('Frontend.028') }}</el-button>
-                    <el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="isAIGrade" :active-text="ncfST('Frontend.029')" :inactive-text="ncfST('Frontend.030')"></el-switch>
+                    <el-button type="primary" :disabled=!isAIGrade size="mini" @@click="aiScoreFormOpenDialog">{{ ncfST('Frontend.PromptRange.SetAIScoringCriteria') }}</el-button>
+                    <el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="isAIGrade" :active-text="ncfST('Frontend.PromptRange.On')" :inactive-text="ncfST('Frontend.PromptRange.Off')"></el-switch>
                 </div>
                 <div style="padding-left: 15px; margin-top: 12px; display: flex; align-items: center; gap: 8px;">
                     <span>{{ getPromptRangeText('streamOptionLabel') }}</span>
@@ -224,7 +224,7 @@
          v-if="!promptLeftShow && !centerAreaMaximized && !rightAreaMaximized"
          @@mousedown="startResizeLeft"
          @@dblclick="resetAreaWidths"
-         :title="ncfST('Frontend.031')"></div>
+         :title="ncfST('Frontend.PromptRange.DragToAdjustWidthDoubleClickToRestoreTheDefault')"></div>
     
     @*Center: prompt input.*@
     <div class="promptPage_centerArea" 
@@ -236,15 +236,15 @@
                 <div class="prompt-mask" v-if="promptFieldOpt.length===0||!promptField" style="z-index: 1350;">
                     <div class="text-center">
                         <i class="el-icon-lock" style="font-size:2.5rem"></i>
-                        <br>{{ ncfST('Frontend.023') }}
+                        <br>{{ ncfST('Frontend.PromptRange.CreateOrSelectARangeBeforeContinuing') }}
                     </div>
                 </div>
                 @* Batch-run mask. *@
                 <div class="prompt-mask" v-if="dodgersLoading">
                     <div class="text-center">
                         <i class="el-icon-lock" style="font-size:2.5rem"></i>
-                        <br>{{ ncfST('Frontend.024') }}
-                        <br>{{ ncfST('Frontend.025') }}
+                        <br>{{ ncfST('Frontend.PromptRange.BurstModeIsOnAndTheContentIsLocked') }}
+                        <br>{{ ncfST('Frontend.PromptRange.SwitchToAnotherModeToMakeChanges') }}
                     </div>
                 </div>
                 @*Prompt input.*@
@@ -257,18 +257,18 @@
                                 <div class="titleContent">{{ promptInputTitle }}</div>
                             </div>
                             <div class="titleRow_rightBox">
-                                <el-button size="mini" @@click="resetInputPrompt">{{ ncfST('Frontend.027') }}</el-button>
-                                <el-button v-if="shouldShowPromptEditor" type="primary" size="mini" :icon="promptParamVisible?'el-icon-s-fold':'el-icon-s-unfold'" @@click="promptParamVisible = !promptParamVisible">{{ ncfST('Frontend.032') }}</el-button>
+                                <el-button size="mini" @@click="resetInputPrompt">{{ ncfST('Frontend.PromptRange.Reset') }}</el-button>
+                                <el-button v-if="shouldShowPromptEditor" type="primary" size="mini" :icon="promptParamVisible?'el-icon-s-fold':'el-icon-s-unfold'" @@click="promptParamVisible = !promptParamVisible">{{ ncfST('Frontend.PromptRange.RequestParameters') }}</el-button>
                                 <i class="el-icon-full-screen" style="font-size: 1.3rem;cursor: pointer;" @@mousedown.prevent="preservePromptContentBeforeAmplification" @@click="Amplification('box2')"></i>
                             </div>
                         </div>
                         <div class="promptContentBox">
                         <div class="modelSpecialPanel stt-upload-panel" v-show="isSpeechToTextModelSelected">
                             <div class="special-row">
-                                <span class="special-label">{{ ncfST('Frontend.033') }}</span>
+                                <span class="special-label">{{ ncfST('Frontend.PromptRange.AudioFile') }}</span>
                                 <div class="special-actions">
-                                    <el-button type="primary" size="mini" @@click="openSpeechFilePicker">{{ ncfST('Frontend.034') }}</el-button>
-                                    <el-button size="mini" @@click="clearSpeechInput" :disabled="!sttForm.audioFileName">{{ ncfST('Frontend.035') }}</el-button>
+                                    <el-button type="primary" size="mini" @@click="openSpeechFilePicker">{{ ncfST('Frontend.PromptRange.UploadAudio') }}</el-button>
+                                    <el-button size="mini" @@click="clearSpeechInput" :disabled="!sttForm.audioFileName">{{ ncfST('Frontend.PromptRange.Clear') }}</el-button>
                                 </div>
                             </div>
                             <input ref="sttFileInput"
@@ -280,22 +280,22 @@
                                 {{ sttForm.audioFileName }}（{{ (sttForm.fileSize / 1024).toFixed(1) }} KB）
                             </div>
                             <div class="special-text" v-else>
-                                {{ ncfST('Frontend.036') }}
+                                {{ ncfST('Frontend.PromptRange.SupportedFormatsFlacMFourAMpThreeMpFourMpegMpga') }}
                             </div>
                             <div class="special-row compact">
-                                <span class="special-label">{{ ncfST('Frontend.037') }}</span>
-                                <el-input v-model="sttForm.language" size="mini" :placeholder="ncfST('Frontend.038')"></el-input>
+                                <span class="special-label">{{ ncfST('Frontend.PromptRange.RecognitionLanguage') }}</span>
+                                <el-input v-model="sttForm.language" size="mini" :placeholder="ncfST('Frontend.PromptRange.OptionalForExampleZhEn')"></el-input>
                             </div>
                         </div>
 
                         <div class="modelSpecialPanel tts-option-panel" v-show="isTextToSpeechModelSelected">
                             <div class="special-row compact">
-                                <span class="special-label">{{ ncfST('Frontend.039') }}</span>
+                                <span class="special-label">{{ ncfST('Frontend.PromptRange.Voice') }}</span>
                                 <el-input v-model="ttsForm.voice" size="mini" placeholder="alloy / ash / onyx ..."></el-input>
                             </div>
                             <div class="special-row compact">
-                                <span class="special-label">{{ ncfST('Frontend.040') }}</span>
-                                <el-select v-model="ttsForm.format" size="mini" :placeholder="ncfST('Frontend.041')">
+                                <span class="special-label">{{ ncfST('Frontend.PromptRange.Format') }}</span>
+                                <el-select v-model="ttsForm.format" size="mini" :placeholder="ncfST('Frontend.PromptRange.SelectOutputFormat')">
                                     <el-option label="mp3" value="mp3"></el-option>
                                     <el-option label="opus" value="opus"></el-option>
                                     <el-option label="aac" value="aac"></el-option>
@@ -305,7 +305,7 @@
                                 </el-select>
                             </div>
                             <div class="special-row compact">
-                                <span class="special-label">{{ ncfST('Frontend.042') }}</span>
+                                <span class="special-label">{{ ncfST('Frontend.PromptRange.Speed') }}</span>
                                 <el-input-number v-model="ttsForm.speedRatio" size="mini" :min="0.5" :max="2.0" :step="0.1" :precision="1"></el-input-number>
                             </div>
                         </div>
@@ -313,17 +313,17 @@
                         <div class="modelSpecialPanel embedding-option-panel" v-show="isTextEmbeddingModelSelected">
                             <div class="special-row compact">
                                 <span class="special-label">VectorDB</span>
-                                <el-select v-model="embeddingForm.vectorDbId" size="mini" filterable :placeholder="ncfST('Frontend.043')" :loading="vectorLoading" @@focus="getVectorOptData()">
+                                <el-select v-model="embeddingForm.vectorDbId" size="mini" filterable :placeholder="ncfST('Frontend.PromptRange.SelectAVectorDatabase')" :loading="vectorLoading" @@focus="getVectorOptData()">
                                     <el-option v-for="item in vectorOpt" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </div>
                             <div class="special-row compact">
                                 <span class="special-label">Collection</span>
-                                <el-input v-model="embeddingForm.collectionName" size="mini" :placeholder="ncfST('Frontend.044')"></el-input>
+                                <el-input v-model="embeddingForm.collectionName" size="mini" :placeholder="ncfST('Frontend.PromptRange.OptionalAutoGenerated')"></el-input>
                             </div>
                             <div class="special-row compact">
-                                <span class="special-label">{{ ncfST('Frontend.045') }}</span>
-                                <el-input v-model="embeddingForm.searchQuery" size="mini" :placeholder="ncfST('Frontend.046')"></el-input>
+                                <span class="special-label">{{ ncfST('Frontend.PromptRange.TestQuery') }}</span>
+                                <el-input v-model="embeddingForm.searchQuery" size="mini" :placeholder="ncfST('Frontend.PromptRange.OptionalAutoQueryAfterTheFirstRun')"></el-input>
                             </div>
                             <div class="special-row compact">
                                 <span class="special-label">TopK</span>
@@ -344,14 +344,14 @@
                              @@compositionstart="handleCompositionStart"
                              @@compositionupdate="handleCompositionUpdate"
                              @@compositionend="handleCompositionEnd"
-                             :data-placeholder="content ? '' : (isTextToSpeechModelSelected ? ncfST('Frontend.047') : ncfST('Frontend.048'))">
+                             :data-placeholder="content ? '' : (isTextToSpeechModelSelected ? ncfST('Frontend.PromptRange.EnterTextToSynthesize') : ncfST('Frontend.PromptRange.EnterPromptContent'))">
                         </div>
                             
                             @* Variable hint card. *@
                             <div class="prompt-variables-hint" v-show="shouldShowPromptEditor && detectedVariables.length > 0">
                                 <div class="hint-title">
                                     <i class="el-icon-info"></i>
-                                    {{ ncfST('Frontend.049') }} {{ detectedVariables.length }} {{ ncfST('Frontend.050') }}
+                                    {{ ncfST('Frontend.PromptRange.Detected') }} {{ detectedVariables.length }} {{ ncfST('Frontend.PromptRange.Variables') }}
                                 </div>
                                 <div class="variables-list">
                                     <el-tag v-for="varItem in detectedVariables" 
@@ -360,26 +360,26 @@
                                             size="small"
                                             class="variable-tag">
                                         {{ varItem.fullMatch }}
-                                        <i v-if="varItem.isDefined" class="el-icon-check" :title="ncfST('Frontend.051')"></i>
-                                        <i v-else class="el-icon-warning" :title="ncfST('Frontend.052')"></i>
+                                        <i v-if="varItem.isDefined" class="el-icon-check" :title="ncfST('Frontend.PromptRange.Defined')"></i>
+                                        <i v-else class="el-icon-warning" :title="ncfST('Frontend.PromptRange.Undefined')"></i>
                                     </el-tag>
                                 </div>
                             </div>
                             <div class="remarkRow">
-                                <span class="remarkLabel">{{ ncfST('Frontend.762') }}</span>
+                                <span class="remarkLabel">{{ ncfST('Frontend.PromptRange.Notes') }}</span>
                                 <el-input v-model="remarks" type="textarea"
                                           :rows="4"
                                           resize="none"
                                           maxlength="200"
                                           show-word-limit
-                                          :placeholder="ncfST('Frontend.053')" class="remarkInputBox" @@change="promptChangeHandel($event,'remarks')" @@blur="promptRemarkSave">
+                                          :placeholder="ncfST('Frontend.PromptRange.EnterNotes')" class="remarkInputBox" @@change="promptChangeHandel($event,'remarks')" @@blur="promptRemarkSave">
                                 </el-input>
                                 @* style="z-index: 1250;" *@
                                 <div class="operationBox">
                                     @* Select the batch-run count. *@
                                     <el-dropdown trigger="click" @@command="changeNumsBtn" type="primary" size="small">
                                         <div class="numsOfResultsBox">
-                                            {{ ncfST('Frontend.054') }}<span class="numVal">{{numsOfResults}}</span>
+                                            {{ ncfST('Frontend.PromptRange.BurstCount') }}<span class="numVal">{{numsOfResults}}</span>
                                             <i class="el-icon-arrow-down"></i>
                                         </div>
                                         <el-dropdown-menu slot="dropdown">
@@ -389,18 +389,18 @@
                                     @* Test button. *@
                                     <div class="targetShootBtnRow">
                                         <el-dropdown trigger="click" @@command="changeBtn" split-button type="primary" @@click="clickSendBtn" size="small">
-                                            {{ ncfST(sendBtnText === PromptRangeSendCommand.shoot ? 'Frontend.265' : (sendBtnText === PromptRangeSendCommand.rapid ? 'Frontend.266' : 'Frontend.310')) }}
+                                            {{ ncfST(sendBtnText === PromptRangeSendCommand.shoot ? 'Frontend.PromptRange.RunAlternate' : (sendBtnText === PromptRangeSendCommand.rapid ? 'Frontend.PromptRange.Burst' : 'Frontend.PromptRange.SaveDraft')) }}
                                             <el-dropdown-menu slot="dropdown">
                                             <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text===PromptRangeSendCommand.rapid&&(!promptid||outputList.length===0||pageChange)" :command="btn.text">
-                                                {{ ncfST(btn.text === PromptRangeSendCommand.shoot ? 'Frontend.265' : (btn.text === PromptRangeSendCommand.rapid ? 'Frontend.266' : 'Frontend.310')) }}
+                                                {{ ncfST(btn.text === PromptRangeSendCommand.shoot ? 'Frontend.PromptRange.RunAlternate' : (btn.text === PromptRangeSendCommand.rapid ? 'Frontend.PromptRange.Burst' : 'Frontend.PromptRange.SaveDraft')) }}
                                             </el-dropdown-item>
                                             </el-dropdown-menu>
                                         </el-dropdown>
                                         <el-tooltip class="item" effect="dark" placement="top">
                                             <div slot="content" class="">
-                                                {{ ncfST('Frontend.403') }}<br />
-                                                {{ ncfST('Frontend.404') }}<br />
-                                                {{ ncfST('Frontend.405') }}
+                                                {{ ncfST('Frontend.PromptRange.RunCreateANewTacticFromTheCurrentInputOrFromThe') }}<br />
+                                                {{ ncfST('Frontend.PromptRange.BurstProduceMultipleResultsInARowFromTheCurrentlySelectedTactic') }}<br />
+                                                {{ ncfST('Frontend.PromptRange.DraftSaveTheCurrentInputAndCreateANewTactic') }}
                                             </div>
                                             <i class="el-icon-warning-outline" :style="sendBtnText===PromptRangeSendCommand.rapid?'filter:invert(1)':''"></i>
                                         </el-tooltip>
@@ -412,52 +412,52 @@
                         <div class="promptParamSection" v-show="shouldShowPromptEditor" :class="{'paramSectionHide': !promptParamVisible}">
                         <div class="titleRow" style="height:28px;">
                             <div class="titleRow_leftBox">
-                                <div class="titleContent">{{ ncfST('Frontend.055') }}</div>
+                                <div class="titleContent">{{ ncfST('Frontend.PromptRange.PromptRequestParameters') }}</div>
                             </div>
                         </div>
                         <div class="promptPmroparaBox">
                             <el-form ref="promptParamForm" :model="promptParamForm" :rules="rules" label-width="70px" label-position="left">
                                 <div class="formItem">
-                                    <el-form-item :label="ncfST('Frontend.056')" prop="prefix">
-                                        <el-input size="mini" v-model="promptParamForm.prefix" autocomplete="off" :placeholder="ncfST('Frontend.406')"></el-input>
+                                    <el-form-item :label="ncfST('Frontend.PromptRange.Prefix')" prop="prefix">
+                                        <el-input size="mini" v-model="promptParamForm.prefix" autocomplete="off" :placeholder="ncfST('Frontend.PromptRange.Example')"></el-input>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.057')" prop="suffix">
-                                        <el-input size="mini" v-model="promptParamForm.suffix" autocomplete="off" :placeholder="ncfST('Frontend.407')"></el-input>
+                                    <el-form-item :label="ncfST('Frontend.PromptRange.Suffix')" prop="suffix">
+                                        <el-input size="mini" v-model="promptParamForm.suffix" autocomplete="off" :placeholder="ncfST('Frontend.PromptRange.ExampleAlternate')"></el-input>
                                     </el-form-item>
                                 </div>
                                 @* Variable name and value. *@
                                 <el-table :data="promptParamForm.variableList" border
                                           max-height="150"
                                           style="width: 100%">
-                                    <el-table-column :label="ncfST('Frontend.058')">
+                                    <el-table-column :label="ncfST('Frontend.PromptRange.VariableName')">
                                         <template slot-scope="scope">
                                             @*<el-input size="mini" v-model="scope.row.name" autocomplete="off" placeholder="Enter a variable name"></el-input>*@
                                             <el-input size="mini" type="textarea"
                                                       autosize
                                                       autocomplete="off"
-                                                      :placeholder="ncfST('Frontend.059')"
+                                                      :placeholder="ncfST('Frontend.PromptRange.EnterAVariableName')"
                                                       v-model="scope.row.name">
                                             </el-input>
                                             @* <el-form-item :prop="'variableList.' + scope.$index + '.name'" :rules="rules.variableName" label-width="0px">
-                                            <el-input size="mini" v-model="scope.row.name" autocomplete="off" :placeholder="ncfST('Frontend.059')"></el-input>
+                                            <el-input size="mini" v-model="scope.row.name" autocomplete="off" :placeholder="ncfST('Frontend.PromptRange.EnterAVariableName')"></el-input>
                                             </el-form-item> *@
                                         </template>
                                     </el-table-column>
-                                    <el-table-column :label="ncfST('Frontend.060')">
+                                    <el-table-column :label="ncfST('Frontend.PromptRange.VariableValue')">
                                         <template slot-scope="scope">
                                             @*<el-input size="mini" v-model="scope.row.value" autocomplete="off" placeholder="Enter a variable value"></el-input>*@
                                             <el-input size="mini" type="textarea"
                                                       autosize
                                                       autocomplete="off"
-                                                      :placeholder="ncfST('Frontend.061')"
+                                                      :placeholder="ncfST('Frontend.PromptRange.EnterAVariableValue')"
                                                       v-model="scope.row.value">
                                             </el-input>
                                             @* <el-form-item :prop="'variableList.' + scope.$index + '.value'" :rules="rules.variableValue" label-width="0px">
-                                            <el-input size="mini" v-model="scope.row.value" autocomplete="off" :placeholder="ncfST('Frontend.061')"></el-input>
+                                            <el-input size="mini" v-model="scope.row.value" autocomplete="off" :placeholder="ncfST('Frontend.PromptRange.EnterAVariableValue')"></el-input>
                                             </el-form-item> *@
                                         </template>
                                     </el-table-column>
-                                    <el-table-column :label="ncfST('Frontend.062')" width="50" class-name="ncf-table-actions-column">
+                                    <el-table-column :label="ncfST('Frontend.PromptRange.Actions')" width="50" class-name="ncf-table-actions-column">
                                         <template slot-scope="scope">
                                             <i class="el-icon-delete deleteIcon" @@click="deleteVariableBtn(scope.$index)"></i>
                                         </template>
@@ -466,15 +466,15 @@
                                 </el-table>
                                 @* <div v-for="(item,index) in promptParamForm.variableList" :key="index" class="formItem">
                                 <el-form-item label="" :prop="'variableList.' + index + '.name'" :rules="rules.variableName" label-width="0px">
-                                <el-input v-model="item.name" autocomplete="off" :placeholder="ncfST('Frontend.059')"></el-input>
+                                <el-input v-model="item.name" autocomplete="off" :placeholder="ncfST('Frontend.PromptRange.EnterAVariableName')"></el-input>
                                 </el-form-item>
                                 <el-form-item label="" :prop="'variableList.' + index + '.value'" :rules="rules.variableValue" label-width="0px">
-                                <el-input v-model="item.value" autocomplete="off" :placeholder="ncfST('Frontend.061')"></el-input>
+                                <el-input v-model="item.value" autocomplete="off" :placeholder="ncfST('Frontend.PromptRange.EnterAVariableValue')"></el-input>
                                 </el-form-item>
                                 <i class="el-icon-delete deleteIcon" @@click="deleteVariableBtn(index)"></i>
                                 </div> *@
                                 <div class="addVariableRow">
-                                    <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addVariableBtn">{{ ncfST('Frontend.063') }}</el-button>
+                                    <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addVariableBtn">{{ ncfST('Frontend.PromptRange.AddVariable') }}</el-button>
                                 </div>
                             </el-form>
                             <div class="footerBtnRow">
@@ -503,7 +503,7 @@
          v-if="!box2Hidden && !centerAreaMaximized && !rightAreaMaximized"
          @@mousedown="startResizeRight"
          @@dblclick="resetAreaWidths"
-         :title="ncfST('Frontend.031')"></div>
+         :title="ncfST('Frontend.PromptRange.DragToAdjustWidthDoubleClickToRestoreTheDefault')"></div>
     
     @*Right: scoring and analysis.*@
     <div class="promptPage_rightArea" 
@@ -517,15 +517,15 @@
             <div class="promptVersion">
                 <div class="promptVersion-content">
                     <div class="promptVersion-row">
-                        <span>{{ ncfST('Frontend.064') }} <strong>{{promptDetail.fullVersion}}</strong></span>
+                        <span>{{ ncfST('Frontend.PromptRange.PromptVersion') }} <strong>{{promptDetail.fullVersion}}</strong></span>
                         <i class="el-icon-document-copy" style="font-size: 1.0rem;cursor: pointer;margin-left: 8px;" @@click="copyInfo"></i>
                     </div>
                     <div class="promptVersion-row promptVersion-info">
-                        <span style="margin-right:5px;">{{ ncfST('Frontend.065') }}</span>
+                        <span style="margin-right:5px;">{{ ncfST('Frontend.PromptRange.Range') }}</span>
                         <span style="margin-right:15px;">{{promptDetail.promptFieldStr||'--'}}</span>
-                        <span style="margin-right:5px;">{{ ncfST('Frontend.066') }}</span>
+                        <span style="margin-right:5px;">{{ ncfST('Frontend.PromptRange.Tactic') }}</span>
                         <span style="margin-right:15px;">{{promptDetail.promptStr||'--'}}</span>
-                        <span style="margin-right:5px;">{{ ncfST('Frontend.067') }}</span>
+                        <span style="margin-right:5px;">{{ ncfST('Frontend.PromptRange.Aim') }}</span>
                         <span>{{promptDetail.tacticsStr||'--'}}</span>
                     </div>
                 </div>
@@ -535,14 +535,14 @@
             <div class="titleRow">
                 <div class="titleRow_leftBox">
                     <img src="~/image/PromptRange/prompt_output.svg" alt="" class="imgIcon" />
-                    <div class="titleContent">{{ ncfST('Frontend.068') }}</div>
+                    <div class="titleContent">{{ ncfST('Frontend.PromptRange.Output') }}</div>
                 </div>
                 <div class="titleRow_scoreBox">
-                    <span>{{ ncfST('Frontend.069') }}</span>
+                    <span>{{ ncfST('Frontend.PromptRange.AverageScore') }}</span>
                     <span>{{outputAverageDeci>-1?outputAverageDeci.toFixed(1):'--'}}</span>
                 </div>
                 <div class="titleRow_scoreBox">
-                    <span>{{ ncfST('Frontend.070') }}</span>
+                    <span>{{ ncfST('Frontend.PromptRange.HighestScore') }}</span>
                     <span>{{outputMaxDeci>-1?outputMaxDeci.toFixed(1):'--'}}</span>
                 </div>
             </div>
@@ -556,11 +556,11 @@
                      :data-result-id="item.id">
                     <div class="promptResult_Item_Title">
                         <div class="promptReultTimeArea">
-                            <span>{{item.addTime}} [{{ ncfST('Frontend.071') }}{{item.costTime}}]</span>
+                            <span>{{item.addTime}} [{{ ncfST('Frontend.PromptRange.ElapsedMs') }}{{item.costTime}}]</span>
                         </div>
                         <div class="copyButtonArea">
-                            <a href="javascript:void(0);" @@click="copyPromptResult(item,false)" :title="ncfST('Frontend.072')"><i class="fa fa-copy"></i> HTML</a>
-                            <a href="javascript:void(0);" @@click="copyPromptResult(item,true)" :title="ncfST('Frontend.073')"><i class="fa fa-copy"></i> {{ ncfST('Frontend.074') }}</a>
+                            <a href="javascript:void(0);" @@click="copyPromptResult(item,false)" :title="ncfST('Frontend.PromptRange.CopyFormattedHTMLCode')"><i class="fa fa-copy"></i> HTML</a>
+                            <a href="javascript:void(0);" @@click="copyPromptResult(item,true)" :title="ncfST('Frontend.PromptRange.CopyRawContentForExampleMarkdownMarkersWillBeCopied')"><i class="fa fa-copy"></i> {{ ncfST('Frontend.PromptRange.Raw') }}</a>
                         </div>
                     </div>
                     <div class="contentRow contentRow_tti" v-if="item.resultViewType === 'TextToImage'">
@@ -568,10 +568,10 @@
                             <div class="tti-image-wrapper" v-if="item.textToImage && item.textToImage.imageUrl">
                                 <img :src="item.textToImage.imageUrl" alt="Generated Image" class="tti-image" />
                             </div>
-                            <div class="tti-empty" v-else>{{ ncfST('Frontend.075') }}</div>
+                            <div class="tti-empty" v-else>{{ ncfST('Frontend.PromptRange.TheImageWasGeneratedButNoAccessibleAddressWasReturned') }}</div>
                             <div class="tti-meta">
-                                <div class="tti-meta-row"><span class="tti-meta-label">{{ ncfST('Frontend.076') }}</span><span>{{ item.textToImage && item.textToImage.storageType ? item.textToImage.storageType : '--' }}</span></div>
-                                <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.imageUrl"><a :href="item.textToImage.imageUrl">{{ ncfST('Frontend.077') }}</a></div>
+                                <div class="tti-meta-row"><span class="tti-meta-label">{{ ncfST('Frontend.PromptRange.Storage') }}</span><span>{{ item.textToImage && item.textToImage.storageType ? item.textToImage.storageType : '--' }}</span></div>
+                                <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.imageUrl"><a :href="item.textToImage.imageUrl">{{ ncfST('Frontend.PromptRange.ViewOriginalImage') }}</a></div>
                                 <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.revisedPrompt"><span class="tti-meta-label">Revised：</span><span>{{ item.textToImage.revisedPrompt }}</span></div>
                                 <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.prompt"><span class="tti-meta-label">Prompt：</span><span>{{ item.textToImage.prompt }}</span></div>
                             </div>
@@ -580,7 +580,7 @@
                     <div class="contentRow contentRow_audio" v-else-if="item.resultViewType === 'TextToSpeech'">
                         <div class="audio-card">
                             <audio v-if="item.textToSpeech && item.textToSpeech.audioUrl" controls :src="item.textToSpeech.audioUrl" class="audio-player"></audio>
-                            <div class="audio-empty" v-else>{{ ncfST('Frontend.078') }}</div>
+                            <div class="audio-empty" v-else>{{ ncfST('Frontend.PromptRange.TheAudioWasGeneratedButNoAccessibleAddressWasReturned') }}</div>
                             <div class="audio-meta">
                                 <div class="audio-meta-row"><span class="audio-meta-label">Voice：</span><span>{{ item.textToSpeech && item.textToSpeech.voice ? item.textToSpeech.voice : '--' }}</span></div>
                                 <div class="audio-meta-row"><span class="audio-meta-label">Format：</span><span>{{ item.textToSpeech && item.textToSpeech.format ? item.textToSpeech.format : '--' }}</span></div>
@@ -609,9 +609,9 @@
                             <div class="embedding-meta-row"><span class="embedding-meta-label">Source：</span><span>{{ item.textEmbedding && item.textEmbedding.sourceText ? item.textEmbedding.sourceText : '--' }}</span></div>
 
                             <div class="embedding-query-panel">
-                                <el-input v-model="item.embeddingQueryText" size="mini" :placeholder="ncfST('Frontend.079')"></el-input>
+                                <el-input v-model="item.embeddingQueryText" size="mini" :placeholder="ncfST('Frontend.PromptRange.EnterQueryTextForVectorSearch')"></el-input>
                                 <el-input-number v-model="item.embeddingQueryTopK" size="mini" :min="1" :max="20" :step="1"></el-input-number>
-                                <el-button type="primary" size="mini" :loading="item.embeddingQueryLoading" @@click.stop="runTextEmbeddingQuery(item)">{{ ncfST('Frontend.080') }}</el-button>
+                                <el-button type="primary" size="mini" :loading="item.embeddingQueryLoading" @@click.stop="runTextEmbeddingQuery(item)">{{ ncfST('Frontend.PromptRange.Search') }}</el-button>
                             </div>
 
                             <div class="embedding-hit-list" v-if="item.embeddingQueryResults && item.embeddingQueryResults.length > 0">
@@ -625,15 +625,15 @@
                     <div class="contentRow" v-else v-html="item.resultStringHtml">
                     </div>
                     <div class="promptResultUsageRow" v-if="item.resultString.length>0">
-                        <span class="promptResultUsageToken">Token: {{item.totalCostToken || 0}}（{{ ncfST('Frontend.081') }} {{item.promptCostToken || 0}} / {{ ncfST('Frontend.082') }} {{item.resultCostToken || 0}}）</span>
+                        <span class="promptResultUsageToken">Token: {{item.totalCostToken || 0}}（{{ ncfST('Frontend.PromptRange.Input') }} {{item.promptCostToken || 0}} / {{ ncfST('Frontend.PromptRange.Output') }} {{item.resultCostToken || 0}}）</span>
                     </div>
                     <div class="operateRow" v-if="item.resultString.length>0">
                         <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
                             <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
                             <span :class="checkUseRed(index,item,'robotScore')">
-                                {{ ncfST('Frontend.086') }}:
+                                {{ ncfST('Frontend.PromptRange.AIScoreAlternate') }}:
                                 <template v-if="robotScoreLoadingMap[item.id]">
-                                    <i class="el-icon-loading"></i> {{ ncfST('Frontend.083') }}
+                                    <i class="el-icon-loading"></i> {{ ncfST('Frontend.PromptRange.AIScoring') }}
                                 </template>
                                 <template v-else>
                                     {{item.robotScore>-1 ? item.robotScore.toFixed(1) : '--'}}
@@ -642,26 +642,26 @@
                         </div>
                         <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
                             <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
-                            <span :class="checkUseRed(index,item,'humanScore')">{{ ncfST('Frontend.087') }}: {{item.humanScore>-1 ? item.humanScore.toFixed(1) : '--'}}</span>
+                            <span :class="checkUseRed(index,item,'humanScore')">{{ ncfST('Frontend.PromptRange.ManualScoreAlternate') }}: {{item.humanScore>-1 ? item.humanScore.toFixed(1) : '--'}}</span>
                         </div>
                         <div class="operateRow_item" v-if="item.mode === 2 || item.mode === 'Chat'" @@click="app.continueChat(item.id, index)" style="cursor: pointer; color: #409EFF;">
                             <i class="el-icon-chat-line-round"></i>
-                            <span>{{ ncfST('Frontend.085') }}</span>
+                            <span>{{ ncfST('Frontend.PromptRange.ContinueChat') }}</span>
                         </div>
                     </div>
                     <div v-if="item.isScoreView" class="scoreRow">
                         <div class="tabsArea">
                             @* @@click="app.alBtnScoring(index)" *@
-                            <div v-if="item.scoreType === '1'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '1'}">{{ ncfST('Frontend.086') }}</div>
-                            <div v-if="item.scoreType === '2'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '2'}">{{ ncfST('Frontend.087') }}</div>
+                            <div v-if="item.scoreType === '1'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '1'}">{{ ncfST('Frontend.PromptRange.AIScoreAlternate') }}</div>
+                            <div v-if="item.scoreType === '2'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '2'}">{{ ncfST('Frontend.PromptRange.ManualScoreAlternate') }}</div>
                         </div>
                         <div v-if="item.scoreType === '1'" class="alScoreArea">
                             <div v-for="(elItem,elindex) in item.alResultList" :key="elindex" class="valFormItem">
                                 <span class="label">{{elItem.label}}</span>
-                                <el-input v-model="elItem.value" clearable :placeholder="ncfST('Frontend.088')" class="input" />
+                                <el-input v-model="elItem.value" clearable :placeholder="ncfST('Frontend.PromptRange.PleaseEnter')" class="input" />
                             </div>
                             <div class="aiOperation">
-                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">{{ ncfST('Frontend.089') }}</el-button>
+                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">{{ ncfST('Frontend.PromptRange.StartScoring') }}</el-button>
                                 <el-button type="primary" size="mini" icon="el-icon-plus" circle @@click="app.addAlScoring(index)"></el-button>
                             </div>
                         </div>
@@ -685,14 +685,14 @@
                             </div>
                             @*<el-input v-model="manualScorVal" clearable placeholder="Enter a value" class="input"></el-input>*@
                             <div class="manualOperation">
-                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">{{ ncfST('Frontend.090') }}</el-button>
-                                <el-button type="primary" size="mini" @@click="cancelManualScore(index)">{{ ncfST('Frontend.091') }}</el-button>
+                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">{{ ncfST('Frontend.PromptRange.Save') }}</el-button>
+                                <el-button type="primary" size="mini" @@click="cancelManualScore(index)">{{ ncfST('Frontend.PromptRange.Cancel') }}</el-button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div v-if="outputList.length===0" class="emptyDataArea">
-                    {{ ncfST('Frontend.092') }}
+                    {{ ncfST('Frontend.PromptRange.NoGeneratedResults') }}
                 </div>
             </div>
             @*Custom scrollbar thumb.*@
@@ -717,7 +717,7 @@
                         <div class="thumbnail-content">
                             <span class="thumbnail-time">{{formatTime(item.addTime)}}</span>
                             <span v-if="getFinalScore(item) !== null" class="thumbnail-score">
-                                {{getFinalScore(item).toFixed(1)}}{{ ncfST('Frontend.093') }}
+                                {{getFinalScore(item).toFixed(1)}}{{ ncfST('Frontend.PromptRange.Points') }}
                             </span>
                         </div>
                     </div>
@@ -732,19 +732,19 @@
                     <div class="titleRow_leftBox">
                         <img src="~/image/PromptRange/prompt_chart.svg" alt="" class="imgIcon" />
                         <div class="titleContent">
-                            {{ ncfST('Frontend.094') }} <el-tooltip class="item" :content="ncfST('Frontend.095')" effect="dark" placement="top">
+                            {{ ncfST('Frontend.PromptRange.ScoreTrend') }} <el-tooltip class="item" :content="ncfST('Frontend.PromptRange.OnlyOneItemHasAScoreAChartCannotDrawALine')" effect="dark" placement="top">
                                 <i class="el-icon-warning-outline" style="color:#f00"></i>
                             </el-tooltip>
                         </div>
-                        <el-radio v-model="isAvg" :label="true" @@input="getScoringTrendData">{{ ncfST('Frontend.096') }}</el-radio>
-                        <el-radio v-model="isAvg" :label="false" @@input="getScoringTrendData">{{ ncfST('Frontend.097') }}</el-radio>
+                        <el-radio v-model="isAvg" :label="true" @@input="getScoringTrendData">{{ ncfST('Frontend.PromptRange.AverageScoreAlternate') }}</el-radio>
+                        <el-radio v-model="isAvg" :label="false" @@input="getScoringTrendData">{{ ncfST('Frontend.PromptRange.HighestScoreAlternate') }}</el-radio>
                     </div>
                 </div>
                 <div id="promptPage_scoreChart" key="myCharts" v-if="promptid&&promptid!==''&&chartData.length!==0" class="echartsBox">
                 </div>
                 <div v-else class="echartsBox">
                     <div class="emptyDataArea">
-                        {{ ncfST('Frontend.098') }}
+                        {{ ncfST('Frontend.PromptRange.NoData') }}
                     </div>
                 </div>
 
@@ -753,15 +753,15 @@
         
     </div>
     @*Version history drawer.*@
-    <div v-if="promptField" class="versionBtn" @@click="seeVersionRecord">{{ ncfST('Frontend.099') }}</div>
-    <el-drawer :visible.sync="versionDrawer" direction="rtl" :title="ncfST('Frontend.099')" :with-header="false" @@close="versionDrawerClose">
+    <div v-if="promptField" class="versionBtn" @@click="seeVersionRecord">{{ ncfST('Frontend.PromptRange.VersionHistory') }}</div>
+    <el-drawer :visible.sync="versionDrawer" direction="rtl" :title="ncfST('Frontend.PromptRange.VersionHistory')" :with-header="false" @@close="versionDrawerClose">
         <div class="versionDrawerArea">
             <div class="versionDrawerArea_titleRow">
-                <span>{{ ncfST('Frontend.099') }}</span>
+                <span>{{ ncfST('Frontend.PromptRange.VersionHistory') }}</span>
                 <img src="~/image/PromptRange/prompt_back.svg" class="imgIcon" onclick="app.versionDrawer = false" />
             </div>
 
-            <el-input v-model="versionSearchVal" size="mini" :placeholder="ncfST('Frontend.100')" class="versionDrawerArea_inputRow">
+            <el-input v-model="versionSearchVal" size="mini" :placeholder="ncfST('Frontend.PromptRange.EnterAName')" class="versionDrawerArea_inputRow">
                 <el-button slot="append" icon="el-icon-search" size="mini"></el-button>
             </el-input>
 
@@ -779,14 +779,14 @@
                         <el-popover popper-class="versionTreeMorePopover" placement="left" width="118" trigger="hover">
                             <div class="operateArea">
                                 <div class="operateItem">
-                                    <span style="margin-right:5px;">{{ ncfST('Frontend.101') }}</span>
+                                    <span style="margin-right:5px;">{{ ncfST('Frontend.PromptRange.Public') }}</span>
                                     <el-switch v-model="data.isPublic" disabled="true" :width="34" @@change="versionRecordIsPublic(data)">
                                     </el-switch>
                                 </div>
-                                <div class="operateItem" @@click="versionRecordEdit(data)">{{ ncfST('Frontend.102') }}</div>
-                                <div class="operateItem" @@click="versionRecordGenerateCode(data)">{{ ncfST('Frontend.103') }}</div>
+                                <div class="operateItem" @@click="versionRecordEdit(data)">{{ ncfST('Frontend.PromptRange.Edit') }}</div>
+                                <div class="operateItem" @@click="versionRecordGenerateCode(data)">{{ ncfST('Frontend.PromptRange.GenerateCode') }}</div>
                                 @* <div class="operateItem" @@click="versionRecordViewNotes(data)">View notes</div> *@
-                                <div class="operateItem" @@click="versionRecordDelete(data)">{{ ncfST('Frontend.007') }}</div>
+                                <div class="operateItem" @@click="versionRecordDelete(data)">{{ ncfST('Frontend.PromptRange.Delete') }}</div>
                             </div>
                             <img slot="reference" src="~/image/PromptRange/prompt_moreDot.svg" class="treeMoreIcon" />
                         </el-popover>
@@ -797,7 +797,7 @@
     </el-drawer>
     @*Tactic selection dialog.*@
     <el-dialog 
-        :title="continueChatMode ? ncfST('Frontend.085') : (promptid ? ncfST('Frontend.104') : ncfST('Frontend.105'))" 
+        :title="continueChatMode ? ncfST('Frontend.PromptRange.ContinueChat') : (promptid ? ncfST('Frontend.PromptRange.TacticSelection') : ncfST('Frontend.PromptRange.RunMode'))"
         :visible.sync="tacticalFormVisible" 
         :width="continueChatMode ? '80%' : '65%'"
         :close-on-click-modal="false"
@@ -805,75 +805,75 @@
         @@close="tacticalFormCloseDialog">
         <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" :label-width="continueChatMode ? '120px' : '100px'" label-position="left" class="tacticalFormBox">
             @* Hide tactic selection during continued chat and on the first test when promptid is absent. *@
-            <el-form-item v-if="!continueChatMode && promptid" :label="ncfST('Frontend.106')" prop="tactics">
+            <el-form-item v-if="!continueChatMode && promptid" :label="ncfST('Frontend.PromptRange.TacticAlternate')" prop="tactics">
                 <el-radio-group v-model="tacticalForm.tactics">
                     <el-radio label="create-top">
-                        <div class="d-f-startr-start-title">{{ ncfST('Frontend.107') }}</div>
+                        <div class="d-f-startr-start-title">{{ ncfST('Frontend.PromptRange.CreateTopLevelTactic') }}</div>
                         <div class="d-f-startr-start-nowrap">
-                            <span style="color: #606266;">{{ ncfST('Frontend.108') }}</span>
+                            <span style="color: #606266;">{{ ncfST('Frontend.PromptRange.WillCreate') }}</span>
                             <div style="margin-left: 8px;">
-                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">{{ ncfST('Frontend.109') }}{{ currentTacticalInfo.tactic }}</div>
-                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.topTactic }} <span style="color: #67C23A; font-size: 12px;">{{ ncfST('Frontend.110') }}</span></div>
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">{{ ncfST('Frontend.PromptRange.Current') }}{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.topTactic }} <span style="color: #67C23A; font-size: 12px;">{{ ncfST('Frontend.PromptRange.New') }}</span></div>
                             </div>
                         </div>
                     </el-radio>
                     <el-radio label="create-parallel">
-                        <div class="d-f-startr-start-title">{{ ncfST('Frontend.111') }}</div>
+                        <div class="d-f-startr-start-title">{{ ncfST('Frontend.PromptRange.CreateParallelTactic') }}</div>
                         <div class="d-f-startr-start-nowrap">
-                            <span style="color: #606266;">{{ ncfST('Frontend.108') }}</span>
+                            <span style="color: #606266;">{{ ncfST('Frontend.PromptRange.WillCreate') }}</span>
                             <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
-                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">{{ ncfST('Frontend.109') }}{{ currentTacticalInfo.tactic }}</div>
-                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.parallelTactic }} <span style="color: #67C23A; font-size: 12px;">{{ ncfST('Frontend.110') }}</span></div>
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">{{ ncfST('Frontend.PromptRange.Current') }}{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.parallelTactic }} <span style="color: #67C23A; font-size: 12px;">{{ ncfST('Frontend.PromptRange.New') }}</span></div>
                             </div>
                         </div>
                     </el-radio>
 
                     <el-radio label="create-sub">
-                        <div class="d-f-startr-start-title">{{ ncfST('Frontend.112') }}</div>
+                        <div class="d-f-startr-start-title">{{ ncfST('Frontend.PromptRange.CreateChildTactic') }}</div>
                         <div class="d-f-startr-start-nowrap">
-                            <span style="color: #606266;">{{ ncfST('Frontend.108') }}</span>
+                            <span style="color: #606266;">{{ ncfST('Frontend.PromptRange.WillCreate') }}</span>
                             <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
-                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">{{ ncfST('Frontend.109') }}{{ currentTacticalInfo.tactic }}</div>
-                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.subTactic }} <span style="color: #67C23A; font-size: 12px;">{{ ncfST('Frontend.110') }}</span></div>
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">{{ ncfST('Frontend.PromptRange.Current') }}{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.subTactic }} <span style="color: #67C23A; font-size: 12px;">{{ ncfST('Frontend.PromptRange.New') }}</span></div>
                             </div>
                         </div>
                     </el-radio>
                     <el-radio label="retarget">
-                        <div class="d-f-startr-start-title">{{ ncfST('Frontend.113') }}</div>
+                        <div class="d-f-startr-start-title">{{ ncfST('Frontend.PromptRange.ReAim') }}</div>
                         <div class="d-f-startr-start-nowrap">
-                            <span style="color: #606266;">{{ ncfST('Frontend.108') }}</span>
+                            <span style="color: #606266;">{{ ncfST('Frontend.PromptRange.WillCreate') }}</span>
                             <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
-                                <div v-if="currentTacticalInfo.fullTactical !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">{{ ncfST('Frontend.109') }}{{ currentTacticalInfo.fullTactical }}</div>
-                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.newAiming }} <span style="color: #67C23A; font-size: 12px;">{{ ncfST('Frontend.110') }}</span></div>
+                                <div v-if="currentTacticalInfo.fullTactical !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">{{ ncfST('Frontend.PromptRange.Current') }}{{ currentTacticalInfo.fullTactical }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.newAiming }} <span style="color: #67C23A; font-size: 12px;">{{ ncfST('Frontend.PromptRange.New') }}</span></div>
                             </div>
                         </div>
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="!continueChatMode && supportsChatMode" :label="ncfST('Frontend.105')" prop="chatMode">
+            <el-form-item v-if="!continueChatMode && supportsChatMode" :label="ncfST('Frontend.PromptRange.RunMode')" prop="chatMode">
                 <el-radio-group v-model="tacticalForm.chatMode" :disabled="continueChatMode">
                     <el-radio label="chat">
-                        <div>{{ ncfST('Frontend.114') }}</div>
-                        <div style="margin-top:5px; font-size:12px; color:#909399;">{{ ncfST('Frontend.116') }}</div>
+                        <div>{{ ncfST('Frontend.PromptRange.ChatMode') }}</div>
+                        <div style="margin-top:5px; font-size:12px; color:#909399;">{{ ncfST('Frontend.PromptRange.EnterItAsAConversationThenRun') }}</div>
                     </el-radio>
                     <el-radio label="direct">
-                        <div>{{ ncfST('Frontend.115') }}</div>
-                        <div style="margin-top:5px; font-size:12px; color:#909399;">{{ ncfST('Frontend.117') }}</div>
+                        <div>{{ ncfST('Frontend.PromptRange.DirectTest') }}</div>
+                        <div style="margin-top:5px; font-size:12px; color:#909399;">{{ ncfST('Frontend.PromptRange.TestDirectlyWithTheCurrentPrompt') }}</div>
                     </el-radio>
                 </el-radio-group>
                 <div v-if="continueChatMode" style="margin-top: 8px; font-size: 12px; color: #E6A23C;">
-                    <i class="el-icon-lock"></i> {{ ncfST('Frontend.118') }}
+                    <i class="el-icon-lock"></i> {{ ncfST('Frontend.PromptRange.ContinueChatModeIsLockedToConversationMode') }}
                 </div>
             </el-form-item>
             <el-alert v-if="!continueChatMode && !supportsChatMode"
-                      :title="ncfST('Frontend.119')"
+                      :title="ncfST('Frontend.PromptRange.TheCurrentModelDoesNotSupportConversationModeAndWillRunAs')"
                       type="info"
                       :closable="false"
                       show-icon
                       style="margin-bottom: 12px;">
             </el-alert>
             @* History display for continued chat mode. *@
-            <el-form-item v-if="continueChatMode" :label="ncfST('Frontend.120')">
+            <el-form-item v-if="continueChatMode" :label="ncfST('Frontend.PromptRange.ConversationHistory')">
                 <div class="chat-history-container" id="chatHistoryContainer" @@scroll="handleChatHistoryScroll">
                     @* Display the system message at the top of the conversation history. *@
                     <div v-if="continueChatMode" class="system-message-in-chat-history">
@@ -881,19 +881,19 @@
                             <el-collapse-item name="systemMessage">
                                 <template slot="title">
                                     <i :class="systemMessageCollapse.includes('systemMessage') ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" style="margin-right: 8px;"></i>
-                                    <span style="font-weight: 600;">{{ ncfST('Frontend.536') }}</span>
-                                    <span style="margin-left: 8px; font-size: 12px; color: #909399;">({{ ncfST(systemMessageCollapse.includes('systemMessage') ? 'Frontend.410' : 'Frontend.123') }})</span>
+                                    <span style="font-weight: 600;">{{ ncfST('Frontend.PromptRange.SystemMessagePrompt') }}</span>
+                                    <span style="margin-left: 8px; font-size: 12px; color: #909399;">({{ ncfST(systemMessageCollapse.includes('systemMessage') ? 'Frontend.PromptRange.ClickToViewThePromptUsedByTheCurrentConversation' : 'Frontend.PromptRange.ViewThePromptUsedByTheCurrentConversation') }})</span>
                                 </template>
-                                <div class="system-message-content">{{ continueChatSystemMessage || ncfST('Frontend.124') }}</div>
+                                <div class="system-message-content">{{ continueChatSystemMessage || ncfST('Frontend.PromptRange.Loading') }}</div>
                             </el-collapse-item>
                         </el-collapse>
                     </div>
                     <div v-if="continueChatMode" style="padding: 8px 12px; margin-bottom: 10px; background: #f5f7fa; border-radius: 6px; color: #606266;">
-                        {{ ncfST('Frontend.757', continueChatUsageSummary.totalCostToken || 0, continueChatUsageSummary.promptCostToken || 0, continueChatUsageSummary.resultCostToken || 0) }}
+                        {{ ncfST('Frontend.PromptRange.TotalTokensValueInputValueOutputValue', continueChatUsageSummary.totalCostToken || 0, continueChatUsageSummary.promptCostToken || 0, continueChatUsageSummary.resultCostToken || 0) }}
                     </div>
                     <div v-if="continueChatHistory.length === 0" class="chat-empty-tip">
                         <i class="el-icon-chat-line-round"></i>
-                        <span>{{ ncfST('Frontend.126') }}</span>
+                        <span>{{ ncfST('Frontend.PromptRange.NoConversationHistory') }}</span>
                     </div>
                     <div v-for="(msg, idx) in continueChatHistory" :key="msg.id || `temp-${idx}`" class="chat-message-item" :class="{'chat-message-user': msg.roleType === 1, 'chat-message-assistant': msg.roleType === 2, 'chat-message-generating': msg._generating}">
                         <div class="chat-message-avatar">
@@ -901,7 +901,7 @@
                         </div>
                         <div class="chat-message-content-wrapper">
                             <div class="chat-message-header">
-                                <span class="chat-message-role">{{ msg.roleType === 1 ? ncfST('Frontend.127') : ncfST('Frontend.128') }}</span>
+                                <span class="chat-message-role">{{ msg.roleType === 1 ? ncfST('Frontend.PromptRange.User') : ncfST('Frontend.PromptRange.Assistant') }}</span>
                                 <span class="chat-message-sequence">#{{ msg.sequence }}</span>
                                 <span class="chat-message-time">{{ formatChatTime(msg.addTime) }}</span>
                             </div>
@@ -914,23 +914,23 @@
                                     :icon="msg.userFeedback === true ? 'el-icon-check' : 'el-icon-thumb'" 
                                     size="mini"
                                     @@click="toggleChatFeedback(msg.id, true)"
-                                    :title="ncfST('Frontend.129')">
-                                    <span v-if="msg.userFeedback === true">{{ ncfST('Frontend.130') }}</span>
-                                    <span v-else>{{ ncfST('Frontend.129') }}</span>
+                                    :title="ncfST('Frontend.PromptRange.Like')">
+                                    <span v-if="msg.userFeedback === true">{{ ncfST('Frontend.PromptRange.Liked') }}</span>
+                                    <span v-else>{{ ncfST('Frontend.PromptRange.Like') }}</span>
                                 </el-button>
                                 <el-button 
                                     :type="msg.userFeedback === false ? 'danger' : 'text'" 
                                     :icon="msg.userFeedback === false ? 'el-icon-close' : 'el-icon-remove-outline'" 
                                     size="mini"
                                     @@click="toggleChatFeedback(msg.id, false)"
-                                    :title="ncfST('Frontend.131')">
-                                    <span v-if="msg.userFeedback === false">{{ ncfST('Frontend.132') }}</span>
-                                    <span v-else>{{ ncfST('Frontend.131') }}</span>
+                                    :title="ncfST('Frontend.PromptRange.Dislike')">
+                                    <span v-if="msg.userFeedback === false">{{ ncfST('Frontend.PromptRange.Disliked') }}</span>
+                                    <span v-else>{{ ncfST('Frontend.PromptRange.Dislike') }}</span>
                                 </el-button>
                             </div>
                             @* Show a notice when no valid ID is available. *@
                             <div v-if="msg.roleType === 2 && (!msg.id || msg.id === 0)" class="chat-message-feedback" style="color: #909399; font-size: 12px;">
-                                <i class="el-icon-loading"></i> {{ ncfST('Frontend.133') }}
+                                <i class="el-icon-loading"></i> {{ ncfST('Frontend.PromptRange.Saving') }}
                             </div>
                         </div>
                     </div>
@@ -939,30 +939,30 @@
             
             @* Conversation input area for chat mode. *@
             @* Do not use prop="chatInput"; this conditional field can make resetFields fail. *@
-            <el-form-item v-if="supportsChatMode && tacticalForm.chatMode === 'chat'" :label="ncfST('Frontend.134')">
+            <el-form-item v-if="supportsChatMode && tacticalForm.chatMode === 'chat'" :label="ncfST('Frontend.PromptRange.ConversationInput')">
                 <el-input 
                     v-model="tacticalChatInput" 
                     type="textarea" 
                     :rows="6"
                     ref="tacticalChatInput"
                     @@keydown.native="handleChatInputKeydown"
-                    :placeholder="continueChatMode ? ncfST('Frontend.768') : ncfST('Frontend.767')">
+                    :placeholder="continueChatMode ? ncfST('Frontend.PromptRange.EnterYourNextMessageCtrlEnterCmdEnterToSendAlternate') : ncfST('Frontend.PromptRange.EnterYourQuestionCtrlEnterCmdEnterToSendAlternate')">
                 </el-input>
                 <div style="margin-top: 8px; font-size: 12px; color: #909399;">
-                    {{ continueChatMode ? ncfST('Frontend.137') : ncfST('Frontend.138') }}
-                    <span style="margin-left: 8px; color: #909399;">{{ ncfST('Frontend.139') }}</span>
+                    {{ continueChatMode ? ncfST('Frontend.PromptRange.EnteredContentWillBeAppendedToTheExistingConversation') : ncfST('Frontend.PromptRange.TheEnteredContentIsPassedToTheBackendAPIAsTheUserMessage') }}
+                    <span style="margin-left: 8px; color: #909399;">{{ ncfST('Frontend.PromptRange.ShortcutCtrlEnterWindowsCmdEnterMac') }}</span>
                 </div>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button size="mini" @@click="tacticalFormVisible = false">{{ ncfST('Frontend.091') }}</el-button>
+            <el-button size="mini" @@click="tacticalFormVisible = false">{{ ncfST('Frontend.PromptRange.Cancel') }}</el-button>
             @* v-loading="tacticalFormSubmitLoading" *@
-            <el-button type="primary" size="mini" @@click="tacticalFormSubmitBtn">{{ ncfST('Frontend.140') }}</el-button>
+            <el-button type="primary" size="mini" @@click="tacticalFormSubmitBtn">{{ ncfST('Frontend.PromptRange.Run') }}</el-button>
         </div>
     </el-dialog>
     @*Diagram dialog.*@
     <el-dialog 
-        :title="ncfST('Frontend.141')" 
+        :title="ncfST('Frontend.PromptRange.ThreeDStructureMap')"
         :visible.sync="mapDialogVisible" 
         width="90%"
         :close-on-click-modal="false"
@@ -970,60 +970,60 @@
         @@close="mapDialogClose">
         @*Toolbar.*@
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
-            <el-button size="mini" icon="el-icon-refresh" @@click="resetMap3DView">{{ ncfST('Frontend.142') }}</el-button>
-            <el-button size="mini" icon="el-icon-full-screen" @@click="toggleMap3DFullscreen">{{ ncfST('Frontend.143') }}</el-button>
-            <el-button size="mini" icon="el-icon-zoom-in" @@click="fitMap3DView">{{ ncfST('Frontend.144') }}</el-button>
+            <el-button size="mini" icon="el-icon-refresh" @@click="resetMap3DView">{{ ncfST('Frontend.PromptRange.ResetView') }}</el-button>
+            <el-button size="mini" icon="el-icon-full-screen" @@click="toggleMap3DFullscreen">{{ ncfST('Frontend.PromptRange.FullScreen') }}</el-button>
+            <el-button size="mini" icon="el-icon-zoom-in" @@click="fitMap3DView">{{ ncfST('Frontend.PromptRange.FitView') }}</el-button>
             <el-popover placement="bottom" width="260" trigger="hover" popper-class="map3d-shortcuts-popover">
                 <div slot="content" style="font-size:12px;line-height:1.8;">
-                    <div><strong>{{ ncfST('Frontend.145') }}</strong></div>
-                    <div>{{ ncfST('Frontend.146') }}</div>
-                    <div>{{ ncfST('Frontend.147') }}</div>
-                    <div>{{ ncfST('Frontend.148') }}</div>
-                    <div>{{ ncfST('Frontend.149') }}</div>
-                    <div>{{ ncfST('Frontend.150') }}</div>
-                    <div style="margin-top:6px;"><strong>{{ ncfST('Frontend.151') }}</strong></div>
-                    <div>{{ ncfST('Frontend.152') }}</div>
-                    <div>{{ ncfST('Frontend.153') }}</div>
-                    <div>{{ ncfST('Frontend.154') }}</div>
-                    <div>{{ ncfST('Frontend.155') }}</div>
-                    <div>{{ ncfST('Frontend.156') }}</div>
+                    <div><strong>{{ ncfST('Frontend.PromptRange.MouseActions') }}</strong></div>
+                    <div>{{ ncfST('Frontend.PromptRange.LeftDragRotateView') }}</div>
+                    <div>{{ ncfST('Frontend.PromptRange.RightDragPanScene') }}</div>
+                    <div>{{ ncfST('Frontend.PromptRange.MouseWheelZoom') }}</div>
+                    <div>{{ ncfST('Frontend.PromptRange.ClickNodeHighlight') }}</div>
+                    <div>{{ ncfST('Frontend.PromptRange.DoubleClickNodeOpenTactic') }}</div>
+                    <div style="margin-top:6px;"><strong>{{ ncfST('Frontend.PromptRange.KeyboardShortcuts') }}</strong></div>
+                    <div>{{ ncfST('Frontend.PromptRange.WASDPanForwardBackwardLeftAndRight') }}</div>
+                    <div>{{ ncfST('Frontend.PromptRange.QEDepthPanForwardBackward') }}</div>
+                    <div>{{ ncfST('Frontend.PromptRange.RResetView') }}</div>
+                    <div>{{ ncfST('Frontend.PromptRange.FFitView') }}</div>
+                    <div>{{ ncfST('Frontend.PromptRange.ZoomInOut') }}</div>
                 </div>
-                <el-button slot="reference" size="mini" icon="el-icon-question">{{ ncfST('Frontend.157') }}</el-button>
+                <el-button slot="reference" size="mini" icon="el-icon-question">{{ ncfST('Frontend.PromptRange.Shortcuts') }}</el-button>
             </el-popover>
             <div style="margin-left:auto;font-size:12px;color:#909399;" v-if="map3dNodes && map3dNodes.length > 0">
-                {{ map3dNodes.length }} {{ ncfST('Frontend.158') }}
+                {{ map3dNodes.length }} {{ ncfST('Frontend.PromptRange.Nodes') }}
             </div>
         </div>
         <div id="map3dContainer" style="width: 100%; height: 580px; background: #1a1a1a;"></div>
     </el-dialog>
     @*Quick agent creation dialog.*@
     <el-dialog 
-        :title="ncfST('Frontend.159')" 
+        :title="ncfST('Frontend.PromptRange.CreateAnAgentFromAPromptCode')"
         :visible.sync="createAgentDialogVisible"
         width="560px"
         :close-on-click-modal="false"
         center>
         <el-form label-width="110px" size="small">
-            <el-form-item :label="ncfST('Frontend.160')">
-                <el-input v-model="createAgentForm.name" :placeholder="ncfST('Frontend.161')" maxlength="50" show-word-limit></el-input>
+            <el-form-item :label="ncfST('Frontend.PromptRange.AgentName')">
+                <el-input v-model="createAgentForm.name" :placeholder="ncfST('Frontend.PromptRange.EnterAgentName')" maxlength="50" show-word-limit></el-input>
             </el-form-item>
-            <el-form-item :label="ncfST('Frontend.162')">
+            <el-form-item :label="ncfST('Frontend.PromptRange.Scope')">
                 <el-radio-group v-model="createAgentForm.scopeType" @@change="onCreateAgentScopeChange">
                     <el-radio label="range">
-                        {{ ncfST('Frontend.163') }}
-                        <el-tooltip :content="ncfST('Frontend.164')" placement="top">
+                        {{ ncfST('Frontend.PromptRange.RangeLevel') }}
+                        <el-tooltip :content="ncfST('Frontend.PromptRange.PromptCodeContainsOnlyTheRangeNameAndMatchesEveryTacticInThat')" placement="top">
                             <i class="el-icon-question" style="color: #909399;"></i>
                         </el-tooltip>
                     </el-radio>
                     <el-radio label="tactic">
-                        {{ ncfST('Frontend.165') }}
-                        <el-tooltip :content="ncfST('Frontend.166')" placement="top">
+                        {{ ncfST('Frontend.PromptRange.TacticLevel') }}
+                        <el-tooltip :content="ncfST('Frontend.PromptRange.PromptCodeIncludesTheRangeNameAndTacticNumberAndMatchesEveryAim')" placement="top">
                             <i class="el-icon-question" style="color: #909399;"></i>
                         </el-tooltip>
                     </el-radio>
                     <el-radio label="full">
-                        {{ ncfST('Frontend.167') }}
-                        <el-tooltip :content="ncfST('Frontend.168')" placement="top">
+                        {{ ncfST('Frontend.PromptRange.ExactVersion') }}
+                        <el-tooltip :content="ncfST('Frontend.PromptRange.PromptCodeIsTheFullVersionNumberAndMatchesTheCurrentTacticExactly')" placement="top">
                             <i class="el-icon-question" style="color: #909399;"></i>
                         </el-tooltip>
                     </el-radio>
@@ -1032,73 +1032,73 @@
             <el-form-item label="PromptCode">
                 <el-tag type="info" style="font-family: monospace;">{{ createAgentPromptCode }}</el-tag>
             </el-form-item>
-            <el-form-item :label="ncfST('Frontend.169')">
-                <el-input v-model="createAgentForm.description" type="textarea" :rows="2" :placeholder="ncfST('Frontend.170')"></el-input>
+            <el-form-item :label="ncfST('Frontend.PromptRange.Description')">
+                <el-input v-model="createAgentForm.description" type="textarea" :rows="2" :placeholder="ncfST('Frontend.PromptRange.DescriptionOfTheNewAgentOptional')"></el-input>
             </el-form-item>
             <el-form-item label="Function Calls">
-                <el-input v-model="createAgentForm.functionCallNames" :placeholder="ncfST('Frontend.171')"></el-input>
+                <el-input v-model="createAgentForm.functionCallNames" :placeholder="ncfST('Frontend.PromptRange.FunctionCallNamesSeparatedByCommasOptional')"></el-input>
             </el-form-item>
         </el-form>
         @*Existing-agent notice.*@
         <el-alert v-if="createAgentExistingList.length > 0"
-                  :title="ncfST('Frontend.769', createAgentExistingList.length, createAgentExistingList.map(a => a.name).join(', '))"
+                  :title="ncfST('Frontend.PromptRange.ValueAgentsAlreadyExistForTheCurrentPromptCodeValue', createAgentExistingList.length, createAgentExistingList.map(a => a.name).join(', '))"
                   type="warning"
                   :closable="false"
                   show-icon
                   style="margin-top: 10px;">
         </el-alert>
         <div slot="footer" class="dialog-footer">
-            <el-button size="small" @@click="createAgentDialogVisible = false">{{ ncfST('Frontend.091') }}</el-button>
-            <el-button type="primary" size="small" :loading="createAgentLoading" @@click="submitCreateAgent">{{ ncfST('Frontend.172') }}</el-button>
+            <el-button size="small" @@click="createAgentDialogVisible = false">{{ ncfST('Frontend.PromptRange.Cancel') }}</el-button>
+            <el-button type="primary" size="small" :loading="createAgentLoading" @@click="submitCreateAgent">{{ ncfST('Frontend.PromptRange.Create') }}</el-button>
         </div>
     </el-dialog>
     @*Add-model dialog.*@
-    <el-dialog :title="ncfST('Frontend.173')" :visible.sync="modelFormVisible" center @@close="modelFormCloseDialog">
+    <el-dialog :title="ncfST('Frontend.PromptRange.AddModel')" :visible.sync="modelFormVisible" center @@close="modelFormCloseDialog">
         <el-form ref="modelForm" :model="modelForm" :rules="rules" label-position="left">
-            <el-form-item :label="ncfST('Frontend.174')" prop="modelType" label-width="130px">
-                <el-select v-model="modelForm.modelType" :placeholder="ncfST('Frontend.175')">
+            <el-form-item :label="ncfST('Frontend.PromptRange.ModelType')" prop="modelType" label-width="130px">
+                <el-select v-model="modelForm.modelType" :placeholder="ncfST('Frontend.PromptRange.SelectAModelType')">
                     <el-option v-for="(item,index) in modelTypeOpt" :key="index" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="ncfST('Frontend.176')" prop="alias" label-width="130px">
-                <el-input v-model="modelForm.alias" autocomplete="off" :placeholder="ncfST('Frontend.177')"></el-input>
+            <el-form-item :label="ncfST('Frontend.PromptRange.ModelAlias')" prop="alias" label-width="130px">
+                <el-input v-model="modelForm.alias" autocomplete="off" :placeholder="ncfST('Frontend.PromptRange.EnterModelAlias')"></el-input>
             </el-form-item>
-            <el-form-item :label="ncfST('Frontend.178')" prop="deploymentName" label-width="130px">
-                <el-input v-model="modelForm.deploymentName" autocomplete="off" :placeholder="ncfST('Frontend.179')"></el-input>
+            <el-form-item :label="ncfST('Frontend.PromptRange.ModelName')" prop="deploymentName" label-width="130px">
+                <el-input v-model="modelForm.deploymentName" autocomplete="off" :placeholder="ncfST('Frontend.PromptRange.EnterModelName')"></el-input>
             </el-form-item>
             <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='4'" label="API Version" prop="apiVersion" label-width="130px">
-                <el-input v-model="modelForm.apiVersion" autocomplete="off" :placeholder="ncfST('Frontend.180')"></el-input>
+                <el-input v-model="modelForm.apiVersion" autocomplete="off" :placeholder="ncfST('Frontend.PromptRange.EnterAPIVersion')"></el-input>
             </el-form-item>
             <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='8'||modelForm.modelType==='4'" label="API key" prop="apiKey" label-width="130px">
-                <el-input v-model="modelForm.apiKey" show-password autocomplete="off" auto-complete="new-password" :placeholder="ncfST('Frontend.181')"></el-input>
+                <el-input v-model="modelForm.apiKey" show-password autocomplete="off" auto-complete="new-password" :placeholder="ncfST('Frontend.PromptRange.EnterAPIKey')"></el-input>
             </el-form-item>
             <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='4'||modelForm.modelType==='32'" label="End Point" prop="endpoint" label-width="130px">
-                <el-input v-model="modelForm.endpoint" autocomplete="off" :placeholder="ncfST('Frontend.182')"></el-input>
+                <el-input v-model="modelForm.endpoint" autocomplete="off" :placeholder="ncfST('Frontend.PromptRange.EnterEndPoint')"></el-input>
             </el-form-item>
             <el-form-item v-if="modelForm.modelType==='8'" label="Organization Id" prop="organizationId" label-width="130px">
-                <el-input v-model="modelForm.organizationId" autocomplete="off" :placeholder="ncfST('Frontend.183')"></el-input>
+                <el-input v-model="modelForm.organizationId" autocomplete="off" :placeholder="ncfST('Frontend.PromptRange.EnterOrganizationId')"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="modelFormVisible = false">{{ ncfST('Frontend.091') }}</el-button>
+            <el-button @@click="modelFormVisible = false">{{ ncfST('Frontend.PromptRange.Cancel') }}</el-button>
             @* v-loading="modelFormSubmitLoading" *@
-            <el-button type="primary" @@click="modelFormSubmitBtn">{{ ncfST('Frontend.207') }}</el-button>
+            <el-button type="primary" @@click="modelFormSubmitBtn">{{ ncfST('Frontend.PromptRange.Confirm') }}</el-button>
         </div>
     </el-dialog>
     @*Add-range dialog.*@
-    <el-dialog :title="ncfST('Frontend.184')" :visible.sync="fieldFormVisible" center @@close="fieldFormCloseDialog">
+    <el-dialog :title="ncfST('Frontend.PromptRange.AddRange')" :visible.sync="fieldFormVisible" center @@close="fieldFormCloseDialog">
         <el-form ref="fieldForm" :model="fieldForm" :rules="rules" label-position="left">
-            <el-form-item :label="ncfST('Frontend.185')" prop="alias" label-width="130px">
-                <el-input v-model="fieldForm.alias" autocomplete="off" :placeholder="ncfST('Frontend.186')"></el-input>
+            <el-form-item :label="ncfST('Frontend.PromptRange.RangeName')" prop="alias" label-width="130px">
+                <el-input v-model="fieldForm.alias" autocomplete="off" :placeholder="ncfST('Frontend.PromptRange.EnterRangeName')"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="fieldFormVisible = false">{{ ncfST('Frontend.091') }}</el-button>
-            <el-button type="primary" v-loading="fieldFormSubmitLoading" @@click="fieldFormSubmitBtn">{{ ncfST('Frontend.207') }}</el-button>
+            <el-button @@click="fieldFormVisible = false">{{ ncfST('Frontend.PromptRange.Cancel') }}</el-button>
+            <el-button type="primary" v-loading="fieldFormSubmitLoading" @@click="fieldFormSubmitBtn">{{ ncfST('Frontend.PromptRange.Confirm') }}</el-button>
         </div>
     </el-dialog>
     @*AI scoring criteria dialog.*@
-    <el-dialog :title="ncfST('Frontend.187')" :visible.sync="aiScoreFormVisible" center>
+    <el-dialog :title="ncfST('Frontend.PromptRange.AIScoringCriteria')" :visible.sync="aiScoreFormVisible" center>
         <el-form ref="aiScoreForm" :model="aiScoreForm" :rules="rules" label-position="left">
 
             <div v-for="(item,index) in aiScoreForm.resultList" :key="index" class="targetShootBtnRow">
@@ -1108,57 +1108,57 @@
                     @* resize="none"
                     maxlength="200"
                     show-word-limit *@
-                    <el-input v-model="item.value" type="textarea" :rows="2" :placeholder="ncfST('Frontend.188')" style="width:430px;">
+                    <el-input v-model="item.value" type="textarea" :rows="2" :placeholder="ncfST('Frontend.PromptRange.EnterExpectedResult')" style="width:430px;">
                     </el-input>
                 </el-form-item>
                 <i slot="reference" class="el-icon-delete deleteIcon" @@click="deleteAiScoreBtn(index)"></i>
 
             </div>
             <el-button type="primary" size="mini" icon="el-icon-plus" circle @@click="aiScoreFormAddRow"></el-button>
-            <div class="warnRow" style="margin-top:20px;">{{ ncfST('Frontend.189') }}</div>
+            <div class="warnRow" style="margin-top:20px;">{{ ncfST('Frontend.PromptRange.NoteAfterYouSetAnExpectedResultAIScoringRunsAutomaticallyFrom') }}</div>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="aiScoreFormClose">{{ ncfST('Frontend.190') }}</el-button>
+            <el-button @@click="aiScoreFormClose">{{ ncfST('Frontend.PromptRange.Close') }}</el-button>
             @* v-loading="aiScoreFormSubmitLoading" *@
             @* <el-button type="primary" @@click="aiScoreFormSubmitBtn">Save</el-button> *@
         </div>
     </el-dialog>
     @*Import plugin.*@
-    <el-dialog :title="ncfST('Frontend.191')" :visible.sync="uploadPluginVisible" center @@close="uploadPluginCloseDialog">
+    <el-dialog :title="ncfST('Frontend.PromptRange.ImportPluginFolder')" :visible.sync="uploadPluginVisible" center @@close="uploadPluginCloseDialog">
         <div class="">
             @*Notice.*@
             <div class="tipsRow">
-                {{ ncfST('Frontend.192') }}
+                {{ ncfST('Frontend.PromptRange.YouCanUploadAnOpenAISemanticKernelStandardPluginFolderToGenerate') }}
             </div>
             @*Drop area.*@
             <div v-if="uploadPluginDropAreaVisible" class="el-upload-dragger" v-bind:class="{'is-dragover':uploadPluginDropHover}" @@drop="enentPluginDrop" @@dragover="pluginDropOverHandler" @@dragenter="pluginDropEnterHandler" @@dragleave="pluginDropLeaveHandler">
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">
-                    {{ ncfST('Frontend.193') }}<em @@click="enentPluginInput">{{ ncfST('Frontend.194') }}</em>
+                    {{ ncfST('Frontend.PromptRange.DragTheFolderHereOr') }}<em @@click="enentPluginInput">{{ ncfST('Frontend.PromptRange.ClickToUpload') }}</em>
                 </div>
             </div>
             @*File list from the selected folder.*@
             <div v-else>
-                <el-button type="primary" size="mini" @@click="uploadPluginCloseDialog">{{ ncfST('Frontend.195') }}</el-button>
+                <el-button type="primary" size="mini" @@click="uploadPluginCloseDialog">{{ ncfST('Frontend.PromptRange.UploadAgain') }}</el-button>
                 <el-table :data="uploadPluginData"
                           max-height="300"
                           style="width: 100%">
-            <el-table-column prop="name" :label="ncfST('Frontend.196')" width="200"></el-table-column>
-                    <el-table-column prop="path" :label="ncfST('Frontend.197')"></el-table-column>
+            <el-table-column prop="name" :label="ncfST('Frontend.PromptRange.FileName')" width="200"></el-table-column>
+                    <el-table-column prop="path" :label="ncfST('Frontend.PromptRange.FilePath')"></el-table-column>
                 </el-table>
             </div>
         </div>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="uploadPluginVisible = false">{{ ncfST('Frontend.091') }}</el-button>
-            <el-button type="primary" @@click="submitUploadPlugins">{{ ncfST('Frontend.198') }}</el-button>
+            <el-button @@click="uploadPluginVisible = false">{{ ncfST('Frontend.PromptRange.Cancel') }}</el-button>
+            <el-button type="primary" @@click="submitUploadPlugins">{{ ncfST('Frontend.PromptRange.Upload') }}</el-button>
         </div>
     </el-dialog>
     @*Export plugin.*@
-    <el-dialog :title="ncfST('Frontend.199')" :visible.sync="expectedPluginVisible" center @@close="expectedPluginCloseDialog">
+    <el-dialog :title="ncfST('Frontend.PromptRange.ExportPluginFolder')" :visible.sync="expectedPluginVisible" center @@close="expectedPluginCloseDialog">
         <el-form ref="expectedPluginFoem" :model="expectedPluginFoem" :rules="rules" label-position="left">
             @*             <el-form-item label="Prompt range" prop="rangeId" label-width="130px">
             <el-select v-model="expectedPluginFoem.rangeId" multiple
-            collapse-tags :placeholder="ncfST('Frontend.005')" class="selectRow" @@change="expectedPluginPromptFieldChange">
+            collapse-tags :placeholder="ncfST('Frontend.PromptRange.SelectARange')" class="selectRow" @@change="expectedPluginPromptFieldChange">
             <el-option v-for="item in promptFieldOpt"
             :key="item.id"
             :label="item.label"
@@ -1167,21 +1167,21 @@
             </el-option>
             </el-select>
             </el-form-item> *@
-            <el-form-item :label="ncfST('Frontend.200')" prop="checkList" label-width="130px">
+            <el-form-item :label="ncfST('Frontend.PromptRange.RangesAndTactics')" prop="checkList" label-width="130px">
                 @*Action button group.*@
                 <div class="plugin-export-actions">
                     <div class="action-buttons">
-                        <el-button size="mini" icon="el-icon-check" @@click="exportPluginSelectAll">{{ ncfST('Frontend.201') }}</el-button>
-                        <el-button size="mini" icon="el-icon-refresh-left" @@click="exportPluginInvertSelection">{{ ncfST('Frontend.202') }}</el-button>
-                        <el-button size="mini" icon="el-icon-close" @@click="exportPluginClearAll">{{ ncfST('Frontend.035') }}</el-button>
+                        <el-button size="mini" icon="el-icon-check" @@click="exportPluginSelectAll">{{ ncfST('Frontend.PromptRange.SelectAll') }}</el-button>
+                        <el-button size="mini" icon="el-icon-refresh-left" @@click="exportPluginInvertSelection">{{ ncfST('Frontend.PromptRange.InvertSelection') }}</el-button>
+                        <el-button size="mini" icon="el-icon-close" @@click="exportPluginClearAll">{{ ncfST('Frontend.PromptRange.Clear') }}</el-button>
                         <el-divider direction="vertical"></el-divider>
                         <el-button size="mini" :icon="exportPluginExpandAll ? 'el-icon-folder-opened' : 'el-icon-folder'" @@click="exportPluginToggleExpand">
-                            {{ exportPluginExpandAll ? ncfST('Frontend.204') : ncfST('Frontend.203') }}
+                            {{ exportPluginExpandAll ? ncfST('Frontend.PromptRange.CollapseAll') : ncfST('Frontend.PromptRange.ExpandAll') }}
                         </el-button>
                     </div>
                     <div class="selection-count">
                         <el-tag size="small" type="info">
-                            {{ ncfST('Frontend.205') }} <strong>{{exportPluginSelectedCount}}</strong> {{ ncfST('Frontend.206') }}
+                            {{ ncfST('Frontend.PromptRange.Selected') }} <strong>{{exportPluginSelectedCount}}</strong> {{ ncfST('Frontend.PromptRange.Tactics') }}
                         </el-tag>
                     </div>
                 </div>
@@ -1200,35 +1200,35 @@
 
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="expectedPluginVisible = false">{{ ncfST('Frontend.091') }}</el-button>
-            <el-button type="primary" @@click="btnExpectedPlugins">{{ ncfST('Frontend.207') }}</el-button>
+            <el-button @@click="expectedPluginVisible = false">{{ ncfST('Frontend.PromptRange.Cancel') }}</el-button>
+            <el-button type="primary" @@click="btnExpectedPlugins">{{ ncfST('Frontend.PromptRange.Confirm') }}</el-button>
         </div>
     </el-dialog>
-    <el-dialog :title="ncfST('Frontend.016')"
+    <el-dialog :title="ncfST('Frontend.PromptRange.SetTacticName')"
                :visible.sync="dialogVisible"
                width="30%"
               >
         <span>
-            {{ ncfST('Frontend.208') }}
-            <el-tooltip :content="ncfST('Frontend.209')" placement="top">
+            {{ ncfST('Frontend.PromptRange.SelectOrEnterANoteName') }}
+            <el-tooltip :content="ncfST('Frontend.PromptRange.IfYouSelectAnExistingNameThatNameMovesToTheCurrent')" placement="top">
                 <i class="el-icon-info"></i>
             </el-tooltip>
         </span>
         <el-autocomplete class="inline-input" 
                          v-model="targetlaneName"
                          :fetch-suggestions="querySearch"
-                         :placeholder="ncfST('Frontend.210')"
+                         :placeholder="ncfST('Frontend.PromptRange.EnterTacticNoteName')"
                          value-key="label"
                          style="width:100%"
         @@select="handleSelect"></el-autocomplete>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="dialogVisible = false">{{ ncfST('Frontend.091') }}</el-button>
-            <el-button type="primary" @@click="confirmtargetlaneName">{{ ncfST('Frontend.207') }}</el-button>
+            <el-button @@click="dialogVisible = false">{{ ncfST('Frontend.PromptRange.Cancel') }}</el-button>
+            <el-button type="primary" @@click="confirmtargetlaneName">{{ ncfST('Frontend.PromptRange.Confirm') }}</el-button>
         </span>
     </el-dialog>
     
         @*Prompt comparison dialog.*@
-    <el-dialog :title="ncfST('Frontend.211')" 
+    <el-dialog :title="ncfST('Frontend.PromptRange.ComparePrompt')"
                :visible.sync="compareDialogVisible" 
                width="90%" 
                top="5vh"
@@ -1238,7 +1238,7 @@
         <div class="compare-selector">
             <el-select v-model="comparePromptAId" 
                        filterable 
-                       :placeholder="ncfST('Frontend.212')" 
+                       :placeholder="ncfST('Frontend.PromptRange.SelectPromptA')"
                        @@change="loadComparePromptA"
                        style="width: 40%;">
                 <el-option v-for="item in promptOpt"
@@ -1252,12 +1252,12 @@
                        icon="el-icon-sort" 
                        @@click="swapComparePrompts"
                        style="margin: 0 20px;">
-                {{ ncfST('Frontend.213') }}
+                {{ ncfST('Frontend.PromptRange.Swap') }}
             </el-button>
             
             <el-select v-model="comparePromptBId" 
                        filterable 
-                       :placeholder="ncfST('Frontend.214')" 
+                       :placeholder="ncfST('Frontend.PromptRange.SelectPromptB')"
                        @@change="loadComparePromptB"
                        style="width: 40%;">
                 <el-option v-for="item in promptOpt"
@@ -1270,14 +1270,14 @@
         
         @*Same-prompt warning.*@
         <el-alert v-if="isSamePrompt" 
-                  :title="ncfST('Frontend.215')" 
+                  :title="ncfST('Frontend.PromptRange.WarningYouAreComparingTheSamePrompt')"
                   type="warning" 
                   :closable="false"
                   show-icon
                   style="margin-bottom: 15px;">
             <template slot>
-                <p style="margin: 5px 0;">{{ ncfST('Frontend.216') }} <strong>{{comparePromptA ? comparePromptA.fullVersion : ''}}</strong>）。</p>
-                <p style="margin: 5px 0;">{{ ncfST('Frontend.217') }}</p>
+                <p style="margin: 5px 0;">{{ ncfST('Frontend.PromptRange.TheTwoSelectedPromptsAreTheSameVersionNumber') }} <strong>{{comparePromptA ? comparePromptA.fullVersion : ''}}</strong>）。</p>
+                <p style="margin: 5px 0;">{{ ncfST('Frontend.PromptRange.SelectDifferentPromptsToCompareSoYouCanSeeTheDifferences') }}</p>
             </template>
         </el-alert>
         
@@ -1290,18 +1290,18 @@
                                size="mini" 
                                icon="el-icon-position" 
                                @@click="switchToPrompt(comparePromptAId)">
-                        {{ ncfST('Frontend.218') }}
+                        {{ ncfST('Frontend.PromptRange.GoToThisPrompt') }}
                     </el-button>
                 </div>
                 <div class="score-card-body">
                     <div class="score-item">
-                        <span class="score-label">{{ ncfST('Frontend.069') }}</span>
+                        <span class="score-label">{{ ncfST('Frontend.PromptRange.AverageScore') }}</span>
                         <span class="score-value" :class="{'score-empty': !hasScore(comparePromptA.evalAvgScore)}">
                             {{comparePromptA.evalAvgScore > -1 ? comparePromptA.evalAvgScore.toFixed(1) : '--'}}
                         </span>
                     </div>
                     <div class="score-item">
-                        <span class="score-label">{{ ncfST('Frontend.070') }}</span>
+                        <span class="score-label">{{ ncfST('Frontend.PromptRange.HighestScore') }}</span>
                         <span class="score-value" :class="{'score-empty': !hasScore(comparePromptA.evalMaxScore)}">
                             {{comparePromptA.evalMaxScore > -1 ? comparePromptA.evalMaxScore.toFixed(1) : '--'}}
                         </span>
@@ -1316,18 +1316,18 @@
                                size="mini" 
                                icon="el-icon-position" 
                                @@click="switchToPrompt(comparePromptBId)">
-                        {{ ncfST('Frontend.218') }}
+                        {{ ncfST('Frontend.PromptRange.GoToThisPrompt') }}
                     </el-button>
                 </div>
                 <div class="score-card-body">
                     <div class="score-item">
-                        <span class="score-label">{{ ncfST('Frontend.069') }}</span>
+                        <span class="score-label">{{ ncfST('Frontend.PromptRange.AverageScore') }}</span>
                         <span class="score-value" :class="{'score-empty': !hasScore(comparePromptB.evalAvgScore)}">
                             {{comparePromptB.evalAvgScore > -1 ? comparePromptB.evalAvgScore.toFixed(1) : '--'}}
                         </span>
                     </div>
                     <div class="score-item">
-                        <span class="score-label">{{ ncfST('Frontend.070') }}</span>
+                        <span class="score-label">{{ ncfST('Frontend.PromptRange.HighestScore') }}</span>
                         <span class="score-value" :class="{'score-empty': !hasScore(comparePromptB.evalMaxScore)}">
                             {{comparePromptB.evalMaxScore > -1 ? comparePromptB.evalMaxScore.toFixed(1) : '--'}}
                         </span>
@@ -1343,26 +1343,26 @@
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 120px;">{{ ncfST('Frontend.219') }}</th>
+                            <th style="width: 120px;">{{ ncfST('Frontend.PromptRange.Field') }}</th>
                             <th>
                                 📝 Prompt A 
                                 <span class="version-tag">{{comparePromptA.fullVersion}}</span>
                                 <i class="el-icon-document-copy copy-version-icon" 
                                    @@click="copyInfo('A')"
-                                   :title="ncfST('Frontend.220')"></i>
+                                   :title="ncfST('Frontend.PromptRange.CopyVersionNumber')"></i>
                             </th>
                             <th>
                                 📝 Prompt B 
                                 <span class="version-tag">{{comparePromptB.fullVersion}}</span>
                                 <i class="el-icon-document-copy copy-version-icon" 
                                    @@click="copyInfo('B')"
-                                   :title="ncfST('Frontend.220')"></i>
+                                   :title="ncfST('Frontend.PromptRange.CopyVersionNumber')"></i>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetRangeName !== comparePromptBInfo.targetRangeName}">
-                            <td class="field-name">{{ ncfST('Frontend.221') }}</td>
+                            <td class="field-name">{{ ncfST('Frontend.PromptRange.RangeAlternate') }}</td>
                             <td>{{comparePromptAInfo ? comparePromptAInfo.targetRangeName : '--'}}</td>
                             <td>
                                 {{comparePromptBInfo ? comparePromptBInfo.targetRangeName : '--'}}
@@ -1370,7 +1370,7 @@
                             </td>
                         </tr>
                         <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetLaneName !== comparePromptBInfo.targetLaneName}">
-                            <td class="field-name">{{ ncfST('Frontend.222') }}</td>
+                            <td class="field-name">{{ ncfST('Frontend.PromptRange.TacticSupplemental') }}</td>
                             <td>{{comparePromptAInfo ? comparePromptAInfo.targetLaneName : '--'}}</td>
                             <td>
                                 {{comparePromptBInfo ? comparePromptBInfo.targetLaneName : '--'}}
@@ -1378,7 +1378,7 @@
                             </td>
                         </tr>
                         <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.tacticalName !== comparePromptBInfo.tacticalName}">
-                            <td class="field-name">{{ ncfST('Frontend.106') }}</td>
+                            <td class="field-name">{{ ncfST('Frontend.PromptRange.TacticAlternate') }}</td>
                             <td>{{comparePromptAInfo ? comparePromptAInfo.tacticalName : '--'}}</td>
                             <td>
                                 {{comparePromptBInfo ? comparePromptBInfo.tacticalName : '--'}}
@@ -1386,7 +1386,7 @@
                             </td>
                         </tr>
                         <tr :class="{'has-diff': hasFieldDiff(comparePromptA.nickName, comparePromptB.nickName)}">
-                            <td class="field-name">{{ ncfST('Frontend.223') }}</td>
+                            <td class="field-name">{{ ncfST('Frontend.PromptRange.Alias') }}</td>
                             <td>{{comparePromptA.nickName || '--'}}</td>
                             <td>
                                 {{comparePromptB.nickName || '--'}}
@@ -1394,7 +1394,7 @@
                             </td>
                         </tr>
                         <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.modelName !== comparePromptBInfo.modelName}">
-                            <td class="field-name">{{ ncfST('Frontend.224') }}</td>
+                            <td class="field-name">{{ ncfST('Frontend.PromptRange.Model') }}</td>
                             <td>{{comparePromptAInfo ? comparePromptAInfo.modelName : '--'}}</td>
                             <td>
                                 {{comparePromptBInfo ? comparePromptBInfo.modelName : '--'}}
@@ -1447,7 +1447,7 @@
             
             @*Prompt content comparison with synchronized scrolling and Git-style differences.*@
             <div class="compare-diff-section">
-                <h4 class="diff-title">{{ ncfST('Frontend.225') }}</h4>
+                <h4 class="diff-title">{{ ncfST('Frontend.PromptRange.PromptContentComparison') }}</h4>
                 <div class="compare-diff-container" ref="compareScrollContainer">
                     <div class="compare-columns">
                         <div class="compare-diff-column">
@@ -1458,7 +1458,7 @@
                         </div>
                         <div class="compare-diff-column">
                             <div class="diff-column-header">Prompt B  
-                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.promptContent, comparePromptB.promptContent)">{{ ncfST('Frontend.226') }}</span>
+                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.promptContent, comparePromptB.promptContent)">{{ ncfST('Frontend.PromptRange.Different') }}</span>
                             </div>
                             <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.promptContent, comparePromptB.promptContent)}">
                                 <pre v-html="getContentDiffHtml('B')"></pre>
@@ -1470,36 +1470,36 @@
             
             @*Request parameter comparison (prefix, suffix, and variable configuration).*@
             <div class="compare-diff-section">
-                <h4 class="diff-title">{{ ncfST('Frontend.227') }}</h4>
+                <h4 class="diff-title">{{ ncfST('Frontend.PromptRange.RequestParameterComparison') }}</h4>
                 
                 @*Prefix and suffix comparison (table format).*@
                 <div class="compare-params-table">
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 100px;">{{ ncfST('Frontend.228') }}</th>
+                                <th style="width: 100px;">{{ ncfST('Frontend.PromptRange.Parameters') }}</th>
                                 <th>Prompt A</th>
                                 <th>Prompt B</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr :class="{'has-diff': hasFieldDiff(getPromptPrefix('A'), getPromptPrefix('B'))}">
-                                <td class="field-name">{{ ncfST('Frontend.056') }}</td>
+                                <td class="field-name">{{ ncfST('Frontend.PromptRange.Prefix') }}</td>
                                 <td>
-                                    <code>{{getPromptPrefix('A') || ncfST('Frontend.229')}}</code>
+                                    <code>{{getPromptPrefix('A') || ncfST('Frontend.PromptRange.NotSet')}}</code>
                                 </td>
                                 <td>
-                                    <code>{{getPromptPrefix('B') || ncfST('Frontend.229')}}</code>
+                                    <code>{{getPromptPrefix('B') || ncfST('Frontend.PromptRange.NotSet')}}</code>
                                     <span class="diff-mark" v-if="hasFieldDiff(getPromptPrefix('A'), getPromptPrefix('B'))">●</span>
                                 </td>
                             </tr>
                             <tr :class="{'has-diff': hasFieldDiff(getPromptSuffix('A'), getPromptSuffix('B'))}">
-                                <td class="field-name">{{ ncfST('Frontend.057') }}</td>
+                                <td class="field-name">{{ ncfST('Frontend.PromptRange.Suffix') }}</td>
                                 <td>
-                                    <code>{{getPromptSuffix('A') || ncfST('Frontend.229')}}</code>
+                                    <code>{{getPromptSuffix('A') || ncfST('Frontend.PromptRange.NotSet')}}</code>
                                 </td>
                                 <td>
-                                    <code>{{getPromptSuffix('B') || ncfST('Frontend.229')}}</code>
+                                    <code>{{getPromptSuffix('B') || ncfST('Frontend.PromptRange.NotSet')}}</code>
                                     <span class="diff-mark" v-if="hasFieldDiff(getPromptSuffix('A'), getPromptSuffix('B'))">●</span>
                                 </td>
                             </tr>
@@ -1511,14 +1511,14 @@
                 <div class="compare-diff-container" v-if="comparePromptA.variableDictJson || comparePromptB.variableDictJson">
                     <div class="compare-columns">
                         <div class="compare-diff-column">
-                            <div class="diff-column-header">Prompt A - {{ ncfST('Frontend.230') }}</div>
+                            <div class="diff-column-header">Prompt A - {{ ncfST('Frontend.PromptRange.PromptAVariableConfiguration') }}</div>
                             <div class="diff-code-block">
                                 <pre v-html="getVariablesDiffHtml('A')"></pre>
                             </div>
                         </div>
                         <div class="compare-diff-column">
-                            <div class="diff-column-header">Prompt B - {{ ncfST('Frontend.231') }}
-                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.variableDictJson, comparePromptB.variableDictJson)">{{ ncfST('Frontend.226') }}</span>
+                            <div class="diff-column-header">Prompt B - {{ ncfST('Frontend.PromptRange.PromptBVariableConfiguration') }}
+                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.variableDictJson, comparePromptB.variableDictJson)">{{ ncfST('Frontend.PromptRange.Different') }}</span>
                             </div>
                             <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.variableDictJson, comparePromptB.variableDictJson)}">
                                 <pre v-html="getVariablesDiffHtml('B')"></pre>
@@ -1528,7 +1528,7 @@
                 </div>
                 <div v-else class="compare-empty-params">
                     <i class="el-icon-info"></i>
-                    <span>{{ ncfST('Frontend.232') }}</span>
+                    <span>{{ ncfST('Frontend.PromptRange.NeitherPromptHasVariablesConfigured') }}</span>
                 </div>
             </div>
         </div>
@@ -1536,23 +1536,23 @@
         @*Empty-state notice.*@
         <div v-else class="compare-empty-state">
             <i class="el-icon-document-copy" style="font-size: 60px; color: #dcdfe6;"></i>
-            <p>{{ ncfST('Frontend.233') }}</p>
+            <p>{{ ncfST('Frontend.PromptRange.SelectTwoPromptsToCompare') }}</p>
         </div>
         
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="compareDialogVisible = false">{{ ncfST('Frontend.190') }}</el-button>
+            <el-button @@click="compareDialogVisible = false">{{ ncfST('Frontend.PromptRange.Close') }}</el-button>
         </div>
     </el-dialog>
 
     @*Prompt optimization dialog.*@
-    <el-dialog :title="ncfST('Frontend.234')" :visible.sync="optimizeDialogVisible" width="50%" :append-to-body="true" :close-on-click-modal="!optimizing">
+    <el-dialog :title="ncfST('Frontend.PromptRange.AIAutomaticPromptOptimizationAgent')" :visible.sync="optimizeDialogVisible" width="50%" :append-to-body="true" :close-on-click-modal="!optimizing">
         <div class="optimize-dialog-content">
-            <el-alert :title="ncfST('Frontend.235')" type="info" :description="ncfST('Frontend.236')" show-icon :closable="false" style="margin-bottom: 20px;">
+            <el-alert :title="ncfST('Frontend.PromptRange.Description')" type="info" :description="ncfST('Frontend.PromptRange.OptimizationIsDoneByThePromptCatalyzerAgentInTheAgentsModuleThrough')" show-icon :closable="false" style="margin-bottom: 20px;">
             </el-alert>
             <el-alert v-if="optimizing && optimizeProgressText" :title="optimizeProgressText" type="warning" show-icon :closable="false" style="margin-bottom: 16px;">
             </el-alert>
             <el-alert v-if="optimizeErrorText"
-                      :title="ncfST('Frontend.237')"
+                      :title="ncfST('Frontend.PromptRange.OptimizationFailed')"
                       type="error"
                       :description="optimizeErrorText"
                       show-icon
@@ -1561,22 +1561,22 @@
                       style="margin-bottom: 16px; white-space: pre-wrap;">
             </el-alert>
             <el-form label-position="top">
-                <el-form-item :label="ncfST('Frontend.238')">
-                    <el-input type="textarea" :rows="4" :placeholder="ncfST('Frontend.239')" v-model="optimizeRequirement">
+                <el-form-item :label="ncfST('Frontend.PromptRange.OptimizationRequirements')">
+                    <el-input type="textarea" :rows="4" :placeholder="ncfST('Frontend.PromptRange.ForExampleMakeTheAnswersMoreCreativeOrReduceHallucinations')" v-model="optimizeRequirement">
                     </el-input>
                 </el-form-item>
                 
                 @* New options: automatic testing and AI scoring. *@
-                <el-form-item :label="ncfST('Frontend.240')">
+                <el-form-item :label="ncfST('Frontend.PromptRange.AfterOptimization')">
                     <el-checkbox v-model="autoShootAfterOptimize" style="display: block; margin-bottom: 10px;">
-                        <span style="font-weight: 500;">{{ ncfST('Frontend.241') }}</span>
-                        <el-tooltip :content="ncfST('Frontend.242')" placement="top">
+                        <span style="font-weight: 500;">{{ ncfST('Frontend.PromptRange.RunImmediatelyAfterCreation') }}</span>
+                        <el-tooltip :content="ncfST('Frontend.PromptRange.AfterOptimizationRunOneTestAutomaticallyToCheckTheNewPrompt')" placement="top">
                             <i class="el-icon-question" style="color: #909399; margin-left: 5px;"></i>
                         </el-tooltip>
                     </el-checkbox>
                     <el-checkbox v-model="autoAIGradeAfterShoot" :disabled="!autoShootAfterOptimize" style="margin-left: 20px;">
-                        <span style="font-weight: 500;">{{ ncfST('Frontend.243') }}</span>
-                        <el-tooltip :content="ncfST('Frontend.244')" placement="top">
+                        <span style="font-weight: 500;">{{ ncfST('Frontend.PromptRange.UseAIScoringAfterRun') }}</span>
+                        <el-tooltip :content="ncfST('Frontend.PromptRange.AfterARunFinishesAIScoringRunsAutomaticallySoYouGetQuality')" placement="top">
                             <i class="el-icon-question" style="color: #909399; margin-left: 5px;"></i>
                         </el-tooltip>
                     </el-checkbox>
@@ -1584,33 +1584,33 @@
             </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="optimizeDialogVisible = false">{{ ncfST('Frontend.091') }}</el-button>
-            <el-button type="primary" @@click="executeOptimize" :loading="optimizing" :disabled="optimizing">{{ ncfST('Frontend.245') }}</el-button>
+            <el-button @@click="optimizeDialogVisible = false">{{ ncfST('Frontend.PromptRange.Cancel') }}</el-button>
+            <el-button type="primary" @@click="executeOptimize" :loading="optimizing" :disabled="optimizing">{{ ncfST('Frontend.PromptRange.StartOptimization') }}</el-button>
         </span>
     </el-dialog>
 
     @*PromptCatalyzer initialization dialog.*@
-    <el-dialog :title="ncfST('Frontend.246')" 
+    <el-dialog :title="ncfST('Frontend.PromptRange.FirstUseInitializePromptOptimization')"
                :visible.sync="promptCatalyzerInitVisible" 
                width="55%" 
                :close-on-click-modal="false"
                center>
         <div class="init-dialog-content">
-            <el-alert :title="ncfST('Frontend.247')" 
+            <el-alert :title="ncfST('Frontend.PromptRange.WelcomeToAIAutomaticOptimization')"
                       type="info" 
                       show-icon 
                       :closable="false" 
                       style="margin-bottom: 20px;">
                 <template slot>
-                    <p style="margin: 5px 0;">{{ ncfST('Frontend.248') }}</p>
-                    <p style="margin: 5px 0;">{{ ncfST('Frontend.249') }}</p>
+                    <p style="margin: 5px 0;">{{ ncfST('Frontend.PromptRange.FirstUseRequiresInitializingThePromptCatalyzerAgent') }}</p>
+                    <p style="margin: 5px 0;">{{ ncfST('Frontend.PromptRange.SelectAnAIModelToDriveOptimizationTheSystemWillCreateThe') }}</p>
                 </template>
             </el-alert>
             
             <el-form label-position="top">
-                <el-form-item :label="ncfST('Frontend.250')" required>
+                <el-form-item :label="ncfST('Frontend.PromptRange.SelectAIModel')" required>
                     <el-select v-model="selectedModelIdForInit" 
-                               :placeholder="ncfST('Frontend.251')" 
+                               :placeholder="ncfST('Frontend.PromptRange.SelectAnAIModel')"
                                style="width: 100%;"
                                :loading="loadingModels"
                                filterable>
@@ -1630,63 +1630,63 @@
                     </el-select>
                     <div style="margin-top: 10px; padding: 8px 12px; background-color: #f4f4f5; border-radius: 4px; font-size: 12px; color: #606266;">
                         <i class="el-icon-info" style="color: #409EFF; margin-right: 4px;"></i>
-                        <strong>{{ ncfST('Frontend.252') }}</strong>{{ ncfST('Frontend.663') }}
+                        <strong>{{ ncfST('Frontend.PromptRange.Tip') }}</strong>{{ ncfST('Frontend.PromptRange.TheSelectedModelCreatesTheDefaultPromptCatalyzerPromptAnotherModelCanBe') }}
                     </div>
                 </el-form-item>
                 
-                <el-form-item :label="ncfST('Frontend.253')" v-if="selectedModelIdForInit">
+                <el-form-item :label="ncfST('Frontend.PromptRange.DefaultParameterPreview')" v-if="selectedModelIdForInit">
                     <el-descriptions :column="2" border size="small">
                         <el-descriptions-item label-class-name="desc-label">
                             <template slot="label">
-                                <el-tooltip :content="ncfST('Frontend.254')" placement="top">
+                                <el-tooltip :content="ncfST('Frontend.PromptRange.ControlsOutputRandomnessZeroZeroOneZeroLowerIsMorePreciseHigher')" placement="top">
                                     <span>Temperature <i class="el-icon-question"></i></span>
                                 </el-tooltip>
                             </template>
                             <el-tag size="mini" type="success">0.7</el-tag>
-                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">{{ ncfST('Frontend.255') }}</span>
+                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">{{ ncfST('Frontend.PromptRange.BalancedMode') }}</span>
                         </el-descriptions-item>
                         <el-descriptions-item label-class-name="desc-label">
                             <template slot="label">
-                                <el-tooltip :content="ncfST('Frontend.256')" placement="top">
+                                <el-tooltip :content="ncfST('Frontend.PromptRange.NucleusSamplingParameterZeroZeroOneZeroItControlsTheRangeOf')" placement="top">
                                     <span>TopP <i class="el-icon-question"></i></span>
                                 </el-tooltip>
                             </template>
                             <el-tag size="mini" type="success">0.9</el-tag>
-                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">{{ ncfST('Frontend.257') }}</span>
+                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">{{ ncfST('Frontend.PromptRange.HighQuality') }}</span>
                         </el-descriptions-item>
                         <el-descriptions-item label-class-name="desc-label">
                             <template slot="label">
-                                <el-tooltip :content="ncfST('Frontend.258')" placement="top">
+                                <el-tooltip :content="ncfST('Frontend.PromptRange.MaximumNumberOfTokensToGenerateThisAffectsOutputLength')" placement="top">
                                     <span>MaxTokens <i class="el-icon-question"></i></span>
                                 </el-tooltip>
                             </template>
                             <el-tag size="mini" type="success">4000</el-tag>
-                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">{{ ncfST('Frontend.259') }}</span>
+                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">{{ ncfST('Frontend.PromptRange.StandardLength') }}</span>
                         </el-descriptions-item>
                         <el-descriptions-item label-class-name="desc-label">
                             <template slot="label">
-                                <el-tooltip :content="ncfST('Frontend.260')" placement="top">
+                                <el-tooltip :content="ncfST('Frontend.PromptRange.FrequencyPenaltyTwoZeroToTwoZeroItReducesRepeatedWords')" placement="top">
                                     <span>FrequencyPenalty <i class="el-icon-question"></i></span>
                                 </el-tooltip>
                             </template>
                             <el-tag size="mini" type="success">0</el-tag>
-                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">{{ ncfST('Frontend.261') }}</span>
+                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">{{ ncfST('Frontend.PromptRange.NoPenalty') }}</span>
                         </el-descriptions-item>
                     </el-descriptions>
                     <div style="margin-top: 8px; font-size: 12px; color: #909399; text-align: center;">
-                        {{ ncfST('Frontend.262') }}
+                        {{ ncfST('Frontend.PromptRange.ITheseAreInitialParametersYouCanAdjustThemInPromptRangeAfter') }}
                     </div>
                 </el-form-item>
             </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="promptCatalyzerInitVisible = false" :disabled="initializing">{{ ncfST('Frontend.091') }}</el-button>
+            <el-button @@click="promptCatalyzerInitVisible = false" :disabled="initializing">{{ ncfST('Frontend.PromptRange.Cancel') }}</el-button>
             <el-button type="primary" 
                        @@click="executeInitialization" 
                        :loading="initializing"
                        :disabled="!selectedModelIdForInit">
                 <i class="el-icon-magic-stick" v-if="!initializing"></i>
-                {{ initializing ? ncfST('Frontend.263') : ncfST('Frontend.264') }}
+                {{ initializing ? ncfST('Frontend.PromptRange.Initializing') : ncfST('Frontend.PromptRange.Initialize') }}
             </el-button>
         </span>
     </el-dialog>

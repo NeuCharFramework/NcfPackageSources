@@ -103,7 +103,7 @@ var app = new Vue({
       layoutMenuActive: 0, //Legacy comment translated to English.
       layoutMenuList: [
         {
-          name: ncfST('Frontend.276'),
+          name: ncfST('Frontend.DynamicData.MenuOne'),
           isEditName: false,
           layoutList: []
         }

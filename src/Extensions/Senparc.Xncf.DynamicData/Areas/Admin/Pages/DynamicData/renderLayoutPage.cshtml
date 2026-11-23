@@ -1,7 +1,7 @@
 ﻿@page
 @model Senparc.Xncf.DynamicData.Areas.Admin.Pages.DynamicData.renderLayoutPageModel
 @{
-    ViewData["Title"] = XR["Frontend.262"];
+    ViewData["Title"] = XR["Frontend.DynamicData.DynamicDataLayoutRenderPage"];
     Layout = "_Layout_Vue";
 }
 
@@ -13,7 +13,7 @@
 @section breadcrumbs {
     <el-breadcrumb-item>@XR["Area.Extensions"]</el-breadcrumb-item>
     <el-breadcrumb-item>@XR["Module.DynamicData.MenuName"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@XR["Frontend.262"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.DynamicData.DynamicDataLayoutRenderPage"]</el-breadcrumb-item>
 }
 
 <el-container>
@@ -28,7 +28,7 @@
             </div>
         </div>
         @* <div class="menu-newbtn" @@click="handleAddMenu">
-        <i class="el-icon-plus"></i>{{ ncfST('Frontend.117') }}
+        <i class="el-icon-plus"></i>{{ ncfST('Frontend.DynamicData.AddMenu') }}
         </div> *@
     </div>
         @* Main action area *@
@@ -117,7 +117,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @@click="handleSubmitBtnEdit(item)">{{ ncfST('Frontend.087') }}</el-button>
+                        <el-button type="primary" @@click="handleSubmitBtnEdit(item)">{{ ncfST('Frontend.DynamicData.Submit') }}</el-button>
                         @* <el-button @@click="resetForm('ruleForm')">Reset</el-button> *@
                     </el-form-item>
                 </el-form>

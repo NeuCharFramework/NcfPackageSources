@@ -164,85 +164,85 @@
   </data>
 
 
-  <data name="Frontend.001" xml:space="preserve"><value>Solo habilitados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.002" xml:space="preserve"><value>Estos son servicios MCP asignados por el runtime de este sitio. Son de solo lectura y no son configuraciones de conexión del cliente.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.003" xml:space="preserve"><value>Por ejemplo 1.0 (opcional)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.004" xml:space="preserve"><value>Por ejemplo http://localhost:3001/mcp/sse</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Guardar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.006" xml:space="preserve"><value>Probar antes de guardar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.007" xml:space="preserve"><value>Cerrar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.008" xml:space="preserve"><value>Eliminar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.009" xml:space="preserve"><value>Actualizar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.010" xml:space="preserve"><value>Versión del protocolo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.011" xml:space="preserve"><value>Parámetros</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.012" xml:space="preserve"><value>Nombre del parámetro</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.013" xml:space="preserve"><value>Número de parámetros</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.014" xml:space="preserve"><value>Ruta publicada</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.015" xml:space="preserve"><value>Cancelar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.016" xml:space="preserve"><value>Opcional</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.017" xml:space="preserve"><value>Opcional; guardar como JSON de AuthConfig con un campo token</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.018" xml:space="preserve"><value>Nombre</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.019" xml:space="preserve"><value>No</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.020" xml:space="preserve"><value>Habilitado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.021" xml:space="preserve"><value>Copiar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.022" xml:space="preserve"><value>Configuración de conexión del cliente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.023" xml:space="preserve"><value>Nombre de la herramienta</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.024" xml:space="preserve"><value>Obligatorio</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.025" xml:space="preserve"><value>Módulo propietario</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.026" xml:space="preserve"><value>Descripción</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.027" xml:space="preserve"><value>Buscar nombre / dirección / descripción</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.028" xml:space="preserve"><value>Buscar servicio / módulo / dirección</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.029" xml:space="preserve"><value>Acciones</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.030" xml:space="preserve"><value>Ampliar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.031" xml:space="preserve"><value>Añadir endpoint</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.032" xml:space="preserve"><value>Sí</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.033" xml:space="preserve"><value>Última prueba</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.034" xml:space="preserve"><value>Nombre del servicio</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.035" xml:space="preserve"><value>No probado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.036" xml:space="preserve"><value>No se devolvió ninguna lista de herramientas. Comprueba el endpoint, el protocolo y la autenticación y vuelve a intentarlo.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.037" xml:space="preserve"><value>Título</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.038" xml:space="preserve"><value>Probar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.039" xml:space="preserve"><value>Probar la configuración actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.040" xml:space="preserve"><value>Identifica de forma única este endpoint MCP</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.041" xml:space="preserve"><value>Dirección del endpoint</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.042" xml:space="preserve"><value>Tipo de endpoint</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.043" xml:space="preserve"><value>Tipo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.044" xml:space="preserve"><value>Editar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.045" xml:space="preserve"><value>Acceder al endpoint</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.046" xml:space="preserve"><value>Esquema de entrada (JSON)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.047" xml:space="preserve"><value>Servicios MCP publicados por este sitio ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.048" xml:space="preserve"><value>No hay ningún servicio MCP publicado por este sitio que coincida</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.049" xml:space="preserve"><value>Se encontraron {0} herramientas (Functions)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.050" xml:space="preserve"><value>Prueba de conexión - {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.051" xml:space="preserve"><value>Se encontraron {0} herramientas (Functions). Selecciona la flecha de la izquierda para ver los parámetros y esquemas de entrada.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.052" xml:space="preserve"><value>La publicación, las herramientas y los permisos de acceso los gestiona el módulo propietario. La dirección se genera a partir del sitio actual y no implica acceso anónimo ni disponibilidad pública.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.053" xml:space="preserve"><value>Herramientas {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.054" xml:space="preserve"><value>(ninguno)</value></data>
-  <data name="Frontend.055" xml:space="preserve"><value>El formato de respuesta del servidor no es válido. Confirma que has iniciado sesión y actualiza la página.</value></data>
-  <data name="Frontend.056" xml:space="preserve"><value>Error en la solicitud</value></data>
-  <data name="Frontend.057" xml:space="preserve"><value>: interfaz no encontrada (HTTP 404). Confirma que el sitio ha cargado la última versión del módulo MCP.</value></data>
-  <data name="Frontend.058" xml:space="preserve"><value>: la sesión ha caducado o no tienes permisos. Vuelve a iniciar sesión.</value></data>
-  <data name="Frontend.059" xml:space="preserve"><value>El servidor devolvió un formato de resultado de prueba de conexión no válido.</value></data>
-  <data name="Frontend.060" xml:space="preserve"><value>Añadir endpoint MCP</value></data>
-  <data name="Frontend.061" xml:space="preserve"><value>El nombre del endpoint no puede estar vacío</value></data>
-  <data name="Frontend.062" xml:space="preserve"><value>La dirección del endpoint no puede estar vacía</value></data>
-  <data name="Frontend.063" xml:space="preserve"><value>El servidor devolvió una lista no válida de servicios MCP publicados por este sitio.</value></data>
-  <data name="Frontend.064" xml:space="preserve"><value>No se pudieron leer los servicios MCP publicados por este sitio</value></data>
-  <data name="Frontend.065" xml:space="preserve"><value>Este navegador no admite copiar al portapapeles. Selecciona y copia manualmente la dirección del endpoint.</value></data>
-  <data name="Frontend.066" xml:space="preserve"><value>Dirección del endpoint copiada</value></data>
-  <data name="Frontend.067" xml:space="preserve"><value>Error al copiar. Selecciona y copia manualmente la dirección del endpoint.</value></data>
-  <data name="Frontend.068" xml:space="preserve"><value>El servidor devolvió un formato de lista de endpoints no válido.</value></data>
-  <data name="Frontend.069" xml:space="preserve"><value>No se pudo leer la lista de endpoints MCP</value></data>
-  <data name="Frontend.070" xml:space="preserve"><value>Editar endpoint MCP</value></data>
-  <data name="Frontend.071" xml:space="preserve"><value>✓ Prueba de conexión del endpoint correcta</value></data>
-  <data name="Frontend.072" xml:space="preserve"><value>✗ Prueba de conexión del endpoint fallida</value></data>
-  <data name="Frontend.073" xml:space="preserve"><value>Guardado correctamente</value></data>
-  <data name="Frontend.074" xml:space="preserve"><value>Error al guardar</value></data>
-  <data name="Frontend.075" xml:space="preserve"><value>Error al actualizar</value></data>
-  <data name="Frontend.076" xml:space="preserve"><value>¿Eliminar el endpoint MCP «{0}»?</value></data>
-  <data name="Frontend.077" xml:space="preserve"><value>Aviso</value></data>
-  <data name="Frontend.078" xml:space="preserve"><value>Eliminado correctamente</value></data>
-  <data name="Frontend.079" xml:space="preserve"><value>Error al eliminar</value></data>
-  <data name="Frontend.080" xml:space="preserve"><value>Esquema de entrada</value></data>
-  <data name="Frontend.081" xml:space="preserve"><value>(sin información de esquema JSON)</value></data>
+  <data name="Frontend.Mcp.EnabledOnly" xml:space="preserve"><value>Solo habilitados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.TheseAreMCPServicesMappedByThisSiteRuntimeTheyAreRead" xml:space="preserve"><value>Estos son servicios MCP asignados por el runtime de este sitio. Son de solo lectura y no son configuraciones de conexión del cliente.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ForExampleOneZeroOptional" xml:space="preserve"><value>Por ejemplo 1.0 (opcional)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ForExampleHttpLocalhost3001McpSse" xml:space="preserve"><value>Por ejemplo http://localhost:3001/mcp/sse</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Save" xml:space="preserve"><value>Guardar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.TestBeforeSaving" xml:space="preserve"><value>Probar antes de guardar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Close" xml:space="preserve"><value>Cerrar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Delete" xml:space="preserve"><value>Eliminar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Refresh" xml:space="preserve"><value>Actualizar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ProtocolVersion" xml:space="preserve"><value>Versión del protocolo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Parameters" xml:space="preserve"><value>Parámetros</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ParameterName" xml:space="preserve"><value>Nombre del parámetro</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ParameterCount" xml:space="preserve"><value>Número de parámetros</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.PublishedRoute" xml:space="preserve"><value>Ruta publicada</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Cancel" xml:space="preserve"><value>Cancelar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Optional" xml:space="preserve"><value>Opcional</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.OptionalSaveAsAuthConfigJSONWithATokenField" xml:space="preserve"><value>Opcional; guardar como JSON de AuthConfig con un campo token</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Name" xml:space="preserve"><value>Nombre</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.No" xml:space="preserve"><value>No</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Enabled" xml:space="preserve"><value>Habilitado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Copy" xml:space="preserve"><value>Copiar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ClientConnectionConfiguration" xml:space="preserve"><value>Configuración de conexión del cliente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ToolName" xml:space="preserve"><value>Nombre de la herramienta</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Required" xml:space="preserve"><value>Obligatorio</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.OwningModule" xml:space="preserve"><value>Módulo propietario</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Description" xml:space="preserve"><value>Descripción</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.SearchNameAddressDescription" xml:space="preserve"><value>Buscar nombre / dirección / descripción</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.SearchServiceModuleAddress" xml:space="preserve"><value>Buscar servicio / módulo / dirección</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Actions" xml:space="preserve"><value>Acciones</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ZoomIn" xml:space="preserve"><value>Ampliar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.AddEndpoint" xml:space="preserve"><value>Añadir endpoint</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Yes" xml:space="preserve"><value>Sí</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.LastTested" xml:space="preserve"><value>Última prueba</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ServiceName" xml:space="preserve"><value>Nombre del servicio</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.NotTested" xml:space="preserve"><value>No probado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.NoToolListWasReturnedCheckTheEndpointProtocolAndAuthenticationThen" xml:space="preserve"><value>No se devolvió ninguna lista de herramientas. Comprueba el endpoint, el protocolo y la autenticación y vuelve a intentarlo.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Title" xml:space="preserve"><value>Título</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Test" xml:space="preserve"><value>Probar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.TestTheCurrentConfiguration" xml:space="preserve"><value>Probar la configuración actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.UniquelyIdentifiesThisMCPEndpoint" xml:space="preserve"><value>Identifica de forma única este endpoint MCP</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.EndpointAddress" xml:space="preserve"><value>Dirección del endpoint</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.EndpointType" xml:space="preserve"><value>Tipo de endpoint</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Type" xml:space="preserve"><value>Tipo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.Edit" xml:space="preserve"><value>Editar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.AccessEndpoint" xml:space="preserve"><value>Acceder al endpoint</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.InputSchemaJSON" xml:space="preserve"><value>Esquema de entrada (JSON)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.MCPServicesPublishedByThisSiteValue" xml:space="preserve"><value>Servicios MCP publicados por este sitio ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.NoMatchingMCPServicePublishedByThisSite" xml:space="preserve"><value>No hay ningún servicio MCP publicado por este sitio que coincida</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.FoundValueToolsFunctions" xml:space="preserve"><value>Se encontraron {0} herramientas (Functions)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ConnectionTestValue" xml:space="preserve"><value>Prueba de conexión - {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.FoundValueToolsFunctionsSelectTheArrowOnTheLeftToView" xml:space="preserve"><value>Se encontraron {0} herramientas (Functions). Selecciona la flecha de la izquierda para ver los parámetros y esquemas de entrada.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.PublishingToolsAndAccessPermissionsAreManagedByTheOwningModuleThe" xml:space="preserve"><value>La publicación, las herramientas y los permisos de acceso los gestiona el módulo propietario. La dirección se genera a partir del sitio actual y no implica acceso anónimo ni disponibilidad pública.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.ToolsValue" xml:space="preserve"><value>Herramientas {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Mcp.None" xml:space="preserve"><value>(ninguno)</value></data>
+  <data name="Frontend.Mcp.TheServerResponseFormatIsInvalidConfirmThatYouAreSignedIn" xml:space="preserve"><value>El formato de respuesta del servidor no es válido. Confirma que has iniciado sesión y actualiza la página.</value></data>
+  <data name="Frontend.Mcp.RequestFailed" xml:space="preserve"><value>Error en la solicitud</value></data>
+  <data name="Frontend.Mcp.TheInterfaceWasNotFoundHTTP404ConfirmThatTheSiteHas" xml:space="preserve"><value>: interfaz no encontrada (HTTP 404). Confirma que el sitio ha cargado la última versión del módulo MCP.</value></data>
+  <data name="Frontend.Mcp.YourSignInHasExpiredOrYouDoNotHavePermissionSign" xml:space="preserve"><value>: la sesión ha caducado o no tienes permisos. Vuelve a iniciar sesión.</value></data>
+  <data name="Frontend.Mcp.TheServerReturnedAnInvalidConnectionTestResultFormat" xml:space="preserve"><value>El servidor devolvió un formato de resultado de prueba de conexión no válido.</value></data>
+  <data name="Frontend.Mcp.AddMCPEndpoint" xml:space="preserve"><value>Añadir endpoint MCP</value></data>
+  <data name="Frontend.Mcp.EndpointNameCannotBeEmpty" xml:space="preserve"><value>El nombre del endpoint no puede estar vacío</value></data>
+  <data name="Frontend.Mcp.EndpointAddressCannotBeEmpty" xml:space="preserve"><value>La dirección del endpoint no puede estar vacía</value></data>
+  <data name="Frontend.Mcp.TheServerReturnedAnInvalidListOfMCPServicesPublishedByThis" xml:space="preserve"><value>El servidor devolvió una lista no válida de servicios MCP publicados por este sitio.</value></data>
+  <data name="Frontend.Mcp.FailedToReadMCPServicesPublishedByThisSite" xml:space="preserve"><value>No se pudieron leer los servicios MCP publicados por este sitio</value></data>
+  <data name="Frontend.Mcp.ThisBrowserCannotCopyToTheClipboardSelectAndCopyTheEndpoint" xml:space="preserve"><value>Este navegador no admite copiar al portapapeles. Selecciona y copia manualmente la dirección del endpoint.</value></data>
+  <data name="Frontend.Mcp.EndpointAddressCopied" xml:space="preserve"><value>Dirección del endpoint copiada</value></data>
+  <data name="Frontend.Mcp.CopyFailedSelectAndCopyTheEndpointAddressManually" xml:space="preserve"><value>Error al copiar. Selecciona y copia manualmente la dirección del endpoint.</value></data>
+  <data name="Frontend.Mcp.TheServerReturnedAnInvalidEndpointListFormat" xml:space="preserve"><value>El servidor devolvió un formato de lista de endpoints no válido.</value></data>
+  <data name="Frontend.Mcp.FailedToReadTheMCPEndpointList" xml:space="preserve"><value>No se pudo leer la lista de endpoints MCP</value></data>
+  <data name="Frontend.Mcp.EditMCPEndpoint" xml:space="preserve"><value>Editar endpoint MCP</value></data>
+  <data name="Frontend.Mcp.EndpointConnectionTestSucceeded" xml:space="preserve"><value>✓ Prueba de conexión del endpoint correcta</value></data>
+  <data name="Frontend.Mcp.EndpointConnectionTestFailed" xml:space="preserve"><value>✗ Prueba de conexión del endpoint fallida</value></data>
+  <data name="Frontend.Mcp.SavedSuccessfully" xml:space="preserve"><value>Guardado correctamente</value></data>
+  <data name="Frontend.Mcp.SaveFailed" xml:space="preserve"><value>Error al guardar</value></data>
+  <data name="Frontend.Mcp.UpdateFailed" xml:space="preserve"><value>Error al actualizar</value></data>
+  <data name="Frontend.Mcp.DeleteMCPEndpointValue" xml:space="preserve"><value>¿Eliminar el endpoint MCP «{0}»?</value></data>
+  <data name="Frontend.Mcp.Notice" xml:space="preserve"><value>Aviso</value></data>
+  <data name="Frontend.Mcp.DeletedSuccessfully" xml:space="preserve"><value>Eliminado correctamente</value></data>
+  <data name="Frontend.Mcp.DeleteFailed" xml:space="preserve"><value>Error al eliminar</value></data>
+  <data name="Frontend.Mcp.InputSchema" xml:space="preserve"><value>Esquema de entrada</value></data>
+  <data name="Frontend.Mcp.NoJSONSchemaInformation" xml:space="preserve"><value>(sin información de esquema JSON)</value></data>
 </root>

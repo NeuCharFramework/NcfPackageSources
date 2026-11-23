@@ -88,7 +88,7 @@
     <value>深度||请输入最大爬取深度</value>
   </data>
   <data name="Parameter.SenMapic.PageCount" xml:space="preserve">
-    <value>网页数量||请输入最大爬取页数</value>
+    <value>网页数量||每次抓取默认 20 页，最多 100 页</value>
   </data>
   <data name="Area.Extensions" xml:space="preserve">
     <value>扩展模块</value>
@@ -252,31 +252,31 @@
   <data name="Message.DeleteFailed" xml:space="preserve">
     <value>Deletion failed</value>
   </data>
-  <data name="Frontend.001" xml:space="preserve">
+  <data name="Frontend.SenMapic.ExceptionThrowTestParametersPassedValueValue" xml:space="preserve">
     <value>抛出异常测试，传输参数：{0} {1}</value>
   </data>
-  <data name="Frontend.002" xml:space="preserve">
+  <data name="Frontend.SenMapic.DivisorCannotBeZero" xml:space="preserve">
     <value>被除数不能为0！</value>
   </data>
-  <data name="Frontend.003" xml:space="preserve">
+  <data name="Frontend.SenMapic.UnknownOperatorValue" xml:space="preserve">
     <value>未知的运算符：{0}</value>
   </data>
-  <data name="Frontend.004" xml:space="preserve">
+  <data name="Frontend.SenMapic.UnknownOperator" xml:space="preserve">
     <value>未知操作符</value>
   </data>
-  <data name="Frontend.005" xml:space="preserve">
+  <data name="Frontend.SenMapic.EnterAValidURL" xml:space="preserve">
     <value>请提供正确的网址！</value>
   </data>
-  <data name="Frontend.006" xml:space="preserve">
+  <data name="Frontend.SenMapic.TheTargetHostResolvedToANonPublicAddressTheConnectionWas" xml:space="preserve">
     <value>目标主机解析为非公网地址，已拒绝连接。</value>
   </data>
-  <data name="Frontend.007" xml:space="preserve">
+  <data name="Frontend.SenMapic.UnableToConnectToTheTargetHostThatPassedThePublicAddress" xml:space="preserve">
     <value>无法连接到已通过公网地址校验的目标主机。</value>
   </data>
-  <data name="Frontend.008" xml:space="preserve">
+  <data name="Frontend.SenMapic.TheTargetURLIsNotAllowed" xml:space="preserve">
     <value>目标 URL 不允许访问。</value>
   </data>
-  <data name="Frontend.009" xml:space="preserve">
+  <data name="Frontend.SenMapic.TheRedirectTargetURLIsNotAllowed" xml:space="preserve">
     <value>重定向目标 URL 不允许访问。</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
@@ -289,7 +289,7 @@
     <value>网页爬虫</value>
   </data>
   <data name="Function.SenMapic.Crawl.Description" xml:space="preserve">
-    <value>爬取网页信息</value>
+    <value>爬取网页信息；省略页数时默认抓取 20 页，单次最多抓取 100 页</value>
   </data>
 
 </root>

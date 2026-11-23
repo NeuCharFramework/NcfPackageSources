@@ -19,7 +19,7 @@ var AgentsAppMethodsPluginMcp = {
           `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetFunctionBindingCatalog?agentId=${agentId}`)
         const data = response?.data ?? {}
         if (!data.success) {
-          this.$message.error(data.errorMessage || ncfST('Frontend.173'))
+          this.$message.error(data.errorMessage || ncfST('Frontend.AgentsManager.FailedToLoad'))
           return
         }
 
@@ -37,7 +37,7 @@ var AgentsAppMethodsPluginMcp = {
         }
       } catch (error) {
         console.error('Failed to load Function binding catalog:', error)
-        this.$message.error(error?.message || ncfST('Frontend.173'))
+        this.$message.error(error?.message || ncfST('Frontend.AgentsManager.FailedToLoad'))
       } finally {
         this.functionBindingLoading = false
       }
@@ -217,8 +217,8 @@ var AgentsAppMethodsPluginMcp = {
           
           //Legacy comment translated to English.
           tools = tools.map(tool => ({
-            name: tool.name || ncfST('Frontend.242'), 
-            description: tool.description || ncfST('Frontend.251'),
+            name: tool.name || ncfST('Frontend.AgentsManager.UnnamedTool'),
+            description: tool.description || ncfST('Frontend.AgentsManager.NoDescription'),
             parameters: Array.isArray(tool.parameters) ? tool.parameters : []
           }));
           
@@ -236,7 +236,7 @@ var AgentsAppMethodsPluginMcp = {
           
           console.log('Updated endpoint object:', JSON.parse(JSON.stringify(endpoint)));
           
-          this.$message.success(ncfST('Frontend.243'));
+          this.$message.success(ncfST('Frontend.AgentsManager.ConnectionTestSucceeded'));
           
           //Legacy comment translated to English.
           if (tools && tools.length > 0) {
@@ -245,19 +245,19 @@ var AgentsAppMethodsPluginMcp = {
         } else {
           const testResult = {
             success: false,
-            message: response.data.errorMessage || ncfST('Frontend.210')
+            message: response.data.errorMessage || ncfST('Frontend.AgentsManager.UnknownError')
           };
           this.$set(endpoint, 'testResult', testResult);
-          this.$message.error(ncfST('Frontend.244') + ' ' + testResult.message);
+          this.$message.error(ncfST('Frontend.AgentsManager.ConnectionTestFailed') + ' ' + testResult.message);
         }
       } catch (error) {
         console.error('MCP connection test failed:', error);
         const testResult = {
           success: false,
-          message: error.message || ncfST('Frontend.210')
+          message: error.message || ncfST('Frontend.AgentsManager.UnknownError')
         };
         this.$set(endpoint, 'testResult', testResult);
-        this.$message.error(ncfST('Frontend.245') + ' ' + testResult.message);
+        this.$message.error(ncfST('Frontend.AgentsManager.ConnectionTestError') + ' ' + testResult.message);
       } finally {
         //Legacy comment translated to English.
         this.$set(endpoint, 'testing', false);
@@ -273,38 +273,38 @@ var AgentsAppMethodsPluginMcp = {
         }
       } catch (error) {
         console.error('Failed to load plugin types:', error);
-        this.$message.error(ncfST('Frontend.246'));
+        this.$message.error(ncfST('Frontend.AgentsManager.FailedToLoadPluginTypes'));
       }
     },
 
     getKnowledgeBaseBindingInfo(knowledgeBaseId) {
       const id = Number(knowledgeBaseId || 0)
       if (!Number.isInteger(id) || id <= 0) {
-        return { text: ncfST('Frontend.611'), type: 'info', status: 'unbound' }
+        return { text: ncfST('Frontend.AgentsManager.NotBoundAlternate'), type: 'info', status: 'unbound' }
       }
       if (!this.knowledgeBaseOptionsLoaded) {
-        return { text: ncfST('Frontend.612'), type: 'info', status: 'loading' }
+        return { text: ncfST('Frontend.AgentsManager.ReadingStatus'), type: 'info', status: 'loading' }
       }
       const knowledgeBase = (this.knowledgeBaseOptions || []).find(item => Number(item.id) === id)
       if (!knowledgeBase) {
-        return { text: ncfST('Frontend.613'), type: 'danger', status: 'unavailable' }
+        return { text: ncfST('Frontend.AgentsManager.KnowledgeBaseUnavailable'), type: 'danger', status: 'unavailable' }
       }
       if (knowledgeBase.embeddingStatus === 'legacy') {
-        return { text: ncfST('Frontend.614'), type: 'warning', status: 'legacy' }
+        return { text: ncfST('Frontend.AgentsManager.LegacyVectorizedPendingPublication'), type: 'warning', status: 'legacy' }
       }
       return knowledgeBase.isEmbedded
-        ? { text: ncfST('Frontend.615'), type: 'success', status: 'embedded' }
-        : { text: ncfST('Frontend.616'), type: 'warning', status: 'pending' }
+        ? { text: ncfST('Frontend.AgentsManager.Searchable'), type: 'success', status: 'embedded' }
+        : { text: ncfST('Frontend.AgentsManager.PendingVectorization'), type: 'warning', status: 'pending' }
     },
 
     getKnowledgeBaseOptionLabel(knowledgeBase) {
       if (!knowledgeBase) return ''
       if (knowledgeBase.embeddingStatus === 'legacy') {
-        return `${knowledgeBase.name} (${ncfST('Frontend.617')})`
+        return `${knowledgeBase.name} (${ncfST('Frontend.AgentsManager.VectorizedPendingRepublishing')})`
       }
       return knowledgeBase.isEmbedded
         ? knowledgeBase.name
-        : `${knowledgeBase.name} (${ncfST('Frontend.618')})`
+        : `${knowledgeBase.name} (${ncfST('Frontend.AgentsManager.NotVectorized')})`
     },
 
     buildKnowledgeBaseUrl(knowledgeBaseId, focus = 'materials') {
@@ -320,7 +320,7 @@ var AgentsAppMethodsPluginMcp = {
     openKnowledgeBase(knowledgeBaseId, focus = 'materials') {
       const url = this.buildKnowledgeBaseUrl(knowledgeBaseId, focus)
       if (!url) {
-        this.$message.warning(ncfST('Frontend.634'))
+        this.$message.warning(ncfST('Frontend.AgentsManager.SelectAValidKnowledgeBaseFirst'))
         return
       }
 
@@ -332,11 +332,11 @@ var AgentsAppMethodsPluginMcp = {
       }
 
       this.$confirm(
-        ncfST('Frontend.635'),
-        ncfST('Frontend.636'),
+        ncfST('Frontend.AgentsManager.ThisEnvironmentCannotOpenANewWindowSaveTheAgentFirstTo'),
+        ncfST('Frontend.AgentsManager.OpenKnowledgeBase'),
         {
-          confirmButtonText: ncfST('Frontend.637'),
-          cancelButtonText: ncfST('Frontend.191'),
+          confirmButtonText: ncfST('Frontend.AgentsManager.ContinueNavigation'),
+          cancelButtonText: ncfST('Frontend.AgentsManager.CancelAlternate'),
           type: 'warning'
         })
         .then(() => window.location.assign(url))
@@ -353,16 +353,16 @@ var AgentsAppMethodsPluginMcp = {
         if (res?.data?.success) {
           this.knowledgeBaseOptions = Array.isArray(res.data.data) ? res.data.data : []
           if (showFeedback) {
-            this.$message.success(ncfST('Frontend.638'))
+            this.$message.success(ncfST('Frontend.AgentsManager.KnowledgeBaseStatusRefreshed'))
           }
         } else if (showFeedback) {
-          this.$message.error(res?.data?.errorMessage || ncfST('Frontend.639'))
+          this.$message.error(res?.data?.errorMessage || ncfST('Frontend.AgentsManager.FailedToRefreshKnowledgeBaseStatus'))
         }
       } catch (error) {
         console.error('Failed to load knowledge bases:', error)
         this.knowledgeBaseOptions = []
         if (showFeedback) {
-        this.$message.error(ncfST('Frontend.639'))
+        this.$message.error(ncfST('Frontend.AgentsManager.FailedToRefreshKnowledgeBaseStatus'))
         }
       } finally {
         this.knowledgeBaseOptionsLoaded = true
@@ -430,7 +430,7 @@ var AgentsAppMethodsPluginMcp = {
       const url = this.mcpEndpointUrlValue.trim();
       
       if (!name || !url) {
-        this.$message.warning(ncfST('Frontend.247'));
+        this.$message.warning(ncfST('Frontend.AgentsManager.NameAndURLCannotBeEmpty'));
         return;
       }
       
@@ -481,7 +481,7 @@ var AgentsAppMethodsPluginMcp = {
           '/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetMcpEndpointOptions');
         const data = response && response.data ? response.data : {};
         if (!data.success) {
-          this.mcpSelectMessage = data.errorMessage || ncfST('Frontend.246');
+          this.mcpSelectMessage = data.errorMessage || ncfST('Frontend.AgentsManager.FailedToLoadPluginTypes');
           return;
         }
         const result = data.data || {};
@@ -490,7 +490,7 @@ var AgentsAppMethodsPluginMcp = {
         this.mcpEndpointOptions = Array.isArray(result.options) ? result.options : [];
       } catch (error) {
         console.error('Failed to load MCP endpoints:', error);
-        this.mcpSelectMessage = (error && error.message) || ncfST('Frontend.246');
+        this.mcpSelectMessage = (error && error.message) || ncfST('Frontend.AgentsManager.FailedToLoadPluginTypes');
       } finally {
         this.mcpSelectLoading = false;
       }
@@ -519,12 +519,12 @@ var AgentsAppMethodsPluginMcp = {
       
       if (selected) {
         if (!name || !url) {
-        this.$message.warning(ncfST('Frontend.247'));
+        this.$message.warning(ncfST('Frontend.AgentsManager.NameAndURLCannotBeEmpty'));
           return;
         }
         endpoints[name] = { url };
         this.agentForm.mcpEndpoints = JSON.stringify(endpoints);
-        this.$message.success(ncfST('Frontend.601', name));
+        this.$message.success(ncfST('Frontend.AgentsManager.MCPEndpointAddedValue', name));
         return;
       }
       
@@ -571,7 +571,7 @@ var AgentsAppMethodsPluginMcp = {
       //Legacy comment translated to English.
       if (!endpoint) {
         console.error('The endpoint parameter is empty');
-        this.$message.warning(ncfST('Frontend.248'));
+        this.$message.warning(ncfST('Frontend.AgentsManager.EndpointParameterIsEmpty'));
         return;
       }
       
@@ -599,46 +599,46 @@ var AgentsAppMethodsPluginMcp = {
         }, 500);
       } else {
         console.warn('No tool information is available', endpoint);
-        this.$message.warning(ncfST('Frontend.249'));
+        this.$message.warning(ncfST('Frontend.AgentsManager.NoToolInformationAvailable'));
       }
     },
 
     //Legacy comment translated to English.
     showMcpToolsAlert(tools) {
       if (!tools || !tools.length) {
-        this.$message.warning(ncfST('Frontend.249'));
+        this.$message.warning(ncfST('Frontend.AgentsManager.NoToolInformationAvailable'));
         return;
       }
       
       this.$alert(
         `<div>
-          <h3>${ncfST('Frontend.250', tools.length)}</h3>
+          <h3>${ncfST('Frontend.AgentsManager.ToolListValue', tools.length)}</h3>
           <ul style="padding-left: 20px; text-align: left;">
             ${tools.map(tool => 
               `<li style="margin-bottom: 10px;">
                 <div style="font-weight: bold; color: #409EFF;">${tool.name}</div>
-                <div style="margin: 5px 0; color: #606266;">${tool.description || ncfST('Frontend.251')}</div>
+                <div style="margin: 5px 0; color: #606266;">${tool.description || ncfST('Frontend.AgentsManager.NoDescription')}</div>
                 ${tool.parameters && tool.parameters.length > 0 ? 
                   `<div style="margin-top: 5px;">
-                    <div style="font-weight: bold;">${ncfST('Frontend.252')}</div>
+                    <div style="font-weight: bold;">${ncfST('Frontend.AgentsManager.ParametersLabel')}</div>
                     <ul style="padding-left: 20px;">
                       ${tool.parameters.map(param => 
                         `<li><span style="color: #409EFF;">${param.name}</span>: ${param.description || ''}</li>`
                       ).join('')}
                     </ul>
                   </div>` : 
-                  `<div>${ncfST('Frontend.253')}</div>`
+                  `<div>${ncfST('Frontend.AgentsManager.NoParameters')}</div>`
                 }
               </li>`
             ).join('')}
           </ul>
         </div>`,
-        ncfST('Frontend.254'),
+        ncfST('Frontend.AgentsManager.MCPToolListAlternate'),
         {
           dangerouslyUseHTMLString: true,
           closeOnClickModal: true,
           closeOnPressEscape: true,
-          confirmButtonText: ncfST('Frontend.255')
+          confirmButtonText: ncfST('Frontend.AgentsManager.Close')
         }
       );
     },

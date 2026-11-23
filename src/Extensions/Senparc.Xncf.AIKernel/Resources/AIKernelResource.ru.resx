@@ -164,19 +164,19 @@
   <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Скорость вывода токенов</value></data>
   <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>Удовлетворённость пользователей</value></data>
   <data name="Dashboard.TotalMessages" xml:space="preserve"><value>Всего сообщений</value></data>
-  <data name="Frontend.001" xml:space="preserve"><value>Эта сущность удалена или не существует!</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>Ошибка: учётная запись разработчика NeuChar не настроена. Откройте Модуль [Управление системой], страницу настроек, и используйте [Обновить сведения облачной учётной записи NeuChar], чтобы привязать учётную запись разработчика NeuChar!</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>Неверный AppKey или AppSecret! Задайте их снова!</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>Указанный DeveloperId не совпадает с AppKey, заданным в системе. Проверьте или обновите его и повторите попытку!</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Успешно обновлено.</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>Сущность не найдена!</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>Пока не поддерживается: обработка модели {0} в BuildSenparcAiSetting</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>Senparc.Xncf.AIKernel пока не поддерживает тип {0}</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>SenparcAiSetting не может быть пустым</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>Данные модели отсутствуют. Проверьте, развёрнута ли она и есть ли у вас разрешение!</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>Успешно добавлено моделей: {0}, обновлены сведения о моделях: {1}.</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>PromptRange пока не поддерживает тип {0}</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>Для автоматической оценки нужно задать хотя бы одну модель типа Chat (в Модуле AIKernel)</value></data>
+  <data name="Frontend.AIKernel.ThisEntityWasDeletedOrDoesNotExist" xml:space="preserve"><value>Эта сущность удалена или не существует!</value></data>
+  <data name="Frontend.AIKernel.ErrorNoNeuCharDeveloperAccountIsConfiguredGoToTheSystemManagement" xml:space="preserve"><value>Ошибка: учётная запись разработчика NeuChar не настроена. Откройте Модуль [Управление системой], страницу настроек, и используйте [Обновить сведения облачной учётной записи NeuChar], чтобы привязать учётную запись разработчика NeuChar!</value></data>
+  <data name="Frontend.AIKernel.AppKeyOrAppSecretIsIncorrectPleaseSetThemAgain" xml:space="preserve"><value>Неверный AppKey или AppSecret! Задайте их снова!</value></data>
+  <data name="Frontend.AIKernel.TheProvidedDeveloperIdDoesNotMatchTheAppKeyConfiguredInTheSystem" xml:space="preserve"><value>Указанный DeveloperId не совпадает с AppKey, заданным в системе. Проверьте или обновите его и повторите попытку!</value></data>
+  <data name="Frontend.AIKernel.UpdatedSuccessfully" xml:space="preserve"><value>Успешно обновлено.</value></data>
+  <data name="Frontend.AIKernel.EntityNotFound" xml:space="preserve"><value>Сущность не найдена!</value></data>
+  <data name="Frontend.AIKernel.NotSupportedYetHandlingOfModelValueInBuildSenparcAiSetting" xml:space="preserve"><value>Пока не поддерживается: обработка модели {0} в BuildSenparcAiSetting</value></data>
+  <data name="Frontend.AIKernel.SenparcXncfAIKernelDoesNotSupportTheValueTypeYet" xml:space="preserve"><value>Senparc.Xncf.AIKernel пока не поддерживает тип {0}</value></data>
+  <data name="Frontend.AIKernel.SenparcAiSettingCannotBeEmpty" xml:space="preserve"><value>SenparcAiSetting не может быть пустым</value></data>
+  <data name="Frontend.AIKernel.ModelDataDoesNotExistCheckWhetherItIsDeployedAndWhether" xml:space="preserve"><value>Данные модели отсутствуют. Проверьте, развёрнута ли она и есть ли у вас разрешение!</value></data>
+  <data name="Frontend.AIKernel.SuccessfullyAddedValueModelsAndUpdatedValueModelRecords" xml:space="preserve"><value>Успешно добавлено моделей: {0}, обновлены сведения о моделях: {1}.</value></data>
+  <data name="Frontend.AIKernel.PromptRangeDoesNotSupportTheValueTypeYet" xml:space="preserve"><value>PromptRange пока не поддерживает тип {0}</value></data>
+  <data name="Frontend.AIKernel.AtLeastOneChatModelMustBeSetBeforeAutomaticScoringIn" xml:space="preserve"><value>Для автоматической оценки нужно задать хотя бы одну модель типа Chat (в Модуле AIKernel)</value></data>
   <data name="Area.AIKernel.TokenMonitor" xml:space="preserve"><value>Монитор Token</value></data>
   <data name="TokenMonitor.Title" xml:space="preserve"><value>Монитор Token</value></data>
   <data name="TokenMonitor.TotalTokens" xml:space="preserve"><value>Всего Token</value></data>
@@ -532,10 +532,10 @@
   <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>Файл ключа уже существует и оставлен без изменений.</value><comment>Переведено для этого языка.</comment></data>
   <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>Сначала сохраните, затем создайте ключ и запустите worker.</value><comment>Переведено для этого языка.</comment></data>
   <data name="FineTuning.Optional" xml:space="preserve"><value>Необязательно</value><comment>Переведено для этого языка.</comment></data>
-  <data name="Frontend.400" xml:space="preserve"><value>Импортировано из NeuChar AI (DevId: {0})</value><comment>Переведено для этого языка.</comment></data>
+  <data name="Frontend.AIKernel.ImportedFromNeuCharAIDevIdValue" xml:space="preserve"><value>Импортировано из NeuChar AI (DevId: {0})</value><comment>Переведено для этого языка.</comment></data>
 
-  <data name="Frontend.100" xml:space="preserve"><value>Создать задачу тонкой настройки</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>Создайте задачу тонкой настройки с утверждённой локальной моделью, набором данных и параметрами обучения. Worker, модель и набор данных загружаются автоматически; параметры обучения имеют значения по умолчанию, а Workflow может выполняться с ними.</value></data>
+  <data name="Frontend.AIKernel.CreateFineTuningTask" xml:space="preserve"><value>Создать задачу тонкой настройки</value></data>
+  <data name="Frontend.AIKernel.CreateAFineTuningTaskWithAnApprovedLocalModelDatasetAnd" xml:space="preserve"><value>Создайте задачу тонкой настройки с утверждённой локальной моделью, набором данных и параметрами обучения. Worker, модель и набор данных загружаются автоматически; параметры обучения имеют значения по умолчанию, а Workflow может выполняться с ними.</value></data>
   <data name="Function.FineTuning.CheckWorker.Name" xml:space="preserve"><value>Проверить Worker тонкой настройки</value></data>
   <data name="Function.FineTuning.CheckWorker.Description" xml:space="preserve"><value>Проверяет состояние, возможности и очередь выбранного Worker тонкой настройки. Если доступен только один Worker, он выбирается автоматически.</value></data>
   <data name="Function.FineTuning.CheckEnvironment.Name" xml:space="preserve"><value>Проверить среду тонкой настройки</value></data>

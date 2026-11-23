@@ -132,8 +132,10 @@ public static class WorkspaceTextFiles
             [".png"] = "image/png", [".jpg"] = "image/jpeg", [".jpeg"] = "image/jpeg",
 
             [".gif"] = "image/gif", [".webp"] = "image/webp", [".ico"] = "image/x-icon",
-
-            [".pdf"] = "application/pdf"
+            [".pdf"] = "application/pdf",
+            [".glb"] = "model/gltf-binary", [".gltf"] = "model/gltf+json",
+            [".obj"] = "model/obj", [".stl"] = "model/stl",
+            [".ply"] = "application/x-ply", [".mtl"] = "text/plain"
 
         };
 
@@ -218,6 +220,10 @@ public static class WorkspaceTextFiles
         return IsText(ResolveContentType(relativePath));
 
     }
+
+    public static bool Is3D(string relativePath) =>
+        new[] { ".glb", ".gltf", ".obj", ".stl", ".ply" }
+            .Contains(Path.GetExtension(relativePath ?? string.Empty), StringComparer.OrdinalIgnoreCase);
 
 
 

@@ -164,19 +164,19 @@
   <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Vitesse de sortie des tokens</value></data>
   <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>Satisfaction des utilisateurs</value></data>
   <data name="Dashboard.TotalMessages" xml:space="preserve"><value>Nombre total de messages</value></data>
-  <data name="Frontend.001" xml:space="preserve"><value>Cette entité a été supprimée ou n'existe pas !</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>Erreur : aucun compte développeur NeuChar n'est configuré. Allez dans le Module [Administration du système], page des paramètres, et utilisez [Mettre à jour les informations du compte cloud NeuChar] pour lier un compte développeur NeuChar !</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>AppKey ou AppSecret est incorrect ! Veuillez les définir à nouveau !</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>Le DeveloperId fourni ne correspond pas à l'AppKey configuré dans le système. Vérifiez-le ou mettez-le à jour, puis réessayez !</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Mise à jour réussie.</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>Entité introuvable !</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>Pas encore pris en charge : le traitement du modèle {0} dans BuildSenparcAiSetting</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>Senparc.Xncf.AIKernel ne prend pas encore en charge le type {0}</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>SenparcAiSetting ne peut pas être vide</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>Les données du modèle n'existent pas. Vérifiez s'il est déployé et si vous avez l'autorisation !</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>{0} modèles ont été ajoutés et les informations de {1} modèles ont été mises à jour.</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>PromptRange ne prend pas encore en charge le type {0}</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>Au moins un modèle de type Chat doit être défini pour la notation automatique (dans le Module AIKernel)</value></data>
+  <data name="Frontend.AIKernel.ThisEntityWasDeletedOrDoesNotExist" xml:space="preserve"><value>Cette entité a été supprimée ou n'existe pas !</value></data>
+  <data name="Frontend.AIKernel.ErrorNoNeuCharDeveloperAccountIsConfiguredGoToTheSystemManagement" xml:space="preserve"><value>Erreur : aucun compte développeur NeuChar n'est configuré. Allez dans le Module [Administration du système], page des paramètres, et utilisez [Mettre à jour les informations du compte cloud NeuChar] pour lier un compte développeur NeuChar !</value></data>
+  <data name="Frontend.AIKernel.AppKeyOrAppSecretIsIncorrectPleaseSetThemAgain" xml:space="preserve"><value>AppKey ou AppSecret est incorrect ! Veuillez les définir à nouveau !</value></data>
+  <data name="Frontend.AIKernel.TheProvidedDeveloperIdDoesNotMatchTheAppKeyConfiguredInTheSystem" xml:space="preserve"><value>Le DeveloperId fourni ne correspond pas à l'AppKey configuré dans le système. Vérifiez-le ou mettez-le à jour, puis réessayez !</value></data>
+  <data name="Frontend.AIKernel.UpdatedSuccessfully" xml:space="preserve"><value>Mise à jour réussie.</value></data>
+  <data name="Frontend.AIKernel.EntityNotFound" xml:space="preserve"><value>Entité introuvable !</value></data>
+  <data name="Frontend.AIKernel.NotSupportedYetHandlingOfModelValueInBuildSenparcAiSetting" xml:space="preserve"><value>Pas encore pris en charge : le traitement du modèle {0} dans BuildSenparcAiSetting</value></data>
+  <data name="Frontend.AIKernel.SenparcXncfAIKernelDoesNotSupportTheValueTypeYet" xml:space="preserve"><value>Senparc.Xncf.AIKernel ne prend pas encore en charge le type {0}</value></data>
+  <data name="Frontend.AIKernel.SenparcAiSettingCannotBeEmpty" xml:space="preserve"><value>SenparcAiSetting ne peut pas être vide</value></data>
+  <data name="Frontend.AIKernel.ModelDataDoesNotExistCheckWhetherItIsDeployedAndWhether" xml:space="preserve"><value>Les données du modèle n'existent pas. Vérifiez s'il est déployé et si vous avez l'autorisation !</value></data>
+  <data name="Frontend.AIKernel.SuccessfullyAddedValueModelsAndUpdatedValueModelRecords" xml:space="preserve"><value>{0} modèles ont été ajoutés et les informations de {1} modèles ont été mises à jour.</value></data>
+  <data name="Frontend.AIKernel.PromptRangeDoesNotSupportTheValueTypeYet" xml:space="preserve"><value>PromptRange ne prend pas encore en charge le type {0}</value></data>
+  <data name="Frontend.AIKernel.AtLeastOneChatModelMustBeSetBeforeAutomaticScoringIn" xml:space="preserve"><value>Au moins un modèle de type Chat doit être défini pour la notation automatique (dans le Module AIKernel)</value></data>
   <data name="Area.AIKernel.TokenMonitor" xml:space="preserve"><value>Moniteur Token</value></data>
   <data name="TokenMonitor.Title" xml:space="preserve"><value>Moniteur Token</value></data>
   <data name="TokenMonitor.TotalTokens" xml:space="preserve"><value>Tokens totaux</value></data>
@@ -532,10 +532,10 @@
   <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>Le fichier de clé existe déjà et reste inchangé.</value><comment>Traduit pour cette langue.</comment></data>
   <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>Enregistrez d’abord, générez une clé, puis démarrez le worker.</value><comment>Traduit pour cette langue.</comment></data>
   <data name="FineTuning.Optional" xml:space="preserve"><value>Facultatif</value><comment>Traduit pour cette langue.</comment></data>
-  <data name="Frontend.400" xml:space="preserve"><value>Importé depuis NeuChar AI (DevId : {0})</value><comment>Traduit pour cette langue.</comment></data>
+  <data name="Frontend.AIKernel.ImportedFromNeuCharAIDevIdValue" xml:space="preserve"><value>Importé depuis NeuChar AI (DevId : {0})</value><comment>Traduit pour cette langue.</comment></data>
 
-  <data name="Frontend.100" xml:space="preserve"><value>Créer une tâche de fine-tuning</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>Créez une tâche de fine-tuning avec un modèle local approuvé, un jeu de données et des paramètres d’entraînement. Le worker, le modèle et le jeu de données sont chargés automatiquement ; les paramètres ont des valeurs par défaut et le Workflow peut s’exécuter avec ces valeurs.</value></data>
+  <data name="Frontend.AIKernel.CreateFineTuningTask" xml:space="preserve"><value>Créer une tâche de fine-tuning</value></data>
+  <data name="Frontend.AIKernel.CreateAFineTuningTaskWithAnApprovedLocalModelDatasetAnd" xml:space="preserve"><value>Créez une tâche de fine-tuning avec un modèle local approuvé, un jeu de données et des paramètres d’entraînement. Le worker, le modèle et le jeu de données sont chargés automatiquement ; les paramètres ont des valeurs par défaut et le Workflow peut s’exécuter avec ces valeurs.</value></data>
   <data name="Function.FineTuning.CheckWorker.Name" xml:space="preserve"><value>Vérifier le Worker de fine-tuning</value></data>
   <data name="Function.FineTuning.CheckWorker.Description" xml:space="preserve"><value>Vérifie l’état de santé, les capacités et la file du Worker de fine-tuning sélectionné. S’il n’y en a qu’un de disponible, il est sélectionné automatiquement.</value></data>
   <data name="Function.FineTuning.CheckEnvironment.Name" xml:space="preserve"><value>Vérifier l’environnement de fine-tuning</value></data>

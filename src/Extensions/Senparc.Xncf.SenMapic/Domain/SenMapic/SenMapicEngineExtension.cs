@@ -347,6 +347,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     return null;//Legacy comment translated to English.
                 }
 
+                if (!TryReservePageRequest())
+                {
+                    return null;
+                }
+
                 //Legacy comment translated to English.
                 var responseResult = await RequestPage(url);//Legacy comment translated to English.
                 webResponse = responseResult.response;
@@ -478,6 +483,19 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 }
             }
             return urlData;//Legacy comment translated to English.
+        }
+
+        private bool TryReservePageRequest()
+        {
+            var reservedCount = Interlocked.Increment(ref _currentRequestReservationCount);
+            if (reservedCount <= _maxPageCount)
+            {
+                return true;
+            }
+
+            Interlocked.Decrement(ref _currentRequestReservationCount);
+            ReachMaxPages = true;
+            return false;
         }
 
         /// <summary>

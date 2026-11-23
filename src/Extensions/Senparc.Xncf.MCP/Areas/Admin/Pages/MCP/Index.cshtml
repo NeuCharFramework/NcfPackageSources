@@ -24,30 +24,30 @@
             <div class="mcp-admin-page">
                 <section class="mcp-published-panel">
                     <div class="mcp-admin-toolbar">
-                        <span class="mcp-admin-toolbar__title">{{ ncfST('Frontend.047', publishedServers.length) }}</span>
+                        <span class="mcp-admin-toolbar__title">{{ ncfST('Frontend.Mcp.MCPServicesPublishedByThisSiteValue', publishedServers.length) }}</span>
                         <div class="mcp-toolbar-actions">
-                            <el-input v-model="publishedFilterText" :placeholder="ncfST('Frontend.028')"
+                            <el-input v-model="publishedFilterText" :placeholder="ncfST('Frontend.Mcp.SearchServiceModuleAddress')"
                                 prefix-icon="el-icon-search" clearable size="small" style="width:220px;"></el-input>
                             <el-button size="small" icon="el-icon-refresh" :loading="publishedLoading"
-                                @@click="getPublishedServers">{{ ncfST('Frontend.009') }}</el-button>
+                                @@click="getPublishedServers">{{ ncfST('Frontend.Mcp.Refresh') }}</el-button>
                         </div>
                     </div>
-                    <el-alert :title="ncfST('Frontend.002')"
-                        :description="ncfST('Frontend.052')"
+                    <el-alert :title="ncfST('Frontend.Mcp.TheseAreMCPServicesMappedByThisSiteRuntimeTheyAreRead')"
+                        :description="ncfST('Frontend.Mcp.PublishingToolsAndAccessPermissionsAreManagedByTheOwningModuleThe')"
                         type="info" :closable="false" show-icon class="mcp-published-note"></el-alert>
                     <el-table :data="filteredPublishedServers" v-loading="publishedLoading" row-key="serverName"
-                        :empty-text="ncfST('Frontend.048')" style="width:100%;">
-                        <el-table-column prop="serverName" :label="ncfST('Frontend.034')" min-width="220" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="xncfName" :label="ncfST('Frontend.025')" min-width="220" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="route" :label="ncfST('Frontend.014')" min-width="180" show-overflow-tooltip></el-table-column>
-                        <el-table-column :label="ncfST('Frontend.045')" min-width="380">
+                        :empty-text="ncfST('Frontend.Mcp.NoMatchingMCPServicePublishedByThisSite')" style="width:100%;">
+                        <el-table-column prop="serverName" :label="ncfST('Frontend.Mcp.ServiceName')" min-width="220" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="xncfName" :label="ncfST('Frontend.Mcp.OwningModule')" min-width="220" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="route" :label="ncfST('Frontend.Mcp.PublishedRoute')" min-width="180" show-overflow-tooltip></el-table-column>
+                        <el-table-column :label="ncfST('Frontend.Mcp.AccessEndpoint')" min-width="380">
                             <template slot-scope="scope">
                                 <div v-for="endpoint in scope.row.endpoints" :key="endpoint.endpointType"
                                     class="mcp-published-endpoint">
                                     <el-tag size="mini">{{ endpoint.endpointType.toUpperCase() }}</el-tag>
                                     <span class="mcp-endpoint-url">{{ endpoint.endpoint }}</span>
                                     <el-button type="text" size="mini" icon="el-icon-document-copy"
-                                        @@click="copyPublishedEndpoint(endpoint.endpoint)">{{ ncfST('Frontend.021') }}</el-button>
+                                        @@click="copyPublishedEndpoint(endpoint.endpoint)">{{ ncfST('Frontend.Mcp.Copy') }}</el-button>
                                 </div>
                             </template>
                         </el-table-column>
@@ -55,58 +55,58 @@
                 </section>
 
                 <div class="mcp-admin-toolbar">
-                    <span class="mcp-admin-toolbar__title">{{ ncfST('Frontend.022') }}<ncf-doc-help topic="mcp.connections"></ncf-doc-help></span>
+                    <span class="mcp-admin-toolbar__title">{{ ncfST('Frontend.Mcp.ClientConnectionConfiguration') }}<ncf-doc-help topic="mcp.connections"></ncf-doc-help></span>
                     <div>
-                        <el-checkbox v-model="onlyEnabled" style="margin-right:12px;">{{ ncfST('Frontend.001') }}</el-checkbox>
-                        <el-input v-model="filterText" :placeholder="ncfST('Frontend.027')" prefix-icon="el-icon-search"
+                        <el-checkbox v-model="onlyEnabled" style="margin-right:12px;">{{ ncfST('Frontend.Mcp.EnabledOnly') }}</el-checkbox>
+                        <el-input v-model="filterText" :placeholder="ncfST('Frontend.Mcp.SearchNameAddressDescription')" prefix-icon="el-icon-search"
                             clearable size="small" style="width:220px;margin-right:12px;"></el-input>
-                        <el-button type="primary" size="small" icon="el-icon-plus" @@click="handleAdd">{{ ncfST('Frontend.031') }}</el-button>
+                        <el-button type="primary" size="small" icon="el-icon-plus" @@click="handleAdd">{{ ncfST('Frontend.Mcp.AddEndpoint') }}</el-button>
                     </div>
                 </div>
 
                 <el-table :data="filteredTableData" style="width:100%" v-loading="loading" row-key="id">
-                    <el-table-column prop="name" :label="ncfST('Frontend.018')" min-width="140" show-overflow-tooltip></el-table-column>
-                    <el-table-column :label="ncfST('Frontend.041')" min-width="220" show-overflow-tooltip>
+                    <el-table-column prop="name" :label="ncfST('Frontend.Mcp.Name')" min-width="140" show-overflow-tooltip></el-table-column>
+                    <el-table-column :label="ncfST('Frontend.Mcp.EndpointAddress')" min-width="220" show-overflow-tooltip>
                         <template slot-scope="scope">
                             <span class="mcp-endpoint-url">{{ scope.row.endpoint }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="endpointType" :label="ncfST('Frontend.043')" width="90"></el-table-column>
-                    <el-table-column prop="protocolVersion" :label="ncfST('Frontend.010')" width="90"></el-table-column>
-                    <el-table-column prop="description" :label="ncfST('Frontend.026')" min-width="140" show-overflow-tooltip></el-table-column>
-                    <el-table-column :label="ncfST('Frontend.020')" width="80" align="center">
+                    <el-table-column prop="endpointType" :label="ncfST('Frontend.Mcp.Type')" width="90"></el-table-column>
+                    <el-table-column prop="protocolVersion" :label="ncfST('Frontend.Mcp.ProtocolVersion')" width="90"></el-table-column>
+                    <el-table-column prop="description" :label="ncfST('Frontend.Mcp.Description')" min-width="140" show-overflow-tooltip></el-table-column>
+                    <el-table-column :label="ncfST('Frontend.Mcp.Enabled')" width="80" align="center">
                         <template slot-scope="scope">
                             <el-switch v-model="scope.row.enabled" :disabled="scope.row.saving"
                                 @@change="handleToggleEnabled(scope.row)"></el-switch>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.033')" width="200">
+                    <el-table-column :label="ncfST('Frontend.Mcp.LastTested')" width="200">
                         <template slot-scope="scope">
                             <div class="mcp-test-status-cell" v-if="scope.row.lastTestedTime">
                                 <el-tag :type="scope.row.lastTestResult ? 'success' : 'danger'" size="mini">
-                                    {{ scope.row.lastTestResult ? ncfST('Frontend.032') : ncfST('Frontend.019') }}
+                                    {{ scope.row.lastTestResult ? ncfST('Frontend.Mcp.Yes') : ncfST('Frontend.Mcp.No') }}
                                 </el-tag>
                                 <span class="mcp-test-time">{{ formatDateTime(scope.row.lastTestedTime) }}</span>
-                                <div v-if="scope.row.lastToolCount != null">{{ ncfST('Frontend.053', scope.row.lastToolCount) }}</div>
+                                <div v-if="scope.row.lastToolCount != null">{{ ncfST('Frontend.Mcp.ToolsValue', scope.row.lastToolCount) }}</div>
                             </div>
-                                <span v-else style="color:#c0c4cc;">{{ ncfST('Frontend.035') }}</span>
+                                <span v-else style="color:#c0c4cc;">{{ ncfST('Frontend.Mcp.NotTested') }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.029')" width="150" align="center" class-name="ncf-table-actions-column">
+                    <el-table-column :label="ncfST('Frontend.Mcp.Actions')" width="150" align="center" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
                             <el-button size="mini" type="success" icon="el-icon-connection"
-                                :loading="testLoadingId === scope.row.id" @@click="handleTest(scope.row)">{{ ncfST('Frontend.038') }}</el-button>
-                            <el-tooltip :content="ncfST('Frontend.029')" placement="top" :open-delay="180">
+                                :loading="testLoadingId === scope.row.id" @@click="handleTest(scope.row)">{{ ncfST('Frontend.Mcp.Test') }}</el-button>
+                            <el-tooltip :content="ncfST('Frontend.Mcp.Actions')" placement="top" :open-delay="180">
                                 <el-dropdown trigger="click" placement="bottom-end">
                                     <el-button type="text" size="mini" icon="el-icon-more"
-                                        class="ncf-table-action-more" :title="ncfST('Frontend.029')" :aria-label="ncfST('Frontend.029')"></el-button>
+                                        class="ncf-table-action-more" :title="ncfST('Frontend.Mcp.Actions')" :aria-label="ncfST('Frontend.Mcp.Actions')"></el-button>
                                     <el-dropdown-menu slot="dropdown">
                                         <el-dropdown-item @@click.native="handleEdit(scope.row)" icon="el-icon-edit">
-                                            {{ ncfST('Frontend.044') }}
+                                            {{ ncfST('Frontend.Mcp.Edit') }}
                                         </el-dropdown-item>
                                         <el-dropdown-item command="delete" divided class="ncf-table-action-danger"
                                             @@click.native="handleDelete(scope.row)" icon="el-icon-delete">
-                                            {{ ncfST('Frontend.008') }}
+                                            {{ ncfST('Frontend.Mcp.Delete') }}
                                         </el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
@@ -122,55 +122,55 @@
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="640px" :close-on-click-modal="false"
         :show-close="!saving" :close-on-press-escape="!saving">
         <el-form :model="form" :rules="rules" ref="mcpForm" label-width="110px">
-            <el-form-item :label="ncfST('Frontend.018')" prop="name">
-                <el-input v-model="form.name" :placeholder="ncfST('Frontend.040')"></el-input>
+            <el-form-item :label="ncfST('Frontend.Mcp.Name')" prop="name">
+                <el-input v-model="form.name" :placeholder="ncfST('Frontend.Mcp.UniquelyIdentifiesThisMCPEndpoint')"></el-input>
             </el-form-item>
-            <el-form-item :label="ncfST('Frontend.041')" prop="endpoint">
-                <el-input v-model="form.endpoint" :placeholder="ncfST('Frontend.004')"></el-input>
+            <el-form-item :label="ncfST('Frontend.Mcp.EndpointAddress')" prop="endpoint">
+                <el-input v-model="form.endpoint" :placeholder="ncfST('Frontend.Mcp.ForExampleHttpLocalhost3001McpSse')"></el-input>
             </el-form-item>
-            <el-form-item :label="ncfST('Frontend.042')">
+            <el-form-item :label="ncfST('Frontend.Mcp.EndpointType')">
                 <el-select v-model="form.endpointType" style="width:100%;">
                     <el-option v-for="t in endpointTypeOptions" :key="t" :label="t" :value="t"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="ncfST('Frontend.010')">
-                <el-input v-model="form.protocolVersion" :placeholder="ncfST('Frontend.003')"></el-input>
+            <el-form-item :label="ncfST('Frontend.Mcp.ProtocolVersion')">
+                <el-input v-model="form.protocolVersion" :placeholder="ncfST('Frontend.Mcp.ForExampleOneZeroOptional')"></el-input>
             </el-form-item>
-            <el-form-item :label="ncfST('Frontend.026')">
-                <el-input v-model="form.description" type="textarea" :rows="2" :placeholder="ncfST('Frontend.016')"></el-input>
+            <el-form-item :label="ncfST('Frontend.Mcp.Description')">
+                <el-input v-model="form.description" type="textarea" :rows="2" :placeholder="ncfST('Frontend.Mcp.Optional')"></el-input>
             </el-form-item>
             <el-form-item label="Bearer Token">
                 <el-input v-model="form.bearerToken" type="textarea" :rows="2"
-                    :placeholder="ncfST('Frontend.017')"></el-input>
+                    :placeholder="ncfST('Frontend.Mcp.OptionalSaveAsAuthConfigJSONWithATokenField')"></el-input>
             </el-form-item>
-            <el-form-item :label="ncfST('Frontend.020')">
+            <el-form-item :label="ncfST('Frontend.Mcp.Enabled')">
                 <el-switch v-model="form.enabled"></el-switch>
             </el-form-item>
-            <el-form-item :label="ncfST('Frontend.006')">
+            <el-form-item :label="ncfST('Frontend.Mcp.TestBeforeSaving')">
                 <div class="mcp-form-test-block" style="width:100%;">
                     <el-button size="small" type="success" plain icon="el-icon-connection"
-                        :loading="preTestLoading" @@click="handleTestBeforeSave">{{ ncfST('Frontend.039') }}</el-button>
+                        :loading="preTestLoading" @@click="handleTestBeforeSave">{{ ncfST('Frontend.Mcp.TestTheCurrentConfiguration') }}</el-button>
                     <el-alert v-if="preTestResult" :title="preTestResult.statusMessage"
                         :type="preTestResult.success ? 'success' : 'error'"
-                        :description="preTestResult.success ? ncfST('Frontend.049', preTestResult.toolCount) : ''"
+                        :description="preTestResult.success ? ncfST('Frontend.Mcp.FoundValueToolsFunctions', preTestResult.toolCount) : ''"
                         show-icon :closable="false" style="margin-top:8px;"></el-alert>
                 </div>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button :disabled="saving" @@click="dialogVisible = false">{{ ncfST('Frontend.015') }}</el-button>
-            <el-button type="primary" :loading="saving" @@click="handleSubmit">{{ ncfST('Frontend.005') }}</el-button>
+            <el-button :disabled="saving" @@click="dialogVisible = false">{{ ncfST('Frontend.Mcp.Cancel') }}</el-button>
+            <el-button type="primary" :loading="saving" @@click="handleSubmit">{{ ncfST('Frontend.Mcp.Save') }}</el-button>
         </div>
     </el-dialog>
 
     <!-- Connection test result dialog, with expandable Function details -->
-    <el-dialog :title="ncfST('Frontend.050', testResultEndpointName)" :visible.sync="testDialogVisible" width="820px" top="6vh">
+    <el-dialog :title="ncfST('Frontend.Mcp.ConnectionTestValue', testResultEndpointName)" :visible.sync="testDialogVisible" width="820px" top="6vh">
         <div v-if="testResult">
             <el-alert :title="testResult.statusMessage" :type="testResult.success ? 'success' : 'error'"
                 show-icon :closable="false" style="margin-bottom:12px;"></el-alert>
             <div v-if="testResult.success">
                 <div style="margin-bottom:8px;color:#606266;">
-                    <span>{{ ncfST('Frontend.051', testResultTools.length) }}</span>
+                    <span>{{ ncfST('Frontend.Mcp.FoundValueToolsFunctionsSelectTheArrowOnTheLeftToView', testResultTools.length) }}</span>
                 </div>
                 <el-table :data="testResultTools" size="small" row-key="name"
                     :expand-row-keys="expandedTools" @@expand-change="handleToolExpandChange">
@@ -178,42 +178,42 @@
                         <template slot-scope="props">
                             <div style="padding:6px 24px 12px;">
                                 <div v-if="props.row.parameters && props.row.parameters.length" style="margin-bottom:10px;">
-                                    <div style="font-weight:600;margin-bottom:6px;">{{ ncfST('Frontend.011') }}</div>
+                                    <div style="font-weight:600;margin-bottom:6px;">{{ ncfST('Frontend.Mcp.Parameters') }}</div>
                                     <el-table :data="props.row.parameters" size="mini" class="mcp-tool-params">
-                                        <el-table-column prop="name" :label="ncfST('Frontend.012')" min-width="140"></el-table-column>
-                                        <el-table-column prop="type" :label="ncfST('Frontend.043')" width="120"></el-table-column>
-                                        <el-table-column :label="ncfST('Frontend.024')" width="70" align="center">
+                                        <el-table-column prop="name" :label="ncfST('Frontend.Mcp.ParameterName')" min-width="140"></el-table-column>
+                                        <el-table-column prop="type" :label="ncfST('Frontend.Mcp.Type')" width="120"></el-table-column>
+                                        <el-table-column :label="ncfST('Frontend.Mcp.Required')" width="70" align="center">
                                             <template slot-scope="p">
-                                                <el-tag v-if="p.row.required" type="danger" size="mini">{{ ncfST('Frontend.032') }}</el-tag>
-                                                <span v-else style="color:#c0c4cc;">{{ ncfST('Frontend.019') }}</span>
+                                                <el-tag v-if="p.row.required" type="danger" size="mini">{{ ncfST('Frontend.Mcp.Yes') }}</el-tag>
+                                                <span v-else style="color:#c0c4cc;">{{ ncfST('Frontend.Mcp.No') }}</span>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="description" :label="ncfST('Frontend.026')" min-width="200" show-overflow-tooltip></el-table-column>
+                                        <el-table-column prop="description" :label="ncfST('Frontend.Mcp.Description')" min-width="200" show-overflow-tooltip></el-table-column>
                                     </el-table>
                                 </div>
                                 <div>
                                     <div style="font-weight:600;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
-                                        <span>{{ ncfST('Frontend.046') }}</span>
+                                        <span>{{ ncfST('Frontend.Mcp.InputSchemaJSON') }}</span>
                                         <el-button size="mini" type="text" icon="el-icon-zoom-in"
-                                            @@click="showSchema(props.row)">{{ ncfST('Frontend.030') }}</el-button>
+                                            @@click="showSchema(props.row)">{{ ncfST('Frontend.Mcp.ZoomIn') }}</el-button>
                                     </div>
-                                    <pre class="mcp-schema-pre">{{ formatSchemaJson(props.row.inputSchemaJson) || ncfST('Frontend.054') }}</pre>
+                                    <pre class="mcp-schema-pre">{{ formatSchemaJson(props.row.inputSchemaJson) || ncfST('Frontend.Mcp.None') }}</pre>
                                 </div>
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="name" :label="ncfST('Frontend.023')" min-width="160" show-overflow-tooltip></el-table-column>
-                    <el-table-column prop="title" :label="ncfST('Frontend.037')" min-width="120" show-overflow-tooltip></el-table-column>
-                    <el-table-column :label="ncfST('Frontend.013')" width="80" align="center">
+                    <el-table-column prop="name" :label="ncfST('Frontend.Mcp.ToolName')" min-width="160" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="title" :label="ncfST('Frontend.Mcp.Title')" min-width="120" show-overflow-tooltip></el-table-column>
+                    <el-table-column :label="ncfST('Frontend.Mcp.ParameterCount')" width="80" align="center">
                         <template slot-scope="scope">{{ (scope.row.parameters || []).length }}</template>
                     </el-table-column>
-                    <el-table-column prop="description" :label="ncfST('Frontend.026')" min-width="220" show-overflow-tooltip class-name="mcp-tool-desc"></el-table-column>
+                    <el-table-column prop="description" :label="ncfST('Frontend.Mcp.Description')" min-width="220" show-overflow-tooltip class-name="mcp-tool-desc"></el-table-column>
                 </el-table>
             </div>
-            <div v-else style="color:#f56c6c;">{{ ncfST('Frontend.036') }}</div>
+            <div v-else style="color:#f56c6c;">{{ ncfST('Frontend.Mcp.NoToolListWasReturnedCheckTheEndpointProtocolAndAuthenticationThen') }}</div>
         </div>
         <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @@click="testDialogVisible = false">{{ ncfST('Frontend.007') }}</el-button>
+            <el-button type="primary" @@click="testDialogVisible = false">{{ ncfST('Frontend.Mcp.Close') }}</el-button>
         </div>
     </el-dialog>
 
@@ -221,7 +221,7 @@
     <el-dialog :title="schemaTitle" :visible.sync="schemaDialogVisible" width="720px" append-to-body>
         <pre class="mcp-schema-pre" style="max-height:60vh;">{{ schemaText }}</pre>
         <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @@click="schemaDialogVisible = false">{{ ncfST('Frontend.007') }}</el-button>
+            <el-button type="primary" @@click="schemaDialogVisible = false">{{ ncfST('Frontend.Mcp.Close') }}</el-button>
         </div>
     </el-dialog>
 </div>

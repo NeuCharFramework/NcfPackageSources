@@ -88,7 +88,7 @@
     <value>Depth||Enter the maximum crawl depth</value>
   </data>
   <data name="Parameter.SenMapic.PageCount" xml:space="preserve">
-    <value>Page count||Enter the maximum number of pages to crawl</value>
+    <value>Page count||Defaults to 20 pages per crawl, with a hard limit of 100 pages</value>
   </data>
   <data name="Area.Extensions" xml:space="preserve">
     <value>Extensions</value>
@@ -252,31 +252,31 @@
   <data name="Message.DeleteFailed" xml:space="preserve">
     <value>Deletion failed</value>
   </data>
-  <data name="Frontend.001" xml:space="preserve">
+  <data name="Frontend.SenMapic.ExceptionThrowTestParametersPassedValueValue" xml:space="preserve">
     <value>Exception-throw test, parameters passed: {0} {1}</value>
   </data>
-  <data name="Frontend.002" xml:space="preserve">
+  <data name="Frontend.SenMapic.DivisorCannotBeZero" xml:space="preserve">
     <value>Divisor cannot be 0!</value>
   </data>
-  <data name="Frontend.003" xml:space="preserve">
+  <data name="Frontend.SenMapic.UnknownOperatorValue" xml:space="preserve">
     <value>Unknown operator: {0}</value>
   </data>
-  <data name="Frontend.004" xml:space="preserve">
+  <data name="Frontend.SenMapic.UnknownOperator" xml:space="preserve">
     <value>Unknown operator</value>
   </data>
-  <data name="Frontend.005" xml:space="preserve">
+  <data name="Frontend.SenMapic.EnterAValidURL" xml:space="preserve">
     <value>Enter a valid URL!</value>
   </data>
-  <data name="Frontend.006" xml:space="preserve">
+  <data name="Frontend.SenMapic.TheTargetHostResolvedToANonPublicAddressTheConnectionWas" xml:space="preserve">
     <value>The target host resolved to a non-public address. The connection was refused.</value>
   </data>
-  <data name="Frontend.007" xml:space="preserve">
+  <data name="Frontend.SenMapic.UnableToConnectToTheTargetHostThatPassedThePublicAddress" xml:space="preserve">
     <value>Unable to connect to the target host that passed the public-address check.</value>
   </data>
-  <data name="Frontend.008" xml:space="preserve">
+  <data name="Frontend.SenMapic.TheTargetURLIsNotAllowed" xml:space="preserve">
     <value>The target URL is not allowed.</value>
   </data>
-  <data name="Frontend.009" xml:space="preserve">
+  <data name="Frontend.SenMapic.TheRedirectTargetURLIsNotAllowed" xml:space="preserve">
     <value>The redirect target URL is not allowed.</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
@@ -289,7 +289,7 @@
     <value>Web crawler</value>
   </data>
   <data name="Function.SenMapic.Crawl.Description" xml:space="preserve">
-    <value>Crawl information from web pages</value>
+    <value>Crawl web-page information; defaults to 20 pages when omitted and is limited to 100 pages per call</value>
   </data>
 
 </root>

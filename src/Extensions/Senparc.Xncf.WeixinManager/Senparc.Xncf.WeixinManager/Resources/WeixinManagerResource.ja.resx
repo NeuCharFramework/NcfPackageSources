@@ -54,220 +54,220 @@
   <data name="Common.Submit" xml:space="preserve">
     <value>送信</value>
   </data>
-  <data name="Frontend.001" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ExtensionModules" xml:space="preserve">
     <value>拡張モジュール</value>
   </data>
-  <data name="Frontend.002" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ModuleManagement" xml:space="preserve">
     <value>モジュール管理</value>
   </data>
-  <data name="Frontend.003" xml:space="preserve">
+  <data name="Frontend.WeixinManager.WeixinManagement" xml:space="preserve">
     <value>Weixin管理</value>
   </data>
-  <data name="Frontend.004" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountControlCenter" xml:space="preserve">
     <value>公式アカウント管理センター</value>
   </data>
-  <data name="Frontend.005" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountCount" xml:space="preserve">
     <value>公式アカウント数</value>
   </data>
-  <data name="Frontend.006" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountsAlreadyInTheSystem" xml:space="preserve">
     <value>システムに登録済みの公式アカウント</value>
   </data>
-  <data name="Frontend.007" xml:space="preserve">
+  <data name="Frontend.WeixinManager.RunningAccountCount" xml:space="preserve">
     <value>実行中のアカウント数</value>
   </data>
-  <data name="Frontend.008" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NumberOfAccountsThatAreActiveAndConnectedToTheWeChatServer" xml:space="preserve">
     <value>有効になり、WeChat サーバーへ接続済みのアカウント数</value>
   </data>
-  <data name="Frontend.009" xml:space="preserve">
+  <data name="Frontend.WeixinManager.TotalWeChatUsers" xml:space="preserve">
     <value>WeChatユーザー総数</value>
   </data>
-  <data name="Frontend.010" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NumberOfUsersWhoInteractedOnThisPlatformOrWereFetchedAutomatically" xml:space="preserve">
     <value>このプラットフォームでやり取りしたユーザー、または自動取得したフォロワーの数</value>
   </data>
-  <data name="Frontend.011" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NewUsersToday" xml:space="preserve">
     <value>本日の新規ユーザー数</value>
   </data>
-  <data name="Frontend.012" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NumberOfUsersSyncedOrAddedToThePlatformToday" xml:space="preserve">
     <value>今日、同期またはプラットフォームに追加されたユーザー数</value>
   </data>
-  <data name="Frontend.013" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ViewUsers" xml:space="preserve">
     <value>ユーザーを表示</value>
   </data>
-  <data name="Frontend.014" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ViewGroups" xml:space="preserve">
     <value>グループを表示</value>
   </data>
-  <data name="Frontend.015" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ViewTags" xml:space="preserve">
     <value>タグを表示</value>
   </data>
-  <data name="Frontend.016" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Conversation" xml:space="preserve">
     <value>会話</value>
   </data>
-  <data name="Frontend.017" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Edit" xml:space="preserve">
     <value>編集</value>
   </data>
-  <data name="Frontend.018" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AccessTokenCredentialValidity" xml:space="preserve">
     <value>AccessToken 資格情報の有効期限</value>
   </data>
-  <data name="Frontend.019" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AccessTokenCredentialStatus" xml:space="preserve">
     <value>AccessToken 資格情報の状態</value>
   </data>
-  <data name="Frontend.020" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountManagement" xml:space="preserve">
     <value>公式アカウント管理</value>
   </data>
-  <data name="Frontend.021" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Add" xml:space="preserve">
     <value>追加</value>
   </data>
-  <data name="Frontend.022" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Delete" xml:space="preserve">
     <value>削除</value>
   </data>
-  <data name="Frontend.023" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Name" xml:space="preserve">
     <value>名前</value>
   </data>
-  <data name="Frontend.024" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Notes" xml:space="preserve">
     <value>メモ</value>
   </data>
-  <data name="Frontend.025" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Description" xml:space="preserve">
     <value>説明</value>
   </data>
-  <data name="Frontend.026" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AddedTime" xml:space="preserve">
     <value>追加日時</value>
   </data>
-  <data name="Frontend.027" xml:space="preserve">
+  <data name="Frontend.WeixinManager.MessageURL" xml:space="preserve">
     <value>メッセージURL</value>
   </data>
-  <data name="Frontend.028" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Open" xml:space="preserve">
     <value>開く</value>
   </data>
-  <data name="Frontend.029" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Actions" xml:space="preserve">
     <value>アクション</value>
   </data>
-  <data name="Frontend.030" xml:space="preserve">
+  <data name="Frontend.WeixinManager.UserManagement" xml:space="preserve">
     <value>ユーザー管理</value>
   </data>
-  <data name="Frontend.031" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountName" xml:space="preserve">
     <value>公式アカウント名</value>
   </data>
-  <data name="Frontend.032" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ServerAddressURLConfiguredInTheWeChatAdminConsole" xml:space="preserve">
     <value>WeChat 管理画面で設定したサーバーアドレス (URL)</value>
   </data>
-  <data name="Frontend.033" xml:space="preserve">
+  <data name="Frontend.WeixinManager.YourDomain" xml:space="preserve">
     <value>[あなたのドメイン]</value>
   </data>
-  <data name="Frontend.034" xml:space="preserve">
+  <data name="Frontend.WeixinManager.YourDomainAlternate" xml:space="preserve">
     <value>[あなたのドメイン]</value>
   </data>
-  <data name="Frontend.035" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NoteTheOfficialAccountNameMustMatchTheNameInMpMessageHandlerName" xml:space="preserve">
     <value>注意：「公式アカウント名」は、対応する MessageHandler に付けられた [MpMessageHandler(name)] の name と一致している必要があります</value>
   </data>
-  <data name="Frontend.036" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Cancel" xml:space="preserve">
     <value>キャンセル</value>
   </data>
-  <data name="Frontend.037" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Confirm" xml:space="preserve">
     <value>確認</value>
   </data>
-  <data name="Frontend.038" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EnterOfficialAccountName" xml:space="preserve">
     <value>公式アカウント名を入力</value>
   </data>
-  <data name="Frontend.039" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EnterAppId" xml:space="preserve">
     <value>AppIdを入力</value>
   </data>
-  <data name="Frontend.040" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EnterAppSecret" xml:space="preserve">
     <value>AppSecretを入力</value>
   </data>
-  <data name="Frontend.041" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EnterToken" xml:space="preserve">
     <value>Tokenを入力</value>
   </data>
-  <data name="Frontend.042" xml:space="preserve">
+  <data name="Frontend.WeixinManager.LengthMustBeBetweenOneAnd100" xml:space="preserve">
     <value>長さは 1 から 100 までです</value>
   </data>
-  <data name="Frontend.043" xml:space="preserve">
+  <data name="Frontend.WeixinManager.LengthMustBeBetweenOneAnd500" xml:space="preserve">
     <value>長さは 1 から 500 までです</value>
   </data>
-  <data name="Frontend.044" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AddOfficialAccount" xml:space="preserve">
     <value>公式アカウントを追加</value>
   </data>
-  <data name="Frontend.045" xml:space="preserve">
+  <data name="Frontend.WeixinManager.EditOfficialAccount" xml:space="preserve">
     <value>公式アカウントを編集</value>
   </data>
-  <data name="Frontend.046" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountAddedSuccessfully" xml:space="preserve">
     <value>公式アカウントを追加しました</value>
   </data>
-  <data name="Frontend.047" xml:space="preserve">
+  <data name="Frontend.WeixinManager.OfficialAccountUpdatedSuccessfully" xml:space="preserve">
     <value>公式アカウントを更新しました</value>
   </data>
-  <data name="Frontend.048" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Success" xml:space="preserve">
     <value>成功しました</value>
   </data>
-  <data name="Frontend.049" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Warning" xml:space="preserve">
     <value>警告</value>
   </data>
-  <data name="Frontend.050" xml:space="preserve">
+  <data name="Frontend.WeixinManager.SelectAtLeastOneOfficialAccount" xml:space="preserve">
     <value>公式アカウントを1つ以上選択</value>
   </data>
-  <data name="Frontend.051" xml:space="preserve">
+  <data name="Frontend.WeixinManager.DeleteAllSelectedItems" xml:space="preserve">
     <value>選択した項目をすべて削除しますか？</value>
   </data>
-  <data name="Frontend.052" xml:space="preserve">
+  <data name="Frontend.WeixinManager.SuccessfullyDeletedValueItems" xml:space="preserve">
     <value>{0} 件削除しました</value>
   </data>
-  <data name="Frontend.053" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AddNewFollowers" xml:space="preserve">
     <value>新規フォロワーを追加</value>
   </data>
-  <data name="Frontend.054" xml:space="preserve">
+  <data name="Frontend.WeixinManager.SyncAllFollowers" xml:space="preserve">
     <value>すべてのフォロワーを同期</value>
   </data>
-  <data name="Frontend.055" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NoteIfThereAreManyUsersThisMayTakeAVeryLong" xml:space="preserve">
     <value>注意：ユーザー数が多い場合、非常に長い時間がかかることがあります！</value>
   </data>
-  <data name="Frontend.056" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Nickname" xml:space="preserve">
     <value>ニックネーム</value>
   </data>
-  <data name="Frontend.057" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Avatar" xml:space="preserve">
     <value>アバター</value>
   </data>
-  <data name="Frontend.058" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Gender" xml:space="preserve">
     <value>性別</value>
   </data>
-  <data name="Frontend.059" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Male" xml:space="preserve">
     <value>男性</value>
   </data>
-  <data name="Frontend.060" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Female" xml:space="preserve">
     <value>女性</value>
   </data>
-  <data name="Frontend.061" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Unknown" xml:space="preserve">
     <value>不明</value>
   </data>
-  <data name="Frontend.062" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Region" xml:space="preserve">
     <value>地域</value>
   </data>
-  <data name="Frontend.063" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Group" xml:space="preserve">
     <value>グループ</value>
   </data>
-  <data name="Frontend.064" xml:space="preserve">
+  <data name="Frontend.WeixinManager.FollowedAt" xml:space="preserve">
     <value>フォロー日時</value>
   </data>
-  <data name="Frontend.065" xml:space="preserve">
+  <data name="Frontend.WeixinManager.FollowStatus" xml:space="preserve">
     <value>フォロー状態</value>
   </data>
-  <data name="Frontend.066" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Following" xml:space="preserve">
     <value>フォロー中</value>
   </data>
-  <data name="Frontend.067" xml:space="preserve">
+  <data name="Frontend.WeixinManager.NotFollowing" xml:space="preserve">
     <value>未フォロー</value>
   </data>
-  <data name="Frontend.068" xml:space="preserve">
+  <data name="Frontend.WeixinManager.FollowSource" xml:space="preserve">
     <value>フォロー元</value>
   </data>
-  <data name="Frontend.069" xml:space="preserve">
+  <data name="Frontend.WeixinManager.Tags" xml:space="preserve">
     <value>タグ</value>
   </data>
-  <data name="Frontend.070" xml:space="preserve">
+  <data name="Frontend.WeixinManager.None" xml:space="preserve">
     <value>なし</value>
   </data>
-  <data name="Frontend.071" xml:space="preserve">
+  <data name="Frontend.WeixinManager.AllUsers" xml:space="preserve">
     <value>すべてのユーザー</value>
   </data>
-  <data name="Frontend.072" xml:space="preserve">
+  <data name="Frontend.WeixinManager.ValueUsers" xml:space="preserve">
     <value>{0} のユーザー</value>
   </data>
   <data name="User.AccountUsers" xml:space="preserve">
@@ -276,10 +276,10 @@
   <data name="User.AllUsers" xml:space="preserve">
     <value>すべてのユーザー</value>
   </data>
-  <data name="Frontend.073" xml:space="preserve">
+  <data name="Frontend.WeixinManager.YourDomainWeixinMpValue" xml:space="preserve">
     <value>[お客様のドメイン]/WeixinMp/{0}</value>
   </data>
-  <data name="Frontend.074" xml:space="preserve">
+  <data name="Frontend.WeixinManager.YourDomainWeixinMpValueAlternate" xml:space="preserve">
     <value>[お客様のドメイン]/WeixinMp/{0}</value>
   </data>
   <data name="Public.ToggleNavigation" xml:space="preserve">
@@ -314,62 +314,62 @@
   </data>
 
 
-  <data name="Frontend.075" xml:space="preserve"><value>個人WeChatボット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.076" xml:space="preserve"><value>/bindペアリングコード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.077" xml:space="preserve"><value>AIModelId（任意）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.078" xml:space="preserve"><value>WorkflowId（任意）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.079" xml:space="preserve"><value>iLinkアカウント</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.080" xml:space="preserve"><value>トークンはサーバー上でData Protectionにより保護され、再表示されることはありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.081" xml:space="preserve"><value>· 送信中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.082" xml:space="preserve"><value>· 失敗</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.083" xml:space="preserve"><value>· 送信済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.084" xml:space="preserve"><value>個人WeChatボット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.085" xml:space="preserve"><value>例：スーパー管理者</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.086" xml:space="preserve"><value>例：自分の個人WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.087" xml:space="preserve"><value>保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.088" xml:space="preserve"><value>バインディング設定を保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.089" xml:space="preserve"><value>NeuBellを許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.090" xml:space="preserve"><value>Workflowを許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.091" xml:space="preserve"><value>すべてのメッセージ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.092" xml:space="preserve"><value>閉じる</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.093" xml:space="preserve"><value>再読み込み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.094" xml:space="preserve"><value>状態を更新</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.095" xml:space="preserve"><value>機能</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.096" xml:space="preserve"><value>送信</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.097" xml:space="preserve"><value>キャンセル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.098" xml:space="preserve"><value>バインディングを有効化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.099" xml:space="preserve"><value>ロングポーリングを有効化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.100" xml:space="preserve"><value>画像</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.101" xml:space="preserve"><value>メディアファイルはまだ準備できていません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.102" xml:space="preserve"><value>個人WeChatはまだ接続されていません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.103" xml:space="preserve"><value>このアカウントの送受信記録すべて</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.104" xml:space="preserve"><value>このアカウントにはバインディングコードが設定されていません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.105" xml:space="preserve"><value>WeChatログインQRコード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.106" xml:space="preserve"><value>リンクを開く</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.107" xml:space="preserve"><value>QRコードをスキャンして個人WeChatに接続</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.108" xml:space="preserve"><value>スキャンして接続</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.109" xml:space="preserve"><value>ファイル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.110" xml:space="preserve"><value>新しいバインディング設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.111" xml:space="preserve"><value>最近のメッセージ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.112" xml:space="preserve"><value>最近の接続</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.113" xml:space="preserve"><value>状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.114" xml:space="preserve"><value>状態：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.115" xml:space="preserve"><value>上流ハンドラーで使用します。空欄でも構いません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.116" xml:space="preserve"><value>既存のトークンを保持するには空欄にします</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.117" xml:space="preserve"><value>バインディングコード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.118" xml:space="preserve"><value>バインディング設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.119" xml:space="preserve"><value>音声ファイル（SILK / MP3）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.120" xml:space="preserve"><value>WeChatでQRコードをスキャンし、スマートフォンでログインを確認してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.121" xml:space="preserve"><value>WeChatから要求された確認コードを入力し、状態を更新してください</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.122" xml:space="preserve"><value>現在のWeChat会話に送信するメッセージを入力してください</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.123" xml:space="preserve"><value>構成名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.124" xml:space="preserve"><value>確認コード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.125" xml:space="preserve"><value>WeCom勤怠</value></data>
-  <data name="Frontend.126" xml:space="preserve"><value>WeCom勤怠記録を取得</value></data>
-  <data name="Frontend.127" xml:space="preserve"><value>勤怠記録を取得</value></data>
-  <data name="Frontend.128" xml:space="preserve"><value>メンバーアカウントと時間範囲でWeComの勤怠記録を取得します。1回の要求は最大30日です。</value></data>
-  <data name="Frontend.129" xml:space="preserve"><value>WeComの認証情報は有効で、勤怠記録を取得できます。</value></data>
-  <data name="Frontend.130" xml:space="preserve"><value>WeCom勤怠コネクターは現在、勤怠記録の取得のみを提供しています。</value></data>
+  <data name="Frontend.WeixinManager.PersonalWeChatBot" xml:space="preserve"><value>個人WeChatボット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.BindPairingCode" xml:space="preserve"><value>/bindペアリングコード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AIModelIdOptional" xml:space="preserve"><value>AIModelId（任意）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.WorkflowIdOptional" xml:space="preserve"><value>WorkflowId（任意）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ILinkAccount" xml:space="preserve"><value>iLinkアカウント</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.TheTokenIsProtectedWithDataProtectionOnTheServerAndIs" xml:space="preserve"><value>トークンはサーバー上でData Protectionにより保護され、再表示されることはありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Sending" xml:space="preserve"><value>· 送信中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Failed" xml:space="preserve"><value>· 失敗</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Submitted" xml:space="preserve"><value>· 送信済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.PersonalWeChatBotAlternate" xml:space="preserve"><value>個人WeChatボット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ForExampleSuperAdministrator" xml:space="preserve"><value>例：スーパー管理者</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ForExampleMyPersonalWeChat" xml:space="preserve"><value>例：自分の個人WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Save" xml:space="preserve"><value>保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.SaveBindingSettings" xml:space="preserve"><value>バインディング設定を保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AllowNeuBell" xml:space="preserve"><value>NeuBellを許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AllowWorkflow" xml:space="preserve"><value>Workflowを許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AllMessages" xml:space="preserve"><value>すべてのメッセージ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Close" xml:space="preserve"><value>閉じる</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Refresh" xml:space="preserve"><value>再読み込み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.RefreshStatus" xml:space="preserve"><value>状態を更新</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Features" xml:space="preserve"><value>機能</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Send" xml:space="preserve"><value>送信</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.CancelAlternate" xml:space="preserve"><value>キャンセル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.EnableBinding" xml:space="preserve"><value>バインディングを有効化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.EnableLongPolling" xml:space="preserve"><value>ロングポーリングを有効化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Image" xml:space="preserve"><value>画像</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.TheMediaFileIsNotReadyYet" xml:space="preserve"><value>メディアファイルはまだ準備できていません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.PersonalWeChatIsNotConnectedYet" xml:space="preserve"><value>個人WeChatはまだ接続されていません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AllSentAndReceivedRecordsForThisAccount" xml:space="preserve"><value>このアカウントの送受信記録すべて</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.NoBindingCodeHasBeenConfiguredForThisAccount" xml:space="preserve"><value>このアカウントにはバインディングコードが設定されていません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.WeChatLoginQRCode" xml:space="preserve"><value>WeChatログインQRコード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.OpenLink" xml:space="preserve"><value>リンクを開く</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ScanTheQRCodeToConnectPersonalWeChat" xml:space="preserve"><value>QRコードをスキャンして個人WeChatに接続</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ConnectByScanning" xml:space="preserve"><value>スキャンして接続</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.File" xml:space="preserve"><value>ファイル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.NewBindingConfiguration" xml:space="preserve"><value>新しいバインディング設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.RecentMessages" xml:space="preserve"><value>最近のメッセージ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.RecentConnections" xml:space="preserve"><value>最近の接続</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.Status" xml:space="preserve"><value>状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.StatusLabel" xml:space="preserve"><value>状態：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.UsedByTheUpstreamHandlerMayBeEmpty" xml:space="preserve"><value>上流ハンドラーで使用します。空欄でも構いません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.LeaveEmptyToKeepTheExistingToken" xml:space="preserve"><value>既存のトークンを保持するには空欄にします</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.BindingCode" xml:space="preserve"><value>バインディングコード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.BindingConfiguration" xml:space="preserve"><value>バインディング設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.AudioFileSILKMPThree" xml:space="preserve"><value>音声ファイル（SILK / MP3）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ScanTheQRCodeWithWeChatAndConfirmTheLoginOnYour" xml:space="preserve"><value>WeChatでQRコードをスキャンし、スマートフォンでログインを確認してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.EnterTheVerificationCodeRequestedByWeChatThenRefreshTheStatus" xml:space="preserve"><value>WeChatから要求された確認コードを入力し、状態を更新してください</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.EnterAMessageToSendToTheCurrentWeChatConversation" xml:space="preserve"><value>現在のWeChat会話に送信するメッセージを入力してください</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.ConfigurationName" xml:space="preserve"><value>構成名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.VerificationCode" xml:space="preserve"><value>確認コード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.WeixinManager.WeComAttendance" xml:space="preserve"><value>WeCom勤怠</value></data>
+  <data name="Frontend.WeixinManager.RetrieveWeComAttendanceRecords" xml:space="preserve"><value>WeCom勤怠記録を取得</value></data>
+  <data name="Frontend.WeixinManager.GetAttendanceRecords" xml:space="preserve"><value>勤怠記録を取得</value></data>
+  <data name="Frontend.WeixinManager.RetrieveWeComAttendanceRecordsByMemberAccountAndTimeRangeUpTo" xml:space="preserve"><value>メンバーアカウントと時間範囲でWeComの勤怠記録を取得します。1回の要求は最大30日です。</value></data>
+  <data name="Frontend.WeixinManager.TheWeComCredentialIsValidAndCanRetrieveAttendanceRecords" xml:space="preserve"><value>WeComの認証情報は有効で、勤怠記録を取得できます。</value></data>
+  <data name="Frontend.WeixinManager.TheWeComAttendanceConnectorCurrentlyOnlyProvidesAttendanceRecordRetrieval" xml:space="preserve"><value>WeCom勤怠コネクターは現在、勤怠記録の取得のみを提供しています。</value></data>
   <data name="Connector.WeCom.Name" xml:space="preserve"><value>WeCom勤怠</value></data>
   <data name="Connector.WeCom.Description" xml:space="preserve"><value>WeComアプリのCorpIdとSecretを使用して勤怠記録を取得します。設定後、Chat、Workflow、Agentテンプレートで選択できます。</value></data>
   <data name="Connector.WeCom.CorpId.Label" xml:space="preserve"><value>企業ID</value></data>
@@ -406,33 +406,33 @@
   <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>終了時刻は開始時刻より後にしてください。</value></data>
   <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>WeComでは1回の要求につき最大30日分の勤怠記録を取得できます。</value></data>
   <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>勤怠種別は1（勤務）、2（社外）、3（すべて）のいずれかです。</value></data>
-  <data name="Frontend.131" xml:space="preserve"><value>会話記録はまだありません。スマートフォンからWeChat ClawBotにテキストを送信してください。</value></data>
-  <data name="Frontend.132" xml:space="preserve"><value>個人WeChatアカウントを追加</value></data>
-  <data name="Frontend.133" xml:space="preserve"><value>個人WeChatアカウントを編集</value></data>
-  <data name="Frontend.134" xml:space="preserve"><value>WeChatメッセージを受信しました</value></data>
-  <data name="Frontend.135" xml:space="preserve"><value>{0}から新しいスマートフォンメッセージを受信しました</value></data>
-  <data name="Frontend.136" xml:space="preserve"><value>WeChat接続状態の更新に失敗しました</value></data>
-  <data name="Frontend.137" xml:space="preserve"><value>個人WeChatログインの開始に失敗しました</value></data>
-  <data name="Frontend.138" xml:space="preserve"><value>ログイン状態の取得に失敗しました。「状態を更新」をクリックして再試行してください。</value></data>
-  <data name="Frontend.139" xml:space="preserve"><value>返信に必要なコンテキストを保存するため、先にスマートフォンからWeChat ClawBotへテキストを送信してください。</value></data>
-  <data name="Frontend.140" xml:space="preserve"><value>バインディング設定を保存しました。</value></data>
-  <data name="Frontend.141" xml:space="preserve"><value>バインディング設定の保存に失敗しました</value></data>
-  <data name="Frontend.142" xml:space="preserve"><value>バインディング設定の削除に失敗しました</value></data>
-  <data name="Frontend.143" xml:space="preserve"><value>メディアを再生できません。元のファイルをダウンロードしてください。音声変換エラーはサービスログを確認し、動画にはブラウザー対応コーデックを使用してください。</value></data>
-  <data name="Frontend.144" xml:space="preserve"><value>メディアメッセージを送信しました。</value></data>
-  <data name="Frontend.145" xml:space="preserve"><value>メディアの送信に失敗しました</value></data>
-  <data name="Frontend.146" xml:space="preserve"><value>最新のWeChat会話コンテキストを使用してメッセージを送信しました。</value></data>
-  <data name="Frontend.147" xml:space="preserve"><value>WeChat Clawへメッセージを送信しました。</value></data>
-  <data name="Frontend.148" xml:space="preserve"><value>個人WeChatメッセージの送信に失敗しました</value></data>
-  <data name="Frontend.149" xml:space="preserve"><value>スマートフォン</value></data>
-  <data name="Frontend.150" xml:space="preserve"><value>システム</value></data>
-  <data name="Frontend.151" xml:space="preserve"><value>新着メッセージ {0} 件</value></data>
-  <data name="Frontend.152" xml:space="preserve"><value>エラー</value></data>
-  <data name="Frontend.153" xml:space="preserve"><value>無効</value></data>
-  <data name="Frontend.154" xml:space="preserve"><value>未接続</value></data>
-  <data name="Frontend.155" xml:space="preserve"><value>有効</value></data>
-  <data name="Frontend.156" xml:space="preserve"><value>無効</value></data>
-  <data name="Frontend.157" xml:space="preserve"><value>最近の送信者：{0}</value></data>
-  <data name="Frontend.158" xml:space="preserve"><value>現在の会話</value></data>
-  <data name="Frontend.159" xml:space="preserve"><value>{0} 件</value></data>
+  <data name="Frontend.WeixinManager.NoConversationRecordsYetSendATextToWeChatClawBotFromYour" xml:space="preserve"><value>会話記録はまだありません。スマートフォンからWeChat ClawBotにテキストを送信してください。</value></data>
+  <data name="Frontend.WeixinManager.AddPersonalWeChatAccount" xml:space="preserve"><value>個人WeChatアカウントを追加</value></data>
+  <data name="Frontend.WeixinManager.EditPersonalWeChatAccount" xml:space="preserve"><value>個人WeChatアカウントを編集</value></data>
+  <data name="Frontend.WeixinManager.WeChatMessageReceived" xml:space="preserve"><value>WeChatメッセージを受信しました</value></data>
+  <data name="Frontend.WeixinManager.ValueReceivedANewPhoneMessage" xml:space="preserve"><value>{0}から新しいスマートフォンメッセージを受信しました</value></data>
+  <data name="Frontend.WeixinManager.FailedToRefreshTheWeChatConnectionStatus" xml:space="preserve"><value>WeChat接続状態の更新に失敗しました</value></data>
+  <data name="Frontend.WeixinManager.FailedToStartPersonalWeChatLogin" xml:space="preserve"><value>個人WeChatログインの開始に失敗しました</value></data>
+  <data name="Frontend.WeixinManager.FailedToQueryLoginStatusClickRefreshStatusToRetry" xml:space="preserve"><value>ログイン状態の取得に失敗しました。「状態を更新」をクリックして再試行してください。</value></data>
+  <data name="Frontend.WeixinManager.SendATextToWeChatClawBotFromYourPhoneFirstSoThe" xml:space="preserve"><value>返信に必要なコンテキストを保存するため、先にスマートフォンからWeChat ClawBotへテキストを送信してください。</value></data>
+  <data name="Frontend.WeixinManager.BindingConfigurationSaved" xml:space="preserve"><value>バインディング設定を保存しました。</value></data>
+  <data name="Frontend.WeixinManager.FailedToSaveTheBindingConfiguration" xml:space="preserve"><value>バインディング設定の保存に失敗しました</value></data>
+  <data name="Frontend.WeixinManager.FailedToDeleteTheBindingConfiguration" xml:space="preserve"><value>バインディング設定の削除に失敗しました</value></data>
+  <data name="Frontend.WeixinManager.MediaCannotBePlayedDownloadTheOriginalFileCheckTheServiceLogs" xml:space="preserve"><value>メディアを再生できません。元のファイルをダウンロードしてください。音声変換エラーはサービスログを確認し、動画にはブラウザー対応コーデックを使用してください。</value></data>
+  <data name="Frontend.WeixinManager.MediaMessageSubmitted" xml:space="preserve"><value>メディアメッセージを送信しました。</value></data>
+  <data name="Frontend.WeixinManager.FailedToSendMedia" xml:space="preserve"><value>メディアの送信に失敗しました</value></data>
+  <data name="Frontend.WeixinManager.MessageSubmittedUsingTheLatestWeChatConversationContext" xml:space="preserve"><value>最新のWeChat会話コンテキストを使用してメッセージを送信しました。</value></data>
+  <data name="Frontend.WeixinManager.MessageSubmittedToWeChatClaw" xml:space="preserve"><value>WeChat Clawへメッセージを送信しました。</value></data>
+  <data name="Frontend.WeixinManager.FailedToSendThePersonalWeChatMessage" xml:space="preserve"><value>個人WeChatメッセージの送信に失敗しました</value></data>
+  <data name="Frontend.WeixinManager.Phone" xml:space="preserve"><value>スマートフォン</value></data>
+  <data name="Frontend.WeixinManager.System" xml:space="preserve"><value>システム</value></data>
+  <data name="Frontend.WeixinManager.ValueNewMessages" xml:space="preserve"><value>新着メッセージ {0} 件</value></data>
+  <data name="Frontend.WeixinManager.Error" xml:space="preserve"><value>エラー</value></data>
+  <data name="Frontend.WeixinManager.Disabled" xml:space="preserve"><value>無効</value></data>
+  <data name="Frontend.WeixinManager.NotConnected" xml:space="preserve"><value>未接続</value></data>
+  <data name="Frontend.WeixinManager.Enabled" xml:space="preserve"><value>有効</value></data>
+  <data name="Frontend.WeixinManager.DisabledAlternate" xml:space="preserve"><value>無効</value></data>
+  <data name="Frontend.WeixinManager.LastSenderValue" xml:space="preserve"><value>最近の送信者：{0}</value></data>
+  <data name="Frontend.WeixinManager.CurrentConversation" xml:space="preserve"><value>現在の会話</value></data>
+  <data name="Frontend.WeixinManager.ValueMessages" xml:space="preserve"><value>{0} 件</value></data>
 </root>

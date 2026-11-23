@@ -2,7 +2,7 @@
 @model Senparc.Xncf.DynamicData.Areas.Admin.Pages.DynamicData.DataSheetSetModel
 
 @{
-    ViewData["Title"] = XR["Frontend.243"];
+    ViewData["Title"] = XR["Frontend.DynamicData.DynamicDataDataTableSettings"];
     Layout = "_Layout_Vue";
 }
 
@@ -14,81 +14,81 @@
 @section breadcrumbs {
     <el-breadcrumb-item>@XR["Area.Extensions"]</el-breadcrumb-item>
     <el-breadcrumb-item>@XR["Module.DynamicData.MenuName"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@XR["Frontend.107"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.DynamicData.DataTableSettings"]</el-breadcrumb-item>
 }
 
 <el-container style="height: 100%;flex-wrap: nowrap;gap: 20px;">
     @* Sidebar *@
     <div class="dataSheetSet-aside">
-        <div class="aside_title">{{ ncfST('Frontend.103') }}</div>
+        <div class="aside_title">{{ ncfST('Frontend.DynamicData.DataTable') }}</div>
         <div class="aside_list">
             <div v-for="item in dataSheetList" :key="item.id" class="aside_list_item" :class="{'aside_select': sheetSelectId === item.id}" :title="item.name" @@click="viewTableDetails(item)">
                 {{ item.name }}
             </div>
         </div>
-        <div class="aside_newbtn" :class="{'aside_select':sheetSelectId === 0}" @@click="addDataTable"><i class="el-icon-plus"></i> {{ ncfST('Frontend.115') }}</div>
+        <div class="aside_newbtn" :class="{'aside_select':sheetSelectId === 0}" @@click="addDataTable"><i class="el-icon-plus"></i> {{ ncfST('Frontend.DynamicData.AddDataTable') }}</div>
     </div>
     @* Detail content *@
     <div class="dataSheetSet-main">
         @* Shared button action area *@
         <div class="main_header">
-            <el-button type="primary" :size="elSize" :disabled="sheetBD" @@click="newFieldsAdd">{{ ncfST('Frontend.114') }}</el-button>
-            <el-button type="primary" :disabled="layoutBD" :size="elSize" @@click="createLayout">{{ ncfST('Frontend.025') }}</el-button>
-            <el-button :size="elSize" :disabled="sheetBD" @@click="importDataSheet">{{ ncfST('Frontend.054') }}</el-button>
-            <el-button :size="elSize" :disabled="sheetBD" @@click="exportDataSheet">{{ ncfST('Frontend.055') }}</el-button>
+            <el-button type="primary" :size="elSize" :disabled="sheetBD" @@click="newFieldsAdd">{{ ncfST('Frontend.DynamicData.AddField') }}</el-button>
+            <el-button type="primary" :disabled="layoutBD" :size="elSize" @@click="createLayout">{{ ncfST('Frontend.DynamicData.CreateLayout') }}</el-button>
+            <el-button :size="elSize" :disabled="sheetBD" @@click="importDataSheet">{{ ncfST('Frontend.DynamicData.Import') }}</el-button>
+            <el-button :size="elSize" :disabled="sheetBD" @@click="exportDataSheet">{{ ncfST('Frontend.DynamicData.Export') }}</el-button>
         </div>
         <div class="main_content">
         @* Data form area for create/edit. *@
             <el-form ref="sheetElForm" :inline="true" :model="sheetForm" :size="elSize" class="sheetForm-inline">
-                <el-form-item :label="ncfST('Frontend.244')" prop="name">
+                <el-form-item :label="ncfST('Frontend.DynamicData.NameAlternate')" prop="name">
                     <div v-if="sheetFormEidt" class="formValueText" :title="sheetForm.name">{{ sheetForm.name }}</div>
-                    <el-input v-else v-model.trim="sheetForm.name" :placeholder="ncfST('Frontend.195')"></el-input>
-                    
+                    <el-input v-else v-model.trim="sheetForm.name" :placeholder="ncfST('Frontend.DynamicData.EnterANameAlternate')"></el-input>
+
                 </el-form-item>
-                <el-form-item :label="ncfST('Frontend.086')" prop="description">
+                <el-form-item :label="ncfST('Frontend.DynamicData.Description')" prop="description">
                     <div v-if="sheetFormEidt" class="formValueText" :title="sheetForm.description">{{ sheetForm.description }}</div>
-                    <el-input v-else v-model.trim="sheetForm.description" :placeholder="ncfST('Frontend.199')"></el-input>
+                    <el-input v-else v-model.trim="sheetForm.description" :placeholder="ncfST('Frontend.DynamicData.EnterADescription')"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button v-if="sheetFormEidt" type="primary" @@click="onEidtSheet">{{ ncfST('Frontend.169') }}</el-button>
+                    <el-button v-if="sheetFormEidt" type="primary" @@click="onEidtSheet">{{ ncfST('Frontend.DynamicData.Edit') }}</el-button>
                     <template v-else>
-                        <el-button type="primary" @@click="onSubmitSheet">{{ ncfST('Frontend.152') }}</el-button>
-                        <el-button v-if="sheetSelectId" @@click="onCancelEidtSheet">{{ ncfST('Frontend.034') }}</el-button>
+                        <el-button type="primary" @@click="onSubmitSheet">{{ ncfST('Frontend.DynamicData.Confirm') }}</el-button>
+                        <el-button v-if="sheetSelectId" @@click="onCancelEidtSheet">{{ ncfST('Frontend.DynamicData.Cancel') }}</el-button>
                     </template>
-                    
+
                 </el-form-item>
             </el-form>
         @* Empty-state notice for new data tables. *@
-            <div v-if="sheetBD" class="tips-dataSheet">{{ ncfST('Frontend.094') }}</div>
+            <div v-if="sheetBD" class="tips-dataSheet">{{ ncfST('Frontend.DynamicData.TipYouCanAddFieldsOnlyAfterAddingADataTable') }}</div>
         @* Data-table fields. *@
             <el-table v-else :data="tableFieldList" :size="elSize" border style="width: 100%">
                 <el-table-column prop="identificationId" label="ID" width="110"></el-table-column>
-                <el-table-column prop="name" :label="ncfST('Frontend.050')" width="130"></el-table-column>
-                <el-table-column prop="dataType" :label="ncfST('Frontend.102')" width="130"></el-table-column>
-                <el-table-column prop="format" :label="ncfST('Frontend.060')" width="130"></el-table-column>
-                <el-table-column :label="ncfST('Frontend.128')" width="200">
+                <el-table-column prop="name" :label="ncfST('Frontend.DynamicData.FieldName')" width="130"></el-table-column>
+                <el-table-column prop="dataType" :label="ncfST('Frontend.DynamicData.DataType')" width="130"></el-table-column>
+                <el-table-column prop="format" :label="ncfST('Frontend.DynamicData.DisplayType')" width="130"></el-table-column>
+                <el-table-column :label="ncfST('Frontend.DynamicData.MaximumLength')" width="200">
                     <template slot-scope="{row}">
-                        <span>{{ ncfST('Frontend.241') }}{{ row.minLen }} / {{ row.maxLen}}</span>
+                        <span>{{ ncfST('Frontend.DynamicData.MinLengthMaxLength') }}{{ row.minLen }} / {{ row.maxLen}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="event" :label="ncfST('Frontend.004')" width="130"></el-table-column>
-                <el-table-column prop="color" :label="ncfST('Frontend.238')" width="80"></el-table-column>
-                <el-table-column prop="requir" :label="ncfST('Frontend.122')" width="80">
+                <el-table-column prop="event" :label="ncfST('Frontend.DynamicData.Events')" width="130"></el-table-column>
+                <el-table-column prop="color" :label="ncfST('Frontend.DynamicData.Color')" width="80"></el-table-column>
+                <el-table-column prop="requir" :label="ncfST('Frontend.DynamicData.Required')" width="80">
                     <template slot-scope="{row}">
-                        <span>{{ row.requir ? ncfST('Frontend.245') : ncfST('Frontend.246') }}</span>
+                        <span>{{ row.requir ? ncfST('Frontend.DynamicData.Yes') : ncfST('Frontend.DynamicData.No') }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="primaryKey" :label="ncfST('Frontend.121')" width="80">
+                <el-table-column prop="primaryKey" :label="ncfST('Frontend.DynamicData.Unique')" width="80">
                     <template slot-scope="{row}">
-                        <span>{{ row.primaryKey ? ncfST('Frontend.245') : ncfST('Frontend.246') }}</span>
+                        <span>{{ row.primaryKey ? ncfST('Frontend.DynamicData.Yes') : ncfST('Frontend.DynamicData.No') }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="description" :label="ncfST('Frontend.086')" width="180"></el-table-column>
+                <el-table-column prop="description" :label="ncfST('Frontend.DynamicData.Description')" width="180"></el-table-column>
                 @* fixed="right" *@
-                <el-table-column :label="ncfST('Frontend.095')" width="200" class-name="ncf-table-actions-column">
+                <el-table-column :label="ncfST('Frontend.DynamicData.Actions')" width="200" class-name="ncf-table-actions-column">
                     <template slot-scope="{row}">
-                        <el-button type="primary" icon="el-icon-edit" :size="elSize" @@click="newFieldsEdit(row)">{{ ncfST('Frontend.169') }}</el-button>
-                        <el-button type="danger" icon="el-icon-delete" :size="elSize" @@click="newFieldsDelete(row)">{{ ncfST('Frontend.026') }}</el-button>
+                        <el-button type="primary" icon="el-icon-edit" :size="elSize" @@click="newFieldsEdit(row)">{{ ncfST('Frontend.DynamicData.Edit') }}</el-button>
+                        <el-button type="danger" icon="el-icon-delete" :size="elSize" @@click="newFieldsDelete(row)">{{ ncfST('Frontend.DynamicData.Delete') }}</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -105,82 +105,82 @@
     <div class="drawerRtl">
             @* Content header, including the title and close icon. *@
             <div class="drawerRtl__header">
-            <div class="drawerRtl__header__title">{{ ncfST('Frontend.114') }}</div>
+            <div class="drawerRtl__header__title">{{ ncfST('Frontend.DynamicData.AddField') }}</div>
             <div class="drawerRtl__header__close" @@click="resetNewField()">&times;</div>
             </div>
             @* Main content area. *@
         <div class="drawerRtl__body">
             <el-form ref="newFieldElForm" :model="newFieldForm" :rules="newFieldFormRules" :size="elSize" label-position="left" label-width="80px" class="newFieldForm-container">
-                <el-form-item :label="ncfST('Frontend.244')" prop="name">
-                    <el-input v-model="newFieldForm.name" :placeholder="ncfST('Frontend.187')"></el-input>
+                <el-form-item :label="ncfST('Frontend.DynamicData.NameAlternate')" prop="name">
+                    <el-input v-model="newFieldForm.name" :placeholder="ncfST('Frontend.DynamicData.EnterAName')"></el-input>
                 </el-form-item>
-                <el-form-item :label="ncfST('Frontend.132')" prop="identificationId">
-                    <el-input v-model="newFieldForm.identificationId" :placeholder="ncfST('Frontend.188')">
+                <el-form-item :label="ncfST('Frontend.DynamicData.IdentifierId')" prop="identificationId">
+                    <el-input v-model="newFieldForm.identificationId" :placeholder="ncfST('Frontend.DynamicData.EnterIdentifierId')">
                         <template slot="append">
                             <div class="inputAppendIdBox" @@click="autoGenerate">
-                                {{ ncfST('Frontend.171') }}
+                                {{ ncfST('Frontend.DynamicData.GeneratedAutomatically') }}
                             </div>
                         </template>
                     </el-input>
-                    <div class="inputIdTips">{{ ncfST('Frontend.100') }}</div>
+                    <div class="inputIdTips">{{ ncfST('Frontend.DynamicData.EnglishIdentifierOfTheDataModelItUniquelyIdentifiesTheDataModel') }}</div>
                 </el-form-item>
-                <el-form-item :label="ncfST('Frontend.102')" prop="dataType">
-                    <el-select v-model="newFieldForm.dataType" style="width:100%" :placeholder="ncfST('Frontend.216')">
-                        <el-option :label="ncfST('Frontend.161')" value="shanghai"></el-option>
-                        <el-option :label="ncfST('Frontend.162')" value="beijing"></el-option>
+                <el-form-item :label="ncfST('Frontend.DynamicData.DataType')" prop="dataType">
+                    <el-select v-model="newFieldForm.dataType" style="width:100%" :placeholder="ncfST('Frontend.DynamicData.SelectDataType')">
+                        <el-option :label="ncfST('Frontend.DynamicData.TypeText')" value="shanghai"></el-option>
+                        <el-option :label="ncfST('Frontend.DynamicData.TypeTextOne')" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item :label="ncfST('Frontend.137')" prop="format">
-                    <el-select v-model="newFieldForm.format" style="width:100%" :placeholder="ncfST('Frontend.218')">
-                        <el-option :label="ncfST('Frontend.138')" value="shanghai"></el-option>
-                        <el-option :label="ncfST('Frontend.139')" value="beijing"></el-option>
+                <el-form-item :label="ncfST('Frontend.DynamicData.Format')" prop="format">
+                    <el-select v-model="newFieldForm.format" style="width:100%" :placeholder="ncfST('Frontend.DynamicData.SelectAFormat')">
+                        <el-option :label="ncfST('Frontend.DynamicData.FormatText')" value="shanghai"></el-option>
+                        <el-option :label="ncfST('Frontend.DynamicData.FormatTextTwo')" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label=" ">
                     <el-row :gutter="20">
                         <el-col :span="12" class="df-wn flex-ac flex-as">
-                            <span class="formitem-labelText">{{ ncfST('Frontend.130') }}</span>
-                            <el-input v-model="newFieldForm.minLen" :placeholder="ncfST('Frontend.130')"></el-input>
+                            <span class="formitem-labelText">{{ ncfST('Frontend.DynamicData.MinimumLength') }}</span>
+                            <el-input v-model="newFieldForm.minLen" :placeholder="ncfST('Frontend.DynamicData.MinimumLength')"></el-input>
                         </el-col>
                         <el-col :span="12" class="df-wn flex-ac flex-as">
-                            <span class="formitem-labelText">{{ ncfST('Frontend.128') }}</span>
-                            <el-input v-model="newFieldForm.maxLen" :placeholder="ncfST('Frontend.128')"></el-input>
+                            <span class="formitem-labelText">{{ ncfST('Frontend.DynamicData.MaximumLength') }}</span>
+                            <el-input v-model="newFieldForm.maxLen" :placeholder="ncfST('Frontend.DynamicData.MaximumLength')"></el-input>
                         </el-col>
                     </el-row>
 
                 </el-form-item>
                 <el-row :gutter="20">
                     <el-col :span="8">
-                        <el-form-item :label="ncfST('Frontend.122')" prop="requir">
+                        <el-form-item :label="ncfST('Frontend.DynamicData.Required')" prop="requir">
                             <el-checkbox v-model="newFieldForm.requir"></el-checkbox>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
-                        <el-form-item :label="ncfST('Frontend.121')" prop="primaryKey">
+                        <el-form-item :label="ncfST('Frontend.DynamicData.Unique')" prop="primaryKey">
                             <el-checkbox v-model="newFieldForm.primaryKey"></el-checkbox>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-form-item :label="ncfST('Frontend.004')" prop="event">
-                    <el-select v-model="newFieldForm.event" style="width:100%" :placeholder="ncfST('Frontend.207')">
-                        <el-option :label="ncfST('Frontend.247')" value="shanghai"></el-option>
-                        <el-option :label="ncfST('Frontend.248')" value="beijing"></el-option>
+                <el-form-item :label="ncfST('Frontend.DynamicData.Events')" prop="event">
+                    <el-select v-model="newFieldForm.event" style="width:100%" :placeholder="ncfST('Frontend.DynamicData.SelectAnEvent')">
+                        <el-option :label="ncfST('Frontend.DynamicData.EventText')" value="shanghai"></el-option>
+                        <el-option :label="ncfST('Frontend.DynamicData.EventTextTwo')" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item :label="ncfST('Frontend.238')" prop="color">
+                <el-form-item :label="ncfST('Frontend.DynamicData.Color')" prop="color">
                     @* <el-input type="color" v-model="newFieldForm.color"></el-input> *@
                     <el-color-picker v-model="newFieldForm.color"></el-color-picker>
                 </el-form-item>
-                <el-form-item :label="ncfST('Frontend.086')" prop="description">
-                    <el-input type="textarea" v-model="newFieldForm.description" :placeholder="ncfST('Frontend.051')"></el-input>
+                <el-form-item :label="ncfST('Frontend.DynamicData.Description')" prop="description">
+                    <el-input type="textarea" v-model="newFieldForm.description" :placeholder="ncfST('Frontend.DynamicData.FieldDescription')"></el-input>
                 </el-form-item>
             </el-form>
 
             </div>
             @* Fixed content footer. *@
             <div class="drawerRtl__footer text-right">
-            <el-button :size="elSize" @@click="resetNewField()">{{ ncfST('Frontend.034') }}</el-button>
-            <el-button :size="elSize" type="primary" @@click="submitNewField">{{ ncfST('Frontend.152') }}</el-button>
+            <el-button :size="elSize" @@click="resetNewField()">{{ ncfST('Frontend.DynamicData.Cancel') }}</el-button>
+            <el-button :size="elSize" type="primary" @@click="submitNewField">{{ ncfST('Frontend.DynamicData.Confirm') }}</el-button>
             </div>
         </div>
 </el-drawer>

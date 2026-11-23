@@ -1,22 +1,22 @@
 ﻿@page
 @model Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager.MpAccount_IndexModel
 @{
-    ViewData["Title"] = XR["Frontend.020"];
+    ViewData["Title"] = XR["Frontend.WeixinManager.OfficialAccountManagement"];
     Layout = "_Layout_Vue";
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@XR["Frontend.001"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@XR["Frontend.002"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@XR["Frontend.003"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@XR["Frontend.020"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.WeixinManager.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.WeixinManager.ModuleManagement"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.WeixinManager.WeixinManagement"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.WeixinManager.OfficialAccountManagement"]</el-breadcrumb-item>
 }
 
 <div>
     <div class="admin-role">
         <div class="filter-container">
-            <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" @@click="add">{{ ncfST('Frontend.021') }}</el-button>
-            <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">{{ ncfST('Frontend.022') }}</el-button>
+            <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" @@click="add">{{ ncfST('Frontend.WeixinManager.Add') }}</el-button>
+            <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">{{ ncfST('Frontend.WeixinManager.Delete') }}</el-button>
         </div>
         <el-table :data="tableData"
                   border
@@ -34,7 +34,7 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             :label="ncfST('Frontend.023')">
+                             :label="ncfST('Frontend.WeixinManager.Name')">
                 <template slot-scope="scope">
                     {{ scope.row.name}}
                 </template>
@@ -86,37 +86,37 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             :label="ncfST('Frontend.024')">
+                             :label="ncfST('Frontend.WeixinManager.Notes')">
                 <template slot-scope="scope">
                     {{ scope.row.adminRemark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             :label="ncfST('Frontend.025')">
+                             :label="ncfST('Frontend.WeixinManager.Description')">
                 <template slot-scope="scope">
                     {{ scope.row.remark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              width="145"
-                             :label="ncfST('Frontend.026')">
+                             :label="ncfST('Frontend.WeixinManager.AddedTime')">
                 <template slot-scope="scope">
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              width="80"
-                             :label="ncfST('Frontend.027')">
+                             :label="ncfST('Frontend.WeixinManager.MessageURL')">
                 <template slot-scope="scope">
-                    <a :href="'/WeixinMp/'+ scope.row.name + '?parameter=' + scope.row.id" :title="ncfST('Frontend.034') + '/WeixinMp/' + scope.row.name + '?parameter=' + scope.row.id"><i class="fa fa-external-link"></i> {{ ncfST('Frontend.028') }}</a>
+                    <a :href="'/WeixinMp/'+ scope.row.name + '?parameter=' + scope.row.id" :title="ncfST('Frontend.WeixinManager.YourDomainAlternate') + '/WeixinMp/' + scope.row.name + '?parameter=' + scope.row.id"><i class="fa fa-external-link"></i> {{ ncfST('Frontend.WeixinManager.Open') }}</a>
                 </template>
             </el-table-column>
-            <el-table-column :label="ncfST('Frontend.029')" align="center" width="200" fixed="right" class-name="ncf-table-actions-column">
+            <el-table-column :label="ncfST('Frontend.WeixinManager.Actions')" align="center" width="200" fixed="right" class-name="ncf-table-actions-column">
                 <template slot-scope="scope">
                     <el-button size="mini" type="primary" icon="el-icon-edit"
-                               @@click="edit(scope.$index, scope.row)">{{ ncfST('Frontend.017') }}</el-button>
+                               @@click="edit(scope.$index, scope.row)">{{ ncfST('Frontend.WeixinManager.Edit') }}</el-button>
                     <el-button size="mini" type="info" icon="el-icon-user"
-                               @@click="openUserMan(scope.row.id)">{{ ncfST('Frontend.030') }}</el-button>
+                               @@click="openUserMan(scope.row.id)">{{ ncfST('Frontend.WeixinManager.UserManagement') }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -128,7 +128,7 @@
     <!-- Add/edit modal -->
     <el-dialog :title="dialog.title" :visible.sync="dialog.visible" width="40%" :close-on-click-modal="false">
         <el-form :model="mpAccountForm" :rules="mpAccountRule" ref="ref_mpAccountForm" label-width="140px" class="demo-ruleForm">
-            <el-form-item :label="ncfST('Frontend.031')" prop="name">
+            <el-form-item :label="ncfST('Frontend.WeixinManager.OfficialAccountName')" prop="name">
                 <el-input v-model="mpAccountForm.name"></el-input>
             </el-form-item>
             <el-form-item label="AppId" prop="appId">
@@ -146,20 +146,20 @@
             <el-form-item label="PromptRangeCode" prop="promptRangeCode">
                 <el-input v-model="mpAccountForm.promptRangeCode"></el-input>
             </el-form-item>
-            <el-form-item :label="ncfST('Frontend.024')" prop="adminRemark">
+            <el-form-item :label="ncfST('Frontend.WeixinManager.Notes')" prop="adminRemark">
                 <el-input v-model="mpAccountForm.adminRemark"></el-input>
             </el-form-item>
             <el-form-item label="URL">
                 <template>
-                    <p>{{ ncfST('Frontend.032') }}</p>
-                    <p v-if="dialog.data.id > 0"><a :href="'/WeixinMp/'+ dialog.data.name + '?parameter=' + dialog.data.id"><i class="fa fa-external-link"></i> {{ ncfST('Frontend.033') }}/WeixinMp/{{mpAccountForm.name}}?parameter={{dialog.data.id}}</a></p>
-                    <p>{{ ncfST('Frontend.035') }}</p>
+                    <p>{{ ncfST('Frontend.WeixinManager.ServerAddressURLConfiguredInTheWeChatAdminConsole') }}</p>
+                    <p v-if="dialog.data.id > 0"><a :href="'/WeixinMp/'+ dialog.data.name + '?parameter=' + dialog.data.id"><i class="fa fa-external-link"></i> {{ ncfST('Frontend.WeixinManager.YourDomain') }}/WeixinMp/{{mpAccountForm.name}}?parameter={{dialog.data.id}}</a></p>
+                    <p>{{ ncfST('Frontend.WeixinManager.NoteTheOfficialAccountNameMustMatchTheNameInMpMessageHandlerName') }}</p>
                 </template>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="dialog.visible = false">{{ ncfST('Frontend.036') }}</el-button>
-            <el-button :loading="dialog.loading" type="primary" @@click="saveMpAccount">{{ ncfST('Frontend.037') }}</el-button>
+            <el-button @@click="dialog.visible = false">{{ ncfST('Frontend.WeixinManager.Cancel') }}</el-button>
+            <el-button :loading="dialog.loading" type="primary" @@click="saveMpAccount">{{ ncfST('Frontend.WeixinManager.Confirm') }}</el-button>
         </div>
     </el-dialog>
 </div>
@@ -194,29 +194,29 @@
                 },
                 mpAccountRule: {
                     name: [
-                        { required: true, message: ncfST('Frontend.038'), trigger: 'blur' },
-                        { min: 1, max: 100, message: ncfST('Frontend.042'), trigger: 'blur' }
+                        { required: true, message: ncfST('Frontend.WeixinManager.EnterOfficialAccountName'), trigger: 'blur' },
+                        { min: 1, max: 100, message: ncfST('Frontend.WeixinManager.LengthMustBeBetweenOneAnd100'), trigger: 'blur' }
                     ],
                     appId: [
-                        { required: true, message: ncfST('Frontend.039'), trigger: 'blur' },
-                        { min: 1, max: 100, message: ncfST('Frontend.042'), trigger: 'blur' }
+                        { required: true, message: ncfST('Frontend.WeixinManager.EnterAppId'), trigger: 'blur' },
+                        { min: 1, max: 100, message: ncfST('Frontend.WeixinManager.LengthMustBeBetweenOneAnd100'), trigger: 'blur' }
                     ],
                     appSecret: [
-                        { required: true, message: ncfST('Frontend.040'), trigger: 'blur' },
-                        { min: 1, max: 100, message: ncfST('Frontend.042'), trigger: 'blur' }
+                        { required: true, message: ncfST('Frontend.WeixinManager.EnterAppSecret'), trigger: 'blur' },
+                        { min: 1, max: 100, message: ncfST('Frontend.WeixinManager.LengthMustBeBetweenOneAnd100'), trigger: 'blur' }
                     ],
                     token: [
-                        { required: true, message: ncfST('Frontend.041'), trigger: 'blur' },
-                        { min: 1, max: 500, message: ncfST('Frontend.043'), trigger: 'blur' }
+                        { required: true, message: ncfST('Frontend.WeixinManager.EnterToken'), trigger: 'blur' },
+                        { min: 1, max: 500, message: ncfST('Frontend.WeixinManager.LengthMustBeBetweenOneAnd500'), trigger: 'blur' }
                     ],
                     encodingAESKey: [
-                        { min: 0, max: 500, message: ncfST('Frontend.043'), trigger: 'blur' }
+                        { min: 0, max: 500, message: ncfST('Frontend.WeixinManager.LengthMustBeBetweenOneAnd500'), trigger: 'blur' }
                     ],
                     promptRangeCode: [
-                        { min: 0, max: 500, message: ncfST('Frontend.042'), trigger: 'blur' }
+                        { min: 0, max: 500, message: ncfST('Frontend.WeixinManager.LengthMustBeBetweenOneAnd100'), trigger: 'blur' }
                     ],
                     adminRemark: [
-                        { min: 0, max: 100, message: ncfST('Frontend.042'), trigger: 'blur' }
+                        { min: 0, max: 100, message: ncfST('Frontend.WeixinManager.LengthMustBeBetweenOneAnd100'), trigger: 'blur' }
                     ]
                 },
                 uid: '',
@@ -245,7 +245,7 @@
                 },
                 add: function () {
                     this.dialog.visible = true;
-                    this.dialog.title = ncfST('Frontend.044');
+                    this.dialog.title = ncfST('Frontend.WeixinManager.AddOfficialAccount');
                     this.dialog.data.id = 0;
                     this.mpAccountForm = {
                         name: '',
@@ -260,7 +260,7 @@
                 edit: function (index, row) {
                     this.dialog.data.id = row.id;
                     this.dialog.visible = true;
-                    this.dialog.title = ncfST('Frontend.045');
+                    this.dialog.title = ncfST('Frontend.WeixinManager.EditOfficialAccount');
                     service.get('@Url.Page("Edit")?handler=Ajax&id=' + row.id).then(res => {
                         const responseData = res.data.data;
                         //debugger
@@ -285,12 +285,12 @@
                     this.$refs.ref_mpAccountForm.validate().then(res => {
                         return service.post('@Url.Page("Edit")?handler=Ajax', obj);
                     }).then(res => {
-                        var message = ncfST('Frontend.046');
+                        var message = ncfST('Frontend.WeixinManager.OfficialAccountAddedSuccessfully');
                         if (this.dialog.data.id > 0) {
-                            message = ncfST('Frontend.047');
+                            message = ncfST('Frontend.WeixinManager.OfficialAccountUpdatedSuccessfully');
                         }
                         this.$notify({
-                            title: ncfST('Frontend.048'),
+                            title: ncfST('Frontend.WeixinManager.Success'),
                             message: message,
                             type: 'success',
                             duration: 2000
@@ -305,8 +305,8 @@
                     var delIds = this.multipleSelection;
                     if (delIds.length === 0) {
                         this.$notify({
-                            title: ncfST('Frontend.049'),
-                            message: ncfST('Frontend.050'),
+                            title: ncfST('Frontend.WeixinManager.Warning'),
+                            message: ncfST('Frontend.WeixinManager.SelectAtLeastOneOfficialAccount'),
                             type: 'warning',
                             duration: 2000
                         });
@@ -318,12 +318,12 @@
                         ids.push(ele.id);
                     })
 
-                    app.$confirm(ncfST('Frontend.051'), { type: 'warning' }).then(res => {
+                    app.$confirm(ncfST('Frontend.WeixinManager.DeleteAllSelectedItems'), { type: 'warning' }).then(res => {
                         return service.post('@Url.Page("Index")?handler=Delete', ids);
                     }).then(res => {
                         this.$notify({
-                            title: ncfST('Frontend.048'),
-                            message: ncfST('Frontend.052', ids.length),
+                            title: ncfST('Frontend.WeixinManager.Success'),
+                            message: ncfST('Frontend.WeixinManager.SuccessfullyDeletedValueItems', ids.length),
                             type: 'success',
                             duration: 2000
                         });

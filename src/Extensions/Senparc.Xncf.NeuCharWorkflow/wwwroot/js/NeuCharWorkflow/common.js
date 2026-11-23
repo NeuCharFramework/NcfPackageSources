@@ -73,10 +73,10 @@
             // Older or faulty XNCF metadata can omit Name. Keep the parameter operable in a
             // draft with a deterministic key, but mark it so the runtime can refuse execution.
             normalized.name = `parameter_${index + 1}`;
-            normalized.title = String(normalized.title || '').trim() || ncfST('Frontend.099', index + 1);
+            normalized.title = String(normalized.title || '').trim() || ncfST('Frontend.NeuCharWorkflow.ParameterValue', index + 1);
             normalized.hasSyntheticName = true;
             normalized.metadataError = normalized.metadataError ||
-                ncfST('Frontend.100');
+                ncfST('Frontend.NeuCharWorkflow.FunctionParameterMetadataIsMissingAFieldNameOnlyDraftsCanBe');
             return normalized;
         }) : [];
     }

@@ -104,117 +104,117 @@
   </data>
 
 
-  <data name="Frontend.001" xml:space="preserve"><value>拡張モジュール</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.002" xml:space="preserve"><value>パネル</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.003" xml:space="preserve"><value>Sandboxパネル</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.004" xml:space="preserve"><value>環境セットアップ</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Sandbox実行概要</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.006" xml:space="preserve"><value>登録済みセッション</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.007" xml:space="preserve"><value>実行中</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.008" xml:space="preserve"><value>対話型セッション</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.009" xml:space="preserve"><value>更新</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.010" xml:space="preserve"><value>すべてのFunction</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.011" xml:space="preserve"><value>環境ドキュメント</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.012" xml:space="preserve"><value>セッション概要</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.013" xml:space="preserve"><value>すべてのセッション</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.014" xml:space="preserve"><value>登録済み</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.015" xml:space="preserve"><value>現在利用可能</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.016" xml:space="preserve"><value>Notebook / プレビュー</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.017" xml:space="preserve"><value>要対応</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.018" xml:space="preserve"><value>失敗または期限切れ</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.019" xml:space="preserve"><value>Functionクイック操作</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.020" xml:space="preserve"><value>モジュールFunctionを開く</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.021" xml:space="preserve"><value>Sandboxを作成</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.022" xml:space="preserve"><value>コードを実行</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.023" xml:space="preserve"><value>Sandboxを破棄</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.024" xml:space="preserve"><value>実行環境</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.025" xml:space="preserve"><value>ライフサイクル</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.026" xml:space="preserve"><value>TTL自動クリーンアップ</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.027" xml:space="preserve"><value>環境を確認</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.028" xml:space="preserve"><value>Sandboxセッション</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.029" xml:space="preserve"><value>テンプレート</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.030" xml:space="preserve"><value>エイリアス</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.031" xml:space="preserve"><value>ランタイム</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.032" xml:space="preserve"><value>状態</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.033" xml:space="preserve"><value>ポート</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.034" xml:space="preserve"><value>追加ポート</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.035" xml:space="preserve"><value>アクセス</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.036" xml:space="preserve"><value>対話型セッションを開く</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.037" xml:space="preserve"><value>開く</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.038" xml:space="preserve"><value>操作</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.039" xml:space="preserve"><value>エイリアスを編集</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.040" xml:space="preserve"><value>エイリアスを設定</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.041" xml:space="preserve"><value>TTLを延長または編集</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.042" xml:space="preserve"><value>実行環境を破棄</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.043" xml:space="preserve"><value>セッション記録を完全削除</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.044" xml:space="preserve"><value>セッションエイリアス</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.045" xml:space="preserve"><value>空欄でエイリアスを削除</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.046" xml:space="preserve"><value>キャンセル</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.047" xml:space="preserve"><value>保存</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.048" xml:space="preserve"><value>TTLを編集</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.049" xml:space="preserve"><value>スケジュールクリーンアップ</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.050" xml:space="preserve"><value>永久保持</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.051" xml:space="preserve"><value>ローカルチェック</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.052" xml:space="preserve"><value>再チェック</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.053" xml:space="preserve"><value>利用可能</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.054" xml:space="preserve"><value>利用不可</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.055" xml:space="preserve"><value>イメージレジストリプレフィックス</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.056" xml:space="preserve"><value>未設定（公開の既定イメージを使用。詳細はドキュメントを参照）</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.057" xml:space="preserve"><value>手動設定チェックリスト（概要）</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.058" xml:space="preserve"><value>Sandboxパネルを開く</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.059" xml:space="preserve"><value>ドキュメント：</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.060" xml:space="preserve"><value>Dockerの利用可能性、イメージプレフィックス、デプロイ手順は環境準備ページで確認します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.061" xml:space="preserve"><value>いいえ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.062" xml:space="preserve"><value>ここでプレフィックスまたは上書きを設定します。詳細はドキュメントを参照してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.063" xml:space="preserve"><value>モジュールが登録した実行エントリを使用し、パラメーター検証と結果ログはモジュールのFunctionページと同じです。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.064" xml:space="preserve"><value>保存後は現在時刻から再計算し、期限になるとバックグラウンドで自動破棄します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.065" xml:space="preserve"><value>作成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.066" xml:space="preserve"><value>Execテンプレートセッションで短いタスクコードを送信します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.067" xml:space="preserve"><value>NCFを実行している同じマシンにDocker（または互換CLI）をインストールして起動します。モジュール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.068" xml:space="preserve"><value>内部レジストリが必要な場合はホスト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.069" xml:space="preserve"><value>実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.070" xml:space="preserve"><value>公式ドキュメントに従って必要なイメージを事前に取得します。具体的な名前とバージョンはドキュメントに従ってください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.071" xml:space="preserve"><value>チェックに合格したら、モジュールFunction「Sandboxを作成」を開き、テンプレートでPython Execを選択して実行します。コマンドラインでテンプレート名を入力する必要はありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.072" xml:space="preserve"><value>状態：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.073" xml:space="preserve"><value>の</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.074" xml:space="preserve"><value>Dockerを自動インストールします。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.075" xml:space="preserve"><value>このセッションはTTLスキャンで自動破棄されず、管理者が手動で破棄する必要があります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.076" xml:space="preserve"><value>SessionIdを入力して、指定したセッションを停止・クリーンアップします。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.077" xml:space="preserve"><value>実行テンプレートとランタイムを選択して、分離セッションを作成します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.078" xml:space="preserve"><value>サイトのリバースプロキシ経由で対話型セッションにアクセスし、リンクにコンテナートークンを公開しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.079" xml:space="preserve"><value>破棄</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.080" xml:space="preserve"><value>イメージレジストリプレフィックス：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.081" xml:space="preserve"><value>セッション状態を一元確認し、モジュールFunctionで分離実行環境の作成、実行、クリーンアップを行います。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.082" xml:space="preserve"><value>状態更新：{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.083" xml:space="preserve"><value>{0}セッション</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.084" xml:space="preserve"><value>Sandboxセッションはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.085" xml:space="preserve"><value>エイリアスは一覧、Function結果、ログでセッションを識別するためだけに使用され、実行環境には影響しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.086" xml:space="preserve"><value>作成中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.087" xml:space="preserve"><value>停止中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.088" xml:space="preserve"><value>停止済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.089" xml:space="preserve"><value>失敗</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.090" xml:space="preserve"><value>期限切れ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.091" xml:space="preserve"><value>不明（{0}）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.092" xml:space="preserve"><value>Dockerの準備が完了しました。サンドボックスを作成できます。</value></data>
-  <data name="Frontend.093" xml:space="preserve"><value>Dockerの準備ができていません。ドキュメントに従って手動インストールとイメージの事前取得を完了してください。</value></data>
-  <data name="Frontend.094" xml:space="preserve"><value>NCFを実行している同じマシンにDocker（または互換CLI）をインストールして起動してください。モジュールはDockerを自動インストールしません。</value></data>
-  <data name="Frontend.095" xml:space="preserve"><value>内部レジストリを使用する場合は、ホストのappsettings.jsonにあるSenparcXncfSandbox:Imagesでプレフィックスまたは上書きを設定してください。詳細はドキュメントを参照してください。</value></data>
-  <data name="Frontend.096" xml:space="preserve"><value>回収待ち</value></data>
-  <data name="Frontend.097" xml:space="preserve"><value>サンドボックスセッションの更新に失敗しました。サービスの状態を確認してください。</value></data>
-  <data name="Frontend.098" xml:space="preserve"><value>エイリアスを更新しました。</value></data>
-  <data name="Frontend.099" xml:space="preserve"><value>エイリアスを削除しました。</value></data>
-  <data name="Frontend.100" xml:space="preserve"><value>エイリアスの更新に失敗しました。セッションの状態を確認してください。</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>永久保持に設定しました。</value></data>
-  <data name="Frontend.102" xml:space="preserve"><value>TTLを更新しました。</value></data>
-  <data name="Frontend.103" xml:space="preserve"><value>TTLの更新に失敗しました。セッションの状態とTTL設定を確認してください。</value></data>
-  <data name="Frontend.104" xml:space="preserve"><value>破棄すると対応する実行環境を停止して削除します。続行しますか？</value></data>
-  <data name="Frontend.105" xml:space="preserve"><value>サンドボックスを破棄</value></data>
-  <data name="Frontend.106" xml:space="preserve"><value>サンドボックスセッションを破棄しました。</value></data>
-  <data name="Frontend.107" xml:space="preserve"><value>サンドボックスセッションの破棄に失敗しました。サービスログを確認してください。</value></data>
-  <data name="Frontend.108" xml:space="preserve"><value>この操作ではセッション記録を完全に削除し、元に戻せません。実行環境が破棄済みであることを確認して続行しますか？</value></data>
-  <data name="Frontend.109" xml:space="preserve"><value>セッション記録を削除</value></data>
-  <data name="Frontend.110" xml:space="preserve"><value>サンドボックスセッション記録を削除しました。</value></data>
-  <data name="Frontend.111" xml:space="preserve"><value>セッション記録の削除に失敗しました。先に実行環境を破棄するか、サービスログを確認してください。</value></data>
+  <data name="Frontend.Sandbox.ExtensionModules" xml:space="preserve"><value>拡張モジュール</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Panel" xml:space="preserve"><value>パネル</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SandboxPanel" xml:space="preserve"><value>Sandboxパネル</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.EnvironmentSetup" xml:space="preserve"><value>環境セットアップ</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SandboxRuntimeOverview" xml:space="preserve"><value>Sandbox実行概要</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.RegisteredSessions" xml:space="preserve"><value>登録済みセッション</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Running" xml:space="preserve"><value>実行中</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.InteractiveSessions" xml:space="preserve"><value>対話型セッション</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Refresh" xml:space="preserve"><value>更新</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.AllFunctions" xml:space="preserve"><value>すべてのFunction</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.EnvironmentDocs" xml:space="preserve"><value>環境ドキュメント</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SessionOverview" xml:space="preserve"><value>セッション概要</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.AllSessions" xml:space="preserve"><value>すべてのセッション</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Registered" xml:space="preserve"><value>登録済み</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.CurrentlyAvailable" xml:space="preserve"><value>現在利用可能</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.NotebookPreview" xml:space="preserve"><value>Notebook / プレビュー</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.NeedsAttention" xml:space="preserve"><value>要対応</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.FailedOrExpired" xml:space="preserve"><value>失敗または期限切れ</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.FunctionQuickActions" xml:space="preserve"><value>Functionクイック操作</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.OpenModuleFunction" xml:space="preserve"><value>モジュールFunctionを開く</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.CreateSandbox" xml:space="preserve"><value>Sandboxを作成</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.ExecuteCode" xml:space="preserve"><value>コードを実行</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.DestroySandbox" xml:space="preserve"><value>Sandboxを破棄</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.RuntimeEnvironment" xml:space="preserve"><value>実行環境</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Lifecycle" xml:space="preserve"><value>ライフサイクル</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.AutomaticTTLCleanup" xml:space="preserve"><value>TTL自動クリーンアップ</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.CheckEnvironment" xml:space="preserve"><value>環境を確認</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SandboxSessions" xml:space="preserve"><value>Sandboxセッション</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Template" xml:space="preserve"><value>テンプレート</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Alias" xml:space="preserve"><value>エイリアス</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Runtime" xml:space="preserve"><value>ランタイム</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Status" xml:space="preserve"><value>状態</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Port" xml:space="preserve"><value>ポート</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.AdditionalPorts" xml:space="preserve"><value>追加ポート</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Access" xml:space="preserve"><value>アクセス</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.OpenInteractiveSession" xml:space="preserve"><value>対話型セッションを開く</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Open" xml:space="preserve"><value>開く</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Actions" xml:space="preserve"><value>操作</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.EditAlias" xml:space="preserve"><value>エイリアスを編集</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SetAlias" xml:space="preserve"><value>エイリアスを設定</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.ExtendOrEditTTL" xml:space="preserve"><value>TTLを延長または編集</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.DestroyRuntime" xml:space="preserve"><value>実行環境を破棄</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.PermanentlyDeleteSessionRecord" xml:space="preserve"><value>セッション記録を完全削除</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SessionAlias" xml:space="preserve"><value>セッションエイリアス</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.LeaveEmptyToClearTheAlias" xml:space="preserve"><value>空欄でエイリアスを削除</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Cancel" xml:space="preserve"><value>キャンセル</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Save" xml:space="preserve"><value>保存</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.EditTTL" xml:space="preserve"><value>TTLを編集</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.ScheduledCleanup" xml:space="preserve"><value>スケジュールクリーンアップ</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.KeepForever" xml:space="preserve"><value>永久保持</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.LocalCheck" xml:space="preserve"><value>ローカルチェック</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.CheckAgain" xml:space="preserve"><value>再チェック</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Available" xml:space="preserve"><value>利用可能</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Unavailable" xml:space="preserve"><value>利用不可</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.ImageRegistryPrefix" xml:space="preserve"><value>イメージレジストリプレフィックス</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.NotConfiguredPublicDefaultImagesAreUsedSeeDocumentation" xml:space="preserve"><value>未設定（公開の既定イメージを使用。詳細はドキュメントを参照）</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.ManualConfigurationChecklistSummary" xml:space="preserve"><value>手動設定チェックリスト（概要）</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.OpenSandboxPanel" xml:space="preserve"><value>Sandboxパネルを開く</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.Documentation" xml:space="preserve"><value>ドキュメント：</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.CheckDockerAvailabilityImagePrefixesAndDeploymentNotesOnTheEnvironmentSetup" xml:space="preserve"><value>Dockerの利用可能性、イメージプレフィックス、デプロイ手順は環境準備ページで確認します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.No" xml:space="preserve"><value>いいえ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.ConfigurePrefixesOrOverridesHereSeeTheDocumentation" xml:space="preserve"><value>ここでプレフィックスまたは上書きを設定します。詳細はドキュメントを参照してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.UsesTheExecutionEntryRegisteredByTheModuleParameterValidationAndResult" xml:space="preserve"><value>モジュールが登録した実行エントリを使用し、パラメーター検証と結果ログはモジュールのFunctionページと同じです。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.RecalculatesFromTheCurrentTimeAfterSavingAndDestroysTheSessionAutomatically" xml:space="preserve"><value>保存後は現在時刻から再計算し、期限になるとバックグラウンドで自動破棄します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Create" xml:space="preserve"><value>作成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.SubmitShortTaskCodeInAnExecTemplateSession" xml:space="preserve"><value>Execテンプレートセッションで短いタスクコードを送信します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.InstallAndStartDockerOrACompatibleCLIOnTheSameMachine" xml:space="preserve"><value>NCFを実行している同じマシンにDocker（または互換CLI）をインストールして起動します。モジュール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.ForAnInternalRegistryConfigureItOnTheHost" xml:space="preserve"><value>内部レジストリが必要な場合はホスト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Execute" xml:space="preserve"><value>実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.PrePullTheRequiredImagesAccordingToTheOfficialDocumentationUseThe" xml:space="preserve"><value>公式ドキュメントに従って必要なイメージを事前に取得します。具体的な名前とバージョンはドキュメントに従ってください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.AfterTheCheckPassesOpenTheModuleFunctionCreateSandboxChoosePython" xml:space="preserve"><value>チェックに合格したら、モジュールFunction「Sandboxを作成」を開き、テンプレートでPython Execを選択して実行します。コマンドラインでテンプレート名を入力する必要はありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.StatusLabel" xml:space="preserve"><value>状態：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Of" xml:space="preserve"><value>の</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.InstallDockerAutomatically" xml:space="preserve"><value>Dockerを自動インストールします。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.ThisSessionIsNotDestroyedByTheTTLScanAndMustBe" xml:space="preserve"><value>このセッションはTTLスキャンで自動破棄されず、管理者が手動で破棄する必要があります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.EnterASessionIdToStopAndCleanUpTheSpecifiedSession" xml:space="preserve"><value>SessionIdを入力して、指定したセッションを停止・クリーンアップします。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.ChooseAnExecutionTemplateAndRuntimeToCreateAnIsolatedSession" xml:space="preserve"><value>実行テンプレートとランタイムを選択して、分離セッションを作成します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.AccessInteractiveSessionsThroughTheSiteReverseProxyLinksDoNotExpose" xml:space="preserve"><value>サイトのリバースプロキシ経由で対話型セッションにアクセスし、リンクにコンテナートークンを公開しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Destroy" xml:space="preserve"><value>破棄</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.ImageRegistryPrefixLabel" xml:space="preserve"><value>イメージレジストリプレフィックス：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.ReviewSessionStatusInOnePlaceAndCreateExecuteAndCleanIsolated" xml:space="preserve"><value>セッション状態を一元確認し、モジュールFunctionで分離実行環境の作成、実行、クリーンアップを行います。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.StatusUpdatedValue" xml:space="preserve"><value>状態更新：{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.ValueSessions" xml:space="preserve"><value>{0}セッション</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.NoSandboxSessions" xml:space="preserve"><value>Sandboxセッションはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.AliasesIdentifySessionsInListsFunctionResultsAndLogsTheyDoNot" xml:space="preserve"><value>エイリアスは一覧、Function結果、ログでセッションを識別するためだけに使用され、実行環境には影響しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Creating" xml:space="preserve"><value>作成中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Stopping" xml:space="preserve"><value>停止中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Stopped" xml:space="preserve"><value>停止済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Failed" xml:space="preserve"><value>失敗</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.Expired" xml:space="preserve"><value>期限切れ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.UnknownValue" xml:space="preserve"><value>不明（{0}）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.DockerIsReadyYouCanContinueCreatingSandboxes" xml:space="preserve"><value>Dockerの準備が完了しました。サンドボックスを作成できます。</value></data>
+  <data name="Frontend.Sandbox.DockerIsNotReadyCompleteTheManualInstallationAndPrePullThe" xml:space="preserve"><value>Dockerの準備ができていません。ドキュメントに従って手動インストールとイメージの事前取得を完了してください。</value></data>
+  <data name="Frontend.Sandbox.InstallAndStartDockerOrACompatibleCLIOnTheSameMachineAlternate" xml:space="preserve"><value>NCFを実行している同じマシンにDocker（または互換CLI）をインストールして起動してください。モジュールはDockerを自動インストールしません。</value></data>
+  <data name="Frontend.Sandbox.ForAnInternalRegistryConfigureThePrefixOrOverridesInSenparcXncfSandboxImages" xml:space="preserve"><value>内部レジストリを使用する場合は、ホストのappsettings.jsonにあるSenparcXncfSandbox:Imagesでプレフィックスまたは上書きを設定してください。詳細はドキュメントを参照してください。</value></data>
+  <data name="Frontend.Sandbox.WaitingForCleanup" xml:space="preserve"><value>回収待ち</value></data>
+  <data name="Frontend.Sandbox.FailedToRefreshSandboxSessionsCheckTheServiceStatus" xml:space="preserve"><value>サンドボックスセッションの更新に失敗しました。サービスの状態を確認してください。</value></data>
+  <data name="Frontend.Sandbox.AliasUpdated" xml:space="preserve"><value>エイリアスを更新しました。</value></data>
+  <data name="Frontend.Sandbox.AliasCleared" xml:space="preserve"><value>エイリアスを削除しました。</value></data>
+  <data name="Frontend.Sandbox.FailedToUpdateTheAliasCheckTheSessionStatus" xml:space="preserve"><value>エイリアスの更新に失敗しました。セッションの状態を確認してください。</value></data>
+  <data name="Frontend.Sandbox.SetToKeepPermanently" xml:space="preserve"><value>永久保持に設定しました。</value></data>
+  <data name="Frontend.Sandbox.TTLUpdated" xml:space="preserve"><value>TTLを更新しました。</value></data>
+  <data name="Frontend.Sandbox.FailedToUpdateTTLCheckTheSessionStatusAndTTLSetting" xml:space="preserve"><value>TTLの更新に失敗しました。セッションの状態とTTL設定を確認してください。</value></data>
+  <data name="Frontend.Sandbox.TheEnvironmentWillBeStoppedAndDeletedAfterDestructionContinue" xml:space="preserve"><value>破棄すると対応する実行環境を停止して削除します。続行しますか？</value></data>
+  <data name="Frontend.Sandbox.DestroySandboxAlternate" xml:space="preserve"><value>サンドボックスを破棄</value></data>
+  <data name="Frontend.Sandbox.SandboxSessionDestroyed" xml:space="preserve"><value>サンドボックスセッションを破棄しました。</value></data>
+  <data name="Frontend.Sandbox.FailedToDestroyTheSandboxSessionCheckTheServiceLogs" xml:space="preserve"><value>サンドボックスセッションの破棄に失敗しました。サービスログを確認してください。</value></data>
+  <data name="Frontend.Sandbox.ThisPermanentlyDeletesTheSessionRecordAndCannotBeUndoneConfirmThat" xml:space="preserve"><value>この操作ではセッション記録を完全に削除し、元に戻せません。実行環境が破棄済みであることを確認して続行しますか？</value></data>
+  <data name="Frontend.Sandbox.DeleteSessionRecord" xml:space="preserve"><value>セッション記録を削除</value></data>
+  <data name="Frontend.Sandbox.SandboxSessionRecordDeleted" xml:space="preserve"><value>サンドボックスセッション記録を削除しました。</value></data>
+  <data name="Frontend.Sandbox.FailedToDeleteTheSessionRecordDestroyTheRuntimeEnvironmentFirstOr" xml:space="preserve"><value>セッション記録の削除に失敗しました。先に実行環境を破棄するか、サービスログを確認してください。</value></data>
   <data name="Function.Sandbox.List.Name" xml:space="preserve"><value>サンドボックスを一覧表示</value></data>
   <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>最近のサンドボックスセッションを表示します。</value></data>
   <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>サンドボックスの状態</value></data>
@@ -257,24 +257,24 @@
   <data name="Parameter.Sandbox.SessionId.Help" xml:space="preserve"><value>実行中の JupyterLab セッションを識別する必要があります。</value></data>
   <data name="Parameter.Sandbox.MaxBytes" xml:space="preserve"><value>読み取り上限（バイト）</value></data>
   <data name="Parameter.Sandbox.MaxBytes.Help" xml:space="preserve"><value>空欄または 0 でシステム既定の上限を使用します。</value></data>
-  <data name="Frontend.112" xml:space="preserve"><value>短時間 Python タスク（Docker）</value></data>
-  <data name="Frontend.113" xml:space="preserve"><value>短時間 C# タスク（Docker SDK イメージ）</value></data>
-  <data name="Frontend.114" xml:space="preserve"><value>インタラクティブ Python Notebook（メモリ消費大）</value></data>
-  <data name="Frontend.115" xml:space="preserve"><value>インタラクティブ C# Notebook（先にイメージの構築・設定が必要）</value></data>
-  <data name="Frontend.116" xml:space="preserve"><value>ローカル Docker が必要</value></data>
-  <data name="Frontend.117" xml:space="preserve"><value>初回リリース用のプレースホルダー（まだ利用できません）</value></data>
+  <data name="Frontend.Sandbox.ShortPythonTaskDocker" xml:space="preserve"><value>短時間 Python タスク（Docker）</value></data>
+  <data name="Frontend.Sandbox.ShortCTaskDockerSDKImage" xml:space="preserve"><value>短時間 C# タスク（Docker SDK イメージ）</value></data>
+  <data name="Frontend.Sandbox.InteractivePythonNotebookMemoryIntensive" xml:space="preserve"><value>インタラクティブ Python Notebook（メモリ消費大）</value></data>
+  <data name="Frontend.Sandbox.InteractiveCNotebookImageMustBeBuiltConfiguredFirst" xml:space="preserve"><value>インタラクティブ C# Notebook（先にイメージの構築・設定が必要）</value></data>
+  <data name="Frontend.Sandbox.RequiresLocalDocker" xml:space="preserve"><value>ローカル Docker が必要</value></data>
+  <data name="Frontend.Sandbox.PlaceholderForTheFirstReleaseNotAvailableYet" xml:space="preserve"><value>初回リリース用のプレースホルダー（まだ利用できません）</value></data>
   <data name="Function.Sandbox.LabUploadFiles.Name" xml:space="preserve"><value>Lab ファイルを一括アップロード</value></data>
   <data name="Function.Sandbox.LabUploadFiles.Description" xml:space="preserve"><value>複数のアップロード済みファイルをストリームで実行中の永続 JupyterLab ワークスペースに書き込みます。</value></data>
-  <data name="Frontend.118" xml:space="preserve"><value>コード</value></data>
-  <data name="Frontend.119" xml:space="preserve"><value>短いタスクのソースコード。Python 例：print('hello from NCF Sandbox')。C# 例：Console.WriteLine("hello from NCF Sandbox")。（C# 文字列は二重引用符を使用）</value></data>
-  <data name="Frontend.120" xml:space="preserve"><value>コマンド</value></data>
-  <data name="Frontend.121" xml:space="preserve"><value>Lab コンテナー内で /bin/sh -lc により実行するコマンド。作業ディレクトリは Lab ワークスペース内に制限されます。</value></data>
-  <data name="Frontend.122" xml:space="preserve"><value>作業ディレクトリ</value></data>
-  <data name="Frontend.123" xml:space="preserve"><value>Lab ワークスペースからの相対ディレクトリ。空欄ならワークスペースのルートです。</value></data>
-  <data name="Frontend.124" xml:space="preserve"><value>タイムアウト（秒）</value></data>
-  <data name="Frontend.125" xml:space="preserve"><value>1 回のコマンドの最大実行時間。既定 30 秒、最大 120 秒です。</value></data>
-  <data name="Frontend.126" xml:space="preserve"><value>標準入力</value></data>
-  <data name="Frontend.127" xml:space="preserve"><value>任意。指定すると docker exec -i で実行し、内容を 1 行ずつ stdin に書き込みます。最大 32768 文字です。</value></data>
+  <data name="Frontend.Sandbox.Code" xml:space="preserve"><value>コード</value></data>
+  <data name="Frontend.Sandbox.ShortTaskSourceCodePythonExamplePrintHelloFromNCFSandboxC" xml:space="preserve"><value>短いタスクのソースコード。Python 例：print('hello from NCF Sandbox')。C# 例：Console.WriteLine("hello from NCF Sandbox")。（C# 文字列は二重引用符を使用）</value></data>
+  <data name="Frontend.Sandbox.Command" xml:space="preserve"><value>コマンド</value></data>
+  <data name="Frontend.Sandbox.CommandExecutedThroughBinShLcInsideTheLabContainerTheWorking" xml:space="preserve"><value>Lab コンテナー内で /bin/sh -lc により実行するコマンド。作業ディレクトリは Lab ワークスペース内に制限されます。</value></data>
+  <data name="Frontend.Sandbox.WorkingDirectory" xml:space="preserve"><value>作業ディレクトリ</value></data>
+  <data name="Frontend.Sandbox.DirectoryRelativeToTheLabWorkspaceLeaveEmptyForTheWorkspaceRoot" xml:space="preserve"><value>Lab ワークスペースからの相対ディレクトリ。空欄ならワークスペースのルートです。</value></data>
+  <data name="Frontend.Sandbox.TimeoutSeconds" xml:space="preserve"><value>タイムアウト（秒）</value></data>
+  <data name="Frontend.Sandbox.MaximumDurationOfOneCommand30SecondsByDefaultAnd120Seconds" xml:space="preserve"><value>1 回のコマンドの最大実行時間。既定 30 秒、最大 120 秒です。</value></data>
+  <data name="Frontend.Sandbox.StandardInput" xml:space="preserve"><value>標準入力</value></data>
+  <data name="Frontend.Sandbox.OptionalWhenProvidedTheCommandRunsWithDockerExecIAndThe" xml:space="preserve"><value>任意。指定すると docker exec -i で実行し、内容を 1 行ずつ stdin に書き込みます。最大 32768 文字です。</value></data>
   <data name="Parameter.Sandbox.RelativePath" xml:space="preserve"><value>ワークスペースファイルパス</value></data>
   <data name="Parameter.Sandbox.RelativePath.Help" xml:space="preserve"><value>ワークスペース内の相対パスだけを指定できます。例：data/input.json。</value></data>
   <data name="Parameter.Sandbox.Base64" xml:space="preserve"><value>Base64 内容</value></data>
@@ -299,6 +299,6 @@
   <data name="Parameter.Sandbox.MaxItems.Help" xml:space="preserve"><value>空欄または 0 でシステム既定の上限を使用します。</value></data>
   <data name="Parameter.Sandbox.NotebookPath" xml:space="preserve"><value>ワークスペースファイルパス</value></data>
   <data name="Parameter.Sandbox.NotebookPath.Help" xml:space="preserve"><value>パスは .ipynb で終わる必要があります。例：notebooks/demo.ipynb。</value></data>
-  <data name="Frontend.220" xml:space="preserve"><value>標準 Python 3 カーネル</value></data>
-  <data name="Frontend.221" xml:space="preserve"><value>dotnet-interactive C# カーネル。C# Jupyter イメージが必要です。</value></data>
+  <data name="Frontend.Sandbox.StandardPythonThreeKernel" xml:space="preserve"><value>標準 Python 3 カーネル</value></data>
+  <data name="Frontend.Sandbox.DotnetInteractiveCKernelACJupyterImageIsRequired" xml:space="preserve"><value>dotnet-interactive C# カーネル。C# Jupyter イメージが必要です。</value></data>
 </root>
