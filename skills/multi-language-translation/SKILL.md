@@ -24,7 +24,7 @@ When creating or maintaining an NCF/XNCF module, all user-facing text must use t
 - Do not add a new supported culture globally for an ordinary module edit. Only update `NcfLocalizationOptions.SupportedCultures` when a language is intentionally being added to NCF itself.
 - Verify key-set equality across all seven files, no new hard-coded UI text, and successful lookup in Chinese plus at least one non-Chinese culture.
 
-The repository's detailed XNCF rule is maintained in [develop-and-maintain.md](../../../skills/develop-xncf-modules/references/develop-and-maintain.md#本地化). Follow it for runtime localization work rather than translating runtime string literals in place.
+The repository's detailed XNCF rule is in [develop-and-maintain.md](../develop-xncf-modules/references/develop-and-maintain.md#%E6%9C%AC%E5%9C%B0%E5%8C%96). Follow it for runtime localization instead of translating runtime string literals in place.
 
 ---
 
@@ -106,7 +106,7 @@ For each `.md` file that contains Chinese content:
 
 2. **Translate the source file** (the original, e.g., `README.md`) into English:
    - Translate all headings, paragraphs, list items, table content, and code block descriptions.
-   - Preserve all Markdown formatting: headings (`#`), bold (`**`), code blocks (`` ` `` and ```` ``` ````), links, tables, etc.
+   - Preserve all Markdown formatting: headings (`#`), bold (`**`), code blocks (`` ` `` and ` ``` ` ), links, tables, etc.
    - Do **not** translate code samples inside fenced code blocks — only translate surrounding prose and inline comments within code blocks if they are in Chinese.
    - If the file is already entirely in English, skip it (do not create a `.cn.md`).
 
@@ -140,8 +140,6 @@ For each `.md` file that contains Chinese content:
 ---
 
 ## Commit Message Conventions
-
-Use the following prefixes for all commits in this workflow:
 
 | Prefix | Usage |
 |---|---|
