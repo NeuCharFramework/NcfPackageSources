@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <UseAppHost>false</UseAppHost>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.4</Version>
+    <Version>0.2.4.1</Version>
     <AssemblyName>Senparc.Xncf.WorkspaceAgent</AssemblyName>
     <RootNamespace>Senparc.Xncf.WorkspaceAgent</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -25,6 +25,12 @@ namespace Senparc.Xncf.WeixinManager.WeixinClaw;
 
 public static class WeixinClawQrCodeRenderer
 {
+    /// <summary>
+    /// Renders QR content as a PNG data URI using high error correction.
+    /// </summary>
+    /// <param name="content">The non-empty content encoded into the QR code.</param>
+    /// <returns>A <c>data:image/png;base64,...</c> URI.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="content"/> is blank.</exception>
     public static string RenderDataUri(string content)
     {
         if (string.IsNullOrWhiteSpace(content))

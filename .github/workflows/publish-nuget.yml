@@ -1,0 +1,159 @@
+name: Build and publish NuGet packages
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the generated packages to nuget.org using OIDC
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and collect NuGet packages
+    runs-on: ubuntu-latest
+    concurrency:
+      group: nuget-package-build-${{ github.ref }}
+      cancel-in-progress: true
+    env:
+      BUILD_CONFIGURATION: Release
+      PACKAGE_DIRECTORY: ${{ github.workspace }}/artifacts/packages
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore solution
+        run: dotnet restore src/NcfPackageSources.sln
+
+      - name: Build solution and generate packages
+        shell: bash
+        run: |
+          mkdir -p "$PACKAGE_DIRECTORY"
+          dotnet build src/NcfPackageSources.sln \
+            --configuration "$BUILD_CONFIGURATION" \
+            --no-restore \
+            --disable-build-servers \
+            --maxcpucount:1 \
+            -p:PackageOutputPath="$PACKAGE_DIRECTORY"
+
+      - name: Validate required abstraction packages
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_packages=(
+            "Senparc.Ncf.Shared.Abstractions"
+            "Senparc.Xncf.FileManager.Abstractions"
+            "Senparc.Xncf.MCP.Abstractions"
+            "Senparc.Xncf.Workspace.Abstractions"
+            "Senparc.Xncf.Connectors.Abstractions"
+          )
+
+          for package_id in "${required_packages[@]}"; do
+            if ! compgen -G "$PACKAGE_DIRECTORY/$package_id.*.nupkg" > /dev/null; then
+              echo "::error::Required package was not generated: $package_id"
+              exit 1
+            fi
+          done
+
+          package_count="$(find "$PACKAGE_DIRECTORY" -maxdepth 1 -type f -name '*.nupkg' | wc -l | tr -d ' ')"
+          if [[ "$package_count" -eq 0 ]]; then
+            echo "::error::No NuGet packages were generated."
+            exit 1
+          fi
+
+          echo "Validated $package_count NuGet package(s)."
+          find "$PACKAGE_DIRECTORY" -maxdepth 1 -type f -name '*.nupkg' -printf '%f\n' | sort
+
+      - name: Upload NuGet packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages-${{ github.run_id }}
+          path: artifacts/packages/
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    name: Publish packages to nuget.org
+    needs: build
+    if: >-
+      (github.event_name == 'workflow_dispatch' && inputs.publish == true) ||
+      (github.event_name == 'push' &&
+       github.ref == 'refs/heads/master' &&
+       vars.ENABLE_GITHUB_NUGET_PUBLISH == 'true')
+    runs-on: ubuntu-latest
+    environment: nuget-production
+    concurrency:
+      group: nuget-production
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Download NuGet packages
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-packages-${{ github.run_id }}
+          path: artifacts/packages
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: NuGet login with GitHub OIDC
+        id: nuget-login
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Push NuGet packages
+        env:
+          NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+          PACKAGE_DIRECTORY: ${{ github.workspace }}/artifacts/packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+
+          packages=(
+            "$PACKAGE_DIRECTORY"/Senparc.Ncf.*.nupkg
+            "$PACKAGE_DIRECTORY"/Senparc.Xncf.*.nupkg
+          )
+
+          if [[ "${#packages[@]}" -eq 0 ]]; then
+            echo "::error::No Senparc.Ncf.* or Senparc.Xncf.* package was found."
+            exit 1
+          fi
+
+          for package in "${packages[@]}"; do
+            echo "Publishing $(basename "$package")"
+            dotnet nuget push "$package" \
+              --source "https://api.nuget.org/v3/index.json" \
+              --api-key "$NUGET_API_KEY" \
+              --skip-duplicate \
+              --timeout 3600
+          done
+
+          {
+            echo "## NuGet publishing summary"
+            echo
+            echo "Published or verified ${#packages[@]} package(s) against nuget.org."
+          } >> "$GITHUB_STEP_SUMMARY"

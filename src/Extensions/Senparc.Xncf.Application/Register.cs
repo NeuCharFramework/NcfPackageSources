@@ -39,6 +39,9 @@ namespace Senparc.Xncf.Application
             "应用程序模块",
             "允许开发者启动外部程序");
 
+        /// <summary>
+        /// Initializes the Application XNCF registration metadata.
+        /// </summary>
         public Register()
         { }
 

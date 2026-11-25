@@ -41,6 +41,10 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
             return options;
         });
 
+        /// <summary>
+        /// Initializes the Dapr serializer with an error logger.
+        /// </summary>
+        /// <param name="logger">The logger used when serialization or deserialization fails.</param>
         public Serializer(ILogger<Serializer> logger)
         {
             _logger = logger;

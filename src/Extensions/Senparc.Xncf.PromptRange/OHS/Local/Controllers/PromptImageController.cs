@@ -39,6 +39,11 @@ public class PromptImageController : ControllerBase
     private const string AllowedPrefix = "PromptRange/TextToImage";
 
     [HttpGet]
+    /// <summary>
+    /// Serves an authorized PromptRange image under the constrained App_Data prefix.
+    /// </summary>
+    /// <param name="path">The relative PromptRange image path.</param>
+    /// <returns>A range-enabled file result or an HTTP validation/not-found response.</returns>
     public IActionResult Get(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
@@ -81,6 +86,11 @@ public class PromptImageController : ControllerBase
         return PhysicalFile(fullPath, contentType, enableRangeProcessing: true);
     }
 
+    /// <summary>
+    /// Normalizes a user-supplied relative path and rejects traversal segments.
+    /// </summary>
+    /// <param name="path">The raw relative path.</param>
+    /// <returns>A slash-normalized path, or <see langword="null"/> when traversal is detected.</returns>
     private static string NormalizeRelativePath(string path)
     {
         var normalized = (path ?? string.Empty).Trim().Replace('\\', '/');

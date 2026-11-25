@@ -49,7 +49,11 @@ namespace Senparc.Xncf.Installer.Domain.Services
             "149D8021-1783-4FC9-97A8-F1A1BA60245B", // Senparc.Xncf.MCP
             "796D12D8-580B-40F3-A6E8-A5D9D2EABB69", // Senparc.Xncf.AIKernel
             "D858D7FA-775A-4690-9023-CFB0B3B84994", // Senparc.Xncf.AgentsManager
-            "E9A9D870-A285-4BCE-9D4D-26A219C41252"  // Senparc.Xncf.DesktopBridge
+            "E9A9D870-A285-4BCE-9D4D-26A219C41252", // Senparc.Xncf.DesktopBridge
+            "9D0AA0B5-1E76-4BA3-96A0-4BE1A8D6A6E7", // Senparc.Xncf.Workspace
+            "5F972F29-A2A5-4A87-B5B8-2FE758AA457B", // Senparc.Xncf.NeuCharWorkflow
+            "BC7769FE-E094-4EAF-9B1F-D82670D1D691", // Senparc.Xncf.FileManager
+            "C4E8A1D2-7B63-4F05-9A18-2D6E0B5C7F41"  // Senparc.Xncf.Connectors
         };
 
         private readonly IServiceProvider _serviceProvider;

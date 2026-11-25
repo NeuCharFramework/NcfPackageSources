@@ -40,6 +40,11 @@ public class PromptAudioController : ControllerBase
     };
 
     [HttpGet]
+    /// <summary>
+    /// Serves an authorized PromptRange audio file under the configured App_Data prefixes.
+    /// </summary>
+    /// <param name="path">The relative TextToSpeech or SpeechToText path.</param>
+    /// <returns>A range-enabled file result or an HTTP validation/not-found response.</returns>
     public IActionResult Get(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
@@ -82,6 +87,11 @@ public class PromptAudioController : ControllerBase
         return PhysicalFile(fullPath, contentType, enableRangeProcessing: true);
     }
 
+    /// <summary>
+    /// Normalizes a user-supplied relative path and rejects traversal segments.
+    /// </summary>
+    /// <param name="path">The raw relative path.</param>
+    /// <returns>A slash-normalized path, or <see langword="null"/> when traversal is detected.</returns>
     private static string NormalizeRelativePath(string path)
     {
         var normalized = (path ?? string.Empty).Trim().Replace('\\', '/');

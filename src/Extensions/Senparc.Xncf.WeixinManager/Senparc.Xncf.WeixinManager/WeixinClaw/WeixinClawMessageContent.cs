@@ -29,6 +29,12 @@ internal static class WeixinClawMessageContent
 {
     private const string Prefix = "__NCF_WEIXINCLAW_MEDIA__";
 
+    /// <summary>
+    /// Serializes text and stored media metadata into the internal message envelope.
+    /// </summary>
+    /// <param name="text">The textual message content.</param>
+    /// <param name="mediaItems">The stored media items associated with the message.</param>
+    /// <returns>The envelope string, or plain text when no media items are present.</returns>
     public static string Serialize(string text, IReadOnlyList<WeixinClawStoredMedia> mediaItems)
     {
         if (mediaItems == null || mediaItems.Count == 0)
@@ -44,6 +50,11 @@ internal static class WeixinClawMessageContent
             });
     }
 
+    /// <summary>
+    /// Parses an internal media envelope, preserving the original value when malformed.
+    /// </summary>
+    /// <param name="value">The persisted message text.</param>
+    /// <returns>A stored message object with a parse-error marker when JSON decoding fails.</returns>
     public static WeixinClawStoredMessage Parse(string value)
     {
         if (string.IsNullOrWhiteSpace(value)

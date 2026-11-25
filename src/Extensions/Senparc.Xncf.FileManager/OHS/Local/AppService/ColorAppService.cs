@@ -31,6 +31,11 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
     {
         private readonly ColorService _colorService;
 
+        /// <summary>
+        /// Initializes the FileManager color application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="colorService">The color persistence service.</param>
         public ColorAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
         {
             this._colorService = colorService;
@@ -38,9 +43,9 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
 
 
         /// <summary>
-        /// get or initialize a ColorDto object
+        /// Gets the persisted color or initializes one and returns its RGB values.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An application response containing color values and elapsed time.</returns>
         public async Task<AppResponseBase<Color_GetOrInitColorResponse>> GetOrInitColorAsync()
         {
             return await this.GetResponseAsync<Color_GetOrInitColorResponse>(async (response, logger) =>

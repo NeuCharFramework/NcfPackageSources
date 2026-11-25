@@ -36,6 +36,9 @@ public class Register : XncfRegisterBase, IXncfRegister
             "Dapr 模块",
             "为其他模块提供 Dapr 相关能力");
 
+    /// <summary>
+    /// Initializes the Dapr XNCF registration metadata.
+    /// </summary>
     public Register()
     { }
 

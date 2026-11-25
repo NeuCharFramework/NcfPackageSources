@@ -28,8 +28,21 @@ namespace Senparc.Xncf.XncfBuilder.Abstractions
     /// </summary>
     public interface IXncfModulesInventoryRequestWaiter
     {
+        /// <summary>
+        /// Registers a request identifier and creates its asynchronous completion source.
+        /// </summary>
+        /// <param name="requestId">The unique inventory request identifier.</param>
         void RegisterRequest(string requestId);
 
+        /// <summary>
+        /// Completes a registered request when an inventory response arrives.
+        /// </summary>
+        /// <param name="requestId">The request identifier.</param>
+        /// <param name="success">Whether inventory collection succeeded.</param>
+        /// <param name="message">The response message.</param>
+        /// <param name="installed">Installed module records.</param>
+        /// <param name="notInstalled">Missing module records.</param>
+        /// <returns><see langword="true"/> when a registered waiter accepted the result.</returns>
         bool TrySetResult(
             string requestId,
             bool success,
@@ -37,6 +50,13 @@ namespace Senparc.Xncf.XncfBuilder.Abstractions
             XncfModuleInventoryItem[] installed,
             XncfModuleInventoryItem[] notInstalled);
 
+        /// <summary>
+        /// Waits for a registered inventory response until timeout or cancellation.
+        /// </summary>
+        /// <param name="requestId">The request identifier.</param>
+        /// <param name="timeout">The maximum wait duration.</param>
+        /// <param name="cancellationToken">Token used to cancel waiting.</param>
+        /// <returns>The response tuple, or a timeout/missing-request result.</returns>
         Task<(bool Ok, string Message, XncfModuleInventoryItem[] Installed, XncfModuleInventoryItem[] NotInstalled)>
             WaitForResponseAsync(string requestId, TimeSpan timeout, CancellationToken cancellationToken = default);
     }
@@ -46,6 +66,7 @@ namespace Senparc.Xncf.XncfBuilder.Abstractions
         private readonly ConcurrentDictionary<string, TaskCompletionSource<(bool Ok, string Message, XncfModuleInventoryItem[] Installed, XncfModuleInventoryItem[] NotInstalled)>> _pending =
             new(StringComparer.Ordinal);
 
+        /// <inheritdoc />
         public void RegisterRequest(string requestId)
         {
             var tcs = new TaskCompletionSource<(bool Ok, string Message, XncfModuleInventoryItem[] Installed, XncfModuleInventoryItem[] NotInstalled)>(
@@ -53,6 +74,7 @@ namespace Senparc.Xncf.XncfBuilder.Abstractions
             _pending[requestId] = tcs;
         }
 
+        /// <inheritdoc />
         public bool TrySetResult(
             string requestId,
             bool success,
@@ -68,6 +90,7 @@ namespace Senparc.Xncf.XncfBuilder.Abstractions
             return false;
         }
 
+        /// <inheritdoc />
         public async Task<(bool Ok, string Message, XncfModuleInventoryItem[] Installed, XncfModuleInventoryItem[] NotInstalled)> WaitForResponseAsync(
             string requestId,
             TimeSpan timeout,

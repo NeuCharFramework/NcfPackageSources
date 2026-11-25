@@ -38,6 +38,11 @@ public sealed class NcfFileManagerGateway : IFileManagerGateway
     private readonly NcfFileService _fileService;
     private readonly XncfRegisterManager _registerManager;
 
+    /// <summary>
+    /// Initializes the FileManager gateway used by cross-module file consumers.
+    /// </summary>
+    /// <param name="fileService">The FileManager service used for upload, read, and delete operations.</param>
+    /// <param name="serviceProvider">The provider used to verify module availability.</param>
     public NcfFileManagerGateway(
         NcfFileService fileService,
         IServiceProvider serviceProvider)
@@ -46,12 +51,25 @@ public sealed class NcfFileManagerGateway : IFileManagerGateway
         _registerManager = new XncfRegisterManager(serviceProvider);
     }
 
+    /// <summary>
+    /// Determines whether the FileManager XNCF is installed and available.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel availability checking.</param>
+    /// <returns>A task returning <see langword="true"/> when the module is available.</returns>
     public Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
         return _registerManager.CheckXncfAvailable(new Register());
     }
 
+    /// <summary>
+    /// Imports a stream into the scope mapped from a cross-module resource kind.
+    /// </summary>
+    /// <param name="request">The stream, file metadata, resource kind, and optional description.</param>
+    /// <param name="cancellationToken">Token used to cancel availability or upload work.</param>
+    /// <returns>The persisted file reference returned to the calling module.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when FileManager is unavailable.</exception>
     public async Task<FileManagerImportResult> ImportAsync(
         FileManagerImportRequest request,
         CancellationToken cancellationToken = default)
@@ -98,6 +116,14 @@ public sealed class NcfFileManagerGateway : IFileManagerGateway
             request.ResourceKind.ToString());
     }
 
+    /// <summary>
+    /// Opens a FileManager file for cross-module streaming.
+    /// </summary>
+    /// <param name="fileId">The FileManager file identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the read request.</param>
+    /// <returns>The file metadata and readable stream.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="fileId"/> is not positive.</exception>
+    /// <exception cref="FileNotFoundException">Thrown when the file does not exist.</exception>
     public async Task<FileManagerReadResult> OpenReadAsync(
         int fileId,
         CancellationToken cancellationToken = default)
@@ -122,6 +148,13 @@ public sealed class NcfFileManagerGateway : IFileManagerGateway
             result.Stream);
     }
 
+    /// <summary>
+    /// Deletes a FileManager file by identifier.
+    /// </summary>
+    /// <param name="fileId">The FileManager file identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the delete request.</param>
+    /// <returns>A task that completes after deletion.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="fileId"/> is not positive.</exception>
     public async Task DeleteAsync(
         int fileId,
         CancellationToken cancellationToken = default)

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.1.4</Version>
+    <Version>0.1.4.1</Version>
     <PackageType>Template</PackageType>
     <PackageVersion>0.15.0</PackageVersion>
     <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>

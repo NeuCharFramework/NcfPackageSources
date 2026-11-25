@@ -51,13 +51,13 @@ internal static class AdminChatWorkspaceToolFactory
         var target = new WorkspaceToolTarget(client, allowWrite, allowCli, budget);
         var functions = new List<AIFunction>
         {
-            Create(target, nameof(WorkspaceToolTarget.ListAsync), "workspace_list", "列出当前 Workspace 内的文件和目录。"),
-            Create(target, nameof(WorkspaceToolTarget.ReadAsync), "workspace_read", "读取当前 Workspace 内的文本文件。"),
+            Create(target, nameof(WorkspaceToolTarget.ListAsync), "workspace_list", "列出当前 Workspace 内的文件和目录。relativePath 可省略或为空，此时表示 Workspace 根目录。"),
+            Create(target, nameof(WorkspaceToolTarget.ReadAsync), "workspace_read", "读取当前 Workspace 内的文本文件。relativePath 必须指向具体文件；每次最多返回 4000 字符。"),
             Create(
                 target,
                 nameof(WorkspaceToolTarget.SearchAsync),
                 "workspace_search",
-                "在当前 Workspace 中搜索文件名、相对路径 glob 和文件内容。nameQuery 是文件名子串；pathGlob 支持相对路径 glob，例如 tools/NcfWebAdminBaseline/**/*Workspace*；contentQuery 默认是字面量，设置 contentRegex=true 后支持正则表达式和 | 批量条件，例如 WorkspaceAssets|sandbox|Content-Security-Policy。返回匹配文件、行号和预览；如果未提供查询条件，则返回指定目录的文件和目录列表。")
+                "在当前 Workspace 中搜索文件名、相对路径 glob 和文件内容。relativePath 可省略或为空，此时表示 Workspace 根目录。nameQuery 是文件名子串；pathGlob 支持相对路径 glob，例如 tools/NcfWebAdminBaseline/**/*Workspace*；contentQuery 默认是字面量，设置 contentRegex=true 后支持正则表达式和 | 批量条件，例如 WorkspaceAssets|sandbox|Content-Security-Policy。返回匹配文件、行号和预览；如果未提供查询条件，则返回指定目录的文件和目录列表。")
         };
         if (documents != null)
         {
@@ -115,6 +115,7 @@ internal static class AdminChatWorkspaceToolFactory
             CancellationToken cancellationToken = default)
         {
             if (offset < 0 || maxEntries is < 1 or > 100) throw new ArgumentException("目录分页参数无效，最多返回 100 个条目。");
+            relativePath ??= string.Empty;
             var entries = await _client.ListAsync(relativePath, cancellationToken).ConfigureAwait(false);
             return _budget.Json(new { entries = entries.Skip(offset).Take(maxEntries), nextOffset = offset + maxEntries,
                 hasMore = offset + maxEntries < entries.Count });
@@ -124,7 +125,8 @@ internal static class AdminChatWorkspaceToolFactory
             CancellationToken cancellationToken = default)
         {
             EnsureFilePath(relativePath);
-            if (offset < 0 || maxCharacters is < 1 or > 4000) throw new ArgumentException("文本读取参数无效，每次最多 4000 字符。");
+            if (offset < 0 || maxCharacters < 1) throw new ArgumentException("文本读取参数无效，offset 必须非负，maxCharacters 必须大于 0。");
+            maxCharacters = Math.Min(maxCharacters, 4000);
             var extension = Path.GetExtension(relativePath).ToLowerInvariant();
             if (extension is ".pdf" or ".docx" or ".xlsx" or ".pptx" or ".doc" or ".xls" or ".ppt"
                 or ".jpg" or ".jpeg" or ".png" or ".webp" or ".zip")
@@ -149,6 +151,7 @@ internal static class AdminChatWorkspaceToolFactory
             bool contentRegex = false)
         {
             if (maxResults is < 1 or > 100) throw new ArgumentException("文件搜索最多返回 100 个结果。");
+            relativePath ??= string.Empty;
             if (string.IsNullOrWhiteSpace(nameQuery)
                 && string.IsNullOrWhiteSpace(contentQuery)
                 && string.IsNullOrWhiteSpace(pathGlob))
@@ -262,6 +265,8 @@ internal static class AdminChatWorkspaceToolFactory
                 throw new InvalidOperationException("当前会话未启用 Workspace Python 执行权限。");
             }
 
+            EnsureFilePath(scriptPath);
+            workingDirectory ??= string.Empty;
             var result = await _client.ExecutePythonAsync(
                 new WorkspacePythonRequest(scriptPath, arguments ?? Array.Empty<string>(), workingDirectory)).ConfigureAwait(false);
             return JsonSerializer.Serialize(result);
@@ -412,7 +417,8 @@ internal static class AdminChatWorkspaceToolFactory
             var argumentSummary = FormatArguments(arguments);
             try
             {
-                return await base.InvokeCoreAsync(arguments, cancellationToken).ConfigureAwait(false);
+                var normalizedArguments = NormalizeRootPath(arguments);
+                return await base.InvokeCoreAsync(normalizedArguments, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -425,6 +431,29 @@ internal static class AdminChatWorkspaceToolFactory
                 Console.Error.WriteLine($"[AdminChat.WorkspaceTool.Failed] {detail}");
                 throw;
             }
+        }
+
+        private AIFunctionArguments NormalizeRootPath(AIFunctionArguments arguments)
+        {
+            if ((Name != "workspace_list" && Name != "workspace_search") || arguments == null)
+            {
+                return arguments;
+            }
+
+            var values = arguments.ToDictionary(
+                pair => pair.Key,
+                pair => pair.Value,
+                StringComparer.OrdinalIgnoreCase);
+            if (!values.TryGetValue("relativePath", out var relativePath) || relativePath == null)
+            {
+                values["relativePath"] = string.Empty;
+            }
+
+            return new AIFunctionArguments(values)
+            {
+                Services = arguments.Services,
+                Context = arguments.Context
+            };
         }
 
         private static string FormatArguments(IEnumerable<KeyValuePair<string, object>> arguments)

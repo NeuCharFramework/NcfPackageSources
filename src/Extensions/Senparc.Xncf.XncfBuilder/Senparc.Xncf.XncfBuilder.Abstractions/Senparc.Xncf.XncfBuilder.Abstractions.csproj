@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.1.6-preview7</Version>
+    <Version>0.1.6.1-preview7</Version>
     <AssemblyName>Senparc.Xncf.XncfBuilder.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
