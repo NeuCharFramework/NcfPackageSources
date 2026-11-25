@@ -67,6 +67,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
@@ -622,7 +625,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 var titleSource = string.IsNullOrEmpty(request.Title) ? request.InitialMessage : request.Title;
                 var title = string.IsNullOrEmpty(titleSource)
-                    ? _localizer["AdminChat.NewConversation"] 
+                    ? _localizer["AdminChat.NewConversation"]
                     : (titleSource.Length > 50 ? titleSource.Substring(0, 50) + "..." : titleSource);
 
                 var workspaceId = request.WorkspaceId?.Trim();

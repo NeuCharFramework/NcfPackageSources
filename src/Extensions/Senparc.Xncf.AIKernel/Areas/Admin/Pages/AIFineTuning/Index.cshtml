@@ -19,7 +19,7 @@
     <div class="ft-page">
     <header class="ft-heading">
         <div>
-            <h1>{{ t('Title') }}</h1>
+            <h1>{{ t('Title') }} <ncf-doc-help topic="ai.fine-tuning"></ncf-doc-help></h1>
             <p>{{ t('Subtitle') }}</p>
         </div>
         <el-button icon="el-icon-refresh" :loading="pollBusy" :disabled="datasetMoreBusy" @@click="refresh">{{ t('Refresh') }}</el-button>

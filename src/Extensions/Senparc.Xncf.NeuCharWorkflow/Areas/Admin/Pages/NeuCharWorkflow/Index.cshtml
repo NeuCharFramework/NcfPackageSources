@@ -47,7 +47,7 @@
     <div :class="['workflow-shell',shellClasses]">
         <aside class="workflow-list-pane">
             <div class="workflow-list-heading">
-                <strong v-show="!listCollapsed">{{ ncfST('Frontend.NeuCharWorkflow.Workflow') }}</strong>
+                <strong v-show="!listCollapsed">{{ ncfST('Frontend.NeuCharWorkflow.Workflow') }} <ncf-doc-help topic="workflow.designer"></ncf-doc-help></strong>
                 <span v-show="!listCollapsed" class="workflow-list-actions">
                     <el-button type="text"
                                icon="el-icon-refresh"

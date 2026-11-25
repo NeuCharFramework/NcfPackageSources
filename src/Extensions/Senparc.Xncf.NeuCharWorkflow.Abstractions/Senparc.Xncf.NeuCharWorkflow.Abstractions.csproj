@@ -30,7 +30,9 @@
         [2026-11-19] v0.3.2 Localized Workflow designer and runtime surfaces
         1. Updated affected project files while preserving existing public integration behavior.
         2. Standardized related English source comments and package metadata for the current release.
-    </PackageReleaseNotes>
+        [2026-11-24] v0.3.2 Enhanced workflow chat tools, editing commands, navigation, and localization behavior.
+        1. Updated functional behavior and package metadata for the current module changes.
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

@@ -50,7 +50,9 @@
         [2026-11-19] v0.20.14 Updated database integration support and related localization metadata
         1. Updated affected project files while preserving existing public integration behavior.
         2. Standardized related English source comments and package metadata for the current release.
-    </PackageReleaseNotes>
+        [2026-11-24] v0.20.14 Dependency compatibility update for affected Senparc modules.
+        1. Aligned dependent package metadata with the current Senparc module versions.
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

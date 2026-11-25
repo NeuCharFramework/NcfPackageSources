@@ -13,7 +13,8 @@
         [2026-11-24] v0.0.3 Baseline sync localization and ignore rules
         1. Add bilingual console messages, CLI language selection, and non-interactive sync options.
         2. Skip module-specific App_Data folders (for example Senparc.Xncf.AIKernel) during baseline copy.
-    </PackageReleaseNotes>
+        3. Updated functional behavior and package metadata for the current module changes.
+        4. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>

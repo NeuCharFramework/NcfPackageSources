@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261124
+    Change description: v0.4.13 Integrated localization, tooling, and runtime improvements across the module.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase.FunctionRenders;

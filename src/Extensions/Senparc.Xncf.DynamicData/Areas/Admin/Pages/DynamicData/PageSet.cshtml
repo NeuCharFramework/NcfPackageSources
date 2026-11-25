@@ -18,6 +18,7 @@
 
 <div class="interfaceSet-page">
         <el-button type="primary" icon="el-icon-plus" :size="elSize" @@click="createLayout">{{ ncfST('Frontend.DynamicData.AddAlternate') }}</el-button>
+        <ncf-doc-help topic="dynamic.pages"></ncf-doc-help>
     <section class="df flex-as flex-js cardArea">
         <div v-for="item in layoutList" :key="item.id" class="df-wn flex-dc flex-ac cardItem">
             <img :src="item.thumbnail" :alt="ncfST('Frontend.DynamicData.Thumbnail')" class="cardItem_thumbnail" />

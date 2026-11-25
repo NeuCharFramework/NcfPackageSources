@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: NeuCharWorkflowChatToolAppService.cs
+    File description: Provides n euc harw orkflowc hatt oola pps ervice functionality.
+
+    Created by: Senparc - 20261123
+
+    Modified by: Senparc - 20261124
+    Change description: v0.4.8 Enhanced workflow chat tools, editing commands, navigation, and localization behavior.
+
+----------------------------------------------------------------*/
+
 using System.Text.Json;
 using Senparc.Ncf.AreaBase.Admin.Filters;
 using Senparc.Ncf.Core.AppServices;

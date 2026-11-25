@@ -46,6 +46,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.19.4 Integrated localization, tooling, and runtime improvements across the module.
+
 ----------------------------------------------------------------*/
 
 using A2A.AspNetCore;

@@ -31,6 +31,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
+
 ----------------------------------------------------------------*/
 using Microsoft.EntityFrameworkCore;
 using Senparc.Areas.Admin.ACL;
@@ -57,7 +60,7 @@ namespace Senparc.Areas.Admin.Domain.Services
     /// </summary>
     public class AdminChatMessageService : BaseClientService<AdminChatMessage>
     {
-        public AdminChatMessageService(IAdminChatMessageRepository repository, IServiceProvider serviceProvider) 
+        public AdminChatMessageService(IAdminChatMessageRepository repository, IServiceProvider serviceProvider)
             : base(repository, serviceProvider)
         {
         }
@@ -73,17 +76,17 @@ namespace Senparc.Areas.Admin.Domain.Services
             if (pageIndex == 0)
             {
                 var allMessages = await base.GetFullListAsync(
-                    m => m.SessionId == sessionId, 
+                    m => m.SessionId == sessionId,
                     "Sequence ASC");
                 return (allMessages.ToList(), allMessages.Count());
             }
             else
             {
                 var result = await base.GetObjectListAsync(
-                    pageIndex, 
-                    pageSize, 
-                    m => m.SessionId == sessionId, 
-                    m => m.Sequence, 
+                    pageIndex,
+                    pageSize,
+                    m => m.SessionId == sessionId,
+                    m => m.Sequence,
                     Ncf.Core.Enums.OrderingType.Ascending);
                 return (result.ToList(), result.TotalCount);
             }

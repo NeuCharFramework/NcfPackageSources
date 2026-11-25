@@ -40,6 +40,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.20.17 Improved PromptRange localization consistency and prompt tooling behavior.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -1227,7 +1230,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             await _promptItemService.UpdateExpectedResultsAsync(promptItem.Id, expectedResultList.ToJson());
 
 
-            // if user dont want force refreshing, and this promptResult is scored 
+            // if user dont want force refreshing, and this promptResult is scored
             if (!isRefresh && promptResult.RobotScore >= 0)
             {
                 throw new NcfExceptionBase("该结果已经评分过了, 请选择强制刷新");

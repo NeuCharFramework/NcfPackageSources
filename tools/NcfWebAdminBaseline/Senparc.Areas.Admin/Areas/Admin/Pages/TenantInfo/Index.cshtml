@@ -17,7 +17,7 @@
 <div>
     <div class="admin-tenant-info">
         <div>
-            <h2 class="tenant-list">@AR["Tenant.CurrentInfo"]</h2>
+            <h2 class="tenant-list">@AR["Tenant.CurrentInfo"] <ncf-doc-help topic="admin.tenants"></ncf-doc-help></h2>
             <el-row :gutter="20" v-show="!enableMultiTenant">
                 <el-col :span="6"><div class="grid-content bg-purple">@AR["Tenant.Disabled"]</div></el-col>
             </el-row>

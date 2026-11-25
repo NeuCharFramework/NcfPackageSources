@@ -43,6 +43,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.4.8 Enhanced workflow chat tools, editing commands, navigation, and localization behavior.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

@@ -133,6 +133,7 @@
   <data name="Frontend.Sandbox.CheckEnvironment" xml:space="preserve"><value>Vérifier l’environnement</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.SandboxSessions" xml:space="preserve"><value>Sessions Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Template" xml:space="preserve"><value>Modèle</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SessionId" xml:space="preserve"><value>ID de session</value></data>
   <data name="Frontend.Sandbox.Alias" xml:space="preserve"><value>Alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Runtime" xml:space="preserve"><value>Environnement d’exécution</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Status" xml:space="preserve"><value>État</value><comment>Auto-completed for locale parity from the English resource.</comment></data>

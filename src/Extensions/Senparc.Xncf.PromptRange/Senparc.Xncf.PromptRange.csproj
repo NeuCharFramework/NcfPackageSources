@@ -178,7 +178,8 @@
         2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
         [2026-11-24] v0.20.17 Align PromptRange neutral resource entries
         1. Remove obsolete duplicate resource keys across locale files for consistent frontend localization lookups.
-    </PackageReleaseNotes>
+        2. Updated functional behavior and package metadata for the current module changes.
+        3. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">

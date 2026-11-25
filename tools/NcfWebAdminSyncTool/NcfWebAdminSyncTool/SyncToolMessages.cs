@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.0.3 Added bilingual sync tool message catalog.
 
+    Modified by: Senparc - 20261124
+    Change description: v0.0.3 Improved bilingual sync tool messages, language selection, and ignore handling.
+
 ----------------------------------------------------------------*/
 
 sealed class SyncToolMessages

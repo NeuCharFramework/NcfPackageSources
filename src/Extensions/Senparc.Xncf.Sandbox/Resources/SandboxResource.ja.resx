@@ -133,6 +133,7 @@
   <data name="Frontend.Sandbox.CheckEnvironment" xml:space="preserve"><value>環境を確認</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.SandboxSessions" xml:space="preserve"><value>Sandboxセッション</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Template" xml:space="preserve"><value>テンプレート</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SessionId" xml:space="preserve"><value>セッション ID</value></data>
   <data name="Frontend.Sandbox.Alias" xml:space="preserve"><value>エイリアス</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Runtime" xml:space="preserve"><value>ランタイム</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Status" xml:space="preserve"><value>状態</value><comment>Auto-completed for locale parity from the English resource.</comment></data>

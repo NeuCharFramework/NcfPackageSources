@@ -28,6 +28,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.20.17 Improved PromptRange localization consistency and prompt tooling behavior.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;

@@ -15,6 +15,7 @@
 <div id="app" v-cloak>
     <div class="admin-role">
         <div class="filter-container">
+            <ncf-doc-help topic="weixin.users"></ncf-doc-help>
             <template v-if="mpAccountDto">
                 <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" :loading="addLoading" @@click="addUser('add')">{{ ncfST('Frontend.WeixinManager.AddNewFollowers') }}</el-button>
                 <el-button size="small" class="filter-item" type="primary" @@click="asyncUser" :loading="isLoading"><i class="fa fa-exchange"></i> {{ ncfST('Frontend.WeixinManager.SyncAllFollowers') }}</el-button>

@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: SystemLogAnalysisAppService.cs
+    File description: Provides s ysteml oga nalysisa pps ervice functionality.
+
+    Created by: Senparc - 20261123
+
+    Modified by: Senparc - 20261124
+    Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
+
+----------------------------------------------------------------*/
+
 using Senparc.Areas.Admin.SenparcTraceManager;
 using Senparc.CO2NET;
 using Senparc.Ncf.AreaBase.Admin.Filters;

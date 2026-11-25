@@ -131,6 +131,7 @@
   <data name="Frontend.Sandbox.CheckEnvironment" xml:space="preserve"><value>检查环境</value></data>
   <data name="Frontend.Sandbox.SandboxSessions" xml:space="preserve"><value>沙箱会话</value></data>
   <data name="Frontend.Sandbox.Template" xml:space="preserve"><value>模板</value></data>
+  <data name="Frontend.Sandbox.SessionId" xml:space="preserve"><value>会话 ID</value></data>
   <data name="Frontend.Sandbox.Alias" xml:space="preserve"><value>别名</value></data>
   <data name="Frontend.Sandbox.Runtime" xml:space="preserve"><value>运行时</value></data>
   <data name="Frontend.Sandbox.Status" xml:space="preserve"><value>状态</value></data>

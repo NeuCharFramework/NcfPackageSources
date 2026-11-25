@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v1.1.15 Integrated localization, tooling, and runtime improvements across the module.
+
 ----------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;

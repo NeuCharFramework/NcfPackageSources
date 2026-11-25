@@ -9,7 +9,7 @@
 }
 
 @section Style{
-    <link href="~/css/Sandbox/index.css" rel="stylesheet" />
+    <link href="~/css/Sandbox/index.css?v=20261124-5" rel="stylesheet" />
 }
 
 @section breadcrumbs{
@@ -24,7 +24,7 @@
     <section class="sandboxHero" :aria-label="ncfST('Frontend.Sandbox.SandboxPanel')" aria-labelledby="sandbox-page-title">
         <div class="sandboxHeroCopy">
             <div class="sandboxEyebrow"><i class="fa fa-cube"></i> Sandbox Runtime</div>
-            <h1 id="sandbox-page-title">{{ ncfST('Frontend.Sandbox.SandboxPanel') }}</h1>
+            <h1 id="sandbox-page-title">{{ ncfST('Frontend.Sandbox.SandboxPanel') }} <ncf-doc-help topic="sandbox.manage"></ncf-doc-help></h1>
             <p>{{ ncfST('Frontend.Sandbox.ReviewSessionStatusInOnePlaceAndCreateExecuteAndCleanIsolated') }}</p>
             <div class="sandboxHeroActions">
                 <el-button type="primary" icon="el-icon-plus" @@click="openFunction('Create')">{{ ncfST('Frontend.Sandbox.CreateSandbox') }}</el-button>
@@ -59,103 +59,7 @@
         </div>
     </div>
 
-    <section class="sandboxOverviewGrid" :aria-label="ncfST('Frontend.Sandbox.SessionOverview')">
-        <div class="sandboxOverviewCard">
-            <div class="overviewIcon iconBlue"><i class="fa fa-cubes"></i></div>
-            <div>
-                <div class="overviewLabel">{{ ncfST('Frontend.Sandbox.AllSessions') }}</div>
-                <div class="overviewValue">{{ sessionStats.total }}</div>
-                <div class="overviewHint">{{ ncfST('Frontend.Sandbox.Registered') }}</div>
-            </div>
-        </div>
-        <div class="sandboxOverviewCard">
-            <div class="overviewIcon iconGreen"><i class="fa fa-play"></i></div>
-            <div>
-                <div class="overviewLabel">{{ ncfST('Frontend.Sandbox.Running') }}</div>
-                <div class="overviewValue">{{ sessionStats.running }}</div>
-                <div class="overviewHint">{{ ncfST('Frontend.Sandbox.CurrentlyAvailable') }}</div>
-            </div>
-        </div>
-        <div class="sandboxOverviewCard">
-            <div class="overviewIcon iconTeal"><i class="fa fa-desktop"></i></div>
-            <div>
-                <div class="overviewLabel">{{ ncfST('Frontend.Sandbox.InteractiveSessions') }}</div>
-                <div class="overviewValue">{{ sessionStats.interactive }}</div>
-                <div class="overviewHint">{{ ncfST('Frontend.Sandbox.NotebookPreview') }}</div>
-            </div>
-        </div>
-        <div class="sandboxOverviewCard">
-            <div class="overviewIcon iconAmber"><i class="fa fa-exclamation-triangle"></i></div>
-            <div>
-                <div class="overviewLabel">{{ ncfST('Frontend.Sandbox.NeedsAttention') }}</div>
-                <div class="overviewValue">{{ sessionStats.attention }}</div>
-                <div class="overviewHint">{{ ncfST('Frontend.Sandbox.FailedOrExpired') }}</div>
-            </div>
-        </div>
-    </section>
-
-    <section class="sandboxBoardGrid">
-        <section class="sandboxBoardCard sandboxQuickActions" :aria-label="ncfST('Frontend.Sandbox.FunctionQuickActions')" aria-labelledby="sandbox-function-title">
-            <div class="sandboxBoardTitleRow">
-                <div>
-                    <h2 id="sandbox-function-title">{{ ncfST('Frontend.Sandbox.FunctionQuickActions') }}</h2>
-                    <p>{{ ncfST('Frontend.Sandbox.UsesTheExecutionEntryRegisteredByTheModuleParameterValidationAndResult') }}</p>
-                </div>
-                <el-button size="mini" icon="el-icon-right" @@click="openFunction()">{{ ncfST('Frontend.Sandbox.OpenModuleFunction') }}</el-button>
-            </div>
-            <div class="sandboxShortcutList">
-                <div class="sandboxShortcut">
-                    <div class="shortcutIcon shortcutCreate"><i class="el-icon-plus"></i></div>
-                    <div class="shortcutContent">
-                        <h3>{{ ncfST('Frontend.Sandbox.CreateSandbox') }}</h3>
-                        <p>{{ ncfST('Frontend.Sandbox.ChooseAnExecutionTemplateAndRuntimeToCreateAnIsolatedSession') }}</p>
-                    </div>
-                    <el-button type="primary" size="mini" icon="el-icon-plus" @@click="openFunction('Create')">{{ ncfST('Frontend.Sandbox.Create') }}</el-button>
-                </div>
-                <div class="sandboxShortcut">
-                    <div class="shortcutIcon shortcutExec"><i class="el-icon-caret-right"></i></div>
-                    <div class="shortcutContent">
-                        <h3>{{ ncfST('Frontend.Sandbox.ExecuteCode') }}</h3>
-                        <p>{{ ncfST('Frontend.Sandbox.SubmitShortTaskCodeInAnExecTemplateSession') }}</p>
-                    </div>
-                    <el-button type="success" size="mini" icon="el-icon-caret-right" @@click="openFunction('Exec')">{{ ncfST('Frontend.Sandbox.Execute') }}</el-button>
-                </div>
-                <div class="sandboxShortcut">
-                    <div class="shortcutIcon shortcutDestroy"><i class="el-icon-delete"></i></div>
-                    <div class="shortcutContent">
-                        <h3>{{ ncfST('Frontend.Sandbox.DestroySandbox') }}</h3>
-                        <p>{{ ncfST('Frontend.Sandbox.EnterASessionIdToStopAndCleanUpTheSpecifiedSession') }}</p>
-                    </div>
-                    <el-button type="danger" size="mini" icon="el-icon-delete" @@click="openFunction('Destroy')">{{ ncfST('Frontend.Sandbox.Destroy') }}</el-button>
-                </div>
-            </div>
-        </section>
-
-        <section class="sandboxBoardCard sandboxEnvironment" :aria-label="ncfST('Frontend.Sandbox.RuntimeEnvironment')" aria-labelledby="sandbox-environment-title">
-            <div class="sandboxBoardTitleRow">
-                <div>
-                    <h2 id="sandbox-environment-title">{{ ncfST('Frontend.Sandbox.RuntimeEnvironment') }}</h2>
-                    <p>{{ ncfST('Frontend.Sandbox.CheckDockerAvailabilityImagePrefixesAndDeploymentNotesOnTheEnvironmentSetup') }}</p>
-                </div>
-            </div>
-            <div class="sandboxEnvironmentRows">
-                <div>
-                    <span><i class="fa fa-code"></i> Exec</span>
-                    <strong>Python / C#</strong>
-                </div>
-                <div>
-                    <span><i class="fa fa-book"></i> Notebook</span>
-                    <strong>JupyterLab</strong>
-                </div>
-                <div>
-                    <span><i class="fa fa-shield"></i> {{ ncfST('Frontend.Sandbox.Lifecycle') }}</span>
-                    <strong>{{ ncfST('Frontend.Sandbox.AutomaticTTLCleanup') }}</strong>
-                </div>
-            </div>
-            <el-button class="sandboxEnvironmentButton" type="primary" plain icon="el-icon-setting" @@click="openSetup">{{ ncfST('Frontend.Sandbox.CheckEnvironment') }}</el-button>
-        </section>
-
-        <section class="sandboxBoardCard sandboxSessions" :aria-label="ncfST('Frontend.Sandbox.SandboxSessions')" aria-labelledby="sandbox-sessions-title" v-loading="loading">
+    <section class="sandboxBoardCard sandboxSessions" :aria-label="ncfST('Frontend.Sandbox.SandboxSessions')" aria-labelledby="sandbox-sessions-title" v-loading="loading">
             <div class="sandboxBoardTitleRow">
                 <div>
                     <h2 id="sandbox-sessions-title">{{ ncfST('Frontend.Sandbox.SandboxSessions') }}</h2>
@@ -163,32 +67,24 @@
                 </div>
                 <el-tag size="mini" type="info">{{ ncfST('Frontend.Sandbox.ValueSessions', sessionStats.total) }}</el-tag>
             </div>
-            <el-table :data="sessions" class="sandboxSessionTable" :empty-text="ncfST('Frontend.Sandbox.NoSandboxSessions')">
-                <el-table-column prop="sessionId" label="SessionId" min-width="190" show-overflow-tooltip></el-table-column>
-                <el-table-column :label="ncfST('Frontend.Sandbox.Template')" min-width="150">
+            <el-table :data="sessions" height="100%" class="sandboxSessionTable" :empty-text="ncfST('Frontend.Sandbox.NoSandboxSessions')">
+                <el-table-column prop="sessionId" :label="ncfST('Frontend.Sandbox.SessionId')" min-width="220" show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        <div class="sessionPrimary">
+                            <span class="sessionIdText">{{ scope.row.sessionId }}</span>
+                            <span class="sessionAliasText" v-if="scope.row.alias">{{ scope.row.alias }}</span>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column :label="ncfST('Frontend.Sandbox.Template')" min-width="170">
                     <template slot-scope="scope">
                         <span class="templateName">{{ templateName(scope.row.templateKey) }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column :label="ncfST('Frontend.Sandbox.Alias')" min-width="130" show-overflow-tooltip>
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.alias" class="aliasName">{{ scope.row.alias }}</span>
-                        <span v-else class="sessionMuted">-</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="runtimeKind" :label="ncfST('Frontend.Sandbox.Runtime')" width="94"></el-table-column>
-                <el-table-column :label="ncfST('Frontend.Sandbox.Status')" width="108">
+                <el-table-column prop="runtimeKind" :label="ncfST('Frontend.Sandbox.Runtime')" width="104"></el-table-column>
+                <el-table-column :label="ncfST('Frontend.Sandbox.Status')" width="104">
                     <template slot-scope="scope">
                         <el-tag :type="statusTagType(scope.row.status)" size="mini">{{ statusText(scope.row.status) }}</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="hostPort" :label="ncfST('Frontend.Sandbox.Port')" width="80">
-                    <template slot-scope="scope">{{ scope.row.hostPort || '-' }}</template>
-                </el-table-column>
-                <el-table-column :label="ncfST('Frontend.Sandbox.AdditionalPorts')" min-width="150" show-overflow-tooltip>
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.extraPorts" class="extraPortsText">{{ scope.row.extraPorts }}</span>
-                        <span v-else class="sessionMuted">-</span>
                     </template>
                 </el-table-column>
                 <el-table-column :label="ncfST('Frontend.Sandbox.Access')" width="104">
@@ -199,14 +95,14 @@
                         <span v-else class="sessionMuted">-</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="TTL" min-width="160">
+                <el-table-column label="TTL" width="126">
                     <template slot-scope="scope">
                         <span :class="{ sessionMuted: !canUpdateTtl(scope.row), ttlUnlimited: scope.row.isTtlUnlimited }">
                             {{ ttlDisplay(scope.row) }}
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column :label="ncfST('Frontend.Sandbox.Actions')" width="190" align="center" class-name="ncf-table-actions-column">
+                <el-table-column :label="ncfST('Frontend.Sandbox.Actions')" width="180" fixed="right" align="center" class-name="ncf-table-actions-column">
                     <template slot-scope="scope">
                         <el-tooltip v-if="canEditAlias(scope.row)" :content="scope.row.alias ? ncfST('Frontend.Sandbox.EditAlias') : ncfST('Frontend.Sandbox.SetAlias')" placement="top">
                             <el-button type="success" size="mini" circle icon="el-icon-edit" @@click="openAliasDialog(scope.row)"></el-button>
@@ -223,7 +119,35 @@
                     </template>
                 </el-table-column>
             </el-table>
-        </section>
+            <div class="sandboxSessionCards">
+                <article v-for="row in sessions" :key="row.sessionId" class="sandboxSessionCard">
+                    <div class="sessionCardHeader">
+                        <div class="sessionCardIdentity">
+                            <strong>{{ row.alias || templateName(row.templateKey) }}</strong>
+                            <span class="sessionIdText">{{ row.sessionId }}</span>
+                        </div>
+                        <el-tag :type="statusTagType(row.status)" size="mini">{{ statusText(row.status) }}</el-tag>
+                    </div>
+                    <div class="sessionCardGrid">
+                        <div><span>{{ ncfST('Frontend.Sandbox.Template') }}</span><strong>{{ templateName(row.templateKey) }}</strong></div>
+                        <div><span>{{ ncfST('Frontend.Sandbox.Runtime') }}</span><strong>{{ row.runtimeKind || '-' }}</strong></div>
+                        <div><span>{{ ncfST('Frontend.Sandbox.Port') }}</span><strong>{{ row.hostPort || '-' }}</strong></div>
+                        <div><span>TTL</span><strong :class="{ ttlUnlimited: row.isTtlUnlimited }">{{ ttlDisplay(row) }}</strong></div>
+                    </div>
+                    <div class="sessionCardFooter">
+                        <span v-if="row.extraPorts" class="extraPortsText">{{ ncfST('Frontend.Sandbox.AdditionalPorts') }}: {{ row.extraPorts }}</span>
+                        <span v-else class="sessionMuted">{{ ncfST('Frontend.Sandbox.AdditionalPorts') }}: -</span>
+                        <div class="sessionCardActions">
+                            <el-button v-if="row.accessUrl" type="text" size="mini" icon="el-icon-top-right" @@click="openAccessUrl(row.accessUrl)">{{ ncfST('Frontend.Sandbox.Open') }}</el-button>
+                            <el-button v-if="canEditAlias(row)" type="text" size="mini" icon="el-icon-edit" @@click="openAliasDialog(row)"></el-button>
+                            <el-button v-if="canUpdateTtl(row)" type="text" size="mini" icon="el-icon-time" @@click="openTtlDialog(row)"></el-button>
+                            <el-button v-if="canDestroySession(row)" type="text" class="actionWarning" size="mini" icon="el-icon-video-pause" @@click="destroySession(row.sessionId)"></el-button>
+                            <el-button v-if="canDeleteRecord(row)" type="text" class="actionDanger" size="mini" icon="el-icon-delete" @@click="deleteSessionRecord(row.sessionId)"></el-button>
+                        </div>
+                    </div>
+                </article>
+                <el-empty v-if="!sessions.length" :description="ncfST('Frontend.Sandbox.NoSandboxSessions')"></el-empty>
+            </div>
     </section>
 
     <el-dialog :title="ncfST('Frontend.Sandbox.SessionAlias')" :visible.sync="aliasDialog.visible" width="440px" :close-on-click-modal="false">

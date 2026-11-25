@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261124
+    Change description: v0.4.13 Integrated localization, tooling, and runtime improvements across the module.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -137,7 +140,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         public List<FilterOmitWord> FilterOmitWords;//Legacy comment translated to English.
         //public Dictionary<string,Dictionary<string,UrlData>> TotalUrlDataCollection { get; set; }
 
-      
+
         public SenMapicEngine(IServiceProvider serviceProvider, IEnumerable<string> urls, int maxThread=4, int maxBuildMinutesForSingleSite=10, string priority=null, string changefreq=null, DateTime? updateDate=null, int maxDeep=5, int maxPageCount=500, List<string> filterOmitWords=null)
         {
             this._serviceProvider = serviceProvider;

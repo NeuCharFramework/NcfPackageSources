@@ -18,7 +18,7 @@
 <div class="neuchar-page pivot-access" v-loading="loading">
     <header class="neuchar-page-header">
         <div>
-            <h2>Function 全局 Provit 访问控制</h2>
+            <h2>Function 全局 Provit 访问控制 <ncf-doc-help topic="pivot.access"></ncf-doc-help></h2>
             <p>为任意 XNCF 模块的 Function 设置数据库访问策略，绑定用户 / 角色 / 权限码。数据库策略存在时覆盖代码属性（AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes）；模块被清除后策略冗余保留，模块重装后自动继续生效，仅手动清除才会删除。</p>
         </div>
         <div class="access-header-actions">
@@ -34,7 +34,6 @@
             <el-tag size="small" type="warning">孤儿策略 {{orphanCount}} 条</el-tag>
         </div>
         <div class="access-toolbar-actions">
-            <ncf-doc-help topic="pivot.access"></ncf-doc-help>
             <el-button size="small" type="success" plain icon="el-icon-unlock" :disabled="!selection.length" @@click="batchApply('apply-open')">批量开放</el-button>
             <el-button size="small" type="warning" plain icon="el-icon-user" :disabled="!selection.length" @@click="openBatchRestrict">批量受限</el-button>
             <el-button size="small" type="danger" plain icon="el-icon-lock" :disabled="!selection.length" @@click="batchApply('apply-deny')">批量禁用</el-button>

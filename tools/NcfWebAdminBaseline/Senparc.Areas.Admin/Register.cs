@@ -64,9 +64,12 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
+
 ----------------------------------------------------------------*/
 
-/* 
+/*
 
  * Legacy comment translated to English.
 
@@ -443,7 +446,7 @@ The user explicitly requested SenparcTrace analysis. Follow this evidence-driven
                         ValidateIssuer = true, //whether or not valid Issuer
                         ValidateAudience = true, //whether or not valid Audience
                         ValidateLifetime = true, //whether or not valid out-of-service time
-                        ValidateIssuerSigningKey = true, //whether or not valid SecurityKey　　　　　　　　　　　
+                        ValidateIssuerSigningKey = true, //whether or not valid SecurityKey
                         ClockSkew = System.TimeSpan.Zero//Allowed server time offset
                     };
                 }).AddJwtBearer("Bearer", options =>
@@ -456,7 +459,7 @@ The user explicitly requested SenparcTrace analysis. Follow this evidence-driven
                         ValidateIssuer = true, //whether or not valid Issuer
                         ValidateAudience = true, //whether or not valid Audience
                         ValidateLifetime = true, //whether or not valid out-of-service time
-                        ValidateIssuerSigningKey = true, //whether or not valid SecurityKey　　　　　　　　　　　
+                        ValidateIssuerSigningKey = true, //whether or not valid SecurityKey
                         ClockSkew = System.TimeSpan.Zero//Allowed server time offset
                     };
                 })
@@ -470,7 +473,7 @@ The user explicitly requested SenparcTrace analysis. Follow this evidence-driven
             //        ValidateIssuer = true, //whether or not valid Issuer
             //        ValidateAudience = true, //whether or not valid Audience
             //        ValidateLifetime = true, //whether or not valid out-of-service time
-            //        ValidateIssuerSigningKey = true, //whether or not valid SecurityKey　　　　　　　　　　　
+            //        ValidateIssuerSigningKey = true, //whether or not valid SecurityKey
             //        ClockSkew = System.TimeSpan.Zero//Allowed server time offset
             //    };
             //})

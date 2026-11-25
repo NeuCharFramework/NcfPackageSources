@@ -1,4 +1,17 @@
 /*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: WorkspaceAssetCapabilityStore.cs
+    File description: Provides w orkspacea ssetc apabilitys tore functionality.
+
+    Created by: Senparc - 20261123
+
+    Modified by: Senparc - 20261124
+    Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
+
+----------------------------------------------------------------*/
+
+/*----------------------------------------------------------------
 
     Copyright (C) 2026 Senparc
 

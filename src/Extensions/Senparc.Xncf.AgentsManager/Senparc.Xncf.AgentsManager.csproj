@@ -205,7 +205,9 @@
         [2026-11-19] v0.19.4 Localized agent management and task surfaces
         1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
         2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
-    </PackageReleaseNotes>
+        [2026-11-24] v0.19.4 Integrated localization, tooling, and runtime improvements across the module.
+        1. Updated functional behavior and package metadata for the current module changes.
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
@@ -229,7 +231,7 @@
 		<PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.15.2-preview1" />
 		<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.17.3.1-preview1" />
 		<PackageReference Include="Senparc.Ncf.AreaBase" Version="0.15.2-preview1+37312e28c788cba6605dfcc00947f80a36023b86" />
-		
+
 		<PackageReference Include="Senparc.Xncf.PromptRange" Version="0.6.4.22-preview1" />
 		<PackageReference Include="Senparc.Xncf.XncfBuilder" Version="0.24.3.50-beta1" />
 	</ItemGroup>-->

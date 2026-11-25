@@ -20,7 +20,7 @@
 <el-container style="height: 100%;flex-wrap: nowrap;gap: 20px;">
     @* Sidebar *@
     <div class="dataSheetSet-aside">
-        <div class="aside_title">{{ ncfST('Frontend.DynamicData.DataTable') }}</div>
+        <div class="aside_title">{{ ncfST('Frontend.DynamicData.DataTable') }} <ncf-doc-help topic="dynamic.tables"></ncf-doc-help></div>
         <div class="aside_list">
             <div v-for="item in dataSheetList" :key="item.id" class="aside_list_item" :class="{'aside_select': sheetSelectId === item.id}" :title="item.name" @@click="viewTableDetails(item)">
                 {{ item.name }}

@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: DateLog.cshtml.cs
+    File description: Provides d atel og.cshtml functionality.
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261124
+    Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Globalization;
 using System.IO;

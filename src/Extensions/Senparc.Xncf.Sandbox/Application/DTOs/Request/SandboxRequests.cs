@@ -35,6 +35,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.4.4 Updated sandbox request handling and localized runtime surfaces.
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;

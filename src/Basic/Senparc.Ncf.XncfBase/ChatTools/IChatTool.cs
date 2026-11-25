@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: IChatTool.cs
+    File description: Provides ic hatt ool functionality.
+
+    Created by: Senparc - 20261123
+
+    Modified by: Senparc - 20261124
+    Change description: v0.29.1 Expanded chat tool contracts and registry support for agent workflows.
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 

@@ -25,7 +25,7 @@
         <header class="workflow-replay-header">
             <div>
                 <div class="workflow-replay-eyebrow">{{ncfST('Frontend.NeuCharWorkflow.ReadOnlyRunReplayValue', replay.executionLogId)}}</div>
-                <h2>{{ replay.workflowName }}</h2>
+                <h2>{{ replay.workflowName }} <ncf-doc-help topic="workflow.replay"></ncf-doc-help></h2>
                 <p>{{ncfST('Frontend.NeuCharWorkflow.RanAtValueValueTheCanvasIsASnapshotFromThatTime', formatDate(replay.startedAt), statusText(replay.status))}}</p>
             </div>
             <div class="workflow-replay-actions">

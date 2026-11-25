@@ -165,7 +165,9 @@
         [2026-11-19] v0.41.10 Localized XNCF Builder tools and template surfaces
         1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
         2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
-    </PackageReleaseNotes>
+        [2026-11-24] v0.41.10 Integrated localization, tooling, and runtime improvements across the module.
+        1. Updated functional behavior and package metadata for the current module changes.
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <!-- Visual Studio  -->
@@ -291,9 +293,9 @@
     <Analyzer Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(Configuration)' == 'Debug'" Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Debug/netstandard2.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <!-- 
+    <!--
       configuration: inputgeneratefile.
-       Generator , 
+       Generator ,
       "", file.
     -->
     <!--<Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />-->

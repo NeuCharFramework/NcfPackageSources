@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'TemplateRelease' ">true</GeneratePackageOnBuild>
     <Description>
 			Senparc.Ncf.DatabasePlant database.
-			database, addcondition, : 
+			database, addcondition, :
 			&lt;PackageReference Condition=" '$(Configuration)' != 'Release' " Include="Senparc.Ncf.DatabasePlant" Version="0.2.200.102-beta1" /&gt;
 		</Description>
     <Copyright>NeuCharFramework</Copyright>
@@ -103,7 +103,9 @@
         [2026-11-19] v0.21.16 Updated database integration support and related localization metadata
         1. Updated affected project files while preserving existing public integration behavior.
         2. Standardized related English source comments and package metadata for the current release.
-    </PackageReleaseNotes>
+        [2026-11-24] v0.21.16 Dependency compatibility update for affected Senparc modules.
+        1. Aligned dependent package metadata with the current Senparc module versions.
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

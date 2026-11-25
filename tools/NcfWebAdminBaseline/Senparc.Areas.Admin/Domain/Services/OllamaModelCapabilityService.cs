@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: OllamaModelCapabilityService.cs
+    File description: Provides o llamam odelc apabilitys ervice functionality.
+
+    Created by: Senparc - 20261123
+
+    Modified by: Senparc - 20261124
+    Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
+
+----------------------------------------------------------------*/
+
 using Microsoft.Extensions.Logging;
 using Senparc.AI;
 using Senparc.AI.AgentKernel;

@@ -27,6 +27,7 @@
             </template>
             <template v-else>
                 <span class="title-text" :class="{'title-text_value':!!layoutName}">{{ layoutName || ncfST('Frontend.DynamicData.EnterLayoutName') }}</span>
+                <ncf-doc-help topic="dynamic.layouts"></ncf-doc-help>
                 <i class="el-icon-edit editLayoutName-btn" @@click="handleEditLayoutName"></i>
             </template>
         </div>

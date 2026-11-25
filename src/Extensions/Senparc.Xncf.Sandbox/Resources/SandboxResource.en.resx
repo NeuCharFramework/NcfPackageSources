@@ -131,6 +131,7 @@
   <data name="Frontend.Sandbox.CheckEnvironment" xml:space="preserve"><value>Check environment</value></data>
   <data name="Frontend.Sandbox.SandboxSessions" xml:space="preserve"><value>Sandbox sessions</value></data>
   <data name="Frontend.Sandbox.Template" xml:space="preserve"><value>Template</value></data>
+  <data name="Frontend.Sandbox.SessionId" xml:space="preserve"><value>Session ID</value></data>
   <data name="Frontend.Sandbox.Alias" xml:space="preserve"><value>Alias</value></data>
   <data name="Frontend.Sandbox.Runtime" xml:space="preserve"><value>Runtime</value></data>
   <data name="Frontend.Sandbox.Status" xml:space="preserve"><value>Status</value></data>

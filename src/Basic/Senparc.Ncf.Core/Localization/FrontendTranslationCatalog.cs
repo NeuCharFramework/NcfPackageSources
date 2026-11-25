@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261124
+    Change description: v0.31.1-preview12 Improved frontend localization catalog filtering and fallback behavior.
+
 ----------------------------------------------------------------*/
 
 using System;

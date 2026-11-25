@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.0.3 UI localization (English default, optional Chinese)
 
+    Modified by: Senparc - 20261124
+    Change description: v0.0.3 Improved bilingual sync tool messages, language selection, and ignore handling.
+
 ----------------------------------------------------------------*/
 using Microsoft.Extensions.Logging;
 
@@ -23,12 +26,12 @@ class Program
 {
     private static readonly ILogger _logger;
     private static SyncToolMessages M = SyncToolMessages.English;
-    private static readonly string[] IgnoredFolders = new[] 
-    { 
+    private static readonly string[] IgnoredFolders = new[]
+    {
         "bin", "obj", "SenparcTraceLog", "logs", ".git" ,".vs","NcfFiles"
     };
-    private static readonly string[] IgnoredExtensions = new[] 
-    { 
+    private static readonly string[] IgnoredExtensions = new[]
+    {
         ".csproj", ".user", ".DS_Store", ".Development.config"
     };
     //Legacy comment translated to English.
@@ -127,18 +130,18 @@ class Program
             //Legacy comment translated to English.
             string templateSourceDir = Path.Combine(sourceDir, "Template_OrgName.Xncf.Template_XncfName");
             string templateTargetDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..","..", "..", "..", "..", "..", "src", "Extensions", "Senparc.Xncf.XncfBuilder", "Senparc.Xncf.XncfBuilder.Template", "templates", "template1"));
-            
+
             if (Directory.Exists(templateSourceDir))
             {
                 Console.WriteLine($"\nTemplate source directory: {templateSourceDir}");
                 Console.WriteLine($"Template target directory: {templateTargetDir}");
-                
+
                 if (!Directory.Exists(templateTargetDir))
                 {
                     Directory.CreateDirectory(templateTargetDir);
                     Console.WriteLine(M.CreatedTemplateTargetDir);
                 }
-                
+
                 await SyncTemplateDirectoryAsync(templateSourceDir, templateTargetDir);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Template directory synchronization completed.");
@@ -200,8 +203,8 @@ class Program
 
         //Legacy comment translated to English.
         var extension = Path.GetExtension(path);
-        if (IgnoredExtensions.Any(ext => 
-            ext.Equals(extension, StringComparison.OrdinalIgnoreCase) || 
+        if (IgnoredExtensions.Any(ext =>
+            ext.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
             fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
             return true;
 
@@ -252,8 +255,8 @@ class Program
             return true;
 
         //Legacy comment translated to English.
-        if (templateIgnoredExtensions.Any(ext => 
-            ext.Equals(extension, StringComparison.OrdinalIgnoreCase) || 
+        if (templateIgnoredExtensions.Any(ext =>
+            ext.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
             fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
             return true;
 
@@ -366,7 +369,7 @@ class Program
                     //Legacy comment translated to English.
                     await FileExtensions.CopyAsync(sourceFile, targetFile, true);
                 }
-                
+
                 File.SetLastWriteTime(targetFile, File.GetLastWriteTime(sourceFile));
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"Template copied: {relativePath}");
@@ -385,7 +388,7 @@ class Program
     static List<(string Line, char Type)> GetDiff(string[] sourceLines, string[] targetLines)
     {
         var diff = new List<(string Line, char Type)>();
-        
+
         //Legacy comment translated to English.
         int[,] lcs = new int[sourceLines.Length + 1, targetLines.Length + 1];
         for (int i = 1; i <= sourceLines.Length; i++)
@@ -410,21 +413,21 @@ class Program
 
         while (sourceIndex > 0 || targetIndex > 0)
         {
-            if (sourceIndex > 0 && targetIndex > 0 && 
+            if (sourceIndex > 0 && targetIndex > 0 &&
                 sourceLines[sourceIndex - 1].Trim() == targetLines[targetIndex - 1].Trim())
             {
                 tempDiff.Add((sourceLines[sourceIndex - 1], ' '));
                 sourceIndex--;
                 targetIndex--;
             }
-            else if (targetIndex > 0 && 
+            else if (targetIndex > 0 &&
                     (sourceIndex == 0 || lcs[sourceIndex, targetIndex - 1] >= lcs[sourceIndex - 1, targetIndex]))
             {
                 //Legacy comment translated to English.
                 tempDiff.Add((targetLines[targetIndex - 1], '-'));
                 targetIndex--;
             }
-            else if (sourceIndex > 0 && 
+            else if (sourceIndex > 0 &&
                     (targetIndex == 0 || lcs[sourceIndex - 1, targetIndex] >= lcs[sourceIndex, targetIndex - 1]))
             {
                 //Legacy comment translated to English.
@@ -449,16 +452,16 @@ class Program
         Console.WriteLine("-".PadRight(50, '-'));
 
         var diff = GetDiff(sourceLines, targetLines);
-        
+
         const int contextLines = 3;
         bool hasDiff = false;
         bool hasRealDiff = false;
-        
+
         for (int k = 0; k < diff.Count; k++)
         {
             var (line, type) = diff[k];
-            
-            bool showLine = type != ' ' || 
+
+            bool showLine = type != ' ' ||
                 Enumerable.Range(Math.Max(0, k - contextLines), Math.Min(contextLines * 2, diff.Count - k))
                     .Any(idx => diff[idx].Type != ' ');
 
@@ -599,7 +602,7 @@ class Program
                                     Console.Write(M.ChooseAutoActionPrompt);
                                     var autoChoice = Console.ReadKey();
                                     Console.WriteLine();
-                                    
+
                                     if (autoChoice.Key == ConsoleKey.U || autoChoice.Key == ConsoleKey.N)
                                     {
                                         _autoUpdateChoice = autoChoice.Key;

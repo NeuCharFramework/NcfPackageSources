@@ -1,4 +1,17 @@
 /*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: PromptShotting.cs
+    File description: Provides p rompts hotting functionality.
+
+    Created by: Senparc - 20261123
+
+    Modified by: Senparc - 20261124
+    Change description: v0.3.3-preview8 Improved PromptRange localization consistency and prompt tooling behavior.
+
+----------------------------------------------------------------*/
+
+/*----------------------------------------------------------------
 
     Copyright (C) 2026 Senparc
 

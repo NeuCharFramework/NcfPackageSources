@@ -133,6 +133,7 @@
   <data name="Frontend.Sandbox.CheckEnvironment" xml:space="preserve"><value>Проверить среду</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.SandboxSessions" xml:space="preserve"><value>Сессии Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Template" xml:space="preserve"><value>Шаблон</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.Sandbox.SessionId" xml:space="preserve"><value>ID сессии</value></data>
   <data name="Frontend.Sandbox.Alias" xml:space="preserve"><value>Псевдоним</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Runtime" xml:space="preserve"><value>Среда выполнения</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Status" xml:space="preserve"><value>Состояние</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
