@@ -149,6 +149,11 @@ public sealed class WeixinClawMediaPlaybackService
         }
     }
 
+    /// <summary>
+    /// Validates SILK framing, packet lengths, and the estimated decoded-size bound.
+    /// </summary>
+    /// <param name="silk">The complete SILK file bytes.</param>
+    /// <exception cref="InvalidDataException">Thrown when headers, packet sizes, or packet count are invalid.</exception>
     private static void ValidateSilkPackets(ReadOnlySpan<byte> silk)
     {
         if (silk.Length > MaximumVoiceBytes)
@@ -187,6 +192,12 @@ public sealed class WeixinClawMediaPlaybackService
         }
     }
 
+    /// <summary>
+    /// Creates a mono 16-bit PCM WAV header for the configured voice sample rate.
+    /// </summary>
+    /// <param name="pcmLength">The decoded PCM payload length in bytes.</param>
+    /// <returns>A 44-byte RIFF/WAVE header.</returns>
+    /// <exception cref="OverflowException">Thrown when the RIFF size cannot be represented as a 32-bit value.</exception>
     private static byte[] CreateWaveHeader(int pcmLength)
     {
         var header = new byte[44];

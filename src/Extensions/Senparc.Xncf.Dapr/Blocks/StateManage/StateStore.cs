@@ -28,6 +28,11 @@ namespace Senparc.Xncf.Dapr.Blocks.StateManage
         public string Key { get; set; }
         public object? Value { get; set; }
 
+        /// <summary>
+        /// Initializes a state entry with its storage key and value.
+        /// </summary>
+        /// <param name="key">The Dapr state-store key.</param>
+        /// <param name="value">The value associated with the key.</param>
         public StateStore(string key, object? value)
         {
             Key = key;

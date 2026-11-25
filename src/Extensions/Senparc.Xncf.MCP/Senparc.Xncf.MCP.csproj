@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.5.14</Version>
+    <Version>0.5.14.1</Version>
     <AssemblyName>Senparc.Xncf.MCP</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -17,6 +17,8 @@
     <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReadmeSourceFile>NUGET_README.md</PackageReadmeSourceFile>
+    <PackageReadmeFile>NUGET_README.md</PackageReadmeFile>
     <PackageReleaseNotes>[2025-06-20] v0.2.1-beta Add MCP functions in XncfRegisterBase class
         [2025-06-20] v0.2.2-beta Add MCP functions in XncfRegisterBase class
         v0.1.0 initial release

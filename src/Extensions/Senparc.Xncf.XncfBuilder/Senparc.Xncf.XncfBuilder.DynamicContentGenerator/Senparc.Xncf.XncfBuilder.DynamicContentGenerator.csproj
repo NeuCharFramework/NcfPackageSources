@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<Version>0.0.3</Version>
+		<Version>0.0.3.1</Version>
 		<PackageReleaseNotes>[2026-07-05] v0.0.1 Updated module behavior and related support.
 		    1. Updated module behavior and related support.
 		    2. Updated module behavior and related support.

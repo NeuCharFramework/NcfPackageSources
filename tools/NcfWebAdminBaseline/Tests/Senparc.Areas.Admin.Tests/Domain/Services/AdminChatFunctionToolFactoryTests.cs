@@ -117,6 +117,87 @@ public class AdminChatFunctionToolFactoryTests
     }
 
     [TestMethod]
+    public async Task WorkspaceList_DefaultsMissingOrNullRelativePathToRoot()
+    {
+        var client = new Mock<IWorkspaceClient>();
+        client.SetupGet(value => value.WorkspaceId).Returns("ws-test");
+        client.Setup(value => value.ListAsync(
+                string.Empty,
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Array.Empty<WorkspaceEntry>());
+        var list = CreateWorkspaceTools(client.Object, allowWrite: false)
+            .Single(tool => tool.Name == "workspace_list");
+
+        await list.InvokeAsync(new AIFunctionArguments());
+        await list.InvokeAsync(new AIFunctionArguments
+        {
+            ["relativePath"] = null
+        });
+
+        client.Verify(value => value.ListAsync(
+            string.Empty,
+            It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [TestMethod]
+    public async Task WorkspaceRead_ClampsRequestedCharactersToSafeMaximum()
+    {
+        var client = new Mock<IWorkspaceClient>();
+        client.SetupGet(value => value.WorkspaceId).Returns("ws-test");
+        var metadata = new WorkspaceFileMetadata(
+            "large.txt",
+            false,
+            6000,
+            DateTime.UtcNow,
+            DateTime.UtcNow,
+            "\"etag\"");
+        client.Setup(value => value.ReadFileAsync(
+                "large.txt",
+                It.IsAny<int>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new WorkspaceFileContent(
+                metadata,
+                Encoding.UTF8.GetBytes(new string('a', 6000))));
+        var read = CreateWorkspaceTools(client.Object, allowWrite: false)
+            .Single(tool => tool.Name == "workspace_read");
+
+        var result = await read.InvokeAsync(new AIFunctionArguments
+        {
+            ["relativePath"] = "large.txt",
+            ["maxCharacters"] = 6000
+        });
+
+        using var document = JsonDocument.Parse(result!.ToString()!);
+        Assert.AreEqual(4000, document.RootElement.GetProperty("content").GetString()!.Length);
+        Assert.AreEqual(4000, document.RootElement.GetProperty("nextOffset").GetInt32());
+        Assert.IsTrue(document.RootElement.GetProperty("hasMore").GetBoolean());
+    }
+
+    [TestMethod]
+    public void WorkspaceTools_HidePythonExecutionWhenRuntimeCannotExecute()
+    {
+        var client = new Mock<IWorkspaceClient>();
+        client.SetupGet(value => value.WorkspaceId).Returns("ws-test");
+
+        var tools = CreateWorkspaceTools(client.Object, allowWrite: true, allowCli: false);
+
+        Assert.IsFalse(tools.Any(tool => tool.Name == "workspace_execute_python"));
+    }
+
+    [TestMethod]
+    public void WorkspaceSystemPrompt_ExplainsRootPathsAndOutputFolders()
+    {
+        var method = typeof(AdminChatAiService).GetMethod(
+            "BuildSystemMessage",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        var prompt = method!.Invoke(null, [null])!.ToString()!;
+
+        StringAssert.Contains(prompt, "relativePath may be omitted or empty");
+        StringAssert.Contains(prompt, "outputs/<short-task-name>/");
+        StringAssert.Contains(prompt, "code execution is disabled");
+    }
+
+    [TestMethod]
     public async Task WorkspaceWrite_ReturnsStructuredLineChangeSummary()
     {
         var client = new Mock<IWorkspaceClient>();
@@ -427,13 +508,14 @@ public class AdminChatFunctionToolFactoryTests
 
     private static IReadOnlyList<AIFunction> CreateWorkspaceTools(
         IWorkspaceClient client,
-        bool allowWrite)
+        bool allowWrite,
+        bool allowCli = false)
     {
         var factory = typeof(AdminChatAiService).Assembly.GetType(
             "Senparc.Areas.Admin.Domain.Services.AdminChatWorkspaceToolFactory")!;
         return (IReadOnlyList<AIFunction>)factory.GetMethod("Create")!.Invoke(
             null,
-            [client, allowWrite, false, null])!;
+            [client, allowWrite, allowCli, null])!;
     }
 
     private static JsonElement? FindPropertySchema(JsonElement schema, string name)

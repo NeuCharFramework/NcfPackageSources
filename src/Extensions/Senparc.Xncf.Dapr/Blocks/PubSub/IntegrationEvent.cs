@@ -22,6 +22,9 @@ public record IntegrationEvent
 
     public DateTime CreationDate { get; }
 
+    /// <summary>
+    /// Creates an integration event with a new identifier and current UTC creation time.
+    /// </summary>
     public IntegrationEvent()
     {
         Id = Guid.NewGuid();

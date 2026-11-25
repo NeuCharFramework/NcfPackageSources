@@ -86,6 +86,10 @@ public sealed record WorkspaceAgentRuntimeInfo(
 
 public sealed class WorkspaceConflictException : InvalidOperationException
 {
+    /// <summary>
+    /// Initializes a workspace optimistic-concurrency exception.
+    /// </summary>
+    /// <param name="message">The conflict description.</param>
     public WorkspaceConflictException(string message)
         : base(message)
     {
@@ -94,6 +98,10 @@ public sealed class WorkspaceConflictException : InvalidOperationException
 
 public sealed class WorkspaceLimitException : InvalidOperationException
 {
+    /// <summary>
+    /// Initializes a workspace quota or operation-limit exception.
+    /// </summary>
+    /// <param name="message">The limit description.</param>
     public WorkspaceLimitException(string message)
         : base(message)
     {

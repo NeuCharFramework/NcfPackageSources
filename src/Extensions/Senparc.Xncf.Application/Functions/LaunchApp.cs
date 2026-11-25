@@ -69,15 +69,19 @@ namespace Senparc.Xncf.Application.Functions
 
         public override Type FunctionParameterType => typeof(LaunchApp_Parameters);
 
+        /// <summary>
+        /// Initializes the application-launch function.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the function base.</param>
         public LaunchApp(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
         /// <summary>
-        /// run
+        /// Starts the executable path supplied by the function request and records the result.
         /// </summary>
-        /// <param name="param"></param>
-        /// <returns></returns>
+        /// <param name="param">The request containing the executable path.</param>
+        /// <returns>A function result describing whether launch processing completed.</returns>
         public override FunctionResult Run(IFunctionParameter param)
         {
             var typeParam = param as LaunchApp_Parameters;
@@ -101,31 +105,64 @@ namespace Senparc.Xncf.Application.Functions
         }
 
         #region Legacy section
+        /// <summary>
+        /// Starts an application with a hidden window and no arguments.
+        /// </summary>
+        /// <param name="appName">The executable or shell-resolvable application name.</param>
+        /// <returns><see langword="true"/> when the process starts and exits without an exception.</returns>
         private bool StartApp(string appName)
         {
             return StartApp(appName, ProcessWindowStyle.Hidden);
         }
 
+        /// <summary>
+        /// Starts an application with the requested process window style.
+        /// </summary>
+        /// <param name="appName">The executable or shell-resolvable application name.</param>
+        /// <param name="style">The requested process window style.</param>
+        /// <returns><see langword="true"/> when the process starts and exits without an exception.</returns>
         private bool StartApp(string appName, ProcessWindowStyle style)
         {
             return StartApp(appName, null, style);
         }
 
+        /// <summary>
+        /// Starts an application with arguments and a hidden window.
+        /// </summary>
+        /// <param name="appName">The executable or shell-resolvable application name.</param>
+        /// <param name="arguments">The process argument string.</param>
+        /// <returns><see langword="true"/> when the process starts and exits without an exception.</returns>
         private bool StartApp(string appName, string arguments)
         {
             return StartApp(appName, arguments, ProcessWindowStyle.Hidden);
         }
 
+        /// <summary>
+        /// Starts an application by concatenating a directory path and file name.
+        /// </summary>
+        /// <param name="filePath">The directory or path prefix.</param>
+        /// <param name="fileName">The executable file name.</param>
         private void StartAppointApp(string filePath, string fileName)
         {
             Process exep = Process.Start(filePath + fileName);
         }
 
+        /// <summary>
+        /// Starts an application from one complete file path.
+        /// </summary>
+        /// <param name="fileNamePath">The executable file path.</param>
         private void StartAppointApp(string fileNamePath)
         {
             Process exep = Process.Start(fileNamePath);
         }
 
+        /// <summary>
+        /// Starts a process, waits for it to exit, and converts startup failures to a false result.
+        /// </summary>
+        /// <param name="appName">The executable or shell-resolvable application name.</param>
+        /// <param name="arguments">The process argument string.</param>
+        /// <param name="style">The requested process window style.</param>
+        /// <returns><see langword="true"/> when the process starts and exits without an exception.</returns>
         private bool StartApp(string appName, string arguments, ProcessWindowStyle style)
         {
             bool blnRst = false;

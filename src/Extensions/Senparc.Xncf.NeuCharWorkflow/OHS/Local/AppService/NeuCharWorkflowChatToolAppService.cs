@@ -32,6 +32,11 @@ public sealed class NeuCharWorkflowChatToolAppService(
     private readonly NeuCharWorkflowAppService _workflowAppService = workflowAppService;
     private readonly IAdminWorkContextProvider _adminWorkContextProvider = adminWorkContextProvider;
 
+    /// <summary>
+    /// Searches owner-scoped workflows and returns bounded metadata for AdminChat.
+    /// </summary>
+    /// <param name="request">The optional name/description query.</param>
+    /// <returns>A function response containing matching workflow metadata.</returns>
     [FunctionRender(
         typeof(NeuCharWorkflowResource),
         "AdminChat.Function.SearchWorkflows",
@@ -73,6 +78,11 @@ public sealed class NeuCharWorkflowChatToolAppService(
         });
     }
 
+    /// <summary>
+    /// Starts one owner-scoped workflow run from an AdminChat request.
+    /// </summary>
+    /// <param name="request">The workflow identifier and optional input.</param>
+    /// <returns>A function response containing the started run identifier.</returns>
     [FunctionRender(
         typeof(NeuCharWorkflowResource),
         "AdminChat.Function.StartWorkflow",
@@ -107,6 +117,11 @@ public sealed class NeuCharWorkflowChatToolAppService(
         });
     }
 
+    /// <summary>
+    /// Returns a bounded read-only workflow inspection payload for AdminChat.
+    /// </summary>
+    /// <param name="request">The workflow identifier and graph size limit.</param>
+    /// <returns>A function response containing workflow metadata and graph JSON.</returns>
     [FunctionRender(
         typeof(NeuCharWorkflowResource),
         "AdminChat.Function.InspectWorkflow",
@@ -150,6 +165,11 @@ public sealed class NeuCharWorkflowChatToolAppService(
         });
     }
 
+    /// <summary>
+    /// Applies a revision-checked graph edit to an owner-scoped workflow.
+    /// </summary>
+    /// <param name="request">The workflow identifier, expected revision, and replacement graph JSON.</param>
+    /// <returns>A function response containing the persisted revision and save status.</returns>
     [FunctionRender(
         typeof(NeuCharWorkflowResource),
         "AdminChat.Function.ApplyWorkflowEdit",

@@ -3,4 +3,9 @@
   <PropertyGroup Condition="'$(CodeAnalysisRuleSet)' == 'MinimumRecommendedRules.ruleset' And !Exists('$(MSBuildProjectDirectory)/$(CodeAnalysisRuleSet)')">
     <CodeAnalysisRuleSet />
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(PackageReadmeSourceFile)' != '' And '$(PackageReadmeFile)' != ''">
+    <None Remove="README.md;readme.md;$(PackageReadmeSourceFile)" />
+    <None Include="$(PackageReadmeSourceFile)" Pack="true" PackagePath="$(PackageReadmeFile)" />
+  </ItemGroup>
 </Project>

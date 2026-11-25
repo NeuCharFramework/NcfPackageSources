@@ -429,6 +429,17 @@ public sealed class WeixinClawApi
             cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a JSON POST request with a linked timeout and deserializes the protocol response.
+    /// </summary>
+    /// <typeparam name="T">The expected response type.</typeparam>
+    /// <param name="baseUrl">The protocol base URL.</param>
+    /// <param name="endpoint">The relative endpoint.</param>
+    /// <param name="body">The JSON request body.</param>
+    /// <param name="botToken">The optional bot token.</param>
+    /// <param name="timeout">The maximum request duration.</param>
+    /// <param name="cancellationToken">The caller cancellation token.</param>
+    /// <returns>The deserialized response.</returns>
     private async Task<T> PostAsync<T>(
         string baseUrl,
         string endpoint,
@@ -449,6 +460,15 @@ public sealed class WeixinClawApi
         return await SendAsync<T>(request, timeoutSource.Token).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Creates an iLink HTTP request with protocol headers and optional bearer authorization.
+    /// </summary>
+    /// <param name="method">The HTTP method.</param>
+    /// <param name="baseUrl">The protocol base URL.</param>
+    /// <param name="endpoint">The relative endpoint.</param>
+    /// <param name="includeAuthorization">Whether authorization headers should be added.</param>
+    /// <param name="botToken">The optional bot token.</param>
+    /// <returns>The configured request message.</returns>
     private HttpRequestMessage CreateRequest(
         HttpMethod method,
         string baseUrl,
@@ -475,6 +495,15 @@ public sealed class WeixinClawApi
         return request;
     }
 
+    /// <summary>
+    /// Sends a request, limits error-body exposure, and deserializes a successful JSON response.
+    /// </summary>
+    /// <typeparam name="T">The expected response type.</typeparam>
+    /// <param name="request">The prepared request message.</param>
+    /// <param name="cancellationToken">Token used to cancel the HTTP operation.</param>
+    /// <returns>The deserialized response.</returns>
+    /// <exception cref="HttpRequestException">Thrown when the API returns a non-success status.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the response body cannot produce a value.</exception>
     private async Task<T> SendAsync<T>(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         using var response = await _httpClient.SendAsync(
@@ -497,6 +526,11 @@ public sealed class WeixinClawApi
         return result;
     }
 
+    /// <summary>
+    /// Serializes a body using protocol JSON options and wraps it as JSON HTTP content.
+    /// </summary>
+    /// <param name="body">The request body to serialize.</param>
+    /// <returns>UTF-8 JSON HTTP content.</returns>
     private static HttpContent CreateJsonContent(object body)
     {
         var content = new ByteArrayContent(
@@ -517,12 +551,21 @@ public sealed class WeixinClawApi
             : baseUrl.TrimEnd('/') + "/";
     }
 
+    /// <summary>
+    /// Creates the protocol base-info payload identifying this channel implementation.
+    /// </summary>
+    /// <returns>The base-info payload.</returns>
     private static WeixinClawBaseInfo CreateBaseInfo() => new()
     {
         ChannelVersion = WeixinClawProtocol.ChannelVersion,
         BotAgent = "NCF-WeixinManager/" + WeixinClawProtocol.ChannelVersion
     };
 
+    /// <summary>
+    /// Bounds an error response body before including it in an exception message.
+    /// </summary>
+    /// <param name="content">The response body.</param>
+    /// <returns>An empty marker or at most 500 characters of content.</returns>
     private static string LimitForError(string content)
     {
         if (string.IsNullOrEmpty(content))
@@ -533,6 +576,13 @@ public sealed class WeixinClawApi
         return content.Length <= 500 ? content : content[..500];
     }
 
+    /// <summary>
+    /// Decodes a base64 AES key or a base64-wrapped 32-character hexadecimal key.
+    /// </summary>
+    /// <param name="value">The encoded key value.</param>
+    /// <returns>A 16-byte AES key.</returns>
+    /// <exception cref="FormatException">Thrown when the input is not valid base64.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the decoded value is not a 16-byte key.</exception>
     private static byte[] ParseAesKey(string value)
     {
         var decoded = Convert.FromBase64String(value);
@@ -550,11 +600,22 @@ public sealed class WeixinClawApi
         throw new InvalidOperationException("微信媒体 AES key 不是有效的 16 字节密钥。");
     }
 
+    /// <summary>
+    /// Determines whether a character is a hexadecimal digit.
+    /// </summary>
+    /// <param name="value">The character to inspect.</param>
+    /// <returns><see langword="true"/> when the character is hexadecimal.</returns>
     private static bool IsHex(char value) =>
         value is >= '0' and <= '9'
             or >= 'a' and <= 'f'
             or >= 'A' and <= 'F';
 
+    /// <summary>
+    /// Decrypts AES-ECB/PKCS7 media payload bytes.
+    /// </summary>
+    /// <param name="encrypted">The encrypted payload.</param>
+    /// <param name="key">The 16-byte AES key.</param>
+    /// <returns>The decrypted payload.</returns>
     private static byte[] DecryptAesEcb(byte[] encrypted, byte[] key)
     {
         using var aes = System.Security.Cryptography.Aes.Create();

@@ -143,6 +143,14 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
         /// <param name="parser">The parser that converts the non-empty token text.</param>
         /// <returns>The parsed primitive value.</returns>
         /// <exception cref="JsonException">Thrown when the token is not a non-empty string or cannot be parsed.</exception>
+        /// <summary>
+        /// Reads a JSON string token and parses it with the converter-specific function.
+        /// </summary>
+        /// <typeparam name="T">The converted target type.</typeparam>
+        /// <param name="reader">The JSON reader positioned at the value.</param>
+        /// <param name="parser">The parser applied to the string representation.</param>
+        /// <returns>The parsed value.</returns>
+        /// <exception cref="JsonException">Thrown when the token is not a usable string or parsing fails.</exception>
         private static T ParseString<T>(ref Utf8JsonReader reader, Func<string, T> parser)
         {
             if (reader.TokenType != JsonTokenType.String)
@@ -172,6 +180,12 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
         /// <param name="reader">The reader containing the unexpected token.</param>
         /// <param name="targetType">The type the token was expected to represent.</param>
         /// <returns>A <see cref="JsonException"/> describing the failed conversion.</returns>
+        /// <summary>
+        /// Creates a consistent JSON exception for an unsupported converter token.
+        /// </summary>
+        /// <param name="reader">The reader containing the invalid token.</param>
+        /// <param name="targetType">The converter target type.</param>
+        /// <returns>A descriptive JSON exception.</returns>
         private static JsonException CreateJsonException(Utf8JsonReader reader, Type targetType)
         {
             return new JsonException($"Token {reader.TokenType} cannot be converted to {targetType.Name}.");

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.1.14</Version>
+    <Version>0.1.14.1</Version>
     <PackageReleaseNotes>[2026-07-17] v0.1.0  Application moduleintegrateunifyresourcelocalizationimprovefeature text
         1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
         2. Updated module behavior and related support.

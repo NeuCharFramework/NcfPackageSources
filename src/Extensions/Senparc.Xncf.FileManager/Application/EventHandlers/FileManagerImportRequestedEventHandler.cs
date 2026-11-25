@@ -36,6 +36,13 @@ public sealed class FileManagerImportRequestedEventHandler
     private readonly IEventBus _eventBus;
     private readonly ILogger<FileManagerImportRequestedEventHandler> _logger;
 
+    /// <summary>
+    /// Initializes the integration-event handler for cross-module file imports.
+    /// </summary>
+    /// <param name="gateway">The gateway used to persist imported files.</param>
+    /// <param name="fileService">The FileManager service used to apply tenant context.</param>
+    /// <param name="eventBus">The event bus used to publish completion events.</param>
+    /// <param name="logger">The logger used for import failures.</param>
     public FileManagerImportRequestedEventHandler(
         IFileManagerGateway gateway,
         NcfFileService fileService,
@@ -48,6 +55,13 @@ public sealed class FileManagerImportRequestedEventHandler
         _logger = logger;
     }
 
+    /// <summary>
+    /// Imports event content under the requested tenant and publishes a completion event.
+    /// </summary>
+    /// <param name="@event">The import request event and file metadata.</param>
+    /// <param name="cancellationToken">Token used to cancel the import.</param>
+    /// <returns>A task that completes after the completion event is published.</returns>
+    /// <exception cref="OperationCanceledException">Propagated when the import is cancelled.</exception>
     public async Task Handle(
         FileManagerImportRequestedEvent @event,
         CancellationToken cancellationToken)
