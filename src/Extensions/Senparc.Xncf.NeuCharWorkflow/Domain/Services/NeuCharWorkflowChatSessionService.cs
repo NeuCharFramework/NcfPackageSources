@@ -54,6 +54,11 @@ public sealed class NeuCharWorkflowChatSessionService
     /// trimming whitespace). Session keys and database persistence use the same
     /// algorithm so restart recovery can find the original session.
     /// </summary>
+    /// <summary>
+    /// Hashes a trimmed participant key for session and persistence storage.
+    /// </summary>
+    /// <param name="participantKey">The participant key to hash.</param>
+    /// <returns>An uppercase hexadecimal SHA-256 digest.</returns>
     public static string HashParticipant(string participantKey) =>
         Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(participantKey.Trim())));
 
@@ -86,6 +91,14 @@ public sealed class NeuCharWorkflowChatSessionService
     /// Append a message and return the current snapshot; discard the oldest
     /// messages when the limit is exceeded.
     /// </summary>
+    /// <summary>
+    /// Adds a bounded user/assistant/error message to a session and returns its current snapshot.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The user or guest participant key.</param>
+    /// <param name="role">The message role.</param>
+    /// <param name="content">The message content, truncated at the session limit.</param>
+    /// <returns>The current session message snapshot.</returns>
     public IReadOnlyList<WorkflowChatSessionMessage> AddMessage(
         int workflowId,
         string participantKey,
@@ -118,6 +131,12 @@ public sealed class NeuCharWorkflowChatSessionService
         }
     }
 
+    /// <summary>
+    /// Returns the current bounded message snapshot for a chat session.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The user or guest participant key.</param>
+    /// <returns>Session messages ordered by insertion.</returns>
     public IReadOnlyList<WorkflowChatSessionMessage> GetMessages(int workflowId, string participantKey)
     {
         var session = Get(workflowId, participantKey);
@@ -146,6 +165,12 @@ public sealed class NeuCharWorkflowChatSessionService
         }
     }
 
+    /// <summary>
+    /// Determines whether a session has an active pending workflow run.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The participant key.</param>
+    /// <returns><see langword="true"/> when a run is associated with the session.</returns>
     public bool HasPendingRun(int workflowId, string participantKey)
     {
         var session = Get(workflowId, participantKey);
@@ -199,6 +224,13 @@ public sealed class NeuCharWorkflowChatSessionService
         }
     }
 
+    /// <summary>
+    /// Determines whether the session's pending run matches the supplied run identifier.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The participant key.</param>
+    /// <param name="runId">The run identifier to compare.</param>
+    /// <returns><see langword="true"/> when the session belongs to the run.</returns>
     public bool HasPendingRunMatching(int workflowId, string participantKey, Guid runId)
     {
         var session = Get(workflowId, participantKey);

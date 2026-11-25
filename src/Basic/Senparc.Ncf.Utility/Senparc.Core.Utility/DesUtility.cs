@@ -22,17 +22,23 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.Utility
 {
+    /// <summary>
+    /// Provides legacy DES encryption helpers with a fixed initialization vector.
+    /// Failures are handled by returning the original input for compatibility with
+    /// existing callers.
+    /// </summary>
     public class DesUtility
     {
-        //Legacy comment translated to English.
+        // Fixed legacy initialization vector retained for compatibility with existing ciphertext.
         private static byte[] Keys = { 0xA2, 0x24, 0x26, 0x77, 0x99, 0xAB, 0xEF, 0x88 };
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Encrypts UTF-8 text with DES using the first eight characters of the supplied key.
+        /// Any encryption or key-format failure returns the original input unchanged.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="encryptString">The plaintext to encrypt.</param>
+        /// <param name="encryptKey">The key whose first eight characters form the DES key.</param>
+        /// <returns>The Base64 ciphertext, or the original plaintext when encryption fails.</returns>
         public static string EncryptDES(string encryptString, string encryptKey)
         {
             try
@@ -54,11 +60,12 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Decrypts Base64 ciphertext with DES using the first eight characters of the supplied key.
+        /// Any decryption, Base64, or key-format failure returns the original input unchanged.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="decryptString">The Base64 ciphertext to decrypt.</param>
+        /// <param name="decryptKey">The key whose first eight characters form the DES key.</param>
+        /// <returns>The decrypted UTF-8 text, or the original ciphertext when decryption fails.</returns>
         public static string DecryptDES(string decryptString, string decryptKey)
         {
             try

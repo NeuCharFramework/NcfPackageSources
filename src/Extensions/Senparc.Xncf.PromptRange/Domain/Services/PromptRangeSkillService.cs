@@ -60,6 +60,15 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
     private readonly AIModelService _aiModelService;
     private readonly IServiceProvider _serviceProvider;
 
+    /// <summary>
+    /// Initializes the PromptRange-backed skill catalog, executor, and package service.
+    /// </summary>
+    /// <param name="promptRangeService">Service used to resolve skill ranges.</param>
+    /// <param name="promptItemService">Service used to resolve prompt versions and export artifacts.</param>
+    /// <param name="promptResultService">Service used to execute prompt versions.</param>
+    /// <param name="httpClientFactory">Factory used for remote package downloads.</param>
+    /// <param name="aiModelService">Service used for generated skill execution.</param>
+    /// <param name="serviceProvider">Provider used for file-manager integration.</param>
     public PromptRangeSkillService(
         PromptRangeService promptRangeService,
         PromptItemService promptItemService,
@@ -76,6 +85,7 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
         _serviceProvider = serviceProvider;
     }
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<SkillDescriptor>> ListAsync(
         SkillQuery query = null,
         CancellationToken cancellationToken = default)
@@ -130,6 +140,7 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
         return result;
     }
 
+    /// <inheritdoc />
     public async Task<SkillDescriptor> GetAsync(
         string skillId,
         string version = null,
@@ -165,6 +176,7 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             new SkillExecutionPolicy());
     }
 
+    /// <inheritdoc />
     public async Task<SkillExecutionResult> ExecuteAsync(
         SkillExecutionRequest request,
         CancellationToken cancellationToken = default)
@@ -206,6 +218,7 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             result.Id);
     }
 
+    /// <inheritdoc />
     public async Task<Stream> ExportAsync(
         string skillId,
         string version = null,
@@ -258,6 +271,7 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
         }
     }
 
+    /// <inheritdoc />
     public async Task<SkillInstallResult> InstallAsync(
         Stream package,
         string fileName,
@@ -498,6 +512,7 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             "Skill 已安装为 Draft，审核并发布后才能被 AdminChat 或 AgentsManager 执行。");
     }
 
+    /// <inheritdoc />
     public async Task<SkillInstallResult> InstallFromUrlAsync(
         string packageUrl,
         CancellationToken cancellationToken = default)
@@ -541,6 +556,7 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
         return await InstallAsync(stream, Path.GetFileName(uri.LocalPath), packageUrl, cancellationToken);
     }
 
+    /// <inheritdoc />
     public async Task<SkillContentPreview> PreviewAsync(
         string skillId,
         string version = null,
@@ -579,6 +595,7 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             files);
     }
 
+    /// <inheritdoc />
     public async Task<SkillGenerationResult> GenerateAsync(
         SkillGenerationRequest request,
         CancellationToken cancellationToken = default)
@@ -668,6 +685,7 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             "Skill 已由 AI 生成并保存为 Draft，请预览、编辑和测试后再发布。");
     }
 
+    /// <inheritdoc />
     public async Task<SkillDescriptor> PublishAsync(
         string skillId,
         string version,
@@ -686,6 +704,16 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             cancellationToken);
     }
 
+    /// <summary>
+    /// Resolves a Skill ID/version to a PromptItem, enforcing draft visibility by execution mode
+    /// and selecting the highest-scored available version when no version is supplied.
+    /// </summary>
+    /// <param name="skillId">The Skill ID, alias, or PromptRange name.</param>
+    /// <param name="version">An optional full version or tactic selector.</param>
+    /// <param name="context">The caller and execution-mode context.</param>
+    /// <param name="cancellationToken">Token used to cancel lookup.</param>
+    /// <returns>A task containing the selected PromptItem.</returns>
+    /// <exception cref="SkillNotFoundException">Thrown when the Skill or version cannot be resolved.</exception>
     private async Task<PromptItem> ResolveItemAsync(
         string skillId,
         string version,
@@ -730,12 +758,25 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
         return selected;
     }
 
+    /// <summary>
+    /// Loads all PromptItems belonging to a PromptRange.
+    /// </summary>
+    /// <param name="rangeId">The PromptRange identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel lookup.</param>
+    /// <returns>A task containing the PromptItems.</returns>
     private async Task<List<PromptItem>> GetItemsAsync(int rangeId, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         return await _promptItemService.GetFullListAsync(item => item.RangeId == rangeId);
     }
 
+    /// <summary>
+    /// Selects the highest-scored PromptItem using average score, maximum score,
+    /// aiming, and identifier as deterministic tie-breakers.
+    /// </summary>
+    /// <param name="items">Candidate PromptItems.</param>
+    /// <param name="publishedOnly">Whether drafts are excluded.</param>
+    /// <returns>The selected item, or <see langword="null"/> when no candidate exists.</returns>
     private static PromptItem SelectBestItem(IEnumerable<PromptItem> items, bool publishedOnly)
     {
         var candidates = items.Where(item => !publishedOnly || !item.IsDraft).ToList();
@@ -747,6 +788,13 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             .FirstOrDefault();
     }
 
+    /// <summary>
+    /// Maps a PromptItem to its public Skill version descriptor.
+    /// </summary>
+    /// <param name="skillId">The public Skill ID.</param>
+    /// <param name="range">The parent PromptRange.</param>
+    /// <param name="item">The PromptItem version.</param>
+    /// <returns>The version descriptor.</returns>
     private static SkillVersionDescriptor ToVersionDescriptor(
         string skillId,
         PromptRangeDto range,
@@ -765,6 +813,12 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             ParseInputs(item.VariableDictJson));
     }
 
+    /// <summary>
+    /// Parses PromptRange variable definitions into Skill input descriptors.
+    /// </summary>
+    /// <param name="variableDictJson">Serialized variable definitions.</param>
+    /// <returns>Skill input definitions.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the variable JSON is malformed.</exception>
     private static IReadOnlyList<SkillInputDefinition> ParseInputs(string variableDictJson)
     {
         if (string.IsNullOrWhiteSpace(variableDictJson))
@@ -785,6 +839,12 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
         }
     }
 
+    /// <summary>
+    /// Applies caller arguments or a single input value to the PromptItem variable dictionary.
+    /// </summary>
+    /// <param name="item">The PromptItem DTO whose variables are updated.</param>
+    /// <param name="arguments">Named caller arguments.</param>
+    /// <param name="input">The raw Skill input used for a single-variable definition.</param>
     private static void ApplyArguments(
         PromptItemDto item,
         IReadOnlyDictionary<string, object> arguments,
@@ -815,6 +875,12 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
         item.VariableDictJson = JsonSerializer.Serialize(values);
     }
 
+    /// <summary>
+    /// Builds the constrained AI prompt used to generate or improve a Skill definition.
+    /// </summary>
+    /// <param name="request">The Skill generation request.</param>
+    /// <param name="existingContent">Optional existing prompt content to improve.</param>
+    /// <returns>A JSON-only generation prompt.</returns>
     private static string BuildGenerationPrompt(SkillGenerationRequest request, string existingContent)
     {
         var prompt = $@"You are designing a safe PromptRange Skill. Return JSON only with these properties:
@@ -830,6 +896,13 @@ Requested Skill:
             : $"\nExisting prompt content to improve:\n{existingContent}");
     }
 
+    /// <summary>
+    /// Stores an exported Skill package through FileManager when that integration is available.
+    /// </summary>
+    /// <param name="package">The package stream.</param>
+    /// <param name="fileName">The package file name.</param>
+    /// <param name="sourceUrl">Optional source URL recorded with the artifact.</param>
+    /// <returns>A task containing the import result, or <see langword="null"/> when FileManager is unavailable.</returns>
     private async Task<FileManagerImportResult> StoreArtifactAsync(
         MemoryStream package,
         string fileName,
@@ -856,6 +929,12 @@ Requested Skill:
         return result;
     }
 
+    /// <summary>
+    /// Parses model-generated Skill JSON, falling back to treating the raw output as prompt content.
+    /// </summary>
+    /// <param name="output">The model output.</param>
+    /// <param name="request">The original generation request used for fallback metadata.</param>
+    /// <returns>A normalized generated Skill definition.</returns>
     private static GeneratedSkillDefinition ParseGeneratedSkill(
         string output,
         SkillGenerationRequest request)
@@ -894,6 +973,11 @@ Requested Skill:
         };
     }
 
+    /// <summary>
+    /// Converts a Skill identifier to lowercase path-safe characters.
+    /// </summary>
+    /// <param name="value">The raw identifier.</param>
+    /// <returns>A normalized Skill identifier.</returns>
     private static string NormalizeSkillId(string value)
     {
         var normalized = new string((value ?? "generated-skill")
@@ -906,6 +990,16 @@ Requested Skill:
         return string.IsNullOrWhiteSpace(normalized) ? "generated-skill" : normalized;
     }
 
+    /// <summary>
+    /// Downloads a GitHub repository archive, extracts one folder into a normalized
+    /// Skill package, and enforces package limits.
+    /// </summary>
+    /// <param name="repository">The GitHub owner/repository path.</param>
+    /// <param name="branch">The branch or reference name.</param>
+    /// <param name="folder">The Skill folder path.</param>
+    /// <param name="cancellationToken">Token used to cancel download and packaging.</param>
+    /// <returns>A task containing the normalized Skill package.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the folder, prompt file, or package limits are invalid.</exception>
     private async Task<MemoryStream> DownloadGitHubFolderAsync(
         string repository,
         string branch,
@@ -999,6 +1093,14 @@ Requested Skill:
         return output;
     }
 
+    /// <summary>
+    /// Parses a GitHub tree URL into repository, branch, and folder components.
+    /// </summary>
+    /// <param name="value">The URL to parse.</param>
+    /// <param name="repository">Receives the owner/repository path.</param>
+    /// <param name="branch">Receives the branch name.</param>
+    /// <param name="folder">Receives the folder path.</param>
+    /// <returns><see langword="true"/> when the URL matches the supported GitHub tree format.</returns>
     private static bool TryParseGitHubFolder(
         string value,
         out string repository,
@@ -1026,10 +1128,20 @@ Requested Skill:
         return true;
     }
 
+    /// <summary>
+    /// Determines whether a package file extension is safe for text preview.
+    /// </summary>
+    /// <param name="path">The package path.</param>
+    /// <returns><see langword="true"/> for supported text-like extensions.</returns>
     private static bool IsPreviewable(string path)
         => new[] { ".md", ".txt", ".json", ".yaml", ".yml", ".xml", ".cs", ".js", ".ts", ".py" }
             .Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// Maps a previewable file extension to its response content type.
+    /// </summary>
+    /// <param name="path">The file path.</param>
+    /// <returns>The content type.</returns>
     private static string GetContentType(string path)
         => Path.GetExtension(path).ToLowerInvariant() switch
         {
@@ -1048,6 +1160,11 @@ Requested Skill:
         public string Content { get; set; }
     }
 
+    /// <summary>
+    /// Sanitizes one package path component for archive output.
+    /// </summary>
+    /// <param name="value">The raw component.</param>
+    /// <returns>A non-empty file-name-safe component.</returns>
     private static string SanitizePackageComponent(string value)
     {
         var invalidCharacters = Path.GetInvalidFileNameChars();
@@ -1057,12 +1174,26 @@ Requested Skill:
         return string.IsNullOrWhiteSpace(sanitized) ? "skill" : sanitized;
     }
 
+    /// <summary>Gets the public Skill ID from a PromptRange alias or name.</summary>
+    /// <param name="range">The PromptRange DTO.</param>
+    /// <returns>The public Skill ID.</returns>
     private static string GetSkillId(PromptRangeDto range)
         => string.IsNullOrWhiteSpace(range.Alias) ? range.RangeName : range.Alias;
 
+    /// <summary>Gets the display name from a PromptRange alias or name.</summary>
+    /// <param name="range">The PromptRange DTO.</param>
+    /// <returns>The display name.</returns>
     private static string GetRangeName(PromptRangeDto range)
         => string.IsNullOrWhiteSpace(range.Alias) ? range.RangeName : range.Alias;
 
+    /// <summary>
+    /// Applies Skill ID and keyword filters to one PromptRange.
+    /// </summary>
+    /// <param name="query">The catalog query.</param>
+    /// <param name="skillId">The public Skill ID.</param>
+    /// <param name="alias">The PromptRange alias.</param>
+    /// <param name="rangeName">The PromptRange name.</param>
+    /// <returns><see langword="true"/> when the range matches.</returns>
     private static bool Matches(SkillQuery query, string skillId, string alias, string rangeName)
     {
         if (!string.IsNullOrWhiteSpace(query.SkillId) &&
@@ -1081,6 +1212,12 @@ Requested Skill:
                (rangeName?.Contains(query.Keyword, StringComparison.OrdinalIgnoreCase) ?? false);
     }
 
+    /// <summary>
+    /// Writes UTF-8 text content into a ZIP archive entry.
+    /// </summary>
+    /// <param name="archive">The target archive.</param>
+    /// <param name="path">The entry path.</param>
+    /// <param name="content">The text content.</param>
     private static void WriteEntry(ZipArchive archive, string path, string content)
     {
         var entry = archive.CreateEntry(path, CompressionLevel.Fastest);

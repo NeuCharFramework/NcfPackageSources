@@ -111,6 +111,8 @@
 .studio-member button:first-child { flex: 1; text-align: left; overflow-wrap: anywhere; }
 .studio-member button:disabled { opacity: .4; cursor: not-allowed; }
 .studio-metrics { display: flex; gap: 10px; color: #67ddc6; font-size: 12px; }
+.studio-conversation-state { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 90px; margin: 0; color: var(--studio-muted); text-align: center; }
+.studio-conversation-state i { color: #67ddc6; font-size: 18px; }
 .studio-history { padding: 12px; margin-bottom: 10px; border: 1px solid var(--studio-border); border-radius: 8px; background: #172d3e; overflow-wrap: anywhere; }
 .studio-history > strong { color: #78d7d1; font-size: 11px; }
 .studio-history > div { line-height: 1.7; }

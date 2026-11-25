@@ -934,4 +934,14 @@
   <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>変更を保存せず、マスク済みグラフ、リビジョン、ノード情報を読み取ります。</value></data>
   <data name="AdminChat.Function.ApplyWorkflowEdit" xml:space="preserve"><value>Workflow の編集を適用</value></data>
   <data name="AdminChat.Function.ApplyWorkflowEditDescription" xml:space="preserve"><value>確認済みリビジョンで明示的な最小変更を保存し、シークレット、トリガー、有効状態を保持します。</value></data>
+  <data name="AdminChat.Command.Workflow.Parameter.Id" xml:space="preserve"><value>Workflow</value></data>
+  <data name="AdminChat.Command.Workflow.Parameter.IdHint" xml:space="preserve"><value>現在の管理者が所有する Workflow を選択</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.Input" xml:space="preserve"><value>Workflow 入力</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.InputHint" xml:space="preserve"><value>今回の実行用の任意入力を入力</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.InputPlaceholder" xml:space="preserve"><value>入力またはタスクを説明</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.Revision" xml:space="preserve"><value>リビジョン</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.RevisionHint" xml:space="preserve"><value>競合チェック用の任意リビジョン</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.Change" xml:space="preserve"><value>変更内容</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.ChangeHint" xml:space="preserve"><value>適用する最小限の変更を説明</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.ChangePlaceholder" xml:space="preserve"><value>具体的な変更内容を入力</value></data>
 </root>

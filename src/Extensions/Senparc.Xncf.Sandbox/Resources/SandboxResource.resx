@@ -132,6 +132,9 @@
   <data name="Frontend.Sandbox.SandboxSessions" xml:space="preserve"><value>沙箱会话</value></data>
   <data name="Frontend.Sandbox.Template" xml:space="preserve"><value>模板</value></data>
   <data name="Frontend.Sandbox.SessionId" xml:space="preserve"><value>会话 ID</value></data>
+  <data name="Frontend.Sandbox.CopySessionId" xml:space="preserve"><value>复制会话 ID</value></data>
+  <data name="Frontend.Sandbox.SessionIdCopied" xml:space="preserve"><value>已复制完整会话 ID</value></data>
+  <data name="Frontend.Sandbox.FailedToCopySessionId" xml:space="preserve"><value>复制会话 ID 失败，请手动选择后复制</value></data>
   <data name="Frontend.Sandbox.Alias" xml:space="preserve"><value>别名</value></data>
   <data name="Frontend.Sandbox.Runtime" xml:space="preserve"><value>运行时</value></data>
   <data name="Frontend.Sandbox.Status" xml:space="preserve"><value>状态</value></data>
@@ -187,6 +190,14 @@
   <data name="Frontend.Sandbox.StatusUpdatedValue" xml:space="preserve"><value>状态更新于 {0}</value></data>
   <data name="Frontend.Sandbox.ValueSessions" xml:space="preserve"><value>{0} 个会话</value></data>
   <data name="Frontend.Sandbox.NoSandboxSessions" xml:space="preserve"><value>暂无沙箱会话</value></data>
+  <data name="Frontend.Sandbox.SearchSessions" xml:space="preserve"><value>搜索会话 ID、别名或模板</value></data>
+  <data name="Frontend.Sandbox.AllStatuses" xml:space="preserve"><value>全部状态</value></data>
+  <data name="Frontend.Sandbox.AllTemplates" xml:space="preserve"><value>全部模板</value></data>
+  <data name="Frontend.Sandbox.BulkDelete" xml:space="preserve"><value>批量删除</value></data>
+  <data name="Frontend.Sandbox.SelectDeletable" xml:space="preserve"><value>选择可删除项</value></data>
+  <data name="Frontend.Sandbox.BulkDeleteConfirm" xml:space="preserve"><value>将永久删除选中的 {0} 条可删除会话记录，是否继续？</value></data>
+  <data name="Frontend.Sandbox.BulkDeleteCompleted" xml:space="preserve"><value>批量删除完成：删除 {0} 条，跳过 {1} 条。</value></data>
+  <data name="Frontend.Sandbox.FailedToBulkDelete" xml:space="preserve"><value>批量删除失败，请检查服务日志。</value></data>
   <data name="Frontend.Sandbox.AliasesIdentifySessionsInListsFunctionResultsAndLogsTheyDoNot" xml:space="preserve"><value>别名仅用于在列表、Function 结果与日志中识别会话；不影响运行环境。</value></data>
   <data name="Frontend.Sandbox.Creating" xml:space="preserve"><value>创建中</value></data>
   <data name="Frontend.Sandbox.Stopping" xml:space="preserve"><value>停止中</value></data>

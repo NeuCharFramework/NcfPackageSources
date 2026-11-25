@@ -28,11 +28,20 @@ public sealed class WeixinClawMessageDispatcher
 {
     private readonly IEnumerable<IWeixinClawMessageHandler> _handlers;
 
+    /// <summary>
+    /// Initializes the ordered message-handler dispatcher.
+    /// </summary>
+    /// <param name="handlers">Handlers invoked sequentially for each received message.</param>
     public WeixinClawMessageDispatcher(IEnumerable<IWeixinClawMessageHandler> handlers)
     {
         _handlers = handlers;
     }
 
+    /// <summary>
+    /// Dispatches one received message to every registered handler in enumeration order.
+    /// </summary>
+    /// <param name="context">The received message context.</param>
+    /// <param name="cancellationToken">Token used to cancel handler execution.</param>
     public async Task DispatchAsync(
         WeixinClawMessageReceivedContext context,
         CancellationToken cancellationToken = default)

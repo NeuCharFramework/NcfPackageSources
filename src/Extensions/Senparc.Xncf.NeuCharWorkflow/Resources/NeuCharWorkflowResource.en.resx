@@ -934,4 +934,14 @@
   <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>Read the masked graph, revision, and node context without saving changes.</value></data>
   <data name="AdminChat.Function.ApplyWorkflowEdit" xml:space="preserve"><value>Apply Workflow edit</value></data>
   <data name="AdminChat.Function.ApplyWorkflowEditDescription" xml:space="preserve"><value>Save one explicit minimal GraphJson edit using an inspected revision while preserving secrets, trigger, and enabled state.</value></data>
+  <data name="AdminChat.Command.Workflow.Parameter.Id" xml:space="preserve"><value>Workflow</value></data>
+  <data name="AdminChat.Command.Workflow.Parameter.IdHint" xml:space="preserve"><value>Choose a workflow owned by the current administrator</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.Input" xml:space="preserve"><value>Workflow input</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.InputHint" xml:space="preserve"><value>Enter optional input for this run</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.InputPlaceholder" xml:space="preserve"><value>Describe the input or task</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.Revision" xml:space="preserve"><value>Revision</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.RevisionHint" xml:space="preserve"><value>Optional expected revision for optimistic concurrency</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.Change" xml:space="preserve"><value>Requested change</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.ChangeHint" xml:space="preserve"><value>Describe the smallest workflow change to apply</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.ChangePlaceholder" xml:space="preserve"><value>Describe the requested change</value></data>
 </root>

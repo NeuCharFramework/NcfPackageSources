@@ -30,6 +30,11 @@ public sealed class WeixinClawFileManagerBridge
     private readonly IEventBusRequestClient _requestClient;
     private readonly ILogger<WeixinClawFileManagerBridge> _logger;
 
+    /// <summary>
+    /// Initializes the event-bus bridge used to import received media into FileManager.
+    /// </summary>
+    /// <param name="requestClient">Event-bus request client for FileManager import requests.</param>
+    /// <param name="logger">Bridge logger.</param>
     public WeixinClawFileManagerBridge(
         IEventBusRequestClient requestClient,
         ILogger<WeixinClawFileManagerBridge> logger)
@@ -38,6 +43,16 @@ public sealed class WeixinClawFileManagerBridge
         _logger = logger;
     }
 
+    /// <summary>
+    /// Requests FileManager import for inbound media and records non-cancellation failures on the media object.
+    /// </summary>
+    /// <param name="tenantId">The tenant receiving the media.</param>
+    /// <param name="accountId">The Weixin account identifier.</param>
+    /// <param name="messageId">The inbound message identifier.</param>
+    /// <param name="media">The stored media metadata to update.</param>
+    /// <param name="content">The media bytes sent to FileManager.</param>
+    /// <param name="cancellationToken">Token used to cancel the import request.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="media"/> or <paramref name="content"/> is <see langword="null"/>.</exception>
     public async Task ImportAsync(
         int tenantId,
         int accountId,

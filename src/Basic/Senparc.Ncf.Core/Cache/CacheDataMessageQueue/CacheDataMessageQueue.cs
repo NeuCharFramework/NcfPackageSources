@@ -22,32 +22,33 @@ using System.Linq;
 namespace Senparc.Ncf.Core.Cache
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores deferred cache-related actions by a stable composite key and executes them
+    /// in a serialized flush operation.
     /// </summary>
     public class CacheDataMessageQueue
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Holds pending actions indexed by their composite queue key.
         /// </summary>
         private static Dictionary<string, CacheDataMessageQueueItem> MessageQueueDictionary = new Dictionary<string, CacheDataMessageQueueItem>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Protects reads and writes to <see cref="MessageQueueDictionary"/>.
         /// </summary>
         private static object MessageQueueSyncLock = new object();
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Prevents concurrent callers from flushing the same queue at the same time.
         /// </summary>
         private static object FlushCacheLock = new object();
 
         /// <summary>
-        /// generateKey
+        /// Builds the case-insensitive key used to coalesce or locate a deferred action.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="name">The logical name of the operation or message source.</param>
+        /// <param name="senderType">The type that originated the operation.</param>
+        /// <param name="identityKey">The identity of the affected cache entry or entity.</param>
+        /// <param name="actionName">The operation name used to distinguish actions for the same identity.</param>
+        /// <returns>A composite key containing all supplied identity components.</returns>
         public static string GenerateKey(string name, Type senderType, string identityKey, string actionName)
         {
             var key = string.Format("Name@{0}||Type@{1}||Key@{2}||ActionName@{3}",
@@ -56,28 +57,29 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Executes each currently queued action until the queue is empty.
         /// </summary>
         public static void OperateQueue()
         {
             lock (FlushCacheLock)
             {
                 var mq = new CacheDataMessageQueue();
-                var key = mq.GetCurrentKey(); //Legacy comment translated to English.
+                var key = mq.GetCurrentKey();
                 while (!string.IsNullOrEmpty(key))
                 {
-                    var mqItem = mq.GetItem(key); //Legacy comment translated to English.
-                    mqItem.Action(); //execute
-                    mq.Remove(key); //Legacy comment translated to English.
-                    key = mq.GetCurrentKey(); //Legacy comment translated to English.
+                    var mqItem = mq.GetItem(key);
+                    mqItem.Action();
+                    mq.Remove(key);
+                    key = mq.GetCurrentKey();
                 }
             }
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets one currently queued key. The returned value is an available work item,
+        /// not a durable sequence number.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The first key returned by dictionary enumeration, or <see langword="null"/> when empty.</returns>
         public string GetCurrentKey()
         {
             lock (MessageQueueSyncLock)
@@ -87,10 +89,10 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// getSenparcMessageQueueItem
+        /// Gets the queued action associated with a composite queue key.
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="key">The key previously produced by <see cref="GenerateKey"/> or supplied to <see cref="Add"/>.</param>
+        /// <returns>The queued item, or <see langword="null"/> when no item exists for <paramref name="key"/>.</returns>
         public CacheDataMessageQueueItem GetItem(string key)
         {
             lock (MessageQueueSyncLock)
@@ -104,10 +106,11 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Adds or replaces the deferred action associated with a queue key.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="action"></param>
+        /// <param name="key">The key used to identify the deferred action.</param>
+        /// <param name="action">The action to execute during <see cref="OperateQueue"/>.</param>
+        /// <returns>The queue item created for the key.</returns>
         public CacheDataMessageQueueItem Add(string key, Action action)
         {
             lock (MessageQueueSyncLock)
@@ -119,7 +122,6 @@ namespace Senparc.Ncf.Core.Cache
                 //else
                 //{
                 //    MessageQueueList.Remove(key);
-                //Legacy comment translated to English.
                 //}
 
                 var mqItem = new CacheDataMessageQueueItem(key, action);
@@ -129,9 +131,9 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Removes a queued action when an item exists for the supplied key.
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="key">The key of the queued action to remove.</param>
         public void Remove(string key)
         {
             lock (MessageQueueSyncLock)
@@ -145,9 +147,9 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the number of actions currently waiting in the queue.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The current number of queued actions.</returns>
         public int GetCount()
         {
             lock (MessageQueueSyncLock)

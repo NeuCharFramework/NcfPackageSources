@@ -70,6 +70,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
 
+    Modified by: Senparc - 20261125
+    Change description: v0.12.29 Improved AdminChat conversation loading and command parameter feedback.
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
@@ -94,6 +97,7 @@ using Senparc.Xncf.Workspace.Abstractions;
 using Senparc.Xncf.PromptRange.Abstractions.Shotting;
 using Senparc.Xncf.PromptRange.Abstractions.References;
 using Senparc.Xncf.PromptRange.Abstractions.SystemMessages;
+using Senparc.Ncf.XncfBase.ChatTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -145,6 +149,27 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             _localizer = localizer;
             _eventBus = serviceProvider.GetService<IEventBus>();
             _workspaceStorage = workspaceStorage;
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<ChatToolParameterOptionsResult>> GetChatToolParameterOptionsAsync(
+            string command,
+            string parameter,
+            string query = null,
+            int limit = 50)
+        {
+            return await this.GetResponseAsync<
+                AppResponseBase<ChatToolParameterOptionsResult>,
+                ChatToolParameterOptionsResult>(
+                async (_, _) => await ChatToolRegistry.GetParameterOptionsAsync(
+                    ServiceProvider,
+                    new ChatToolParameterOptionsRequest
+                    {
+                        Command = command,
+                        Parameter = parameter,
+                        Query = query,
+                        Limit = limit
+                    }).ConfigureAwait(false));
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]

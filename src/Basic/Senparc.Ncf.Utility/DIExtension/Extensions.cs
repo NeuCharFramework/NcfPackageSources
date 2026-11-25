@@ -20,11 +20,17 @@ using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    //Legacy comment translated to English.
-
+    /// <summary>
+    /// Registers the application's service provider in the legacy NCF DI access point.
+    /// </summary>
     public static class Extensions
     {
 
+        /// <summary>
+        /// Stores the application's service provider and returns the builder for fluent startup configuration.
+        /// </summary>
+        /// <param name="builder">The application builder whose service provider is stored.</param>
+        /// <returns>The same application builder.</returns>
         public static IApplicationBuilder UseSenparcMvcDI(this IApplicationBuilder builder)
         {
             DI.ServiceProvider = builder.ApplicationServices;
@@ -33,10 +39,13 @@ namespace Microsoft.Extensions.DependencyInjection
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides the legacy process-wide service-provider access point used by NCF utility helpers.
     /// </summary>
     public static class DI
     {
+        /// <summary>
+        /// Gets or sets the service provider used by legacy static helpers.
+        /// </summary>
         public static IServiceProvider ServiceProvider { get; set; }
     }
 }

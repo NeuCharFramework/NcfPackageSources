@@ -203,6 +203,11 @@ public sealed class FineTuningStartJobFunctionRequest : FineTuningWorkerFunction
         }
     }
 
+    /// <summary>
+    /// Resolves and validates the Worker alias encoded in the worker, model, and dataset selections.
+    /// </summary>
+    /// <returns>The single consistent Worker alias, or <see langword="null"/> when none is selected.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when selected resources belong to different Workers.</exception>
     public string? ResolveWorkerAlias()
     {
         Unwrap(ModelId, out var modelWorker);
@@ -220,6 +225,13 @@ public sealed class FineTuningStartJobFunctionRequest : FineTuningWorkerFunction
         return aliases.SingleOrDefault();
     }
 
+    /// <summary>
+    /// Converts the function request into a validated fine-tuning job request.
+    /// </summary>
+    /// <returns>The normalized job request consumed by the fine-tuning service.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when Worker, model, dataset, or validation-dataset selections are missing or inconsistent.
+    /// </exception>
     public FineTuningJobRequest ToJobRequest()
     {
         var workerAlias = ResolveWorkerAlias();
@@ -277,9 +289,20 @@ public sealed class FineTuningStartJobFunctionRequest : FineTuningWorkerFunction
         };
     }
 
+    /// <summary>
+    /// Trims a selectable value and converts blank text to <see langword="null"/>.
+    /// </summary>
+    /// <param name="value">The value to normalize.</param>
+    /// <returns>The trimmed value, or <see langword="null"/> when blank.</returns>
     private static string? Normalize(string? value) =>
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
+    /// <summary>
+    /// Splits an optionally Worker-qualified selection into alias and resource identifier.
+    /// </summary>
+    /// <param name="value">The raw selection value, optionally formatted as <c>alias/id</c>.</param>
+    /// <param name="alias">Receives the Worker alias when the qualified form is used.</param>
+    /// <returns>The resource identifier portion.</returns>
     private static string Unwrap(string? value, out string? alias)
     {
         alias = null;
@@ -304,6 +327,12 @@ internal static class FineTuningFunctionCatalog
 {
     private static readonly TimeSpan CatalogTimeout = TimeSpan.FromSeconds(3);
 
+    /// <summary>
+    /// Loads enabled Workers with configured secrets into a function selection list.
+    /// </summary>
+    /// <param name="serviceProvider">The provider used to resolve Worker configuration.</param>
+    /// <param name="target">The selection list receiving ready Worker options.</param>
+    /// <returns>The ready Worker DTOs in display-name order.</returns>
     public static async Task<List<AIFineTuningWorkerDto>> LoadWorkersAsync(
         IServiceProvider serviceProvider, SelectionList target)
     {
@@ -329,6 +358,15 @@ internal static class FineTuningFunctionCatalog
         return ready;
     }
 
+    /// <summary>
+    /// Loads models and datasets from ready Workers into fine-tuning selection lists.
+    /// </summary>
+    /// <param name="serviceProvider">The provider used to resolve the fine-tuning client.</param>
+    /// <param name="workers">The ready Workers to query.</param>
+    /// <param name="modelOptions">The model selection list to populate.</param>
+    /// <param name="datasetOptions">The training-dataset selection list to populate.</param>
+    /// <param name="evalOptions">The validation-dataset selection list to populate.</param>
+    /// <returns>A task that completes after bounded catalog loading.</returns>
     public static async Task LoadTrainingCatalogAsync(
         IServiceProvider serviceProvider,
         IReadOnlyList<AIFineTuningWorkerDto> workers,
@@ -409,9 +447,21 @@ internal static class FineTuningFunctionCatalog
             new SelectionItem(dataset.Value, dataset.Text, dataset.Note))).ToList();
     }
 
+    /// <summary>
+    /// Formats a catalog option value with a Worker prefix when multiple Workers are available.
+    /// </summary>
+    /// <param name="singleWorker">Whether the catalog contains only one Worker.</param>
+    /// <param name="alias">The Worker alias.</param>
+    /// <param name="id">The model or dataset identifier.</param>
+    /// <returns>The selection value consumed by request conversion.</returns>
     private static string OptionValue(bool singleWorker, string alias, string id) =>
         singleWorker ? id : $"{alias}/{id}";
 
+    /// <summary>
+    /// Writes diagnostic output and best-effort Senparc tracing for fine-tuning catalog operations.
+    /// </summary>
+    /// <param name="message">The diagnostic message.</param>
+    /// <param name="exception">An optional exception associated with the message.</param>
     internal static void WriteDebug(string message, Exception? exception = null)
     {
         System.Diagnostics.Debug.WriteLine(exception == null

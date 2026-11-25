@@ -27,11 +27,20 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
 {
     public class ColorService : ServiceBase<Color>
     {
+        /// <summary>
+        /// Initializes the color service with its repository and service provider.
+        /// </summary>
+        /// <param name="repo">The color repository.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public ColorService(IRepositoryBase<Color> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {
         }
 
+        /// <summary>
+        /// Creates and persists a random color, then maps it to a DTO.
+        /// </summary>
+        /// <returns>The newly persisted random color.</returns>
         public async Task<ColorDto> CreateNewColor()
         {
             Color color = new Color(-1, -1, -1);
@@ -40,6 +49,10 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
             return colorDto;
         }
 
+        /// <summary>
+        /// Loads the newest color or creates a random initial color when none exists.
+        /// </summary>
+        /// <returns>The existing or newly created color DTO.</returns>
         public async Task<ColorDto> GetOrInitColor()
         {
             var color = await base.GetObjectAsync(z => true);
@@ -53,6 +66,10 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
             return base.Mapper.Map<ColorDto>(color);
         }
 
+        /// <summary>
+        /// Brightens the newest persisted color and saves the result.
+        /// </summary>
+        /// <returns>The updated color DTO.</returns>
         public async Task<ColorDto> Brighten()
         {
             //TODO: add sorting to the asynchronous method
@@ -62,6 +79,10 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
             return base.Mapper.Map<ColorDto>(obj);
         }
 
+        /// <summary>
+        /// Darkens the newest persisted color and saves the result.
+        /// </summary>
+        /// <returns>The updated color DTO.</returns>
         public async Task<ColorDto> Darken()
         {
             //TODO: add sorting to the asynchronous method
@@ -71,6 +92,10 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
             return base.Mapper.Map<ColorDto>(obj);
         }
 
+        /// <summary>
+        /// Replaces the newest persisted color with a random color and saves the result.
+        /// </summary>
+        /// <returns>The updated color DTO.</returns>
         public async Task<ColorDto> Random()
         {
             //TODO: add sorting to the asynchronous method

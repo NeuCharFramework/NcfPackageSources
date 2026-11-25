@@ -101,6 +101,9 @@
         2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
         [2026-11-24] v0.8.4 Integrated localization, tooling, and runtime improvements across the module.
         1. Updated functional behavior and package metadata for the current module changes.
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-25] v0.8.4 Registered and localized KnowledgeBase chat-tool services.
+        1. Added chat-tool service registration and localized command resources for knowledge-base interactions.
         2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

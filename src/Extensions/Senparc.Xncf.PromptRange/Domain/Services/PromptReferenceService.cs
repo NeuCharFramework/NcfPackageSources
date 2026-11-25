@@ -34,6 +34,11 @@ public sealed class PromptReferenceService : IPromptReferenceService
     private readonly IRepositoryBase<PromptItem> _repository;
     private readonly PromptResultService _results;
 
+    /// <summary>
+    /// Initializes prompt reference validation and scoring services.
+    /// </summary>
+    /// <param name="repository">Prompt-item repository.</param>
+    /// <param name="results">Prompt-result scoring service.</param>
     public PromptReferenceService(IRepositoryBase<PromptItem> repository, PromptResultService results)
     {
         _repository = repository;
@@ -79,6 +84,12 @@ public sealed class PromptReferenceService : IPromptReferenceService
         entry.Property(robot ? nameof(PromptItem.RobotScore) : nameof(PromptItem.HumanScore)).IsModified = true;
     }
 
+    /// <summary>
+    /// Validates reference ranges and verifies that referenced PromptCode content has not changed.
+    /// </summary>
+    /// <param name="content">The source content containing references.</param>
+    /// <param name="references">The reference ranges and PromptCode versions.</param>
+    /// <exception cref="NcfExceptionBase">Thrown when a reference is invalid or its content no longer matches.</exception>
     public async Task ValidateAsync(string content, IReadOnlyList<PromptReference> references)
     {
         PromptReference.ValidateRanges(content, references);
@@ -92,8 +103,19 @@ public sealed class PromptReferenceService : IPromptReferenceService
         }
     }
 
+    /// <summary>
+    /// Returns scoring metadata for one referenced PromptCode.
+    /// </summary>
+    /// <param name="promptItemId">The prompt-item identifier.</param>
+    /// <returns>Reference identity, scores, and benchmark availability.</returns>
     public async Task<PromptReferenceInfo> GetInfoAsync(int promptItemId) => Info(await GetAsync(promptItemId));
 
+    /// <summary>
+    /// Applies and persists a human/reference score while preserving concurrent score updates.
+    /// </summary>
+    /// <param name="promptItemId">The prompt-item identifier.</param>
+    /// <param name="score">The score to store.</param>
+    /// <returns>The refreshed reference scoring metadata.</returns>
     public async Task<PromptReferenceInfo> ScoreAsync(int promptItemId, decimal score)
     {
         var item = await GetAsync(promptItemId);
@@ -103,6 +125,14 @@ public sealed class PromptReferenceService : IPromptReferenceService
         return Info(item);
     }
 
+    /// <summary>
+    /// Evaluates and persists an AI score against a PromptCode benchmark.
+    /// </summary>
+    /// <param name="promptItemId">The prompt-item identifier.</param>
+    /// <param name="context">Optional scoring context, limited to 64,000 characters.</param>
+    /// <param name="result">The generated result, limited to 64,000 characters.</param>
+    /// <returns>The refreshed reference scoring metadata.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when input limits fail or no benchmark exists.</exception>
     public async Task<PromptReferenceInfo> ScoreWithAIAsync(int promptItemId, string context, string result)
     {
         if (string.IsNullOrWhiteSpace(result) || result.Length > 64000 || (context?.Length ?? 0) > 64000)

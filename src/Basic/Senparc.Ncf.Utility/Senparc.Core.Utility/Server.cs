@@ -39,6 +39,11 @@ namespace Senparc.Ncf.Core.Utility
             }
         }
 
+        /// <summary>
+        /// Maps an application-relative virtual path to a physical path.
+        /// </summary>
+        /// <param name="virtualPath">The virtual path to map.</param>
+        /// <returns>The mapped path, or an empty string when <paramref name="virtualPath"/> is null.</returns>
         public static string GetMapPath(string virtualPath)
         {
             if (virtualPath == null)
@@ -49,6 +54,11 @@ namespace Senparc.Ncf.Core.Utility
             return SenparcHttpContext.MapPath(virtualPath);
         }
 
+        /// <summary>
+        /// Maps an application-relative virtual path to its web-facing path representation.
+        /// </summary>
+        /// <param name="virtualPath">The virtual path to map.</param>
+        /// <returns>The mapped web path, or an empty string when <paramref name="virtualPath"/> is null.</returns>
         public static string GetWebMapPath(string virtualPath)
         {
             if (virtualPath == null)

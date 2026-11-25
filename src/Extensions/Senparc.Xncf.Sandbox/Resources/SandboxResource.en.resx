@@ -132,6 +132,9 @@
   <data name="Frontend.Sandbox.SandboxSessions" xml:space="preserve"><value>Sandbox sessions</value></data>
   <data name="Frontend.Sandbox.Template" xml:space="preserve"><value>Template</value></data>
   <data name="Frontend.Sandbox.SessionId" xml:space="preserve"><value>Session ID</value></data>
+  <data name="Frontend.Sandbox.CopySessionId" xml:space="preserve"><value>Copy session ID</value></data>
+  <data name="Frontend.Sandbox.SessionIdCopied" xml:space="preserve"><value>Full session ID copied</value></data>
+  <data name="Frontend.Sandbox.FailedToCopySessionId" xml:space="preserve"><value>Could not copy the session ID. Select it manually and copy.</value></data>
   <data name="Frontend.Sandbox.Alias" xml:space="preserve"><value>Alias</value></data>
   <data name="Frontend.Sandbox.Runtime" xml:space="preserve"><value>Runtime</value></data>
   <data name="Frontend.Sandbox.Status" xml:space="preserve"><value>Status</value></data>
@@ -189,6 +192,14 @@
   <data name="Frontend.Sandbox.StatusUpdatedValue" xml:space="preserve"><value>Status updated {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.Sandbox.ValueSessions" xml:space="preserve"><value>{0} sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.Sandbox.NoSandboxSessions" xml:space="preserve"><value>No sandbox sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.SearchSessions" xml:space="preserve"><value>Search session ID, alias, or template</value></data>
+  <data name="Frontend.Sandbox.AllStatuses" xml:space="preserve"><value>All statuses</value></data>
+  <data name="Frontend.Sandbox.AllTemplates" xml:space="preserve"><value>All templates</value></data>
+  <data name="Frontend.Sandbox.BulkDelete" xml:space="preserve"><value>Bulk delete</value></data>
+  <data name="Frontend.Sandbox.SelectDeletable" xml:space="preserve"><value>Select deletable</value></data>
+  <data name="Frontend.Sandbox.BulkDeleteConfirm" xml:space="preserve"><value>Permanently delete {0} selected session records. Continue?</value></data>
+  <data name="Frontend.Sandbox.BulkDeleteCompleted" xml:space="preserve"><value>Bulk delete completed: {0} deleted, {1} skipped.</value></data>
+  <data name="Frontend.Sandbox.FailedToBulkDelete" xml:space="preserve"><value>Bulk delete failed. Check the service logs.</value></data>
   <data name="Frontend.Sandbox.AliasesIdentifySessionsInListsFunctionResultsAndLogsTheyDoNot" xml:space="preserve"><value>Aliases identify sessions in lists, Function results, and logs; they do not affect the runtime environment.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.Sandbox.Creating" xml:space="preserve"><value>Creating</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.Sandbox.Stopping" xml:space="preserve"><value>Stopping</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>

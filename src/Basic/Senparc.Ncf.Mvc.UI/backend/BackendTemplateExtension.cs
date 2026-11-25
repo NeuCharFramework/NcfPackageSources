@@ -27,11 +27,26 @@ namespace Senparc.Ncf.Mvc.UI
 {
     public static class BackendTemplateExtension
     {
+        /// <summary>
+        /// Writes a content box with the default tab container enabled.
+        /// </summary>
+        /// <param name="htmlHelper">The HTML helper whose view writer receives the opening markup.</param>
+        /// <param name="title">The content-box heading.</param>
+        /// <param name="tabs">The tab markup or labels to render in the header.</param>
+        /// <returns>A disposable content-box writer that closes the emitted markup.</returns>
         public static ContentBox ContentBox(this HtmlHelper htmlHelper, string title, params object[] tabs)
         {
             return ContentBox(htmlHelper, title, true, tabs);
         }
 
+        /// <summary>
+        /// Writes a content box and optionally emits its default tab container.
+        /// </summary>
+        /// <param name="htmlHelper">The HTML helper whose view writer receives the opening markup.</param>
+        /// <param name="title">The content-box heading.</param>
+        /// <param name="showDefaultTabContainer">Whether to emit the default tab container.</param>
+        /// <param name="tabs">The tab markup or labels to render in the header.</param>
+        /// <returns>A disposable content-box writer that closes the emitted markup.</returns>
         public static ContentBox ContentBox(this HtmlHelper htmlHelper, string title, bool showDefaultTabContainer, params object[] tabs)
         {
             StringBuilder tabsCollection = new StringBuilder();
@@ -65,6 +80,11 @@ namespace Senparc.Ncf.Mvc.UI
             return contentBox;
         }
 
+        /// <summary>
+        /// Converts model messages into client-side alert calls.
+        /// </summary>
+        /// <param name="helper">The HTML helper providing the current view model.</param>
+        /// <returns>Rendered script markup, or <see langword="null"/> when the model is not a UI view model.</returns>
         public static HtmlString RenderMessageBox(this IHtmlHelper helper)
         {
             if (!(helper.ViewData.Model is IBaseUiVD model))
@@ -89,6 +109,11 @@ namespace Senparc.Ncf.Mvc.UI
             return new HtmlString(sb.ToString());
         }
 
+        /// <summary>
+        /// Converts developer messages into diagnostic alert markup.
+        /// </summary>
+        /// <param name="helper">The HTML helper providing the current view model.</param>
+        /// <returns>Rendered HTML, or <see langword="null"/> when the model is not a UI view model.</returns>
         public static HtmlString RenderDeveloperMessageBox(this HtmlHelper helper)
         {
             if (!(helper.ViewData.Model is IBaseUiVD model))
@@ -107,6 +132,13 @@ namespace Senparc.Ncf.Mvc.UI
             return new HtmlString(sb.ToString());
         }
 
+        /// <summary>
+        /// Renders one developer message using an alert style derived from its message type.
+        /// </summary>
+        /// <param name="helper">The HTML helper used to preserve extension-method call compatibility.</param>
+        /// <param name="messageType">The message category controlling the icon and CSS class.</param>
+        /// <param name="messageText">The message text to place in the alert markup.</param>
+        /// <returns>The generated alert HTML.</returns>
         public static HtmlString DeveloperMessageBox(this IHtmlHelper helper, MessageType messageType, string messageText)
         {
             string icon = messageType == MessageType.success ? "exclamation" : "remove";

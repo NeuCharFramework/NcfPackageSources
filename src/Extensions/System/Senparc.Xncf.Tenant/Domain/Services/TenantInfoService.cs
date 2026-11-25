@@ -46,6 +46,12 @@ namespace Senparc.Xncf.Tenant.Domain.Services
     {
         private readonly Lazy<IHttpContextAccessor> _httpContextAccessor;
 
+        /// <summary>
+        /// Initializes tenant persistence and request-context resolution dependencies.
+        /// </summary>
+        /// <param name="repo">Tenant information repository.</param>
+        /// <param name="serviceProvider">Dependency-injection provider.</param>
+        /// <param name="httpContextAccessor">Lazy accessor for the current HTTP context.</param>
         public TenantInfoService(TenantInfoRepository repo, IServiceProvider serviceProvider, Lazy<IHttpContextAccessor> httpContextAccessor)
             : base(repo, serviceProvider)
         {
@@ -53,10 +59,12 @@ namespace Senparc.Xncf.Tenant.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves the current request tenant according to the configured tenant rule and
+        /// populates the scoped <see cref="RequestTenantInfo"/> instance.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="httpContext">The current HTTP context, or <see langword="null"/> to use the accessor.</param>
+        /// <returns>The scoped tenant information, matched when the request identifies a known tenant.</returns>
+        /// <exception cref="NcfUninstallException">Thrown when tenant cache loading fails during installation or multi-tenant setup.</exception>
         public async Task<RequestTenantInfo> SetScopedRequestTenantInfoAsync(HttpContext httpContext)
         {
             var requestTenantInfo = _serviceProvider.GetRequiredService<RequestTenantInfo>();
@@ -147,12 +155,12 @@ namespace Senparc.Xncf.Tenant.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates or updates tenant metadata after normalizing the tenant key and checking duplicates.
         /// </summary>
-        /// <param name="createOrUpdate_TenantInfoDto"></param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="createOrUpdate_TenantInfoDto">The tenant create/update data.</param>
+        /// <param name="throwIfExisted">Whether duplicate name/key conflicts should throw instead of returning the existing DTO.</param>
+        /// <returns>The persisted tenant DTO.</returns>
+        /// <exception cref="NcfTenantException">Thrown when a requested tenant does not exist or duplicate conflicts are configured to throw.</exception>
         public async Task<TenantInfoDto> CreateOrUpdateTenantInfoAsync(CreateOrUpdate_TenantInfoDto createOrUpdate_TenantInfoDto, bool throwIfExisted = false)
         {
             createOrUpdate_TenantInfoDto.TenantKey = createOrUpdate_TenantInfoDto.TenantKey.ToUpper();
@@ -191,10 +199,10 @@ namespace Senparc.Xncf.Tenant.Domain.Services
         }
 
         /// <summary>
-        /// createdefault TenantInfo information
+        /// Creates initial tenant metadata using the current request host.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="httpContext">The current HTTP context, or <see langword="null"/> to use the accessor.</param>
+        /// <returns>The created or existing initial tenant DTO.</returns>
         public async Task<TenantInfoDto> CreateInitTenantInfoAsync(HttpContext httpContext)
         {
             httpContext = httpContext ?? _httpContextAccessor.Value.HttpContext;
@@ -205,22 +213,22 @@ namespace Senparc.Xncf.Tenant.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Checks whether another tenant uses the supplied display name.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="id">The tenant identifier to exclude.</param>
+        /// <param name="name">The name to check.</param>
+        /// <returns><see langword="true"/> when another tenant has the name.</returns>
         public async Task<bool> CheckNameExisted(int id, string name)
         {
             return await GetObjectAsync(z => z.Id != id && z.Name == name, null) != null;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Checks whether another tenant uses the supplied normalized tenant key.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="tenantKey"></param>
-        /// <returns></returns>
+        /// <param name="id">The tenant identifier to exclude.</param>
+        /// <param name="tenantKey">The tenant key to check.</param>
+        /// <returns><see langword="true"/> when another tenant has the key.</returns>
         public async Task<bool> CheckTenantKeyExisted(int id, string tenantKey)
         {
             tenantKey = tenantKey.ToUpper();
@@ -234,10 +242,10 @@ namespace Senparc.Xncf.Tenant.Domain.Services
         }
 
         /// <summary>
-        /// get RequestTenantInfo
+        /// Converts tenant persistence data into a matched request-tenant context.
         /// </summary>
-        /// <param name="tenantInfo"></param>
-        /// <returns></returns>
+        /// <param name="tenantInfo">The tenant information to convert.</param>
+        /// <returns>A matched request tenant.</returns>
         public RequestTenantInfo GetRequestTenantInfo(TenantInfo tenantInfo)
         {
             var requestTenantInfo = new RequestTenantInfo()
@@ -251,10 +259,10 @@ namespace Senparc.Xncf.Tenant.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Applies tenant information to the current multi-tenant database context.
         /// </summary>
-        /// <param name="requestTenantInfo"></param>
-        /// <returns></returns>
+        /// <param name="tenantInfo">The tenant information to apply.</param>
+        /// <returns><see langword="true"/> when the base context accepts the tenant; otherwise, <see langword="false"/>.</returns>
         public bool SetTenantInfo(TenantInfo tenantInfo)
         {
             var requestTenantInfo = this.GetRequestTenantInfo(tenantInfo);

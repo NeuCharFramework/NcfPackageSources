@@ -332,6 +332,20 @@ var AgentsAppData = {
       taskMemberList: [],
       taskMemberfilter: '',
       taskMemberfilterList: [],
+      taskDetailRequestTokens: {
+        task: 0,
+        agentTask: 0,
+        agentGroupTask: 0,
+        groupTask: 0
+      },
+      taskConversationLoading: {
+        task: false,
+        agentTask: false,
+        agentGroupTask: false,
+        groupTask: false
+      },
+      taskConversationCache: {},
+      taskConversationCacheOrder: [],
       // task task ---end
       // agent add|edit
       agentForm: {

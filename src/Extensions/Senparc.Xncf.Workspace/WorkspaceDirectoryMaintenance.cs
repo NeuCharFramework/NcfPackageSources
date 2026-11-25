@@ -24,6 +24,13 @@ internal static class WorkspaceDirectoryMaintenance
     private static readonly string[] InitialDirectories = ["input", "output", "logs", ".workspace"];
     private const string ManifestName = ".workspace.json";
 
+    /// <summary>
+    /// Measures non-manifest files and directories beneath a real workspace root.
+    /// </summary>
+    /// <param name="workspaceRoot">The physical workspace root.</param>
+    /// <param name="quotaBytes">The quota included in the returned statistics.</param>
+    /// <param name="cancellationToken">Token used to cancel traversal.</param>
+    /// <returns>File count, directory count, used bytes, and quota information.</returns>
     public static WorkspaceUsageStatistics Measure(
         string workspaceRoot,
         long quotaBytes,
@@ -69,6 +76,11 @@ internal static class WorkspaceDirectoryMaintenance
         return new WorkspaceUsageStatistics(fileCount, directoryCount, usedBytes, quotaBytes);
     }
 
+    /// <summary>
+    /// Deletes workspace content except the root manifest and recreates required directories.
+    /// </summary>
+    /// <param name="workspaceRoot">The physical workspace root.</param>
+    /// <param name="cancellationToken">Token used to cancel deletion.</param>
     public static void ResetToInitialLayout(
         string workspaceRoot,
         CancellationToken cancellationToken = default)
@@ -92,6 +104,11 @@ internal static class WorkspaceDirectoryMaintenance
         }
     }
 
+    /// <summary>
+    /// Recursively deletes a file-system entry while refusing to follow reparse points.
+    /// </summary>
+    /// <param name="path">The file or directory to delete.</param>
+    /// <param name="cancellationToken">Token used to cancel traversal.</param>
     private static void DeleteTree(string path, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -124,6 +141,12 @@ internal static class WorkspaceDirectoryMaintenance
         Directory.Delete(path, recursive: false);
     }
 
+    /// <summary>
+    /// Determines whether a path is the protected manifest directly under the workspace root.
+    /// </summary>
+    /// <param name="workspaceRoot">The workspace root.</param>
+    /// <param name="path">The candidate path.</param>
+    /// <returns><see langword="true"/> when the path is the root manifest.</returns>
     private static bool IsRootManifest(string workspaceRoot, string path)
     {
         var parent = Path.GetDirectoryName(path);
@@ -135,6 +158,12 @@ internal static class WorkspaceDirectoryMaintenance
                && string.Equals(Path.GetFileName(path), ManifestName, StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Verifies that the workspace root exists and is not a symbolic link.
+    /// </summary>
+    /// <param name="workspaceRoot">The physical workspace root.</param>
+    /// <exception cref="DirectoryNotFoundException">Thrown when the root does not exist.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the root is a reparse point.</exception>
     private static void EnsureRealDirectory(string workspaceRoot)
     {
         if (!Directory.Exists(workspaceRoot))

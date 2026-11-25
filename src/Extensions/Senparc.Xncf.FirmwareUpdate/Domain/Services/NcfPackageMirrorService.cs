@@ -43,8 +43,7 @@ using Senparc.Ncf.Service;
 namespace Senparc.Xncf.FirmwareUpdate.Domain.Services;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Mirrors validated NCF host and desktop release assets into the local public package feed.
 /// </summary>
 public class NcfPackageMirrorService
 {
@@ -90,6 +89,11 @@ public class NcfPackageMirrorService
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<NcfPackageMirrorService> _logger;
 
+    /// <summary>
+    /// Initializes the package mirror service.
+    /// </summary>
+    /// <param name="httpClientFactory">Factory for the configured GitHub HTTP client.</param>
+    /// <param name="logger">Mirror operation logger.</param>
     public NcfPackageMirrorService(IHttpClientFactory httpClientFactory, ILogger<NcfPackageMirrorService> logger)
     {
         _httpClientFactory = httpClientFactory;
@@ -97,8 +101,9 @@ public class NcfPackageMirrorService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Resolves the local public package-feed root from site configuration with a user-directory fallback.
     /// </summary>
+    /// <returns>The local package-feed directory.</returns>
     public static string GetLocalPackageRoot()
     {
         if (!string.IsNullOrWhiteSpace(SiteConfig.WebRootPath))
@@ -119,7 +124,13 @@ public class NcfPackageMirrorService
         return fallback;
     }
 
-    ///Legacy comment translated to English.
+    /// <summary>
+    /// Synchronizes configured host and desktop release feeds, preserving existing metadata when a feed fails.
+    /// </summary>
+    /// <param name="serviceProvider">Provider used to load and save mirror configuration.</param>
+    /// <param name="manualTrigger">Whether the synchronization was explicitly requested.</param>
+    /// <param name="cancellationToken">Token used to cancel network and file operations.</param>
+    /// <returns>A localized synchronization summary.</returns>
     public async Task<string> RunAsync(IServiceProvider serviceProvider, bool manualTrigger, CancellationToken cancellationToken = default)
     {
         await SyncGate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -196,6 +207,14 @@ public class NcfPackageMirrorService
         }
     }
 
+    /// <summary>
+    /// Synchronizes the latest release and retained historical versions for one feed.
+    /// </summary>
+    /// <param name="client">HTTP client used to retrieve release metadata and assets.</param>
+    /// <param name="root">The local package-feed root.</param>
+    /// <param name="feed">Feed selection and retention policy.</param>
+    /// <param name="cancellationToken">Token used to cancel synchronization.</param>
+    /// <returns>The feed synchronization result.</returns>
     internal async Task<MirrorFeedSyncResult> SyncFeedAsync(
         HttpClient client,
         string root,
@@ -264,6 +283,13 @@ public class NcfPackageMirrorService
             $"{latestMessage}，但历史保留版本同步失败：{string.Join("、", retentionFailures)}");
     }
 
+    /// <summary>
+    /// Fetches and validates the latest non-draft, non-prerelease release.
+    /// </summary>
+    /// <param name="client">The GitHub HTTP client.</param>
+    /// <param name="releasesApi">The release API endpoint.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>A task containing the validated release.</returns>
     private async Task<GitHubReleaseDto> FetchLatestReleaseAsync(
         HttpClient client,
         string releasesApi,
@@ -285,6 +311,14 @@ public class NcfPackageMirrorService
         return release;
     }
 
+    /// <summary>
+    /// Fetches bounded release-history pages and returns valid published releases newest first.
+    /// </summary>
+    /// <param name="client">The GitHub HTTP client.</param>
+    /// <param name="releasesApi">The release API endpoint.</param>
+    /// <param name="maxPages">The maximum number of pages to request.</param>
+    /// <param name="cancellationToken">Token used to cancel requests.</param>
+    /// <returns>A task containing valid published releases.</returns>
     private async Task<List<GitHubReleaseDto>> FetchReleasesAsync(
         HttpClient client,
         string releasesApi,
@@ -320,6 +354,13 @@ public class NcfPackageMirrorService
             .ToList();
     }
 
+    /// <summary>
+    /// Selects exactly one validated ZIP asset for each supported runtime identifier.
+    /// </summary>
+    /// <param name="release">The GitHub release.</param>
+    /// <param name="feed">The feed asset naming policy.</param>
+    /// <returns>The selected runtime assets.</returns>
+    /// <exception cref="InvalidDataException">Thrown when a required runtime asset is missing or duplicated.</exception>
     internal static IReadOnlyList<GitHubAssetDto> SelectExpectedAssets(
         GitHubReleaseDto release,
         MirrorFeedDefinition feed)
@@ -349,6 +390,12 @@ public class NcfPackageMirrorService
         return selected;
     }
 
+    /// <summary>
+    /// Validates asset name, size, trusted HTTPS GitHub URL, and digest metadata.
+    /// </summary>
+    /// <param name="asset">The release asset.</param>
+    /// <param name="tagName">The release tag used in diagnostics.</param>
+    /// <exception cref="InvalidDataException">Thrown when asset metadata is unsafe or incomplete.</exception>
     private static void ValidateAsset(GitHubAssetDto asset, string? tagName)
     {
         if (string.IsNullOrWhiteSpace(asset.Name) ||
@@ -368,6 +415,14 @@ public class NcfPackageMirrorService
         _ = GetExpectedSha256(asset, tagName);
     }
 
+    /// <summary>
+    /// Downloads release assets atomically and verifies size and SHA-256 before replacement.
+    /// </summary>
+    /// <param name="client">The GitHub HTTP client.</param>
+    /// <param name="feedRoot">The local feed root.</param>
+    /// <param name="release">The release being mirrored.</param>
+    /// <param name="assets">The validated assets.</param>
+    /// <param name="cancellationToken">Token used to cancel downloads.</param>
     private static async Task MirrorReleaseAssetsAsync(
         HttpClient client,
         string feedRoot,
@@ -432,6 +487,14 @@ public class NcfPackageMirrorService
         }
     }
 
+    /// <summary>
+    /// Writes the feed's latest-release metadata atomically after computing local MD5 values.
+    /// </summary>
+    /// <param name="root">The package-feed root.</param>
+    /// <param name="feed">The feed definition.</param>
+    /// <param name="latest">The latest release.</param>
+    /// <param name="assets">The mirrored assets.</param>
+    /// <param name="cancellationToken">Token used to cancel metadata writing.</param>
     private static async Task WriteLatestReleaseJsonAsync(
         string root,
         MirrorFeedDefinition feed,
@@ -478,6 +541,11 @@ public class NcfPackageMirrorService
         }
     }
 
+    /// <summary>
+    /// Removes version directories not included in the feed retention set.
+    /// </summary>
+    /// <param name="feedRoot">The local feed root.</param>
+    /// <param name="keepTags">Release tags to retain.</param>
     private static void PruneOldVersionFolders(string feedRoot, IReadOnlyCollection<string> keepTags)
     {
         var keepSafe = new HashSet<string>(keepTags.Select(MakeSafeDirectorySegment), StringComparer.OrdinalIgnoreCase);
@@ -505,6 +573,13 @@ public class NcfPackageMirrorService
         }
     }
 
+    /// <summary>
+    /// Extracts and validates the 64-hex-character SHA-256 digest from asset metadata.
+    /// </summary>
+    /// <param name="asset">The release asset.</param>
+    /// <param name="tagName">The release tag used in diagnostics.</param>
+    /// <returns>The expected SHA-256 digest.</returns>
+    /// <exception cref="InvalidDataException">Thrown when the digest is missing or malformed.</exception>
     private static string GetExpectedSha256(GitHubAssetDto asset, string? tagName)
     {
         const string prefix = "sha256:";
@@ -522,6 +597,10 @@ public class NcfPackageMirrorService
         return value;
     }
 
+    /// <summary>Computes a file's SHA-256 digest.</summary>
+    /// <param name="path">The file path.</param>
+    /// <param name="cancellationToken">Token used to cancel hashing.</param>
+    /// <returns>A task containing the lowercase hexadecimal digest.</returns>
     private static async Task<string> ComputeSha256Async(string path, CancellationToken cancellationToken)
     {
         await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -529,6 +608,10 @@ public class NcfPackageMirrorService
         return Convert.ToHexStringLower(hash);
     }
 
+    /// <summary>Computes a file's MD5 digest for legacy feed metadata.</summary>
+    /// <param name="path">The file path.</param>
+    /// <param name="cancellationToken">Token used to cancel hashing.</param>
+    /// <returns>A task containing the lowercase hexadecimal digest.</returns>
     private static async Task<string> ComputeMd5Async(string path, CancellationToken cancellationToken)
     {
         await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -536,6 +619,12 @@ public class NcfPackageMirrorService
         return Convert.ToHexStringLower(hash);
     }
 
+    /// <summary>
+    /// Logs a feed synchronization failure to the configured logger and SenparcTrace.
+    /// </summary>
+    /// <param name="feedName">The feed display name.</param>
+    /// <param name="message">The user-facing failure message.</param>
+    /// <param name="exception">The underlying exception.</param>
     private void LogSyncFailure(string feedName, string message, Exception exception)
     {
         //Legacy comment translated to English.
@@ -545,6 +634,11 @@ public class NcfPackageMirrorService
             $"{message}{Environment.NewLine}{exception}");
     }
 
+    /// <summary>
+    /// Converts an exception chain into a stable user-facing synchronization failure category.
+    /// </summary>
+    /// <param name="exception">The synchronization exception.</param>
+    /// <returns>A localized failure reason.</returns>
     internal static string GetSyncFailureReason(Exception exception)
     {
         var exceptions = EnumerateExceptionChain(exception).ToArray();
@@ -588,6 +682,11 @@ public class NcfPackageMirrorService
         return "发生未预期错误，请查看 SenparcTrace 日志";
     }
 
+    /// <summary>
+    /// Enumerates an exception and all inner exceptions in order.
+    /// </summary>
+    /// <param name="exception">The root exception.</param>
+    /// <returns>The exception chain.</returns>
     private static IEnumerable<Exception> EnumerateExceptionChain(Exception exception)
     {
         for (var current = exception; current != null; current = current.InnerException)
@@ -596,7 +695,11 @@ public class NcfPackageMirrorService
         }
     }
 
-    ///Legacy comment translated to English.
+    /// <summary>
+    /// Converts a release tag into a filesystem-safe directory segment.
+    /// </summary>
+    /// <param name="tag">The release tag to normalize.</param>
+    /// <returns>A safe directory segment, or <c>unknown</c> for empty input.</returns>
     public static string MakeSafeDirectorySegment(string tag)
     {
         var invalid = new HashSet<char>(Path.GetInvalidFileNameChars())

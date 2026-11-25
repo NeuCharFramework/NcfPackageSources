@@ -934,4 +934,14 @@
   <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>Читает замаскированный граф, ревизию и узлы без сохранения изменений.</value></data>
   <data name="AdminChat.Function.ApplyWorkflowEdit" xml:space="preserve"><value>Применить изменение процесса</value></data>
   <data name="AdminChat.Function.ApplyWorkflowEditDescription" xml:space="preserve"><value>Сохраняет одно явное минимальное изменение с проверенной ревизией, сохраняя секреты, триггер и состояние.</value></data>
+  <data name="AdminChat.Command.Workflow.Parameter.Id" xml:space="preserve"><value>Рабочий процесс</value></data>
+  <data name="AdminChat.Command.Workflow.Parameter.IdHint" xml:space="preserve"><value>Выберите процесс текущего администратора</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.Input" xml:space="preserve"><value>Вход процесса</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.InputHint" xml:space="preserve"><value>Введите необязательные данные для запуска</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.InputPlaceholder" xml:space="preserve"><value>Опишите входные данные или задачу</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.Revision" xml:space="preserve"><value>Редакция</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.RevisionHint" xml:space="preserve"><value>Необязательная редакция для проверки конфликтов</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.Change" xml:space="preserve"><value>Требуемое изменение</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.ChangeHint" xml:space="preserve"><value>Опишите минимальное изменение для применения</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.ChangePlaceholder" xml:space="preserve"><value>Опишите требуемое изменение</value></data>
 </root>

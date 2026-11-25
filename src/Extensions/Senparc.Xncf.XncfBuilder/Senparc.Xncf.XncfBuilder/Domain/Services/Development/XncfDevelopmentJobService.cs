@@ -49,6 +49,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
         private readonly IServiceProvider _serviceProvider;
         private readonly ConcurrentDictionary<string, SemaphoreSlim> _jobLocks = new(StringComparer.OrdinalIgnoreCase);
 
+        /// <summary>
+        /// Initializes the development-job coordinator and persistent state store.
+        /// </summary>
+        /// <param name="stateStore">Store for durable job snapshots and audit status.</param>
+        /// <param name="serviceProvider">Provider used for optional Sandbox and tenant services.</param>
         public XncfDevelopmentJobService(
             IXncfDevelopmentJobStateStore stateStore,
             IServiceProvider serviceProvider)
@@ -57,6 +62,16 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             _serviceProvider = serviceProvider;
         }
 
+        /// <summary>
+        /// Creates a tenant-aware isolated development workspace and records the initial job snapshot.
+        /// New-module creation runs only inside the sanitized workspace.
+        /// </summary>
+        /// <param name="options">The target solution, module, mode, owner, and requirement options.</param>
+        /// <param name="cancellationToken">Token used to cancel snapshot creation.</param>
+        /// <param name="ambientTenant">Optional tenant context captured into the job.</param>
+        /// <returns>The ready-for-code development job information.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is <see langword="null"/>.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when solution, module, or workspace validation fails.</exception>
         public async Task<XncfDevelopmentJobInfo> CreateAsync(
             XncfDevelopmentCreateOptions options,
             CancellationToken cancellationToken = default,
@@ -130,6 +145,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
+        /// <summary>
+        /// Reads one text file from the isolated module workspace.
+        /// </summary>
+        /// <param name="jobId">The development job identifier.</param>
+        /// <param name="relativeFilePath">The relative module file path.</param>
+        /// <param name="cancellationToken">Token used to cancel reading.</param>
+        /// <param name="ambientTenant">Optional tenant context for state lookup.</param>
+        /// <returns>File content and SHA-256 fingerprint.</returns>
         public async Task<XncfDevelopmentFileReadResult> ReadFileAsync(
             string jobId,
             string relativeFilePath,
@@ -146,6 +169,17 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             return new XncfDevelopmentFileReadResult(relativeFilePath, result.Content, result.Sha256);
         }
 
+        /// <summary>
+        /// Atomically writes an allowed code/resource file in the isolated workspace,
+        /// enforcing optimistic SHA-256 concurrency and refreshing the module diff.
+        /// </summary>
+        /// <param name="jobId">The development job identifier.</param>
+        /// <param name="relativeFilePath">The relative module file path.</param>
+        /// <param name="content">The replacement file content.</param>
+        /// <param name="expectedSha256">Optional fingerprint read before editing.</param>
+        /// <param name="cancellationToken">Token used to cancel the write.</param>
+        /// <param name="ambientTenant">Optional tenant context for state lookup.</param>
+        /// <returns>The write result and new fingerprint.</returns>
         public async Task<XncfDevelopmentFileWriteResult> WriteFileAsync(
             string jobId,
             string relativeFilePath,
@@ -190,6 +224,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }, cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Validates isolated solution/module paths and host-project references.
+        /// </summary>
+        /// <param name="jobId">The development job identifier.</param>
+        /// <param name="cancellationToken">Token used to cancel validation.</param>
+        /// <param name="ambientTenant">Optional tenant context for state lookup.</param>
+        /// <returns>The updated job information.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the isolated workspace layout or host reference is invalid.</exception>
         public async Task<XncfDevelopmentJobInfo> ValidateAsync(
             string jobId,
             CancellationToken cancellationToken = default,
@@ -225,6 +267,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }, cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Validates the workspace and starts a controlled Sandbox preview from the sanitized copy.
+        /// </summary>
+        /// <param name="jobId">The development job identifier.</param>
+        /// <param name="cancellationToken">Token used to cancel preview startup.</param>
+        /// <param name="ambientTenant">Optional tenant context for state lookup.</param>
+        /// <returns>The updated job information containing Sandbox session/URL data.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when Sandbox is unavailable or preview validation/startup fails.</exception>
         public async Task<XncfDevelopmentJobInfo> StartSandboxPreviewAsync(
             string jobId,
             CancellationToken cancellationToken = default,
@@ -298,6 +348,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }, cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Recomputes the isolated diff and changes a validated job into the human-approval state.
+        /// </summary>
+        /// <param name="jobId">The development job identifier.</param>
+        /// <param name="cancellationToken">Token used to cancel state persistence.</param>
+        /// <param name="ambientTenant">Optional tenant context for state lookup.</param>
+        /// <returns>The updated approval-pending job information.</returns>
         public async Task<XncfDevelopmentJobInfo> RequestMergeApprovalAsync(
             string jobId,
             CancellationToken cancellationToken = default,
@@ -319,6 +376,15 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }, cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Applies the isolated module diff to the target source only after the exact administrator confirmation phrase.
+        /// </summary>
+        /// <param name="jobId">The development job identifier.</param>
+        /// <param name="confirmationPhrase">The exact <c>APPLY &lt;ModuleProjectName&gt;</c> confirmation.</param>
+        /// <param name="cancellationToken">Token used to cancel copying and persistence.</param>
+        /// <param name="ambientTenant">Optional tenant context for state lookup.</param>
+        /// <returns>The applied terminal job information.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when approval state or confirmation phrase is invalid.</exception>
         public async Task<XncfDevelopmentJobInfo> ApplyApprovedJobAsync(
             string jobId,
             string confirmationPhrase,
@@ -358,6 +424,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }, cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Stops associated Sandbox work, deletes the isolated workspace, and marks the job discarded.
+        /// </summary>
+        /// <param name="jobId">The development job identifier.</param>
+        /// <param name="cancellationToken">Token used to cancel cleanup.</param>
+        /// <param name="ambientTenant">Optional tenant context for state lookup.</param>
+        /// <returns>The discarded job information.</returns>
         public async Task<XncfDevelopmentJobInfo> DiscardAsync(
             string jobId,
             CancellationToken cancellationToken = default,
@@ -383,12 +456,26 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }, cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Retrieves one development job snapshot after tenant ownership checks.
+        /// </summary>
+        /// <param name="jobId">The development job identifier.</param>
+        /// <param name="cancellationToken">Token used to cancel lookup.</param>
+        /// <param name="ambientTenant">Optional tenant context for state lookup.</param>
+        /// <returns>The job information.</returns>
         public async Task<XncfDevelopmentJobInfo> GetAsync(
             string jobId,
             CancellationToken cancellationToken = default,
             RequestTenantInfo? ambientTenant = null) =>
             ToInfo(await GetRequiredSnapshotAsync(jobId, ambientTenant, cancellationToken).ConfigureAwait(false));
 
+        /// <summary>
+        /// Lists recent development jobs for the current tenant.
+        /// </summary>
+        /// <param name="maxCount">Maximum number of jobs to return, bounded by the service.</param>
+        /// <param name="cancellationToken">Token used to cancel lookup.</param>
+        /// <param name="ambientTenant">Optional tenant context.</param>
+        /// <returns>Recent job information.</returns>
         public async Task<IReadOnlyList<XncfDevelopmentJobInfo>> GetRecentAsync(
             int maxCount = 100,
             CancellationToken cancellationToken = default,
@@ -402,10 +489,20 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             return jobs.Select(ToInfo).ToArray();
         }
 
+        /// <summary>
+        /// Gets durable development-job persistence availability and diagnostics.
+        /// </summary>
+        /// <returns>The persistence status.</returns>
         public XncfDevelopmentPersistenceInfo GetPersistenceStatus() =>
             _stateStore.GetPersistenceStatus();
 
-        private async Task ApplyWorkspaceModuleAsync(XncfDevelopmentJobSnapshot snapshot, CancellationToken cancellationToken)
+    /// <summary>
+    /// Applies the reviewed workspace module diff to the target module with project-file checks,
+    /// staging, rollback, and source-fingerprint verification.
+    /// </summary>
+    /// <param name="snapshot">The approved development snapshot.</param>
+    /// <param name="cancellationToken">Token used to cancel merge operations.</param>
+    private async Task ApplyWorkspaceModuleAsync(XncfDevelopmentJobSnapshot snapshot, CancellationToken cancellationToken)
         {
             var workspaceModule = XncfWorkspaceFileService.ResolveModuleDirectory(
                 snapshot.WorkspaceSolutionFilePath,
@@ -475,7 +572,15 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
-        private static async Task CopyAllowedModuleFilesWithRollbackAsync(
+    /// <summary>
+    /// Copies mergeable module files through a staging directory and restores the target
+    /// when copying fails.
+    /// </summary>
+    /// <param name="workspaceModule">The sanitized workspace module directory.</param>
+    /// <param name="targetModule">The target module directory.</param>
+    /// <param name="stagingDirectory">The staging directory.</param>
+    /// <param name="cancellationToken">Token used to cancel copying.</param>
+    private static async Task CopyAllowedModuleFilesWithRollbackAsync(
             string workspaceModule,
             string targetModule,
             string backupRoot,
@@ -526,7 +631,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
-        private static async Task CopyNewModuleToStagingAsync(string workspaceModule, string stagingDirectory, CancellationToken cancellationToken)
+    /// <summary>
+    /// Copies allowed files for a newly created module into a staging directory.
+    /// </summary>
+    /// <param name="workspaceModule">The workspace module directory.</param>
+    /// <param name="stagingDirectory">The staging directory.</param>
+    /// <param name="cancellationToken">Token used to cancel copying.</param>
+    private static async Task CopyNewModuleToStagingAsync(string workspaceModule, string stagingDirectory, CancellationToken cancellationToken)
         {
             foreach (var sourceFile in EnumerateMergeableFiles(workspaceModule, includeProjectFile: true))
             {
@@ -540,7 +651,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
-        private static IEnumerable<string> EnumerateMergeableFiles(string moduleDirectory, bool includeProjectFile)
+    /// <summary>
+    /// Enumerates source files allowed to participate in an approved module merge.
+    /// </summary>
+    /// <param name="moduleDirectory">The module directory.</param>
+    /// <param name="includeProjectFile">Whether the project file is included.</param>
+    /// <returns>Allowed mergeable file paths.</returns>
+    private static IEnumerable<string> EnumerateMergeableFiles(string moduleDirectory, bool includeProjectFile)
         {
             var pending = new Stack<string>();
             pending.Push(moduleDirectory);
@@ -592,7 +709,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
-        private static void EnsureProjectFileUnchanged(string targetModule, string workspaceModule, string moduleName)
+    /// <summary>
+    /// Ensures an existing module project file has not changed since the development snapshot.
+    /// </summary>
+    /// <param name="targetModule">The target module directory.</param>
+    /// <param name="workspaceModule">The workspace module directory.</param>
+    /// <param name="moduleName">The module project name.</param>
+    /// <exception cref="InvalidOperationException">Thrown when the target project differs or is missing.</exception>
+    private static void EnsureProjectFileUnchanged(string targetModule, string workspaceModule, string moduleName)
         {
             var fileName = moduleName + ".csproj";
             var targetProject = Path.Combine(targetModule, fileName);
@@ -607,7 +731,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
-        private static async Task CreateModuleInWorkspaceAsync(
+    /// <summary>
+    /// Creates a new XNCF module through the allowlisted template command inside the workspace.
+    /// </summary>
+    /// <param name="workspaceSolutionFilePath">The workspace solution path.</param>
+    /// <param name="moduleName">The requested module project name.</param>
+    /// <param name="options">The creation options.</param>
+    /// <param name="cancellationToken">Token used to cancel template execution.</param>
+    private static async Task CreateModuleInWorkspaceAsync(
             string workspaceSolutionFilePath,
             string moduleName,
             XncfDevelopmentCreateOptions options,
@@ -662,7 +793,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
                 .ConfigureAwait(false);
         }
 
-        private static async Task RunDotNetAsync(string workingDirectory, IEnumerable<string> arguments, CancellationToken cancellationToken)
+    /// <summary>
+    /// Runs an allowlisted dotnet command and rejects non-zero exit codes.
+    /// </summary>
+    /// <param name="workingDirectory">The command working directory.</param>
+    /// <param name="arguments">The fixed command arguments.</param>
+    /// <param name="cancellationToken">Token used to cancel the process.</param>
+    private static async Task RunDotNetAsync(string workingDirectory, IEnumerable<string> arguments, CancellationToken cancellationToken)
         {
             var args = arguments.ToArray();
             var startInfo = new ProcessStartInfo
@@ -721,7 +858,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
-        private async Task RefreshDiffAsync(XncfDevelopmentJobSnapshot snapshot, CancellationToken cancellationToken)
+    /// <summary>
+    /// Recomputes the workspace-to-target module diff and updates its fingerprint/summary.
+    /// </summary>
+    /// <param name="snapshot">The development snapshot to update.</param>
+    /// <param name="cancellationToken">Token used to cancel diff calculation.</param>
+    private async Task RefreshDiffAsync(XncfDevelopmentJobSnapshot snapshot, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             var diff = XncfDevelopmentWorkspaceService.BuildModuleDiff(
@@ -733,7 +875,15 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             snapshot.DiffSummary = diff.Summary;
         }
 
-        private async Task<XncfDevelopmentJobSnapshot> GetRequiredSnapshotAsync(
+    /// <summary>
+    /// Loads a development snapshot and verifies tenant/owner access.
+    /// </summary>
+    /// <param name="jobId">The development job identifier.</param>
+    /// <param name="ambientTenant">Optional tenant context.</param>
+    /// <param name="cancellationToken">Token used to cancel lookup.</param>
+    /// <returns>The owned snapshot.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the job does not exist or is not accessible.</exception>
+    private async Task<XncfDevelopmentJobSnapshot> GetRequiredSnapshotAsync(
             string jobId,
             RequestTenantInfo? ambientTenant,
             CancellationToken cancellationToken)
@@ -746,13 +896,24 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             return snapshot ?? throw new InvalidOperationException("开发任务不存在，或任务记录已过期。");
         }
 
-        private async Task SaveAsync(XncfDevelopmentJobSnapshot snapshot, CancellationToken cancellationToken)
+    /// <summary>
+    /// Persists an updated development snapshot with the current timestamp.
+    /// </summary>
+    /// <param name="snapshot">The snapshot to save.</param>
+    /// <param name="cancellationToken">Token used to cancel persistence.</param>
+    private async Task SaveAsync(XncfDevelopmentJobSnapshot snapshot, CancellationToken cancellationToken)
         {
             snapshot.UpdatedAt = DateTimeOffset.UtcNow;
             await _stateStore.SaveAsync(snapshot, cancellationToken).ConfigureAwait(false);
         }
 
-        private async Task MarkFailedAsync(XncfDevelopmentJobSnapshot snapshot, Exception ex, CancellationToken cancellationToken)
+    /// <summary>
+    /// Marks a development job failed, records diagnostics, and persists its terminal state.
+    /// </summary>
+    /// <param name="snapshot">The job snapshot.</param>
+    /// <param name="ex">The failure exception.</param>
+    /// <param name="cancellationToken">Token used to persist failure state.</param>
+    private async Task MarkFailedAsync(XncfDevelopmentJobSnapshot snapshot, Exception ex, CancellationToken cancellationToken)
         {
             snapshot.Stage = XncfDevelopmentJobStage.Failed;
             snapshot.ErrorMessage = Truncate(ex.Message, 4000);

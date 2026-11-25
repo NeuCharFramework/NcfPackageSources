@@ -21,6 +21,19 @@ namespace Senparc.Ncf.Utility
 {
     public static class ReflectorUtility
     {
+        /// <summary>
+        /// Converts text to a supported property type and assigns it through reflection.
+        /// </summary>
+        /// <param name="obj">The object whose property should be assigned.</param>
+        /// <param name="objType">The type used to resolve <paramref name="propertyName"/>.</param>
+        /// <param name="propertyName">The writable property name.</param>
+        /// <param name="value">The textual value to parse or assign.</param>
+        /// <exception cref="ArgumentNullException">
+        /// May be thrown by reflection or parsing APIs when required values are null.
+        /// </exception>
+        /// <exception cref="FormatException">
+        /// Thrown when a supported numeric, date, or Boolean value cannot be parsed.
+        /// </exception>
         public static void SetPropertyValue(object obj, Type objType, string propertyName, string value)
         {
             var prop = objType.GetProperty(propertyName);

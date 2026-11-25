@@ -47,6 +47,10 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
         // parameters:
         //   optionsBuilder:
         //     The options builder.
+        /// <summary>
+        /// Initializes an NCF in-memory options builder over an EF Core options builder.
+        /// </summary>
+        /// <param name="optionsBuilder">The EF Core options builder to configure.</param>
         public InMemoryDbContextOptionsBuilderForNcf(DbContextOptionsBuilder optionsBuilder)
             : base(optionsBuilder)
         {
@@ -68,6 +72,11 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
         //Legacy comment translated to English.
         //     See Using DbContextOptions, and The EF Core in-memory database provider for more
         //     information and examples.
+        /// <summary>
+        /// Enables or disables nullability checks for entities in the in-memory database.
+        /// </summary>
+        /// <param name="nullChecksEnabled">Whether nullability checks should be enabled.</param>
+        /// <returns>This builder for fluent configuration.</returns>
         public virtual InMemoryDbContextOptionsBuilderForNcf EnableNullChecks(bool nullChecksEnabled = true)
         {
             InMemoryOptionsExtension inMemoryOptionsExtension = OptionsBuilder.Options.FindExtension<InMemoryOptionsExtension>() ?? new InMemoryOptionsExtension();

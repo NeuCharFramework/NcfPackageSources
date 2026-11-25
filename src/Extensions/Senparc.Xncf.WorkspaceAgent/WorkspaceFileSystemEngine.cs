@@ -40,6 +40,13 @@ public sealed class WorkspaceFileSystemEngine
     private readonly string _rootPath;
     private readonly StringComparison _pathComparison;
 
+    /// <summary>
+    /// Initializes a file-system engine rooted at the configured workspace directory.
+    /// The root is created and rejected when it is a symbolic link.
+    /// </summary>
+    /// <param name="options">Workspace root, quota, search, and execution options.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the workspace root is a symbolic link.</exception>
     public WorkspaceFileSystemEngine(WorkspaceAgentOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);
@@ -52,8 +59,17 @@ public sealed class WorkspaceFileSystemEngine
         EnsureWorkspaceRoot();
     }
 
+    /// <summary>
+    /// Gets the normalized workspace root path.
+    /// </summary>
     public string RootPath => _rootPath;
 
+    /// <summary>
+    /// Lists non-reserved files and directories below a relative path.
+    /// </summary>
+    /// <param name="relativePath">The relative directory path; the root is not accepted for file mutation but is valid for listing.</param>
+    /// <param name="cancellationToken">Token used to cancel enumeration.</param>
+    /// <returns>Visible entries ordered by relative path.</returns>
     public async Task<IReadOnlyList<WorkspaceEntry>> ListAsync(
         string relativePath,
         CancellationToken cancellationToken = default)
@@ -90,6 +106,12 @@ public sealed class WorkspaceFileSystemEngine
         return entries;
     }
 
+    /// <summary>
+    /// Gets metadata and an ETag for a workspace file or directory.
+    /// </summary>
+    /// <param name="relativePath">The relative path to inspect.</param>
+    /// <param name="cancellationToken">Token used to cancel metadata creation.</param>
+    /// <returns>The current workspace metadata.</returns>
     public async Task<WorkspaceFileMetadata> GetFileInfoAsync(
         string relativePath,
         CancellationToken cancellationToken = default)
@@ -99,6 +121,14 @@ public sealed class WorkspaceFileSystemEngine
         return await CreateMetadataAsync(path, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Reads a file into memory after applying path, symlink, existence, and byte-limit checks.
+    /// </summary>
+    /// <param name="relativePath">The relative file path.</param>
+    /// <param name="maxBytes">The caller-requested maximum byte count.</param>
+    /// <param name="cancellationToken">Token used to cancel the read.</param>
+    /// <returns>File bytes and metadata.</returns>
+    /// <exception cref="WorkspaceLimitException">Thrown when the file exceeds the effective read limit.</exception>
     public async Task<WorkspaceFileContent> ReadFileAsync(
         string relativePath,
         int maxBytes,
@@ -123,6 +153,12 @@ public sealed class WorkspaceFileSystemEngine
         return new WorkspaceFileContent(metadata, content);
     }
 
+    /// <summary>
+    /// Reads a bounded line window without loading the entire text file into memory.
+    /// </summary>
+    /// <param name="request">The relative path, line range, and byte limit.</param>
+    /// <param name="cancellationToken">Token used to cancel scanning.</param>
+    /// <returns>The text window, continuation flag, truncation flag, and ETag.</returns>
     public async Task<WorkspaceTextWindow> ReadTextWindowAsync(
         WorkspaceTextWindowRequest request,
         CancellationToken cancellationToken = default)
@@ -216,6 +252,12 @@ public sealed class WorkspaceFileSystemEngine
             CreateWindowETag(info));
     }
 
+    /// <summary>
+    /// Writes a byte array using create, overwrite, ETag, path, symlink, and quota checks.
+    /// </summary>
+    /// <param name="request">The target path, content, and concurrency options.</param>
+    /// <param name="cancellationToken">Token used to cancel the write.</param>
+    /// <returns>Result metadata and whether a new file was created.</returns>
     public async Task<WorkspaceWriteFileResult> WriteFileAsync(
         WorkspaceWriteFileRequest request,
         CancellationToken cancellationToken = default)
@@ -283,6 +325,11 @@ public sealed class WorkspaceFileSystemEngine
             !exists);
     }
 
+    /// <summary>
+    /// Creates a relative directory after path and symlink checks.
+    /// </summary>
+    /// <param name="relativePath">The directory path relative to the workspace root.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
     public Task CreateDirectoryAsync(
         string relativePath,
         CancellationToken cancellationToken = default)
@@ -294,6 +341,11 @@ public sealed class WorkspaceFileSystemEngine
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Deletes a file or directory after optional ETag and recursive-deletion checks.
+    /// </summary>
+    /// <param name="request">The relative path and deletion options.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
     public async Task DeleteEntryAsync(
         WorkspaceDeleteEntryRequest request,
         CancellationToken cancellationToken = default)
@@ -322,6 +374,11 @@ public sealed class WorkspaceFileSystemEngine
         Directory.Delete(path, request.Recursive);
     }
 
+    /// <summary>
+    /// Moves a file or directory after source/target path, symlink, ETag, and overwrite checks.
+    /// </summary>
+    /// <param name="request">The source, target, overwrite, and expected ETag options.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
     public async Task MoveEntryAsync(
         WorkspaceMoveEntryRequest request,
         CancellationToken cancellationToken = default)
@@ -374,6 +431,12 @@ public sealed class WorkspaceFileSystemEngine
         }
     }
 
+    /// <summary>
+    /// Searches file names, relative paths, and bounded text content with optional glob/regex matching.
+    /// </summary>
+    /// <param name="request">The search terms, limits, case mode, and path/content filters.</param>
+    /// <param name="cancellationToken">Token used to cancel traversal and reading.</param>
+    /// <returns>Matching workspace results.</returns>
     public async Task<IReadOnlyList<WorkspaceSearchResult>> SearchAsync(
         WorkspaceSearchRequest request,
         CancellationToken cancellationToken = default)
@@ -499,6 +562,12 @@ public sealed class WorkspaceFileSystemEngine
         return results;
     }
 
+    /// <summary>
+    /// Creates a bounded content regex matcher from a search request.
+    /// </summary>
+    /// <param name="query">The content query.</param>
+    /// <param name="caseSensitive">Whether matching is case-sensitive.</param>
+    /// <returns>A compiled matcher, or <see langword="null"/> for empty query.</returns>
     private static Regex? CreateContentMatcher(
         string query,
         bool useRegex,
@@ -531,6 +600,12 @@ public sealed class WorkspaceFileSystemEngine
         }
     }
 
+    /// <summary>
+    /// Converts a relative path glob into a bounded regular-expression matcher.
+    /// </summary>
+    /// <param name="pathGlob">The glob pattern.</param>
+    /// <param name="caseSensitive">Whether matching is case-sensitive.</param>
+    /// <returns>A compiled path matcher, or <see langword="null"/> for empty input.</returns>
     private static Regex? CreatePathGlobMatcher(string pathGlob, bool caseSensitive)
     {
         if (string.IsNullOrWhiteSpace(pathGlob))
@@ -590,12 +665,23 @@ public sealed class WorkspaceFileSystemEngine
             TimeSpan.FromSeconds(1));
     }
 
+    /// <summary>
+    /// Creates the regex options used by workspace search matchers.
+    /// </summary>
+    /// <param name="caseSensitive">Whether matching is case-sensitive.</param>
+    /// <returns>The configured regex options.</returns>
     private static RegexOptions CreateSearchRegexOptions(bool caseSensitive)
     {
         return RegexOptions.CultureInvariant
             | (caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase);
     }
 
+    /// <summary>
+    /// Suggests files and directories by relative-path query without reading file contents.
+    /// </summary>
+    /// <param name="request">The suggestion query and result limits.</param>
+    /// <param name="cancellationToken">Token used to cancel traversal.</param>
+    /// <returns>A task containing ranked path suggestions.</returns>
     private Task<IReadOnlyList<WorkspaceSearchResult>> SuggestPaths(
         WorkspaceSearchRequest request,
         CancellationToken cancellationToken)
@@ -686,6 +772,11 @@ public sealed class WorkspaceFileSystemEngine
         return Task.FromResult<IReadOnlyList<WorkspaceSearchResult>>(ordered);
     }
 
+    /// <summary>
+    /// Determines whether a directory is hidden from workspace suggestions.
+    /// </summary>
+    /// <param name="name">The directory name.</param>
+    /// <returns><see langword="true"/> for hidden or reserved workspace directories.</returns>
     private static bool IsHiddenWorkspaceDirectory(string name)
     {
         return name.Equals(".git", StringComparison.OrdinalIgnoreCase)
@@ -693,12 +784,25 @@ public sealed class WorkspaceFileSystemEngine
             || name.Equals("node_modules", StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Creates a path suggestion result with directory/file metadata.
+    /// </summary>
+    /// <param name="relativePath">The workspace-relative path.</param>
+    /// <param name="isDirectory">Whether the path is a directory.</param>
+    /// <returns>The suggestion result.</returns>
     private static WorkspaceSearchResult CreatePathSuggestion(string relativePath, bool isDirectory)
     {
         var name = Path.GetFileName(relativePath.TrimEnd('/'));
         return new WorkspaceSearchResult(relativePath, isDirectory ? "directory" : "path", null, name);
     }
 
+    /// <summary>
+    /// Calculates a relevance rank for a path suggestion.
+    /// </summary>
+    /// <param name="item">The suggestion item.</param>
+    /// <param name="query">The normalized query.</param>
+    /// <param name="comparison">The string comparison mode.</param>
+    /// <returns>A higher score indicates a stronger match.</returns>
     private static int RankPathSuggestion(WorkspaceSearchResult item, string query, StringComparison comparison)
     {
         var isDirectory = item.MatchType == "directory";
@@ -731,6 +835,12 @@ public sealed class WorkspaceFileSystemEngine
         return 7;
     }
 
+    /// <summary>
+    /// Applies an exact replacement after validating hash and expected match count, then writes atomically.
+    /// </summary>
+    /// <param name="request">The target file, old/new text, replacement count, and optional hash.</param>
+    /// <param name="cancellationToken">Token used to cancel the patch.</param>
+    /// <returns>The patch outcome and diagnostic message.</returns>
     public async Task<WorkspacePatchResult> ApplyPatchAsync(
         WorkspacePatchRequest request,
         CancellationToken cancellationToken = default)
@@ -778,6 +888,12 @@ public sealed class WorkspaceFileSystemEngine
         return new WorkspacePatchResult(true, replacementCount, "Patch applied successfully.");
     }
 
+    /// <summary>
+    /// Executes a command only when execution is enabled and the command is allow-listed.
+    /// </summary>
+    /// <param name="request">The command, arguments, and working directory.</param>
+    /// <param name="cancellationToken">Token used to cancel process execution.</param>
+    /// <returns>The bounded command result.</returns>
     public Task<WorkspaceCommandResult> ExecuteCommandAsync(
         WorkspaceCommandRequest request,
         CancellationToken cancellationToken = default)
@@ -806,6 +922,12 @@ public sealed class WorkspaceFileSystemEngine
             cancellationToken);
     }
 
+    /// <summary>
+    /// Executes an allowed Python script only when execution is enabled.
+    /// </summary>
+    /// <param name="request">The script path, arguments, and working directory.</param>
+    /// <param name="cancellationToken">Token used to cancel process execution.</param>
+    /// <returns>The bounded command result.</returns>
     public Task<WorkspaceCommandResult> ExecutePythonAsync(
         WorkspacePythonRequest request,
         CancellationToken cancellationToken = default)
@@ -843,6 +965,16 @@ public sealed class WorkspaceFileSystemEngine
         return ExecuteProcessAsync(interpreter.FileName, arguments, workingDirectory, cancellationToken);
     }
 
+    /// <summary>
+    /// Starts an allowed workspace command with safe environment inheritance and bounded output.
+    /// </summary>
+    /// <param name="fileName">The executable name or launcher.</param>
+    /// <param name="arguments">The command arguments.</param>
+    /// <param name="workingDirectory">The validated working directory.</param>
+    /// <param name="timeoutSeconds">The execution timeout.</param>
+    /// <param name="cancellationToken">Token used to cancel the process.</param>
+    /// <returns>A task containing exit code and bounded output.</returns>
+    /// <exception cref="WorkspaceExecutionException">Thrown when execution is disabled or process startup fails.</exception>
     private async Task<WorkspaceCommandResult> ExecuteProcessAsync(
         string fileName,
         IReadOnlyList<string> arguments,
@@ -907,6 +1039,13 @@ public sealed class WorkspaceFileSystemEngine
             timedOut);
     }
 
+    /// <summary>
+    /// Verifies an optional file ETag for optimistic concurrency.
+    /// </summary>
+    /// <param name="path">The file path.</param>
+    /// <param name="expectedETag">The caller's expected ETag.</param>
+    /// <param name="cancellationToken">Token used to cancel metadata creation.</param>
+    /// <exception cref="WorkspaceConflictException">Thrown when the current ETag differs.</exception>
     private async Task EnsureExpectedETagAsync(
         string path,
         string expectedETag,
@@ -925,6 +1064,12 @@ public sealed class WorkspaceFileSystemEngine
         }
     }
 
+    /// <summary>
+    /// Creates metadata and an ETag for a file or directory.
+    /// </summary>
+    /// <param name="path">The file-system path.</param>
+    /// <param name="cancellationToken">Token used for any metadata-dependent checks.</param>
+    /// <returns>A task containing workspace metadata.</returns>
     private async Task<WorkspaceFileMetadata> CreateMetadataAsync(
         string path,
         CancellationToken cancellationToken)
@@ -964,6 +1109,13 @@ public sealed class WorkspaceFileSystemEngine
             $"\"{Convert.ToHexString(hash)}\"");
     }
 
+    /// <summary>
+    /// Creates file metadata using the supplied file information and optional content bytes.
+    /// </summary>
+    /// <param name="path">The file path.</param>
+    /// <param name="info">The file information.</param>
+    /// <param name="content">Optional file content used for content-aware metadata.</param>
+    /// <returns>The workspace metadata.</returns>
     private WorkspaceFileMetadata CreateFileMetadata(string path, FileInfo info, byte[] content)
     {
         return new WorkspaceFileMetadata(
@@ -975,17 +1127,30 @@ public sealed class WorkspaceFileSystemEngine
             $"\"{Convert.ToHexString(SHA256.HashData(content))}\"");
     }
 
+    /// <summary>Creates an ETag from directory timestamps and identity.</summary>
+    /// <param name="info">The directory information.</param>
+    /// <returns>The directory ETag.</returns>
     private static string CreateDirectoryETag(DirectoryInfo info)
     {
         var value = $"{info.CreationTimeUtc.Ticks}:{info.LastWriteTimeUtc.Ticks}";
         return $"\"{Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value)))}\"";
     }
 
+    /// <summary>Creates an ETag for a text-window read from file metadata.</summary>
+    /// <param name="info">The file information.</param>
+    /// <returns>The text-window ETag.</returns>
     private static string CreateWindowETag(FileInfo info)
     {
         return $"\"w-{info.Length:x}-{info.LastWriteTimeUtc.Ticks:x}\"";
     }
 
+    /// <summary>
+    /// Resolves a workspace-relative path under the configured root and rejects traversal.
+    /// </summary>
+    /// <param name="relativePath">The relative path.</param>
+    /// <param name="allowRoot">Whether an empty path may resolve to the workspace root.</param>
+    /// <returns>The normalized absolute path.</returns>
+    /// <exception cref="WorkspacePathException">Thrown when the path escapes the workspace.</exception>
     private string ResolvePath(string? relativePath, bool allowRoot = false)
     {
         if (string.IsNullOrWhiteSpace(relativePath))
@@ -1026,6 +1191,9 @@ public sealed class WorkspaceFileSystemEngine
         return path;
     }
 
+    /// <summary>
+    /// Ensures the configured workspace root is not a symlink or reparse point.
+    /// </summary>
     private void EnsureWorkspaceRoot()
     {
         if (File.GetAttributes(_rootPath).HasFlag(FileAttributes.ReparsePoint))
@@ -1034,6 +1202,11 @@ public sealed class WorkspaceFileSystemEngine
         }
     }
 
+    /// <summary>
+    /// Rejects reparse points on a workspace path and its existing parent chain.
+    /// </summary>
+    /// <param name="path">The path to validate.</param>
+    /// <exception cref="WorkspacePathException">Thrown when a symbolic link or reparse point is encountered.</exception>
     private void EnsureNoSymlink(string path)
     {
         var relative = Path.GetRelativePath(_rootPath, path);
@@ -1056,6 +1229,11 @@ public sealed class WorkspaceFileSystemEngine
         }
     }
 
+    /// <summary>
+    /// Determines whether a path is a reserved workspace metadata path.
+    /// </summary>
+    /// <param name="path">The path to inspect.</param>
+    /// <returns><see langword="true"/> when the path is reserved.</returns>
     private bool IsReservedPath(string path)
     {
         var relative = NormalizeRelativePath(path);
@@ -1065,6 +1243,11 @@ public sealed class WorkspaceFileSystemEngine
                    string.Equals(item, firstSegment, StringComparison.OrdinalIgnoreCase));
     }
 
+    /// <summary>
+    /// Converts an absolute or relative workspace path into a normalized relative path.
+    /// </summary>
+    /// <param name="path">The path to normalize.</param>
+    /// <returns>The normalized slash-separated relative path.</returns>
     private string NormalizeRelativePath(string path)
     {
         var relative = Path.GetRelativePath(_rootPath, path);
@@ -1073,6 +1256,10 @@ public sealed class WorkspaceFileSystemEngine
             : relative.Replace(Path.DirectorySeparatorChar, '/');
     }
 
+    /// <summary>
+    /// Calculates the total workspace file size under the configured quota traversal rules.
+    /// </summary>
+    /// <returns>The total file bytes currently used.</returns>
     private long GetWorkspaceBytes()
     {
         var total = 0L;
@@ -1103,6 +1290,10 @@ public sealed class WorkspaceFileSystemEngine
         return total;
     }
 
+    /// <summary>
+    /// Gets the configured allow-list of executable commands.
+    /// </summary>
+    /// <returns>Allowed command names.</returns>
     private IReadOnlyList<string> GetAllowedCommands()
     {
         return _options.AllowedCommands is { Count: > 0 }
@@ -1110,6 +1301,10 @@ public sealed class WorkspaceFileSystemEngine
             : Array.Empty<string>();
     }
 
+    /// <summary>
+    /// Resolves the configured Python executable and whether it must run through a launcher.
+    /// </summary>
+    /// <returns>The executable name and launcher flag.</returns>
     private (string FileName, bool UsesLauncher) ResolvePythonInterpreter()
     {
         var virtualEnvironmentPath = OperatingSystem.IsWindows()
@@ -1135,6 +1330,10 @@ public sealed class WorkspaceFileSystemEngine
         return (interpreter, string.Equals(interpreter, "py", StringComparison.OrdinalIgnoreCase));
     }
 
+    /// <summary>
+    /// Retains only the environment variables explicitly allowed for workspace processes.
+    /// </summary>
+    /// <param name="startInfo">The process-start configuration.</param>
     private static void PreserveSafeEnvironment(ProcessStartInfo startInfo)
     {
         var safeNames = OperatingSystem.IsWindows()
@@ -1153,6 +1352,10 @@ public sealed class WorkspaceFileSystemEngine
         startInfo.Environment["NCF_WORKSPACE_AGENT"] = "1";
     }
 
+    /// <summary>
+    /// Ensures command execution is enabled in workspace-agent options.
+    /// </summary>
+    /// <exception cref="WorkspaceExecutionException">Thrown when execution is disabled.</exception>
     private void EnsureExecutionEnabled()
     {
         if (!_options.ExecutionEnabled)
@@ -1162,6 +1365,11 @@ public sealed class WorkspaceFileSystemEngine
         }
     }
 
+    /// <summary>
+    /// Truncates command output to the configured maximum length.
+    /// </summary>
+    /// <param name="value">The output text.</param>
+    /// <returns>The bounded output text.</returns>
     private string LimitOutput(string value)
     {
         var limit = Math.Max(1, _options.MaxCommandOutputBytes);
@@ -1170,6 +1378,12 @@ public sealed class WorkspaceFileSystemEngine
             : value[..Math.Min(value.Length, limit)] + Environment.NewLine + "[output truncated]";
     }
 
+    /// <summary>
+    /// Counts non-overlapping occurrences of a value in text.
+    /// </summary>
+    /// <param name="text">The text to inspect.</param>
+    /// <param name="value">The value to count.</param>
+    /// <returns>The occurrence count.</returns>
     private static int CountOccurrences(string text, string value)
     {
         var count = 0;
@@ -1183,6 +1397,12 @@ public sealed class WorkspaceFileSystemEngine
         return count;
     }
 
+    /// <summary>
+    /// Detects likely binary content by inspecting a bounded prefix for null bytes or invalid UTF-8.
+    /// </summary>
+    /// <param name="path">The file path to inspect.</param>
+    /// <param name="cancellationToken">Token used to cancel reading.</param>
+    /// <returns>A task whose result indicates whether the file appears binary.</returns>
     private static async Task<bool> IsBinaryFileAsync(string path, CancellationToken cancellationToken)
     {
         var buffer = new byte[4096];
@@ -1211,6 +1431,12 @@ public sealed class WorkspaceFileSystemEngine
             _stream = stream;
         }
 
+        /// <summary>
+        /// Skips up to the requested number of newline-delimited text lines.
+        /// </summary>
+        /// <param name="lines">The number of lines to skip.</param>
+        /// <param name="cancellationToken">Token used to cancel scanning.</param>
+        /// <returns>A task containing the number of lines actually skipped.</returns>
         public async Task<int> SkipLinesAsync(int lines, CancellationToken cancellationToken)
         {
             var skipped = 0;
@@ -1244,6 +1470,12 @@ public sealed class WorkspaceFileSystemEngine
             return skipped;
         }
 
+        /// <summary>
+        /// Reads one bounded UTF-8 line, reporting truncation when the line exceeds the byte limit.
+        /// </summary>
+        /// <param name="maxLineBytes">The maximum line byte count.</param>
+        /// <param name="cancellationToken">Token used to cancel scanning.</param>
+        /// <returns>A task containing the line, or <see langword="null"/> at end of stream.</returns>
         public async Task<WorkspaceTextLine?> ReadLineAsync(int maxLineBytes, CancellationToken cancellationToken)
         {
             var line = new MemoryStream();
@@ -1287,11 +1519,20 @@ public sealed class WorkspaceFileSystemEngine
             }
         }
 
+        /// <summary>
+        /// Determines whether unread bytes remain in the scanner stream.
+        /// </summary>
+        /// <param name="cancellationToken">Token used to cancel probing.</param>
+        /// <returns>A task whose result indicates whether more bytes are available.</returns>
         public Task<bool> HasMoreAsync(CancellationToken cancellationToken)
         {
             return EnsureAsync(cancellationToken);
         }
 
+        /// <summary>
+        /// Consumes bytes until the current line terminator or end of stream.
+        /// </summary>
+        /// <param name="cancellationToken">Token used to cancel draining.</param>
         private async Task DrainRestOfLineAsync(CancellationToken cancellationToken)
         {
             while (true)
@@ -1324,6 +1565,11 @@ public sealed class WorkspaceFileSystemEngine
             }
         }
 
+        /// <summary>
+        /// Reads the next buffered byte without advancing the scanner position.
+        /// </summary>
+        /// <param name="cancellationToken">Token used to cancel buffering.</param>
+        /// <returns>A task containing the next byte, or <c>-1</c> at end of stream.</returns>
         private async Task<int> PeekAsync(CancellationToken cancellationToken)
         {
             if (!await EnsureAsync(cancellationToken).ConfigureAwait(false))
@@ -1334,6 +1580,11 @@ public sealed class WorkspaceFileSystemEngine
             return _buffer[_offset];
         }
 
+        /// <summary>
+        /// Ensures that the scanner buffer contains at least one byte when possible.
+        /// </summary>
+        /// <param name="cancellationToken">Token used to cancel buffering.</param>
+        /// <returns>A task whose result indicates whether a byte is available.</returns>
         private async Task<bool> EnsureAsync(CancellationToken cancellationToken)
         {
             if (_offset < _count)

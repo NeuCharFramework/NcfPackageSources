@@ -64,7 +64,10 @@
         1. Remove redundant v-pre wrappers so ncfST help strings compile in Vue instead of showing raw placeholders.
         2. Keep formula literal examples on code elements only, matching aggregate and safe-code node patterns.
         3. Updated functional behavior and package metadata for the current module changes.
-        4. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        4. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-25] v0.4.8 Registered and localized workflow chat-tool services.
+        1. Added workflow chat-tool registration and localized command resources for workflow interactions.
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
     <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

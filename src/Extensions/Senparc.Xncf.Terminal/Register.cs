@@ -39,6 +39,9 @@ namespace Senparc.Xncf.Terminal
             "终端模块",
             "允许开发者直接使用终端命令控制系统。");
 
+        /// <summary>
+        /// Initializes the Terminal XNCF registration metadata.
+        /// </summary>
         public Register()
         { }
 

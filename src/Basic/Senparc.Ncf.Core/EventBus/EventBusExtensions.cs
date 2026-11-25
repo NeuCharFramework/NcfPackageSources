@@ -30,11 +30,14 @@ namespace Senparc.Ncf.Core.EventBus
     public static class EventBusExtensions
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Registers the in-memory event bus, hosted dispatcher, request client,
+        /// options, and integration-event handlers discovered from the supplied assemblies.
+        /// Registration failures are logged and the original service collection is returned.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="services">The dependency-injection service collection.</param>
+        /// <param name="configureOptions">Optional event-bus options configuration.</param>
+        /// <param name="assembliesToScan">Assemblies containing integration-event handlers.</param>
+        /// <returns>The supplied service collection.</returns>
         public static IServiceCollection AddSenparcEventBus(
             this IServiceCollection services, 
             Action<EventBusOptions> configureOptions = null,

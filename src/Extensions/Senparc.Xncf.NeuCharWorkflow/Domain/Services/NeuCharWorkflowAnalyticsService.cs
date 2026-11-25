@@ -24,11 +24,22 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
+/// <summary>
+/// Aggregates persisted and live workflow execution data into dashboard analytics.
+/// </summary>
 public sealed class NeuCharWorkflowAnalyticsService(
     NeuCharWorkflowService workflowService,
     NeuCharWorkflowExecutionLogService executionLogService,
     NeuCharWorkflowRunCoordinator runCoordinator)
 {
+    /// <summary>
+    /// Builds filtered workflow analytics from persisted execution logs and active runs,
+    /// including summaries, resource usage, workflow rows, trends, and a paged run list.
+    /// </summary>
+    /// <param name="adminUserId">The workflow owner identifier.</param>
+    /// <param name="query">Status, keyword, workflow, date, resource, and paging filters.</param>
+    /// <param name="cancellationToken">Token used to cancel analytics queries.</param>
+    /// <returns>The complete analytics result.</returns>
     public async Task<WorkflowAnalyticsResult> GetAsync(
         int adminUserId,
         WorkflowAnalyticsQuery query,
@@ -113,6 +124,15 @@ public sealed class NeuCharWorkflowAnalyticsService(
             matchingRuns.Count > page * pageSize);
     }
 
+    /// <summary>
+    /// Builds a compact workflow summary for dashboards without detailed resource rows.
+    /// </summary>
+    /// <param name="adminUserId">The workflow owner identifier.</param>
+    /// <param name="workflowId">Optional workflow filter.</param>
+    /// <param name="from">Optional inclusive start date in <c>yyyy-MM-dd</c> format.</param>
+    /// <param name="to">Optional inclusive end date in <c>yyyy-MM-dd</c> format.</param>
+    /// <param name="cancellationToken">Token used to cancel queries.</param>
+    /// <returns>The aggregate workflow summary.</returns>
     public async Task<WorkflowAnalyticsSummary> GetSummaryAsync(
         int adminUserId,
         int? workflowId = null,
@@ -153,6 +173,11 @@ public sealed class NeuCharWorkflowAnalyticsService(
         return BuildSummary(runs);
     }
 
+    /// <summary>
+    /// Parses a UTC date filter in exact <c>yyyy-MM-dd</c> format.
+    /// </summary>
+    /// <param name="value">The date text to parse.</param>
+    /// <returns>A UTC date, or <see langword="null"/> for empty/invalid input.</returns>
     public static DateTime? ParseDate(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -170,12 +195,22 @@ public sealed class NeuCharWorkflowAnalyticsService(
             : null;
     }
 
+    /// <summary>
+    /// Normalizes supported analytics status filters.
+    /// </summary>
+    /// <param name="status">The raw status filter.</param>
+    /// <returns><c>running</c>, <c>success</c>, <c>failed</c>, or an empty string.</returns>
     public static string NormalizeStatus(string? status) => status?.Trim().ToLowerInvariant() switch
     {
         "running" or "success" or "failed" => status.Trim().ToLowerInvariant(),
         _ => string.Empty
     };
 
+    /// <summary>
+    /// Converts inclusive date filters into a UTC half-open interval.
+    /// </summary>
+    /// <param name="query">The analytics query.</param>
+    /// <returns>The inclusive start and exclusive end timestamps.</returns>
     private static (DateTime? FromUtc, DateTime? ToUtc) NormalizeDateRange(WorkflowAnalyticsQuery query)
     {
         var from = ParseDate(query.From);
@@ -183,6 +218,12 @@ public sealed class NeuCharWorkflowAnalyticsService(
         return (from, to?.AddDays(1));
     }
 
+    /// <summary>
+    /// Resolves the requested workflow filter against workflows owned by the administrator.
+    /// </summary>
+    /// <param name="workflows">The owned workflow map.</param>
+    /// <param name="workflowId">The optional workflow filter.</param>
+    /// <returns>Allowed workflow IDs, or an empty list for an inaccessible filter.</returns>
     private static IReadOnlyList<int> ResolveWorkflowIds(
         IReadOnlyDictionary<int, string> workflows,
         int? workflowId)
@@ -197,10 +238,23 @@ public sealed class NeuCharWorkflowAnalyticsService(
         return workflows.Keys.ToList();
     }
 
+    /// <summary>
+    /// Determines whether a timestamp falls within the half-open UTC range.
+    /// </summary>
+    /// <param name="value">The timestamp to test.</param>
+    /// <param name="fromUtc">The inclusive lower bound.</param>
+    /// <param name="toUtc">The exclusive upper bound.</param>
+    /// <returns><see langword="true"/> when the timestamp is in range.</returns>
     private static bool InDateRange(DateTime value, DateTime? fromUtc, DateTime? toUtc) =>
         (!fromUtc.HasValue || value >= fromUtc.Value) &&
         (!toUtc.HasValue || value < toUtc.Value);
 
+    /// <summary>
+    /// Maps a persisted analytics log into the normalized run model, including parsed resources.
+    /// </summary>
+    /// <param name="log">The persisted analytics log.</param>
+    /// <param name="workflows">Owned workflow names keyed by ID.</param>
+    /// <returns>The normalized analytics run.</returns>
     private static AnalyticsRun ToRun(
         NeuCharWorkflowAnalyticsLog log,
         IReadOnlyDictionary<int, string> workflows)
@@ -225,6 +279,12 @@ public sealed class NeuCharWorkflowAnalyticsService(
             resources);
     }
 
+    /// <summary>
+    /// Maps a compact task-summary source into the normalized run model.
+    /// </summary>
+    /// <param name="source">The summary source.</param>
+    /// <param name="workflows">Owned workflow names keyed by ID.</param>
+    /// <returns>The normalized analytics run.</returns>
     private static AnalyticsRun ToSummaryRun(
         NeuCharWorkflowTaskSummarySource source,
         IReadOnlyDictionary<int, string> workflows) =>
@@ -246,6 +306,12 @@ public sealed class NeuCharWorkflowAnalyticsService(
             "history",
             Array.Empty<ResourceUsage>());
 
+    /// <summary>
+    /// Maps an active in-process run into the normalized live-run model.
+    /// </summary>
+    /// <param name="run">The active run.</param>
+    /// <param name="workflows">Owned workflow names keyed by ID.</param>
+    /// <returns>The normalized live run.</returns>
     private static AnalyticsRun ToLiveRun(
         NeuCharWorkflowActiveRun run,
         IReadOnlyDictionary<int, string> workflows) =>
@@ -269,6 +335,11 @@ public sealed class NeuCharWorkflowAnalyticsService(
             run.Source,
             Array.Empty<ResourceUsage>());
 
+    /// <summary>
+    /// Aggregates counts, success rate, duration statistics, and resource totals.
+    /// </summary>
+    /// <param name="runs">The filtered normalized runs.</param>
+    /// <returns>The aggregate analytics summary.</returns>
     private static WorkflowAnalyticsSummary BuildSummary(IEnumerable<AnalyticsRun> runs)
     {
         var items = runs.ToList();
@@ -292,6 +363,11 @@ public sealed class NeuCharWorkflowAnalyticsService(
             resourceUsages.Select(ResourceKey).Distinct(StringComparer.OrdinalIgnoreCase).Count());
     }
 
+    /// <summary>
+    /// Aggregates resource calls by type, provider, object, and name.
+    /// </summary>
+    /// <param name="runs">The filtered normalized runs.</param>
+    /// <returns>Resource summary rows ordered by call count.</returns>
     private static IReadOnlyList<WorkflowAnalyticsResourceSummary> BuildResourceRows(
         IEnumerable<AnalyticsRun> runs)
     {
@@ -319,6 +395,11 @@ public sealed class NeuCharWorkflowAnalyticsService(
             .ToList();
     }
 
+    /// <summary>
+    /// Aggregates run counts, success rates, and durations by workflow.
+    /// </summary>
+    /// <param name="runs">The filtered normalized runs.</param>
+    /// <returns>Workflow summary rows.</returns>
     private static IReadOnlyList<WorkflowAnalyticsWorkflowSummary> BuildWorkflowRows(
         IEnumerable<AnalyticsRun> runs)
     {
@@ -348,6 +429,11 @@ public sealed class NeuCharWorkflowAnalyticsService(
             .ToList();
     }
 
+    /// <summary>
+    /// Groups runs by their UTC start date for trend visualization.
+    /// </summary>
+    /// <param name="runs">The filtered normalized runs.</param>
+    /// <returns>Chronologically ordered trend points.</returns>
     private static IReadOnlyList<WorkflowAnalyticsTrendPoint> BuildTrendRows(
         IEnumerable<AnalyticsRun> runs)
     {
@@ -363,6 +449,11 @@ public sealed class NeuCharWorkflowAnalyticsService(
             .ToList();
     }
 
+    /// <summary>
+    /// Maps a normalized run into the paged run-summary DTO and distinct resource list.
+    /// </summary>
+    /// <param name="run">The normalized run.</param>
+    /// <returns>The run summary DTO.</returns>
     private static WorkflowAnalyticsRunSummary ToRunSummary(AnalyticsRun run) =>
         new(
             run.ExecutionLogId,
@@ -387,6 +478,11 @@ public sealed class NeuCharWorkflowAnalyticsService(
                     group.First().Name))
                 .ToList());
 
+    /// <summary>
+    /// Converts a resource summary row into a resource filter option.
+    /// </summary>
+    /// <param name="row">The resource summary row.</param>
+    /// <returns>The filter option.</returns>
     private static WorkflowAnalyticsOption ToResourceOption(WorkflowAnalyticsResourceSummary row) =>
         new(
             row.Type,
@@ -395,6 +491,12 @@ public sealed class NeuCharWorkflowAnalyticsService(
             row.Name,
             $"{row.TypeLabel} · {row.Name}");
 
+    /// <summary>
+    /// Applies the normalized status filter to one run.
+    /// </summary>
+    /// <param name="status">The run status.</param>
+    /// <param name="filter">The requested status filter.</param>
+    /// <returns><see langword="true"/> when the run matches.</returns>
     private static bool MatchesStatus(string status, string? filter)
     {
         var normalized = NormalizeStatus(filter);
@@ -402,6 +504,12 @@ public sealed class NeuCharWorkflowAnalyticsService(
                string.Equals(status, normalized, StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Matches a keyword against workflow name, summary, error, and correlation fields.
+    /// </summary>
+    /// <param name="run">The normalized run.</param>
+    /// <param name="keyword">The optional keyword filter.</param>
+    /// <returns><see langword="true"/> when the run matches.</returns>
     private static bool MatchesKeyword(AnalyticsRun run, string? keyword)
     {
         if (string.IsNullOrWhiteSpace(keyword))
@@ -418,6 +526,12 @@ public sealed class NeuCharWorkflowAnalyticsService(
                                              Contains(resource.ObjectId, value));
     }
 
+    /// <summary>
+    /// Applies resource type/provider/object/name filters to one run.
+    /// </summary>
+    /// <param name="resources">The run's resources.</param>
+    /// <param name="query">The analytics resource filters.</param>
+    /// <returns><see langword="true"/> when at least one resource satisfies the filters.</returns>
     private static bool MatchesResource(
         IReadOnlyList<ResourceUsage> resources,
         WorkflowAnalyticsQuery query)
@@ -441,6 +555,11 @@ public sealed class NeuCharWorkflowAnalyticsService(
              string.Equals(resource.Name, query.ResourceName, StringComparison.OrdinalIgnoreCase)));
     }
 
+    /// <summary>
+    /// Parses resource references from replay-event JSON, ignoring malformed or incomplete entries.
+    /// </summary>
+    /// <param name="json">Serialized replay events.</param>
+    /// <returns>Parsed resource usages.</returns>
     private static IReadOnlyList<ResourceUsage> ParseResources(string? json)
     {
         if (string.IsNullOrWhiteSpace(json))
@@ -495,12 +614,24 @@ public sealed class NeuCharWorkflowAnalyticsService(
         }
     }
 
+    /// <summary>
+    /// Reads a case-insensitive JSON string property.
+    /// </summary>
+    /// <param name="element">The JSON object.</param>
+    /// <param name="propertyName">The property name.</param>
+    /// <returns>The string value, or <see langword="null"/> when absent or non-string.</returns>
     private static string? GetJsonString(JsonElement element, string propertyName) =>
         TryGetJsonProperty(element, propertyName, out var property) &&
         property.ValueKind == JsonValueKind.String
             ? property.GetString()
             : null;
 
+    /// <summary>
+    /// Reads and parses a case-insensitive JSON date-time property as UTC.
+    /// </summary>
+    /// <param name="element">The JSON object.</param>
+    /// <param name="propertyName">The property name.</param>
+    /// <returns>The parsed timestamp, or <see langword="null"/> when invalid.</returns>
     private static DateTimeOffset? GetJsonDateTimeOffset(JsonElement element, string propertyName)
     {
         var value = GetJsonString(element, propertyName);
@@ -513,6 +644,13 @@ public sealed class NeuCharWorkflowAnalyticsService(
             : null;
     }
 
+    /// <summary>
+    /// Gets a JSON property using exact lookup first and case-insensitive fallback.
+    /// </summary>
+    /// <param name="element">The JSON object.</param>
+    /// <param name="propertyName">The property name.</param>
+    /// <param name="value">Receives the property value.</param>
+    /// <returns><see langword="true"/> when the property exists.</returns>
     private static bool TryGetJsonProperty(
         JsonElement element,
         string propertyName,
@@ -540,9 +678,20 @@ public sealed class NeuCharWorkflowAnalyticsService(
         return false;
     }
 
+    /// <summary>
+    /// Converts persisted completion fields into the analytics status vocabulary.
+    /// </summary>
+    /// <param name="finishedAt">The completion timestamp.</param>
+    /// <param name="succeeded">The persisted success flag.</param>
+    /// <returns><c>running</c>, <c>success</c>, or <c>failed</c>.</returns>
     private static string ToStatus(DateTime? finishedAt, bool? succeeded) =>
         finishedAt == null ? "running" : succeeded == true ? "success" : "failed";
 
+    /// <summary>
+    /// Converts a resource type key into a display label.
+    /// </summary>
+    /// <param name="type">The resource type key.</param>
+    /// <returns>The display label.</returns>
     private static string ResourceTypeLabel(string type) => type?.ToLowerInvariant() switch
     {
         "agent" => "Agent",
@@ -554,6 +703,11 @@ public sealed class NeuCharWorkflowAnalyticsService(
         _ => string.IsNullOrWhiteSpace(type) ? "未知资源" : type
     };
 
+    /// <summary>
+    /// Builds the stable grouping key for one resource usage.
+    /// </summary>
+    /// <param name="resource">The resource usage.</param>
+    /// <returns>The grouping key.</returns>
     private static string ResourceKey(ResourceUsage resource) =>
         string.Join(
             "|",
@@ -561,10 +715,22 @@ public sealed class NeuCharWorkflowAnalyticsService(
             resource.ProviderId ?? string.Empty,
             resource.ObjectId ?? resource.Name ?? string.Empty);
 
+    /// <summary>
+    /// Performs a case-insensitive contains check for a non-empty source.
+    /// </summary>
+    /// <param name="source">The source text.</param>
+    /// <param name="value">The value to find.</param>
+    /// <returns><see langword="true"/> when the source contains the value.</returns>
     private static bool Contains(string? source, string value) =>
         !string.IsNullOrWhiteSpace(source) &&
         source.Contains(value, StringComparison.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// Extracts a run GUID from the analytics correlation-ID format.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier expected in the prefix.</param>
+    /// <param name="correlationId">The correlation ID to parse.</param>
+    /// <returns>The run ID, or <see langword="null"/> when the format is invalid.</returns>
     private static Guid? GetRunId(int workflowId, string? correlationId)
     {
         var prefix = $"workflow-{workflowId}-run-";
@@ -577,15 +743,32 @@ public sealed class NeuCharWorkflowAnalyticsService(
         return Guid.TryParse(correlationId[prefix.Length..], out var runId) ? runId : null;
     }
 
+    /// <summary>
+    /// Builds the canonical correlation ID used to join active runs with persisted logs.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="runId">The run identifier.</param>
+    /// <returns>The canonical correlation ID.</returns>
     private static string BuildCorrelationId(int workflowId, Guid runId) =>
         $"workflow-{workflowId}-run-{runId:N}";
 
+    /// <summary>Converts a DateTime value to a UTC DateTimeOffset.</summary>
+    /// <param name="value">The DateTime value.</param>
+    /// <returns>The UTC timestamp.</returns>
     private static DateTimeOffset ToUtcOffset(DateTime value) =>
         new(DateTime.SpecifyKind(value, DateTimeKind.Utc));
 
+    /// <summary>Converts an optional DateTime value to a UTC DateTimeOffset.</summary>
+    /// <param name="value">The optional DateTime value.</param>
+    /// <returns>The converted timestamp, or <see langword="null"/>.</returns>
     private static DateTimeOffset? ToUtcOffset(DateTime? value) =>
         value.HasValue ? ToUtcOffset(value.Value) : null;
 
+    /// <summary>
+    /// Creates an empty analytics result while preserving the requested page and page size bounds.
+    /// </summary>
+    /// <param name="query">The original analytics query.</param>
+    /// <returns>An empty analytics result.</returns>
     private static WorkflowAnalyticsResult EmptyResult(WorkflowAnalyticsQuery query) =>
         new(
             BuildSummary(Array.Empty<AnalyticsRun>()),
@@ -599,6 +782,7 @@ public sealed class NeuCharWorkflowAnalyticsService(
             Math.Clamp(query.PageSize, 1, 100),
             false);
 
+    /// <summary>Normalized internal representation of one historical or live run.</summary>
     private sealed record AnalyticsRun(
         int? ExecutionLogId,
         int WorkflowId,
@@ -615,6 +799,7 @@ public sealed class NeuCharWorkflowAnalyticsService(
         string Source,
         IReadOnlyList<ResourceUsage> Resources);
 
+    /// <summary>Normalized resource usage extracted from a workflow run.</summary>
     private sealed record ResourceUsage(
         string Type,
         string ProviderId,
@@ -624,6 +809,7 @@ public sealed class NeuCharWorkflowAnalyticsService(
         DateTimeOffset Timestamp);
 }
 
+/// <summary>Filters and paging options for workflow analytics queries.</summary>
 public sealed record WorkflowAnalyticsQuery(
     string? From = null,
     string? To = null,
@@ -637,6 +823,7 @@ public sealed record WorkflowAnalyticsQuery(
     int Page = 1,
     int PageSize = 25);
 
+/// <summary>Complete workflow analytics response including summaries and paged runs.</summary>
 public sealed record WorkflowAnalyticsResult(
     WorkflowAnalyticsSummary Summary,
     IReadOnlyList<WorkflowAnalyticsTrendPoint> Trend,
@@ -649,6 +836,7 @@ public sealed record WorkflowAnalyticsResult(
     int PageSize,
     bool HasMore);
 
+/// <summary>Aggregate counts and duration/resource metrics.</summary>
 public sealed record WorkflowAnalyticsSummary(
     int TotalRuns,
     int RunningCount,
@@ -661,6 +849,7 @@ public sealed record WorkflowAnalyticsSummary(
     int ResourceCallCount,
     int ResourceCount);
 
+/// <summary>One date bucket in the run trend.</summary>
 public sealed record WorkflowAnalyticsTrendPoint(
     string Date,
     int Total,
@@ -668,6 +857,7 @@ public sealed record WorkflowAnalyticsTrendPoint(
     int Success,
     int Failed);
 
+/// <summary>Aggregate usage metrics for one workflow resource.</summary>
 public sealed record WorkflowAnalyticsResourceSummary(
     string Type,
     string TypeLabel,
@@ -680,6 +870,7 @@ public sealed record WorkflowAnalyticsResourceSummary(
     int WorkflowCount,
     DateTimeOffset LastUsedAt);
 
+/// <summary>Aggregate execution metrics for one workflow.</summary>
 public sealed record WorkflowAnalyticsWorkflowSummary(
     int WorkflowId,
     string WorkflowName,
@@ -691,6 +882,7 @@ public sealed record WorkflowAnalyticsWorkflowSummary(
     double? AverageDurationSeconds,
     DateTimeOffset LastRunAt);
 
+/// <summary>One run row in the paged analytics response.</summary>
 public sealed record WorkflowAnalyticsRunSummary(
     int? ExecutionLogId,
     int WorkflowId,
@@ -706,6 +898,7 @@ public sealed record WorkflowAnalyticsRunSummary(
     bool ReplayAvailable,
     IReadOnlyList<WorkflowAnalyticsRunResource> Resources);
 
+/// <summary>One distinct resource reference attached to a run.</summary>
 public sealed record WorkflowAnalyticsRunResource(
     string Type,
     string TypeLabel,
@@ -713,6 +906,7 @@ public sealed record WorkflowAnalyticsRunResource(
     string? ObjectId,
     string Name);
 
+/// <summary>One workflow or resource filter option.</summary>
 public sealed record WorkflowAnalyticsOption(
     string Type,
     string ProviderId,

@@ -45,15 +45,19 @@ public sealed record AgentsManagerHumanInteractionResolution(
     string Message);
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Coordinates pending Human-in-the-Loop and tool-approval requests for AgentsManager
+/// and exposes them through the Workflow interaction bridge.
 /// </summary>
 public sealed class AgentsManagerHumanInteractionService
 {
     private readonly HumanInTheLoopRequestStore _requestStore;
     private readonly AgentsManagerNeuBellProvider _neuBellProvider;
 
+    /// <summary>
+    /// Initializes the human-interaction coordinator.
+    /// </summary>
+    /// <param name="requestStore">Store for pending and resolved requests.</param>
+    /// <param name="neuBellProvider">Provider used to consume approval notifications.</param>
     public AgentsManagerHumanInteractionService(
         HumanInTheLoopRequestStore requestStore,
         AgentsManagerNeuBellProvider neuBellProvider)
@@ -62,6 +66,12 @@ public sealed class AgentsManagerHumanInteractionService
         _neuBellProvider = neuBellProvider ?? throw new ArgumentNullException(nameof(neuBellProvider));
     }
 
+    /// <summary>
+    /// Lists accessible pending requests for a correlation ID and user.
+    /// </summary>
+    /// <param name="correlationId">The workflow/task correlation ID.</param>
+    /// <param name="userId">The requesting user identifier.</param>
+    /// <returns>Pending requests visible to the user.</returns>
     public IReadOnlyList<PendingHumanRequest> GetPending(string correlationId, string userId)
     {
         if (string.IsNullOrWhiteSpace(correlationId))
@@ -79,6 +89,16 @@ public sealed class AgentsManagerHumanInteractionService
             .ToList();
     }
 
+    /// <summary>
+    /// Validates and resolves one Human-in-the-Loop or tool-approval request,
+    /// consuming its NeuBell item when resolution succeeds.
+    /// </summary>
+    /// <param name="requestId">The pending request identifier.</param>
+    /// <param name="userId">The resolving user identifier.</param>
+    /// <param name="decision">The approval/rejection decision and optional input.</param>
+    /// <param name="correlationId">Optional correlation ID boundary.</param>
+    /// <param name="cancellationToken">Token used to cancel notification consumption.</param>
+    /// <returns>The resolution result.</returns>
     public async Task<AgentsManagerHumanInteractionResolution> ResolveAsync(
         string requestId,
         string userId,
@@ -144,6 +164,13 @@ public sealed class AgentsManagerHumanInteractionService
             "人工处理已提交，任务继续执行。");
     }
 
+    /// <summary>
+    /// Converts accessible pending requests into Workflow interaction DTOs.
+    /// </summary>
+    /// <param name="correlationId">The workflow correlation ID.</param>
+    /// <param name="userId">The requesting user identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel enumeration.</param>
+    /// <returns>A value task containing workflow interactions.</returns>
     public ValueTask<IReadOnlyList<WorkflowHumanInteraction>> GetWorkflowPendingAsync(
         string correlationId,
         string userId,
@@ -167,6 +194,17 @@ public sealed class AgentsManagerHumanInteractionService
         return ValueTask.FromResult<IReadOnlyList<WorkflowHumanInteraction>>(interactions);
     }
 
+    /// <summary>
+    /// Resolves a Workflow interaction through the AgentsManager request store.
+    /// </summary>
+    /// <param name="correlationId">The workflow correlation ID.</param>
+    /// <param name="userId">The resolving user identifier.</param>
+    /// <param name="requestId">The pending request identifier.</param>
+    /// <param name="approved">Whether the request is approved.</param>
+    /// <param name="input">Optional human input.</param>
+    /// <param name="reason">Optional rejection/approval reason.</param>
+    /// <param name="cancellationToken">Token used to cancel notification consumption.</param>
+    /// <returns>A value task containing the Workflow resolution result.</returns>
     public async ValueTask<WorkflowHumanInteractionResult> ResolveWorkflowAsync(
         string correlationId,
         string userId,
@@ -190,6 +228,10 @@ public sealed class AgentsManagerHumanInteractionService
             resolution.Message);
     }
 
+    /// <summary>Checks whether a user may access a pending request.</summary>
+    /// <param name="pending">The pending request.</param>
+    /// <param name="userId">The candidate user identifier.</param>
+    /// <returns><see langword="true"/> when the request is unassigned or assigned to the user.</returns>
     private static bool CanAccess(PendingHumanRequest pending, string userId)
     {
         if (pending == null)
@@ -204,9 +246,13 @@ public sealed class AgentsManagerHumanInteractionService
                 StringComparison.Ordinal);
     }
 
+    /// <summary>Creates a failed interaction-resolution result.</summary>
+    /// <param name="message">The failure message.</param>
+    /// <returns>A failed resolution result.</returns>
     private static AgentsManagerHumanInteractionResolution Failure(string message)
         => new(false, null, null, message);
 
+    /// <summary>Notifies NeuBell subscribers after an interaction notification is consumed.</summary>
     private static async Task NotifyNeuBellChangedAsync()
     {
         //Legacy comment translated to English.
@@ -229,23 +275,31 @@ public sealed class AgentsManagerHumanInteractionService
 }
 
 /// <summary>
-///Legacy comment translated to English.
+/// Adapts AgentsManager human-interaction operations to the Workflow bridge contract.
 /// </summary>
 public sealed class AgentsManagerWorkflowHumanInteractionBridge : IWorkflowHumanInteractionBridge
 {
     private readonly AgentsManagerHumanInteractionService _service;
 
+    /// <summary>
+    /// Initializes the Workflow bridge adapter.
+    /// </summary>
+    /// <param name="service">The AgentsManager interaction service.</param>
     public AgentsManagerWorkflowHumanInteractionBridge(AgentsManagerHumanInteractionService service)
     {
         _service = service ?? throw new ArgumentNullException(nameof(service));
     }
 
+    /// <summary>Lists pending interactions through the underlying AgentsManager service.</summary>
+    /// <param name="correlationId">The workflow correlation ID.</param><param name="userId">The requesting user.</param><param name="cancellationToken">Cancellation token.</param>
     public ValueTask<IReadOnlyList<WorkflowHumanInteraction>> GetPendingAsync(
         string correlationId,
         string userId,
         CancellationToken cancellationToken = default)
         => _service.GetWorkflowPendingAsync(correlationId, userId, cancellationToken);
 
+    /// <summary>Resolves an interaction through the underlying AgentsManager service.</summary>
+    /// <param name="correlationId">The workflow correlation ID.</param><param name="userId">The resolving user.</param><param name="requestId">The request ID.</param><param name="approved">Approval state.</param><param name="input">Optional input.</param><param name="reason">Optional reason.</param><param name="cancellationToken">Cancellation token.</param>
     public ValueTask<WorkflowHumanInteractionResult> ResolveAsync(
         string correlationId,
         string userId,

@@ -513,17 +513,60 @@
                             class="message-text" :content="message.content" :references="message.promptReferences"
                             :ai-score="promptReferenceAiScorer(message)"></prompt-reference-content>
                         <div v-else class="message-text" v-html="formatMessageContent(message.content)"></div>
-                        <div v-if="message.attachments && message.attachments.length" class="chat-message-attachments">
-                            <button v-for="attachment in message.attachments" :key="attachment.relativePath"
+                        <div v-if="messageActionAttachments(message).length" class="chat-message-actions">
+                            <div v-for="attachment in messageActionAttachments(message)" :key="attachment.actionTargetId"
+                                class="chat-message-action-card">
+                                <button type="button" class="is-preview" @@click="openAgentTaskPreview(attachment)">
+                                    <i class="fa fa-play-circle-o" aria-hidden="true"></i>
+                                    <span>{{ ncfT('AdminChat.Action.PreviewAgentTask', attachment.name, attachment.actionTargetId) }}</span>
+                                </button>
+                                <button type="button" class="is-external"
+                                    :title="ncfT('AdminChat.Action.OpenAgentTask', attachment.name, attachment.actionTargetId)"
+                                    @@click="openMessageAttachmentAction(attachment)">
+                                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div v-if="messageRegularAttachments(message).length" class="chat-message-attachments">
+                            <button v-for="attachment in messageRegularAttachments(message)" :key="attachment.relativePath"
                                 type="button"
-                                :class="{ 'is-workspace-artifact': attachment.isWorkspaceArtifact }"
-                                :title="attachment.isWorkspaceArtifact || attachment.previewKind === '3d' ? ncfT('AdminChat.WorkspaceArtifact.Preview', attachment.name) : ncfT('AdminChat.WorkspaceArtifact.Download', attachment.name)"
-                                @@click="attachment.isWorkspaceArtifact || attachment.previewKind === '3d' ? openWorkspaceArtifact(attachment) : downloadWorkspaceEntry(attachment.relativePath)">
+                                :title="attachment.previewKind === '3d' ? ncfT('AdminChat.WorkspaceArtifact.Preview', attachment.name) : ncfT('AdminChat.WorkspaceArtifact.Download', attachment.name)"
+                                @@click="attachment.previewKind === '3d' ? openWorkspaceArtifact(attachment) : downloadWorkspaceEntry(attachment.relativePath)">
                                 <i :class="attachment.previewKind === '3d' ? 'fa fa-cube' : workspaceFileIcon(attachment.relativePath)"></i>
                                 <span>{{ attachment.name }}</span>
-                                <small v-if="attachment.isWorkspaceArtifact">Workspace</small>
                                 <small v-if="attachment.useVision">视觉</small>
                             </button>
+                        </div>
+                        <div v-if="messageWorkspaceArtifacts(message).length" class="chat-workspace-change-summary">
+                            <button type="button" class="chat-workspace-change-heading"
+                                :aria-expanded="workspaceArtifactsExpanded(message)"
+                                @@click="toggleWorkspaceArtifacts(message)">
+                                <i class="fa fa-code-fork" aria-hidden="true"></i>
+                                <strong>{{ ncfT('AdminChat.WorkspaceArtifact.FileChanges', workspaceArtifactStats(message).total) }}</strong>
+                                <span v-if="workspaceArtifactStats(message).created" class="is-added">
+                                    +{{ workspaceArtifactStats(message).created }}
+                                </span>
+                                <span v-if="workspaceArtifactStats(message).changed" class="is-modified">
+                                    ~{{ workspaceArtifactStats(message).changed }}
+                                </span>
+                                <span v-if="workspaceArtifactStats(message).deleted" class="is-deleted">
+                                    −{{ workspaceArtifactStats(message).deleted }}
+                                </span>
+                                <i v-if="messageWorkspaceArtifacts(message).length > 3"
+                                    :class="workspaceArtifactsExpanded(message) ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
+                            </button>
+                            <div v-if="workspaceArtifactsExpanded(message)" class="chat-message-attachments is-expanded">
+                                <button v-for="attachment in messageWorkspaceArtifacts(message)" :key="attachment.relativePath"
+                                    type="button" class="is-workspace-artifact"
+                                    :class="'change-' + (attachment.changeType || 'changed')"
+                                    :disabled="attachment.changeType === 'deleted'"
+                                    :title="attachment.relativePath"
+                                    @@click="openWorkspaceArtifact(attachment)">
+                                    <i :class="attachment.changeType === 'created' ? 'el-icon-plus' : attachment.changeType === 'deleted' ? 'el-icon-minus' : workspaceFileIcon(attachment.relativePath)"></i>
+                                    <span>{{ attachment.relativePath }}</span>
+                                    <small>{{ workspaceArtifactChangeLabel(attachment.changeType) }}</small>
+                                </button>
+                            </div>
                         </div>
                         <div class="message-harness-steps" v-if="message.roleType === 1 && !isManageMode && message.harnessSteps && message.harnessSteps.length > 0">
                             <el-collapse class="harness-collapse">
@@ -722,18 +765,30 @@
                             <small>{{ item.relativePath }}{{ item.isDirectory ? '/' : '' }}</small>
                         </button>
                     </div>
-                    <div v-if="chatCommandMenuOpen && chatCommandSuggestionsFor === 'inputMessage' && slashCommandOptions('inputMessage').length"
-                         class="chat-command-popover" role="listbox" aria-label="AdminChat 命令">
-                        <button v-for="option in slashCommandOptions('inputMessage')" :key="option.value"
+                    <div v-if="chatCommandMenuOpen && chatCommandSuggestionsFor === 'inputMessage' && (slashCommandOptions('inputMessage').length || chatCommandOptionsLoading)"
+                         class="chat-command-popover"
+                         :class="{ 'is-below': chatCommandPopoverBelow }"
+                         :style="{ maxHeight: chatCommandPopoverMaxHeight + 'px' }"
+                         role="listbox" aria-label="AdminChat 命令">
+                        <p v-if="chatCommandOptionsLoading && !slashCommandOptions('inputMessage').length"
+                           class="chat-command-status">{{ ncfT('AdminChat.Command.Loading') }}</p>
+                        <button v-for="(option, optionIndex) in slashCommandOptions('inputMessage')" :key="option.value"
                                 type="button" class="chat-command-option" role="option"
+                                :class="{ 'is-active': optionIndex === chatCommandActiveIndex }"
+                                :aria-selected="optionIndex === chatCommandActiveIndex"
+                                @@mouseenter="chatCommandActiveIndex = optionIndex"
                                 @@mousedown.prevent="selectSlashCommand('inputMessage', option)">
-                            <strong>{{ option.value }}</strong>
-                            <span>{{ option.label }}</span>
+                            <kbd>{{ optionIndex < 9 ? optionIndex + 1 : '·' }}</kbd>
+                            <strong v-html="highlightSlashCommandText(option.displayValue || option.value, option.matchQuery)"></strong>
+                            <span v-html="highlightSlashCommandText(option.label, option.matchQuery)"></span>
                             <em v-if="option.moduleName"
                                 class="chat-command-module"
                                 :style="{ '--chat-command-accent': option.accentColor || '#909399' }">{{ option.moduleName }}</em>
-                            <small>{{ option.hint }}</small>
+                            <small v-html="highlightSlashCommandText(option.hint, option.matchQuery)"></small>
                         </button>
+                        <p v-if="slashCommandOptions('inputMessage').length" class="chat-command-shortcuts">
+                            {{ ncfT('AdminChat.Command.Shortcuts') }}
+                        </p>
                     </div>
                     <el-input
                         type="textarea"
@@ -919,18 +974,30 @@
                                             <small>{{ item.relativePath }}{{ item.isDirectory ? '/' : '' }}</small>
                                         </button>
                                     </div>
-                                    <div v-if="chatCommandMenuOpen && chatCommandSuggestionsFor === 'chatInputText' && slashCommandOptions('chatInputText').length"
-                                         class="chat-command-popover" role="listbox" aria-label="AdminChat 命令">
-                                        <button v-for="option in slashCommandOptions('chatInputText')" :key="option.value"
+                                    <div v-if="chatCommandMenuOpen && chatCommandSuggestionsFor === 'chatInputText' && (slashCommandOptions('chatInputText').length || chatCommandOptionsLoading)"
+                                         class="chat-command-popover"
+                                         :class="{ 'is-below': chatCommandPopoverBelow }"
+                                         :style="{ maxHeight: chatCommandPopoverMaxHeight + 'px' }"
+                                         role="listbox" aria-label="AdminChat 命令">
+                                        <p v-if="chatCommandOptionsLoading && !slashCommandOptions('chatInputText').length"
+                                           class="chat-command-status">{{ ncfT('AdminChat.Command.Loading') }}</p>
+                                        <button v-for="(option, optionIndex) in slashCommandOptions('chatInputText')" :key="option.value"
                                                 type="button" class="chat-command-option" role="option"
+                                                :class="{ 'is-active': optionIndex === chatCommandActiveIndex }"
+                                                :aria-selected="optionIndex === chatCommandActiveIndex"
+                                                @@mouseenter="chatCommandActiveIndex = optionIndex"
                                                 @@mousedown.prevent="selectSlashCommand('chatInputText', option)">
-                                            <strong>{{ option.value }}</strong>
-                                            <span>{{ option.label }}</span>
+                                            <kbd>{{ optionIndex < 9 ? optionIndex + 1 : '·' }}</kbd>
+                                            <strong v-html="highlightSlashCommandText(option.displayValue || option.value, option.matchQuery)"></strong>
+                                            <span v-html="highlightSlashCommandText(option.label, option.matchQuery)"></span>
                                             <em v-if="option.moduleName"
                                                 class="chat-command-module"
                                                 :style="{ '--chat-command-accent': option.accentColor || '#909399' }">{{ option.moduleName }}</em>
-                                            <small>{{ option.hint }}</small>
+                                            <small v-html="highlightSlashCommandText(option.hint, option.matchQuery)"></small>
                                         </button>
+                                        <p v-if="slashCommandOptions('chatInputText').length" class="chat-command-shortcuts">
+                                            {{ ncfT('AdminChat.Command.Shortcuts') }}
+                                        </p>
                                     </div>
                                     <el-input
                                         type="textarea"
@@ -1815,6 +1882,24 @@
             </el-button>
         </div>
     </el-dialog>
+
+    <el-drawer
+        :visible.sync="agentTaskPreviewVisible"
+        direction="rtl"
+        size="min(1080px, 92vw)"
+        append-to-body
+        custom-class="chat-agent-task-preview">
+        <div slot="title" class="chat-agent-task-preview-title">
+            <span>{{ agentTaskPreviewAction ? ncfT('AdminChat.Action.AgentTaskPreviewTitle', agentTaskPreviewAction.name, agentTaskPreviewAction.actionTargetId) : '' }}</span>
+            <el-button size="mini" type="text" icon="el-icon-link"
+                @@click="openMessageAttachmentAction(agentTaskPreviewAction)">
+                {{ ncfT('AdminChat.Action.OpenInTab') }}
+            </el-button>
+        </div>
+        <iframe v-if="agentTaskPreviewVisible && agentTaskPreviewAction"
+            :src="agentTaskUrl(agentTaskPreviewAction, true)"
+            :title="ncfT('AdminChat.Action.AgentTaskPreviewTitle', agentTaskPreviewAction.name, agentTaskPreviewAction.actionTargetId)"></iframe>
+    </el-drawer>
 
     <!-- 超级管理员：用户用量统计（仅数量，不含内容） -->
     <el-drawer

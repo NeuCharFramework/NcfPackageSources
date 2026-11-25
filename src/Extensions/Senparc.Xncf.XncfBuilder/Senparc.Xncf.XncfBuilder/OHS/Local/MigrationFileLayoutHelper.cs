@@ -45,8 +45,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
     internal sealed record GeneratedMigrationFiles(string MigrationFile, string DesignerFile);
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Locates and aligns EF migration files and model snapshots without modifying
+    /// generated migration contents beyond required namespace/layout normalization.
     /// </summary>
     internal static class MigrationFileLayoutHelper
     {
@@ -59,6 +59,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             "obj"
         };
 
+        /// <summary>
+        /// Resolves a project file or directory path to an existing project directory.
+        /// </summary>
+        /// <param name="path">The project file or directory path.</param>
+        /// <param name="parameterName">The parameter label used in validation messages.</param>
+        /// <returns>The normalized project directory.</returns>
         internal static string GetProjectDirectory(string path, string parameterName)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -81,11 +87,23 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return Path.TrimEndingDirectorySeparator(fullPath);
         }
 
+        /// <summary>
+        /// Builds the database-type-specific migration directory path.
+        /// </summary>
+        /// <param name="projectDirectory">The project directory.</param>
+        /// <param name="databaseType">The database provider directory name.</param>
+        /// <returns>The migration directory path.</returns>
         internal static string GetMigrationDirectory(string projectDirectory, string databaseType)
         {
             return Path.Combine(projectDirectory, "Domain", "Migrations", databaseType);
         }
 
+        /// <summary>
+        /// Converts a migration directory into a project-relative command argument.
+        /// </summary>
+        /// <param name="projectDirectory">The target project directory.</param>
+        /// <param name="migrationDirectory">The migration output directory.</param>
+        /// <returns>A relative migration directory argument.</returns>
         internal static string GetOutputDirectoryArgument(string projectDirectory, string migrationDirectory)
         {
             var projectFullPath = Path.TrimEndingDirectorySeparator(Path.GetFullPath(projectDirectory));
@@ -103,6 +121,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return relativePath;
         }
 
+        /// <summary>
+        /// Derives the migration namespace from the project RootNamespace/AssemblyName and database type.
+        /// </summary>
+        /// <param name="projectDirectory">The project directory containing exactly one project file.</param>
+        /// <param name="databaseType">The database provider directory name.</param>
+        /// <returns>The expected migration namespace.</returns>
         internal static string GetExpectedNamespace(string projectDirectory, string databaseType)
         {
             var projectFiles = Directory.GetFiles(projectDirectory, "*.csproj", SearchOption.TopDirectoryOnly);
@@ -125,6 +149,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return $"{rootNamespace}.Domain.Migrations.{databaseType}";
         }
 
+        /// <summary>
+        /// Captures existing top-level migration files before an EF migration command runs.
+        /// </summary>
+        /// <param name="migrationDirectory">The migration directory.</param>
+        /// <returns>Absolute paths of existing C# files.</returns>
         internal static IReadOnlyCollection<string> CaptureMigrationFiles(string migrationDirectory)
         {
             if (!Directory.Exists(migrationDirectory))
@@ -137,6 +166,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 .ToArray();
         }
 
+        /// <summary>
+        /// Verifies that exactly one new migration and matching Designer file were generated.
+        /// </summary>
+        /// <param name="migrationDirectory">The migration output directory.</param>
+        /// <param name="filesBefore">Files captured before generation.</param>
+        /// <returns>The generated migration and Designer file paths.</returns>
         internal static GeneratedMigrationFiles VerifyGeneratedMigrationFiles(
             string migrationDirectory,
             IReadOnlyCollection<string> filesBefore)
@@ -177,6 +212,15 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return new GeneratedMigrationFiles(migrationFiles[0], designerFiles[0]);
         }
 
+        /// <summary>
+        /// Moves the matching model snapshot into the provider migration directory,
+        /// removes duplicate snapshots, and rewrites its namespace when necessary.
+        /// </summary>
+        /// <param name="projectDirectory">The project directory to search.</param>
+        /// <param name="migrationDirectory">The expected provider migration directory.</param>
+        /// <param name="dbContextName">The DbContext name used to identify the snapshot.</param>
+        /// <param name="expectedNamespace">The namespace required by the target project.</param>
+        /// <returns>Snapshot movement, namespace, and duplicate-removal details.</returns>
         internal static MigrationSnapshotAlignmentResult AlignSnapshot(
             string projectDirectory,
             string migrationDirectory,
@@ -287,6 +331,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             };
         }
 
+        /// <summary>
+        /// Compares two paths using platform-appropriate case semantics.
+        /// </summary>
+        /// <param name="first">The first path.</param>
+        /// <param name="second">The second path.</param>
+        /// <returns><see langword="true"/> when normalized paths are equal.</returns>
         internal static bool PathsEqual(string first, string second)
         {
             if (first == null || second == null)

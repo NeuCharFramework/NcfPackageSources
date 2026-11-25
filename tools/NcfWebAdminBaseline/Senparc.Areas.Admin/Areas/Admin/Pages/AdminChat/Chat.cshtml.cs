@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
 
+    Modified by: Senparc - 20261125
+    Change description: v0.12.29 Improved AdminChat conversation loading and command parameter feedback.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -93,7 +96,25 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
                     tool.Label,
                     tool.Hint,
                     tool.ModuleName,
-                    tool.ModuleUid))
+                    tool.ModuleUid,
+                    tool.Parameters
+                        .OrderBy(parameter => parameter.Order)
+                        .Select(parameter => new ChatToolParameterViewModel(
+                            parameter.Name,
+                            parameter.Label,
+                            parameter.Hint,
+                            parameter.Placeholder,
+                            parameter.Prefix,
+                            parameter.Required,
+                            parameter.IsPositional,
+                            parameter.AllowFreeform,
+                            parameter.OptionsProviderType != null,
+                            parameter.Options.Select(option => new ChatToolParameterOptionViewModel(
+                                option.Value,
+                                option.Label,
+                                option.Description))
+                            .ToList()))
+                        .ToList()))
                 .ToList();
 
             var adminWorkContext = _adminWorkContextProvider.GetAdminWorkContext();
@@ -119,5 +140,23 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
         string Label,
         string Hint,
         string ModuleName,
-        string ModuleUid);
+        string ModuleUid,
+        IReadOnlyList<ChatToolParameterViewModel> Parameters);
+
+    public sealed record ChatToolParameterViewModel(
+        string Name,
+        string Label,
+        string Hint,
+        string Placeholder,
+        string Prefix,
+        bool Required,
+        bool IsPositional,
+        bool AllowFreeform,
+        bool HasOptionsProvider,
+        IReadOnlyList<ChatToolParameterOptionViewModel> Options);
+
+    public sealed record ChatToolParameterOptionViewModel(
+        string Value,
+        string Label,
+        string Description);
 }

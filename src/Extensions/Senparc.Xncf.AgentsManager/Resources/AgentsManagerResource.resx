@@ -848,6 +848,8 @@
   <data name="Studio.ReviewHuman" xml:space="preserve"><value>Review / human input</value></data>
   <data name="Studio.FullDetails" xml:space="preserve"><value>Full details</value></data>
   <data name="Studio.Loading" xml:space="preserve"><value>Loading…</value></data>
+  <data name="Studio.LoadingConversation" xml:space="preserve"><value>Loading conversation…</value></data>
+  <data name="Studio.NoConversationRecords" xml:space="preserve"><value>No conversation records yet</value></data>
   <data name="Studio.Rounds" xml:space="preserve"><value>rounds</value></data>
   <data name="Studio.Conversation" xml:space="preserve"><value>Conversation</value></data>
   <data name="Studio.Agent" xml:space="preserve"><value>Agent</value></data>
@@ -1256,4 +1258,9 @@
   <data name="Frontend.AgentsManager.FailedToRefreshKnowledgeBaseStatus" xml:space="preserve"><value>知识库状态刷新失败</value></data>
   <data name="AdminChat.Command.RunAgentGroup" xml:space="preserve"><value>启动 Agent 小组</value></data>
   <data name="AdminChat.Command.RunAgentGroupHint" xml:space="preserve"><value>描述任务；优先语义匹配并复用现有小组</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.Group" xml:space="preserve"><value>Agent 小组</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.GroupHint" xml:space="preserve"><value>选择一个已启用的 Agent 小组</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.Task" xml:space="preserve"><value>任务</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.TaskHint" xml:space="preserve"><value>描述要执行的任务</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.TaskPlaceholder" xml:space="preserve"><value>请输入任务说明</value></data>
 </root>

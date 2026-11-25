@@ -80,25 +80,59 @@ public sealed record FileManagerReferenceReport(
     string PhysicalState,
     IReadOnlyList<FileManagerReference> References);
 
+/// <summary>
+/// Provides external references that prevent or explain deletion of a managed file.
+/// </summary>
 public interface IFileManagerReferenceProvider
 {
+    /// <summary>
+    /// Finds references to a managed file.
+    /// </summary>
+    /// <param name="fileId">The managed file identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel reference lookup.</param>
+    /// <returns>A task containing the references currently known for the file.</returns>
     Task<IReadOnlyList<FileManagerReference>> GetReferencesAsync(
         int fileId,
         CancellationToken cancellationToken = default);
 }
 
+/// <summary>
+/// Defines the cross-module file import, read, availability, and deletion boundary.
+/// </summary>
 public interface IFileManagerGateway
 {
+    /// <summary>
+    /// Checks whether the file manager can accept operations.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel the availability check.</param>
+    /// <returns>A task containing whether the gateway is available.</returns>
     Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Imports a file stream into the file manager.
+    /// </summary>
+    /// <param name="request">The stream, metadata, length, and resource kind to import.</param>
+    /// <param name="cancellationToken">Token used to cancel import.</param>
+    /// <returns>A task containing the persisted file identity and metadata.</returns>
     Task<FileManagerImportResult> ImportAsync(
         FileManagerImportRequest request,
         CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Opens a readable stream for a managed file.
+    /// </summary>
+    /// <param name="fileId">The managed file identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel lookup or stream preparation.</param>
+    /// <returns>A task containing file metadata and an owned readable stream.</returns>
     Task<FileManagerReadResult> OpenReadAsync(
         int fileId,
         CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Deletes a managed file.
+    /// </summary>
+    /// <param name="fileId">The managed file identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel deletion.</param>
     Task DeleteAsync(
         int fileId,
         CancellationToken cancellationToken = default);

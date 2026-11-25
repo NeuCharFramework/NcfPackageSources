@@ -35,11 +35,22 @@ namespace Senparc.Xncf.FileManager.Domain.Services
 {
     public class NcfFolderService : ServiceBase<NcfFolder>
     {
+        /// <summary>
+        /// Initializes folder persistence for managed files.
+        /// </summary>
+        /// <param name="repo">Folder repository.</param>
+        /// <param name="serviceProvider">Dependency-injection provider.</param>
         public NcfFolderService(IRepositoryBase<NcfFolder> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {
         }
 
+        /// <summary>
+        /// Lists child folders under a parent within one resource scope.
+        /// </summary>
+        /// <param name="parentId">Optional parent folder identifier.</param>
+        /// <param name="resourceScope">The resource boundary.</param>
+        /// <returns>Folders ordered by identifier.</returns>
         public async Task<List<NcfFolder>> GetFoldersAsync(
             int? parentId,
             NcfFileResourceScope resourceScope = NcfFileResourceScope.KnowledgeBase)
@@ -96,6 +107,13 @@ namespace Senparc.Xncf.FileManager.Domain.Services
         /// Existing levels are reused, so multiple browser upload batches retain
         /// one coherent directory tree.
         /// </summary>
+        /// <summary>
+        /// Resolves or creates a sequence of child folders below a root folder.
+        /// </summary>
+        /// <param name="folderSegments">Folder names in parent-to-child order.</param>
+        /// <param name="rootFolderId">Optional root folder identifier.</param>
+        /// <param name="resourceScope">The resource boundary.</param>
+        /// <returns>The final folder identifier, or the root identifier when no segments exist.</returns>
         public async Task<int?> GetOrCreateFolderPathAsync(
             IEnumerable<string> folderSegments,
             int? rootFolderId,
@@ -121,6 +139,14 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             return parentId;
         }
 
+        /// <summary>
+        /// Validates and creates a folder with a unique sibling name.
+        /// </summary>
+        /// <param name="name">The folder name.</param>
+        /// <param name="parentId">Optional parent folder identifier.</param>
+        /// <param name="description">Optional folder description.</param>
+        /// <param name="resourceScope">The resource boundary.</param>
+        /// <returns>The persisted folder entity.</returns>
         public async Task<NcfFolder> CreateFolderAsync(
             string name,
             int? parentId,
@@ -145,6 +171,13 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             return folder;
         }
 
+        /// <summary>
+        /// Renames and updates a folder after sibling uniqueness validation.
+        /// </summary>
+        /// <param name="id">The folder identifier.</param>
+        /// <param name="name">The new folder name.</param>
+        /// <param name="description">The new description.</param>
+        /// <returns>A task that completes after persistence.</returns>
         public async Task UpdateFolderAsync(int id, string name, string description)
         {
             var folder = await GetObjectAsync(z => z.Id == id);
@@ -166,6 +199,12 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             await SaveObjectAsync(folder);
         }
 
+        /// <summary>
+        /// Deletes an empty folder that has no child folders or files.
+        /// </summary>
+        /// <param name="id">The folder identifier.</param>
+        /// <returns>A task that completes after deletion.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the folder is missing or not empty.</exception>
         public async Task DeleteFolderAsync(int id)
         {
             var folder = await GetObjectAsync(z => z.Id == id);

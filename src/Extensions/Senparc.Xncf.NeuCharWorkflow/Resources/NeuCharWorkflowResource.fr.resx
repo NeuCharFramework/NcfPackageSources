@@ -934,4 +934,14 @@
   <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>Lit le graphe masqué, la révision et les nœuds sans enregistrer de modification.</value></data>
   <data name="AdminChat.Function.ApplyWorkflowEdit" xml:space="preserve"><value>Appliquer la modification du Workflow</value></data>
   <data name="AdminChat.Function.ApplyWorkflowEditDescription" xml:space="preserve"><value>Enregistre une modification minimale avec la révision vérifiée tout en conservant secrets, déclencheur et état d’activation.</value></data>
+  <data name="AdminChat.Command.Workflow.Parameter.Id" xml:space="preserve"><value>Workflow</value></data>
+  <data name="AdminChat.Command.Workflow.Parameter.IdHint" xml:space="preserve"><value>Choisissez un Workflow appartenant à l’administrateur actuel</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.Input" xml:space="preserve"><value>Entrée du Workflow</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.InputHint" xml:space="preserve"><value>Saisissez les données facultatives de cette exécution</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.InputPlaceholder" xml:space="preserve"><value>Décrivez l’entrée ou la tâche</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.Revision" xml:space="preserve"><value>Révision</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.RevisionHint" xml:space="preserve"><value>Révision facultative attendue pour la concurrence</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.Change" xml:space="preserve"><value>Modification demandée</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.ChangeHint" xml:space="preserve"><value>Décrivez la plus petite modification à appliquer</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.ChangePlaceholder" xml:space="preserve"><value>Décrivez la modification demandée</value></data>
 </root>

@@ -1,0 +1,53 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: ChatGroupChatToolParameterOptionsProvider.cs
+    File description: Provides Agent group chat-tool parameter options.
+
+    Created by: Senparc - 20261125
+
+    Modified by: Senparc - 20261125
+    Change description: v0.19.4 Added chat-tool parameter option integration.
+
+----------------------------------------------------------------*/
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Senparc.Ncf.XncfBase.ChatTools;
+using Senparc.Xncf.AgentsManager.Domain.Services;
+
+namespace Senparc.Xncf.AgentsManager.Application.ChatTools;
+
+public sealed class ChatGroupChatToolParameterOptionsProvider(ChatGroupService chatGroupService)
+    : IChatToolParameterOptionsProvider
+{
+    public async Task<IReadOnlyCollection<ChatToolParameterOption>> GetOptionsAsync(
+        ChatToolParameterOptionsRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var query = request.Query?.Trim();
+        var groups = await chatGroupService.GetObjectListAsync(
+            0,
+            Math.Clamp(request.Limit, 1, 100),
+            group => group.Enable
+                     && (string.IsNullOrWhiteSpace(query)
+                         || group.Name.Contains(query)
+                         || (group.Description != null && group.Description.Contains(query))
+                         || group.Id.ToString().Contains(query)),
+            group => group.Id,
+            Senparc.Ncf.Core.Enums.OrderingType.Descending).ConfigureAwait(false);
+
+        return groups.Select(group => new ChatToolParameterOption
+        {
+            Value = group.Id.ToString(),
+            Label = group.Name,
+            Description = string.IsNullOrWhiteSpace(group.Description)
+                ? $"ChatGroup ID: {group.Id}"
+                : $"#{group.Id} · {group.Description}",
+            Keywords = $"{group.Id} {group.Name} {group.Description}"
+        }).ToArray();
+    }
+}

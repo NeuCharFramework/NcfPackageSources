@@ -136,7 +136,7 @@
                                     <div class="lowerHalfbox_label">{{ncfST('Frontend.AgentsManager.Score')}}</div>
                                     <div class="lowerHalfbox_score">{{ aitem.score }}</div>
                                     <button type="button" class="lowerHalfbox_operation"
-                                        @@click="handleEditDrawerOpenBtn('drawerAgent',aitem)">{{ncfST('Studio.Edit')}}</button>
+                                        @@click="handleEditDrawerOpenBtn('drawerAgent',aitem)">{{ncfST('Frontend.AgentsManager.Edit')}}</button>
                                     <button type="button" class="lowerHalfbox_operation lowerHalfbox_operation--a2a"
                                         :title="aitem.hasPublishedA2A ? ncfST('Frontend.AgentsManager.ManageATwoAPublishing') : ncfST('Frontend.AgentsManager.PublishAsATwoA')"
                                         @@click="openPublishedA2AEditor(aitem)">{{ aitem.hasPublishedA2A ? ncfST('Frontend.AgentsManager.ManageATwoAPublishing') : ncfST('Frontend.AgentsManager.PublishAsATwoA') }}</button>
@@ -547,6 +547,14 @@
                                             <el-scrollbar ref="agentDetailsGroupTaskHistoryScrollbar"
                                                 class="sidebar-taskrecord-container" wrap-class="scrollbar-wrapper">
                                                 <div class="df-wn flex-dc taskrecord-listWrap">
+                                                    <div v-if="isTaskConversationLoading('agentGroupTask')" class="taskrecord-state" role="status">
+                                                        <i class="el-icon-loading"></i>
+                                                        <span>{{ ncfT('AgentsManager.Studio.LoadingConversation') }}</span>
+                                                    </div>
+                                                    <div v-else-if="!agentDetailsGroupTaskHistoryList.length" class="taskrecord-state">
+                                                        <i class="el-icon-chat-line-square"></i>
+                                                        <span>{{ ncfT('AgentsManager.Studio.NoConversationRecords') }}</span>
+                                                    </div>
                                                     <div v-for="ritem in agentDetailsGroupTaskHistoryList"
                                                         :key="ritem.id"
                                                         :class="['taskrecord-listWrap-item', { 'taskrecord-listWrap-item-streaming': ritem._streaming }]"
@@ -686,6 +694,14 @@
                                         <el-scrollbar ref="agentDetailsTaskHistoryScrollbar"
                                             class="sidebar-taskrecord-container" wrap-class="scrollbar-wrapper">
                                             <div class="df-wn flex-dc taskrecord-listWrap">
+                                                <div v-if="isTaskConversationLoading('agentTask')" class="taskrecord-state" role="status">
+                                                    <i class="el-icon-loading"></i>
+                                                    <span>{{ ncfT('AgentsManager.Studio.LoadingConversation') }}</span>
+                                                </div>
+                                                <div v-else-if="!agentDetailsTaskHistoryList.length" class="taskrecord-state">
+                                                    <i class="el-icon-chat-line-square"></i>
+                                                    <span>{{ ncfT('AgentsManager.Studio.NoConversationRecords') }}</span>
+                                                </div>
                                                 <div v-for="ritem in agentDetailsTaskHistoryList" :key="ritem.id"
                                                     :class="['taskrecord-listWrap-item', { 'taskrecord-listWrap-item-streaming': ritem._streaming }]"
                                                     :data-history-id="ritem.id"
@@ -1077,6 +1093,14 @@
                             <el-scrollbar ref="groupTaskHistoryScrollbar" class="sidebar-taskrecord-container"
                                 wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskrecord-listWrap">
+                                    <div v-if="isTaskConversationLoading('groupTask')" class="taskrecord-state" role="status">
+                                        <i class="el-icon-loading"></i>
+                                        <span>{{ ncfT('AgentsManager.Studio.LoadingConversation') }}</span>
+                                    </div>
+                                    <div v-else-if="!groupTaskHistoryList.length" class="taskrecord-state">
+                                        <i class="el-icon-chat-line-square"></i>
+                                        <span>{{ ncfT('AgentsManager.Studio.NoConversationRecords') }}</span>
+                                    </div>
                                     <div v-for="ritem in groupTaskHistoryList" :key="ritem.id"
                                         :class="['taskrecord-listWrap-item', { 'taskrecord-listWrap-item-streaming': ritem._streaming }]"
                                         :data-history-id="ritem.id"
@@ -1359,6 +1383,14 @@
                             <el-scrollbar ref="taskHistoryScrollbar" class="sidebar-taskrecord-container"
                                 wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskrecord-listWrap">
+                                    <div v-if="isTaskConversationLoading('task')" class="taskrecord-state" role="status">
+                                        <i class="el-icon-loading"></i>
+                                        <span>{{ ncfT('AgentsManager.Studio.LoadingConversation') }}</span>
+                                    </div>
+                                    <div v-else-if="!taskHistoryList.length" class="taskrecord-state">
+                                        <i class="el-icon-chat-line-square"></i>
+                                        <span>{{ ncfT('AgentsManager.Studio.NoConversationRecords') }}</span>
+                                    </div>
                                     <div v-for="ritem in taskHistoryList" :key="ritem.id"
                                         :class="['taskrecord-listWrap-item', { 'taskrecord-listWrap-item-streaming': ritem._streaming }]"
                                         :data-history-id="ritem.id"

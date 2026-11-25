@@ -42,14 +42,20 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.Database
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides design-time DbContext factory behavior for an XNCF database registration.
     /// </summary>
-    /// <typeparam name="TSenparcEntities"></typeparam>
+    /// <typeparam name="TSenparcEntities">The concrete runtime DbContext type.</typeparam>
+    /// <typeparam name="TXncfDatabaseRegister">The XNCF database registration type.</typeparam>
     public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TXncfDatabaseRegister>
         : SenparcDesignTimeDbContextFactoryBase<TSenparcEntities>
             where TSenparcEntities : DbContext, ISenparcEntitiesDbContext
             where TXncfDatabaseRegister : class, IXncfDatabase, new()
     {
+        /// <summary>
+        /// Creates the provider-specific runtime DbContext selected by the multiple-database pool.
+        /// </summary>
+        /// <param name="dbContextOptions">The options configured by the base design-time factory.</param>
+        /// <returns>The created XNCF DbContext.</returns>
         public override TSenparcEntities GetDbContextInstance(DbContextOptions<TSenparcEntities> dbContextOptions)
         {
             //Legacy comment translated to English.
@@ -109,10 +115,9 @@ namespace Senparc.Ncf.XncfBase.Database
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Provides common EF Core design-time setup used to create NCF DbContexts.
     /// </summary>
-    /// <typeparam name="TDbContext"></typeparam>
+    /// <typeparam name="TDbContext">The DbContext type produced by the factory.</typeparam>
     public abstract class SenparcDesignTimeDbContextFactoryBase<TDbContext>
         : IDesignTimeDbContextFactory<TDbContext>
             where TDbContext : DbContext
@@ -123,21 +128,19 @@ namespace Senparc.Ncf.XncfBase.Database
         public IDatabaseConfiguration DatabaseConfiguration { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the connection string used by the design-time factory.
         /// </summary>
         public virtual string DatabaseConnectionStr => SenparcDatabaseConnectionConfigs.GetClientConnectionString(); //?? "Server=.\\;Database=NCF;Trusted_Connection=True;integrated security=True;";
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a concrete DbContext from configured options.
         /// </summary>
-        /// <param name="dbContextOptions"></param>
-        /// <returns></returns>
+        /// <param name="dbContextOptions">The configured DbContext options.</param>
+        /// <returns>The created DbContext.</returns>
         public abstract TDbContext GetDbContextInstance(DbContextOptions<TDbContext> dbContextOptions);
 
         /// <summary>
-        ///Legacy comment translated to English.
-        /// b => systemServiceRegister.DbContextOptionsAction(b, "Senparc.Service")
-        ///Legacy comment translated to English.
+        /// Gets the callback that applies provider-specific options to a DbContext builder.
         /// </summary>
         public virtual Action</*SqlServerDbContextOptionsBuilder*/IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsAction => (builder, xncfDatabaseData) =>
          {
@@ -159,12 +162,12 @@ namespace Senparc.Ncf.XncfBase.Database
 
 
         /// <summary>
-        /// SenparcDesignTimeDbContextFactoryBase constructor
+        /// Initializes design-time NCF settings, root paths, and the minimal NCF service registration.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="ncfVersion">The NCF version displayed during design-time setup.</param>
+        /// <param name="rootDirectoryPath">The application root directory used by configuration and file mapping.</param>
+        /// <param name="databaseName">The logical database name used by NCF settings.</param>
+        /// <param name="note">An optional version note.</param>
         public SenparcDesignTimeDbContextFactoryBase(string ncfVersion, string rootDirectoryPath, /*XncfDatabaseData xncfDatabaseData = null,*/
             string databaseName = "Local", string note = null)
         {
@@ -184,9 +187,17 @@ namespace Senparc.Ncf.XncfBase.Database
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Writes design-time database diagnostics and XNCF registration information to the console.
         /// </summary>
         public abstract void CreateDbContextAction();
+
+        /// <summary>
+        /// Builds NCF services, starts the XNCF engine, configures the current database provider,
+        /// and creates the design-time DbContext.
+        /// </summary>
+        /// <param name="args">Design-time command-line arguments retained for factory compatibility.</param>
+        /// <returns>The created design-time DbContext.</returns>
+        /// <exception cref="NcfDatabaseException">Thrown when no connection string is available.</exception>
         public virtual TDbContext CreateDbContext(string[] args)
         {
             //getdatabaseconfiguration

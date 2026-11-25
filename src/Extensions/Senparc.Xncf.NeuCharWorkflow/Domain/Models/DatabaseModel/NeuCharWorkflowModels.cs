@@ -49,14 +49,33 @@ public class NeuCharWorkflow : EntityBase<int>
     public int AutoSaveMinutes { get; private set; } = 3;
     [MaxLength(100)] public string? LegacySourceKey { get; private set; }
 
+    /// <summary>
+    /// Initializes an empty workflow for ORM materialization.
+    /// </summary>
     private NeuCharWorkflow() { }
 
+    /// <summary>
+    /// Creates a workflow owned by an administrator with default runtime settings.
+    /// </summary>
+    /// <param name="name">The display name of the workflow.</param>
+    /// <param name="adminUserId">The administrator identifier that owns the workflow.</param>
     public NeuCharWorkflow(string name, int adminUserId)
     {
         Name = name.Trim();
         AdminUserId = adminUserId;
     }
 
+    /// <summary>
+    /// Updates editable workflow definition and scheduling settings, then advances the revision.
+    /// </summary>
+    /// <param name="name">The new workflow display name.</param>
+    /// <param name="description">The optional workflow description.</param>
+    /// <param name="graphJson">The serialized workflow graph.</param>
+    /// <param name="enabled">Whether the workflow is enabled for triggers.</param>
+    /// <param name="triggerType">The trigger type; blank values become <c>manual</c>.</param>
+    /// <param name="triggerConfigJson">The serialized trigger configuration.</param>
+    /// <param name="nextRunAt">The next scheduled time when enabled.</param>
+    /// <param name="autoSaveMinutes">The requested autosave interval, clamped to the supported range.</param>
     public void Update(string name, string? description, string graphJson, bool enabled,
         string? triggerType, string? triggerConfigJson, DateTime? nextRunAt, int autoSaveMinutes)
     {
@@ -72,6 +91,10 @@ public class NeuCharWorkflow : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Records that runtime execution has started and updates the next scheduled time.
+    /// </summary>
+    /// <param name="nextRunAt">The next scheduled execution time, if any.</param>
     public void MarkStarted(DateTime? nextRunAt)
     {
         LastRunAt = DateTime.UtcNow;
@@ -79,6 +102,11 @@ public class NeuCharWorkflow : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Records the completion status and retains a bounded failure message on failure.
+    /// </summary>
+    /// <param name="succeeded">Whether execution completed successfully.</param>
+    /// <param name="error">The failure message when execution did not succeed.</param>
     public void MarkCompleted(bool succeeded, string? error)
     {
         LastSucceeded = succeeded;
@@ -87,6 +115,17 @@ public class NeuCharWorkflow : EntityBase<int>
     }
 
     /// <summary>Used only when switching from the legacy Admin table; preserves audit timestamps and the idempotent source key.</summary>
+    /// <param name="legacySourceKey">The legacy source key used for idempotent migration.</param>
+    /// <param name="lastRunAt">The historical last-run timestamp.</param>
+    /// <param name="lastSucceeded">The historical completion status.</param>
+    /// <param name="lastError">The historical failure message.</param>
+    /// <param name="revision">The historical workflow revision.</param>
+    /// <param name="flag">The historical base-entity flag.</param>
+    /// <param name="addTime">The historical creation timestamp.</param>
+    /// <param name="lastUpdateTime">The historical update timestamp.</param>
+    /// <param name="tenantId">The historical tenant identifier.</param>
+    /// <param name="adminRemark">The historical administrator remark.</param>
+    /// <param name="remark">The historical general remark.</param>
     public void RestoreFromLegacy(
         string legacySourceKey,
         DateTime? lastRunAt,
@@ -113,6 +152,12 @@ public class NeuCharWorkflow : EntityBase<int>
         Remark = remark;
     }
 
+    /// <summary>
+    /// Truncates persisted text to the specified maximum length.
+    /// </summary>
+    /// <param name="value">The text to bound.</param>
+    /// <param name="length">The maximum character count.</param>
+    /// <returns>The original or truncated text.</returns>
     private static string? Truncate(string? value, int length) =>
         string.IsNullOrEmpty(value) || value.Length <= length ? value : value[..length];
 }
@@ -134,8 +179,18 @@ public class NeuCharWorkflowVersion : EntityBase<int>
     [Required, MaxLength(20)] public string SaveSource { get; private set; } = "manual";
     [MaxLength(100)] public string? LegacySourceKey { get; private set; }
 
+    /// <summary>
+    /// Initializes an empty version for ORM materialization.
+    /// </summary>
     private NeuCharWorkflowVersion() { }
 
+    /// <summary>
+    /// Captures the current workflow definition as a version snapshot.
+    /// </summary>
+    /// <param name="workflow">The live workflow to snapshot.</param>
+    /// <param name="adminUserId">The administrator creating the snapshot.</param>
+    /// <param name="saveSource">The save origin, normalized to a supported value.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="workflow"/> is null.</exception>
     public NeuCharWorkflowVersion(NeuCharWorkflow workflow, int adminUserId, string? saveSource)
     {
         ArgumentNullException.ThrowIfNull(workflow);
@@ -158,6 +213,21 @@ public class NeuCharWorkflowVersion : EntityBase<int>
     }
 
     /// <summary>Used only for idempotent migration from historical Admin versions.</summary>
+    /// <param name="legacySourceKey">The legacy source key used for idempotent migration.</param>
+    /// <param name="name">The historical workflow name.</param>
+    /// <param name="description">The historical workflow description.</param>
+    /// <param name="graphJson">The historical serialized graph.</param>
+    /// <param name="enabled">The historical enabled flag.</param>
+    /// <param name="triggerType">The historical trigger type.</param>
+    /// <param name="triggerConfigJson">The historical trigger configuration.</param>
+    /// <param name="autoSaveMinutes">The historical autosave interval.</param>
+    /// <param name="revision">The historical revision.</param>
+    /// <param name="flag">The historical base-entity flag.</param>
+    /// <param name="addTime">The historical creation timestamp.</param>
+    /// <param name="lastUpdateTime">The historical update timestamp.</param>
+    /// <param name="tenantId">The historical tenant identifier.</param>
+    /// <param name="adminRemark">The historical administrator remark.</param>
+    /// <param name="remark">The historical general remark.</param>
     public void RestoreFromLegacy(
         string legacySourceKey,
         string name,
@@ -212,8 +282,17 @@ public class NeuCharWorkflowExecutionLog : EntityBase<int>
     /// <summary>Node events stored in execution order for read-only replay after completion.</summary>
     public string? ReplayEventsJson { get; private set; }
 
+    /// <summary>
+    /// Initializes an empty execution log for ORM materialization.
+    /// </summary>
     private NeuCharWorkflowExecutionLog() { }
 
+    /// <summary>
+    /// Starts an execution log for a workflow correlation.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="workflowName">The workflow display name at execution start.</param>
+    /// <param name="correlationId">The identifier used to correlate runtime events.</param>
     public NeuCharWorkflowExecutionLog(int workflowId, string workflowName, string correlationId)
     {
         WorkflowId = workflowId;
@@ -222,12 +301,24 @@ public class NeuCharWorkflowExecutionLog : EntityBase<int>
         StartedAt = DateTime.UtcNow;
     }
 
+    /// <summary>
+    /// Stores the bounded hash and optional serialized workflow definition used for replay.
+    /// </summary>
+    /// <param name="snapshotHash">The content hash of the runtime definition.</param>
+    /// <param name="snapshotJson">The definition JSON when a new snapshot must be retained.</param>
     public void SetReplaySnapshot(string snapshotHash, string? snapshotJson)
     {
         ReplaySnapshotHash = Truncate(snapshotHash, 64);
         ReplaySnapshotJson = snapshotJson;
     }
 
+    /// <summary>
+    /// Completes the log and stores bounded result, error, and replay-event data.
+    /// </summary>
+    /// <param name="succeeded">Whether the execution succeeded.</param>
+    /// <param name="resultSummary">The result summary to persist.</param>
+    /// <param name="error">The failure message to persist.</param>
+    /// <param name="replayEventsJson">Optional serialized node events.</param>
     public void Complete(bool succeeded, string? resultSummary, string? error, string? replayEventsJson = null)
     {
         FinishedAt = DateTime.UtcNow;
@@ -238,6 +329,12 @@ public class NeuCharWorkflowExecutionLog : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Truncates execution-log text to the specified maximum length.
+    /// </summary>
+    /// <param name="value">The text to bound.</param>
+    /// <param name="length">The maximum character count.</param>
+    /// <returns>The original or truncated text.</returns>
     private static string? Truncate(string? value, int length) =>
         string.IsNullOrEmpty(value) || value.Length <= length ? value : value[..length];
 }
@@ -256,8 +353,19 @@ public class NeuCharWorkflowChatMessage : EntityBase<int>
     /// <summary>Workflow run associated with this message; empty when no run was started.</summary>
     public Guid? RunId { get; private set; }
 
+    /// <summary>
+    /// Initializes an empty chat message for ORM materialization.
+    /// </summary>
     private NeuCharWorkflowChatMessage() { }
 
+    /// <summary>
+    /// Creates a persisted workflow chat message with bounded participant, role, and content fields.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKeyHash">The hashed participant key.</param>
+    /// <param name="role">The message role.</param>
+    /// <param name="content">The message content.</param>
+    /// <param name="runId">The optional associated runtime run identifier.</param>
     public NeuCharWorkflowChatMessage(int workflowId, string participantKeyHash, string role, string content, Guid? runId)
     {
         WorkflowId = workflowId;
@@ -267,6 +375,12 @@ public class NeuCharWorkflowChatMessage : EntityBase<int>
         RunId = runId;
     }
 
+    /// <summary>
+    /// Truncates chat text to the specified maximum length.
+    /// </summary>
+    /// <param name="value">The text to bound.</param>
+    /// <param name="length">The maximum character count.</param>
+    /// <returns>The original or truncated text.</returns>
     private static string? Truncate(string? value, int length) =>
         string.IsNullOrEmpty(value) || value.Length <= length ? value : value[..length];
 }

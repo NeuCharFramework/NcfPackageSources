@@ -22,17 +22,17 @@ using System.Text;
 namespace Senparc.Ncf.Core.Utility
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides MD5 hashing helpers used for cache keys and legacy identifiers.
     /// </summary>
     public static class MD5
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Computes the MD5 digest of the concatenation of <paramref name="str"/> and <paramref name="salt"/>.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <param name="encoding">defaultfor UTF8</param>
-        /// <returns></returns>
+        /// <param name="str">The input text.</param>
+        /// <param name="salt">The suffix appended before hashing.</param>
+        /// <param name="encoding">The text encoding; UTF-8 is used when omitted.</param>
+        /// <returns>The hexadecimal MD5 representation returned by the shared encryption helper.</returns>
         public static string GetMD5Code(string str, string salt, Encoding encoding = null)
         {
             return Senparc.CO2NET.Helpers.EncryptHelper.GetMD5(str + salt, encoding ?? Encoding.UTF8);

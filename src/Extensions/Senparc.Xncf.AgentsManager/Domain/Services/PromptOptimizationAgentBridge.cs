@@ -23,12 +23,16 @@ using Senparc.Xncf.PromptRange.Abstractions.Events;
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Maintains async-local and fallback correlation state between Agent optimization
+    /// requests and PromptRange optimization results.
     /// </summary>
     public class PromptOptimizationAgentBridge
     {
         private static readonly AsyncLocal<string> ActiveOptimizationRequestId = new();
 
+        /// <summary>Begins an async-local optimization request scope.</summary>
+        /// <param name="requestId">The correlation identifier.</param>
+        /// <returns>A disposable scope restoring the previous request ID.</returns>
         public static IDisposable BeginActiveRequestScope(string requestId)
         {
             if (string.IsNullOrWhiteSpace(requestId))
@@ -41,6 +45,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             return new ActiveRequestScope(previous);
         }
 
+        /// <summary>Gets the current async-local or fallback correlation ID.</summary>
+        /// <returns>The normalized request ID, or <see langword="null"/> when none exists.</returns>
         public static string TryGetActiveRequestId()
         {
             var local = ActiveOptimizationRequestId.Value;
@@ -58,6 +64,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         private static readonly object FallbackCorrelationLock = new object();
         private static string _fallbackCorrelationId;
 
+        /// <summary>Sets the process fallback correlation ID.</summary>
+        /// <param name="requestId">The correlation identifier.</param>
         public static void SetFallbackCorrelationId(string requestId)
         {
             if (string.IsNullOrWhiteSpace(requestId))
@@ -71,6 +79,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
         }
 
+        /// <summary>Clears the process fallback correlation ID.</summary>
         public static void ClearFallbackCorrelationId()
         {
             lock (FallbackCorrelationLock)
@@ -84,8 +93,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             private readonly string _previous;
             private bool _disposed;
 
+            /// <summary>Creates a restoration scope for the previous request ID.</summary>
+            /// <param name="previous">The previous request ID.</param>
             public ActiveRequestScope(string previous) => _previous = previous;
 
+            /// <summary>Restores the previous request ID once.</summary>
             public void Dispose()
             {
                 if (_disposed) return;
@@ -97,6 +109,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         private sealed class NullScope : IDisposable
         {
             public static readonly NullScope Instance = new NullScope();
+            /// <summary>Completes a no-op scope.</summary>
             public void Dispose() { }
         }
 
@@ -130,6 +143,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             string.IsNullOrWhiteSpace(requestId) ? null : requestId.Trim().ToLowerInvariant();
 
         ///Legacy comment translated to English.
+        /// <summary>
+        /// Claims the one-time version-insert slot for a request.
+        /// </summary>
+        /// <param name="requestId">The request correlation ID.</param>
+        /// <returns><see langword="true"/> when the claim was obtained.</returns>
         public bool TryClaimVersionInsert(string requestId)
         {
             var key = NormalizeRequestKey(requestId);
@@ -137,6 +155,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         ///Legacy comment translated to English.
+        /// <summary>Releases a previously claimed version-insert slot.</summary>
+        /// <param name="requestId">The request correlation ID.</param>
         public void ReleaseVersionInsertClaim(string requestId)
         {
             var key = NormalizeRequestKey(requestId);
@@ -146,6 +166,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
         }
 
+        /// <summary>Initializes request state and clears a stale version claim.</summary>
+        /// <param name="requestId">The request correlation ID.</param>
         public void BeginRequest(string requestId)
         {
             var key = NormalizeRequestKey(requestId);
@@ -207,6 +229,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             return false;
         }
 
+        /// <summary>
+        /// Retrieves the PromptRange version recorded for a request.
+        /// </summary>
+        /// <param name="requestId">The request correlation ID.</param>
+        /// <param name="fullVersion">Receives the recorded version.</param>
+        /// <returns><see langword="true"/> when a version was recorded.</returns>
         public bool TryGetRecordedPromptCode(string requestId, out string fullVersion)
         {
             fullVersion = null;
@@ -225,6 +253,18 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             return true;
         }
 
+        /// <summary>
+        /// Records an optimization-created PromptRange version and generation parameters.
+        /// </summary>
+        /// <param name="requestId">The request correlation ID.</param>
+        /// <param name="newPromptCode">The created PromptRange version.</param>
+        /// <param name="newPromptContent">The generated prompt content.</param>
+        /// <param name="temperature">The generation temperature.</param>
+        /// <param name="topP">The generation top-p value.</param>
+        /// <param name="maxTokens">The generation token limit.</param>
+        /// <param name="frequencyPenalty">The frequency penalty.</param>
+        /// <param name="presencePenalty">The presence penalty.</param>
+        /// <param name="evaluationReason">Optional evaluation explanation.</param>
         public void RecordCreatedPrompt(
             string requestId,
             string newPromptCode,
@@ -257,6 +297,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             state.EvaluationReason = evaluationReason ?? "Agent 已通过工具创建优化版本";
         }
 
+        /// <summary>
+        /// Atomically consumes the recorded optimization result for a request.
+        /// </summary>
+        /// <param name="requestId">The request correlation ID.</param>
+        /// <param name="response">Receives the optimization response event.</param>
+        /// <returns><see langword="true"/> when a result was available and consumed.</returns>
         public bool TryTakeResult(string requestId, out PromptOptimizationResponseEvent response)
         {
             response = null;
@@ -296,6 +342,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             return true;
         }
 
+        /// <summary>Removes recorded optimization state without producing a response.</summary>
+        /// <param name="requestId">The request correlation ID.</param>
         public void Remove(string requestId)
         {
             var key = NormalizeRequestKey(requestId);

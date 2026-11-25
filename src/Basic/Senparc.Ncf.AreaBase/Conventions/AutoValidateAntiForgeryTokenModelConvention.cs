@@ -24,8 +24,15 @@ using System.Text;
 
 namespace Senparc.Ncf.AreaBase.Conventions
 {
+    /// <summary>
+    /// Adds antiforgery validation to page handlers that expose POST actions without an explicit validator.
+    /// </summary>
     public class AutoValidateAntiForgeryTokenModelConvention : IPageConvention// IActionModelConvention
     {
+        /// <summary>
+        /// Applies <see cref="ValidateAntiForgeryTokenAttribute"/> when the action is eligible.
+        /// </summary>
+        /// <param name="action">The action model being conventionally configured.</param>
         public void Apply(ActionModel action)
         {
             if (IsConventionApplicable(action))
@@ -34,6 +41,11 @@ namespace Senparc.Ncf.AreaBase.Conventions
             }
         }
 
+        /// <summary>
+        /// Determines whether an action has a POST attribute but no antiforgery validation attribute.
+        /// </summary>
+        /// <param name="action">The action model to inspect.</param>
+        /// <returns><see langword="true"/> when the convention should add validation.</returns>
         public bool IsConventionApplicable(ActionModel action)
         {
             if (action.Attributes.Any(f => f.GetType() == typeof(HttpPostAttribute)) &&

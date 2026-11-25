@@ -39,6 +39,12 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
         private readonly XncfModuleServiceExtension _xncfModuleServiceExtension;
         private readonly Senparc.Ncf.Service.XncfModuleService _xncfModuleService;
 
+        /// <summary>
+        /// Initializes the XNCF module-state function service.
+        /// </summary>
+        /// <param name="serviceProvider">Dependency-injection provider.</param>
+        /// <param name="xncfModuleServiceExtension">Module installation/state extension.</param>
+        /// <param name="xncfModuleService">Module metadata persistence service.</param>
         public XncfStateAppService(
             IServiceProvider serviceProvider,
             XncfModuleServiceExtension xncfModuleServiceExtension,
@@ -50,6 +56,10 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
 
         //[ApiBind]
         [FunctionRender(typeof(XncfModuleManagerResource), "Function.XncfManager.ViewFunctionStatus.Name", "Function.XncfManager.ViewFunctionStatus.Description", typeof(Register))]
+        /// <summary>
+        /// Lists registered function metadata and parameter descriptions for one XNCF module.
+        /// </summary>
+        /// <param name="request">The module UID selection request.</param>
         public async Task<StringAppResponse> ShowFunctions(XncfState_ShowFunctionsRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -105,6 +115,10 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
         }
 
         [FunctionRender(typeof(XncfModuleManagerResource), "Function.XncfManager.InstallAndEnable.Name", "Function.XncfManager.InstallAndEnable.Description", typeof(Register))]
+        /// <summary>
+        /// Installs and opens the selected XNCF module by exact UID.
+        /// </summary>
+        /// <param name="request">The module selection request.</param>
         public async Task<StringAppResponse> InstallAndOpenModule(XncfState_InstallAndOpenModuleRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -129,6 +143,11 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
         }
 
         [FunctionRender(typeof(XncfModuleManagerResource), "Function.XncfManager.InstallAndEnableAi.Name", "Function.XncfManager.InstallAndEnableAi.Description", typeof(Register))]
+        /// <summary>
+        /// Resolves an XNCF module by UID/name and installs/opens it for function callers.
+        /// Ambiguous fuzzy matches are returned for explicit disambiguation.
+        /// </summary>
+        /// <param name="moduleUidOrName">The module UID, name, or menu-name fragment.</param>
         public async Task<StringAppResponse> InstallAndOpenModuleForAi(string moduleUidOrName)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -217,6 +236,9 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
         }
 
         [FunctionRender(typeof(XncfModuleManagerResource), "Function.XncfManager.GetAllModules.Name", "Function.XncfManager.GetAllModules.Description", typeof(Register))]
+        /// <summary>
+        /// Lists all discoverable installable XNCF modules and their installed state.
+        /// </summary>
         public async Task<StringAppResponse> GetAllXncfModules()
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

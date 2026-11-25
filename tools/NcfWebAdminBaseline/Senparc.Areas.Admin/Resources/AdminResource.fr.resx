@@ -967,6 +967,8 @@
   <data name="AdminChat.Command.MaxToken" xml:space="preserve"><value>Set output limit</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="AdminChat.Command.MaxIterations" xml:space="preserve"><value>Set Harness max iterations</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="AdminChat.Command.Harness" xml:space="preserve"><value>Set Harness capabilities</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.Loading" xml:space="preserve"><value>Chargement des commandes…</value></data>
+  <data name="AdminChat.Command.LoadFailed" xml:space="preserve"><value>Impossible de charger les commandes. Veuillez réessayer.</value></data>
   <data name="AdminChat.UserStats" xml:space="preserve"><value>Usage Stats</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="AdminChat.UserStatsTitle" xml:space="preserve"><value>User Usage Statistics (AdminChat)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="AdminChat.UserStatsTip" xml:space="preserve"><value>Only the per-account session/message counts are shown. No session or message content is exposed.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
@@ -1622,4 +1624,20 @@
   <data name="AdminChat.WorkspaceArtifact.Download" xml:space="preserve"><value>Télécharger le fichier original : {0}</value></data>
   <data name="AdminChat.Workspace3D.Loading" xml:space="preserve"><value>Chargement de l'aperçu 3D sécurisé…</value></data>
   <data name="AdminChat.Workspace3D.LoadError" xml:space="preserve"><value>Échec du chargement de l'aperçu 3D</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.Date" xml:space="preserve"><value>Date du journal</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.DateHint" xml:space="preserve"><value>Facultatif, au format yyyyMMdd ; aujourd’hui si omis</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.Question" xml:space="preserve"><value>Question d’analyse</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.QuestionHint" xml:space="preserve"><value>Décrivez le symptôme ou la preuve à examiner</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.QuestionPlaceholder" xml:space="preserve"><value>Saisissez une question d’analyse</value></data>
+  <data name="AdminChat.Command.HelpHint" xml:space="preserve"><value>Afficher les commandes disponibles</value></data>
+  <data name="AdminChat.Command.MaxTokenHint" xml:space="preserve"><value>Plage recommandée 256–8000</value></data>
+  <data name="AdminChat.Command.Shortcuts" xml:space="preserve"><value>↑↓ parcourir · Tab/Entrée sélectionner · 1–9 sélection rapide</value></data>
+  <data name="AdminChat.WorkspaceArtifact.FileChanges" xml:space="preserve"><value>{0} fichiers modifiés pendant ce tour</value></data>
+  <data name="AdminChat.WorkspaceArtifact.Created" xml:space="preserve"><value>Ajouté</value></data>
+  <data name="AdminChat.WorkspaceArtifact.Changed" xml:space="preserve"><value>Modifié</value></data>
+  <data name="AdminChat.WorkspaceArtifact.Deleted" xml:space="preserve"><value>Supprimé</value></data>
+  <data name="AdminChat.Action.OpenAgentTask" xml:space="preserve"><value>Ouvrir la tâche Agent : {0} #{1}</value></data>
+  <data name="AdminChat.Action.PreviewAgentTask" xml:space="preserve"><value>Aperçu en direct : {0} #{1}</value></data>
+  <data name="AdminChat.Action.AgentTaskPreviewTitle" xml:space="preserve"><value>Aperçu de la tâche Agent : {0} #{1}</value></data>
+  <data name="AdminChat.Action.OpenInTab" xml:space="preserve"><value>Ouvrir séparément</value></data>
 </root>

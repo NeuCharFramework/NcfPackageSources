@@ -29,6 +29,12 @@ namespace Senparc.Ncf.Mvc.UI
         private readonly TextWriter _writer;
         private bool _showDefaultTabContainer;
 
+        /// <summary>
+        /// Starts writing a backend content-box wrapper to the supplied view.
+        /// </summary>
+        /// <param name="viewContext">The view context whose writer receives the closing markup.</param>
+        /// <param name="showDefaultTabContainer">Whether the default tab container should be closed.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="viewContext"/> is null.</exception>
         public ContentBox(ViewContext viewContext, bool showDefaultTabContainer)
         {
             if (viewContext == null)
@@ -40,17 +46,27 @@ namespace Senparc.Ncf.Mvc.UI
             this._showDefaultTabContainer = showDefaultTabContainer;
         }
 
+        /// <summary>
+        /// Closes the content-box markup and releases the writer-related state.
+        /// </summary>
         public void EndCotnentBox()
         {
             this.Dispose(true);
         }
 
+        /// <summary>
+        /// Closes the content-box markup and suppresses finalization.
+        /// </summary>
         public void Dispose()
         {
             this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Writes closing markup once for the content box.
+        /// </summary>
+        /// <param name="disposing">Whether managed resources are being released.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!this._disposed)

@@ -9,7 +9,7 @@
 }
 
 @section Style{
-    <link href="~/css/Sandbox/index.css?v=20261124-5" rel="stylesheet" />
+    <link href="~/css/Sandbox/index.css?v=20261125-1" rel="stylesheet" />
 }
 
 @section breadcrumbs{
@@ -65,13 +65,62 @@
                     <h2 id="sandbox-sessions-title">{{ ncfST('Frontend.Sandbox.SandboxSessions') }}</h2>
                     <p>{{ ncfST('Frontend.Sandbox.AccessInteractiveSessionsThroughTheSiteReverseProxyLinksDoNotExpose') }}</p>
                 </div>
-                <el-tag size="mini" type="info">{{ ncfST('Frontend.Sandbox.ValueSessions', sessionStats.total) }}</el-tag>
+                <div class="sandboxSessionHeaderTools">
+                    <el-input
+                        v-model.trim="filters.query"
+                        class="sandboxSessionSearch"
+                        size="mini"
+                        clearable
+                        prefix-icon="el-icon-search"
+                        :placeholder="ncfST('Frontend.Sandbox.SearchSessions')">
+                    </el-input>
+                    <el-select v-model="filters.status" class="sandboxSessionFilter" size="mini">
+                        <el-option :label="ncfST('Frontend.Sandbox.AllStatuses')" value="all"></el-option>
+                        <el-option :label="ncfST('Frontend.Sandbox.Running')" value="running"></el-option>
+                        <el-option :label="ncfST('Frontend.Sandbox.Creating')" value="creating"></el-option>
+                        <el-option :label="ncfST('Frontend.Sandbox.Stopping')" value="stopping"></el-option>
+                        <el-option :label="ncfST('Frontend.Sandbox.Stopped')" value="stopped"></el-option>
+                        <el-option :label="ncfST('Frontend.Sandbox.Failed')" value="failed"></el-option>
+                        <el-option :label="ncfST('Frontend.Sandbox.Expired')" value="expired"></el-option>
+                    </el-select>
+                    <el-select v-model="filters.template" class="sandboxSessionFilter" size="mini">
+                        <el-option :label="ncfST('Frontend.Sandbox.AllTemplates')" value="all"></el-option>
+                        <el-option v-for="template in templateFilters" :key="template.key" :label="template.label" :value="template.key"></el-option>
+                    </el-select>
+                    <el-button
+                        type="danger"
+                        plain
+                        size="mini"
+                        icon="el-icon-delete"
+                        :disabled="!selectedDeletableIds.length || loading"
+                        @@click="bulkDeleteRecords">
+                        {{ ncfST('Frontend.Sandbox.BulkDelete') }}<span v-if="selectedDeletableIds.length"> ({{ selectedDeletableIds.length }})</span>
+                    </el-button>
+                    <el-button size="mini" plain :disabled="!filteredSessions.length" @@click="selectVisibleDeletable">
+                        {{ ncfST('Frontend.Sandbox.SelectDeletable') }}
+                    </el-button>
+                    <el-tag size="mini" type="info">{{ ncfST('Frontend.Sandbox.ValueSessions', filteredSessions.length) }}</el-tag>
+                </div>
             </div>
-            <el-table :data="sessions" height="100%" class="sandboxSessionTable" :empty-text="ncfST('Frontend.Sandbox.NoSandboxSessions')">
+            <el-table
+                ref="sessionTable"
+                :data="filteredSessions"
+                height="100%"
+                row-key="sessionId"
+                class="sandboxSessionTable"
+                :empty-text="ncfST('Frontend.Sandbox.NoSandboxSessions')"
+                @@selection-change="handleTableSelectionChange">
+                <el-table-column type="selection" width="46"></el-table-column>
                 <el-table-column prop="sessionId" :label="ncfST('Frontend.Sandbox.SessionId')" min-width="220" show-overflow-tooltip>
                     <template slot-scope="scope">
                         <div class="sessionPrimary">
-                            <span class="sessionIdText">{{ scope.row.sessionId }}</span>
+                            <div class="sessionIdRow">
+                                <span class="sessionIdText" :title="scope.row.sessionId">{{ scope.row.sessionId }}</span>
+                                <el-tooltip :content="ncfST('Frontend.Sandbox.CopySessionId')" placement="top">
+                                    <el-button type="text" class="sessionIdCopyBtn" size="mini" icon="el-icon-document-copy"
+                                               @@click.stop="copySessionId(scope.row.sessionId)"></el-button>
+                                </el-tooltip>
+                            </div>
                             <span class="sessionAliasText" v-if="scope.row.alias">{{ scope.row.alias }}</span>
                         </div>
                     </template>
@@ -120,11 +169,17 @@
                 </el-table-column>
             </el-table>
             <div class="sandboxSessionCards">
-                <article v-for="row in sessions" :key="row.sessionId" class="sandboxSessionCard">
+                <article v-for="row in filteredSessions" :key="row.sessionId" class="sandboxSessionCard">
                     <div class="sessionCardHeader">
                         <div class="sessionCardIdentity">
+                            <el-checkbox v-model="selectedSessionIds" :label="row.sessionId" class="sessionCardSelector">{{ '' }}</el-checkbox>
                             <strong>{{ row.alias || templateName(row.templateKey) }}</strong>
-                            <span class="sessionIdText">{{ row.sessionId }}</span>
+                            <div class="sessionIdRow">
+                                <span class="sessionIdText" :title="row.sessionId">{{ row.sessionId }}</span>
+                                <el-button type="text" class="sessionIdCopyBtn" size="mini" icon="el-icon-document-copy"
+                                           :aria-label="ncfST('Frontend.Sandbox.CopySessionId')"
+                                           @@click.stop="copySessionId(row.sessionId)"></el-button>
+                            </div>
                         </div>
                         <el-tag :type="statusTagType(row.status)" size="mini">{{ statusText(row.status) }}</el-tag>
                     </div>
@@ -146,13 +201,17 @@
                         </div>
                     </div>
                 </article>
-                <el-empty v-if="!sessions.length" :description="ncfST('Frontend.Sandbox.NoSandboxSessions')"></el-empty>
+                <el-empty v-if="!filteredSessions.length" :description="ncfST('Frontend.Sandbox.NoSandboxSessions')"></el-empty>
             </div>
     </section>
 
     <el-dialog :title="ncfST('Frontend.Sandbox.SessionAlias')" :visible.sync="aliasDialog.visible" width="440px" :close-on-click-modal="false">
         <div v-if="aliasDialog.session" class="aliasDialog">
-            <div class="aliasSessionId">{{ aliasDialog.session.sessionId }}</div>
+            <div class="sessionIdRow sessionIdRowDialog">
+                <span class="sessionIdFull">{{ aliasDialog.session.sessionId }}</span>
+                <el-button type="text" class="sessionIdCopyBtn" size="mini" icon="el-icon-document-copy"
+                           @@click="copySessionId(aliasDialog.session.sessionId)">{{ ncfST('Frontend.Sandbox.CopySessionId') }}</el-button>
+            </div>
             <el-input
                 v-model="aliasDialog.alias"
                 :placeholder="ncfST('Frontend.Sandbox.LeaveEmptyToClearTheAlias')"
@@ -172,7 +231,11 @@
 
     <el-dialog :title="ncfST('Frontend.Sandbox.EditTTL')" :visible.sync="ttlDialog.visible" width="420px" :close-on-click-modal="false">
         <div v-if="ttlDialog.session" class="ttlDialog">
-            <div class="ttlSessionId">{{ ttlDialog.session.sessionId }}</div>
+            <div class="sessionIdRow sessionIdRowDialog">
+                <span class="sessionIdFull">{{ ttlDialog.session.sessionId }}</span>
+                <el-button type="text" class="sessionIdCopyBtn" size="mini" icon="el-icon-document-copy"
+                           @@click="copySessionId(ttlDialog.session.sessionId)">{{ ncfST('Frontend.Sandbox.CopySessionId') }}</el-button>
+            </div>
             <el-radio-group v-model="ttlDialog.keepAlive">
                 <el-radio :label="false">{{ ncfST('Frontend.Sandbox.ScheduledCleanup') }}</el-radio>
                 <el-radio :label="true">{{ ncfST('Frontend.Sandbox.KeepForever') }}</el-radio>
@@ -218,6 +281,12 @@
                     nowTick: Date.now(),
                     countdownTimer: null,
                     stateRefreshTimer: null,
+                    filters: {
+                        query: '',
+                        status: 'all',
+                        template: 'all'
+                    },
+                    selectedSessionIds: [],
                     ttlDialog: {
                         visible: false,
                         saving: false,
@@ -248,6 +317,34 @@
                 window.clearInterval(this.stateRefreshTimer);
             },
             computed: {
+                filteredSessions() {
+                    const query = (this.filters.query || '').toLowerCase();
+                    return (this.sessions || []).filter(row => {
+                        const status = this.statusKey(row.status);
+                        const template = row.templateKey || '';
+                        const text = [
+                            row.sessionId,
+                            row.alias,
+                            template,
+                            this.templateName(template),
+                            row.runtimeKind,
+                            this.statusText(row.status)
+                        ].filter(Boolean).join(' ').toLowerCase();
+                        return (!query || text.includes(query))
+                            && (this.filters.status === 'all' || status === this.filters.status)
+                            && (this.filters.template === 'all' || template === this.filters.template);
+                    });
+                },
+                templateFilters() {
+                    return [...new Set((this.sessions || []).map(row => row.templateKey).filter(Boolean))]
+                        .map(key => ({ key, label: this.templateName(key) }));
+                },
+                selectedDeletableIds() {
+                    const selected = new Set(this.selectedSessionIds || []);
+                    return (this.sessions || [])
+                        .filter(row => selected.has(row.sessionId) && this.canDeleteRecord(row))
+                        .map(row => row.sessionId);
+                },
                 sessionStats() {
                     const rows = this.sessions || [];
                     return {
@@ -257,6 +354,11 @@
                         attention: rows.filter(row => ['4', '5', 'failed', 'expired'].includes(this.statusKey(row.status))).length
                     };
                 }
+            },
+            watch: {
+                'filters.query': 'clearSelection',
+                'filters.status': 'clearSelection',
+                'filters.template': 'clearSelection'
             },
             methods: {
                 statusKey(status) {
@@ -297,6 +399,27 @@
                         expired: 'warning'
                     };
                     return map[this.statusKey(status)] || 'info';
+                },
+                clearSelection() {
+                    this.selectedSessionIds = [];
+                    if (this.$refs.sessionTable) {
+                        this.$refs.sessionTable.clearSelection();
+                    }
+                },
+                handleTableSelectionChange(rows) {
+                    this.selectedSessionIds = rows.map(row => row.sessionId);
+                },
+                selectVisibleDeletable() {
+                    const ids = this.filteredSessions
+                        .filter(row => this.canDeleteRecord(row))
+                        .map(row => row.sessionId);
+                    this.selectedSessionIds = ids;
+                    if (this.$refs.sessionTable) {
+                        this.$refs.sessionTable.clearSelection();
+                        this.filteredSessions
+                            .filter(row => ids.includes(row.sessionId))
+                            .forEach(row => this.$refs.sessionTable.toggleRowSelection(row, true));
+                    }
                 },
                 canDestroySession(row) {
                     return ['0', '1', '2', '4', 'creating', 'running', 'stopping', 'failed']
@@ -403,6 +526,44 @@
                 },
                 openAccessUrl(accessUrl) {
                     window.open(accessUrl, '_blank', 'noopener');
+                },
+                showCopyMessage(type, message) {
+                    const messageApi = this.$message ||
+                        (window.ELEMENT && window.ELEMENT.Message);
+                    if (typeof messageApi === 'function') {
+                        messageApi({
+                            type: type,
+                            message: message,
+                            duration: 3000,
+                            showClose: true
+                        });
+                    }
+                },
+                async copySessionId(sessionId) {
+                    const value = (sessionId || '').trim();
+                    if (!value) {
+                        return;
+                    }
+
+                    try {
+                        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                            await navigator.clipboard.writeText(value);
+                        } else {
+                            const textarea = document.createElement('textarea');
+                            textarea.value = value;
+                            textarea.setAttribute('readonly', 'readonly');
+                            textarea.style.position = 'fixed';
+                            textarea.style.left = '-9999px';
+                            document.body.appendChild(textarea);
+                            textarea.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(textarea);
+                        }
+                        this.showCopyMessage('success', ncfST('Frontend.Sandbox.SessionIdCopied'));
+                    } catch (error) {
+                        console.debug('[Sandbox] copySessionId failed', error);
+                        this.showCopyMessage('error', ncfST('Frontend.Sandbox.FailedToCopySessionId'));
+                    }
                 },
                 async reload() {
                     this.loading = true;
@@ -548,6 +709,44 @@
                         await this.reload();
                     } catch (error) {
                         this.$message.error(ncfST('Frontend.Sandbox.FailedToDeleteTheSessionRecordDestroyTheRuntimeEnvironmentFirstOr'));
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                async bulkDeleteRecords() {
+                    const ids = this.selectedDeletableIds;
+                    if (!ids.length) {
+                        return;
+                    }
+
+                    try {
+                        await this.$confirm(
+                            ncfST('Frontend.Sandbox.BulkDeleteConfirm', ids.length),
+                            ncfST('Frontend.Sandbox.BulkDelete'),
+                            {
+                                confirmButtonText: ncfST('Frontend.Sandbox.BulkDelete'),
+                                cancelButtonText: ncfST('Frontend.Sandbox.Cancel'),
+                                type: 'warning'
+                            });
+                    } catch {
+                        return;
+                    }
+
+                    const form = new FormData();
+                    ids.forEach(sessionId => form.append('sessionIds', sessionId));
+                    form.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]')?.value || '');
+                    this.loading = true;
+                    try {
+                        const response = await axios.post('?handler=BulkDelete', form);
+                        const deleted = response.data && Number(response.data.deleted || 0);
+                        const skipped = response.data && Array.isArray(response.data.skipped)
+                            ? response.data.skipped.length
+                            : 0;
+                        this.clearSelection();
+                        this.$message.success(ncfST('Frontend.Sandbox.BulkDeleteCompleted', deleted, skipped));
+                        await this.reload();
+                    } catch (error) {
+                        this.$message.error(ncfST('Frontend.Sandbox.FailedToBulkDelete'));
                     } finally {
                         this.loading = false;
                     }

@@ -134,6 +134,9 @@
   <data name="Frontend.Sandbox.SandboxSessions" xml:space="preserve"><value>Sandboxセッション</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Template" xml:space="preserve"><value>テンプレート</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.SessionId" xml:space="preserve"><value>セッション ID</value></data>
+  <data name="Frontend.Sandbox.CopySessionId" xml:space="preserve"><value>セッション ID をコピー</value></data>
+  <data name="Frontend.Sandbox.SessionIdCopied" xml:space="preserve"><value>セッション ID 全体をコピーしました</value></data>
+  <data name="Frontend.Sandbox.FailedToCopySessionId" xml:space="preserve"><value>セッション ID をコピーできませんでした。手動で選択してコピーしてください。</value></data>
   <data name="Frontend.Sandbox.Alias" xml:space="preserve"><value>エイリアス</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Runtime" xml:space="preserve"><value>ランタイム</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Status" xml:space="preserve"><value>状態</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
@@ -189,6 +192,14 @@
   <data name="Frontend.Sandbox.StatusUpdatedValue" xml:space="preserve"><value>状態更新：{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.Sandbox.ValueSessions" xml:space="preserve"><value>{0}セッション</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.Sandbox.NoSandboxSessions" xml:space="preserve"><value>Sandboxセッションはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.SearchSessions" xml:space="preserve"><value>セッション ID、別名、テンプレートを検索</value></data>
+  <data name="Frontend.Sandbox.AllStatuses" xml:space="preserve"><value>すべての状態</value></data>
+  <data name="Frontend.Sandbox.AllTemplates" xml:space="preserve"><value>すべてのテンプレート</value></data>
+  <data name="Frontend.Sandbox.BulkDelete" xml:space="preserve"><value>一括削除</value></data>
+  <data name="Frontend.Sandbox.SelectDeletable" xml:space="preserve"><value>削除可能な項目を選択</value></data>
+  <data name="Frontend.Sandbox.BulkDeleteConfirm" xml:space="preserve"><value>選択した {0} 件のセッション記録を完全に削除しますか？</value></data>
+  <data name="Frontend.Sandbox.BulkDeleteCompleted" xml:space="preserve"><value>一括削除完了：{0} 件削除、{1} 件スキップ。</value></data>
+  <data name="Frontend.Sandbox.FailedToBulkDelete" xml:space="preserve"><value>一括削除に失敗しました。ログを確認してください。</value></data>
   <data name="Frontend.Sandbox.AliasesIdentifySessionsInListsFunctionResultsAndLogsTheyDoNot" xml:space="preserve"><value>エイリアスは一覧、Function結果、ログでセッションを識別するためだけに使用され、実行環境には影響しません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.Sandbox.Creating" xml:space="preserve"><value>作成中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.Sandbox.Stopping" xml:space="preserve"><value>停止中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>

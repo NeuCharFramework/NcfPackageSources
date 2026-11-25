@@ -735,4 +735,15 @@
   <data name="Frontend.KnowledgeBase.SuccessAlternate" xml:space="preserve"><value>Correcto</value></data>
   <data name="Frontend.KnowledgeBase.DeletedSuccessfullyAlternate" xml:space="preserve"><value>Eliminado correctamente</value></data>
   <data name="Frontend.KnowledgeBase.VectorizeKnowledgeBaseValue" xml:space="preserve"><value>¿Vectorizar la base de conocimientos «{0}»?</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase" xml:space="preserve"><value>Buscar en una base de conocimiento</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBaseHint" xml:space="preserve"><value>Selecciona una base e introduce una pregunta</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.Id" xml:space="preserve"><value>Base de conocimiento</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.IdHint" xml:space="preserve"><value>Selecciona una base indexada</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.Question" xml:space="preserve"><value>Pregunta</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.QuestionHint" xml:space="preserve"><value>Recupera y responde desde la base seleccionada</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.QuestionPlaceholder" xml:space="preserve"><value>Introduce una pregunta</value></data>
+  <data name="AdminChat.Function.SearchKnowledgeBases" xml:space="preserve"><value>Buscar bases de conocimiento</value></data>
+  <data name="AdminChat.Function.SearchKnowledgeBasesDescription" xml:space="preserve"><value>Busca bases indexadas por nombre o contenido</value></data>
+  <data name="AdminChat.Function.RecallKnowledgeBase" xml:space="preserve"><value>Recuperar pasajes</value></data>
+  <data name="AdminChat.Function.RecallKnowledgeBaseDescription" xml:space="preserve"><value>Recupera pasajes relevantes de una base</value></data>
 </root>

@@ -27,11 +27,20 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
 {
     public class ColorService : ServiceBase<Color>
     {
+        /// <summary>
+        /// Initializes the color persistence service.
+        /// </summary>
+        /// <param name="repo">Repository for color records.</param>
+        /// <param name="serviceProvider">Dependency-injection provider.</param>
         public ColorService(IRepositoryBase<Color> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {
         }
 
+        /// <summary>
+        /// Creates and persists a new color initialized with neutral channel values.
+        /// </summary>
+        /// <returns>The created color DTO.</returns>
         public async Task<ColorDto> CreateNewColor()
         {
             Color color = new Color(-1, -1, -1);
@@ -40,6 +49,10 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
             return colorDto;
         }
 
+        /// <summary>
+        /// Retrieves the newest color or creates the initial color when none exists.
+        /// </summary>
+        /// <returns>The existing or newly created color DTO.</returns>
         public async Task<ColorDto> GetOrInitColor()
         {
             var color = await base.GetObjectAsync(z => true);
@@ -53,6 +66,10 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
             return base.Mapper.Map<ColorDto>(color);
         }
 
+        /// <summary>
+        /// Brightens the newest stored color and persists the result.
+        /// </summary>
+        /// <returns>The updated color DTO.</returns>
         public async Task<ColorDto> Brighten()
         {
             //TODO: add sorting to the asynchronous method
@@ -62,6 +79,10 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
             return base.Mapper.Map<ColorDto>(obj);
         }
 
+        /// <summary>
+        /// Darkens the newest stored color and persists the result.
+        /// </summary>
+        /// <returns>The updated color DTO.</returns>
         public async Task<ColorDto> Darken()
         {
             //TODO: add sorting to the asynchronous method
@@ -71,6 +92,10 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
             return base.Mapper.Map<ColorDto>(obj);
         }
 
+        /// <summary>
+        /// Replaces the newest stored color with a generated random color.
+        /// </summary>
+        /// <returns>The updated color DTO.</returns>
         public async Task<ColorDto> Random()
         {
             //TODO: add sorting to the asynchronous method

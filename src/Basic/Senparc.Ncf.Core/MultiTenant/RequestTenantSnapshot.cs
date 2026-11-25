@@ -26,13 +26,7 @@ using System;
 namespace Senparc.Ncf.Core.MultiTenant
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    /// <para>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    /// </para>
+    /// Immutable tenant context captured from a request and safe to restore into another scope.
     /// </summary>
     public sealed class RequestTenantSnapshot
     {
@@ -40,7 +34,7 @@ namespace Senparc.Ncf.Core.MultiTenant
         public string Name { get; }
         public string TenantKey { get; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Indicates whether tenant matching succeeded when this snapshot was captured.
         /// </summary>
         public bool MatchSuccess { get; }
 
@@ -53,15 +47,15 @@ namespace Senparc.Ncf.Core.MultiTenant
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets a snapshot that intentionally carries no matched tenant.
         /// </summary>
         public static RequestTenantSnapshot Unmatched { get; } = new(0, null, null, false);
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Captures the matched tenant from a request service provider.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <param name="serviceProvider">The request or scope service provider.</param>
+        /// <returns>A matched snapshot, or <see cref="Unmatched"/> when no valid tenant is available.</returns>
         public static RequestTenantSnapshot Capture(IServiceProvider serviceProvider)
         {
             if (serviceProvider == null)
@@ -92,9 +86,10 @@ namespace Senparc.Ncf.Core.MultiTenant
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a snapshot from tenant information when matching succeeded.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <param name="info">The tenant information to copy.</param>
+        /// <returns>A matched snapshot, or <see cref="Unmatched"/> for invalid information.</returns>
         public static RequestTenantSnapshot From(RequestTenantInfo info)
         {
             if (info == null || !info.MatchSuccess)
@@ -110,13 +105,9 @@ namespace Senparc.Ncf.Core.MultiTenant
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        /// <para>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// </para>
+        /// Restores the matched tenant into a dependency-injection scope when multi-tenancy is enabled.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <param name="scopeServiceProvider">The target scope service provider.</param>
         public void Restore(IServiceProvider scopeServiceProvider)
         {
             if (scopeServiceProvider == null

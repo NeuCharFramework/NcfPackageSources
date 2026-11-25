@@ -1294,6 +1294,12 @@
   <data name="Studio.Loading" xml:space="preserve">
     <value>Загрузка…</value>
   </data>
+  <data name="Studio.LoadingConversation" xml:space="preserve">
+    <value>Загрузка диалога…</value>
+  </data>
+  <data name="Studio.NoConversationRecords" xml:space="preserve">
+    <value>Записей разговора пока нет</value>
+  </data>
   <data name="Studio.Rounds" xml:space="preserve">
     <value>раундов</value>
   </data>
@@ -1777,4 +1783,9 @@
   <data name="Frontend.AgentsManager.FailedToRefreshKnowledgeBaseStatus" xml:space="preserve"><value>Не удалось обновить состояние базы знаний</value></data>
   <data name="AdminChat.Command.RunAgentGroup" xml:space="preserve"><value>Запустить группу агентов</value></data>
   <data name="AdminChat.Command.RunAgentGroupHint" xml:space="preserve"><value>Опишите задачу; система повторно использует подходящую существующую группу</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.Group" xml:space="preserve"><value>Группа агентов</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.GroupHint" xml:space="preserve"><value>Выберите включённую группу агентов</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.Task" xml:space="preserve"><value>Задача</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.TaskHint" xml:space="preserve"><value>Опишите задачу для выполнения</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.TaskPlaceholder" xml:space="preserve"><value>Введите описание задачи</value></data>
 </root>

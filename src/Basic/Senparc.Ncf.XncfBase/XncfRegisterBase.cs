@@ -51,40 +51,33 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Base implementation of the XNCF module registration contract.
+    /// Derived registers provide identity metadata and may override lifecycle,
+    /// database, MVC, AutoMapper, and MCP registration hooks.
     /// </summary>
     public abstract class XncfRegisterBase : IXncfRegister
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Indicates whether the module should be excluded from installation workflows.
         /// </summary>
         public virtual bool IgnoreInstall { get; }
 
+        /// <summary>
+        /// Indicates whether the module exposes an MCP server registration.
+        /// </summary>
         public virtual bool EnableMcpServer => false;
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the module display name.</summary>
         public abstract string Name { get; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the stable module UID.</summary>
         public abstract string Uid { get; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the module version presented to installation and diagnostics.</summary>
         public abstract string Version { get; }
-        /// <summary>
-        /// menu name
-        /// </summary>
+        /// <summary>Gets the administration menu name.</summary>
         public abstract string MenuName { get; }
-        /// <summary>
-        /// Iconicon
-        /// </summary>
+        /// <summary>Gets the administration icon identifier.</summary>
         public abstract string Icon { get; }
-        /// <summary>
-        /// description
-        /// </summary>
+        /// <summary>Gets the module description shown to administrators.</summary>
         public abstract string Description { get; }
         ///// <summary>
         ///Legacy comment translated to English.
@@ -92,11 +85,11 @@ namespace Senparc.Ncf.XncfBase
         ///public abstract IList<Type> Functions { get; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets deferred AutoMapper profile registration actions.
         /// </summary>
         public virtual ConcurrentBag<Action<Profile>> AutoMapMappingConfigs { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets registered background threads whose names begin with this module's UID.
         /// </summary>
         public IEnumerable<KeyValuePair<ThreadInfo, Thread>> RegisteredThreadInfo => Register.ThreadCollection.Where(z => z.Value.Name.StartsWith(Uid));
 
@@ -192,27 +185,34 @@ namespace Senparc.Ncf.XncfBase
         #endregion
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Provides the default no-op installation/update lifecycle hook.
         /// </summary>
+        /// <param name="serviceProvider">The application service provider.</param>
+        /// <param name="installOrUpdate">The requested installation operation.</param>
+        /// <returns>A completed task unless a derived register performs asynchronous work.</returns>
         public virtual Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             return Task.CompletedTask;
         }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Runs an uninstall callback supplied by the module host.
         /// </summary>
+        /// <param name="serviceProvider">The application service provider.</param>
+        /// <param name="unsinstallFunc">The asynchronous uninstall operation.</param>
+        /// <returns>A task that completes after the callback.</returns>
         public virtual async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             await unsinstallFunc().ConfigureAwait(false);
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Drops module entity tables and, for non-system modules, the module migration history table.
+        /// Errors are logged as database exceptions so uninstall processing can continue across entities.
         /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <param name="databaseDbContext"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="serviceProvider">The application service provider.</param>
+        /// <param name="databaseDbContext">The module database context.</param>
+        /// <param name="entityType">The entity types whose tables should be dropped.</param>
+        /// <returns>A task that completes after table-drop attempts finish.</returns>
         protected virtual async Task DropTablesAsync(IServiceProvider serviceProvider, DbContext databaseDbContext, Type[] entityType)
         {
             SenparcTrace.SendCustomLog("开始删除应用表格", MenuName + ", " + Name);
@@ -286,10 +286,9 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Returns the module area's configured home URL with the module UID appended.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The module home URL, or <see langword="null"/> when this register is not an area register.</returns>
         public virtual string GetAreaHomeUrl()
         {
             if (this is IAreaRegister)
@@ -300,11 +299,10 @@ namespace Senparc.Ncf.XncfBase
             return null;
         }
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Appends this module's UID query parameter to an area URL.
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
+        /// <param name="path">The relative or absolute area URL.</param>
+        /// <returns>The URL with the module UID, <c>/</c> for a null area path, or <see langword="null"/> for non-area registers.</returns>
         public virtual string GetAreaUrl(string path)
         {
             if (this is IAreaRegister)
@@ -322,11 +320,13 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Registers module database contexts, database services, and shared XNCF database state.
+        /// Derived modules may extend the returned service collection after this base setup.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
+        /// <param name="services">The dependency-injection service collection.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="env">The host environment.</param>
+        /// <returns>The configured service collection.</returns>
         public virtual IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             if (this is IXncfDatabase databaseRegister)
@@ -406,11 +406,13 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a module database context using aligned generic options for the requested context type.
         /// </summary>
-        /// <remarks>
-        ///Legacy comment translated to English.
-        /// </remarks>
+        /// <param name="serviceProvider">The provider used to construct the context.</param>
+        /// <param name="dbContextType">The concrete database context type.</param>
+        /// <param name="dbContextOptions">The configured database options.</param>
+        /// <returns>The created database context.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the context cannot be created.</exception>
         protected virtual DbContext CreateXncfDbContext(
             IServiceProvider serviceProvider,
             Type dbContextType,
@@ -422,8 +424,11 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Aligns non-generic database options with the options type expected by a context constructor.
         /// </summary>
+        /// <param name="dbContextType">The context type whose constructor should be inspected.</param>
+        /// <param name="dbContextOptions">The source options.</param>
+        /// <returns>The original options when compatible, or converted options when required.</returns>
         private static DbContextOptions AlignContextOptions(Type dbContextType, DbContextOptions dbContextOptions)
         {
             var optionsParameter = dbContextType.GetConstructors()
@@ -451,17 +456,21 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Provides the default no-op module middleware hook.
         /// </summary>
-        /// <param name="app"></param>
-        /// <param name="registerService"></param>
-        /// <returns></returns>
+        /// <param name="app">The application builder.</param>
+        /// <param name="registerService">The NCF registration state.</param>
+        /// <returns>The same application builder.</returns>
         public virtual IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             return app;
         }
 
         public static object AddAutoMapMappingLock = new object();
+        /// <summary>
+        /// Adds an AutoMapper profile configuration action to the module's deferred mapping collection.
+        /// </summary>
+        /// <param name="mapping">The profile configuration action.</param>
         public virtual void AddAutoMapMapping(Action<Profile> mapping)
         {
             if (AutoMapMappingConfigs == null)
@@ -478,8 +487,10 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Provides the module AutoMapper hook. The base implementation performs no additional mapping.
         /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="configuration">The application configuration.</param>
         public virtual void OnAutoMapMapping(IServiceCollection services, IConfiguration configuration)
         {
             //Legacy comment translated to English.
@@ -487,11 +498,21 @@ namespace Senparc.Ncf.XncfBase
 
         #region MCP
 
+        /// <summary>
+        /// Builds the internal MCP server name for this module.
+        /// </summary>
+        /// <returns>A stable server name derived from the module name.</returns>
         protected string GetMcpServerName()
         {
             return $"ncf-mcp-server-{this.Name.Replace(".", "-")}";
         }
 
+        /// <summary>
+        /// Gets loadable types from an assembly while retaining types that succeeded
+        /// when reflection reports partial type-load failures.
+        /// </summary>
+        /// <param name="assembly">The assembly to inspect.</param>
+        /// <returns>The loadable types.</returns>
         private static IEnumerable<Type> GetLoadableTypes(Assembly assembly)
         {
             try
@@ -504,6 +525,11 @@ namespace Senparc.Ncf.XncfBase
             }
         }
 
+        /// <summary>
+        /// Registers an MCP server and discovers MCP tool types from the module assembly.
+        /// </summary>
+        /// <param name="services">The dependency-injection service collection.</param>
+        /// <param name="xncfRegister">The module register whose assembly should be scanned.</param>
         public virtual void AddMcpServer(IServiceCollection services, IXncfRegister xncfRegister)
         {
             var serverName = GetMcpServerName();
@@ -546,6 +572,11 @@ namespace Senparc.Ncf.XncfBase
             }
         }
 
+        /// <summary>
+        /// Maps the registered MCP server to the module-specific endpoint route.
+        /// </summary>
+        /// <param name="app">The application builder and endpoint route builder.</param>
+        /// <param name="registerService">The NCF registration state.</param>
         public virtual void UseMcpServer(IApplicationBuilder app, IRegisterService registerService)
         {
             if (app is IEndpointRouteBuilder endpoints)

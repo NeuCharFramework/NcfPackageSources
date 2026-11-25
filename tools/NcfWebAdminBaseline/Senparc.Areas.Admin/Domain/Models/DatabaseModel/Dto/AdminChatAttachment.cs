@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
 
+    Modified by: Senparc - 20261125
+    Change description: v0.12.29 Improved AdminChat conversation loading and command parameter feedback.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -45,6 +48,9 @@ public sealed class AdminChatAttachment
     public bool UseVision { get; set; }
     public bool CanUseVision => !string.IsNullOrEmpty(VisionETag);
     public bool IsWorkspaceArtifact { get; set; }
+    public string ChangeType { get; set; } = "";
+    public string ActionType { get; set; } = "";
+    public int ActionTargetId { get; set; }
     public string PreviewKind { get; set; } = "";
     public DateTimeOffset CreatedAt { get; set; }
     public string LocalStatus { get; set; } = "";

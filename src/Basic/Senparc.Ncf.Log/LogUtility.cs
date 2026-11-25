@@ -19,8 +19,14 @@ using log4net;
 
 namespace Senparc.Ncf.Log
 {
+    /// <summary>
+    /// Provides the named log4net logger instances used by NCF subsystems.
+    /// </summary>
     public static partial class LogUtility
     {
+        /// <summary>
+        /// Serializes access to logger creation and lookup.
+        /// </summary>
         public static object LogLock = new object();
 
         public static ILog WebLogger => GetLogger("WebLogger");
@@ -38,8 +44,15 @@ namespace Senparc.Ncf.Log
 
 
         public static int Int { get; set; }
-        //Legacy comment translated to English.
-
+        /// <summary>
+        /// Gets the logger registered under <paramref name="name"/> in the NCF log4net repository.
+        /// The lookup is synchronized because the repository is shared by concurrent components.
+        /// </summary>
+        /// <param name="name">The logical logger name used by the calling subsystem.</param>
+        /// <returns>The logger associated with <paramref name="name"/>.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// May be thrown by the underlying logging provider when <paramref name="name"/> is <see langword="null"/>.
+        /// </exception>
         public static ILog GetLogger(string name)
         {
             lock (LogLock)
@@ -47,7 +60,6 @@ namespace Senparc.Ncf.Log
                 //var appenders = LogManager.GetRepository().GetAppenders();
                 //if (appenders.Count() == 0)
                 //{
-                //Legacy comment translated to English.
                 //    return log4net.LogManager.GetLogger(name);
                 //}
 

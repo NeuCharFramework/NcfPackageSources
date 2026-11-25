@@ -266,9 +266,20 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
             }
         }
 
+        /// <summary>Creates a failed optimization response event.</summary>
+        /// <param name="requestId">The request correlation ID.</param>
+        /// <param name="message">The failure message.</param>
+        /// <returns>A failed response event.</returns>
         private static PromptOptimizationResponseEvent Fail(string requestId, string message) =>
             new(requestId, null, null, null, 0, message, false, message);
 
+        /// <summary>
+        /// Selects the model with the highest average PromptRange score for the range,
+        /// falling back to the supplied model ID.
+        /// </summary>
+        /// <param name="rangeName">The PromptRange name.</param>
+        /// <param name="defaultModelId">The fallback model identifier.</param>
+        /// <returns>A task containing the selected model ID.</returns>
         private async Task<int> SelectBestModelIdAsync(string rangeName, int defaultModelId)
         {
             if (string.IsNullOrWhiteSpace(rangeName))
@@ -295,6 +306,9 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
             return best?.ModelId ?? defaultModelId;
         }
 
+        /// <summary>Removes an optional Markdown code fence around model JSON output.</summary>
+        /// <param name="raw">The raw model output.</param>
+        /// <returns>The unwrapped text.</returns>
         private static string StripMarkdownCodeFence(string raw)
         {
             var t = raw.Trim();
@@ -319,6 +333,21 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
             return inner.Trim();
         }
 
+        /// <summary>
+        /// Parses the expected optimization JSON directly, then scans embedded JSON objects
+        /// when the model added surrounding text.
+        /// </summary>
+        /// <param name="raw">The raw model output.</param>
+        /// <param name="optimizedContent">Receives optimized prompt content.</param>
+        /// <param name="modelId">Receives the optional model ID.</param>
+        /// <param name="temperature">Receives temperature.</param>
+        /// <param name="topP">Receives top-p.</param>
+        /// <param name="maxTokens">Receives maximum tokens.</param>
+        /// <param name="frequencyPenalty">Receives frequency penalty.</param>
+        /// <param name="presencePenalty">Receives presence penalty.</param>
+        /// <param name="reason">Receives the explanation.</param>
+        /// <param name="predictedScore">Receives the predicted score.</param>
+        /// <returns><see langword="true"/> when a valid payload is found.</returns>
         private static bool TryParsePayloadWithRecovery(
             string raw,
             out string optimizedContent,
@@ -380,6 +409,14 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
             return false;
         }
 
+        /// <summary>
+        /// Extracts the next balanced JSON object while respecting quoted strings and escapes.
+        /// </summary>
+        /// <param name="text">The text to scan.</param>
+        /// <param name="startIndex">The starting scan index.</param>
+        /// <param name="json">Receives the extracted JSON object.</param>
+        /// <param name="nextStartIndex">Receives the next scan index.</param>
+        /// <returns><see langword="true"/> when a complete object is found.</returns>
         private static bool TryExtractNextJsonObject(string text, int startIndex, out string json, out int nextStartIndex)
         {
             json = null;
@@ -449,6 +486,20 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
             return false;
         }
 
+        /// <summary>
+        /// Parses the expected optimization payload and applies safe default generation parameters.
+        /// </summary>
+        /// <param name="json">The candidate JSON object.</param>
+        /// <param name="optimizedContent">Receives optimized prompt content.</param>
+        /// <param name="modelId">Receives the optional model ID.</param>
+        /// <param name="temperature">Receives temperature.</param>
+        /// <param name="topP">Receives top-p.</param>
+        /// <param name="maxTokens">Receives maximum tokens.</param>
+        /// <param name="frequencyPenalty">Receives frequency penalty.</param>
+        /// <param name="presencePenalty">Receives presence penalty.</param>
+        /// <param name="reason">Receives the explanation.</param>
+        /// <param name="predictedScore">Receives the predicted score.</param>
+        /// <returns><see langword="true"/> when required content is valid JSON.</returns>
         private static bool TryParsePayload(
             string json,
             out string optimizedContent,
@@ -499,6 +550,10 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
             }
         }
 
+        /// <summary>Reads a string-like JSON property using case-insensitive aliases.</summary>
+        /// <param name="root">The JSON object.</param>
+        /// <param name="names">Accepted property names.</param>
+        /// <returns>The property text, or <see langword="null"/>.</returns>
         private static string GetStringInsensitive(JsonElement root, params string[] names)
         {
             foreach (var p in root.EnumerateObject())
@@ -515,6 +570,9 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
             return null;
         }
 
+        /// <summary>Reads an integer JSON property using case-insensitive aliases.</summary>
+        /// <param name="root">The JSON object.</param><param name="names">Accepted property names.</param>
+        /// <returns>The parsed value, or <see langword="null"/>.</returns>
         private static int? GetIntInsensitive(JsonElement root, params string[] names)
         {
             foreach (var p in root.EnumerateObject())
@@ -538,6 +596,9 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
             return null;
         }
 
+        /// <summary>Reads a floating-point JSON property using case-insensitive aliases.</summary>
+        /// <param name="root">The JSON object.</param><param name="names">Accepted property names.</param>
+        /// <returns>The parsed value, or <see langword="null"/>.</returns>
         private static float? GetFloatInsensitive(JsonElement root, params string[] names)
         {
             foreach (var p in root.EnumerateObject())
@@ -561,6 +622,9 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
             return null;
         }
 
+        /// <summary>Reads a double JSON property using case-insensitive aliases.</summary>
+        /// <param name="root">The JSON object.</param><param name="names">Accepted property names.</param>
+        /// <returns>The parsed value, or <see langword="null"/>.</returns>
         private static double? GetDoubleInsensitive(JsonElement root, params string[] names)
         {
             foreach (var p in root.EnumerateObject())
@@ -584,6 +648,9 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
             return null;
         }
 
+        /// <summary>Unescapes common JSON string escape sequences in generated prompt content.</summary>
+        /// <param name="value">The generated content.</param>
+        /// <returns>The unescaped content.</returns>
         private static string UnescapeJsonString(string value)
         {
             if (string.IsNullOrEmpty(value))

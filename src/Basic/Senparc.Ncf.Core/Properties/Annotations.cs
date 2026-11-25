@@ -90,9 +90,10 @@ namespace Senparc.Ncf.Core.Annotations
       AttributeTargets.Property | AttributeTargets.Delegate)]
     public sealed class StringFormatMethodAttribute : Attribute
     {
-        /// <param name="formatParameterName">
-        /// Specifies which parameter of an annotated method should be treated as format-string
-        /// </param>
+        /// <summary>
+        /// Marks which parameter contains the format string for the annotated member.
+        /// </summary>
+        /// <param name="formatParameterName">The format-string parameter name.</param>
         public StringFormatMethodAttribute(string formatParameterName)
         {
             FormatParameterName = formatParameterName;
@@ -108,6 +109,10 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Field)]
     public sealed class ValueProviderAttribute : Attribute
     {
+        /// <summary>
+        /// Associates a parameter or member with the name of its value provider.
+        /// </summary>
+        /// <param name="name">The provider member name.</param>
         public ValueProviderAttribute(string name)
         {
             Name = name;
@@ -170,7 +175,15 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes notification metadata using the default parameter convention.
+        /// </summary>
         public NotifyPropertyChangedInvocatorAttribute() { }
+
+        /// <summary>
+        /// Initializes notification metadata for a named parameter.
+        /// </summary>
+        /// <param name="parameterName">The parameter carrying the changed property name.</param>
         public NotifyPropertyChangedInvocatorAttribute(string parameterName)
         {
             ParameterName = parameterName;
@@ -225,10 +238,19 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public sealed class ContractAnnotationAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes a contract annotation with default state handling.
+        /// </summary>
+        /// <param name="contract">The contract expression understood by the analysis tooling.</param>
         public ContractAnnotationAttribute([NotNull] string contract)
           : this(contract, false)
         { }
 
+        /// <summary>
+        /// Initializes a contract annotation with explicit full-state behavior.
+        /// </summary>
+        /// <param name="contract">The contract expression understood by the analysis tooling.</param>
+        /// <param name="forceFullStates">Whether all states should be considered explicitly.</param>
         public ContractAnnotationAttribute([NotNull] string contract, bool forceFullStates)
         {
             Contract = contract;
@@ -251,7 +273,15 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.All)]
     public sealed class LocalizationRequiredAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes localization metadata with localization required.
+        /// </summary>
         public LocalizationRequiredAttribute() : this(true) { }
+
+        /// <summary>
+        /// Initializes localization metadata with the requested requirement flag.
+        /// </summary>
+        /// <param name="required">Whether localized resources are required.</param>
         public LocalizationRequiredAttribute(bool required)
         {
             Required = required;
@@ -296,6 +326,10 @@ namespace Senparc.Ncf.Core.Annotations
     [BaseTypeRequired(typeof(Attribute))]
     public sealed class BaseTypeRequiredAttribute : Attribute
     {
+        /// <summary>
+        /// Declares the base type required by a target attribute.
+        /// </summary>
+        /// <param name="baseType">The required base type or interface.</param>
         public BaseTypeRequiredAttribute([NotNull] Type baseType)
         {
             BaseType = baseType;
@@ -312,18 +346,34 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.All)]
     public sealed class UsedImplicitlyAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes the default implicit-use behavior.
+        /// </summary>
         public UsedImplicitlyAttribute()
           : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
         { }
 
+        /// <summary>
+        /// Initializes implicit-use metadata for a symbol-kind flag.
+        /// </summary>
+        /// <param name="useKindFlags">The kinds of implicit use represented.</param>
         public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags)
           : this(useKindFlags, ImplicitUseTargetFlags.Default)
         { }
 
+        /// <summary>
+        /// Initializes implicit-use metadata for a target flag.
+        /// </summary>
+        /// <param name="targetFlags">The target members considered implicitly used.</param>
         public UsedImplicitlyAttribute(ImplicitUseTargetFlags targetFlags)
           : this(ImplicitUseKindFlags.Default, targetFlags)
         { }
 
+        /// <summary>
+        /// Initializes complete implicit-use metadata.
+        /// </summary>
+        /// <param name="useKindFlags">The kinds of implicit use represented.</param>
+        /// <param name="targetFlags">The target members considered implicitly used.</param>
         public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
         {
             UseKindFlags = useKindFlags;
@@ -341,18 +391,34 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.GenericParameter)]
     public sealed class MeansImplicitUseAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes the default implicit-use behavior for symbols marked by the target attribute.
+        /// </summary>
         public MeansImplicitUseAttribute()
           : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
         { }
 
+        /// <summary>
+        /// Initializes implicit-use behavior for a symbol-kind flag.
+        /// </summary>
+        /// <param name="useKindFlags">The kinds of implicit use represented.</param>
         public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags)
           : this(useKindFlags, ImplicitUseTargetFlags.Default)
         { }
 
+        /// <summary>
+        /// Initializes implicit-use behavior for a target flag.
+        /// </summary>
+        /// <param name="targetFlags">The target members considered implicitly used.</param>
         public MeansImplicitUseAttribute(ImplicitUseTargetFlags targetFlags)
           : this(ImplicitUseKindFlags.Default, targetFlags)
         { }
 
+        /// <summary>
+        /// Initializes complete implicit-use behavior.
+        /// </summary>
+        /// <param name="useKindFlags">The kinds of implicit use represented.</param>
+        /// <param name="targetFlags">The target members considered implicitly used.</param>
         public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
         {
             UseKindFlags = useKindFlags;
@@ -404,7 +470,15 @@ namespace Senparc.Ncf.Core.Annotations
     [MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
     public sealed class PublicAPIAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes public API metadata without an explanatory comment.
+        /// </summary>
         public PublicAPIAttribute() { }
+
+        /// <summary>
+        /// Initializes public API metadata with an explanatory comment.
+        /// </summary>
+        /// <param name="comment">The API comment consumed by analysis tooling.</param>
         public PublicAPIAttribute([NotNull] string comment)
         {
             Comment = comment;
@@ -442,7 +516,15 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class PathReferenceAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes a path-reference annotation without a base path.
+        /// </summary>
         public PathReferenceAttribute() { }
+
+        /// <summary>
+        /// Initializes a path-reference annotation relative to a base path.
+        /// </summary>
+        /// <param name="basePath">The base path used by path-aware analysis.</param>
         public PathReferenceAttribute([PathReference] string basePath)
         {
             BasePath = basePath;

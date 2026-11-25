@@ -27,6 +27,10 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 
 [Table(Register.DATABASE_PREFIX + nameof(WeixinClawAccount))]
 [Serializable]
+/// <summary>
+/// Persists a connected Weixin Claw account, protected credentials, polling cursor,
+/// conversation context, and runtime status.
+/// </summary>
 public class WeixinClawAccount : EntityBase<int>
 {
     [Required, MaxLength(100)]
@@ -72,6 +76,13 @@ public class WeixinClawAccount : EntityBase<int>
     {
     }
 
+    /// <summary>
+    /// Creates a new enabled account with protected bot token settings.
+    /// </summary>
+    /// <param name="name">The account display name.</param>
+    /// <param name="baseUrl">The normalized iLink base URL.</param>
+    /// <param name="botTokenProtected">The protected bot token.</param>
+    /// <param name="promptRangeCode">Optional PromptRange binding.</param>
     public WeixinClawAccount(string name, string baseUrl, string botTokenProtected, string promptRangeCode)
     {
         Name = name;
@@ -83,6 +94,14 @@ public class WeixinClawAccount : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Updates account connection settings and enablement without replacing an omitted token.
+    /// </summary>
+    /// <param name="name">The account display name.</param>
+    /// <param name="baseUrl">The normalized iLink base URL.</param>
+    /// <param name="botTokenProtected">The optional protected bot token.</param>
+    /// <param name="promptRangeCode">Optional PromptRange binding.</param>
+    /// <param name="enabled">Whether polling is enabled.</param>
     public void UpdateSettings(string name, string baseUrl, string botTokenProtected, string promptRangeCode, bool enabled)
     {
         Name = name;
@@ -100,6 +119,13 @@ public class WeixinClawAccount : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Stores successful QR-login identity and marks the account connected.
+    /// </summary>
+    /// <param name="botTokenProtected">The protected bot token.</param>
+    /// <param name="botId">The iLink bot identifier.</param>
+    /// <param name="userId">The iLink user identifier.</param>
+    /// <param name="baseUrl">The effective API base URL.</param>
     public void SetAuthenticated(string botTokenProtected, string botId, string userId, string baseUrl)
     {
         BotTokenProtected = botTokenProtected;
@@ -113,12 +139,21 @@ public class WeixinClawAccount : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Stores the protocol update cursor for the next long-poll request.
+    /// </summary>
+    /// <param name="getUpdatesBuf">The protocol cursor.</param>
     public void SetCursor(string getUpdatesBuf)
     {
         GetUpdatesBuf = getUpdatesBuf;
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Records the latest inbound conversation identity and marks the account running.
+    /// </summary>
+    /// <param name="fromUserId">The sender user identifier.</param>
+    /// <param name="contextTokenProtected">The protected conversation context token.</param>
     public void MarkMessageReceived(string fromUserId = null, string contextTokenProtected = null)
     {
         LastMessageFromUserId = fromUserId;
@@ -129,6 +164,9 @@ public class WeixinClawAccount : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Marks the account polling loop healthy.
+    /// </summary>
     public void MarkRunning()
     {
         LastError = null;
@@ -136,6 +174,10 @@ public class WeixinClawAccount : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Marks the account in error state with a bounded error message.
+    /// </summary>
+    /// <param name="message">The error message.</param>
     public void MarkError(string message)
     {
         LastError = message?.Length > 2000 ? message[..2000] : message;

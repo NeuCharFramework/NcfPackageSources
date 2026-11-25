@@ -735,4 +735,15 @@
   <data name="Frontend.KnowledgeBase.SuccessAlternate" xml:space="preserve"><value>Успешно</value></data>
   <data name="Frontend.KnowledgeBase.DeletedSuccessfullyAlternate" xml:space="preserve"><value>Успешно удалено</value></data>
   <data name="Frontend.KnowledgeBase.VectorizeKnowledgeBaseValue" xml:space="preserve"><value>Векторизовать базу знаний «{0}»?</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase" xml:space="preserve"><value>Поиск в базе знаний</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBaseHint" xml:space="preserve"><value>Выберите базу и введите вопрос</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.Id" xml:space="preserve"><value>База знаний</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.IdHint" xml:space="preserve"><value>Выберите индексированную базу знаний</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.Question" xml:space="preserve"><value>Вопрос</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.QuestionHint" xml:space="preserve"><value>Найти сведения и ответить из выбранной базы</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.QuestionPlaceholder" xml:space="preserve"><value>Введите вопрос</value></data>
+  <data name="AdminChat.Function.SearchKnowledgeBases" xml:space="preserve"><value>Поиск баз знаний</value></data>
+  <data name="AdminChat.Function.SearchKnowledgeBasesDescription" xml:space="preserve"><value>Поиск индексированных баз по имени или содержимому</value></data>
+  <data name="AdminChat.Function.RecallKnowledgeBase" xml:space="preserve"><value>Извлечь фрагменты</value></data>
+  <data name="AdminChat.Function.RecallKnowledgeBaseDescription" xml:space="preserve"><value>Извлечь релевантные фрагменты из базы</value></data>
 </root>

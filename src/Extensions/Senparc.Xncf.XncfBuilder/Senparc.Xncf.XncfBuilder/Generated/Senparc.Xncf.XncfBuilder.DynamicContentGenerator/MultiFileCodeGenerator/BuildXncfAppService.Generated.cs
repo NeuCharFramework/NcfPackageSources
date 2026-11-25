@@ -642,6 +642,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
     Modified by: Senparc - 20261119
     Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v1.1.15 Integrated localization, tooling, and runtime improvements across the module.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -1602,24 +1605,29 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         #region Helper Methods
 
         /// <summary>
-        /// Get template files by type.
+        /// Returns generated template metadata whose type exactly matches the requested value.
         /// </summary>
+        /// <param name="templateType">The configured template type to match.</param>
+        /// <returns>All matching template metadata entries, or an empty array when none match.</returns>
         public static TemplateFileInfo[] GetTemplatesByType(string templateType)
         {
             return AllTemplateFiles.Where(f => f.Type == templateType).ToArray();
         }
 
         /// <summary>
-        /// Get template content by name.
+        /// Returns the generated content for one template constant name.
         /// </summary>
+        /// <param name="templateName">The generated metadata name to locate.</param>
+        /// <returns>The template content, or an empty string when no name matches.</returns>
         public static string GetTemplateContent(string templateName)
         {
             return AllTemplateFiles.FirstOrDefault(f => f.Name == templateName)?.Content ?? string.Empty;
         }
 
         /// <summary>
-        /// Get all template types.
+        /// Returns the distinct template types represented by generated metadata.
         /// </summary>
+        /// <returns>A de-duplicated array of configured template types.</returns>
         public static string[] GetAllTemplateTypes()
         {
             return AllTemplateFiles.Select(f => f.Type).Distinct().ToArray();

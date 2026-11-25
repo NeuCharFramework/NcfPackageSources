@@ -33,6 +33,17 @@ namespace Senparc.Ncf.Core.Localization
     {
         private static readonly ConcurrentDictionary<Type, NcfFallbackStringLocalizer> Localizers = new();
 
+        /// <summary>
+        /// Resolves a localized resource value for the requested resource type and key.
+        /// A supplied culture is applied temporarily and restored before returning.
+        /// </summary>
+        /// <param name="resourceType">The resource class whose assembly contains the resource.</param>
+        /// <param name="resourceKey">The resource key to resolve.</param>
+        /// <param name="fallback">The value returned when the key is not found.</param>
+        /// <param name="culture">Optional UI culture used for this lookup only.</param>
+        /// <returns>The localized value, fallback value, or resource key.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="resourceType"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="resourceKey"/> is empty.</exception>
         public static string Get(
             Type resourceType,
             string resourceKey,
@@ -70,6 +81,14 @@ namespace Senparc.Ncf.Core.Localization
             }
         }
 
+        /// <summary>
+        /// Resolves a localized resource value and formats it with the current culture.
+        /// </summary>
+        /// <param name="resourceType">The resource class whose assembly contains the resource.</param>
+        /// <param name="resourceKey">The resource key to resolve.</param>
+        /// <param name="fallback">The fallback format string when the key is missing.</param>
+        /// <param name="arguments">The values supplied to <see cref="string.Format(IFormatProvider, string, object[])"/>.</param>
+        /// <returns>The formatted localized string.</returns>
         public static string Format(
             Type resourceType,
             string resourceKey,

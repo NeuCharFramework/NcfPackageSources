@@ -133,21 +133,45 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         ///Legacy comment translated to English.
         public string ConnectorBindingsJson { get; private set; }
 
+        /// <summary>
+        /// Deserializes skill bindings, returning an empty list for empty or invalid JSON.
+        /// </summary>
+        /// <returns>The configured skill bindings.</returns>
         public IReadOnlyList<AgentSkillBinding> GetSkillBindings()
             => DeserializeOrEmpty<AgentSkillBinding>(SkillBindingsJson);
 
+        /// <summary>
+        /// Deserializes the workspace policy, returning a default policy when absent or invalid.
+        /// </summary>
+        /// <returns>The configured workspace policy.</returns>
         public WorkspacePolicy GetWorkspacePolicy()
             => DeserializeOrDefault(WorkspacePolicyJson, new WorkspacePolicy());
 
+        /// <summary>
+        /// Serializes skill bindings into the persisted JSON field.
+        /// </summary>
+        /// <param name="bindings">The bindings to store.</param>
         public void SetSkillBindings(IEnumerable<AgentSkillBinding> bindings)
             => SkillBindingsJson = JsonSerializer.Serialize(bindings ?? Array.Empty<AgentSkillBinding>());
 
+        /// <summary>
+        /// Serializes the workspace policy into the persisted JSON field.
+        /// </summary>
+        /// <param name="policy">The policy to store.</param>
         public void SetWorkspacePolicy(WorkspacePolicy policy)
             => WorkspacePolicyJson = JsonSerializer.Serialize(policy ?? new WorkspacePolicy());
 
+        /// <summary>
+        /// Deserializes connector bindings, returning an empty list for empty or invalid JSON.
+        /// </summary>
+        /// <returns>The configured connector bindings.</returns>
         public IReadOnlyList<AgentConnectorBinding> GetConnectorBindings()
             => DeserializeOrEmpty<AgentConnectorBinding>(ConnectorBindingsJson);
 
+        /// <summary>
+        /// Serializes connector bindings into the persisted JSON field.
+        /// </summary>
+        /// <param name="bindings">The bindings to store.</param>
         public void SetConnectorBindings(IEnumerable<AgentConnectorBinding> bindings)
             => ConnectorBindingsJson = JsonSerializer.Serialize(bindings ?? Array.Empty<AgentConnectorBinding>());
 
@@ -185,16 +209,22 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             }
         }
 
-        ///Legacy comment translated to English.
+        /// <summary>
+        /// Indicates whether this template represents the reserved Human participant.
+        /// </summary>
         [NotMapped]
         public bool IsHuman => HumanParticipantConstants.IsHuman(PromptCode);
 
-        ///Legacy comment translated to English.
+        /// <summary>
+        /// Indicates whether this template is a reserved system participant.
+        /// </summary>
         [NotMapped]
         public bool IsSystemAgent => IsHuman
             || string.Equals(Name, "PromptCatalyzer", StringComparison.OrdinalIgnoreCase);
 
-        ///Legacy comment translated to English.
+        /// <summary>
+        /// Gets the reserved system participant kind, or <see langword="null"/> for ordinary agents.
+        /// </summary>
         [NotMapped]
         public string SystemAgentKind => IsHuman
             ? HumanParticipantConstants.Name
@@ -203,9 +233,9 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
                 : null;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deserializes the MCP endpoint name-to-configuration map.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <returns>The endpoint configuration map, or an empty map for invalid JSON.</returns>
         public Dictionary<string, Dictionary<string, string>> GetMcpEndpointsDict()
         {
             if (string.IsNullOrEmpty(McpEndpoints))
@@ -224,11 +254,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Adds or replaces an MCP endpoint configuration.
         /// </summary>
-        /// <param name="name">Endpointname</param>
-        /// <param name="url">Endpoint URL</param>
-        ///Legacy comment translated to English.
+        /// <param name="name">The endpoint name.</param>
+        /// <param name="url">The endpoint URL.</param>
+        /// <returns><see langword="true"/> when both values are non-empty and the endpoint is stored.</returns>
         public bool AddMcpEndpoint(string name, string url)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(url))
@@ -250,10 +280,10 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Removes an MCP endpoint configuration by name.
         /// </summary>
-        /// <param name="name">Endpointname</param>
-        ///Legacy comment translated to English.
+        /// <param name="name">The endpoint name.</param>
+        /// <returns><see langword="true"/> when an endpoint was removed.</returns>
         public bool RemoveMcpEndpoint(string name)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(McpEndpoints))
@@ -296,6 +326,22 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
         private AgentTemplate() { }
 
+        /// <summary>
+        /// Initializes an agent template and its model-binding policy.
+        /// </summary>
+        /// <param name="name">The display name.</param>
+        /// <param name="systemMessage">The system prompt or PromptRange reference.</param>
+        /// <param name="enable">Whether the template is enabled.</param>
+        /// <param name="description">The template description.</param>
+        /// <param name="promptCode">The prompt code/reference.</param>
+        /// <param name="hookRobotType">The hook/robot type.</param>
+        /// <param name="hookRobotParameter">Hook-specific parameter.</param>
+        /// <param name="avastar">Optional avatar.</param>
+        /// <param name="functionCallNames">Optional function names.</param>
+        /// <param name="mcpEndpoints">Optional MCP endpoint configuration.</param>
+        /// <param name="knowledgeBaseId">Optional knowledge-base identifier.</param>
+        /// <param name="modelBinding">The model binding mode.</param>
+        /// <param name="aiModelId">The manually bound model identifier.</param>
         public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter, string avastar = null, string functionCallNames = null, string mcpEndpoints = null, int? knowledgeBaseId = null, AgentModelBindingMode modelBinding = AgentModelBindingMode.InheritPromptRange, int? aiModelId = null)
         {
             Name = name;
@@ -312,18 +358,30 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             SetModelBinding(modelBinding, aiModelId);
         }
 
+        /// <summary>
+        /// Enables the agent template.
+        /// </summary>
+        /// <returns><see langword="true"/> after the state is enabled.</returns>
         public bool EnableAgent()
         {
             Enable = true;
             return true;
         }
 
+        /// <summary>
+        /// Disables the agent template.
+        /// </summary>
+        /// <returns><see langword="true"/> after the state is disabled.</returns>
         public bool DisableAgent()
         {
             Enable = false;
             return true;
         }
 
+        /// <summary>
+        /// Replaces editable template fields from a DTO and reapplies model binding rules.
+        /// </summary>
+        /// <param name="agentTemplateDto">The source DTO.</param>
         public void UpdateFromDto(AgentTemplateDto agentTemplateDto)
         {
             Name = agentTemplateDto.Name;
@@ -343,6 +401,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             SetModelBinding(agentTemplateDto.ModelBinding, agentTemplateDto.AiModelId);
         }
 
+        /// <summary>
+        /// Updates the model-binding mode and clears manual model identity unless manual binding is selected.
+        /// </summary>
+        /// <param name="modelBinding">The desired model-binding mode.</param>
+        /// <param name="aiModelId">The model identifier used for manual binding.</param>
         public void UpdateModelBinding(AgentModelBindingMode modelBinding, int? aiModelId)
         {
             SetModelBinding(modelBinding, aiModelId);

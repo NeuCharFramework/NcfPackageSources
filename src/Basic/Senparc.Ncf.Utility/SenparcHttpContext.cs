@@ -21,26 +21,30 @@ using System.IO;
 
 namespace Microsoft.AspNetCore.Http
 {
-    //Legacy comment translated to English.
-
+    /// <summary>
+    /// Provides process-wide access to common ASP.NET Core hosting paths and the current HTTP context.
+    /// </summary>
     public static class SenparcHttpContext
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the platform-specific directory separator as a string.
         /// </summary>
         public static string DirectorySeparatorChar { get; } = Path.DirectorySeparatorChar.ToString();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the host content-root path resolved from the registered hosting environment.
         /// </summary>
         public static string ContentRootPath { get; } = DI.ServiceProvider.GetRequiredService<IHostingEnvironment>().ContentRootPath;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the host web-root path resolved from the registered hosting environment.
         /// </summary>
         public static string ContentWebRootPath { get; } = DI.ServiceProvider.GetRequiredService<IHostingEnvironment>().WebRootPath;
 
-
+        /// <summary>
+        /// Gets the current HTTP context from the registered accessor.
+        /// </summary>
+        /// <returns>The current context, or <see langword="null"/> when no accessor or context is available.</returns>
         public static HttpContext Current
         {
             get
@@ -59,10 +63,11 @@ namespace Microsoft.AspNetCore.Http
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Converts an application-relative or absolute path into a path under the host content root.
+        /// Absolute paths are returned unchanged.
         /// </summary>
-        /// <param name="path">filepath</param>
-        /// <returns></returns>
+        /// <param name="path">The path to map, such as <c>~/App_Data/file.txt</c> or an absolute path.</param>
+        /// <returns>The mapped content-root path.</returns>
         public static string MapPath(string path)
         {
             return IsAbsolute(path)
@@ -71,10 +76,11 @@ namespace Microsoft.AspNetCore.Http
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Converts an application-relative or absolute path into a path under the host web root.
+        /// Absolute paths are returned unchanged.
         /// </summary>
-        /// <param name="path">filepath</param>
-        /// <returns></returns>
+        /// <param name="path">The path to map, such as <c>~/css/site.css</c> or an absolute path.</param>
+        /// <returns>The mapped web-root path.</returns>
         public static string MapWebPath(string path)
         {
             return IsAbsolute(path)
@@ -83,12 +89,10 @@ namespace Microsoft.AspNetCore.Http
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Determines whether a path uses the platform's absolute-path marker.
         /// </summary>
-        /// <param name="path">path</param>
-        /// <returns></returns>
+        /// <param name="path">The path to inspect.</param>
+        /// <returns><see langword="true"/> when the path is recognized as absolute; otherwise, <see langword="false"/>.</returns>
         public static bool IsAbsolute(string path)
         {
             return Path.VolumeSeparatorChar == ':' ? path.IndexOf(Path.VolumeSeparatorChar) > 0 : path.IndexOf('\\') > 0;

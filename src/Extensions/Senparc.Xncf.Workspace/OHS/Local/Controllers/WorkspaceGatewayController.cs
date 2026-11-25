@@ -28,6 +28,10 @@ using Senparc.Xncf.Workspace.Abstractions;
 
 namespace Senparc.Xncf.Workspace.OHS.Local.Controllers;
 
+/// <summary>
+/// Authenticated HTTP gateway for policy-bound Workspace storage and isolated execution operations.
+/// Every endpoint verifies the caller and workspace ownership before creating a client.
+/// </summary>
 [ApiController]
 [Authorize(AuthenticationSchemes = "Bearer_Backend", Policy = "AdminSuperAdmin")]
 [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
@@ -43,6 +47,15 @@ public sealed class WorkspaceGatewayController : ControllerBase
     private readonly WorkspaceOptions _options;
     private readonly IDesktopBridgeSessionValidator? _desktopSessionValidator;
 
+    /// <summary>
+    /// Initializes the Workspace gateway controller and its authorization/session dependencies.
+    /// </summary>
+    /// <param name="storage">Workspace metadata and content storage.</param>
+    /// <param name="clientFactory">Factory for policy-bound workspace clients.</param>
+    /// <param name="changeHub">Workspace change-event publisher.</param>
+    /// <param name="processFactory">Factory exposing isolated-agent runtime status.</param>
+    /// <param name="options">Workspace limits and gateway settings.</param>
+    /// <param name="desktopSessionValidators">Optional desktop-session validators; exactly one is accepted.</param>
     public WorkspaceGatewayController(
         IWorkspaceStorage storage,
         IWorkspaceClientFactory clientFactory,
@@ -60,6 +73,10 @@ public sealed class WorkspaceGatewayController : ControllerBase
         _desktopSessionValidator = validators.Length == 1 ? validators[0] : null;
     }
 
+    /// <summary>
+    /// Returns protocol, runtime, execution, size-limit, and feature capabilities.
+    /// </summary>
+    /// <returns>An HTTP 200 capability document, or an authorization failure.</returns>
     [HttpGet("capabilities")]
     public ActionResult<WorkspaceGatewayCapabilities> GetCapabilities()
     {
@@ -82,6 +99,11 @@ public sealed class WorkspaceGatewayController : ControllerBase
             SupportsEvents: true));
     }
 
+    /// <summary>
+    /// Lists workspaces owned by the authenticated actor.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel metadata enumeration.</param>
+    /// <returns>The actor's visible workspace descriptors.</returns>
     [HttpGet("workspaces")]
     public async Task<ActionResult<IReadOnlyList<WorkspaceGatewayDescriptor>>> ListWorkspaces(
         CancellationToken cancellationToken)
@@ -102,6 +124,12 @@ public sealed class WorkspaceGatewayController : ControllerBase
         }).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Creates a workspace owned by the authenticated actor.
+    /// </summary>
+    /// <param name="request">The workspace display-name request.</param>
+    /// <param name="cancellationToken">Token used to cancel creation.</param>
+    /// <returns>The created workspace descriptor.</returns>
     [HttpPost("workspaces")]
     [RequestSizeLimit(4096)]
     public async Task<ActionResult<WorkspaceGatewayDescriptor>> CreateWorkspace(
@@ -128,6 +156,13 @@ public sealed class WorkspaceGatewayController : ControllerBase
         }).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Lists entries below a workspace-relative directory.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="path">The workspace-relative directory path.</param>
+    /// <param name="cancellationToken">Token used to cancel enumeration.</param>
+    /// <returns>The visible workspace entries.</returns>
     [HttpGet("workspaces/{workspaceId}/entries")]
     public async Task<ActionResult<IReadOnlyList<WorkspaceEntry>>> ListEntries(
         string workspaceId,
@@ -146,6 +181,13 @@ public sealed class WorkspaceGatewayController : ControllerBase
             client => client.ListAsync(path, cancellationToken)).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Retrieves metadata and the current ETag for a workspace entry.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="path">The workspace-relative path.</param>
+    /// <param name="cancellationToken">Token used to cancel metadata lookup.</param>
+    /// <returns>The entry metadata.</returns>
     [HttpGet("workspaces/{workspaceId}/stat")]
     public async Task<ActionResult<WorkspaceFileMetadata>> Stat(
         string workspaceId,
@@ -164,6 +206,13 @@ public sealed class WorkspaceGatewayController : ControllerBase
             client => client.GetFileInfoAsync(path, cancellationToken)).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Streams a workspace file as an octet-stream response and exposes its ETag.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="path">The workspace-relative file path.</param>
+    /// <param name="cancellationToken">Token used to cancel the read.</param>
+    /// <returns>The file response or a mapped gateway error.</returns>
     [HttpGet("workspaces/{workspaceId}/file")]
     public async Task<IActionResult> ReadFile(
         string workspaceId,
@@ -193,6 +242,15 @@ public sealed class WorkspaceGatewayController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Writes a bounded request body to a workspace file using create, overwrite, and If-Match rules.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="path">The workspace-relative file path.</param>
+    /// <param name="create">Whether a missing file may be created.</param>
+    /// <param name="overwrite">Whether an existing file may be replaced.</param>
+    /// <param name="cancellationToken">Token used to cancel the write.</param>
+    /// <returns>The resulting file metadata and creation flag.</returns>
     [HttpPut("workspaces/{workspaceId}/file")]
     [RequestSizeLimit(16 * 1024 * 1024)]
     public async Task<ActionResult<WorkspaceWriteFileResult>> WriteFile(
@@ -235,6 +293,12 @@ public sealed class WorkspaceGatewayController : ControllerBase
         }).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Creates a workspace-relative directory.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="request">The relative directory path.</param>
+    /// <param name="cancellationToken">Token used to cancel creation.</param>
     [HttpPost("workspaces/{workspaceId}/directories")]
     [RequestSizeLimit(4096)]
     public async Task<IActionResult> CreateDirectory(
@@ -256,6 +320,13 @@ public sealed class WorkspaceGatewayController : ControllerBase
         }).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Deletes a workspace entry according to recursive and ETag policy.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="path">The workspace-relative path.</param>
+    /// <param name="recursive">Whether directories may be deleted recursively.</param>
+    /// <param name="cancellationToken">Token used to cancel deletion.</param>
     [HttpDelete("workspaces/{workspaceId}/entry")]
     public async Task<IActionResult> DeleteEntry(
         string workspaceId,
@@ -282,6 +353,12 @@ public sealed class WorkspaceGatewayController : ControllerBase
         }).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Moves a workspace entry to a new relative path.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="request">The source, target, overwrite, and ETag options.</param>
+    /// <param name="cancellationToken">Token used to cancel the move.</param>
     [HttpPost("workspaces/{workspaceId}/move")]
     [RequestSizeLimit(4096)]
     public async Task<IActionResult> MoveEntry(
@@ -303,6 +380,13 @@ public sealed class WorkspaceGatewayController : ControllerBase
         }).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Searches workspace paths and content using the supplied bounded search request.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="request">The path, content, glob, regex, and result-limit options.</param>
+    /// <param name="cancellationToken">Token used to cancel traversal.</param>
+    /// <returns>Matching workspace results.</returns>
     [HttpPost("workspaces/{workspaceId}/search")]
     [RequestSizeLimit(16 * 1024)]
     public async Task<ActionResult<IReadOnlyList<WorkspaceSearchResult>>> Search(
@@ -322,6 +406,13 @@ public sealed class WorkspaceGatewayController : ControllerBase
             client => client.SearchAsync(request, cancellationToken)).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Applies an exact-text patch after checking the optional hash and replacement count.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="request">The patch target, old text, replacement, and concurrency checks.</param>
+    /// <param name="cancellationToken">Token used to cancel the patch.</param>
+    /// <returns>The patch application result.</returns>
     [HttpPost("workspaces/{workspaceId}/patch")]
     [RequestSizeLimit(12 * 1024 * 1024)]
     public async Task<ActionResult<WorkspacePatchResult>> Patch(
@@ -342,6 +433,12 @@ public sealed class WorkspaceGatewayController : ControllerBase
             allowWrite: true).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Streams workspace change events using an authenticated Server-Sent Events response.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="replayBuffered">Whether buffered changes should be replayed first.</param>
+    /// <param name="cancellationToken">Token used to cancel the event stream.</param>
     [HttpGet("workspaces/{workspaceId}/events")]
     public async Task Events(
         string workspaceId,
@@ -396,6 +493,16 @@ public sealed class WorkspaceGatewayController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Authorizes workspace ownership, creates a policy-bound client, and maps errors
+    /// for an operation returning a value.
+    /// </summary>
+    /// <typeparam name="T">The operation result type.</typeparam>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="actorId">The authenticated actor identifier.</param>
+    /// <param name="action">The operation to execute.</param>
+    /// <param name="allowWrite">Whether the client may mutate workspace content.</param>
+    /// <returns>The mapped HTTP action result.</returns>
     private async Task<ActionResult<T>> WithClientAsync<T>(
         string workspaceId,
         int actorId,
@@ -411,6 +518,13 @@ public sealed class WorkspaceGatewayController : ControllerBase
         }).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Creates a client bound to the authenticated actor and gateway read/write policy.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="actorId">The authenticated actor identifier.</param>
+    /// <param name="allowWrite">Whether write operations are enabled.</param>
+    /// <returns>A policy-bound workspace client.</returns>
     private IWorkspaceClient CreateClient(string workspaceId, int actorId, bool allowWrite)
     {
         return _clientFactory.Create(new WorkspaceAccessContext(
@@ -424,6 +538,14 @@ public sealed class WorkspaceGatewayController : ControllerBase
             User.FindFirstValue("jti") ?? string.Empty));
     }
 
+    /// <summary>
+    /// Resolves a workspace and verifies that it belongs to the authenticated actor.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="actorId">The authenticated actor identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel lookup.</param>
+    /// <exception cref="FileNotFoundException">Thrown when the workspace does not exist.</exception>
+    /// <exception cref="UnauthorizedAccessException">Thrown when another actor owns the workspace.</exception>
     private async Task EnsureOwnedWorkspaceAsync(
         string workspaceId,
         int actorId,
@@ -450,11 +572,23 @@ public sealed class WorkspaceGatewayController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Authorizes the desktop gateway using secure transport, validator availability,
+    /// desktop-session credentials, and the authenticated administrator identity.
+    /// </summary>
+    /// <param name="actorId">Receives the authenticated actor identifier.</param>
+    /// <returns>An error result, or <see langword="null"/> when authorization succeeds.</returns>
     private ActionResult? AuthorizeGateway(out int actorId)
     {
         return AuthorizeGateway(out actorId, out _);
     }
 
+    /// <summary>
+    /// Performs the full gateway authorization check and returns a revocation token when applicable.
+    /// </summary>
+    /// <param name="actorId">Receives the authenticated actor identifier.</param>
+    /// <param name="sessionRevoked">Receives the session-revocation cancellation token.</param>
+    /// <returns>An error result, or <see langword="null"/> when authorization succeeds.</returns>
     private ActionResult? AuthorizeGateway(
         out int actorId,
         out CancellationToken sessionRevoked)
@@ -493,6 +627,10 @@ public sealed class WorkspaceGatewayController : ControllerBase
         return null;
     }
 
+    /// <summary>
+    /// Revalidates the current desktop session for an open event stream.
+    /// </summary>
+    /// <returns><see langword="true"/> when the current session remains authorized.</returns>
     private bool HasAuthorizedDesktopSession()
     {
         if (_desktopSessionValidator == null)
@@ -505,6 +643,10 @@ public sealed class WorkspaceGatewayController : ControllerBase
             out _);
     }
 
+    /// <summary>
+    /// Requires HTTPS for remote gateway calls while permitting loopback HTTP.
+    /// </summary>
+    /// <returns>An error result, or <see langword="null"/> when transport is allowed.</returns>
     private ActionResult? ValidateSecureTransport()
     {
         var remoteAddress = HttpContext.Connection.RemoteIpAddress;
@@ -523,6 +665,12 @@ public sealed class WorkspaceGatewayController : ControllerBase
             });
     }
 
+    /// <summary>
+    /// Executes a gateway action and converts exceptions into HTTP ProblemDetails.
+    /// </summary>
+    /// <typeparam name="T">The action result type.</typeparam>
+    /// <param name="action">The operation to run.</param>
+    /// <returns>The mapped HTTP action result.</returns>
     private async Task<ActionResult<T>> ExecuteAsync<T>(Func<Task<T>> action)
     {
         try
@@ -535,6 +683,11 @@ public sealed class WorkspaceGatewayController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Executes a no-content gateway action and maps exceptions into HTTP ProblemDetails.
+    /// </summary>
+    /// <param name="action">The operation to run.</param>
+    /// <returns>The HTTP response result.</returns>
     private async Task<IActionResult> ExecuteNoContentAsync(Func<Task> action)
     {
         try
@@ -548,6 +701,11 @@ public sealed class WorkspaceGatewayController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Maps workspace domain and file-system exceptions to stable HTTP status/problem titles.
+    /// </summary>
+    /// <param name="exception">The exception to map.</param>
+    /// <returns>An HTTP ProblemDetails result.</returns>
     private ObjectResult MapException(Exception exception)
     {
         var (status, title) = exception switch
@@ -590,6 +748,11 @@ public sealed record WorkspaceGatewayDescriptor(
     DateTime LastAccessedUtc,
     string StorageProvider)
 {
+    /// <summary>
+    /// Maps a storage descriptor to the gateway-safe descriptor shape.
+    /// </summary>
+    /// <param name="descriptor">The storage descriptor.</param>
+    /// <returns>A descriptor without internal root paths or owner details.</returns>
     public static WorkspaceGatewayDescriptor From(WorkspaceDescriptor descriptor)
     {
         return new WorkspaceGatewayDescriptor(

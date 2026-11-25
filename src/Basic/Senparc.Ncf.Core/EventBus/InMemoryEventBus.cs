@@ -30,7 +30,7 @@ using Microsoft.Extensions.Logging;
 namespace Senparc.Ncf.Core.EventBus
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides in-process integration-event publication and request/response correlation.
     /// </summary>
     public class InMemoryEventBus : IEventBus, IEventBusRequestClient
     {
@@ -43,6 +43,12 @@ namespace Senparc.Ncf.Core.EventBus
         private readonly ConcurrentDictionary<Guid, DateTime> _processedEventIds = new();
         private readonly TimeSpan _eventIdRetentionPeriod = TimeSpan.FromMinutes(10);
         
+        /// <summary>
+        /// Initializes an in-memory event bus with bounded request timeout settings.
+        /// </summary>
+        /// <param name="logger">Optional logger for response and event diagnostics.</param>
+        /// <param name="options">Optional event-bus options.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the configured request timeout is not finite and positive.</exception>
         public InMemoryEventBus(
             ILogger<InMemoryEventBus> logger = null,
             EventBusOptions options = null)
@@ -68,8 +74,17 @@ namespace Senparc.Ncf.Core.EventBus
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Publishes a request and waits for a response with the requested timeout and cancellation policy.
         /// </summary>
+        /// <typeparam name="TResponse">The expected integration response type.</typeparam>
+        /// <param name="request">The request event with a non-empty request identifier.</param>
+        /// <param name="timeout">The maximum wait time, bounded by configured event-bus options.</param>
+        /// <param name="cancellationToken">Token used to cancel publishing or waiting.</param>
+        /// <returns>A task that completes with the correlated response.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Thrown when the request identifier is empty.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="timeout"/> is outside the allowed range.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when the request identifier is already pending.</exception>
         public async Task<TResponse> RequestAsync<TResponse>(
             IIntegrationRequest<TResponse> request,
             TimeSpan timeout,
@@ -117,6 +132,13 @@ namespace Senparc.Ncf.Core.EventBus
             }
         }
 
+        /// <summary>
+        /// Publishes an integration event to the in-memory event channel.
+        /// </summary>
+        /// <typeparam name="TEvent">The integration event type.</typeparam>
+        /// <param name="event">The event to publish.</param>
+        /// <param name="cancellationToken">Token used to cancel channel writing.</param>
+        /// <returns>A value task representing channel publication.</returns>
         public ValueTask PublishAsync<TEvent>(TEvent @event, CancellationToken cancellationToken = default) 
             where TEvent : IIntegrationEvent
         {
@@ -124,9 +146,15 @@ namespace Senparc.Ncf.Core.EventBus
         }
         
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Publishes a derived integration event while preserving parent metadata and rejecting circular chains.
         /// </summary>
+        /// <typeparam name="TEvent">The derived integration event type.</typeparam>
+        /// <param name="event">The derived event to publish.</param>
+        /// <param name="parentEvent">The parent event whose metadata should be inherited.</param>
+        /// <param name="cancellationToken">Token used to cancel channel writing.</param>
+        /// <returns>A value task representing channel publication.</returns>
+        /// <exception cref="ArgumentException">Thrown when either event is not an <see cref="IntegrationEvent"/>.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when publication would create a circular event chain.</exception>
         public ValueTask PublishDerivedAsync<TEvent>(TEvent @event, IIntegrationEvent parentEvent, CancellationToken cancellationToken = default)
             where TEvent : IIntegrationEvent
         {
@@ -207,8 +235,10 @@ namespace Senparc.Ncf.Core.EventBus
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Marks an event identifier as processed for duplicate detection.
         /// </summary>
+        /// <param name="eventId">The event identifier to mark.</param>
+        /// <returns><see langword="true"/> when the identifier was new; otherwise, <see langword="false"/>.</returns>
         public bool TryMarkEventAsProcessed(Guid eventId)
         {
             //Legacy comment translated to English.

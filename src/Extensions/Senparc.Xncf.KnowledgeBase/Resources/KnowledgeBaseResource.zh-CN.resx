@@ -731,4 +731,15 @@
   <data name="Frontend.KnowledgeBase.SuccessAlternate" xml:space="preserve"><value>成功</value></data>
   <data name="Frontend.KnowledgeBase.DeletedSuccessfullyAlternate" xml:space="preserve"><value>删除成功</value></data>
   <data name="Frontend.KnowledgeBase.VectorizeKnowledgeBaseValue" xml:space="preserve"><value>确认对知识库“{0}”进行向量化处理吗？</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase" xml:space="preserve"><value>检索知识库</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBaseHint" xml:space="preserve"><value>选择知识库并输入问题</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.Id" xml:space="preserve"><value>知识库</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.IdHint" xml:space="preserve"><value>选择已经完成向量化的知识库</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.Question" xml:space="preserve"><value>问题</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.QuestionHint" xml:space="preserve"><value>从所选知识库中检索并回答</value></data>
+  <data name="AdminChat.Command.SearchKnowledgeBase.Parameter.QuestionPlaceholder" xml:space="preserve"><value>请输入问题</value></data>
+  <data name="AdminChat.Function.SearchKnowledgeBases" xml:space="preserve"><value>搜索知识库</value></data>
+  <data name="AdminChat.Function.SearchKnowledgeBasesDescription" xml:space="preserve"><value>按名称或内容搜索已完成向量化的知识库</value></data>
+  <data name="AdminChat.Function.RecallKnowledgeBase" xml:space="preserve"><value>检索知识库</value></data>
+  <data name="AdminChat.Function.RecallKnowledgeBaseDescription" xml:space="preserve"><value>从指定知识库召回与问题相关的片段</value></data>
 </root>

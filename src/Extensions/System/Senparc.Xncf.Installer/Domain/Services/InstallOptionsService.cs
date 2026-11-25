@@ -54,6 +54,11 @@ namespace Senparc.Xncf.Installer.Domain.Services
 
         private readonly IServiceProvider _serviceProvider;
         private readonly SenparcCoreSetting _senparcCoreSetting;
+        /// <summary>
+        /// Initializes installer defaults and core settings access.
+        /// </summary>
+        /// <param name="serviceProvider">Dependency-injection provider.</param>
+        /// <param name="senparcCoreSetting">Core configuration options.</param>
         public InstallOptionsService(IServiceProvider serviceProvider, IOptions<SenparcCoreSetting> senparcCoreSetting)
         {
             this._serviceProvider = serviceProvider;
@@ -64,36 +69,36 @@ namespace Senparc.Xncf.Installer.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Generates the default administrator username used by first-time installation.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A randomized default administrator username.</returns>
         public string GetDefaultAdminUserName()
         {
             return $"SenparcCoreAdmin{new Random().Next(100).ToString("00")}";
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the default system display name.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The default NCF system name.</returns>
         public string GetDefaultSystemName()
         {
             return "NCF - Template Project";
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves the configured client database connection string.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The current client connection string.</returns>
         public string GetDbConnectionString()
         {
             //string dbConfigName = SenparcDatabaseConnectionConfigs.GetFullDatabaseName(_senparcCoreSetting.DatabaseName);
             return SenparcDatabaseConnectionConfigs.GetClientConnectionString();
         }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns installable XNCF module metadata with default-selection flags.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The available module DTO list.</returns>
         public List<XncfRegisterDto> GetModules()
         {
 
@@ -134,8 +139,10 @@ namespace Senparc.Xncf.Installer.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Persists a changed database connection string and clears the cached configuration.
         /// </summary>
+        /// <param name="dbConnectionString">The replacement database connection string.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when the configured database entry cannot be found.</exception>
         public void ResetDbConnectionString(string dbConnectionString)
         {
             if (dbConnectionString == GetDbConnectionString())

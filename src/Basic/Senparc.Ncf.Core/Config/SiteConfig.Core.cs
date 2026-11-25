@@ -40,14 +40,16 @@ namespace Senparc.Ncf.Core.Config
     public static partial class SiteConfig
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the application content-root path.
         /// </summary>
         public static string ApplicationPath { get; set; }
+        /// <summary>
+        /// Gets or sets the application web-root path.
+        /// </summary>
         public static string WebRootPath { get; set; }
 
         /// <summary>
-        /// settings
-        ///Legacy comment translated to English.
+        /// Gets or sets the central NCF runtime settings object.
         /// </summary>
         public static SenparcCoreSetting SenparcCoreSetting { get; set; } = new SenparcCoreSetting();
         //{
@@ -60,12 +62,12 @@ namespace Senparc.Ncf.Core.Config
         //}
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets whether NCF is running in debug mode.
         /// </summary>
         public static bool IsDebug => SenparcCoreSetting.IsDebug;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets whether the current host is configured as a test site.
         /// </summary>
         public static bool IsTestSite => SenparcCoreSetting.IsTestSite;
 
@@ -172,9 +174,9 @@ namespace Senparc.Ncf.Core.Config
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether the installation completion marker exists under <c>App_Data</c>.
         /// </summary>
-        /// <returns></returns>
+        /// <returns><see langword="true"/> when the marker file exists; otherwise, <see langword="false"/>.</returns>
         public static bool CheckInstallFinishedFileExisted()
         {
             var fileExist = File.Exists(Server.GetMapPath("~/App_Data/install-finished.txt"));
@@ -182,7 +184,7 @@ namespace Senparc.Ncf.Core.Config
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Completes installation through the synchronous compatibility wrapper.
         /// </summary>
         [Obsolete($"Use {nameof(SetInstallFinishedAsync)} so persistence failures can be observed.")]
         public static void SetInstallFinished()
@@ -191,8 +193,10 @@ namespace Senparc.Ncf.Core.Config
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Clears the installation state and writes the installation completion marker
+        /// when it does not already exist.
         /// </summary>
+        /// <returns>A task that completes after the marker has been written or confirmed.</returns>
         public static async Task SetInstallFinishedAsync()
         {
             _isInstalling = false;
@@ -206,16 +210,19 @@ namespace Senparc.Ncf.Core.Config
             }
         }
 
-        public static int PageViewCount { get; set; } //Legacy comment translated to English.
+        /// <summary>
+        /// Gets or sets the current page-view counter.
+        /// </summary>
+        public static int PageViewCount { get; set; }
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the database-backed XNCF modules have been loaded.
         /// </summary>
         public static bool DatabaseXncfLoaded { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the singleton core state object.
         /// </summary>
         public static NcfCoreState NcfCoreState { get; } = NcfCoreState.Instance;
 
@@ -223,11 +230,11 @@ namespace Senparc.Ncf.Core.Config
         public static Dictionary<string, Thread> AsynThread = new Dictionary<string, Thread>(); //Legacy comment translated to English.
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the authorization scheme name used for administrator requests.
         /// </summary>
         public readonly static string NcfAdminAuthorizeScheme = "NcfAdminAuthorizeScheme";
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the authorization scheme name used for user requests.
         /// </summary>
         public readonly static string NcfUserAuthorizeScheme = "NcfUserAuthorizeScheme";
     }

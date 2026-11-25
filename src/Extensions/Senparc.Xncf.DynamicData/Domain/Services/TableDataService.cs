@@ -35,16 +35,22 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
     {
         private readonly ColumnMetadataService _columnMetadataService;
 
+        /// <summary>
+        /// Initializes the table-data service with column metadata and persistence dependencies.
+        /// </summary>
+        /// <param name="columnMetadataService">The service used to load table columns.</param>
+        /// <param name="repo">The table-data repository.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public TableDataService(ColumnMetadataService columnMetadataService, IRepositoryBase<TableData> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             this._columnMetadataService = columnMetadataService;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads column metadata and creates an empty data template for a table.
         /// </summary>
-        /// <param name="tableId"></param>
-        /// <returns></returns>
+        /// <param name="tableId">The table metadata identifier.</param>
+        /// <returns>A template containing one data cell descriptor per column.</returns>
         public async Task<DataTemplate> GetTableDataTemplateAsync(int tableId)
         {
             var columnTemplate = await _columnMetadataService.GetColumnDtos(tableId);
@@ -53,10 +59,10 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates an empty data template from an existing column template.
         /// </summary>
-        /// <param name="columnTemplate"></param>
-        /// <returns></returns>
+        /// <param name="columnTemplate">The columns that define the template shape.</param>
+        /// <returns>A data template containing empty cells for each column.</returns>
         public DataTemplate GetTableDataTemplate(ColumnTemplate columnTemplate)
         {
             //Legacy comment translated to English.
@@ -78,6 +84,13 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         //    var tableData = await base.GetObjectAsync(z=>z.Id == id,z=> z.Id , Ncf.Core.Enums.OrderingType.Ascending,z=>z.Include(typeof()))
         //}
 
+        /// <summary>
+        /// Converts template DTOs to entities and persists them in one transaction.
+        /// </summary>
+        /// <param name="dataTemplate">The template containing table and column cell values.</param>
+        /// <returns>
+        /// A success flag and persisted entities; when persistence fails, the flag is false and the list is null.
+        /// </returns>
         public async Task<(bool Success, List<TableData> SucessDataList)> InsertDataAsync(DataTemplate dataTemplate)
         {
             try
@@ -105,12 +118,10 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         }
 
         /// <summary>
-        /// settingsdata
+        /// Applies values from a column-name dictionary to the cells in a data template.
         /// </summary>
-        /// <param name="dataTemplate"></param>
-        /// <param name="dataList"></param>
-        /// <param name="dataDic"></param>
-        /// <returns></returns>
+        /// <param name="dataTemplate">The template whose cells should be created or updated.</param>
+        /// <param name="dataDic">The values keyed by column name.</param>
         public void SetData(DataTemplate dataTemplate, Dictionary<string, string> dataDic)
         {
             var dataList = dataTemplate.TableDataDtos;

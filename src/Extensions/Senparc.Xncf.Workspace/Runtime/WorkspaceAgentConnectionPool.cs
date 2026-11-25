@@ -27,6 +27,11 @@ public sealed class WorkspaceAgentConnectionPool : IAsyncDisposable
     private readonly WorkspaceAgentProcessFactory _processFactory;
     private readonly ILogger<WorkspaceAgentConnectionPool> _logger;
 
+    /// <summary>
+    /// Initializes a per-workspace Workspace Agent connection pool.
+    /// </summary>
+    /// <param name="processFactory">Factory used to start agent processes.</param>
+    /// <param name="logger">Logger shared by pooled connections.</param>
     public WorkspaceAgentConnectionPool(
         WorkspaceAgentProcessFactory processFactory,
         ILogger<WorkspaceAgentConnectionPool> logger)
@@ -35,6 +40,17 @@ public sealed class WorkspaceAgentConnectionPool : IAsyncDisposable
         _logger = logger;
     }
 
+    /// <summary>
+    /// Invokes an operation through the workspace's reusable connection, recovering once from process exit.
+    /// </summary>
+    /// <typeparam name="TPayload">The request payload type.</typeparam>
+    /// <typeparam name="TResult">The expected result type.</typeparam>
+    /// <param name="workspaceId">The workspace identifier used as the pool key.</param>
+    /// <param name="workspaceRoot">The physical workspace root passed to a new connection.</param>
+    /// <param name="operation">The agent operation name.</param>
+    /// <param name="payload">The operation payload.</param>
+    /// <param name="cancellationToken">Token used to cancel the invocation.</param>
+    /// <returns>A task producing the operation result.</returns>
     public Task<TResult> InvokeAsync<TPayload, TResult>(
         string workspaceId,
         string workspaceRoot,
@@ -52,6 +68,11 @@ public sealed class WorkspaceAgentConnectionPool : IAsyncDisposable
             cancellationToken);
     }
 
+    /// <summary>
+    /// Stops and removes one workspace's pooled connection.
+    /// </summary>
+    /// <param name="workspaceId">The workspace pool key.</param>
+    /// <returns>A task that completes after connection disposal.</returns>
     public async Task StopAsync(string workspaceId)
     {
         if (_connections.TryRemove(workspaceId, out var connection) && connection.IsValueCreated)
@@ -60,6 +81,10 @@ public sealed class WorkspaceAgentConnectionPool : IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Disposes every created workspace connection in the pool.
+    /// </summary>
+    /// <returns>A value task that completes after all connections are disposed.</returns>
     public async ValueTask DisposeAsync()
     {
         var connections = _connections.ToArray();
@@ -73,6 +98,12 @@ public sealed class WorkspaceAgentConnectionPool : IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Gets or lazily creates the connection associated with a workspace.
+    /// </summary>
+    /// <param name="workspaceId">The workspace pool key.</param>
+    /// <param name="workspaceRoot">The physical workspace root for first creation.</param>
+    /// <returns>The pooled connection.</returns>
     private WorkspaceAgentConnection GetConnection(string workspaceId, string workspaceRoot)
     {
         return _connections.GetOrAdd(
@@ -85,6 +116,18 @@ public sealed class WorkspaceAgentConnectionPool : IAsyncDisposable
                 LazyThreadSafetyMode.ExecutionAndPublication)).Value;
     }
 
+    /// <summary>
+    /// Invokes an operation and retries once after removing an exited agent connection.
+    /// </summary>
+    /// <typeparam name="TPayload">The request payload type.</typeparam>
+    /// <typeparam name="TResult">The expected result type.</typeparam>
+    /// <param name="connection">The current pooled connection.</param>
+    /// <param name="workspaceId">The workspace pool key.</param>
+    /// <param name="workspaceRoot">The physical workspace root used for recovery.</param>
+    /// <param name="operation">The agent operation name.</param>
+    /// <param name="payload">The operation payload.</param>
+    /// <param name="cancellationToken">Token used to cancel invocation.</param>
+    /// <returns>The operation result.</returns>
     private async Task<TResult> InvokeWithRecoveryAsync<TPayload, TResult>(
         WorkspaceAgentConnection connection,
         string workspaceId,

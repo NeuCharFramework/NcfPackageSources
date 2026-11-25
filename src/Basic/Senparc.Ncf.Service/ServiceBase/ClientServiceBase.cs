@@ -46,6 +46,11 @@ namespace Senparc.Ncf.Service
             }
         }
 
+        /// <summary>
+        /// Initializes a client service over a client repository.
+        /// </summary>
+        /// <param name="repo">The client repository for entity persistence.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public ClientServiceBase(IClientRepositoryBase<T> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {

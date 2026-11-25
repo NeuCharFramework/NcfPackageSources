@@ -57,6 +57,10 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
                 }
             }
 
+            /// <summary>
+            /// Initializes diagnostic information for the NCF in-memory options extension.
+            /// </summary>
+            /// <param name="extension">The options extension represented by this diagnostic object.</param>
             public ExtensionInfo(IDbContextOptionsExtension extension)
                 : base(extension)
             {
@@ -138,6 +142,9 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         //     changed or removed without notice in any release. You should only use it directly
         //     in your code with extreme caution and knowing that doing so can result in application
         //     failures when updating to a new Entity Framework Core release.
+        /// <summary>
+        /// Initializes empty NCF in-memory database options.
+        /// </summary>
         public InMemoryOptionsExtensionForNcf()
         {
         }
@@ -149,6 +156,10 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         //     changed or removed without notice in any release. You should only use it directly
         //     in your code with extreme caution and knowing that doing so can result in application
         //     failures when updating to a new Entity Framework Core release.
+        /// <summary>
+        /// Copies the mutable store and database-root settings from an existing extension.
+        /// </summary>
+        /// <param name="copyFrom">The extension whose settings should be copied.</param>
         protected InMemoryOptionsExtensionForNcf(InMemoryOptionsExtensionForNcf copyFrom)
         {
             _storeName = copyFrom.StoreName;
@@ -174,6 +185,11 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         //     changed or removed without notice in any release. You should only use it directly
         //     in your code with extreme caution and knowing that doing so can result in application
         //     failures when updating to a new Entity Framework Core release.
+        /// <summary>
+        /// Creates a cloned options extension with the specified in-memory store name.
+        /// </summary>
+        /// <param name="storeName">The logical store name used by the in-memory provider.</param>
+        /// <returns>A cloned extension containing the requested store name.</returns>
         public virtual InMemoryOptionsExtensionForNcf WithStoreName(string storeName)
         {
             InMemoryOptionsExtensionForNcf inMemoryOptionsExtension = Clone() as InMemoryOptionsExtensionForNcf;
@@ -194,6 +210,11 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         //     changed or removed without notice in any release. You should only use it directly
         //     in your code with extreme caution and knowing that doing so can result in application
         //     failures when updating to a new Entity Framework Core release.
+        /// <summary>
+        /// Creates a cloned options extension with the requested nullability-check setting.
+        /// </summary>
+        /// <param name="nullabilityCheckEnabled">Whether entity nullability checks should be enabled.</param>
+        /// <returns>A cloned extension containing the requested setting.</returns>
         public virtual InMemoryOptionsExtensionForNcf WithNullabilityCheckEnabled(bool nullabilityCheckEnabled)
         {
             InMemoryOptionsExtensionForNcf inMemoryOptionsExtension = Clone() as InMemoryOptionsExtensionForNcf;
@@ -214,6 +235,11 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         //     changed or removed without notice in any release. You should only use it directly
         //     in your code with extreme caution and knowing that doing so can result in application
         //     failures when updating to a new Entity Framework Core release.
+        /// <summary>
+        /// Creates a cloned options extension using the supplied shared database root.
+        /// </summary>
+        /// <param name="databaseRoot">The root used to share in-memory database state.</param>
+        /// <returns>A cloned extension containing the requested root.</returns>
         public virtual InMemoryOptionsExtensionForNcf WithDatabaseRoot(InMemoryDatabaseRoot databaseRoot)
         {
             InMemoryOptionsExtensionForNcf inMemoryOptionsExtension = Clone() as InMemoryOptionsExtensionForNcf;
@@ -246,6 +272,10 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         //     changed or removed without notice in any release. You should only use it directly
         //     in your code with extreme caution and knowing that doing so can result in application
         //     failures when updating to a new Entity Framework Core release.
+        /// <summary>
+        /// Validates provider options required by the NCF in-memory integration.
+        /// </summary>
+        /// <param name="options">The complete EF Core options collection.</param>
         public virtual void Validate(IDbContextOptions options)
         {
 

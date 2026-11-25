@@ -38,12 +38,24 @@ public class WeixinClawMessageReceiptService : ServiceBase<WeixinClawMessageRece
         "IX_WeixinManager_WeixinClawMessageReceipt_WeixinClawAccountId_~"
     ];
 
+    /// <summary>
+    /// Initializes the inbound message receipt service.
+    /// </summary>
+    /// <param name="repo">Receipt repository.</param>
+    /// <param name="serviceProvider">Dependency-injection provider.</param>
     public WeixinClawMessageReceiptService(
         IRepositoryBase<WeixinClawMessageReceipt> repo,
         System.IServiceProvider serviceProvider) : base(repo, serviceProvider)
     {
     }
 
+    /// <summary>
+    /// Checks whether an inbound message receipt already exists for the account/message/sequence tuple.
+    /// </summary>
+    /// <param name="accountId">The Weixin account identifier.</param>
+    /// <param name="messageId">The protocol message identifier.</param>
+    /// <param name="seq">The protocol sequence number.</param>
+    /// <returns><see langword="true"/> when the receipt exists.</returns>
     public async Task<bool> ExistsAsync(int accountId, string messageId, long seq)
     {
         var count = await GetCountAsync(z =>
@@ -53,6 +65,13 @@ public class WeixinClawMessageReceiptService : ServiceBase<WeixinClawMessageRece
         return count > 0;
     }
 
+    /// <summary>
+    /// Creates a receipt atomically and treats supported unique-constraint violations as duplicates.
+    /// </summary>
+    /// <param name="accountId">The Weixin account identifier.</param>
+    /// <param name="messageId">The protocol message identifier.</param>
+    /// <param name="seq">The protocol sequence number.</param>
+    /// <returns><see langword="true"/> when a new receipt was created; otherwise, <see langword="false"/> for duplicates.</returns>
     public async Task<bool> TryCreateAsync(int accountId, string messageId, long seq)
     {
         try

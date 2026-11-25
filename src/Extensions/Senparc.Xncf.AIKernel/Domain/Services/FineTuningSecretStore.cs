@@ -35,10 +35,19 @@ public sealed class FineTuningSecretStore
     public string DirectoryPath { get; }
 
     [ActivatorUtilitiesConstructor]
+    /// <summary>
+    /// Initializes the secret store below the host content root.
+    /// </summary>
+    /// <param name="environment">Host environment used to resolve the secret directory.</param>
     public FineTuningSecretStore(IHostEnvironment environment) : this(DirectoryFor(environment.ContentRootPath))
     {
     }
 
+    /// <summary>
+    /// Initializes the secret store with an absolute directory path.
+    /// </summary>
+    /// <param name="directory">The absolute secret directory.</param>
+    /// <exception cref="ArgumentException">Thrown when the directory is empty or relative.</exception>
     public FineTuningSecretStore(string directory)
     {
         if (string.IsNullOrWhiteSpace(directory) || !Path.IsPathRooted(directory))
@@ -46,9 +55,20 @@ public sealed class FineTuningSecretStore
         DirectoryPath = Path.GetFullPath(directory);
     }
 
+    /// <summary>
+    /// Computes the default application-data secret directory.
+    /// </summary>
+    /// <param name="contentRoot">The application content root.</param>
+    /// <returns>The absolute secret directory path.</returns>
     public static string DirectoryFor(string contentRoot) =>
         Path.GetFullPath(Path.Combine(contentRoot, "App_Data", "Senparc.Xncf.AIKernel", "fine-tuning", "secrets"));
 
+    /// <summary>
+    /// Resolves a validated worker alias to its key-file path.
+    /// </summary>
+    /// <param name="alias">The worker alias.</param>
+    /// <returns>The key-file path inside the configured secret directory.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the alias could address a path outside the secret directory.</exception>
     public string PathFor(string alias)
     {
         var safeAlias = NormalizeAlias(alias);
@@ -58,6 +78,12 @@ public sealed class FineTuningSecretStore
         return path;
     }
 
+    /// <summary>
+    /// Reads and validates a worker secret file.
+    /// </summary>
+    /// <param name="alias">The worker alias.</param>
+    /// <param name="key">Receives the valid secret when found.</param>
+    /// <returns><see langword="true"/> when a valid secret exists.</returns>
     public bool TryRead(string alias, out string key)
     {
         key = "";
@@ -80,6 +106,13 @@ public sealed class FineTuningSecretStore
         return true;
     }
 
+    /// <summary>
+    /// Resolves a worker secret from configured options first, then the protected file store.
+    /// </summary>
+    /// <param name="options">Fine-tuning worker options.</param>
+    /// <param name="alias">The worker alias.</param>
+    /// <returns>A valid worker secret.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when no valid secret is available.</exception>
     public string Resolve(FineTuningWorkerOptions options, string alias)
     {
         if (options.WorkerApiKeys.TryGetValue(alias, out var configured) && FineTuningWorkerOptions.IsValidApiKey(configured))
@@ -89,6 +122,10 @@ public sealed class FineTuningSecretStore
         throw new NcfExceptionBase($"No valid fine-tuning worker secret is configured for '{alias}'.");
     }
 
+    /// <summary>
+    /// Lists aliases with valid key files in the secret directory.
+    /// </summary>
+    /// <returns>Configured worker aliases.</returns>
     public IReadOnlyList<string> ListConfiguredAliases()
     {
         if (!Directory.Exists(DirectoryPath))
@@ -103,6 +140,11 @@ public sealed class FineTuningSecretStore
         return aliases;
     }
 
+    /// <summary>
+    /// Creates a random 256-bit worker secret file when one does not already exist.
+    /// </summary>
+    /// <param name="alias">The worker alias.</param>
+    /// <returns>Whether a new file was created and its path.</returns>
     public (bool Created, string Path) Generate(string alias)
     {
         var path = PathFor(alias);

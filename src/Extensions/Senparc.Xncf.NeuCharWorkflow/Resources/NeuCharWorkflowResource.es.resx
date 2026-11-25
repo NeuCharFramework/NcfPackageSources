@@ -934,4 +934,14 @@
   <data name="AdminChat.Function.InspectWorkflowDescription" xml:space="preserve"><value>Lee el grafo enmascarado, la revisión y los nodos sin guardar cambios.</value></data>
   <data name="AdminChat.Function.ApplyWorkflowEdit" xml:space="preserve"><value>Aplicar edición del flujo</value></data>
   <data name="AdminChat.Function.ApplyWorkflowEditDescription" xml:space="preserve"><value>Guarda una edición mínima explícita con la revisión inspeccionada y conserva secretos, desencadenador y estado.</value></data>
+  <data name="AdminChat.Command.Workflow.Parameter.Id" xml:space="preserve"><value>Workflow</value></data>
+  <data name="AdminChat.Command.Workflow.Parameter.IdHint" xml:space="preserve"><value>Selecciona un Workflow del administrador actual</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.Input" xml:space="preserve"><value>Entrada del Workflow</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.InputHint" xml:space="preserve"><value>Introduce datos opcionales para esta ejecución</value></data>
+  <data name="AdminChat.Command.RunWorkflow.Parameter.InputPlaceholder" xml:space="preserve"><value>Describe la entrada o tarea</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.Revision" xml:space="preserve"><value>Revisión</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.RevisionHint" xml:space="preserve"><value>Revisión esperada opcional para controlar conflictos</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.Change" xml:space="preserve"><value>Cambio solicitado</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.ChangeHint" xml:space="preserve"><value>Describe el cambio mínimo que se debe aplicar</value></data>
+  <data name="AdminChat.Command.EditWorkflow.Parameter.ChangePlaceholder" xml:space="preserve"><value>Describe el cambio solicitado</value></data>
 </root>

@@ -41,20 +41,26 @@ namespace Senparc.Ncf.Service
         public IRepositoryBase<T> RepositoryBase { get; set; }
         protected IServiceProvider _serviceProvider => base.ServiceProvider;
 
+        /// <summary>
+        /// Initializes a service over the repository for the entity type <typeparamref name="T"/>.
+        /// </summary>
+        /// <param name="repo">The repository that owns persistence operations for the entity.</param>
+        /// <param name="serviceProvider">The provider used to resolve optional infrastructure services such as AutoMapper.</param>
         public ServiceBase(IRepositoryBase<T> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {
             //_serviceProvider = serviceProvider;
             RepositoryBase = repo;
-            Mapper = _serviceProvider.GetService<IMapper>();//Legacy comment translated to English.
+            Mapper = _serviceProvider.GetService<IMapper>();
         }
 
         #region Insert & DetectChange
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Marks an existing entity as modified when manual change detection is in use.
+        /// New or detached entities are left to the repository's insert detection rules.
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="obj">The entity whose tracked state should be inspected.</param>
         public virtual void TryDetectChange(T obj)
         {
             if (!IsInsert(obj))
@@ -63,6 +69,11 @@ namespace Senparc.Ncf.Service
             }
         }
 
+        /// <summary>
+        /// Determines whether the repository should treat an entity as a new record.
+        /// </summary>
+        /// <param name="obj">The entity to inspect.</param>
+        /// <returns><see langword="true"/> when the repository reports an insert state; otherwise, <see langword="false"/>.</returns>
         public virtual bool IsInsert(T obj)
         {
             return RepositoryBase.IsInsert(obj);
@@ -73,41 +84,105 @@ namespace Senparc.Ncf.Service
 
         #region GetObject
 
+        /// <summary>
+        /// Retrieves the first entity matching a predicate and optional string-based navigation includes.
+        /// </summary>
+        /// <param name="where">The predicate used to select the entity.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>The first matching entity, or the default value when no entity matches.</returns>
         public virtual T GetObject(Expression<Func<T, bool>> where, params string[] includes)
         {
             return RepositoryBase.GetFirstOrDefaultObject(where, includes);
         }
 
+        /// <summary>
+        /// Asynchronously retrieves the first entity matching a predicate and optional string-based navigation includes.
+        /// </summary>
+        /// <param name="where">The predicate used to select the entity.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>A task that completes with the first matching entity, or the default value.</returns>
         public virtual async Task<T> GetObjectAsync(Expression<Func<T, bool>> where, params string[] includes)
         {
             return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, includes);
         }
 
+        /// <summary>
+        /// Retrieves the first matching entity using a strongly typed include expression.
+        /// </summary>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select the entity.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed navigation include expression.</param>
+        /// <returns>The first matching entity, or the default value when no entity matches.</returns>
         public virtual T GetObject<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return RepositoryBase.GetFirstOrDefaultObject(where, includesNavigationPropertyPathFunc);
         }
 
+        /// <summary>
+        /// Asynchronously retrieves the first matching entity using a strongly typed include expression.
+        /// </summary>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select the entity.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed navigation include expression.</param>
+        /// <returns>A task that completes with the first matching entity, or the default value.</returns>
         public virtual async Task<T> GetObjectAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, includesNavigationPropertyPathFunc);
         }
 
+        /// <summary>
+        /// Retrieves the first entity matching a predicate after applying the requested ordering and includes.
+        /// </summary>
+        /// <typeparam name="TK">The ordering key type.</typeparam>
+        /// <param name="where">The predicate used to select the entity.</param>
+        /// <param name="orderBy">The expression used to order matching entities.</param>
+        /// <param name="orderingType">The direction applied to <paramref name="orderBy"/>.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>The first ordered match, or the default value when no entity matches.</returns>
         public virtual T GetObject<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
         {
             return RepositoryBase.GetFirstOrDefaultObject(where, orderBy, orderingType, includes);
         }
 
+        /// <summary>
+        /// Asynchronously retrieves the first entity matching a predicate after applying the requested ordering and includes.
+        /// </summary>
+        /// <typeparam name="TK">The ordering key type.</typeparam>
+        /// <param name="where">The predicate used to select the entity.</param>
+        /// <param name="orderBy">The expression used to order matching entities.</param>
+        /// <param name="orderingType">The direction applied to <paramref name="orderBy"/>.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>A task that completes with the first ordered match, or the default value.</returns>
         public virtual async Task<T> GetObjectAsync<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
         {
             return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, orderBy, orderingType, includes);
         }
 
+        /// <summary>
+        /// Retrieves the first ordered entity using a strongly typed navigation include expression.
+        /// </summary>
+        /// <typeparam name="TK">The ordering key type.</typeparam>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select the entity.</param>
+        /// <param name="orderBy">The expression used to order matching entities.</param>
+        /// <param name="orderingType">The direction applied to <paramref name="orderBy"/>.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed navigation include expression.</param>
+        /// <returns>The first ordered match, or the default value when no entity matches.</returns>
         public virtual T GetObject<TK, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return RepositoryBase.GetFirstOrDefaultObject<TK, TIncludesProperty>(where, orderBy, orderingType, includesNavigationPropertyPathFunc);
         }
 
+        /// <summary>
+        /// Asynchronously retrieves the first ordered entity using a strongly typed navigation include expression.
+        /// </summary>
+        /// <typeparam name="TK">The ordering key type.</typeparam>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select the entity.</param>
+        /// <param name="orderBy">The expression used to order matching entities.</param>
+        /// <param name="orderingType">The direction applied to <paramref name="orderBy"/>.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed navigation include expression.</param>
+        /// <returns>A task that completes with the first ordered match, or the default value.</returns>
         public virtual async Task<T> GetObjectAsync<TK, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, orderBy, orderingType, includesNavigationPropertyPathFunc);
@@ -117,18 +192,29 @@ namespace Senparc.Ncf.Service
 
         #region GetFullList
 
+        /// <summary>
+        /// Retrieves all matching entities as a paged-list object with an unbounded page request.
+        /// </summary>
+        /// <typeparam name="TK">The ordering key type.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderBy">The expression used to order entities.</param>
+        /// <param name="orderingType">The direction applied to <paramref name="orderBy"/>.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>A list containing all matching entities and paging metadata.</returns>
         public virtual PagedList<T> GetFullList<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
         {
             return this.GetObjectList(0, 0, where, orderBy, orderingType, includes);
         }
 
         /// <summary>
-        /// getalldata
+        /// Asynchronously retrieves all matching entities as a paged-list object with an unbounded page request.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="where"></param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
+        /// <typeparam name="TK">The ordering key type.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderBy">The expression used to order entities.</param>
+        /// <param name="orderingType">The direction applied to <paramref name="orderBy"/>.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>A task that completes with all matching entities and paging metadata.</returns>
         public virtual async Task<PagedList<T>> GetFullListAsync<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
         {
             return await this.GetObjectListAsync(0, 0, where, orderBy, orderingType, includes);
@@ -142,11 +228,28 @@ namespace Senparc.Ncf.Service
         /// <param name="orderField">xxx desc, yyy asc</param>
         /// <param name="includes"></param>
         /// <returns></returns>
+        /// <summary>
+        /// Asynchronously retrieves all matching entities using a provider-specific order expression.
+        /// </summary>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderField">The textual order expression, such as <c>Id desc</c>.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>A task that completes with all matching entities and paging metadata.</returns>
         public virtual async Task<PagedList<T>> GetFullListAsync(Expression<Func<T, bool>> where, string orderField = null, params string[] includes)
         {
             return await RepositoryBase.GetObjectListAsync(where, orderField, 0, 0, includes);
         }
 
+        /// <summary>
+        /// Retrieves all matching entities with expression-based ordering and eager-loading.
+        /// </summary>
+        /// <typeparam name="TK">The ordering key type.</typeparam>
+        /// <typeparam name="TIncludesProperty">The navigation property type included by the query.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderBy">The expression used to order entities.</param>
+        /// <param name="orderingType">The direction applied to <paramref name="orderBy"/>.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The include expression applied to the query.</param>
+        /// <returns>All matching entities and paging metadata.</returns>
         public virtual PagedList<T> GetFullList<TK, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return this.GetObjectList<TK, TIncludesProperty>(0, 0, where, orderBy, orderingType, includesNavigationPropertyPathFunc);
@@ -231,6 +334,18 @@ namespace Senparc.Ncf.Service
             return await RepositoryBase.GetObjectListAsync(where, orderBy, pageIndex, pageCount, includes);
         }
 
+        /// <summary>
+        /// Retrieves a page of entities with expression-based ordering and eager-loading.
+        /// </summary>
+        /// <typeparam name="TK">The ordering key type.</typeparam>
+        /// <typeparam name="TIncludesProperty">The navigation property type included by the query.</typeparam>
+        /// <param name="pageIndex">The requested page index.</param>
+        /// <param name="pageCount">The maximum number of items in the page.</param>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderBy">The expression used to order entities.</param>
+        /// <param name="orderingType">The direction applied to <paramref name="orderBy"/>.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The include expression applied to the query.</param>
+        /// <returns>The requested page and paging metadata.</returns>
         public virtual PagedList<T> GetObjectList<TK, TIncludesProperty>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return RepositoryBase.GetObjectList<TK, TIncludesProperty>(where, orderBy, orderingType, pageIndex, pageCount, includesNavigationPropertyPathFunc);
@@ -272,21 +387,47 @@ namespace Senparc.Ncf.Service
 
         #region GetCount
 
+        /// <summary>
+        /// Counts entities matching a predicate, optionally including navigation paths used by the query.
+        /// </summary>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="includes">Navigation property paths applied to the query.</param>
+        /// <returns>The number of matching entities.</returns>
         public virtual int GetCount(Expression<Func<T, bool>> where, params string[] includes)
         {
             return RepositoryBase.ObjectCount(where, includes);
         }
 
+        /// <summary>
+        /// Asynchronously counts entities matching a predicate.
+        /// </summary>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="includes">Navigation property paths applied to the query.</param>
+        /// <returns>A task that completes with the number of matching entities.</returns>
         public virtual async Task<int> GetCountAsync(Expression<Func<T, bool>> where, params string[] includes)
         {
             return await RepositoryBase.ObjectCountAsync(where, includes);
         }
 
+        /// <summary>
+        /// Counts matching entities after applying an include expression.
+        /// </summary>
+        /// <typeparam name="TIncludesProperty">The navigation property type included by the query.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The include expression applied to the query.</param>
+        /// <returns>The number of matching entities.</returns>
         public virtual int GetCount<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return RepositoryBase.ObjectCount(where, includesNavigationPropertyPathFunc);
         }
 
+        /// <summary>
+        /// Asynchronously counts matching entities after applying an include expression.
+        /// </summary>
+        /// <typeparam name="TIncludesProperty">The navigation property type included by the query.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The include expression applied to the query.</param>
+        /// <returns>A task that completes with the number of matching entities.</returns>
         public virtual async Task<int> GetCountAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return await RepositoryBase.ObjectCountAsync(where, includesNavigationPropertyPathFunc);
@@ -296,17 +437,39 @@ namespace Senparc.Ncf.Service
 
         #region GetSum
 
+        /// <summary>
+        /// Calculates the decimal sum of a selected property for matching entities.
+        /// </summary>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="sum">The decimal property expression to aggregate.</param>
+        /// <param name="includes">Navigation property paths applied to the query.</param>
+        /// <returns>The aggregate decimal value.</returns>
         public virtual decimal GetSum(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, params string[] includes)
         {
             return RepositoryBase.GetSum(where, sum, includes);
         }
 
 
+        /// <summary>
+        /// Asynchronously calculates the decimal sum of a selected property.
+        /// </summary>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="sum">The decimal property expression to aggregate.</param>
+        /// <param name="includes">Navigation property paths applied to the query.</param>
+        /// <returns>A task that completes with the aggregate decimal value.</returns>
         public virtual async Task<decimal> GetSumAsync(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, params string[] includes)
         {
             return await RepositoryBase.GetSumAsync(where, sum, includes);
         }
 
+        /// <summary>
+        /// Asynchronously calculates a decimal sum with expression-based eager-loading.
+        /// </summary>
+        /// <typeparam name="TIncludesProperty">The navigation property type included by the query.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="sum">The decimal property expression to aggregate.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The include expression applied to the query.</param>
+        /// <returns>A task that completes with the aggregate decimal value.</returns>
         public virtual async Task<decimal> GetSumAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return await RepositoryBase.GetSumAsync(where, sum, includesNavigationPropertyPathFunc);
@@ -317,6 +480,11 @@ namespace Senparc.Ncf.Service
 
         #region SaveObject & SaveChanges
 
+        /// <summary>
+        /// Saves one entity and raises the configured after-save event.
+        /// Manual change detection is performed when enabled by the repository database settings.
+        /// </summary>
+        /// <param name="obj">The entity to insert or update.</param>
         public virtual void SaveObject(T obj)
         {
             if (RepositoryBase.BaseDB.ManualDetectChangeObject)
@@ -329,6 +497,11 @@ namespace Senparc.Ncf.Service
             AfterSaveObject?.Invoke(this.BaseData, obj);
         }
 
+        /// <summary>
+        /// Asynchronously saves one entity and raises the configured after-save event.
+        /// </summary>
+        /// <param name="obj">The entity to insert or update.</param>
+        /// <returns>A task that completes after persistence and event dispatch finish.</returns>
         public virtual async Task SaveObjectAsync(T obj)
         {
             if (RepositoryBase.BaseDB.ManualDetectChangeObject)
@@ -341,6 +514,11 @@ namespace Senparc.Ncf.Service
             AfterSaveObject?.Invoke(this.BaseData, obj);
         }
 
+        /// <summary>
+        /// Asynchronously saves a sequence of entities and raises the after-save event for each item.
+        /// </summary>
+        /// <param name="objs">The entities to insert or update.</param>
+        /// <returns>A task that completes after all entities are persisted.</returns>
         public virtual async Task SaveObjectListAsync(IEnumerable<T> objs)
         {
             await RepositoryBase.SaveObjectListAsync(objs);
@@ -351,6 +529,9 @@ namespace Senparc.Ncf.Service
             }
         }
 
+        /// <summary>
+        /// Commits pending repository changes and raises the after-save-changes event.
+        /// </summary>
         public virtual void SaveChanges()
         {
             RepositoryBase.SaveChanges();
@@ -358,6 +539,10 @@ namespace Senparc.Ncf.Service
             AfterSaveChanges?.Invoke(this.BaseData);
         }
 
+        /// <summary>
+        /// Asynchronously commits pending repository changes and raises the after-save-changes event.
+        /// </summary>
+        /// <returns>A task that completes after the database commit finishes.</returns>
         public virtual async Task SaveChangesAsync()
         {
             await RepositoryBase.SaveChangesAsync().ConfigureAwait(false);
@@ -371,6 +556,10 @@ namespace Senparc.Ncf.Service
         #region Delete
 
 
+        /// <summary>
+        /// Finds and deletes the first entity matching a predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate used to locate the entity.</param>
         public virtual void DeleteObject(Expression<Func<T, bool>> predicate)
         {
             T obj = GetObject(predicate);
@@ -380,6 +569,11 @@ namespace Senparc.Ncf.Service
             AfterDeleteObject?.Invoke(this.BaseData, obj);
         }
 
+        /// <summary>
+        /// Asynchronously finds and deletes the first entity matching a predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate used to locate the entity.</param>
+        /// <returns>A task that completes after deletion and event dispatch.</returns>
         public virtual async Task DeleteObjectAsync(Expression<Func<T, bool>> predicate)
         {
             T obj = await GetObjectAsync(predicate);
@@ -390,6 +584,10 @@ namespace Senparc.Ncf.Service
         }
 
 
+        /// <summary>
+        /// Deletes one entity and raises the configured after-delete event.
+        /// </summary>
+        /// <param name="obj">The entity to delete.</param>
         public virtual void DeleteObject(T obj)
         {
             RepositoryBase.Delete(obj);
@@ -397,6 +595,11 @@ namespace Senparc.Ncf.Service
             AfterDeleteObject?.Invoke(this.BaseData, obj);
         }
 
+        /// <summary>
+        /// Asynchronously deletes one entity and raises the configured after-delete event.
+        /// </summary>
+        /// <param name="obj">The entity to delete.</param>
+        /// <returns>A task that completes after deletion and event dispatch.</returns>
         public virtual async Task DeleteObjectAsync(T obj)
         {
             await RepositoryBase.DeleteAsync(obj, true);
@@ -404,6 +607,10 @@ namespace Senparc.Ncf.Service
             AfterDeleteObject?.Invoke(this.BaseData, obj);
         }
 
+        /// <summary>
+        /// Deletes each supplied entity through <see cref="DeleteObject(T)"/>.
+        /// </summary>
+        /// <param name="objects">The entities to delete.</param>
         public virtual void DeleteAll(IEnumerable<T> objects)
         {
             var list = objects.ToList();
@@ -413,6 +620,13 @@ namespace Senparc.Ncf.Service
             }
         }
 
+        /// <summary>
+        /// Loads all matching entities and deletes them as a batch.
+        /// </summary>
+        /// <param name="where">The predicate selecting entities to delete.</param>
+        /// <param name="deleteItemAction">An optional callback invoked by the repository for each entity.</param>
+        /// <param name="softDelete">Whether the repository should perform a soft delete when supported.</param>
+        /// <returns>A task that completes after deletion and after-delete events.</returns>
         public virtual async Task DeleteAllAsync(Expression<Func<T, bool>> where, Action<T> deleteItemAction = null, bool softDelete = false)
         {
             var list = await GetFullListAsync(where);
@@ -424,6 +638,13 @@ namespace Senparc.Ncf.Service
             }
         }
 
+        /// <summary>
+        /// Deletes the supplied entity sequence as a batch.
+        /// </summary>
+        /// <param name="objects">The entities to delete.</param>
+        /// <param name="deleteItemAction">An optional callback invoked by the repository for each entity.</param>
+        /// <param name="softDelete">Whether the repository should perform a soft delete when supported.</param>
+        /// <returns>A task that completes after deletion and after-delete events.</returns>
         public virtual async Task DeleteAllAsync(IEnumerable<T> objects, Action<T> deleteItemAction = null, bool softDelete = false)
         {
             await RepositoryBase.DeleteAllAsync(objects, deleteItemAction, softDelete);
@@ -439,18 +660,20 @@ namespace Senparc.Ncf.Service
         #region Transaction
 
         /// <summary>
-        /// enable transactions
+        /// Begins a repository transaction for subsequent service operations.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A task that completes after the transaction has been opened.</returns>
         public async Task BeginTransactionAsync()
         {
             await RepositoryBase.BeginTransactionAsync();
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Begins a transaction, executes a synchronous body, and commits or rolls back as a unit.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="action">The operation to execute inside the transaction.</param>
+        /// <returns>A task that completes after commit or rollback.</returns>
+        /// <exception cref="Exception">Rethrows the body exception after rolling back the transaction.</exception>
         public async Task BeginTransactionAsync(Action action)
         {
             await RepositoryBase.BeginTransactionAsync();
@@ -467,18 +690,19 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// enable transactions
+        /// Begins a repository transaction for subsequent synchronous service operations.
         /// </summary>
-        /// <returns></returns>
         public void BeginTransaction()
         {
             RepositoryBase.BeginTransaction();
         }
 
         /// <summary>
-        /// enable transactions
+        /// Begins a transaction, executes a synchronous body, and commits or rolls back as a unit.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="body">The operation to execute inside the transaction.</param>
+        /// <param name="rollbackAction">An optional callback invoked with the original exception after rollback.</param>
+        /// <exception cref="Exception">Rethrows the body exception after rollback and callback execution.</exception>
         public void BeginTransaction(Action body, Action<Exception> rollbackAction = null)
         {
             BeginTransaction();
@@ -497,9 +721,12 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Begins a transaction, awaits an asynchronous body, and commits or rolls back as a unit.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="body">The asynchronous operation to execute inside the transaction.</param>
+        /// <param name="rollbackAction">An optional callback invoked with the original exception after rollback.</param>
+        /// <returns>A task that completes after commit or rollback.</returns>
+        /// <exception cref="Exception">Rethrows the body exception after rollback and callback execution.</exception>
         public async Task BeginTransactionAsync(Func<Task> body, Action<Exception> rollbackAction = null)
         {
             await BeginTransactionAsync();
@@ -518,11 +745,13 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Begins a transaction, awaits an asynchronous body, and allows the rollback callback
+        /// to replace the original exception before it is thrown.
         /// </summary>
-        /// <param name="body"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="body">The asynchronous operation to execute inside the transaction.</param>
+        /// <param name="rollbackAction">A callback that may translate the body exception.</param>
+        /// <returns>A task that completes after commit or rollback.</returns>
+        /// <exception cref="Exception">Throws the translated rollback exception or the original exception.</exception>
         public async Task BeginTransactionAsync(Func<Task> body, Func<Exception, Exception> rollbackAction)
         {
             await BeginTransactionAsync();
@@ -540,11 +769,13 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Begins a transaction, awaits an asynchronous body, and allows an asynchronous rollback
+        /// callback to replace the original exception before it is thrown.
         /// </summary>
-        /// <param name="body"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="bodyAsync">The asynchronous operation to execute inside the transaction.</param>
+        /// <param name="rollbackActionAsync">An asynchronous callback that may translate the body exception.</param>
+        /// <returns>A task that completes after commit or rollback.</returns>
+        /// <exception cref="Exception">Throws the translated rollback exception or the original exception.</exception>
         public async Task BeginTransactionAsync(Func<Task> bodyAsync, Func<Exception, Task<Exception>> rollbackActionAsync)
         {
             await BeginTransactionAsync();
@@ -562,18 +793,16 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Rolls back the current repository transaction.
         /// </summary>
-        /// <returns></returns>
         public void RollbackTransaction()
         {
             RepositoryBase.RollbackTransaction();
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Commits the current repository transaction.
         /// </summary>
-        /// <returns></returns>
         public void CommitTransaction()
         {
             RepositoryBase.CommitTransaction();
@@ -584,22 +813,22 @@ namespace Senparc.Ncf.Service
         #region Mapping
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Maps one entity to a data-transfer object using the configured AutoMapper instance.
         /// </summary>
-        /// <typeparam name="TDto"></typeparam>
-        /// <param name="entity"></param>
-        /// <returns></returns>
+        /// <typeparam name="TDto">The destination DTO type.</typeparam>
+        /// <param name="entity">The entity to map.</param>
+        /// <returns>The mapped DTO.</returns>
         public TDto Mapping<TDto>(T entity)
         {
             return Mapper.Map<TDto>(entity);
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Maps every entity in a paged list while preserving its paging metadata.
         /// </summary>
-        /// <typeparam name="TDto"></typeparam>
-        /// <param name="pagedList"></param>
-        /// <returns></returns>
+        /// <typeparam name="TDto">The destination DTO type.</typeparam>
+        /// <param name="pagedList">The source page and its entity items.</param>
+        /// <returns>A DTO page with the original page index, counts, and skip count.</returns>
         public PagedList<TDto> Mapping<TDto>(PagedList<T> pagedList)
         {
             var dtoList = pagedList.Select(Mapper.Map<TDto>).ToList();
@@ -611,10 +840,10 @@ namespace Senparc.Ncf.Service
         #region Tenant
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Applies tenant information to the underlying multi-tenant database context when supported.
         /// </summary>
-        /// <param name="requestTenantInfo"></param>
-        /// <returns></returns>
+        /// <param name="requestTenantInfo">The tenant information to assign to the current database context.</param>
+        /// <returns><see langword="true"/> when the underlying context accepts tenant information; otherwise, <see langword="false"/>.</returns>
         public bool SetTenantInfo(RequestTenantInfo requestTenantInfo)
         {
             if (this.BaseData.BaseDB.BaseDataContext is ISenparcEntitiesDbContext senparcDB)

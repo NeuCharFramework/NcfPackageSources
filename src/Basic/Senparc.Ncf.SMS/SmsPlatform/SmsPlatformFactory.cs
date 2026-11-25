@@ -22,6 +22,15 @@ namespace Senparc.Ncf.SMS
 {
     public static class SmsPlatformFactory
     {
+        /// <summary>
+        /// Creates the configured SMS provider implementation for the selected platform.
+        /// </summary>
+        /// <param name="smsAccountCorpid">The provider account or corporation identifier.</param>
+        /// <param name="smsAccountName">The provider account name.</param>
+        /// <param name="smsAccountPassword">The provider account password.</param>
+        /// <param name="smsAccountSubNumber">The provider sub-number.</param>
+        /// <param name="smsPlatformType">The provider type; JunMei is used by default.</param>
+        /// <returns>A provider instance initialized with the supplied account settings.</returns>
         public static ISmsPlatform GetSmsPlateform(string smsAccountCorpid, string smsAccountName,
             string smsAccountPassword, string smsAccountSubNumber, SmsPlatformType smsPlatformType = SmsPlatformType.JunMei)
         {

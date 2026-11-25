@@ -34,6 +34,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
 
+    Modified by: Senparc - 20261125
+    Change description: v0.12.29 Improved AdminChat conversation loading and command parameter feedback.
+
 ----------------------------------------------------------------*/
 using Microsoft.EntityFrameworkCore;
 using Senparc.Areas.Admin.ACL;
@@ -210,21 +213,46 @@ namespace Senparc.Areas.Admin.Domain.Services
             var storage = _serviceProvider.GetService<IWorkspaceStorage>();
             if (session == null || storage == null || string.IsNullOrWhiteSpace(session.WorkspaceId))
                 return Array.Empty<AdminChatAttachment>();
-            var paths = new List<string>();
+            var changes = new Dictionary<string, string>(StringComparer.Ordinal);
+            var actions = new List<AdminChatAttachment>();
             foreach (var trajectoryEvent in harness.TrajectoryEvents)
             {
-                if (!string.Equals(trajectoryEvent.EventType, "workspace.change", StringComparison.OrdinalIgnoreCase)
-                    || string.IsNullOrWhiteSpace(trajectoryEvent.PayloadJson))
+                if (string.IsNullOrWhiteSpace(trajectoryEvent.PayloadJson))
+                    continue;
+                if (string.Equals(trajectoryEvent.EventType, "tool.result", StringComparison.OrdinalIgnoreCase))
+                {
+                    try
+                    {
+                        using var actionDocument = JsonDocument.Parse(trajectoryEvent.PayloadJson);
+                        CollectChatTaskActions(actionDocument.RootElement, actions);
+                    }
+                    catch (JsonException error)
+                    {
+                        SenparcTrace.SendCustomLog("AdminChat.ActionArtifact",
+                            $"Ignored invalid action payload: {error.Message}");
+                    }
+                    continue;
+                }
+                if (!string.Equals(trajectoryEvent.EventType, "workspace.change", StringComparison.OrdinalIgnoreCase))
                     continue;
                 try
                 {
                     using var document = JsonDocument.Parse(trajectoryEvent.PayloadJson);
                     var change = document.RootElement.GetProperty("change");
                     var changeType = change.GetProperty("changeType").GetString();
-                    if (string.Equals(changeType, "deleted", StringComparison.OrdinalIgnoreCase))
-                        continue;
                     var path = change.GetProperty("path").GetString();
-                    if (!string.IsNullOrWhiteSpace(path)) paths.Add(path);
+                    if (string.IsNullOrWhiteSpace(path))
+                        continue;
+                    changes[path] = string.IsNullOrWhiteSpace(changeType) ? "changed" : changeType;
+                    if (change.TryGetProperty("previousRelativePath", out var previousPathElement))
+                    {
+                        var previousPath = previousPathElement.GetString();
+                        if (!string.IsNullOrWhiteSpace(previousPath)
+                            && !string.Equals(previousPath, path, StringComparison.Ordinal))
+                        {
+                            changes[previousPath] = "deleted";
+                        }
+                    }
                 }
                 catch (Exception error) when (error is JsonException or InvalidOperationException)
                 {
@@ -232,12 +260,30 @@ namespace Senparc.Areas.Admin.Domain.Services
                         $"Ignored invalid trajectory payload: {error.Message}");
                 }
             }
-            var result = new List<AdminChatAttachment>();
-            foreach (var path in paths.Distinct(StringComparer.Ordinal).Take(4))
+            var result = actions
+                .GroupBy(action => action.ActionTargetId)
+                .Select(group => group.First())
+                .Take(20)
+                .ToList();
+            foreach (var (path, changeType) in changes.Take(80))
             {
                 try
                 {
                     var normalized = WorkspaceAssetPreviewBuilder.NormalizePath(path);
+                    if (string.Equals(changeType, "deleted", StringComparison.OrdinalIgnoreCase))
+                    {
+                        result.Add(new AdminChatAttachment
+                        {
+                            RelativePath = normalized,
+                            Name = Path.GetFileName(normalized),
+                            ContentType = "",
+                            IsWorkspaceArtifact = true,
+                            ChangeType = changeType,
+                            PreviewKind = "file",
+                            CreatedAt = DateTimeOffset.UtcNow
+                        });
+                        continue;
+                    }
                     var metadata = await storage.GetFileInfoAsync(session.WorkspaceId, normalized);
                     if (metadata.IsDirectory) continue;
                     result.Add(new AdminChatAttachment
@@ -248,6 +294,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                         Size = metadata.Length,
                         ETag = metadata.ETag,
                         IsWorkspaceArtifact = true,
+                        ChangeType = changeType,
                         PreviewKind = WorkspaceTextFiles.Is3D(normalized) ? "3d"
                             : metadata.Length > 0 && WorkspaceTextFiles.ResolveContentType(normalized).StartsWith("image/")
                                 ? "image"
@@ -263,6 +310,104 @@ namespace Senparc.Areas.Admin.Domain.Services
                 }
             }
             return result;
+        }
+
+        private static void CollectChatTaskActions(
+            JsonElement element,
+            List<AdminChatAttachment> actions)
+        {
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.Array:
+                    foreach (var item in element.EnumerateArray())
+                    {
+                        CollectChatTaskActions(item, actions);
+                    }
+                    break;
+                case JsonValueKind.String:
+                    var text = element.GetString();
+                    if (string.IsNullOrWhiteSpace(text)
+                        || (!text.Contains("admin-chat-action", StringComparison.Ordinal)
+                            && !text.Contains("agents-task", StringComparison.Ordinal)))
+                    {
+                        break;
+                    }
+                    try
+                    {
+                        using var nested = JsonDocument.Parse(text);
+                        CollectChatTaskActions(nested.RootElement, actions);
+                    }
+                    catch (JsonException)
+                    {
+                        var start = text.IndexOf('{', StringComparison.Ordinal);
+                        var end = text.LastIndexOf('}');
+                        if (start >= 0 && end > start)
+                        {
+                            try
+                            {
+                                using var embedded = JsonDocument.Parse(text[start..(end + 1)]);
+                                CollectChatTaskActions(embedded.RootElement, actions);
+                            }
+                            catch (JsonException)
+                            {
+                            }
+                        }
+                    }
+                    break;
+                case JsonValueKind.Object:
+                    if (element.TryGetProperty("task", out var task)
+                        && task.ValueKind == JsonValueKind.Object
+                        && TryGetInt32(task, "ChatTaskId", out var taskId)
+                        && taskId > 0)
+                    {
+                        var groupName = TryGetString(task, "ChatGroupName");
+                        actions.Add(new AdminChatAttachment
+                        {
+                            Name = string.IsNullOrWhiteSpace(groupName)
+                                ? $"ChatTask #{taskId}"
+                                : groupName,
+                            ActionType = "agents-task",
+                            ActionTargetId = taskId,
+                            PreviewKind = "action",
+                            Notice = "Open the Agent task session",
+                            CreatedAt = DateTimeOffset.UtcNow
+                        });
+                    }
+                    foreach (var property in element.EnumerateObject())
+                    {
+                        if (!string.Equals(property.Name, "task", StringComparison.OrdinalIgnoreCase))
+                        {
+                            CollectChatTaskActions(property.Value, actions);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private static bool TryGetInt32(JsonElement element, string name, out int value)
+        {
+            value = 0;
+            foreach (var property in element.EnumerateObject())
+            {
+                if (!string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase))
+                    continue;
+                return property.Value.TryGetInt32(out value);
+            }
+            return false;
+        }
+
+        private static string TryGetString(JsonElement element, string name)
+        {
+            foreach (var property in element.EnumerateObject())
+            {
+                if (string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return property.Value.ValueKind == JsonValueKind.String
+                        ? property.Value.GetString()
+                        : property.Value.ToString();
+                }
+            }
+            return null;
         }
 
         /// <summary>

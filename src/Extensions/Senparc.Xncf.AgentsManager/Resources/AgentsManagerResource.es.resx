@@ -1294,6 +1294,12 @@
   <data name="Studio.Loading" xml:space="preserve">
     <value>Cargando…</value>
   </data>
+  <data name="Studio.LoadingConversation" xml:space="preserve">
+    <value>Cargando la conversación…</value>
+  </data>
+  <data name="Studio.NoConversationRecords" xml:space="preserve">
+    <value>Aún no hay registros de conversación</value>
+  </data>
   <data name="Studio.Rounds" xml:space="preserve">
     <value>rondas</value>
   </data>
@@ -1777,4 +1783,9 @@
   <data name="Frontend.AgentsManager.FailedToRefreshKnowledgeBaseStatus" xml:space="preserve"><value>Error al actualizar el estado de la base de conocimiento</value></data>
   <data name="AdminChat.Command.RunAgentGroup" xml:space="preserve"><value>Ejecutar un grupo de agentes</value></data>
   <data name="AdminChat.Command.RunAgentGroupHint" xml:space="preserve"><value>Describe la tarea y reutiliza el grupo existente que mejor coincida</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.Group" xml:space="preserve"><value>Grupo de agentes</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.GroupHint" xml:space="preserve"><value>Selecciona un grupo de agentes habilitado</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.Task" xml:space="preserve"><value>Tarea</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.TaskHint" xml:space="preserve"><value>Describe la tarea que se ejecutará</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.TaskPlaceholder" xml:space="preserve"><value>Introduce la descripción de la tarea</value></data>
 </root>

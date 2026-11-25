@@ -32,20 +32,33 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Executes reflection-based, schema-guided database queries without exposing arbitrary SQL.
     /// </summary>
     public class DatabaseExecutor
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly DatabaseSchemaMetadataProvider _metadataProvider;
 
+        /// <summary>
+        /// Initializes the database query executor.
+        /// </summary>
+        /// <param name="serviceProvider">Provider used to resolve typed services.</param>
+        /// <param name="metadataProvider">Schema metadata used to resolve modules and entities.</param>
         public DatabaseExecutor(IServiceProvider serviceProvider, DatabaseSchemaMetadataProvider metadataProvider)
         {
             _serviceProvider = serviceProvider;
             _metadataProvider = metadataProvider;
         }
 
+        /// <summary>
+        /// Queries a bounded page of entity rows using a generated string-property contains predicate.
+        /// </summary>
+        /// <param name="moduleName">The module name or resolvable module input.</param>
+        /// <param name="tableName">The entity/table name.</param>
+        /// <param name="filter">Optional text applied to all readable string properties.</param>
+        /// <param name="pageNumber">The one-based page number.</param>
+        /// <param name="pageSize">The requested page size, bounded to 100.</param>
+        /// <returns>A query result object containing metadata, total count, and rows.</returns>
         public async Task<object> QueryRecordsAsync(string moduleName, string tableName, string filter, int pageNumber, int pageSize)
         {
             var schema = _metadataProvider.GetSchemaByTable(moduleName, tableName);
@@ -77,6 +90,12 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             };
         }
 
+        /// <summary>
+        /// Returns row count and filterable column metadata for a resolved entity/table.
+        /// </summary>
+        /// <param name="moduleName">The module name or resolvable module input.</param>
+        /// <param name="tableName">The entity/table name.</param>
+        /// <returns>A statistics object, or a schema/type-not-found message.</returns>
         public async Task<object> GetTableStatisticsAsync(string moduleName, string tableName)
         {
             var schema = _metadataProvider.GetSchemaByTable(moduleName, tableName);

@@ -32,8 +32,8 @@ using System.Linq;
 namespace Senparc.Ncf.Core.EventBus
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Consumes integration events from the in-memory event bus, enforces configured
+    /// duplicate/depth/cycle limits, and dispatches handlers with bounded concurrency.
     /// </summary>
     public class EventBusHostedService : BackgroundService
     {
@@ -42,6 +42,13 @@ namespace Senparc.Ncf.Core.EventBus
         private readonly ILogger<EventBusHostedService> _logger;
         private readonly EventBusOptions _options;
 
+        /// <summary>
+        /// Initializes the hosted event-bus consumer.
+        /// </summary>
+        /// <param name="eventBus">The in-memory event bus whose reader supplies events.</param>
+        /// <param name="serviceProvider">The provider used to resolve event handlers in a scoped lifetime.</param>
+        /// <param name="logger">The logger used for lifecycle, dispatch, retry, and failure diagnostics.</param>
+        /// <param name="options">Optional dispatch limits and retry behavior.</param>
         public EventBusHostedService(
             InMemoryEventBus eventBus,
             IServiceProvider serviceProvider,
@@ -54,6 +61,13 @@ namespace Senparc.Ncf.Core.EventBus
             _options = options ?? new EventBusOptions();
         }
 
+        /// <summary>
+        /// Reads events until cancellation, validates event-chain safeguards, and dispatches
+        /// accepted events using the configured concurrency and retry policy.
+        /// </summary>
+        /// <param name="stoppingToken">The token used to stop reading and dispatching events.</param>
+        /// <returns>A task that completes when the event stream is exhausted or cancellation is requested.</returns>
+        /// <exception cref="OperationCanceledException">Observed internally to finish graceful shutdown.</exception>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation(
@@ -63,7 +77,7 @@ namespace Senparc.Ncf.Core.EventBus
                 _options.MaxEventChainDepth,
                 _options.EnableCircularReferenceDetection);
 
-            //Legacy comment translated to English.
+            // The semaphore limits handler work while the reader continues to accept queued events.
             using var semaphore = new SemaphoreSlim(_options.MaxConcurrency);
             var activeTasks = new List<Task>();
 
@@ -71,7 +85,6 @@ namespace Senparc.Ncf.Core.EventBus
             {
                 await foreach (var @event in _eventBus.Reader.ReadAllAsync(stoppingToken))
                 {
-                    //Legacy comment translated to English.
                     if (_options.EnableDuplicateDetection)
                     {
                         if (!_eventBus.TryMarkEventAsProcessed(@event.Id))
@@ -84,7 +97,6 @@ namespace Senparc.Ncf.Core.EventBus
                         }
                     }
                     
-                    //Legacy comment translated to English.
                     if (@event.Depth >= _options.MaxEventChainDepth)
                     {
                         _logger.LogError(
@@ -96,7 +108,6 @@ namespace Senparc.Ncf.Core.EventBus
                         continue;
                     }
                     
-                    //Legacy comment translated to English.
                     if (_options.EnableCircularReferenceDetection)
                     {
                         var currentEventType = @event.GetType().Name;
@@ -113,10 +124,8 @@ namespace Senparc.Ncf.Core.EventBus
                         }
                     }
 
-                    //Legacy comment translated to English.
                     await semaphore.WaitAsync(stoppingToken);
 
-                    //Legacy comment translated to English.
                     var task = Task.Run(async () =>
                     {
                         try
@@ -132,7 +141,6 @@ namespace Senparc.Ncf.Core.EventBus
                                 @event.Id,
                                 @event.Depth);
                             
-                            //Legacy comment translated to English.
                             if (_options.RetryOnFailure && _options.MaxRetryAttempts > 0)
                             {
                                 await RetryEventProcessingAsync(@event, stoppingToken);
@@ -140,21 +148,18 @@ namespace Senparc.Ncf.Core.EventBus
                         }
                         finally
                         {
-                            //Legacy comment translated to English.
                             semaphore.Release();
                         }
                     }, stoppingToken);
 
                     activeTasks.Add(task);
 
-                    //Legacy comment translated to English.
                     if (activeTasks.Count >= _options.MaxConcurrency * 2)
                     {
                         activeTasks.RemoveAll(t => t.IsCompleted);
                     }
                 }
 
-                //Legacy comment translated to English.
                 await Task.WhenAll(activeTasks);
             }
             catch (OperationCanceledException)
@@ -168,18 +173,23 @@ namespace Senparc.Ncf.Core.EventBus
             }
         }
 
+        /// <summary>
+        /// Resolves all handlers for the concrete event type and invokes them in registration order.
+        /// A pending request is completed before handler dispatch so response events can satisfy
+        /// request callers even when no additional handler is registered.
+        /// </summary>
+        /// <param name="@event">The integration event to dispatch.</param>
+        /// <param name="ct">The cancellation token passed to each handler.</param>
+        /// <returns>A task that completes after all resolved handlers finish.</returns>
+        /// <exception cref="Exception">Propagates a handler failure after logging it.</exception>
         private async Task ProcessEventAsync(IIntegrationEvent @event, CancellationToken ct)
         {
             var startTime = DateTime.UtcNow;
 
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
             var completedPendingRequest = _eventBus.TryCompleteRequest(@event);
             
-            //Legacy comment translated to English.
             using var scope = _serviceProvider.CreateScope();
 
-            //Legacy comment translated to English.
             var handlerType = typeof(IIntegrationEventHandler<>).MakeGenericType(@event.GetType());
             var handlers = scope.ServiceProvider.GetServices(handlerType).ToList();
 
@@ -240,7 +250,7 @@ namespace Senparc.Ncf.Core.EventBus
                         @event.Id,
                         @event.Depth,
                         @event.EventChain);
-                    throw; //Legacy comment translated to English.
+                    throw;
                 }
             }
 
@@ -253,6 +263,13 @@ namespace Senparc.Ncf.Core.EventBus
                 totalDuration.TotalMilliseconds);
         }
 
+        /// <summary>
+        /// Retries event dispatch using exponentially increasing delays until it succeeds,
+        /// cancellation is requested, or the configured attempt count is exhausted.
+        /// </summary>
+        /// <param name="@event">The event whose dispatch should be retried.</param>
+        /// <param name="ct">The cancellation token used during delays and handler execution.</param>
+        /// <returns>A task that completes after a successful retry or after all attempts fail.</returns>
         private async Task RetryEventProcessingAsync(IIntegrationEvent @event, CancellationToken ct)
         {
             for (int attempt = 1; attempt <= _options.MaxRetryAttempts; attempt++)
@@ -266,7 +283,6 @@ namespace Senparc.Ncf.Core.EventBus
                         attempt,
                         _options.MaxRetryAttempts);
 
-                    //Legacy comment translated to English.
                     var delay = TimeSpan.FromSeconds(Math.Pow(2, attempt - 1));
                     await Task.Delay(delay, ct);
 
@@ -277,7 +293,7 @@ namespace Senparc.Ncf.Core.EventBus
                         @event.GetType().Name,
                         @event.Id,
                         attempt);
-                    return; //Legacy comment translated to English.
+                    return;
                 }
                 catch (Exception ex)
                 {
@@ -302,44 +318,43 @@ namespace Senparc.Ncf.Core.EventBus
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Controls event-bus concurrency, duplicate/depth/cycle protection, request timeout,
+    /// and retry behavior for <see cref="EventBusHostedService"/>.
     /// </summary>
     public class EventBusOptions
     {
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Gets or sets the maximum number of events processed concurrently.
         /// </summary>
         public int MaxConcurrency { get; set; } = Math.Max(4, Environment.ProcessorCount * 2);
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether already-processed event identifiers are skipped.
         /// </summary>
         public bool EnableDuplicateDetection { get; set; } = true;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether handler failures should trigger retries.
         /// </summary>
         public bool RetryOnFailure { get; set; } = true;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the maximum number of retry attempts after the initial dispatch.
         /// </summary>
         public int MaxRetryAttempts { get; set; } = 3;
         
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the maximum permitted event-chain depth.
         /// </summary>
         public int MaxEventChainDepth { get; set; } = 10;
         
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether an event type already present in its chain is rejected.
         /// </summary>
         public bool EnableCircularReferenceDetection { get; set; } = true;
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Gets or sets the maximum duration allowed for request/response event correlation.
         /// </summary>
         public TimeSpan MaxRequestTimeout { get; set; } = TimeSpan.FromMinutes(5);
     }

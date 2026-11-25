@@ -111,6 +111,9 @@
         2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
         [2026-11-24] v0.29.1 Expanded chat tool contracts and registry support for agent workflows.
         1. Updated functional behavior and package metadata for the current module changes.
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-25] v0.29.1 Expanded chat-tool contracts with dynamic parameter definitions and option providers.
+        1. Added reusable parameter metadata and asynchronous option-provider contracts for chat integrations.
         2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

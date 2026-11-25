@@ -18,33 +18,35 @@
 namespace Senparc.Xncf.Dapr.Utils.Serializer
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the JSON serialization boundary used by the Dapr integration.
+    /// Implementations may provide custom converters and naming rules, but must
+    /// preserve the null/default behavior documented by each member.
     /// </summary>
     public interface ISerializer
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Serializes a value to JSON.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="input"></param>
-        /// <param name="IngoreOptions"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The runtime type of the value being serialized.</typeparam>
+        /// <param name="input">The value to serialize.</param>
+        /// <param name="IngoreOptions">When <see langword="true"/>, bypasses implementation-specific serializer options.</param>
+        /// <returns>The serialized JSON text, or the default string value when serialization fails.</returns>
         string SerializesJson<T>(T input, bool IngoreOptions = false);
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deserializes JSON text into a statically selected type.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="input"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type to which the JSON payload is converted.</typeparam>
+        /// <param name="input">The JSON payload to deserialize.</param>
+        /// <returns>The deserialized value, or the default value when the input is empty or invalid.</returns>
         T DeserializesJson<T>(string input);
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deserializes JSON text into a runtime-supplied type.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="input"></param>
-        /// <returns></returns>
+        /// <param name="type">The runtime type to which the JSON payload is converted.</param>
+        /// <param name="input">The JSON payload to deserialize.</param>
+        /// <returns>The deserialized object, or <see langword="null"/> when the input is empty or invalid.</returns>
         object DeserializesJson(Type type, string input);
     }
 }

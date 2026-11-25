@@ -90,6 +90,12 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             _aIModelService = aIModelService;
         }
 
+        /// <summary>
+        /// Lists knowledge bases using one-based paging and maps them to DTOs.
+        /// </summary>
+        /// <param name="PageIndex">The one-based page index.</param>
+        /// <param name="PageSize">The requested page size, clamped to 1-200.</param>
+        /// <returns>A task containing the newest knowledge bases first.</returns>
         public async Task<IEnumerable<KnowledgeBaseDto>> GetKnowledgeBasesList(int PageIndex, int PageSize)
         {
             PageIndex = Math.Max(1, PageIndex);
@@ -104,10 +110,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <summary>
+        /// Resolves current embedding status for knowledge bases, including legacy embedded-item detection.
         /// </summary>
+        /// <param name="knowledgeBases">The knowledge bases to inspect.</param>
+        /// <returns>A task containing status keyed by knowledge-base ID.</returns>
         public async Task<IReadOnlyDictionary<int, KnowledgeBaseEmbeddingStatus>> GetEmbeddingStatusesAsync(
             IEnumerable<KnowledgeBase.Models.DatabaseModel.KnowledgeBase> knowledgeBases)
         {
@@ -148,12 +155,23 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             return result;
         }
 
+        /// <summary>
+        /// Determines whether a knowledge base has a completed embedding timestamp and collection name.
+        /// </summary>
+        /// <param name="knowledgeBase">The knowledge base to inspect.</param>
+        /// <returns><see langword="true"/> when the published embedding metadata is complete.</returns>
         public static bool IsEmbeddingPublished(KnowledgeBase.Models.DatabaseModel.KnowledgeBase knowledgeBase)
         {
             return knowledgeBase?.EmbeddedTime.HasValue == true
                    && !string.IsNullOrWhiteSpace(knowledgeBase.VectorCollectionName);
         }
 
+        /// <summary>
+        /// Creates or updates a knowledge base, validates embedding/vector configuration,
+        /// and synchronizes inline/file content before invalidating embeddings.
+        /// </summary>
+        /// <param name="dto">The knowledge-base definition and content selections.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when names, model/vector configuration, or referenced data is invalid.</exception>
         public async Task CreateOrUpdateAsync(KnowledgeBase_InsertDto dto)
         {
             ArgumentNullException.ThrowIfNull(dto);
@@ -201,6 +219,13 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             await SaveObjectAsync(knowledgeBase);
         }
 
+        /// <summary>
+        /// Validates that the selected model is TextEmbedding and the vector database
+        /// is an allowed persistent provider.
+        /// </summary>
+        /// <param name="embeddingModelId">The embedding model identifier.</param>
+        /// <param name="vectorDbId">The vector database identifier.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when either configuration is missing or unsupported.</exception>
         private async Task ValidateConfigurationAsync(int embeddingModelId, int vectorDbId)
         {
             var aiModel = await _aIModelService.GetObjectAsync(z => z.Id == embeddingModelId);
@@ -223,6 +248,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             EnsureSupportedPersistentVectorStore(new AIVectorDto(vector));
         }
 
+        /// <summary>
+        /// Replaces inline text chunks for a knowledge base using the configured chunking policy.
+        /// </summary>
+        /// <param name="knowledgeBase">The knowledge base receiving content.</param>
+        /// <param name="content">The inline content, or blank to remove existing inline chunks.</param>
         private async Task SyncInlineContentAsync(
             KnowledgeBase.Models.DatabaseModel.KnowledgeBase knowledgeBase,
             string content)
@@ -247,6 +277,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Synchronizes selected source files with the knowledge-base item records.
+        /// </summary>
+        /// <param name="knowledgeBase">The knowledge base receiving files.</param>
+        /// <param name="fileIds">The selected file identifiers.</param>
         private async Task SyncFilesAsync(
             KnowledgeBase.Models.DatabaseModel.KnowledgeBase knowledgeBase,
             IEnumerable<int> fileIds)
@@ -270,6 +305,12 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Replaces the file selection for a knowledge base and invalidates its embedding state.
+        /// </summary>
+        /// <param name="knowledgeBaseId">The knowledge-base identifier.</param>
+        /// <param name="fileIds">The selected source file identifiers.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when the knowledge base does not exist.</exception>
         public async Task SyncFilesToKnowledgeBaseAsync(int knowledgeBaseId, IEnumerable<int> fileIds)
         {
             var knowledgeBase = await GetObjectAsync(z => z.Id == knowledgeBaseId)
@@ -281,6 +322,12 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             await SyncFilesAsync(knowledgeBase, fileIds ?? Array.Empty<int>());
         }
 
+        /// <summary>
+        /// Replaces inline knowledge-base content and regenerates its text chunks.
+        /// </summary>
+        /// <param name="knowledgeBaseId">The knowledge-base identifier.</param>
+        /// <param name="content">The new inline content.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when the knowledge base does not exist.</exception>
         public async Task SyncInlineContentToKnowledgeBaseAsync(int knowledgeBaseId, string content)
         {
             var knowledgeBase = await GetObjectAsync(z => z.Id == knowledgeBaseId)
@@ -291,6 +338,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             await SyncInlineContentAsync(knowledgeBase, knowledgeBase.Content);
         }
 
+        /// <summary>
+        /// Deletes a knowledge base and all associated item records.
+        /// </summary>
+        /// <param name="knowledgeBaseId">The knowledge-base identifier.</param>
         public async Task DeleteKnowledgeBaseAsync(int knowledgeBaseId)
         {
             var knowledgeBase = await GetObjectAsync(z => z.Id == knowledgeBaseId);
@@ -309,11 +360,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Adds multiple source files to a knowledge base and returns the number of created chunks.
         /// </summary>
-        /// <param name="knowledgeBaseId"></param>
-        /// <param name="fileIds"></param>
-        ///Legacy comment translated to English.
+        /// <param name="knowledgeBaseId">The knowledge-base identifier.</param>
+        /// <param name="fileIds">The source file identifiers.</param>
+        /// <returns>A task containing the total chunk count.</returns>
         public async Task<int> AddFilesToKnowledgeBaseAsync(int knowledgeBaseId, List<int> fileIds)
         {
             if (fileIds == null || fileIds.Count == 0)
@@ -341,11 +392,13 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Extracts one source file, replaces its existing chunks, and creates new chunks
+        /// using the knowledge-base retrieval configuration.
         /// </summary>
-        /// <param name="knowledgeBaseId"></param>
-        /// <param name="fileId"></param>
-        ///Legacy comment translated to English.
+        /// <param name="knowledgeBaseId">The knowledge-base identifier.</param>
+        /// <param name="fileId">The source file identifier.</param>
+        /// <returns>A task containing the number of created chunks.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the file or knowledge base is missing or the file scope is invalid.</exception>
         public async Task<int> AddFileToKnowledgeBaseAsync(int knowledgeBaseId, int fileId)
         {
             // 1. getfileinformation
@@ -405,11 +458,13 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Embeds all non-empty knowledge-base chunks into the configured persistent vector store,
+        /// marks successful chunks, and records the generated collection name.
         /// </summary>
-        /// <param name="knowledgeBaseId"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="knowledgeBaseId">The knowledge-base identifier.</param>
+        /// <param name="tags">Optional operation tags reserved for caller diagnostics.</param>
+        /// <returns>A task containing a human-readable embedding summary.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when configuration, content, vector storage, or retry operations fail.</exception>
         public async Task<string> EmbeddingKnowledgeBaseAsync(int knowledgeBaseId, params string[] tags)
         {
             var knowledgeBase = await base.GetObjectAsync(z => z.Id == knowledgeBaseId);
@@ -471,21 +526,26 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Performs recall testing using the default retrieval options.
         /// </summary>
-        /// <param name="knowledgeBaseId"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="knowledgeBaseId">The knowledge-base identifier.</param>
+        /// <param name="content">The query text.</param>
+        /// <param name="topK">The maximum number of returned results.</param>
+        /// <returns>A task containing ranked recall results.</returns>
         public Task<List<RecallTestResponse>> RecallTestAsync(int knowledgeBaseId, string content, int topK = 5)
         {
             return RecallTestAsync(knowledgeBaseId, content, topK, null);
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Performs vector recall and optional lexical/LLM reranking with configurable candidate limits.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <param name="knowledgeBaseId">The knowledge-base identifier.</param>
+        /// <param name="content">The query text, limited to 2000 characters.</param>
+        /// <param name="topK">The requested result count, clamped to 1-20.</param>
+        /// <param name="options">Optional reranking configuration.</param>
+        /// <returns>A task containing ranked recall results and timing/source metadata.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the knowledge base is missing, unembedded, or query content is invalid.</exception>
         public async Task<List<RecallTestResponse>> RecallTestAsync(
             int knowledgeBaseId,
             string content,
@@ -614,6 +674,12 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 .ToList();
         }
 
+        /// <summary>
+        /// Resolves the rerank mode from per-request options or knowledge-base defaults.
+        /// </summary>
+        /// <param name="config">The stored retrieval configuration.</param>
+        /// <param name="options">Optional request overrides.</param>
+        /// <returns>The normalized rerank mode.</returns>
         private static string ResolveRerankMode(KnowledgeBaseRetrievalConfig config, RecallOptions options)
         {
             if (options != null && !string.IsNullOrWhiteSpace(options.RerankMode))
@@ -626,6 +692,14 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             return config.RerankMode;
         }
 
+        /// <summary>
+        /// Resolves and clamps the vector candidate pool used before reranking.
+        /// </summary>
+        /// <param name="config">The stored retrieval configuration.</param>
+        /// <param name="options">Optional request overrides.</param>
+        /// <param name="effectiveMode">The selected rerank mode.</param>
+        /// <param name="topK">The final requested result count.</param>
+        /// <returns>The bounded candidate count.</returns>
         private static int ResolveCandidateCount(
             KnowledgeBaseRetrievalConfig config,
             RecallOptions options,
@@ -646,6 +720,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             return Math.Clamp(Math.Max(topK, pool), topK, 100);
         }
 
+        /// <summary>
+        /// Allows only absolute HTTP(S) source links to leave the retrieval boundary.
+        /// </summary>
+        /// <param name="sourceLink">The source link from vector metadata.</param>
+        /// <returns>The absolute URL, or <see langword="null"/> for unsafe/invalid links.</returns>
         private static string GetSafeSourceLink(string sourceLink)
         {
             return Uri.TryCreate(sourceLink, UriKind.Absolute, out var uri)
@@ -655,8 +734,14 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds bounded RAG context text from recall results.
         /// </summary>
+        /// <param name="knowledgeBaseId">The knowledge-base identifier.</param>
+        /// <param name="query">The retrieval query.</param>
+        /// <param name="topK">The maximum number of recall results.</param>
+        /// <param name="maxCharacters">The maximum context length.</param>
+        /// <param name="options">Optional reranking configuration.</param>
+        /// <returns>A task containing formatted context text.</returns>
         public async Task<string> BuildRagContextAsync(
             int knowledgeBaseId,
             string query,
@@ -691,6 +776,13 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             return builder.ToString().Trim();
         }
 
+        /// <summary>
+        /// Builds an embedding runner using the configured model and persistent vector database.
+        /// </summary>
+        /// <param name="knowledgeBase">The knowledge base containing model/vector configuration.</param>
+        /// <param name="collectionName">The vector collection name.</param>
+        /// <returns>A task containing the configured runner.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when configuration is missing or the vector store is unsupported.</exception>
         private async Task<IWantToRun> BuildEmbeddingRunnerAsync(
             KnowledgeBase.Models.DatabaseModel.KnowledgeBase knowledgeBase,
             string collectionName)
@@ -716,6 +808,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 .BuildKernel();
         }
 
+        /// <summary>
+        /// Rejects volatile/in-memory or unsupported vector stores for persistent knowledge bases.
+        /// </summary>
+        /// <param name="vector">The vector database DTO.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when the provider is not Redis or Qdrant.</exception>
         private static void EnsureSupportedPersistentVectorStore(AIVectorDto vector)
         {
             var vectorTypeName = vector.VectorDBType.ToString();
@@ -731,11 +828,23 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Creates a timestamped vector collection name for a knowledge base.
+        /// </summary>
+        /// <param name="knowledgeBaseId">The knowledge-base identifier.</param>
+        /// <returns>The collection name.</returns>
         private static string BuildVectorCollectionName(int knowledgeBaseId)
         {
             return $"ncf_kb_{knowledgeBaseId}_{DateTime.UtcNow:yyyyMMddHHmmssfff}";
         }
 
+        /// <summary>
+        /// Executes an operation with bounded retries and honors provider retry-after hints when present.
+        /// </summary>
+        /// <param name="action">The asynchronous operation.</param>
+        /// <param name="operationName">The diagnostic operation name.</param>
+        /// <param name="maxAttempts">The maximum number of attempts.</param>
+        /// <exception cref="Exception">Propagates the final operation failure after retries.</exception>
         private static async Task ExecuteWithRetryAsync(Func<Task> action, string operationName, int maxAttempts = 3)
         {
             Exception lastException = null;

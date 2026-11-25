@@ -131,6 +131,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             _workflowFunctionCallingProvider = workflowFunctionCallingProviders?.FirstOrDefault();
         }
 
+        /// <summary>
+        /// Converts an inline Agent prompt into a PromptRange, performs one evaluation,
+        /// and updates the Agent to inherit the generated PromptRange.
+        /// </summary>
+        /// <param name="request">The Agent, prompt, test input, expected result, and Chat model.</param>
+        /// <returns>A task containing conversion and score details.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when input, Agent, model, or evaluation is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AgentTemplate_ConvertPlainPromptResponse>> ConvertPlainPromptToPromptRange(
             [FromBody] AgentTemplate_ConvertPlainPromptRequest request)
@@ -217,6 +224,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         //[ApiBind]
+        /// <summary>
+        /// Creates or updates an AgentTemplate, normalizes PromptRange references,
+        /// and validates knowledge-base/tool bindings.
+        /// </summary>
+        /// <param name="request">The Agent name, prompt, model/tool bindings, and description.</param>
+        /// <returns>A task containing operation logs.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when reserved Human or invalid bindings are used.</exception>
         [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.TemplateManagement.Name", "Function.Agents.TemplateManagement.Description", typeof(Register))]
         public async Task<StringAppResponse> AgentTemplateManage(AgentTemplate_ManageRequest request)
         {
@@ -274,6 +288,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
 //[ApiBind]
+        /// <summary>
+        /// Creates a new AgentTemplate from a PromptCode after reporting duplicate usage.
+        /// </summary>
+        /// <param name="request">The Agent name, PromptCode, description, and Function bindings.</param>
+        /// <returns>A task containing creation logs.</returns>
         [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.CreateFromPromptCode.Name", "Function.Agents.CreateFromPromptCode.Description", typeof(Register))]
         public async Task<StringAppResponse> CreateAgentFromPromptCode(AgentTemplate_CreateFromPromptCodeRequest request)
         {
@@ -326,6 +345,11 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             });
         }
 
+        /// <summary>
+        /// Searches enabled AgentTemplates by exact or fuzzy name/PromptCode matches.
+        /// </summary>
+        /// <param name="request">The search terms and result limit.</param>
+        /// <returns>A task containing formatted AgentTemplate results.</returns>
         [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.SearchTemplate.Name", "Function.Agents.SearchTemplate.Description", typeof(Register))]
         public async Task<StringAppResponse> FindAgentTemplate(AgentTemplate_FindByNameRequest request)
         {
@@ -503,6 +527,12 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             });
         }
 
+        /// <summary>
+        /// Resolves and caches the average score for a PromptRange-backed Agent prompt.
+        /// </summary>
+        /// <param name="promptCode">The prompt code.</param>
+        /// <param name="scoreCache">The per-request score cache.</param>
+        /// <returns>A task containing the score, or <c>-1</c> when unavailable.</returns>
         private async Task<float> GetAgentScoreByPromptCodeAsync(string promptCode, Dictionary<string, float> scoreCache)
         {
             if (string.IsNullOrWhiteSpace(promptCode))
@@ -708,6 +738,11 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         [ApiBind]
+        /// <summary>
+        /// Returns available Function, workflow, plugin, connector, and MCP bindings.
+        /// </summary>
+        /// <param name="agentId">Optional AgentTemplate identifier used to load existing bindings.</param>
+        /// <returns>A task containing the binding catalog.</returns>
         public async Task<AppResponseBase<AgentFunctionBindingCatalogResponse>> GetFunctionBindingCatalog(int agentId = 0)
         {
             return await this.GetResponseAsync<AgentFunctionBindingCatalogResponse>(async (response, logger) =>
@@ -819,6 +854,11 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
+        /// <summary>
+        /// Deletes one AgentTemplate and its dependent references.
+        /// </summary>
+        /// <param name="id">The AgentTemplate identifier.</param>
+        /// <returns>A task containing deletion logs.</returns>
         public async Task<AppResponseBase<string>> Delete(int id)
         {
             return await this.GetResponseAsync<string>(async (response, logger) =>
@@ -829,6 +869,11 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
+        /// <summary>
+        /// Deletes multiple AgentTemplates and their dependent references.
+        /// </summary>
+        /// <param name="ids">The AgentTemplate identifiers.</param>
+        /// <returns>A task containing deletion logs.</returns>
         public async Task<AppResponseBase<string>> DeleteBatch([FromBody] List<int> ids)
         {
             return await this.GetResponseAsync<string>(async (response, logger) =>
@@ -867,6 +912,10 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         [ApiBind]
+        /// <summary>
+        /// Lists available knowledge bases for AgentTemplate binding.
+        /// </summary>
+        /// <returns>A task containing knowledge-base options.</returns>
         public async Task<AppResponseBase<List<KnowledgeBaseOptionResponse>>> GetKnowledgeBaseOptions()
         {
             return await this.GetResponseAsync<List<KnowledgeBaseOptionResponse>>(async (response, logger) =>
@@ -891,6 +940,11 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             });
         }
 
+        /// <summary>
+        /// Validates that an optional knowledge-base binding exists and is usable.
+        /// </summary>
+        /// <param name="knowledgeBaseId">The optional knowledge-base identifier.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when the selected knowledge base is unavailable.</exception>
         private async Task ValidateKnowledgeBaseBindingAsync(int? knowledgeBaseId)
         {
             if (!knowledgeBaseId.HasValue)
@@ -915,6 +969,12 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             }
         }
 
+        /// <summary>
+        /// Validates the AgentTemplate model-binding mode and referenced AI model.
+        /// </summary>
+        /// <param name="modelBinding">The selected binding mode.</param>
+        /// <param name="aiModelId">The optional AI model identifier.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when the binding configuration is invalid.</exception>
         private async Task ValidateAgentModelBindingAsync(
             AgentTemplateDto agentTemplateDto,
             bool isHumanParticipant = false)
@@ -1067,6 +1127,10 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             }
         }
 
+        /// <summary>
+        /// Gets the current administrator identifier from the work context.
+        /// </summary>
+        /// <returns>The current administrator identifier.</returns>
         private int GetCurrentAdminUserId()
         {
             try
@@ -1079,6 +1143,11 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             }
         }
 
+        /// <summary>
+        /// Creates a detached copy of a Function binding DTO for response composition.
+        /// </summary>
+        /// <param name="binding">The binding to copy.</param>
+        /// <returns>The copied binding.</returns>
         private static AgentFunctionBindingDto CloneBinding(AgentFunctionBindingDto binding)
             => binding == null
                 ? null
@@ -1234,6 +1303,12 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             });
         }
 
+        /// <summary>
+        /// Deletes AgentTemplates and related group/member/task references.
+        /// </summary>
+        /// <param name="ids">The AgentTemplate identifiers.</param>
+        /// <param name="logger">The operation logger.</param>
+        /// <returns>A task containing deletion details.</returns>
         private async Task<string> DeleteInternalAsync(List<int> ids, AppServiceLogger logger)
         {
             if (ids == null || ids.Count == 0)

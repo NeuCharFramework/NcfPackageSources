@@ -63,11 +63,14 @@ public class GenerationOptions
 }
 
 [Generator]
+/// <summary>
+/// Generates a partial application-service class containing configured template files
+/// and lookup helpers from Roslyn additional text inputs.
+/// </summary>
 public class MultiFileCodeGenerator : IIncrementalGenerator
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Embedded fallback configuration used when the project does not provide a generation-config.json file.
     /// </summary>
     private const string EmbeddedDefaultGenerationConfigJson = """
 {
@@ -141,12 +144,22 @@ public class MultiFileCodeGenerator : IIncrementalGenerator
 }
 """;
 
+    /// <inheritdoc/>
+    /// <remarks>
+    /// The generator collects all additional texts once per compilation and emits either
+    /// the configured template class or a minimal fallback source when configuration is invalid.
+    /// </remarks>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var allAdditional = context.AdditionalTextsProvider.Collect();
         context.RegisterSourceOutput(allAdditional, GenerateFromAllAdditionalTexts);
     }
 
+    /// <summary>
+    /// Deserializes a generation configuration without allowing malformed input to fail compilation.
+    /// </summary>
+    /// <param name="json">The JSON configuration text.</param>
+    /// <returns>The parsed configuration, or <see langword="null"/> for blank or invalid JSON.</returns>
     private static FileGenerationConfig? DeserializeConfig(string? json)
     {
         if (json is null || string.IsNullOrWhiteSpace(json))
@@ -166,6 +179,11 @@ public class MultiFileCodeGenerator : IIncrementalGenerator
         }
     }
 
+    /// <summary>
+    /// Finds and parses the optional <c>generation-config.json</c> additional file.
+    /// </summary>
+    /// <param name="additionalFiles">The additional files supplied by the current compilation.</param>
+    /// <returns>The parsed configuration, or <see langword="null"/> when no usable file exists.</returns>
     private static FileGenerationConfig? TryLoadConfigFromAdditionalFiles(ImmutableArray<AdditionalText> additionalFiles)
     {
         var configFile = additionalFiles.FirstOrDefault(f =>
@@ -182,6 +200,15 @@ public class MultiFileCodeGenerator : IIncrementalGenerator
         }
     }
 
+    /// <summary>
+    /// Selects the external or embedded configuration, loads configured files, and emits generated source.
+    /// </summary>
+    /// <param name="context">The Roslyn output context used to report diagnostics and add source.</param>
+    /// <param name="additionalFiles">The additional text files available to the generator.</param>
+    /// <remarks>
+    /// Any configuration or generation failure is reported as a warning and produces a minimal
+    /// partial class so downstream compilation can continue with a predictable fallback.
+    /// </remarks>
     private void GenerateFromAllAdditionalTexts(SourceProductionContext context, ImmutableArray<AdditionalText> additionalFiles)
     {
         var config = TryLoadConfigFromAdditionalFiles(additionalFiles)
@@ -218,7 +245,10 @@ public class MultiFileCodeGenerator : IIncrementalGenerator
         }
     }
 
-    ///Legacy comment translated to English.
+    /// <summary>
+    /// Emits the smallest valid partial class when configured generation cannot be completed.
+    /// </summary>
+    /// <param name="context">The Roslyn output context receiving the fallback source.</param>
     private static void EmitMinimalBuildXncfAppServicePartial(SourceProductionContext context)
     {
         const string minimal = """
@@ -239,9 +269,15 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         context.AddSource("BuildXncfAppService.Generated.cs", SourceText.From(minimal, Encoding.UTF8));
     }
 
+    /// <summary>
+    /// Resolves one configured file against the additional-text paths and reads its source text.
+    /// </summary>
+    /// <param name="filePath">The configured relative or file-name path.</param>
+    /// <param name="additionalFiles">The additional files available to search.</param>
+    /// <returns>The file text, or an empty string when no matching file is present.</returns>
     private string GetFileContent(string filePath, ImmutableArray<AdditionalText> additionalFiles)
     {
-        //Legacy comment translated to English.
+        // Match exact suffixes first, then fall back to the configured file name.
         var file = additionalFiles.FirstOrDefault(f =>
             f.Path.EndsWith(filePath) ||
             f.Path.Replace('\\', '/').EndsWith(filePath.Replace('\\', '/')) ||
@@ -256,11 +292,17 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         return "";
     }
 
+    /// <summary>
+    /// Builds the configured partial class source, including constants, metadata, and helpers.
+    /// </summary>
+    /// <param name="context">The Roslyn output context receiving the generated source.</param>
+    /// <param name="config">The output namespace, class, grouping, and feature configuration.</param>
+    /// <param name="files">The configured files after content resolution.</param>
     private void GenerateMultiFileClass(SourceProductionContext context, FileGenerationConfig config, List<ProcessedFile> files)
     {
         var sb = new StringBuilder();
 
-        //Legacy comment translated to English.
+        // Emit the standard generated-file header before adding template content.
         sb.AppendLine("// <auto-generated>");
         sb.AppendLine("// This file was generated by MultiFileCodeGenerator");
         sb.AppendLine("// Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.");
@@ -274,11 +316,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         sb.AppendLine("using System.Linq;");
         sb.AppendLine();
 
-        //Legacy comment translated to English.
+        // Keep the generated namespace aligned with the configured output namespace.
         sb.AppendLine($"namespace {config.OutputNamespace}");
         sb.AppendLine("{");
 
-        //Legacy comment translated to English.
+        // Document the generated partial class so its constants are discoverable in IDEs.
         sb.AppendLine($"    /// <summary>");
         sb.AppendLine($"    /// Auto-generated NCF template constants containing all template file content.");
         sb.AppendLine($"    /// </summary>");
@@ -357,33 +399,33 @@ Code:
 "";
 ");
 
-        //Legacy comment translated to English.
+        // Select grouped or flat constant emission according to the configuration.
         if (config.Grouping.ByType)
         {
             GenerateGroupedConstants(sb, files, config);
         }
         else
         {
-            //Legacy comment translated to English.
+            // Flat mode preserves the configured file order.
             foreach (var file in files)
             {
                 GenerateConstantForFile(sb, file);
             }
         }
 
-        //Legacy comment translated to English.
+        // Type constants are optional because older consumers only require file constants.
         if (config.Grouping.GenerateTypeConstants)
         {
             GenerateTypeConstants(sb, files);
         }
 
-        //Legacy comment translated to English.
+        // File metadata is emitted only when requested by the configuration.
         if (config.Options.IncludeFileInfo)
         {
             GenerateFileInfoArray(sb, files);
         }
 
-        //Legacy comment translated to English.
+        // Helper methods are optional for consumers that only need raw constants.
         if (config.Options.GenerateHelperMethods)
         {
             GenerateHelperMethods(sb, files);
@@ -395,6 +437,12 @@ Code:
         context.AddSource($"{config.OutputClassName}.Generated.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
     }
 
+    /// <summary>
+    /// Emits template constants grouped by their configured template type.
+    /// </summary>
+    /// <param name="sb">The generated-source builder.</param>
+    /// <param name="files">The resolved template files.</param>
+    /// <param name="config">The generation configuration.</param>
     private void GenerateGroupedConstants(StringBuilder sb, List<ProcessedFile> files, FileGenerationConfig config)
     {
         var groupedFiles = files.GroupBy(f => f.Type).ToList();
@@ -414,6 +462,11 @@ Code:
         }
     }
 
+    /// <summary>
+    /// Emits one XML-documented string constant containing a template file.
+    /// </summary>
+    /// <param name="sb">The generated-source builder.</param>
+    /// <param name="file">The resolved file metadata and content.</param>
     private void GenerateConstantForFile(StringBuilder sb, ProcessedFile file)
     {
         var escapedContent = EscapeStringLiteral(file.Content);
@@ -426,6 +479,11 @@ Code:
         sb.AppendLine();
     }
 
+    /// <summary>
+    /// Emits constants for the distinct template types represented by the input files.
+    /// </summary>
+    /// <param name="sb">The generated-source builder.</param>
+    /// <param name="files">The resolved template files.</param>
     private void GenerateTypeConstants(StringBuilder sb, List<ProcessedFile> files)
     {
         var types = files.Select(f => f.Type).Distinct().ToList();
@@ -450,6 +508,11 @@ Code:
         sb.AppendLine();
     }
 
+    /// <summary>
+    /// Emits the generated template metadata array and its record type.
+    /// </summary>
+    /// <param name="sb">The generated-source builder.</param>
+    /// <param name="files">The resolved template files.</param>
     private void GenerateFileInfoArray(StringBuilder sb, List<ProcessedFile> files)
     {
         sb.AppendLine("        #region File Information");
@@ -476,29 +539,39 @@ Code:
         sb.AppendLine();
     }
 
+    /// <summary>
+    /// Emits helper methods for filtering, retrieving, and enumerating generated templates.
+    /// </summary>
+    /// <param name="sb">The generated-source builder.</param>
+    /// <param name="files">The resolved template files; used to determine emitted metadata availability.</param>
     private void GenerateHelperMethods(StringBuilder sb, List<ProcessedFile> files)
     {
         sb.AppendLine("        #region Helper Methods");
         sb.AppendLine();
         sb.AppendLine("        /// <summary>");
-        sb.AppendLine("        /// Get template files by type.");
+        sb.AppendLine("        /// Returns generated template metadata whose type exactly matches the requested value.");
         sb.AppendLine("        /// </summary>");
+        sb.AppendLine("        /// <param name=\"templateType\">The configured template type to match.</param>");
+        sb.AppendLine("        /// <returns>All matching template metadata entries, or an empty array when none match.</returns>");
         sb.AppendLine("        public static TemplateFileInfo[] GetTemplatesByType(string templateType)");
         sb.AppendLine("        {");
         sb.AppendLine("            return AllTemplateFiles.Where(f => f.Type == templateType).ToArray();");
         sb.AppendLine("        }");
         sb.AppendLine();
         sb.AppendLine("        /// <summary>");
-        sb.AppendLine("        /// Get template content by name.");
+        sb.AppendLine("        /// Returns the generated content for one template constant name.");
         sb.AppendLine("        /// </summary>");
+        sb.AppendLine("        /// <param name=\"templateName\">The generated metadata name to locate.</param>");
+        sb.AppendLine("        /// <returns>The template content, or an empty string when no name matches.</returns>");
         sb.AppendLine("        public static string GetTemplateContent(string templateName)");
         sb.AppendLine("        {");
         sb.AppendLine("            return AllTemplateFiles.FirstOrDefault(f => f.Name == templateName)?.Content ?? string.Empty;");
         sb.AppendLine("        }");
         sb.AppendLine();
         sb.AppendLine("        /// <summary>");
-        sb.AppendLine("        /// Get all template types.");
+        sb.AppendLine("        /// Returns the distinct template types represented by generated metadata.");
         sb.AppendLine("        /// </summary>");
+        sb.AppendLine("        /// <returns>A de-duplicated array of configured template types.</returns>");
         sb.AppendLine("        public static string[] GetAllTemplateTypes()");
         sb.AppendLine("        {");
         sb.AppendLine("            return AllTemplateFiles.Select(f => f.Type).Distinct().ToArray();");
@@ -507,9 +580,14 @@ Code:
         sb.AppendLine("        #endregion");
     }
 
+    /// <summary>
+    /// Emits the legacy default-code representation for all additional C# files.
+    /// </summary>
+    /// <param name="context">The Roslyn output context receiving the generated source.</param>
+    /// <param name="additionalFiles">The additional files to inspect.</param>
     private void GenerateDefaultCode(SourceProductionContext context, ImmutableArray<AdditionalText> additionalFiles)
     {
-        //Legacy comment translated to English.
+        // Preserve the legacy default-code path for projects that still use it.
         var csFiles = additionalFiles.Where(f => f.Path.EndsWith(".cs")).ToList();
 
         if (!csFiles.Any())
@@ -539,6 +617,11 @@ Code:
         context.AddSource("BuildXncfAppService.Default.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
     }
 
+    /// <summary>
+    /// Escapes quotation marks for inclusion in a verbatim C# string literal.
+    /// </summary>
+    /// <param name="input">The source text to escape.</param>
+    /// <returns>The escaped text, or an empty string for null or empty input.</returns>
     private string EscapeStringLiteral(string input)
     {
         if (string.IsNullOrEmpty(input))
@@ -547,6 +630,12 @@ Code:
         return input.Replace("\"", "\"\"");
     }
 
+    /// <summary>
+    /// Reports a non-fatal generator warning with the supplied diagnostic identifier and message.
+    /// </summary>
+    /// <param name="context">The Roslyn output context used to publish the diagnostic.</param>
+    /// <param name="id">The stable diagnostic identifier.</param>
+    /// <param name="message">The diagnostic text shown to the compiler consumer.</param>
     private void ReportError(SourceProductionContext context, string id, string message)
     {
         var diagnostic = Diagnostic.Create(

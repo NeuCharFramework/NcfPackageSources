@@ -50,6 +50,12 @@ namespace Senparc.Xncf.DynamicData
                            new AreaPageMenuItem(GetAreaUrl(HomeUrl+"DataSheetSet"), DynamicDataResource.Get("Area.DynamicData.TableSettings", "数据库表设置"),"fa fa-laptop")
                      };
 
+        /// <summary>
+        /// Registers DynamicData Razor Page options and records module startup information.
+        /// </summary>
+        /// <param name="builder">The MVC builder to configure.</param>
+        /// <param name="env">The host environment supplied by the application.</param>
+        /// <returns>The configured MVC builder.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>

@@ -24,6 +24,14 @@ namespace Senparc.Ncf.Service
 {
     public static class ServiceExtension
     {
+        /// <summary>
+        /// Maps each entity in a paged result to a DTO while preserving paging metadata.
+        /// </summary>
+        /// <typeparam name="T">The source entity type.</typeparam>
+        /// <typeparam name="TDto">The destination DTO type.</typeparam>
+        /// <param name="pagedList">The source page.</param>
+        /// <param name="serviceBase">The service whose mapper performs the conversion.</param>
+        /// <returns>A DTO page with the same page index, size, and total count.</returns>
         public static PagedList<TDto> ToDtoPagedList<T, TDto>(this PagedList<T> pagedList, IServiceBase<T> serviceBase)
             where T : class, IEntityBase
         {

@@ -922,6 +922,8 @@
   <data name="AdminChat.Command.MaxToken" xml:space="preserve"><value>Set output limit</value></data>
   <data name="AdminChat.Command.MaxIterations" xml:space="preserve"><value>Set Harness max iterations</value></data>
   <data name="AdminChat.Command.Harness" xml:space="preserve"><value>Set Harness capabilities</value></data>
+  <data name="AdminChat.Command.Loading" xml:space="preserve"><value>Loading commands…</value></data>
+  <data name="AdminChat.Command.LoadFailed" xml:space="preserve"><value>Unable to load commands. Please retry.</value></data>
   <data name="AdminChat.UserStats" xml:space="preserve"><value>Usage Stats</value></data>
   <data name="AdminChat.UserStatsTitle" xml:space="preserve"><value>User Usage Statistics (AdminChat)</value></data>
   <data name="AdminChat.UserStatsTip" xml:space="preserve"><value>Only the per-account session/message counts are shown. No session or message content is exposed.</value></data>
@@ -1624,4 +1626,20 @@
   <data name="AdminChat.WorkspaceArtifact.Download" xml:space="preserve"><value>Download original file: {0}</value></data>
   <data name="AdminChat.Workspace3D.Loading" xml:space="preserve"><value>Loading secure 3D preview…</value></data>
   <data name="AdminChat.Workspace3D.LoadError" xml:space="preserve"><value>3D preview failed to load</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.Date" xml:space="preserve"><value>Log date</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.DateHint" xml:space="preserve"><value>Optional yyyyMMdd date; today is used when omitted</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.Question" xml:space="preserve"><value>Analysis question</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.QuestionHint" xml:space="preserve"><value>Describe the symptom or evidence to investigate</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.QuestionPlaceholder" xml:space="preserve"><value>Enter an analysis question</value></data>
+  <data name="AdminChat.Command.HelpHint" xml:space="preserve"><value>Display available commands</value></data>
+  <data name="AdminChat.Command.MaxTokenHint" xml:space="preserve"><value>Recommended range 256–8000</value></data>
+  <data name="AdminChat.Command.Shortcuts" xml:space="preserve"><value>↑↓ navigate · Tab/Enter select · 1–9 quick select</value></data>
+  <data name="AdminChat.WorkspaceArtifact.FileChanges" xml:space="preserve"><value>{0} files changed in this turn</value></data>
+  <data name="AdminChat.WorkspaceArtifact.Created" xml:space="preserve"><value>Added</value></data>
+  <data name="AdminChat.WorkspaceArtifact.Changed" xml:space="preserve"><value>Modified</value></data>
+  <data name="AdminChat.WorkspaceArtifact.Deleted" xml:space="preserve"><value>Deleted</value></data>
+  <data name="AdminChat.Action.OpenAgentTask" xml:space="preserve"><value>Open Agent task: {0} #{1}</value></data>
+  <data name="AdminChat.Action.PreviewAgentTask" xml:space="preserve"><value>Live preview: {0} #{1}</value></data>
+  <data name="AdminChat.Action.AgentTaskPreviewTitle" xml:space="preserve"><value>Agent task live preview: {0} #{1}</value></data>
+  <data name="AdminChat.Action.OpenInTab" xml:space="preserve"><value>Open separately</value></data>
 </root>

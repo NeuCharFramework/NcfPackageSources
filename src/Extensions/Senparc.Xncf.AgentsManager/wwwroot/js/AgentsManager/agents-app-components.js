@@ -57,7 +57,7 @@ Vue.component('participant-quick-action', {
         </div>
         <div class="participant-quick-info__footer">
           <span>{{ncfST('Frontend.AgentsManager.UsageCountsOnlyRecordsLoadedForTheCurrentTask')}}</span>
-          <el-button v-if="quickInfo.canOpenEditor" type="text" size="mini" icon="el-icon-top-right" :title="ncfST('Frontend.AgentsManager.EditAgentInANewWindow')" @click.stop="editAgent">{{ncfST('Studio.Edit')}}</el-button>
+          <el-button v-if="quickInfo.canOpenEditor" type="text" size="mini" icon="el-icon-top-right" :title="ncfST('Frontend.AgentsManager.EditAgentInANewWindow')" @click.stop="editAgent">{{ncfST('Frontend.AgentsManager.Edit')}}</el-button>
           <el-button v-if="quickInfo.isRemote" type="text" size="mini" :loading="testing" @click.stop="testRemote">{{ncfST('Frontend.AgentsManager.TestConnection')}}</el-button>
         </div>
       </section>
@@ -135,10 +135,10 @@ Vue.component('load-more-select', {
       <template v-else>{{item.label}}</template>
     </el-option></el-select>
     <template v-if="direction==='horizontal'">
-        <i class="cursorPointer fas fa-redo" :title="ncfST('Studio.Refresh')" @click="refreshManagementList" />
+        <i class="cursorPointer fas fa-redo" :title="ncfST('Frontend.AgentsManager.Refresh')" @click="refreshManagementList" />
     </template>
     <template v-else>
-        <el-button size="mini" @click="refreshManagementList" :loading="interesLoading">{{ncfST('Studio.Refresh')}}</el-button>
+        <el-button size="mini" @click="refreshManagementList" :loading="interesLoading">{{ncfST('Frontend.AgentsManager.Refresh')}}</el-button>
         <el-button v-if="serviceType === 'systemMessage'" type="primary" size="mini" @click="jumpPromptRange('promptRange')">{{ncfST('Frontend.AgentsManager.ManagePromptRange')}}</el-button>
         <el-button v-if="serviceType === 'model'" type="primary" size="mini" @click="jumpPromptRange('model')">{{ncfST('Frontend.AgentsManager.ManageModels')}}</el-button>
     </template>

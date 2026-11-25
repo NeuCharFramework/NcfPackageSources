@@ -134,6 +134,9 @@
   <data name="Frontend.Sandbox.SandboxSessions" xml:space="preserve"><value>Sesiones Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Template" xml:space="preserve"><value>Plantilla</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.SessionId" xml:space="preserve"><value>ID de sesión</value></data>
+  <data name="Frontend.Sandbox.CopySessionId" xml:space="preserve"><value>Copiar ID de sesión</value></data>
+  <data name="Frontend.Sandbox.SessionIdCopied" xml:space="preserve"><value>ID de sesión completo copiado</value></data>
+  <data name="Frontend.Sandbox.FailedToCopySessionId" xml:space="preserve"><value>No se pudo copiar el ID de sesión. Selecciónelo manualmente y copie.</value></data>
   <data name="Frontend.Sandbox.Alias" xml:space="preserve"><value>Alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Runtime" xml:space="preserve"><value>Tiempo de ejecución</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.Sandbox.Status" xml:space="preserve"><value>Estado</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
@@ -189,6 +192,14 @@
   <data name="Frontend.Sandbox.StatusUpdatedValue" xml:space="preserve"><value>Estado actualizado {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.Sandbox.ValueSessions" xml:space="preserve"><value>{0} sesiones</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.Sandbox.NoSandboxSessions" xml:space="preserve"><value>No hay sesiones Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.Sandbox.SearchSessions" xml:space="preserve"><value>Buscar ID, alias o plantilla</value></data>
+  <data name="Frontend.Sandbox.AllStatuses" xml:space="preserve"><value>Todos los estados</value></data>
+  <data name="Frontend.Sandbox.AllTemplates" xml:space="preserve"><value>Todas las plantillas</value></data>
+  <data name="Frontend.Sandbox.BulkDelete" xml:space="preserve"><value>Eliminación masiva</value></data>
+  <data name="Frontend.Sandbox.SelectDeletable" xml:space="preserve"><value>Seleccionar eliminables</value></data>
+  <data name="Frontend.Sandbox.BulkDeleteConfirm" xml:space="preserve"><value>¿Eliminar permanentemente los {0} registros seleccionados?</value></data>
+  <data name="Frontend.Sandbox.BulkDeleteCompleted" xml:space="preserve"><value>Eliminación completada: {0} eliminados, {1} omitidos.</value></data>
+  <data name="Frontend.Sandbox.FailedToBulkDelete" xml:space="preserve"><value>Error en la eliminación masiva. Consulte los registros.</value></data>
   <data name="Frontend.Sandbox.AliasesIdentifySessionsInListsFunctionResultsAndLogsTheyDoNot" xml:space="preserve"><value>Los alias identifican sesiones en listas, resultados de Function y registros; no afectan al entorno de ejecución.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.Sandbox.Creating" xml:space="preserve"><value>Creando</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.Sandbox.Stopping" xml:space="preserve"><value>Deteniendo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>

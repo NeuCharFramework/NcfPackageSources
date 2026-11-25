@@ -29,9 +29,34 @@ namespace Senparc.Xncf.Workspace.Domain.Services;
 
 public interface IWorkspaceMetadataStore
 {
+    /// <summary>
+    /// Determines whether a workspace metadata record is visible in the current scope.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>A task returning <see langword="true"/> when a record exists.</returns>
     Task<bool> IsVisibleAsync(string workspaceId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Inserts or updates workspace metadata.
+    /// </summary>
+    /// <param name="descriptor">The workspace descriptor to persist.</param>
+    /// <param name="cancellationToken">Token used to cancel persistence.</param>
     Task UpsertAsync(WorkspaceDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Updates a workspace's last-access timestamp when its record exists.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="lastAccessedAt">The timestamp to store.</param>
+    /// <param name="cancellationToken">Token used to cancel persistence.</param>
     Task TouchAsync(string workspaceId, DateTime lastAccessedAt, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Deletes workspace metadata when its record exists.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel deletion.</param>
     Task DeleteAsync(string workspaceId, CancellationToken cancellationToken = default);
 }
 
@@ -39,14 +64,30 @@ public sealed class WorkspaceMetadataStore : IWorkspaceMetadataStore
 {
     private readonly WorkspaceSenparcEntities _entities;
 
+    /// <summary>
+    /// Initializes metadata persistence over the Workspace database context.
+    /// </summary>
+    /// <param name="entities">The Workspace entity context.</param>
     public WorkspaceMetadataStore(WorkspaceSenparcEntities entities)
     {
         _entities = entities;
     }
 
+    /// <summary>
+    /// Determines whether metadata for a workspace is visible in the current database scope.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>A task returning <see langword="true"/> when a record exists.</returns>
     public Task<bool> IsVisibleAsync(string workspaceId, CancellationToken cancellationToken = default) =>
         _entities.WorkspaceRecords.AnyAsync(x => x.WorkspaceId == workspaceId, cancellationToken);
 
+    /// <summary>
+    /// Inserts workspace metadata or updates its last-access timestamp.
+    /// </summary>
+    /// <param name="descriptor">The workspace descriptor to persist.</param>
+    /// <param name="cancellationToken">Token used to cancel persistence.</param>
+    /// <returns>A task that completes after the database save.</returns>
     public async Task UpsertAsync(WorkspaceDescriptor descriptor, CancellationToken cancellationToken = default)
     {
         var record = await _entities.WorkspaceRecords
@@ -64,6 +105,13 @@ public sealed class WorkspaceMetadataStore : IWorkspaceMetadataStore
         await _entities.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Updates the last-access timestamp when a workspace record exists.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="lastAccessedAt">The timestamp to persist.</param>
+    /// <param name="cancellationToken">Token used to cancel persistence.</param>
+    /// <returns>A task that completes after the optional database save.</returns>
     public async Task TouchAsync(string workspaceId, DateTime lastAccessedAt, CancellationToken cancellationToken = default)
     {
         var record = await _entities.WorkspaceRecords
@@ -78,6 +126,12 @@ public sealed class WorkspaceMetadataStore : IWorkspaceMetadataStore
         await _entities.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Removes workspace metadata when a record exists.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel deletion.</param>
+    /// <returns>A task that completes after the optional database save.</returns>
     public async Task DeleteAsync(string workspaceId, CancellationToken cancellationToken = default)
     {
         var record = await _entities.WorkspaceRecords

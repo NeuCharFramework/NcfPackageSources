@@ -31,6 +31,11 @@ namespace Senparc.Xncf.DynamicData.OHS.Local.AppService
     {
         private readonly ColorService _colorService;
 
+        /// <summary>
+        /// Initializes the color application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="colorService">The service used to load or initialize colors.</param>
         public ColorAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
         {
             this._colorService = colorService;
@@ -38,9 +43,9 @@ namespace Senparc.Xncf.DynamicData.OHS.Local.AppService
 
 
         /// <summary>
-        /// get or initialize a ColorDto object
+        /// Gets the newest color or creates one when the color store is empty.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An application response containing RGB values and operation duration.</returns>
         public async Task<AppResponseBase<Color_GetOrInitColorResponse>> GetOrInitColorAsync()
         {
             return await this.GetResponseAsync<Color_GetOrInitColorResponse>(async (response, logger) =>

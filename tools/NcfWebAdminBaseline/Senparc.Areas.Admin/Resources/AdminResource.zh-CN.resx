@@ -964,6 +964,8 @@
   <data name="AdminChat.Command.MaxToken" xml:space="preserve"><value>设置输出上限</value></data>
   <data name="AdminChat.Command.MaxIterations" xml:space="preserve"><value>设置 Harness 最大迭代</value></data>
   <data name="AdminChat.Command.Harness" xml:space="preserve"><value>设置 Harness 能力</value></data>
+  <data name="AdminChat.Command.Loading" xml:space="preserve"><value>正在加载命令…</value></data>
+  <data name="AdminChat.Command.LoadFailed" xml:space="preserve"><value>无法加载命令，请重试。</value></data>
 
   <data name="SystemMenu.AdministratorManagement" xml:space="preserve"><value>管理员管理</value></data>
   <data name="SystemMenu.RoleManagement" xml:space="preserve"><value>角色管理</value></data>
@@ -1666,4 +1668,20 @@
   <data name="AdminChat.WorkspaceArtifact.Download" xml:space="preserve"><value>下载原文件：{0}</value></data>
   <data name="AdminChat.Workspace3D.Loading" xml:space="preserve"><value>正在加载安全 3D 预览…</value></data>
   <data name="AdminChat.Workspace3D.LoadError" xml:space="preserve"><value>3D 预览加载失败</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.Date" xml:space="preserve"><value>日志日期</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.DateHint" xml:space="preserve"><value>可选，使用 yyyyMMdd；留空时分析今天</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.Question" xml:space="preserve"><value>分析问题</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.QuestionHint" xml:space="preserve"><value>描述要调查的现象或证据</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.QuestionPlaceholder" xml:space="preserve"><value>请输入分析问题</value></data>
+  <data name="AdminChat.Command.HelpHint" xml:space="preserve"><value>显示可用命令</value></data>
+  <data name="AdminChat.Command.MaxTokenHint" xml:space="preserve"><value>建议范围 256–8000</value></data>
+  <data name="AdminChat.Command.Shortcuts" xml:space="preserve"><value>↑↓ 导航 · Tab/Enter 选择 · 1–9 快速选择</value></data>
+  <data name="AdminChat.WorkspaceArtifact.FileChanges" xml:space="preserve"><value>本轮修改了 {0} 个文件</value></data>
+  <data name="AdminChat.WorkspaceArtifact.Created" xml:space="preserve"><value>新增</value></data>
+  <data name="AdminChat.WorkspaceArtifact.Changed" xml:space="preserve"><value>修改</value></data>
+  <data name="AdminChat.WorkspaceArtifact.Deleted" xml:space="preserve"><value>删除</value></data>
+  <data name="AdminChat.Action.OpenAgentTask" xml:space="preserve"><value>打开 Agent 任务：{0} #{1}</value></data>
+  <data name="AdminChat.Action.PreviewAgentTask" xml:space="preserve"><value>预览运行：{0} #{1}</value></data>
+  <data name="AdminChat.Action.AgentTaskPreviewTitle" xml:space="preserve"><value>Agent 任务运行预览：{0} #{1}</value></data>
+  <data name="AdminChat.Action.OpenInTab" xml:space="preserve"><value>在独立页面打开</value></data>
 </root>

@@ -46,6 +46,16 @@ public sealed class SkillAppService : AppServiceBase
     private readonly ISkillTestRunner _testRunner;
     private readonly AIModelService _aiModelService;
 
+    /// <summary>
+    /// Initializes the authenticated Skill catalog, executor, test runner, package service,
+    /// and Chat model selector.
+    /// </summary>
+    /// <param name="serviceProvider">Dependency-injection provider.</param>
+    /// <param name="catalog">Skill catalog service.</param>
+    /// <param name="executor">Skill execution service.</param>
+    /// <param name="packageService">Skill package/import/export service.</param>
+    /// <param name="testRunner">Skill isolation test runner.</param>
+    /// <param name="aiModelService">AI model service used for generation model selection.</param>
     public SkillAppService(
         System.IServiceProvider serviceProvider,
         ISkillCatalog catalog,
@@ -62,6 +72,10 @@ public sealed class SkillAppService : AppServiceBase
         _aiModelService = aiModelService;
     }
 
+    /// <summary>Lists catalogued Skills using keyword and publication filters.</summary>
+    /// <param name="keyword">Optional Skill ID/name keyword.</param>
+    /// <param name="publishedOnly">Whether draft versions are excluded.</param>
+    /// <returns>A task containing the catalog response.</returns>
     [ApiBind]
     public async Task<AppResponseBase<IReadOnlyList<SkillDescriptor>>> ListAsync(
         string keyword = null,
@@ -72,6 +86,10 @@ public sealed class SkillAppService : AppServiceBase
                 await _catalog.ListAsync(new SkillQuery(Keyword: keyword, PublishedOnly: publishedOnly)));
     }
 
+    /// <summary>Resolves one Skill descriptor and optional version.</summary>
+    /// <param name="skillId">The Skill identifier.</param>
+    /// <param name="version">Optional version selector.</param>
+    /// <returns>A task containing the descriptor response.</returns>
     [ApiBind]
     public async Task<AppResponseBase<SkillDescriptor>> GetAsync(
         string skillId,
@@ -81,6 +99,8 @@ public sealed class SkillAppService : AppServiceBase
             async (response, logger) => await _catalog.GetAsync(skillId, version));
     }
 
+    /// <summary>Lists configured Chat models available for Skill generation.</summary>
+    /// <returns>A task containing Chat model DTOs.</returns>
     [ApiBind]
     public async Task<AppResponseBase<IReadOnlyList<AIModelDto>>> ListChatModelsAsync()
     {
@@ -97,6 +117,11 @@ public sealed class SkillAppService : AppServiceBase
             });
     }
 
+    /// <summary>Executes a Skill in PromptRange evaluation mode.</summary>
+    /// <param name="skillId">The Skill identifier.</param>
+    /// <param name="version">The optional version selector.</param>
+    /// <param name="input">The Skill input text.</param>
+    /// <returns>A task containing execution output and status.</returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public async Task<AppResponseBase<SkillExecutionResult>> ExecuteAsync(
         string skillId,
@@ -111,6 +136,9 @@ public sealed class SkillAppService : AppServiceBase
                 new SkillExecutionContext("PromptRange", Mode: SkillExecutionMode.Evaluation))));
     }
 
+    /// <summary>Runs an isolated Skill test request.</summary>
+    /// <param name="request">The Skill test and isolation request.</param>
+    /// <returns>A task containing test output, isolation state, and diagnostics.</returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public async Task<AppResponseBase<SkillTestResult>> TestAsync(
         SkillTestRequest request)
@@ -119,6 +147,10 @@ public sealed class SkillAppService : AppServiceBase
             async (response, logger) => await _testRunner.TestAsync(request));
     }
 
+    /// <summary>Exports a Skill version as a downloadable package.</summary>
+    /// <param name="skillId">The Skill identifier.</param>
+    /// <param name="version">Optional version selector.</param>
+    /// <returns>A ZIP file result.</returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public async Task<FileContentResult> ExportAsync(string skillId, string version = null)
     {
@@ -131,6 +163,10 @@ public sealed class SkillAppService : AppServiceBase
         };
     }
 
+    /// <summary>Installs a Skill package uploaded as a form file.</summary>
+    /// <param name="package">The uploaded Skill package.</param>
+    /// <returns>A task containing installation status and descriptor.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="package"/> is missing.</exception>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public async Task<AppResponseBase<SkillInstallResult>> InstallAsync(IFormFile package)
     {
@@ -147,6 +183,9 @@ public sealed class SkillAppService : AppServiceBase
             });
     }
 
+    /// <summary>Downloads and installs a Skill package from a URL.</summary>
+    /// <param name="packageUrl">The package URL.</param>
+    /// <returns>A task containing installation status and descriptor.</returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public async Task<AppResponseBase<SkillInstallResult>> InstallFromUrlAsync(string packageUrl)
     {
@@ -155,6 +194,10 @@ public sealed class SkillAppService : AppServiceBase
                 await _packageService.InstallFromUrlAsync(packageUrl));
     }
 
+    /// <summary>Returns a bounded preview of a Skill package's manifest and files.</summary>
+    /// <param name="skillId">The Skill identifier.</param>
+    /// <param name="version">Optional version selector.</param>
+    /// <returns>A task containing preview metadata.</returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public async Task<AppResponseBase<SkillContentPreview>> PreviewAsync(
         string skillId,
@@ -165,6 +208,9 @@ public sealed class SkillAppService : AppServiceBase
                 await _packageService.PreviewAsync(skillId, version));
     }
 
+    /// <summary>Generates or improves a Skill definition with the selected AI model.</summary>
+    /// <param name="request">The Skill generation request.</param>
+    /// <returns>A task containing generated content and approval state.</returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public async Task<AppResponseBase<SkillGenerationResult>> GenerateAsync(
         SkillGenerationRequest request)
@@ -174,6 +220,10 @@ public sealed class SkillAppService : AppServiceBase
                 await _packageService.GenerateAsync(request));
     }
 
+    /// <summary>Publishes a selected Skill version for production use.</summary>
+    /// <param name="skillId">The Skill identifier.</param>
+    /// <param name="version">The version to publish.</param>
+    /// <returns>A task containing the published descriptor.</returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public async Task<AppResponseBase<SkillDescriptor>> PublishAsync(
         string skillId,

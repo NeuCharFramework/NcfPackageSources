@@ -49,6 +49,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.19.4 Integrated localization, tooling, and runtime improvements across the module.
 
+    Modified by: Senparc - 20261125
+    Change description: v0.19.4 Improved Agent group command parameter selection and conversation loading.
+
 ----------------------------------------------------------------*/
 
 using A2A.AspNetCore;
@@ -77,8 +80,6 @@ using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.AgentsManager.Abstractions;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
 using Senparc.Ncf.Core.Localization;
-using Senparc.Ncf.XncfBase.ChatTools;
-using Senparc.Xncf.AgentsManager.OHS.Local.AppService;
 using Senparc.Ncf.Shared.Abstractions.ChatAgent;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using System;
@@ -90,7 +91,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager
 {
     [XncfRegister]
-    public partial class Register : XncfRegisterBase, IXncfRegister, IChatTool
+    public partial class Register : XncfRegisterBase, IXncfRegister
     {
         private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<AgentsManagerResource>(
             "Module.AgentsManager",
@@ -112,47 +113,6 @@ namespace Senparc.Xncf.AgentsManager
         public override string Icon => "fa fa-star";
 
         public override string Description => RegisterText.Description;
-
-        public IReadOnlyCollection<ChatToolDefinition> GetChatTools()
-        {
-            return new[]
-            {
-                new ChatToolDefinition
-                {
-                    Command = "/run-agent-group",
-                    Label = AgentsManagerResource.Get(
-                        "AdminChat.Command.RunAgentGroup",
-                        "Run an Agent group"),
-                    Hint = AgentsManagerResource.Get(
-                        "AdminChat.Command.RunAgentGroupHint",
-                        "Describe the task; reuse an existing matching group"),
-                    ModuleName = MenuName,
-                    ModuleUid = Uid,
-                    Functions = new[]
-                    {
-                        new ChatToolFunctionDefinition
-                        {
-                            DeclaringType = typeof(ChatGroupAppService),
-                            MethodName = nameof(ChatGroupAppService.FindChatGroups)
-                        },
-                        new ChatToolFunctionDefinition
-                        {
-                            DeclaringType = typeof(ChatGroupAppService),
-                            MethodName = nameof(ChatGroupAppService.RunChatGroup)
-                        }
-                    },
-                    Instructions = """
-
-[Agent Group Command]
-The user asked to run an existing AgentsManager ChatGroup. Do not create, edit, or delete a group.
-1. Search enabled groups with FindChatGroups using task keywords, group name, or the explicit --group value.
-2. Reuse an exact ID when supplied. For a semantic match, choose only when one group clearly matches; otherwise show the closest options and ask the user to choose.
-3. Start the selected existing group with RunChatGroup and the user's task as Command.
-4. Report the selected group and the resulting task status; do not claim completion because the run is asynchronous.
-"""
-                }
-            };
-        }
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
@@ -225,6 +185,7 @@ The user asked to run an existing AgentsManager ChatGroup. Do not create, edit, 
             services.AddSingleton<INeuBellProvider>(serviceProvider =>
                 serviceProvider.GetRequiredService<AgentsManagerNeuBellProvider>());
             services.AddScoped<ChatGroupService>();
+            AddChatToolServices(services);
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();
             services.AddScoped<ChatGroupMemberService>();

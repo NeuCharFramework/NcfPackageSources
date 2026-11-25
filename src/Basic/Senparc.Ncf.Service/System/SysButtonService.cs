@@ -31,11 +31,21 @@ namespace Senparc.Ncf.Service
     {
         private readonly ISysButtonRespository _iSysButtonRespository;
 
+        /// <summary>
+        /// Initializes the button service with its specialized repository.
+        /// </summary>
+        /// <param name="repo">The repository used for button queries and deletion.</param>
+        /// <param name="serviceProvider">The service provider used by the base service.</param>
         public SysButtonService(ISysButtonRespository repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             _iSysButtonRespository = repo;
         }
 
+        /// <summary>
+        /// Deletes all buttons associated with a menu identifier.
+        /// </summary>
+        /// <param name="menuId">The menu identifier whose buttons should be deleted.</param>
+        /// <returns>The number of deleted buttons, or zero for an empty menu identifier.</returns>
         public async Task<int> DeleteButtonsByMenuId(string menuId)
         {
             if (string.IsNullOrEmpty(menuId))
@@ -45,6 +55,11 @@ namespace Senparc.Ncf.Service
             return await _iSysButtonRespository.DeleteButtonsByMenuId(menuId);
         }
 
+        /// <summary>
+        /// Loads all buttons for a menu and maps them to DTOs.
+        /// </summary>
+        /// <param name="MenuId">The menu identifier used to filter button records.</param>
+        /// <returns>The mapped button DTO sequence.</returns>
         public async Task<IEnumerable<SysButtonDto>> GetSysButtonDtosAsync(string MenuId)
         {
             IEnumerable<SysButton> sysButtons = await GetFullListAsync(_ => _.MenuId == MenuId);

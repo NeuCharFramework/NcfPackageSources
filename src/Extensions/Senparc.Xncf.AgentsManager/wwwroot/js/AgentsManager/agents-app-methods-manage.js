@@ -48,6 +48,8 @@ var AgentsAppMethodsManage = {
     },
     //Legacy comment translated to English.
     resetAgentDetailsQuery() {
+      this.invalidateTaskDetailRequest('agentGroupTask')
+      this.invalidateTaskDetailRequest('agentTask')
       this.agentDetailsTabsActiveName = 'first'
       this.agentDetailsGroupList = []
       this.agentDetailsGroupShowType = '1'
@@ -106,7 +108,7 @@ var AgentsAppMethodsManage = {
       this.$confirm(messageText, ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
         confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
-        cancelButtonText: ncfST('Studio.Cancel'),
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
@@ -152,7 +154,7 @@ var AgentsAppMethodsManage = {
         await this.$confirm(messageText, ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
           dangerouslyUseHTMLString: true,
           confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
-          cancelButtonText: ncfST('Studio.Cancel'),
+          cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
           type: 'warning'
         })
 
@@ -241,7 +243,7 @@ var AgentsAppMethodsManage = {
         this.$confirm(previewMessage, ncfST('Frontend.AgentsManager.ConfirmAction'), {
           dangerouslyUseHTMLString: true,
           confirmButtonText: ncfST('Frontend.AgentsManager.DeleteAgent'),
-          cancelButtonText: ncfST('Studio.Cancel'),
+          cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
           type: 'warning'
         }).then(() => {
           serviceAM.post(serviceURL).then(res => {
@@ -454,7 +456,7 @@ var AgentsAppMethodsManage = {
       this.$confirm(ncfST('Frontend.AgentsManager.DeleteThisData'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
         confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
-        cancelButtonText: ncfST('Studio.Cancel'),
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
@@ -499,7 +501,7 @@ var AgentsAppMethodsManage = {
       this.$confirm(ncfST('Frontend.AgentsManager.DeleteTheSelectedDataInBatch'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
         confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
-        cancelButtonText: ncfST('Studio.Cancel'),
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
@@ -534,6 +536,7 @@ var AgentsAppMethodsManage = {
         return
       }
       this.clearHistoryTimer()
+      this.invalidateTaskDetailRequest('task')
       this.scrollbarTaskIndex = ''
       // clear detail data
       this.taskDetails = ''
@@ -557,6 +560,7 @@ var AgentsAppMethodsManage = {
       }
       this.clearHistoryTimer()
       if (clickType === 'agentTask') {
+        this.invalidateTaskDetailRequest(clickType)
         this.agentDetailsTaskIndex = index ?? ''
         // clear detail data
         this.agentDetailsTaskDetails = ''
@@ -567,6 +571,7 @@ var AgentsAppMethodsManage = {
         this.getTaskDetailData(clickType, item.id, item)
       }
       if (clickType === 'agentGroupTask') {
+        this.invalidateTaskDetailRequest(clickType)
         this.agentDetailsGroupShowType = '2'
         // clear detail data
         this.agentDetailsGroupDetailsTaskDetails = ''
@@ -577,6 +582,7 @@ var AgentsAppMethodsManage = {
         this.getTaskDetailData(clickType, item.id, item)
       }
       if (clickType === 'groupTask') {
+        this.invalidateTaskDetailRequest(clickType)
         this.groupShowType = '3'
         // clear detail data
         this.groupTaskDetails = ''
@@ -588,6 +594,7 @@ var AgentsAppMethodsManage = {
         this.syncHashRoute({ tab: 'second', groupId: item.chatGroupId || this.scrollbarGroupIndex || null, taskId: item.id })
       }
       if (clickType === 'task') {
+        this.invalidateTaskDetailRequest(clickType)
         this.scrollbarTaskIndex = index ?? ''
         // clear detail data
         this.taskDetails = ''
@@ -648,12 +655,14 @@ var AgentsAppMethodsManage = {
       }
       this.clearHistoryTimer()
       if (clickType === 'agentGroupTask') {
+        this.invalidateTaskDetailRequest(clickType)
         this.agentDetailsGroupShowType = '1'
         // const item = this.agentDetailsGroupList[this.agentDetailsGroupIndex]
         // this.getGroupDetailData('agentGroup', item.id,this.agentDetailsGroupDetails)
 
       }
       if (clickType === 'groupTask') {
+        this.invalidateTaskDetailRequest(clickType)
         this.groupShowType = '2' //Legacy comment translated to English.
         this.syncHashRoute({ tab: 'second', taskId: null })
         // const item = this.groupList[this.scrollbarGroupIndex]
@@ -864,7 +873,7 @@ var AgentsAppMethodsManage = {
       this.$confirm(ncfST('Frontend.AgentsManager.DeleteThisData'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
         confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
-        cancelButtonText: ncfST('Studio.Cancel'),
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
@@ -929,7 +938,7 @@ var AgentsAppMethodsManage = {
       this.$confirm(ncfST('Frontend.AgentsManager.StartTheSelectedDataInBatch'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
         confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
-        cancelButtonText: ncfST('Studio.Cancel'),
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
@@ -991,7 +1000,7 @@ var AgentsAppMethodsManage = {
       this.$confirm(ncfST('Frontend.AgentsManager.DeleteTheSelectedDataInBatch'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
         confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
-        cancelButtonText: ncfST('Studio.Cancel'),
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
@@ -1037,7 +1046,7 @@ var AgentsAppMethodsManage = {
       this.$confirm(ncfST('Frontend.AgentsManager.ForceStopThisTask'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true,
         confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
-        cancelButtonText: ncfST('Studio.Cancel')
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel')
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
           if (res.data.success) {
@@ -1090,7 +1099,7 @@ var AgentsAppMethodsManage = {
       this.$confirm(ncfST('Frontend.AgentsManager.ForceStopTheSelectedTasks'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true,
         confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
-        cancelButtonText: ncfST('Studio.Cancel')
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel')
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
@@ -1511,7 +1520,7 @@ var AgentsAppMethodsManage = {
     </div>`, ncfST('Frontend.AgentsManager.ModelParameters'), {
             dangerouslyUseHTMLString: true, //Legacy comment translated to English.
             confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
-            cancelButtonText: ncfST('Studio.Cancel'),
+            cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
             showCancelButton: false,
             // type: 'warning'
           }).then(() => { }).catch(() => { });

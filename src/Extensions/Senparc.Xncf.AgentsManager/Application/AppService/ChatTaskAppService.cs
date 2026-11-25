@@ -55,6 +55,10 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
     [ApiAuthorize]
+    /// <summary>
+    /// Exposes authenticated administration operations for listing, reviewing, controlling,
+    /// and deleting agent chat tasks.
+    /// </summary>
     public class ChatTaskAppService : AppServiceBase
     {
         private readonly ChatTaskService _chatTaskService;
@@ -63,6 +67,15 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         private readonly AgentsManagerHumanInteractionService _humanInteractionService;
         private readonly ChatTaskCancellationRegistry _cancellationRegistry;
 
+        /// <summary>
+        /// Initializes the application service and its task-control collaborators.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency injection provider used by the base application service.</param>
+        /// <param name="chatTaskService">The service used to query and persist chat tasks.</param>
+        /// <param name="chatGroupService">The service used to start the task's associated chat group.</param>
+        /// <param name="humanInTheLoopRequestStore">The store used to inspect and cancel pending human requests.</param>
+        /// <param name="humanInteractionService">The service used to resolve human-in-the-loop decisions and replies.</param>
+        /// <param name="cancellationRegistry">The registry used to signal cancellation to active task executions.</param>
         public ChatTaskAppService(
             IServiceProvider serviceProvider,
             ChatTaskService chatTaskService,
@@ -79,6 +92,16 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        /// <summary>
+        /// Queries tasks with optional chat-group, agent-template, name, and archive-state filters.
+        /// </summary>
+        /// <param name="chatGroupId">Optional chat-group identifier; non-positive values do not filter by group.</param>
+        /// <param name="agentTemplateId">Optional agent-template identifier used to derive matching chat groups.</param>
+        /// <param name="pageIndex">The zero- or one-based page index expected by the underlying service.</param>
+        /// <param name="pageSize">The maximum number of tasks requested from the underlying service.</param>
+        /// <param name="filter">Optional case-sensitive or provider-dependent task-name filter.</param>
+        /// <param name="archiveScope">Archive selector: <c>0</c> active only, <c>1</c> archived only, other values both.</param>
+        /// <returns>An application response containing the mapped task page.</returns>
         public async Task<AppResponseBase<ChatTask_GetListResponse>> GetList(int chatGroupId, int agentTemplateId, int pageIndex, int pageSize, string filter = "", int archiveScope = 2)
         {
             return await this.GetResponseAsync<ChatTask_GetListResponse>(async (response, logger) =>
@@ -98,11 +121,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                       seh.ValueCompare
                           .AndAlso(chatGroupId > 0, z => z.ChatGroupId == chatGroupId)
                           .AndAlso(agentTemplateId > 0, z => chatGroupIdList.Contains(z.ChatGroupId));
-                      //Legacy comment translated to English.
+                      // Archive scope 0 selects active tasks and scope 1 selects archived tasks.
                       seh.ValueCompare
                           .AndAlso(archiveScope == 0, z => z.IsArchived == false)
                           .AndAlso(archiveScope == 1, z => z.IsArchived == true);
-                      //Legacy comment translated to English.
+                      // An empty filter keeps the query unfiltered by task name.
                       seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(filter), _ => _.Name.Contains(filter));
                       var where = seh.BuildWhereExpression();
 
@@ -116,6 +139,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        /// <summary>
+        /// Changes the archive flag of one task.
+        /// </summary>
+        /// <param name="id">The task identifier.</param>
+        /// <param name="isArchived">Whether the task should be marked archived.</param>
+        /// <returns>An application response containing a localized operation result.</returns>
         public async Task<AppResponseBase<string>> SetArchiveStatus(int id, bool isArchived)
         {
             return await this.GetResponseAsync<string>(async (response, logger) =>
@@ -132,6 +161,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        /// <summary>
+        /// Loads one task and maps it to the application-service item response.
+        /// </summary>
+        /// <param name="id">The task identifier.</param>
+        /// <returns>The mapped task response; the mapping behavior for a missing task is delegated to the configured mapper.</returns>
         public async Task<AppResponseBase<ChatTask_GetItemResponse>> GetItem(int id)
         {
             return await this.GetResponseAsync<ChatTask_GetItemResponse>(async (response, logger) =>
@@ -146,6 +180,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        /// <summary>
+        /// Returns pending human-in-the-loop requests for a task.
+        /// </summary>
+        /// <param name="chatTaskId">The task identifier whose pending requests should be returned.</param>
+        /// <returns>An application response containing a materialized list of pending requests.</returns>
         public async Task<AppResponseBase<List<HumanInTheLoopRequestDto>>> GetHumanRequests(int chatTaskId)
         {
             return await this.GetResponseAsync<List<HumanInTheLoopRequestDto>>(async (response, logger) =>
@@ -155,6 +194,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        /// <summary>
+        /// Resolves a pending tool-approval request for the current administrator.
+        /// </summary>
+        /// <param name="requestId">The pending human-interaction request identifier.</param>
+        /// <param name="approved">Whether the requested tool action is approved.</param>
+        /// <param name="reason">Optional reason to store with the decision.</param>
+        /// <param name="input">Optional input associated with the decision.</param>
+        /// <returns>An application response containing the localized resolution result.</returns>
         public async Task<AppResponseBase<string>> ResolveHumanRequest(
             string requestId,
             bool approved,
@@ -187,6 +234,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        /// <summary>
+        /// Submits text to a pending human-turn request and allows the waiting task to continue.
+        /// </summary>
+        /// <param name="request">The request identifier and non-empty human text.</param>
+        /// <returns>An application response containing the localized submission result.</returns>
         public async Task<AppResponseBase<string>> SendHumanMessage([FromBody] HumanMessageRequest request)
         {
             return await this.GetResponseAsync<string>(async (response, logger) =>
@@ -222,6 +274,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        /// <summary>
+        /// Requests cancellation of one active task and releases its pending runtime resources.
+        /// </summary>
+        /// <param name="id">The task identifier.</param>
+        /// <returns>An application response describing the cancellation result.</returns>
         public async Task<AppResponseBase<string>> ForceStop(int id)
         {
             return await this.GetResponseAsync<string>(async (response, logger) =>
@@ -232,6 +289,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        /// <summary>
+        /// Requests cancellation of multiple tasks in one operation.
+        /// </summary>
+        /// <param name="ids">The task identifiers to cancel; null or empty input is rejected by the operation.</param>
+        /// <returns>An application response containing counts of changed and skipped tasks.</returns>
         public async Task<AppResponseBase<string>> ForceStopBatch([FromBody] List<int> ids)
         {
             return await this.GetResponseAsync<string>(async (response, logger) =>
@@ -242,6 +304,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        /// <summary>
+        /// Deletes one task together with its persisted chat history and runtime state.
+        /// </summary>
+        /// <param name="id">The task identifier.</param>
+        /// <returns>An application response describing the deletion result.</returns>
         public async Task<AppResponseBase<string>> Delete(int id)
         {
             return await this.GetResponseAsync<string>(async (response, logger) =>
@@ -252,6 +319,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        /// <summary>
+        /// Deletes multiple tasks and their persisted histories and runtime state.
+        /// </summary>
+        /// <param name="ids">The task identifiers to delete; null or empty input is rejected by the operation.</param>
+        /// <returns>An application response containing the number of deleted tasks.</returns>
         public async Task<AppResponseBase<string>> DeleteBatch([FromBody] List<int> ids)
         {
             return await this.GetResponseAsync<string>(async (response, logger) =>
@@ -262,6 +334,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        /// <summary>
+        /// Starts the eligible tasks in a batch by dispatching their associated chat groups.
+        /// </summary>
+        /// <param name="ids">The task identifiers to start.</param>
+        /// <returns>An application response containing started and skipped counts.</returns>
         public async Task<AppResponseBase<string>> StartBatch([FromBody] List<int> ids)
         {
             return await this.GetResponseAsync<string>(async (response, logger) =>
@@ -316,6 +393,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Performs the shared cancellation workflow used by single-task and batch endpoints.
+        /// </summary>
+        /// <param name="ids">The candidate task identifiers.</param>
+        /// <returns>A localized result containing changed and skipped counts.</returns>
         private async Task<string> ForceStopInternalAsync(List<int> ids)
         {
             if (ids == null || ids.Count == 0)
@@ -350,6 +432,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             return $"强制停止完成：成功 {changed} 条，跳过 {skipped} 条";
         }
 
+        /// <summary>
+        /// Reads the current administrator identifier for human-interaction ownership checks.
+        /// </summary>
+        /// <returns>The administrator identifier as text, or <see langword="null"/> when no usable context exists.</returns>
         private string GetCurrentAdminUserId()
         {
             try
@@ -363,6 +449,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             }
         }
 
+        /// <summary>
+        /// Performs the shared deletion workflow used by single-task and batch endpoints.
+        /// </summary>
+        /// <param name="ids">The candidate task identifiers.</param>
+        /// <returns>A localized result containing the number of deleted tasks.</returns>
         private async Task<string> DeleteInternalAsync(List<int> ids)
         {
             if (ids == null || ids.Count == 0)
@@ -397,6 +488,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
     }
 
+    /// <summary>
+    /// Carries text submitted to a pending human-turn interaction.
+    /// </summary>
     public sealed class HumanMessageRequest
     {
         public string RequestId { get; set; }

@@ -23,6 +23,10 @@ using Senparc.Xncf.Connectors.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.Connectors.Domain.Services;
 
+/// <summary>
+/// Validates, persists, tests, and invokes configured connector instances.
+/// Secret fields are protected before persistence and unprotected only at provider boundaries.
+/// </summary>
 public sealed class ConnectorGateway : IConnectorGateway
 {
     private readonly ConnectorsSenparcEntities _db;
@@ -30,6 +34,13 @@ public sealed class ConnectorGateway : IConnectorGateway
     private readonly ConnectorSecretProtector _secrets;
     private readonly ILogger<ConnectorGateway> _logger;
 
+    /// <summary>
+    /// Initializes the connector gateway.
+    /// </summary>
+    /// <param name="db">Connector database context.</param>
+    /// <param name="providers">Connector providers available to the module.</param>
+    /// <param name="secrets">Secret protection service.</param>
+    /// <param name="logger">Logger for connector operations.</param>
     public ConnectorGateway(
         ConnectorsSenparcEntities db,
         IEnumerable<IConnectorProvider> providers,
@@ -44,6 +55,7 @@ public sealed class ConnectorGateway : IConnectorGateway
             .ToDictionary(group => group.Key, group => group.Last(), StringComparer.OrdinalIgnoreCase);
     }
 
+    /// <inheritdoc />
     public Task<IReadOnlyList<ConnectorDescriptor>> ListCatalogAsync(CancellationToken cancellationToken)
     {
         IReadOnlyList<ConnectorDescriptor> catalog = _providers.Values
@@ -54,6 +66,12 @@ public sealed class ConnectorGateway : IConnectorGateway
         return Task.FromResult(catalog);
     }
 
+    /// <inheritdoc />
+    /// <summary>
+    /// Lists enabled connector instances with only their permitted action metadata.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel the database query.</param>
+    /// <returns>Enabled configured connectors whose provider types are installed.</returns>
     public async Task<IReadOnlyList<ConfiguredConnector>> ListEnabledAsync(CancellationToken cancellationToken)
     {
         var instances = await _db.ConnectorInstances
@@ -69,6 +87,12 @@ public sealed class ConnectorGateway : IConnectorGateway
             .ToArray();
     }
 
+    /// <inheritdoc />
+    /// <summary>
+    /// Lists all connector instances for administration without exposing secret values.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel the database query.</param>
+    /// <returns>Administrative connector views with secret-field names but no secret contents.</returns>
     public async Task<IReadOnlyList<ConnectorInstanceView>> ListInstancesAsync(CancellationToken cancellationToken)
     {
         var instances = await _db.ConnectorInstances
@@ -79,6 +103,13 @@ public sealed class ConnectorGateway : IConnectorGateway
         return instances.Select(ToView).ToArray();
     }
 
+    /// <inheritdoc />
+    /// <summary>
+    /// Validates and persists a connector configuration, protecting secret fields before storage.
+    /// </summary>
+    /// <param name="input">The connector name, type, field values, actions, and enabled state.</param>
+    /// <param name="cancellationToken">Token used to cancel validation or persistence.</param>
+    /// <returns>Operation status, localized message, and the saved public instance identifier.</returns>
     public async Task<(bool Success, string Message, string? InstanceId)> SaveAsync(
         ConnectorSaveInput input,
         CancellationToken cancellationToken)
@@ -191,6 +222,13 @@ public sealed class ConnectorGateway : IConnectorGateway
         return (true, ConnectorsResource.Get("Message.Saved", "Connector saved."), entity.PublicId);
     }
 
+    /// <inheritdoc />
+    /// <summary>
+    /// Soft-deletes a configured connector instance by setting its entity flag.
+    /// </summary>
+    /// <param name="instanceId">The public connector instance identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the database operation.</param>
+    /// <returns>Operation status and a localized result message.</returns>
     public async Task<(bool Success, string Message)> DeleteAsync(string instanceId, CancellationToken cancellationToken)
     {
         var entity = await _db.ConnectorInstances
@@ -207,6 +245,13 @@ public sealed class ConnectorGateway : IConnectorGateway
         return (true, ConnectorsResource.Get("Message.Deleted", "Connector deleted."));
     }
 
+    /// <inheritdoc />
+    /// <summary>
+    /// Tests one configured connector after unprotecting its secret fields at the provider boundary.
+    /// </summary>
+    /// <param name="instanceId">The public connector instance identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the provider test.</param>
+    /// <returns>The provider test result, persisted as the instance's latest test status.</returns>
     public async Task<ConnectorTestResult> TestAsync(string instanceId, CancellationToken cancellationToken)
     {
         var entity = await _db.ConnectorInstances
@@ -234,6 +279,15 @@ public sealed class ConnectorGateway : IConnectorGateway
         return result;
     }
 
+    /// <inheritdoc />
+    /// <summary>
+    /// Invokes an enabled, authorized action on a configured connector instance.
+    /// </summary>
+    /// <param name="instanceId">The public connector instance identifier.</param>
+    /// <param name="actionKey">The provider action key.</param>
+    /// <param name="arguments">Optional action arguments; blank keys/values are ignored.</param>
+    /// <param name="cancellationToken">Token used to cancel provider invocation.</param>
+    /// <returns>Connector output or a localized failure result.</returns>
     public async Task<ConnectorInvocationResult> InvokeAsync(
         string instanceId,
         string actionKey,
@@ -303,9 +357,19 @@ public sealed class ConnectorGateway : IConnectorGateway
         }
     }
 
+    /// <summary>
+    /// Finds the catalog descriptor for a connector key.
+    /// </summary>
+    /// <param name="connectorKey">The case-insensitive connector key.</param>
+    /// <returns>The descriptor, or <see langword="null"/> when no provider is registered.</returns>
     public ConnectorDescriptor? FindDescriptor(string connectorKey)
         => _providers.TryGetValue(connectorKey ?? string.Empty, out var provider) ? provider.Describe() : null;
 
+    /// <summary>
+    /// Unprotects only secret fields required by the configured provider.
+    /// </summary>
+    /// <param name="entity">The persisted connector entity.</param>
+    /// <returns>A mutable configuration dictionary for provider-bound use.</returns>
     private Dictionary<string, string> Unprotect(ConnectorInstance entity)
     {
         var values = ConnectorConfigurationCodec.Read(entity.ConfigJson);
@@ -325,6 +389,11 @@ public sealed class ConnectorGateway : IConnectorGateway
         return values;
     }
 
+    /// <summary>
+    /// Projects a persisted entity into the enabled-connector contract.
+    /// </summary>
+    /// <param name="entity">The persisted connector entity.</param>
+    /// <returns>The configured connector, or <see langword="null"/> when its provider is unavailable.</returns>
     private ConfiguredConnector? ToConfigured(ConnectorInstance entity)
     {
         if (!_providers.TryGetValue(entity.ConnectorKey, out var provider))
@@ -349,6 +418,11 @@ public sealed class ConnectorGateway : IConnectorGateway
         };
     }
 
+    /// <summary>
+    /// Projects a persisted entity into an administration view with secrets redacted.
+    /// </summary>
+    /// <param name="entity">The persisted connector entity.</param>
+    /// <returns>The redacted connector instance view.</returns>
     private ConnectorInstanceView ToView(ConnectorInstance entity)
     {
         var descriptor = FindDescriptor(entity.ConnectorKey);

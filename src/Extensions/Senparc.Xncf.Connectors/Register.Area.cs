@@ -32,6 +32,12 @@ public sealed partial class Register : IAreaRegister
         new AreaPageMenuItem(GetAreaHomeUrl(), ConnectorsResource.Get("Area.Connectors.Config", "Connector setup"), "fa fa-plug")
     ];
 
+    /// <summary>
+    /// Registers connector Razor Pages options for the application MVC builder.
+    /// </summary>
+    /// <param name="builder">The MVC builder to configure.</param>
+    /// <param name="env">The host environment used by area registration.</param>
+    /// <returns>The configured MVC builder.</returns>
     public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         => builder.AddRazorPagesOptions(_ => { });
 

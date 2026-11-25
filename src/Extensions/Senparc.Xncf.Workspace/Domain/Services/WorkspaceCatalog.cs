@@ -56,6 +56,10 @@ public sealed record WorkspaceUsageReport(
     WorkspaceUsageSummary OtherSummary,
     WorkspaceUsageSummary VisibleSummary)
 {
+    /// <summary>Creates an empty usage report for an actor and quota.</summary>
+    /// <param name="actor">The resolved workspace actor.</param>
+    /// <param name="quotaBytes">The configured workspace quota.</param>
+    /// <returns>An empty report preserving actor scope and quota.</returns>
     public static WorkspaceUsageReport Empty(WorkspaceActor actor, long quotaBytes) =>
         new(
             actor.IsSuperAdmin,
@@ -81,6 +85,12 @@ public static class WorkspaceActors
     /// </summary>
     public const string SuperAdminRoleCode = "administrator";
 
+    /// <summary>
+    /// Resolves an authenticated administrator identity and its super-administrator role.
+    /// </summary>
+    /// <param name="user">The claims principal.</param>
+    /// <param name="actor">Receives the resolved actor or a zero-valued actor.</param>
+    /// <returns><see langword="true"/> when a positive NameIdentifier is present.</returns>
     public static bool TryResolve(ClaimsPrincipal? user, out WorkspaceActor actor)
     {
         actor = new WorkspaceActor(0, false);
@@ -99,6 +109,11 @@ public static class WorkspaceActors
         return true;
     }
 
+    /// <summary>
+    /// Checks role claims for the configured super-administrator role code.
+    /// </summary>
+    /// <param name="user">The claims principal.</param>
+    /// <returns><see langword="true"/> when the role is present.</returns>
     public static bool HasSuperAdminRole(ClaimsPrincipal user) =>
         user.Claims
             .Where(claim => claim.Type == ClaimTypes.Role)
@@ -139,6 +154,14 @@ public sealed class WorkspaceCatalog : IWorkspaceCatalog
         _logger = logger;
     }
 
+    /// <summary>
+    /// Creates a workspace owned by the authenticated actor.
+    /// </summary>
+    /// <param name="actor">The workspace actor.</param>
+    /// <param name="name">The workspace display name.</param>
+    /// <param name="cancellationToken">Token used to cancel creation.</param>
+    /// <returns>A task containing the created workspace descriptor.</returns>
+    /// <exception cref="UnauthorizedAccessException">Thrown when the actor identity is invalid.</exception>
     public Task<WorkspaceDescriptor> CreateOwnAsync(
         WorkspaceActor actor,
         string name,
@@ -157,6 +180,13 @@ public sealed class WorkspaceCatalog : IWorkspaceCatalog
         return _storage.CreateAsync(new WorkspaceCreateRequest(actor.UserId, name.Trim()), cancellationToken);
     }
 
+    /// <summary>
+    /// Aggregates usage for the actor's own workspaces and, for super administrators,
+    /// visible workspaces owned by other administrators.
+    /// </summary>
+    /// <param name="actor">The workspace actor.</param>
+    /// <param name="cancellationToken">Token used to cancel enumeration and usage reads.</param>
+    /// <returns>A task containing scoped workspace usage and summaries.</returns>
     public async Task<WorkspaceUsageReport> GetReportAsync(
         WorkspaceActor actor,
         CancellationToken cancellationToken = default)
@@ -227,6 +257,14 @@ public sealed class WorkspaceCatalog : IWorkspaceCatalog
             visibleSummary);
     }
 
+    /// <summary>
+    /// Clears workspace content after enforcing ownership or super-administrator scope.
+    /// </summary>
+    /// <param name="actor">The workspace actor.</param>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel deletion.</param>
+    /// <returns>A task containing the cleared workspace result.</returns>
+    /// <exception cref="DirectoryNotFoundException">Thrown when the workspace is not visible to the actor.</exception>
     public async Task<WorkspaceClearResult> ClearContentAsync(
         WorkspaceActor actor,
         string workspaceId,
@@ -283,6 +321,11 @@ public sealed class WorkspaceCatalog : IWorkspaceCatalog
         return new WorkspaceClearResult(descriptor.Id, descriptor.Name, clearingOtherOwner, descriptor.OwnerId);
     }
 
+    /// <summary>
+    /// Ensures the actor contains a positive administrator identifier.
+    /// </summary>
+    /// <param name="actor">The actor to validate.</param>
+    /// <exception cref="UnauthorizedAccessException">Thrown when the actor identity is invalid.</exception>
     private static void EnsureActor(WorkspaceActor actor)
     {
         if (actor.UserId <= 0)
@@ -296,6 +339,11 @@ internal static class WorkspaceUsageSummaryMath
 {
     public static readonly WorkspaceUsageSummary Empty = new(0, 0, 0, 0);
 
+    /// <summary>
+    /// Sums file, directory, byte, and workspace counts from usage items.
+    /// </summary>
+    /// <param name="items">The usage items to aggregate.</param>
+    /// <returns>The aggregate usage summary.</returns>
     public static WorkspaceUsageSummary From(IReadOnlyList<WorkspaceUsageItem> items)
     {
         var fileCount = 0;
@@ -311,6 +359,12 @@ internal static class WorkspaceUsageSummaryMath
         return new WorkspaceUsageSummary(items.Count, fileCount, directoryCount, usedBytes);
     }
 
+    /// <summary>
+    /// Adds two usage summaries with checked arithmetic.
+    /// </summary>
+    /// <param name="left">The first summary.</param>
+    /// <param name="right">The second summary.</param>
+    /// <returns>The combined summary.</returns>
     public static WorkspaceUsageSummary Add(WorkspaceUsageSummary left, WorkspaceUsageSummary right) =>
         new(
             checked(left.WorkspaceCount + right.WorkspaceCount),

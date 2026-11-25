@@ -240,6 +240,89 @@ var AgentsAppMethodsTask = {
       if (listType === 'groupTask') return this.groupTaskDetails || null
       return null
     },
+    beginTaskDetailRequest(listType) {
+      if (!listType) return 0
+      const token = Number(this.taskDetailRequestTokens[listType] || 0) + 1
+      this.$set(this.taskDetailRequestTokens, listType, token)
+      return token
+    },
+    invalidateTaskDetailRequest(listType) {
+      if (!listType) return
+      this.beginTaskDetailRequest(listType)
+      this.$set(this.taskConversationLoading, listType, false)
+      this.closeTaskHistoryStream(listType)
+      this.clearTaskHistoryStreamSilentTimer(listType)
+      if (this.historyTimer[listType]) {
+        clearTimeout(this.historyTimer[listType])
+        this.$delete(this.historyTimer, listType)
+      }
+    },
+    isCurrentTaskDetailRequest(listType, token) {
+      return Number(this.taskDetailRequestTokens[listType] || 0) === Number(token)
+    },
+    isCurrentTaskSelection(listType, chatTaskId) {
+      const current = this.getCurrentTaskDetailByType(listType)
+      return !!current && String(current.id) === String(chatTaskId)
+    },
+    isTaskConversationLoading(listType) {
+      return this.taskConversationLoading[listType] === true
+    },
+    isTerminalTaskStatus(status) {
+      return [3, 4, 5].includes(Number(status))
+    },
+    getTaskMemberListByType(listType) {
+      if (listType === 'task') return this.taskMemberList || []
+      if (listType === 'agentTask') return this.agentDetailsTaskMemberList || []
+      if (listType === 'agentGroupTask') return this.agentDetailsGroupTaskMemberList || []
+      if (listType === 'groupTask') return this.groupTaskMemberList || []
+      return []
+    },
+    setTaskMemberListByType(listType, list) {
+      if (listType === 'task') this.$set(this, 'taskMemberList', list)
+      if (listType === 'agentTask') this.$set(this, 'agentDetailsTaskMemberList', list)
+      if (listType === 'agentGroupTask') this.$set(this, 'agentDetailsGroupTaskMemberList', list)
+      if (listType === 'groupTask') this.$set(this, 'groupTaskMemberList', list)
+    },
+    getTaskConversationCacheKey(listType, chatTaskId) {
+      return `${listType}:${chatTaskId}`
+    },
+    getCachedTaskConversation(listType, chatTaskId) {
+      const key = this.getTaskConversationCacheKey(listType, chatTaskId)
+      const cached = this.taskConversationCache[key]
+      if (!cached) return null
+
+      this.taskConversationCacheOrder = this.taskConversationCacheOrder.filter(item => item !== key)
+      this.taskConversationCacheOrder.push(key)
+      return cached
+    },
+    cacheTaskConversation(listType, chatTaskId) {
+      const detail = this.getCurrentTaskDetailByType(listType)
+      if (!this.isTerminalTaskStatus(detail?.status)) return
+
+      const key = this.getTaskConversationCacheKey(listType, chatTaskId)
+      this.$set(this.taskConversationCache, key, {
+        detail: Object.assign({}, detail),
+        histories: this.getHistoryListByType(listType).filter(item => !item?._generating).map(item => Object.assign({}, item)),
+        members: this.getTaskMemberListByType(listType).map(item => Object.assign({}, item))
+      })
+      this.taskConversationCacheOrder = this.taskConversationCacheOrder.filter(item => item !== key)
+      this.taskConversationCacheOrder.push(key)
+
+      const maxEntries = 24
+      while (this.taskConversationCacheOrder.length > maxEntries) {
+        const expiredKey = this.taskConversationCacheOrder.shift()
+        this.$delete(this.taskConversationCache, expiredKey)
+      }
+    },
+    applyCachedTaskConversation(listType, chatTaskId, listedDetail = {}) {
+      const cached = this.getCachedTaskConversation(listType, chatTaskId)
+      if (!cached) return false
+
+      this.setCurrentTaskDetailByType(listType, Object.assign({}, cached.detail, listedDetail))
+      this.setHistoryListByType(listType, cached.histories.map(item => Object.assign({}, item)))
+      this.setTaskMemberListByType(listType, cached.members.map(item => Object.assign({}, item)))
+      return true
+    },
     setCurrentTaskDetailByType(listType, detail) {
       if (listType === 'task') this.$set(this, 'taskDetails', detail)
       if (listType === 'agentTask') this.$set(this, 'agentDetailsTaskDetails', detail)
@@ -333,7 +416,6 @@ var AgentsAppMethodsTask = {
     },
     //Legacy comment translated to English.
     async getTaskDetailData(detailType, id, detail = {}, detailsOn = false) {
-      //TODO:
       if (id == undefined) {
         app.$message({
           message: ncfST('Frontend.AgentsManager.ThereAreNoExecutableTasksYet'),
@@ -342,72 +424,80 @@ var AgentsAppMethodsTask = {
         })
         return
       }
-      await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetItem?id=${id}`)
-        .then(async res => {
-          const data = res?.data ?? {}
-          if (data.success) {
-            //Legacy comment translated to English.
-            if (!detailsOn) {
-              this.clearHistoryTimer()
-            }
-
-            if (!detailsOn) {
-              if (detailType === 'agentGroupTask') this.$set(this, 'agentDetailsGroupTaskMemberList', [])
-              if (detailType === 'groupTask') this.$set(this, 'groupTaskMemberList', [])
-            }
-
-            let taskDetail = data?.data?.chatTaskDto ?? ''
-            if (taskDetail) {
-              taskDetail = Object.assign({}, detail, taskDetail)
-            }
-            // agent group task
-            if (detailType === 'agentGroupTask') {
-              this.$set(this, 'agentDetailsGroupDetailsTaskDetails', taskDetail)
-            }
-            // group task
-            if (detailType === 'groupTask') {
-              this.$set(this, 'groupTaskDetails', taskDetail)
-            }
-            // agent task
-            if (detailType === 'agentTask') {
-              this.$set(this, 'agentDetailsTaskDetails', taskDetail)
-            }
-            // task
-            if (detailType === 'task') {
-              this.$set(this, 'taskDetails', taskDetail)
-            }
-
-            if (!detailsOn && taskDetail) {
-              if (detailType === 'task') this.$set(this, 'taskHistoryList', [])
-              if (detailType === 'agentTask') this.$set(this, 'agentDetailsTaskHistoryList', [])
-              if (detailType === 'agentGroupTask') this.$set(this, 'agentDetailsGroupTaskHistoryList', [])
-              if (detailType === 'groupTask') this.$set(this, 'groupTaskHistoryList', [])
-
-              //Legacy comment translated to English.
-              const taskMemberList = await this.getTaskMemberListData(detailType, taskDetail.chatGroupId)
-              await this.autoTestRemoteParticipants(taskMemberList)
-              //Legacy comment translated to English.
-              this.getTaskRecordListData(detailType, taskDetail.id, '', true)
-              this.startTaskHistoryStream(detailType, taskDetail.id, taskDetail.status)
-            }
-          } else {
+      const requestToken = this.beginTaskDetailRequest(detailType)
+      if (!detailsOn) {
+        this.clearHistoryTimer()
+        this.$set(this.taskConversationLoading, detailType, true)
+        if (this.isTerminalTaskStatus(detail?.status)
+          && this.applyCachedTaskConversation(detailType, id, detail)) {
+          this.$set(this.taskConversationLoading, detailType, false)
+          return
+        }
+      }
+      try {
+        const res = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetItem?id=${id}`)
+        const data = res?.data ?? {}
+        if (!data.success) {
+          if (this.isCurrentTaskDetailRequest(detailType, requestToken)) {
             app.$message({
               message: data.errorMessage || data.data || 'Error',
               type: 'error',
               duration: 5 * 1000
             })
           }
-        })
+          return
+        }
+        if (!this.isCurrentTaskDetailRequest(detailType, requestToken)) return
+
+        if (!detailsOn) {
+          if (detailType === 'agentGroupTask') this.$set(this, 'agentDetailsGroupTaskMemberList', [])
+          if (detailType === 'groupTask') this.$set(this, 'groupTaskMemberList', [])
+        }
+
+        let taskDetail = data?.data?.chatTaskDto ?? ''
+        if (taskDetail) {
+          taskDetail = Object.assign({}, detail, taskDetail)
+        }
+        this.setCurrentTaskDetailByType(detailType, taskDetail)
+
+        if (!detailsOn && taskDetail) {
+          this.setHistoryListByType(detailType, [])
+          const taskMemberList = await this.getTaskMemberListData(detailType, taskDetail.chatGroupId, requestToken)
+          if (!this.isCurrentTaskDetailRequest(detailType, requestToken)) return
+          await this.autoTestRemoteParticipants(taskMemberList)
+          if (!this.isCurrentTaskDetailRequest(detailType, requestToken)) return
+          const historyLoaded = await this.getTaskRecordListData(detailType, taskDetail.id, '', true)
+          if (!this.isCurrentTaskDetailRequest(detailType, requestToken)) return
+          if (historyLoaded) {
+            this.cacheTaskConversation(detailType, taskDetail.id)
+          }
+          this.startTaskHistoryStream(detailType, taskDetail.id, taskDetail.status)
+        }
+      } catch (error) {
+        if (this.isCurrentTaskDetailRequest(detailType, requestToken)) {
+          app.$message({
+            message: error?.message || 'Error',
+            type: 'error',
+            duration: 5 * 1000
+          })
+        }
+      } finally {
+        if (!detailsOn && this.isCurrentTaskDetailRequest(detailType, requestToken)) {
+          this.$set(this.taskConversationLoading, detailType, false)
+        }
+      }
     },
     //Legacy comment translated to English.
     async getTaskRecordListData(recordType, chatTaskId, nextHistoryId, isFirst = false) {
+      if (!this.isCurrentTaskSelection(recordType, chatTaskId)) return
       const queryList = {
         chatTaskId,
         nextHistoryId
       }
       //Legacy comment translated to English.
-      await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupHistoryAppService/Xncf.AgentsManager_ChatGroupHistoryAppService.GetList?${getInterfaceQueryStr(queryList)}`, queryList)
+      return serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupHistoryAppService/Xncf.AgentsManager_ChatGroupHistoryAppService.GetList?${getInterfaceQueryStr(queryList)}`, queryList)
         .then(res => {
+          if (!this.isCurrentTaskSelection(recordType, chatTaskId)) return
           const data = res?.data ?? {}
           if (data.success) {
             const chatGroupHistories = data?.data?.chatGroupHistories ?? []
@@ -532,12 +622,15 @@ var AgentsAppMethodsTask = {
               duration: 5 * 1000
             })
           }
+          return data.success
         })
     },
     //Legacy comment translated to English.
-    async getTaskMemberListData(memberType, chatGroupld) {
+    async getTaskMemberListData(memberType, chatGroupld, requestToken = null) {
+      const isCurrentRequest = () => requestToken === null || this.isCurrentTaskDetailRequest(memberType, requestToken)
       try {
         const res = await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${chatGroupld}`)
+        if (!isCurrentRequest()) return []
         const data = res?.data ?? {}
         if (!data.success) {
           throw new Error(data.errorMessage || data.data || ncfST('Frontend.AgentsManager.FailedToLoadTaskMembers'))
@@ -577,11 +670,13 @@ var AgentsAppMethodsTask = {
         }
         return taskMemberList
       } catch (err) {
-        app.$message({
-          message: err?.message || ncfST('Frontend.AgentsManager.FailedToLoadTaskMembers'),
-          type: 'error',
-          duration: 5 * 1000
-        })
+        if (isCurrentRequest()) {
+          app.$message({
+            message: err?.message || ncfST('Frontend.AgentsManager.FailedToLoadTaskMembers'),
+            type: 'error',
+            duration: 5 * 1000
+          })
+        }
         return []
       }
     },
@@ -742,6 +837,7 @@ var AgentsAppMethodsTask = {
       if (!scope || this.taskArchiveScope === scope) return
       this.taskArchiveScope = scope
       this.clearHistoryTimer()
+      this.invalidateTaskDetailRequest('task')
       this.scrollbarTaskIndex = ''
       this.taskDetails = ''
       this.taskHistoryList = []
@@ -769,6 +865,7 @@ var AgentsAppMethodsTask = {
         this.$message.success(ncfST('Frontend.AgentsManager.ValueSucceeded', actionText))
         const currentTaskId = Number(this.taskDetails?.id || 0)
         if (currentTaskId === Number(item.id) && this.taskArchiveScope !== 'all' && this.taskArchiveScope !== (nextArchived ? 'archived' : 'active')) {
+          this.invalidateTaskDetailRequest('task')
           this.scrollbarTaskIndex = ''
           this.taskDetails = ''
           this.taskHistoryList = []

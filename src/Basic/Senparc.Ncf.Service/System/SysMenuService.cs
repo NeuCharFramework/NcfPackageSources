@@ -41,7 +41,8 @@ using Microsoft.AspNetCore.Authentication;
 namespace Senparc.Ncf.Service
 {
     /// <summary>
-    /// 
+    /// Provides persistence, caching, tenant propagation, and initialization operations
+    /// for system menus and their button permissions.
     /// </summary>
     public class SysMenuService : ClientServiceBase<SysMenu>
     {
@@ -55,6 +56,16 @@ namespace Senparc.Ncf.Service
 
         //private readonly SenparcEntitiesBase _senparcEntities;
 
+        /// <summary>
+        /// Initializes the menu service and connects the related button, role, permission,
+        /// and role-admin services used by menu operations.
+        /// </summary>
+        /// <param name="repo">The repository used to persist <see cref="SysMenu"/> entities.</param>
+        /// <param name="serviceProvider">The provider used to resolve shared infrastructure such as <see cref="IDistributedCache"/>.</param>
+        /// <param name="sysRoleService">The role service used during system initialization.</param>
+        /// <param name="sysRolePermissionService">The repository used to persist role permissions.</param>
+        /// <param name="sysRoleAdminUserInfoService">The service used to associate administrator accounts with roles.</param>
+        /// <param name="sysButtonService">The service used to manage menu buttons.</param>
         public SysMenuService(ClientRepositoryBase<SysMenu> repo, IServiceProvider serviceProvider,
             SysRoleService sysRoleService, ClientRepositoryBase<SysRolePermission> sysRolePermissionService,
             SysRoleAdminUserInfoService sysRoleAdminUserInfoService, SysButtonService sysButtonService
@@ -68,6 +79,11 @@ namespace Senparc.Ncf.Service
             //_senparcEntities = _serviceProvider.GetService<SenparcEntitiesBase>();
         }
 
+        /// <summary>
+        /// Applies the supplied tenant context to this service and every related menu dependency
+        /// when multi-tenant mode is enabled.
+        /// </summary>
+        /// <param name="requestTenantInfo">The tenant context to propagate to the related services.</param>
         public void SetTenantInfoForAllServices(RequestTenantInfo requestTenantInfo)
         {
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
@@ -81,10 +97,13 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a new menu or updates an existing unlocked menu, validates button resource-code
+        /// uniqueness, persists the entity, and refreshes the menu caches.
         /// </summary>
-        /// <param name="sysMenuDto"></param>
-        /// <returns></returns>
+        /// <param name="sysMenuDto">The menu data to create or apply to an existing menu.</param>
+        /// <returns>The persisted menu entity. A locked existing menu is returned unchanged.</returns>
+        /// <exception cref="ArgumentNullException">Thrown by downstream code when <paramref name="sysMenuDto"/> is <see langword="null"/>.</exception>
+        /// <exception cref="NcfExceptionBase">Thrown when a button menu reuses an existing resource code.</exception>
         public virtual async Task<SysMenu> CreateOrUpdateAsync(SysMenuDto sysMenuDto)
         {
             SysMenu menu;
@@ -95,7 +114,7 @@ namespace Senparc.Ncf.Service
                 menu = await GetObjectAsync(_ => _.Id == sysMenuDto.Id);
                 if (menu.IsLocked)
                 {
-                    return menu;//Legacy comment translated to English.
+                    return menu;
                 }
 
                 isRepeat = await this.GetObjectAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode && _.Id != sysMenuDto.Id) != null;
@@ -123,11 +142,12 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates or updates a menu together with its button definitions in one transaction,
+        /// then invalidates the menu caches so subsequent reads observe the persisted state.
         /// </summary>
-        /// <param name="sysMenuDto"></param>
-        /// <param name="buttons"></param>
-        /// <returns></returns>
+        /// <param name="sysMenuDto">The menu data to create or apply to an existing menu.</param>
+        /// <param name="buttons">The button definitions to create or update for the menu.</param>
+        /// <returns>A task that completes after the menu and button changes are committed.</returns>
         public virtual async Task CreateOrUpdateAsync(SysMenuDto sysMenuDto, IEnumerable<SysButtonDto> buttons)
         {
             SysMenu menu;
@@ -183,20 +203,21 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// get data from the cache
+        /// Removes the flat menu cache entry. The hierarchical cache is rebuilt as part of
+        /// the refresh path used by <see cref="GetMenuDtoByCacheAsync(bool)"/>.
         /// </summary>
-        /// <param name="isRefresh"></param>
-        /// <returns></returns>
+        /// <returns>A task that completes after both cache entries have been removed.</returns>
         public virtual async Task RemoveMenuAsync()
         {
             await _distributedCache.RemoveAsync(MenuCacheKey);
         }
 
         /// <summary>
-        /// get data from the cache TODO...
+        /// Gets menu and button DTOs from the distributed cache, rebuilding and storing both
+        /// the flat list and tree cache when the entry is absent or a refresh is requested.
         /// </summary>
-        /// <param name="isRefresh"></param>
-        /// <returns></returns>
+        /// <param name="isRefresh">When <see langword="true"/>, bypasses the existing flat-list cache and rebuilds both menu caches.</param>
+        /// <returns>A task whose result contains menu and button DTOs visible to the current service scope.</returns>
         public virtual async Task<IEnumerable<SysMenuDto>> GetMenuDtoByCacheAsync(bool isRefresh = false)
         {
             List<SysMenuDto> selectListItems = null;
@@ -221,6 +242,12 @@ namespace Senparc.Ncf.Service
             return selectListItems;
         }
 
+        /// <summary>
+        /// Builds the top-level menu tree from a flat menu/button DTO sequence.
+        /// Only entries marked as menus participate in the hierarchy.
+        /// </summary>
+        /// <param name="sysMenuTreeItems">The flat DTO sequence containing parent identifiers.</param>
+        /// <returns>The root menu nodes with recursively populated children.</returns>
         public virtual IEnumerable<SysMenuTreeItemDto> GetSysMenuTreesMainRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems)
         {
             List<SysMenuTreeItemDto> sysMenuTrees = new List<SysMenuTreeItemDto>();
@@ -229,6 +256,12 @@ namespace Senparc.Ncf.Service
         }
 
 
+        /// <summary>
+        /// Recursively appends menu nodes whose parent identifier matches <paramref name="parentId"/>.
+        /// </summary>
+        /// <param name="sysMenuTreeItems">The complete flat menu sequence.</param>
+        /// <param name="sysMenuTrees">The list receiving nodes for the current parent.</param>
+        /// <param name="parentId">The parent identifier to match; <see langword="null"/> selects root menus.</param>
         private void GetSysMenuTreesRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems, IList<SysMenuTreeItemDto> sysMenuTrees, string parentId)
         {
             foreach (var item in sysMenuTreeItems.Where(_ => _.ParentId == parentId && _.IsMenu))
@@ -240,9 +273,10 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// get data from the cache
+        /// Gets the hierarchical menu tree from the distributed cache, initializing the menu
+        /// caches first when the tree entry is absent.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A task whose result contains the cached menu tree.</returns>
         public async Task<IEnumerable<SysMenuTreeItemDto>> GetMenuTreeDtoByCacheAsync()
         {
             IEnumerable<SysMenuTreeItemDto> sysMenuTreeItems = null;//
@@ -257,8 +291,12 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Initializes the built-in system menus, roles, permissions, and administrator-role
+        /// association using the synchronous compatibility wrapper.
         /// </summary>
+        /// <param name="requestTenantInfo">The tenant context used to prefix and scope initialized identifiers.</param>
+        /// <param name="adminUserInfoId">The administrator account identifier to associate with the built-in role.</param>
+        /// <exception cref="Exception">Propagates initialization failures after the asynchronous operation has been synchronously waited.</exception>
         [Obsolete($"Use {nameof(InitAsync)} so initialization failures can be observed.")]
         public void Init(RequestTenantInfo requestTenantInfo, int adminUserInfoId)
         {
@@ -266,13 +304,17 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Initializes the built-in system menus, roles, permissions, and administrator-role
+        /// association for the supplied tenant.
         /// </summary>
+        /// <param name="requestTenantInfo">The tenant context used to prefix and scope initialized identifiers.</param>
+        /// <param name="adminUserInfoId">The administrator account identifier to associate with the built-in role.</param>
+        /// <returns>A task that completes after all initialization entities have been persisted.</returns>
+        /// <exception cref="Exception">Thrown when any initialization persistence operation fails.</exception>
         public async Task InitAsync(RequestTenantInfo requestTenantInfo, int adminUserInfoId)
         {
             this.SetTenantInfoForAllServices(requestTenantInfo);
 
-            //Legacy comment translated to English.
             string tenantId = null;
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
             {
@@ -352,7 +394,6 @@ namespace Senparc.Ncf.Service
 
             try
             {
-                //Legacy comment translated to English.
                 //Console.WriteLine("sysRoleService DbConte HashCode: " + sysRoleService.BaseData.BaseDB.BaseDataContext.GetHashCode());
                 //Console.WriteLine("sysRolePermissionService DbConte HashCode: " + sysRolePermissionService.BaseDB.BaseDataContext.GetHashCode());
                 //Console.WriteLine("sysRoleAdminUserInfoService DbConte HashCode: " + sysRoleAdminUserInfoService.BaseData.BaseDB.BaseDataContext.GetHashCode());
@@ -383,9 +424,11 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads the complete menu list directly from the database and maps it to menu DTOs.
+        /// Unlike <see cref="GetMenuDtoByCacheAsync(bool)"/>, this method does not read or update
+        /// the distributed menu caches.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A task whose result contains DTOs mapped from all persisted menus.</returns>
         public virtual async Task<IEnumerable<SysMenuDto>> GetMenuDtoByDbAsync()
         {
             List<SysMenuDto> selectListItems = null;

@@ -29,6 +29,14 @@ namespace Senparc.Ncf.SMS
 {
     public class SmsPlatform_JunMei : SmsPlatform, ISmsPlatform
     {
+        /// <summary>
+        /// Initializes a JunMei SMS provider with its account credentials.
+        /// </summary>
+        /// <param name="smsServiceAddress">An optional endpoint override.</param>
+        /// <param name="smsAccountCORPID">The JunMei account or corporation identifier.</param>
+        /// <param name="smsAccountName">The JunMei account name.</param>
+        /// <param name="smsAccountPassword">The JunMei account password.</param>
+        /// <param name="smsAccountSubNumber">The JunMei sub-number.</param>
         public SmsPlatform_JunMei(string smsServiceAddress, string smsAccountCORPID, string smsAccountName, string smsAccountPassword, string smsAccountSubNumber)
             : base(SmsPlatformType.JunMei, smsServiceAddress, smsAccountCORPID, smsAccountName, smsAccountPassword, smsAccountSubNumber)
         {
@@ -98,9 +106,10 @@ namespace Senparc.Ncf.SMS
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Indicates that inbound reply retrieval is no longer supported by this implementation.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>This method never returns successfully.</returns>
+        /// <exception cref="Exception">Always thrown because the legacy reply API was removed.</exception>
         public ReplyMessageCollection GetReplyMessages()
         {
             throw new Exception("此方法已修改，请查看文档！");

@@ -1294,6 +1294,12 @@
   <data name="Studio.Loading" xml:space="preserve">
     <value>読み込み中…</value>
   </data>
+  <data name="Studio.LoadingConversation" xml:space="preserve">
+    <value>会話を読み込み中…</value>
+  </data>
+  <data name="Studio.NoConversationRecords" xml:space="preserve">
+    <value>まだ会話記録がありません</value>
+  </data>
   <data name="Studio.Rounds" xml:space="preserve">
     <value>ラウンド</value>
   </data>
@@ -1777,4 +1783,9 @@
   <data name="Frontend.AgentsManager.FailedToRefreshKnowledgeBaseStatus" xml:space="preserve"><value>ナレッジベースの状態を更新できませんでした</value></data>
   <data name="AdminChat.Command.RunAgentGroup" xml:space="preserve"><value>Agent グループを実行</value></data>
   <data name="AdminChat.Command.RunAgentGroupHint" xml:space="preserve"><value>タスクを説明し、一致する既存グループを再利用します</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.Group" xml:space="preserve"><value>Agent グループ</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.GroupHint" xml:space="preserve"><value>有効な Agent グループを選択</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.Task" xml:space="preserve"><value>タスク</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.TaskHint" xml:space="preserve"><value>実行するタスクを説明</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.TaskPlaceholder" xml:space="preserve"><value>タスク内容を入力</value></data>
 </root>

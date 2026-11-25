@@ -115,12 +115,18 @@ public sealed class NeuCharWorkflowEdge
     public string TargetHandle { get; set; }
 }
 
+/// <summary>
+/// Contains the final state, output, trace, and optional error from a workflow run.
+/// </summary>
 public sealed record NeuCharWorkflowRunResult(
     bool Success,
     string? Output,
     IReadOnlyList<string> Trace,
     string? ErrorMessage = null);
 
+/// <summary>
+/// Describes one bounded workflow execution-progress event.
+/// </summary>
 public sealed record NeuCharWorkflowProgress(
     string NodeId,
     string NodeName,
@@ -151,12 +157,19 @@ public sealed class NeuCharWorkflowEngine
         "aggregate", "merge", "parallel", "loop", "loop-end", "sub-workflow", "code", "console", "neubell", "human-input", "end"
     };
 
+    /// <summary>
+    /// Holds a resolved Function descriptor and its serialized default parameter values.
+    /// </summary>
     private sealed record ResolvedFunctionReference(
         NeuCharFunctionDescriptor Descriptor,
         string DefaultParametersJson);
 
     private sealed class WorkflowGraphIndex
     {
+        /// <summary>
+        /// Indexes graph nodes and incoming/outgoing edges for repeated validation and execution queries.
+        /// </summary>
+        /// <param name="graph">The graph to index.</param>
         public WorkflowGraphIndex(NeuCharWorkflowGraph graph)
         {
             NodesById = graph.Nodes.ToDictionary(node => node.Id, StringComparer.Ordinal);
@@ -179,11 +192,21 @@ public sealed class NeuCharWorkflowEngine
         public IReadOnlyDictionary<string, IReadOnlyList<NeuCharWorkflowEdge>> IncomingByTarget { get; }
         public Dictionary<string, string?> LoopBoundaryIds { get; } = new(StringComparer.Ordinal);
 
+        /// <summary>
+        /// Gets outgoing edges for a node.
+        /// </summary>
+        /// <param name="nodeId">The source node ID.</param>
+        /// <returns>The outgoing edges, or an empty list.</returns>
         public IReadOnlyList<NeuCharWorkflowEdge> Outgoing(string nodeId) =>
             OutgoingBySource.TryGetValue(nodeId, out var edges)
                 ? edges
                 : Array.Empty<NeuCharWorkflowEdge>();
 
+        /// <summary>
+        /// Gets incoming edges for a node.
+        /// </summary>
+        /// <param name="nodeId">The target node ID.</param>
+        /// <returns>The incoming edges, or an empty list.</returns>
         public IReadOnlyList<NeuCharWorkflowEdge> Incoming(string nodeId) =>
             IncomingByTarget.TryGetValue(nodeId, out var edges)
                 ? edges
@@ -228,6 +251,16 @@ public sealed class NeuCharWorkflowEngine
     private readonly INeuBellPublisher? _neuBellPublisher;
     private readonly NeuCharWorkflowHumanInputService? _humanInputService;
 
+    /// <summary>
+    /// Initializes the workflow graph validator and runtime engine.
+    /// </summary>
+    /// <param name="workflowService">Workflow persistence service used for nested/sub-workflow access.</param>
+    /// <param name="scopeFactory">Factory used to create isolated execution scopes.</param>
+    /// <param name="logService">Execution log service.</param>
+    /// <param name="parameterProtector">Protector used for workflow secret parameters.</param>
+    /// <param name="neuBellProvider">Optional notification provider.</param>
+    /// <param name="neuBellPublisher">Optional notification publisher.</param>
+    /// <param name="humanInputService">Optional native human-input service.</param>
     public NeuCharWorkflowEngine(
         NeuCharWorkflowService workflowService,
         IServiceScopeFactory scopeFactory,
@@ -247,8 +280,13 @@ public sealed class NeuCharWorkflowEngine
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Parses and validates a workflow graph, applies safe defaults, normalizes handles,
+    /// validates references/loops/templates, and optionally requires every node to be reachable.
     /// </summary>
+    /// <param name="graphJson">Serialized workflow graph JSON.</param>
+    /// <param name="requireAllNodesReachable">Whether disconnected nodes should be rejected.</param>
+    /// <returns>The normalized validated graph.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when JSON, node types, edges, loops, limits, variables, or templates are invalid.</exception>
     public NeuCharWorkflowGraph ParseAndValidateGraph(string graphJson, bool requireAllNodesReachable = true)
     {
         if (graphJson?.Length > 1_000_000)
@@ -483,8 +521,10 @@ public sealed class NeuCharWorkflowEngine
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Returns graph nodes that cannot be reached from the workflow trigger.
     /// </summary>
+    /// <param name="graph">The graph to inspect.</param>
+    /// <returns>Disconnected nodes in graph order.</returns>
     public IReadOnlyList<NeuCharWorkflowNode> GetDisconnectedNodes(NeuCharWorkflowGraph graph)
     {
         ArgumentNullException.ThrowIfNull(graph);
@@ -493,6 +533,12 @@ public sealed class NeuCharWorkflowEngine
         return trigger == null ? graph.Nodes : FindDisconnectedNodes(graph, trigger.Id);
     }
 
+    /// <summary>
+    /// Validates function, object, agent, and model references used by a workflow graph.
+    /// </summary>
+    /// <param name="graph">The workflow graph to validate.</param>
+    /// <param name="cancellationToken">Token used to cancel reference lookups.</param>
+    /// <returns>An error message, or <see langword="null"/> when references are valid.</returns>
     public async Task<string?> ValidateReferencesAsync(
         NeuCharWorkflowGraph graph,
         CancellationToken cancellationToken = default)
@@ -652,7 +698,16 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
-    ///Legacy comment translated to English.
+    /// <summary>
+    /// Validates nested workflow references, ownership, enablement, and cycle prevention.
+    /// </summary>
+    /// </summary>
+    /// <param name="graph">The graph containing sub-workflow nodes.</param>
+    /// <param name="workflowId">The current workflow identifier, used to reject self-reference.</param>
+    /// <param name="adminUserId">The workflow owner identifier.</param>
+    /// <param name="requireEnabled">Whether referenced workflows must be enabled.</param>
+    /// <param name="cancellationToken">Token used to cancel lookups.</param>
+    /// <returns>An error message, or <see langword="null"/> when nested references are valid.</returns>
     public async Task<string?> ValidateSubWorkflowReferencesAsync(
         NeuCharWorkflowGraph graph,
         int currentWorkflowId,
@@ -718,6 +773,14 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
+    /// <summary>
+    /// Copies protected secret values from an existing graph into an edited graph
+    /// when the editor intentionally leaves those values masked or unchanged.
+    /// </summary>
+    /// <param name="graph">The edited graph receiving preserved secrets.</param>
+    /// <param name="existingGraphJson">The previously persisted graph JSON.</param>
+    /// <param name="cancellationToken">Token used to cancel asynchronous reference operations.</param>
+    /// <returns>A task that completes after secret merging.</returns>
     public async Task MergeExistingSecretsAsync(
         NeuCharWorkflowGraph graph,
         string existingGraphJson,
@@ -779,6 +842,12 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Protects secret-bearing workflow configuration values before persistence.
+    /// </summary>
+    /// <param name="graph">The graph whose secret values should be protected.</param>
+    /// <param name="cancellationToken">Token used to cancel asynchronous operations.</param>
+    /// <returns>A task that completes after protection.</returns>
     public async Task ProtectSecretsAsync(
         NeuCharWorkflowGraph graph,
         CancellationToken cancellationToken = default)
@@ -815,6 +884,13 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Converts a persisted graph into editor-safe JSON, including secret placeholders
+    /// and normalized designer values.
+    /// </summary>
+    /// <param name="graphJson">The persisted graph JSON.</param>
+    /// <param name="cancellationToken">Token used to cancel validation or reference loading.</param>
+    /// <returns>Serialized editable graph JSON.</returns>
     public async Task<string> BuildEditableGraphJsonAsync(
         string storedGraphJson,
         CancellationToken cancellationToken = default)
@@ -856,6 +932,16 @@ public sealed class NeuCharWorkflowEngine
         return JsonSerializer.Serialize(graph, JsonOptions);
     }
 
+    /// <summary>
+    /// Executes a validated workflow graph with bounded activations, replay events,
+    /// loop iterations, variable state, human-input pauses, and output protection.
+    /// </summary>
+    /// <param name="workflow">The persisted workflow to execute.</param>
+    /// <param name="input">The initial workflow input text.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <param name="parseInputAsJson">Whether the initial input should be parsed as JSON.</param>
+    /// <returns>A task containing success state, output, trace, and error details.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the graph or runtime state violates workflow limits.</exception>
     public async Task<NeuCharWorkflowRunResult> RunAsync(
         WorkflowEntity workflow,
         string input,
@@ -1334,6 +1420,11 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Retrieves descriptors for workflow objects available to designer and runtime binding.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel object-provider discovery.</param>
+    /// <returns>Available workflow object descriptors.</returns>
     public async Task<IReadOnlyList<WorkflowObjectDescriptor>> GetWorkflowObjectsAsync(
         CancellationToken cancellationToken = default)
     {
@@ -1348,6 +1439,13 @@ public sealed class NeuCharWorkflowEngine
         return result;
     }
 
+    /// <summary>
+    /// Calculates the next interval-trigger execution time from a trigger configuration.
+    /// </summary>
+    /// <param name="triggerType">The workflow trigger type.</param>
+    /// <param name="triggerConfigJson">Serialized trigger configuration.</param>
+    /// <param name="fromUtc">The UTC time from which the next run is calculated.</param>
+    /// <returns>The next UTC run time, or <see langword="null"/> for non-interval triggers or invalid schedules.</returns>
     public static DateTime? CalculateNextRun(string triggerType, string triggerConfigJson, DateTime fromUtc)
     {
         if (!string.Equals(triggerType, "interval", StringComparison.OrdinalIgnoreCase))
@@ -1366,6 +1464,16 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Builds a replay-safe representation of a function node's resolved input,
+    /// masking protected parameters and falling back to the raw input on errors.
+    /// </summary>
+    /// <param name="node">The function node whose parameters are represented.</param>
+    /// <param name="input">The node input value.</param>
+    /// <param name="outputs">Previously produced node outputs.</param>
+    /// <param name="functionSelectionInputs">Function selection values available to templates.</param>
+    /// <param name="cancellationToken">Token used to cancel reference lookup.</param>
+    /// <returns>A task containing replay input text.</returns>
     private async Task<string> BuildReplayInputTextAsync(
         NeuCharWorkflowNode node,
         JsonNode input,
@@ -1412,6 +1520,14 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Collects active incoming edge outputs for an aggregate node.
+    /// </summary>
+    /// <param name="graph">The workflow graph.</param>
+    /// <param name="aggregateNode">The aggregate node receiving values.</param>
+    /// <param name="activeEdgeIds">The edge identifiers active for the current execution.</param>
+    /// <param name="outputs">Previously produced node outputs.</param>
+    /// <returns>An array containing cloned source outputs.</returns>
     private static JsonArray BuildAggregateInput(
         NeuCharWorkflowGraph graph,
         NeuCharWorkflowNode aggregateNode,
@@ -1430,6 +1546,21 @@ public sealed class NeuCharWorkflowEngine
         return aggregate;
     }
 
+    /// <summary>
+    /// Dispatches one workflow node to its type-specific executor and applies built-in
+    /// behavior for triggers, delays, conditions, aggregates, and terminal nodes.
+    /// </summary>
+    /// <param name="workflow">The workflow being executed.</param>
+    /// <param name="node">The node to execute.</param>
+    /// <param name="input">The node input.</param>
+    /// <param name="outputs">Previously produced outputs.</param>
+    /// <param name="functionSelectionInputs">Function selection values available to templates.</param>
+    /// <param name="correlationId">The execution correlation identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <param name="workflowPath">Ancestor workflow identifiers used for cycle protection.</param>
+    /// <param name="objectReferenceKey">Optional execution-reference key.</param>
+    /// <param name="objectExecutionReferences">Reference map receiving executed object descriptors.</param>
+    /// <returns>The node success state, output, condition result, and optional error.</returns>
     private async Task<(bool success, JsonNode? output, bool? condition, string? error)> ExecuteNodeAsync(
         WorkflowEntity workflow,
         NeuCharWorkflowNode node,
@@ -1536,6 +1667,17 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Resolves and invokes a workflow Function with protected, defaulted runtime parameters.
+    /// </summary>
+    /// <param name="node">The Function node to execute.</param>
+    /// <param name="input">The node input.</param>
+    /// <param name="outputs">Previously produced outputs.</param>
+    /// <param name="functionSelectionInputs">Receives resolved selection values.</param>
+    /// <param name="cancellationToken">Token used to cancel lookup and invocation.</param>
+    /// <param name="objectReferenceKey">Optional execution-reference key.</param>
+    /// <param name="objectExecutionReferences">Reference map receiving the Function descriptor.</param>
+    /// <returns>The Function execution result.</returns>
     private async Task<(bool success, JsonNode? output, bool? condition, string? error)> ExecuteFunctionNodeAsync(
         NeuCharWorkflowNode node,
         JsonNode input,
@@ -1592,6 +1734,18 @@ public sealed class NeuCharWorkflowEngine
             : (false, null, null, result.ErrorMessage);
     }
 
+    /// <summary>
+    /// Sends a NeuBell notification using resolved title, summary, consumption mode,
+    /// and workflow correlation metadata.
+    /// </summary>
+    /// <param name="workflow">The workflow being executed.</param>
+    /// <param name="node">The NeuBell node.</param>
+    /// <param name="input">The node input.</param>
+    /// <param name="outputs">Previously produced outputs.</param>
+    /// <param name="functionSelectionInputs">Function selection values available to templates.</param>
+    /// <param name="correlationId">The execution correlation identifier.</param>
+    /// <param name="cancellationToken">Token used for provider-change notification.</param>
+    /// <returns>The notification execution result.</returns>
     private async Task<(bool success, JsonNode? output, bool? condition, string? error)> ExecuteNeuBellNodeAsync(
         WorkflowEntity workflow,
         NeuCharWorkflowNode node,
@@ -1641,6 +1795,18 @@ public sealed class NeuCharWorkflowEngine
         }, null, null);
     }
 
+    /// <summary>
+    /// Creates a pending human-input request, notifies the user, waits for approval or rejection,
+    /// and cancels the request when execution is cancelled or fails.
+    /// </summary>
+    /// <param name="workflow">The workflow being executed.</param>
+    /// <param name="node">The human-input node.</param>
+    /// <param name="input">The node input.</param>
+    /// <param name="outputs">Previously produced outputs.</param>
+    /// <param name="functionSelectionInputs">Function selection values available to templates.</param>
+    /// <param name="correlationId">The execution correlation identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the pending request.</param>
+    /// <returns>The approved input or an execution error.</returns>
     private async Task<(bool success, JsonNode? output, bool? condition, string? error)> ExecuteHumanInputNodeAsync(
         WorkflowEntity workflow,
         NeuCharWorkflowNode node,
@@ -1732,6 +1898,17 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Executes an Agent, Agent group, or A2A workflow object without recording an explicit reference key.
+    /// </summary>
+    /// <param name="workflow">The workflow being executed.</param>
+    /// <param name="node">The workflow-object node.</param>
+    /// <param name="input">The node input.</param>
+    /// <param name="outputs">Previously produced outputs.</param>
+    /// <param name="functionSelectionInputs">Function selection values available to templates.</param>
+    /// <param name="correlationId">The execution correlation identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <returns>The workflow-object execution result.</returns>
     private async Task<(bool success, JsonNode? output, bool? condition, string? error)> ExecuteWorkflowObjectNodeAsync(
         WorkflowEntity workflow,
         NeuCharWorkflowNode node,
@@ -1752,6 +1929,20 @@ public sealed class NeuCharWorkflowEngine
                 null)
             .ConfigureAwait(false);
 
+    /// <summary>
+    /// Resolves a workflow-object provider in a private scope, validates the selected object,
+    /// and executes it with bounded tool and human-in-the-loop permissions.
+    /// </summary>
+    /// <param name="workflow">The workflow being executed.</param>
+    /// <param name="node">The workflow-object node.</param>
+    /// <param name="input">The node input.</param>
+    /// <param name="outputs">Previously produced outputs.</param>
+    /// <param name="functionSelectionInputs">Function selection values available to templates.</param>
+    /// <param name="correlationId">The execution correlation identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <param name="objectReferenceKey">Optional execution-reference key.</param>
+    /// <param name="objectExecutionReferences">Reference map receiving provider execution data.</param>
+    /// <returns>The workflow-object execution result.</returns>
     private async Task<(bool success, JsonNode? output, bool? condition, string? error)> ExecuteWorkflowObjectNodeWithReferenceAsync(
         WorkflowEntity workflow,
         NeuCharWorkflowNode node,
@@ -1838,6 +2029,12 @@ public sealed class NeuCharWorkflowEngine
             : (false, null, null, result.ErrorMessage);
     }
 
+    /// <summary>
+    /// Resolves workflow-object providers from a service provider and indexes them by provider ID.
+    /// The first registration for a duplicate ID wins.
+    /// </summary>
+    /// <param name="serviceProvider">The provider used to resolve object providers.</param>
+    /// <returns>A case-insensitive provider map.</returns>
     private static IReadOnlyDictionary<string, IWorkflowObjectProvider> GetWorkflowObjectProviders(
         IServiceProvider serviceProvider) =>
         serviceProvider
@@ -1845,6 +2042,19 @@ public sealed class NeuCharWorkflowEngine
             .GroupBy(provider => provider.ProviderId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// Resolves and executes a saved child workflow while preserving owner scope,
+    /// correlation ID, cancellation, and ancestor-cycle protection.
+    /// </summary>
+    /// <param name="parentWorkflow">The workflow containing the child-workflow node.</param>
+    /// <param name="node">The child-workflow node.</param>
+    /// <param name="input">The node input.</param>
+    /// <param name="outputs">Previously produced outputs.</param>
+    /// <param name="functionSelectionInputs">Function selection values available to templates.</param>
+    /// <param name="cancellationToken">Token used to cancel child execution.</param>
+    /// <param name="workflowPath">Ancestor workflow IDs used for cycle detection.</param>
+    /// <param name="correlationId">The parent execution correlation identifier.</param>
+    /// <returns>The child-workflow execution result.</returns>
     private async Task<(bool success, JsonNode? output, bool? condition, string? error)> ExecuteSubWorkflowNodeAsync(
         WorkflowEntity parentWorkflow,
         NeuCharWorkflowNode node,
@@ -1904,6 +2114,15 @@ public sealed class NeuCharWorkflowEngine
             : (false, null, null, result.ErrorMessage ?? "子工作流执行失败。");
     }
 
+    /// <summary>
+    /// Applies the restricted assignment-list code node to the runtime workflow variables.
+    /// Arbitrary code execution is intentionally not supported.
+    /// </summary>
+    /// <param name="node">The code node containing assignment definitions.</param>
+    /// <param name="input">The node input.</param>
+    /// <param name="outputs">Previously produced outputs.</param>
+    /// <param name="functionSelectionInputs">Function selection values available to templates.</param>
+    /// <returns>The assignment result and optional validation error.</returns>
     private static (bool success, JsonNode? output, bool? condition, string? error) ExecuteCodeNode(
         NeuCharWorkflowNode node,
         JsonNode input,
@@ -1937,6 +2156,16 @@ public sealed class NeuCharWorkflowEngine
         return (true, input, null, null);
     }
 
+    /// <summary>
+    /// Resolves and validates the configured loop iteration count at runtime.
+    /// </summary>
+    /// <param name="config">The loop node configuration.</param>
+    /// <param name="input">The loop node input.</param>
+    /// <param name="outputs">Previously produced outputs.</param>
+    /// <param name="functionSelectionInputs">Function selection values available to templates.</param>
+    /// <param name="count">Receives the validated iteration count.</param>
+    /// <param name="error">Receives a user-facing validation error.</param>
+    /// <returns><see langword="true"/> when a valid count is resolved.</returns>
     private static bool TryResolveLoopCount(
         JsonObject config,
         JsonNode input,
@@ -1969,6 +2198,12 @@ public sealed class NeuCharWorkflowEngine
         return false;
     }
 
+    /// <summary>
+    /// Parses a runtime JSON value as a bounded positive loop count.
+    /// </summary>
+    /// <param name="value">The runtime value to parse.</param>
+    /// <param name="count">Receives the parsed count.</param>
+    /// <returns><see langword="true"/> when the value is an integer in the allowed range.</returns>
     private static bool TryReadLoopCount(JsonNode value, out int count)
     {
         count = 0;
@@ -1977,6 +2212,14 @@ public sealed class NeuCharWorkflowEngine
                count is >= 1 and <= MaxLoopIterations;
     }
 
+    /// <summary>
+    /// Evaluates a condition node using resolved left/right values and its configured operator.
+    /// </summary>
+    /// <param name="config">The condition configuration.</param>
+    /// <param name="input">The node input.</param>
+    /// <param name="outputs">Previously produced outputs.</param>
+    /// <param name="functionSelectionInputs">Function selection values available to templates.</param>
+    /// <returns>The condition result.</returns>
     private static bool EvaluateCondition(
         JsonObject config,
         JsonNode input,
@@ -2003,6 +2246,16 @@ public sealed class NeuCharWorkflowEngine
         };
     }
 
+    /// <summary>
+    /// Resolves an aggregate output template while preserving a direct <c>{{input}}</c>
+    /// aggregate as a typed JSON value and enforcing the text-size limit.
+    /// </summary>
+    /// <param name="config">The aggregate configuration.</param>
+    /// <param name="input">The aggregate input array.</param>
+    /// <param name="outputs">Previously produced outputs.</param>
+    /// <param name="functionSelectionInputs">Function selection values available to templates.</param>
+    /// <returns>The resolved aggregate output.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when rendered output exceeds the configured size limit.</exception>
     private static JsonNode? ResolveAggregateOutput(
         JsonObject config,
         JsonNode input,
@@ -2037,9 +2290,13 @@ public sealed class NeuCharWorkflowEngine
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Resolves the console node's print template and returns the value that should be printed.
     /// </summary>
+    /// <param name="config">The console configuration.</param>
+    /// <param name="input">The node input.</param>
+    /// <param name="outputs">Previously produced outputs.</param>
+    /// <param name="functionSelectionInputs">Function selection values available to templates.</param>
+    /// <returns>The resolved print value.</returns>
     private static JsonNode? ResolveConsolePrintOutput(
         JsonObject config,
         JsonNode input,
@@ -2057,6 +2314,15 @@ public sealed class NeuCharWorkflowEngine
         return ResolveRuntimeValue(templateValue, input, outputs, functionSelectionInputs);
     }
 
+    /// <summary>
+    /// Recursively resolves source bindings, templates, arrays, objects, and literal input
+    /// placeholders into a runtime JSON value.
+    /// </summary>
+    /// <param name="node">The configured runtime value.</param>
+    /// <param name="input">The current node input.</param>
+    /// <param name="outputs">Previously produced outputs.</param>
+    /// <param name="functionSelectionInputs">Function selection values available to bindings.</param>
+    /// <returns>The resolved cloned value.</returns>
     private static JsonNode? ResolveRuntimeValue(
         JsonNode? node,
         JsonNode? input,
@@ -2107,6 +2373,14 @@ public sealed class NeuCharWorkflowEngine
         return node?.DeepClone();
     }
 
+    /// <summary>
+    /// Creates the bounded runtime variable object and resolves definitions in declaration order.
+    /// </summary>
+    /// <param name="definitions">The workflow variable definitions.</param>
+    /// <param name="input">The initial workflow input.</param>
+    /// <param name="outputs">The runtime output map receiving the variable object.</param>
+    /// <param name="functionSelectionInputs">Function selection values available to templates.</param>
+    /// <returns>The resolved variable object.</returns>
     private static JsonObject BuildWorkflowVariables(
         IEnumerable<NeuCharWorkflowVariable> definitions,
         JsonNode input,
@@ -2196,6 +2470,12 @@ public sealed class NeuCharWorkflowEngine
         return JsonValue.Create(text);
     }
 
+    /// <summary>
+    /// Detects whether text consists entirely of one <c>{{= expression }}</c> construct.
+    /// </summary>
+    /// <param name="text">The template text.</param>
+    /// <param name="expression">Receives the extracted expression.</param>
+    /// <returns><see langword="true"/> when the complete text is one expression.</returns>
     private static bool TryGetWholeTemplateExpression(string text, out string? expression)
     {
         expression = null;
@@ -2215,6 +2495,13 @@ public sealed class NeuCharWorkflowEngine
         return expression.Length > 0;
     }
 
+    /// <summary>
+    /// Evaluates embedded restricted expressions while preserving surrounding literal text
+    /// and enforcing expression-count and output-length limits.
+    /// </summary>
+    /// <param name="text">The template text.</param>
+    /// <param name="variables">The values available to expressions.</param>
+    /// <returns>The rendered text.</returns>
     private static string RenderTemplateExpressions(string text, IReadOnlyDictionary<string, JsonNode?> variables)
     {
         var position = 0;
@@ -2252,6 +2539,12 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Finds the closing delimiter of an expression while ignoring delimiters inside quoted strings.
+    /// </summary>
+    /// <param name="text">The template text.</param>
+    /// <param name="start">The index at which expression scanning begins.</param>
+    /// <returns>The index of the closing delimiter, or <c>-1</c> when none exists.</returns>
     private static int FindTemplateExpressionEnd(string text, int start)
     {
         var quote = '\0';
@@ -2281,6 +2574,12 @@ public sealed class NeuCharWorkflowEngine
         return -1;
     }
 
+    /// <summary>
+    /// Determines whether literal or expression syntax in a template references a token.
+    /// </summary>
+    /// <param name="text">The template text.</param>
+    /// <param name="token">The token to find.</param>
+    /// <returns><see langword="true"/> when the token is referenced.</returns>
     private static bool TemplateReferencesToken(string text, string token)
     {
         if (string.IsNullOrWhiteSpace(token)) return false;
@@ -2297,6 +2596,12 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Determines whether an expression contains a matching identifier outside quoted strings.
+    /// </summary>
+    /// <param name="expression">The expression text.</param>
+    /// <param name="token">The identifier to find.</param>
+    /// <returns><see langword="true"/> when the identifier is referenced.</returns>
     private static bool ExpressionReferencesToken(string expression, string token)
     {
         var quote = '\0';
@@ -2334,17 +2639,37 @@ public sealed class NeuCharWorkflowEngine
         return false;
     }
 
+    /// <summary>
+    /// Validates the restricted identifier syntax used by template binding tokens.
+    /// </summary>
+    /// <param name="token">The token to validate.</param>
+    /// <returns><see langword="true"/> for a non-empty bounded identifier.</returns>
     private static bool IsTemplateToken(string token) =>
         !string.IsNullOrWhiteSpace(token) &&
         token.Length <= 64 &&
         char.IsLetter(token[0]) &&
         token.All(character => char.IsLetterOrDigit(character) || character is '_' or '-');
 
+    /// <summary>
+    /// Determines whether a binding represents a tolerated observed-output path.
+    /// </summary>
+    /// <param name="binding">The binding object.</param>
+    /// <param name="path">The referenced output path.</param>
+    /// <returns><see langword="true"/> when the binding is an allowed observed-output reference.</returns>
     private static bool IsObservedOutputBinding(JsonObject binding, string path) =>
         string.Equals(GetString(binding, "sourceKind"), "observed-output", StringComparison.OrdinalIgnoreCase) &&
         path.StartsWith("$", StringComparison.Ordinal) &&
         path.Length <= 256;
 
+    /// <summary>
+    /// Resolves a Function selection or upstream output binding, including object paths
+    /// and collection/item indexes.
+    /// </summary>
+    /// <param name="binding">The binding definition.</param>
+    /// <param name="outputs">Previously produced node outputs.</param>
+    /// <param name="functionSelectionInputs">Resolved Function selection values.</param>
+    /// <returns>The selected value.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the source, path, or index is invalid.</exception>
     private static JsonNode? ResolveBinding(
         JsonObject binding,
         IReadOnlyDictionary<string, JsonNode> outputs,
@@ -2418,6 +2743,13 @@ public sealed class NeuCharWorkflowEngine
         return value;
     }
 
+    /// <summary>
+    /// Extracts dropdown and checkbox-list parameter values from resolved Function parameters
+    /// for downstream workflow bindings.
+    /// </summary>
+    /// <param name="resolvedParameters">The resolved Function parameter object.</param>
+    /// <param name="parameterInfos">The Function parameter descriptors.</param>
+    /// <returns>A case-preserving selection-value object.</returns>
     private static JsonObject ExtractFunctionSelectionValues(
         JsonNode resolvedParameters,
         IReadOnlyList<Senparc.Ncf.XncfBase.FunctionParameterInfo> parameterInfos)
@@ -2443,6 +2775,14 @@ public sealed class NeuCharWorkflowEngine
         return selections;
     }
 
+    /// <summary>
+    /// Selects a bounded item from a JSON array.
+    /// </summary>
+    /// <param name="value">The value expected to be an array.</param>
+    /// <param name="index">The zero-based index.</param>
+    /// <param name="label">The user-facing label used in the error message.</param>
+    /// <returns>A cloned array item.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the value is not an array or the index is out of range.</exception>
     private static JsonNode? SelectArrayIndex(JsonNode? value, int index, string label)
     {
         if (value is not JsonArray array || index < 0 || index >= array.Count)
@@ -2452,6 +2792,12 @@ public sealed class NeuCharWorkflowEngine
         return array[index]?.DeepClone();
     }
 
+    /// <summary>
+    /// Converts an arbitrary result object to JSON, falling back to its text representation
+    /// when serialization is unavailable.
+    /// </summary>
+    /// <param name="value">The object to convert.</param>
+    /// <returns>A JSON node representing the value.</returns>
     private static JsonNode ToJsonNode(object? value)
     {
         if (value == null)
@@ -2469,6 +2815,11 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Converts a JSON node to display text, preserving strings without JSON quoting.
+    /// </summary>
+    /// <param name="value">The node to convert.</param>
+    /// <returns>The string value or serialized JSON text.</returns>
     private static string NodeToText(JsonNode? value)
     {
         if (value == null)
@@ -2482,6 +2833,17 @@ public sealed class NeuCharWorkflowEngine
         return value.ToJsonString(JsonOptions);
     }
 
+    /// <summary>
+    /// Emits a bounded workflow-progress event with replay-safe output and input lengths.
+    /// </summary>
+    /// <param name="progress">The progress callback.</param>
+    /// <param name="node">The node reporting progress.</param>
+    /// <param name="status">The progress status.</param>
+    /// <param name="message">The status message.</param>
+    /// <param name="output">The node output text.</param>
+    /// <param name="outputSchema">Optional output schema text.</param>
+    /// <param name="input">Optional input text.</param>
+    /// <param name="objectReference">Optional executed object reference.</param>
     private static void Report(
         Action<NeuCharWorkflowProgress> progress,
         NeuCharWorkflowNode node,
@@ -2506,29 +2868,43 @@ public sealed class NeuCharWorkflowEngine
         });
     }
 
+    /// <summary>
+    /// Truncates replay text to a bounded length and adds a truncation marker.
+    /// </summary>
+    /// <param name="value">The text to limit.</param>
+    /// <param name="maxLength">The maximum text length before the marker.</param>
+    /// <returns>The original or truncated text.</returns>
     private static string? LimitReplayText(string? value, int maxLength) =>
         string.IsNullOrEmpty(value) || value.Length <= maxLength
             ? value
             : value[..maxLength] + "\n…（回看内容已截断）";
 
+    /// <summary>Reads an integer configuration value, returning a fallback for missing or invalid data.</summary>
+    /// <param name="config">The configuration object.</param><param name="name">The property name.</param><param name="fallback">The fallback value.</param>
     private static int GetInt(JsonObject config, string name, int fallback)
     {
         try { return config?[name]?.GetValue<int>() ?? fallback; }
         catch { return fallback; }
     }
 
+    /// <summary>Reads a Boolean configuration value, returning false for missing or invalid data.</summary>
+    /// <param name="config">The configuration object.</param><param name="name">The property name.</param>
     private static bool GetBool(JsonObject config, string name)
     {
         try { return config?[name]?.GetValue<bool>() ?? false; }
         catch { return false; }
     }
 
+    /// <summary>Reads a string configuration value, returning null when missing or invalid.</summary>
+    /// <param name="config">The configuration object.</param><param name="name">The property name.</param>
     private static string? GetString(JsonObject config, string name)
     {
         try { return config?[name]?.GetValue<string>(); }
         catch { return null; }
     }
 
+    /// <summary>Reads a runtime text value and returns null for absent or non-text values.</summary>
+    /// <param name="config">The configuration object.</param><param name="name">The property name.</param>
     private static string? GetRuntimeText(JsonObject config, string name)
     {
         var value = config?[name];
@@ -2539,6 +2915,11 @@ public sealed class NeuCharWorkflowEngine
         return GetString(config, name);
     }
 
+    /// <summary>
+    /// Validates runtime text-bearing fields for the node type.
+    /// </summary>
+    /// <param name="node">The node whose configured text fields are checked.</param>
+    /// <returns>An error message, or <see langword="null"/> when all templates are valid.</returns>
     private static string? ValidateNodeTextTemplates(NeuCharWorkflowNode node)
     {
         var fields = node.Type.ToLowerInvariant() switch
@@ -2564,6 +2945,11 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
+    /// <summary>
+    /// Validates a runtime text value when it contains a restricted template or expression.
+    /// </summary>
+    /// <param name="value">The configured value to inspect.</param>
+    /// <returns>An error message, or <see langword="null"/> when no invalid template is found.</returns>
     private static string? ValidateRuntimeTextValue(JsonNode? value)
     {
         if (value is JsonObject obj && obj["$template"] is JsonObject template)
@@ -2578,6 +2964,11 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
+    /// <summary>
+    /// Extracts a normalized workflow run identifier from a correlation ID.
+    /// </summary>
+    /// <param name="correlationId">The execution correlation ID.</param>
+    /// <returns>The compact GUID identifier, or <see langword="null"/> when absent or invalid.</returns>
     private static string? TryGetWorkflowRunId(string correlationId)
     {
         const string marker = "-run-";
@@ -2590,12 +2981,25 @@ public sealed class NeuCharWorkflowEngine
         return Guid.TryParse(candidate, out var parsed) ? parsed.ToString("N") : null;
     }
 
+    /// <summary>
+    /// Reads an optional integer configuration property.
+    /// </summary>
+    /// <param name="config">The configuration object.</param>
+    /// <param name="name">The property name.</param>
+    /// <returns>The parsed value, or <see langword="null"/> when missing or invalid.</returns>
     private static int? GetNullableInt(JsonObject config, string name)
     {
         try { return config?[name]?.GetValue<int>(); }
         catch { return null; }
     }
 
+    /// <summary>
+    /// Resolves a Function descriptor in an isolated scoped service context and optionally caches it.
+    /// </summary>
+    /// <param name="node">The Function node containing module and function keys.</param>
+    /// <param name="cancellationToken">Token used to cancel lookup.</param>
+    /// <param name="descriptorCache">Optional cache keyed by module/function identity.</param>
+    /// <returns>A task containing the descriptor and serialized defaults, or <see langword="null"/> when unresolved.</returns>
     private async Task<ResolvedFunctionReference?> ResolveFunctionReferenceAsync(
         NeuCharWorkflowNode node,
         CancellationToken cancellationToken,
@@ -2629,6 +3033,12 @@ public sealed class NeuCharWorkflowEngine
         return new ResolvedFunctionReference(descriptor, defaultParametersJson);
     }
 
+    /// <summary>
+    /// Merges missing schema defaults into a Function parameter object.
+    /// </summary>
+    /// <param name="parameterNode">The submitted parameter object.</param>
+    /// <param name="descriptor">The Function descriptor providing defaults.</param>
+    /// <returns>The merged parameter node.</returns>
     private static JsonNode ApplyFunctionParameterDefaults(JsonNode parameterNode, NeuCharFunctionDescriptor descriptor)
     {
         if (descriptor?.Parameters == null || descriptor.Parameters.Count == 0)
@@ -2649,6 +3059,12 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Resolves the Function service in a private dependency-injection scope and executes an operation.
+    /// </summary>
+    /// <typeparam name="T">The operation result type.</typeparam>
+    /// <param name="operation">The operation to execute against the scoped Function service.</param>
+    /// <returns>A task containing the operation result.</returns>
     private async Task<T> ExecuteInFunctionScopeAsync<T>(
         Func<NeuCharWorkflowFunctionService, Task<T>> operation)
     {
@@ -2657,12 +3073,27 @@ public sealed class NeuCharWorkflowEngine
         return await operation(functionService).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Compares two Function nodes by module UID and Function key.
+    /// </summary>
+    /// <param name="left">The first Function node.</param>
+    /// <param name="right">The second Function node.</param>
+    /// <returns><see langword="true"/> when both nodes reference the same Function.</returns>
     private static bool IsSameFunctionReference(NeuCharWorkflowNode left, NeuCharWorkflowNode right)
     {
         return string.Equals(GetString(left.Config, "moduleUid"), GetString(right.Config, "moduleUid"), StringComparison.OrdinalIgnoreCase) &&
                string.Equals(GetString(left.Config, "functionKey"), GetString(right.Config, "functionKey"), StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Validates Function parameter templates and upstream output bindings against
+    /// the current Function descriptor and graph topology.
+    /// </summary>
+    /// <param name="graph">The workflow graph.</param>
+    /// <param name="targetNode">The Function node receiving bindings.</param>
+    /// <param name="targetFunction">The resolved Function descriptor.</param>
+    /// <param name="cancellationToken">Token used to resolve upstream output descriptors.</param>
+    /// <returns>An error message, or <see langword="null"/> when bindings are valid.</returns>
     private async Task<string?> ValidateFunctionBindingsAsync(
         NeuCharWorkflowGraph graph,
         NeuCharWorkflowNode targetNode,
@@ -2774,6 +3205,11 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
+    /// <summary>
+    /// Validates workflow variable count, names, reserved names, value sizes, and templates.
+    /// </summary>
+    /// <param name="variables">The variable definitions to validate.</param>
+    /// <exception cref="InvalidOperationException">Thrown when a variable violates workflow limits or syntax rules.</exception>
     private static void ValidateWorkflowVariables(IReadOnlyCollection<NeuCharWorkflowVariable> variables)
     {
         if (variables.Count > MaxWorkflowVariables)
@@ -2807,6 +3243,12 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Validates the restricted assignment list used by a code node.
+    /// </summary>
+    /// <param name="config">The code-node configuration.</param>
+    /// <param name="workflowVariables">The declared workflow variables.</param>
+    /// <returns>An error message, or <see langword="null"/> when assignments are valid.</returns>
     private static string? ValidateCodeAssignments(
         JsonObject config,
         IReadOnlyCollection<NeuCharWorkflowVariable> workflowVariables)
@@ -2848,6 +3290,11 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
+    /// <summary>
+    /// Gets target workflow IDs referenced by sub-workflow nodes.
+    /// </summary>
+    /// <param name="graph">The graph to inspect.</param>
+    /// <returns>The referenced workflow identifiers.</returns>
     private static IEnumerable<int> GetSubWorkflowIds(NeuCharWorkflowGraph graph) =>
         (graph?.Nodes ?? Enumerable.Empty<NeuCharWorkflowNode>())
             .Where(node => node.Type.Equals("sub-workflow", StringComparison.OrdinalIgnoreCase))
@@ -2896,6 +3343,17 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
+    /// <summary>
+    /// Validates one explicit loop-body path, including nested loops, condition break edges,
+    /// boundary ownership, and the single-path restrictions.
+    /// </summary>
+    /// <param name="index">The indexed workflow graph.</param>
+    /// <param name="loopId">The owning loop node ID.</param>
+    /// <param name="currentId">The current path node ID.</param>
+    /// <param name="boundaryId">The loop-end boundary node ID.</param>
+    /// <param name="nodeMap">The graph node map.</param>
+    /// <param name="path">The path nodes already visited during this validation branch.</param>
+    /// <returns>An error message, or <see langword="null"/> when the path is valid.</returns>
     private static string? ValidateLoopScopePath(
         WorkflowGraphIndex index,
         string loopId,
@@ -3002,6 +3460,13 @@ public sealed class NeuCharWorkflowEngine
         return ValidateLoopScopePath(index, loopId, outgoing[0].Target, boundaryId, nodeMap, path);
     }
 
+    /// <summary>
+    /// Finds and caches the unique loop-end boundary reachable from a loop node.
+    /// </summary>
+    /// <param name="index">The indexed workflow graph.</param>
+    /// <param name="loopNodeId">The loop node ID.</param>
+    /// <returns>The boundary node ID, or <see langword="null"/> for legacy loops without one.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when more than one boundary belongs to the loop.</exception>
     private static string? FindLoopBoundaryNodeId(WorkflowGraphIndex index, string loopNodeId)
     {
         if (index.LoopBoundaryIds.TryGetValue(loopNodeId, out var cachedBoundaryId))
@@ -3047,6 +3512,14 @@ public sealed class NeuCharWorkflowEngine
         return boundaryId;
     }
 
+    /// <summary>
+    /// Determines whether a target node is reachable inside a loop before its boundary.
+    /// </summary>
+    /// <param name="index">The indexed workflow graph.</param>
+    /// <param name="loopNodeId">The loop node ID.</param>
+    /// <param name="targetNodeId">The node to test.</param>
+    /// <param name="boundaryNodeId">The loop boundary that stops traversal.</param>
+    /// <returns><see langword="true"/> when the target is inside the loop scope.</returns>
     private static bool IsNodeInLoopScope(
         WorkflowGraphIndex index,
         string loopNodeId,
@@ -3085,6 +3558,11 @@ public sealed class NeuCharWorkflowEngine
         return false;
     }
 
+    /// <summary>
+    /// Validates a loop count configured as a bounded number, source binding, or template expression.
+    /// </summary>
+    /// <param name="config">The loop-node configuration.</param>
+    /// <returns>An error message, or <see langword="null"/> when the configuration is valid.</returns>
     private static string? ValidateLoopCountConfiguration(JsonObject config)
     {
         var count = config?["count"];
@@ -3117,6 +3595,11 @@ public sealed class NeuCharWorkflowEngine
             : $"循环次数必须为 1 到 {MaxLoopIterations} 的整数，或引用上游单值。";
     }
 
+    /// <summary>
+    /// Validates the aggregate output template syntax, expression limits, and supported placeholders.
+    /// </summary>
+    /// <param name="config">The aggregate-node configuration.</param>
+    /// <returns>An error message, or <see langword="null"/> when the template is valid.</returns>
     private static string? ValidateAggregateOutputTemplate(JsonObject config)
     {
         var template = GetRuntimeText(config, "outputTemplate");
@@ -3164,6 +3647,12 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Validates a Function parameter template against its parameter type and allowed binding syntax.
+    /// </summary>
+    /// <param name="parameter">The Function parameter descriptor.</param>
+    /// <param name="template">The persisted template object.</param>
+    /// <returns>An error message, or <see langword="null"/> when the template is valid.</returns>
     private static string? ValidateTemplate(
         Senparc.Ncf.XncfBase.FunctionParameterInfo parameter,
         JsonObject template)
@@ -3227,6 +3716,11 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
+    /// <summary>
+    /// Validates template text and its restricted expressions without resolving runtime values.
+    /// </summary>
+    /// <param name="template">The template object containing text and expressions.</param>
+    /// <returns>An error message, or <see langword="null"/> when the template is valid.</returns>
     private static string? ValidateTemplateText(JsonObject template)
     {
         if (template["text"] is not JsonValue textValue || !textValue.TryGetValue<string>(out var text))
@@ -3283,6 +3777,14 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Validates every direct or templated output binding in a node against graph topology,
+    /// source descriptors, source kinds, and array-index requirements.
+    /// </summary>
+    /// <param name="graph">The workflow graph.</param>
+    /// <param name="targetNode">The node receiving bindings.</param>
+    /// <param name="cancellationToken">Token used to resolve output descriptors.</param>
+    /// <returns>An error message, or <see langword="null"/> when bindings are valid.</returns>
     private async Task<string?> ValidateNodeBindingsAsync(
         NeuCharWorkflowGraph graph,
         NeuCharWorkflowNode targetNode,
@@ -3338,6 +3840,12 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
+    /// <summary>
+    /// Enumerates source bindings recursively from an arbitrary JSON configuration value.
+    /// </summary>
+    /// <param name="value">The configuration value to traverse.</param>
+    /// <param name="path">The current configuration path used for diagnostics.</param>
+    /// <returns>Binding objects with their configuration paths.</returns>
     private static IEnumerable<(string Path, JsonObject Binding)> EnumerateBindings(
         JsonNode value,
         string path)
@@ -3383,6 +3891,14 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Determines whether a binding source kind matches the declared output field,
+    /// including the allowed observed-output compatibility case.
+    /// </summary>
+    /// <param name="configPath">The configuration path containing the binding.</param>
+    /// <param name="binding">The binding definition.</param>
+    /// <param name="field">The declared output field.</param>
+    /// <returns><see langword="true"/> when the source kinds are compatible.</returns>
     private static bool BindingSourceKindMatches(
         string configPath,
         JsonObject binding,
@@ -3406,6 +3922,15 @@ public sealed class NeuCharWorkflowEngine
                string.Equals(fieldKind, "output", StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Resolves the output descriptor exposed by a node, recursively inheriting descriptors
+    /// through pass-through nodes and loading Function metadata when required.
+    /// </summary>
+    /// <param name="graph">The workflow graph.</param>
+    /// <param name="node">The node whose output is described.</param>
+    /// <param name="cancellationToken">Token used to resolve Function metadata.</param>
+    /// <param name="visited">Nodes already visited while following pass-through outputs.</param>
+    /// <returns>A task containing the output descriptor, or <see langword="null"/> when unresolved.</returns>
     private async Task<NeuCharFunctionOutputDescriptor?> GetNodeOutputDescriptorAsync(
         NeuCharWorkflowGraph graph,
         NeuCharWorkflowNode node,
@@ -3500,6 +4025,12 @@ public sealed class NeuCharWorkflowEngine
             new[] { new NeuCharFunctionOutputFieldDescriptor("$", "节点输出", typeName, false, false) });
     }
 
+    /// <summary>
+    /// Adds synthetic output fields for Function dropdown and checkbox-list selections.
+    /// </summary>
+    /// <param name="output">The Function output descriptor.</param>
+    /// <param name="parameterInfos">The Function parameter descriptors.</param>
+    /// <returns>The descriptor with selection fields appended.</returns>
     private static NeuCharFunctionOutputDescriptor AddFunctionSelectionInputFields(
         NeuCharFunctionOutputDescriptor output,
         IReadOnlyList<Senparc.Ncf.XncfBase.FunctionParameterInfo> parameterInfos)
@@ -3536,6 +4067,11 @@ public sealed class NeuCharWorkflowEngine
             outputFields.Concat(selectionFields).ToArray());
     }
 
+    /// <summary>
+    /// Maps a Function parameter descriptor to the workflow binding type and array shape.
+    /// </summary>
+    /// <param name="parameter">The Function parameter descriptor.</param>
+    /// <returns>The normalized type name and array flag.</returns>
     private static (string typeName, bool isArray) GetParameterValueShape(
         Senparc.Ncf.XncfBase.FunctionParameterInfo parameter)
     {
@@ -3554,6 +4090,13 @@ public sealed class NeuCharWorkflowEngine
         return (typeName, isArray);
     }
 
+    /// <summary>
+    /// Determines whether a target node is reachable from a source node by following directed edges.
+    /// </summary>
+    /// <param name="graph">The workflow graph.</param>
+    /// <param name="sourceId">The candidate upstream node ID.</param>
+    /// <param name="targetId">The target node ID.</param>
+    /// <returns><see langword="true"/> when the source can reach the target.</returns>
     private static bool IsUpstream(NeuCharWorkflowGraph graph, string sourceId, string targetId)
     {
         var queue = new Queue<string>();
@@ -3578,6 +4121,12 @@ public sealed class NeuCharWorkflowEngine
         return false;
     }
 
+    /// <summary>
+    /// Rejects graph-level cycles using a topological traversal. Explicit Loop nodes are
+    /// represented by acyclic graph structure and are validated separately.
+    /// </summary>
+    /// <param name="graph">The workflow graph to inspect.</param>
+    /// <exception cref="InvalidOperationException">Thrown when not all nodes can be topologically visited.</exception>
     private static void EnsureAcyclic(NeuCharWorkflowGraph graph)
     {
         var indegree = graph.Nodes.ToDictionary(z => z.Id, _ => 0, StringComparer.Ordinal);
@@ -3606,6 +4155,12 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    /// <summary>
+    /// Normalizes a source handle according to the source node type.
+    /// </summary>
+    /// <param name="sourceType">The source node type.</param>
+    /// <param name="sourceHandle">The submitted source handle.</param>
+    /// <returns>A supported normalized handle.</returns>
     private static string NormalizeSourceHandle(string sourceType, string sourceHandle)
     {
         if (sourceType.Equals("condition", StringComparison.OrdinalIgnoreCase))
@@ -3617,6 +4172,12 @@ public sealed class NeuCharWorkflowEngine
         return "default";
     }
 
+    /// <summary>
+    /// Normalizes a target handle according to the target node type.
+    /// </summary>
+    /// <param name="targetType">The target node type.</param>
+    /// <param name="targetHandle">The submitted target handle.</param>
+    /// <returns>A supported normalized handle.</returns>
     private static string NormalizeTargetHandle(string targetType, string targetHandle)
     {
         if (targetType.Equals("loop-end", StringComparison.OrdinalIgnoreCase))
@@ -3628,6 +4189,12 @@ public sealed class NeuCharWorkflowEngine
         return "default";
     }
 
+    /// <summary>
+    /// Rejects graphs containing nodes that cannot be reached from the trigger.
+    /// </summary>
+    /// <param name="graph">The workflow graph.</param>
+    /// <param name="triggerId">The trigger node ID.</param>
+    /// <exception cref="InvalidOperationException">Thrown when disconnected nodes are found.</exception>
     private static void EnsureAllNodesReachable(NeuCharWorkflowGraph graph, string triggerId)
     {
         var unreachable = FindDisconnectedNodes(graph, triggerId);
@@ -3642,6 +4209,12 @@ public sealed class NeuCharWorkflowEngine
         throw new InvalidOperationException($"工作流包含未连接到触发器的节点：{string.Join("、", names)}。");
     }
 
+    /// <summary>
+    /// Finds graph nodes not reachable from a trigger using directed edge traversal.
+    /// </summary>
+    /// <param name="graph">The workflow graph.</param>
+    /// <param name="triggerId">The trigger node ID.</param>
+    /// <returns>Disconnected nodes in graph order.</returns>
     private static IReadOnlyList<NeuCharWorkflowNode> FindDisconnectedNodes(NeuCharWorkflowGraph graph, string triggerId)
     {
         var visited = new HashSet<string>(StringComparer.Ordinal);

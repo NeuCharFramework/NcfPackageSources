@@ -25,7 +25,7 @@ using System.Text;
 namespace Senparc.Ncf.Utility.ExpressionExtension
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides dynamic ordering for LINQ queryables using a comma-separated field specification.
     /// </summary>
     public static class SenparcIQueryableExtension
     {
@@ -42,12 +42,16 @@ namespace Senparc.Ncf.Utility.ExpressionExtension
         const string Desc = "desc";
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Applies one or more property-based ordering clauses to a queryable.
+        /// Clauses use the form <c>PropertyName [asc|desc]</c> and are separated by commas.
+        /// Unknown properties are skipped.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="iQueryable"></param>
-        /// <param name="orderBy">xxxx desc, aaa asc, ddd desc</param>
-        /// <returns></returns>
+        /// <typeparam name="T">The element type queried.</typeparam>
+        /// <param name="iQueryable">The source queryable.</param>
+        /// <param name="orderBy">The comma-separated ordering specification.</param>
+        /// <returns>The queryable with the requested ordering expressions applied.</returns>
+        /// <exception cref="ArgumentNullException">Thrown by the query provider when the source queryable is null.</exception>
+        /// <exception cref="InvalidOperationException">May be thrown when no valid property remains for a non-empty ordering specification.</exception>
         public static IQueryable<T> OrderByExtension<T>(this IQueryable<T> iQueryable, string orderBy)
         {
             if (string.IsNullOrEmpty(orderBy))

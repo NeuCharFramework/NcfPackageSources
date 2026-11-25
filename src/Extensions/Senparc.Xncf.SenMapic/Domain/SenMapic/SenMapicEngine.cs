@@ -141,6 +141,20 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         //public Dictionary<string,Dictionary<string,UrlData>> TotalUrlDataCollection { get; set; }
 
 
+        /// <summary>
+        /// Initializes a sitemap crawler with target sites, concurrency and crawl-depth limits,
+        /// sitemap metadata, and optional URL omission rules.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider used by crawler support services.</param>
+        /// <param name="urls">The root URLs to crawl.</param>
+        /// <param name="maxThread">The requested concurrency limit, accepted only within the supported range.</param>
+        /// <param name="maxBuildMinutesForSingleSite">The maximum duration allowed for one site.</param>
+        /// <param name="priority">The sitemap priority metadata value.</param>
+        /// <param name="changefreq">The sitemap change-frequency metadata value.</param>
+        /// <param name="updateDate">The optional sitemap update date.</param>
+        /// <param name="maxDeep">The maximum link depth.</param>
+        /// <param name="maxPageCount">The maximum number of page requests.</param>
+        /// <param name="filterOmitWords">Raw URL omission expressions.</param>
         public SenMapicEngine(IServiceProvider serviceProvider, IEnumerable<string> urls, int maxThread=4, int maxBuildMinutesForSingleSite=10, string priority=null, string changefreq=null, DateTime? updateDate=null, int maxDeep=5, int maxPageCount=500, List<string> filterOmitWords=null)
         {
             this._serviceProvider = serviceProvider;
@@ -185,9 +199,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Crawls each configured root URL and merges the collected page records into
+        /// <see cref="TotalUrls"/> until depth, page-count, or time limits are reached.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The collected URL data keyed by normalized URL.</returns>
+        /// <exception cref="Exception">Propagates a site-crawl failure after logging the failing root URL.</exception>
         public Dictionary<string, UrlData> Build()
         {
             // System.Web.HttpContext.Current.Response.Write(this.GetDomain(url));
@@ -271,9 +287,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         private static ManualResetEvent allDoneSL = new ManualResetEvent(false);
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Schedules crawl work layer by layer beginning at the supplied home URL and stops
+        /// when depth, page, or build-stop conditions are met.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <param name="homeUrl">The normalized root URL of the current site.</param>
         private void SearchWebSite(string homeUrl)
         {
             homeUrl = this.RemoveUrlEndingSlash(homeUrl);
@@ -379,9 +396,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Processes one queued crawl URL, updates crawl counters, and records its result
+        /// in the current site's URL collections.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <param name="url">The queued URL object supplied by the thread-pool callback.</param>
         private async Task CrawlUrlEventHandler(object url)
         {
             //bool threadStarted = false;

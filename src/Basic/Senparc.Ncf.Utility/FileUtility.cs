@@ -19,12 +19,16 @@ using System;
 
 namespace Senparc.Ncf.Utility
 {
+    /// <summary>
+    /// Provides file-related naming helpers.
+    /// </summary>
     public class FileUtility
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Generates a compact name using the current tick count and a random GUID suffix.
+        /// The result is intended as a collision-resistant name component rather than a full path.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A string containing a timestamp component followed by eight hexadecimal characters.</returns>
         public static string GetRandomFileName()
         {
             return $"{DateTime.Now.Ticks}{Guid.NewGuid().ToString("n").Substring(0, 8)}";

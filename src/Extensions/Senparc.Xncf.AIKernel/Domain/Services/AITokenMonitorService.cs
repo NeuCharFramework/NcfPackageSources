@@ -30,13 +30,7 @@ using Senparc.Xncf.AIKernel.Domain.Models.Usage;
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    /// <para>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    /// </para>
+    /// Aggregates per-tenant AI token usage and exposes bounded live progress streams.
     /// </summary>
     public sealed class AITokenMonitorService
     {
@@ -98,12 +92,13 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         #endregion
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Records normalized token counts, call status, duration, model totals, and daily totals.
         /// </summary>
-        /// <param name="modelAlias">model code</param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <param name="success">whethersuccess</param>
+        /// <param name="modelAlias">The model alias used for model-level aggregation.</param>
+        /// <param name="snapshot">The token usage snapshot; negative or missing values are normalized to zero.</param>
+        /// <param name="durationMs">The elapsed call duration in milliseconds.</param>
+        /// <param name="success">Whether the call completed successfully.</param>
+        /// <param name="tenantId">The tenant bucket receiving the usage.</param>
         public void Record(string modelAlias, AITokenUsageSnapshot snapshot, int durationMs, bool success, int tenantId = 0)
         {
             var tenant = _tenantAggs.GetOrAdd(tenantId, _ => new TenantAgg());
@@ -152,9 +147,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// getcurrentreal-time aggregationstatistics。
+        /// Returns current aggregate usage by model and day for one tenant.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <param name="dailyDays">The number of recent daily buckets to include.</param>
+        /// <param name="tenantId">The tenant bucket to read.</param>
+        /// <returns>A live usage snapshot.</returns>
         public AITokenMonitorStats GetLiveStats(int dailyDays = 7, int tenantId = 0)
         {
             _tenantAggs.TryGetValue(tenantId, out var tenant);
@@ -229,8 +226,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         #region Legacy section
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Publishes a progress event into the run buffer and active subscribers.
         /// </summary>
+        /// <param name="progress">The progress event to publish.</param>
+        /// <param name="tenantId">The tenant owning the run.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the run belongs to another tenant.</exception>
         public void PublishProgress(AITokenProgressEvent progress, int tenantId = 0)
         {
             if (progress == null)
@@ -286,8 +286,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the latest buffered progress event for a tenant-owned run.
         /// </summary>
+        /// <param name="runId">The monitored run identifier.</param>
+        /// <param name="tenantId">The tenant owning the run.</param>
+        /// <returns>The latest event, or <see langword="null"/> when unavailable.</returns>
         public AITokenProgressEvent GetLatestProgress(Guid runId, int tenantId = 0)
         {
             if (_runs.TryGetValue(runId, out var run) && run.TenantId == tenantId)

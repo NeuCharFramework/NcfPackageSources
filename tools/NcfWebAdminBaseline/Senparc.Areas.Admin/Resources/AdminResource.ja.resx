@@ -967,6 +967,8 @@
   <data name="AdminChat.Command.MaxToken" xml:space="preserve"><value>Set output limit</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="AdminChat.Command.MaxIterations" xml:space="preserve"><value>Set Harness max iterations</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="AdminChat.Command.Harness" xml:space="preserve"><value>Set Harness capabilities</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.Loading" xml:space="preserve"><value>コマンドを読み込んでいます…</value></data>
+  <data name="AdminChat.Command.LoadFailed" xml:space="preserve"><value>コマンドを読み込めませんでした。もう一度お試しください。</value></data>
   <data name="AdminChat.UserStats" xml:space="preserve"><value>Usage Stats</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="AdminChat.UserStatsTitle" xml:space="preserve"><value>User Usage Statistics (AdminChat)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="AdminChat.UserStatsTip" xml:space="preserve"><value>Only the per-account session/message counts are shown. No session or message content is exposed.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
@@ -1622,4 +1624,20 @@
   <data name="AdminChat.WorkspaceArtifact.Download" xml:space="preserve"><value>元ファイルをダウンロード：{0}</value></data>
   <data name="AdminChat.Workspace3D.Loading" xml:space="preserve"><value>安全な 3D プレビューを読み込み中…</value></data>
   <data name="AdminChat.Workspace3D.LoadError" xml:space="preserve"><value>3D プレビューの読み込みに失敗しました</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.Date" xml:space="preserve"><value>ログ日付</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.DateHint" xml:space="preserve"><value>任意。yyyyMMdd 形式。省略時は今日</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.Question" xml:space="preserve"><value>分析内容</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.QuestionHint" xml:space="preserve"><value>調査する症状や証拠を説明</value></data>
+  <data name="AdminChat.Command.AnalyzeSystemLogs.Parameter.QuestionPlaceholder" xml:space="preserve"><value>分析内容を入力</value></data>
+  <data name="AdminChat.Command.HelpHint" xml:space="preserve"><value>利用可能なコマンドを表示</value></data>
+  <data name="AdminChat.Command.MaxTokenHint" xml:space="preserve"><value>推奨範囲 256–8000</value></data>
+  <data name="AdminChat.Command.Shortcuts" xml:space="preserve"><value>↑↓ 移動 · Tab/Enter 選択 · 1–9 クイック選択</value></data>
+  <data name="AdminChat.WorkspaceArtifact.FileChanges" xml:space="preserve"><value>このターンで {0} ファイルを変更</value></data>
+  <data name="AdminChat.WorkspaceArtifact.Created" xml:space="preserve"><value>追加</value></data>
+  <data name="AdminChat.WorkspaceArtifact.Changed" xml:space="preserve"><value>変更</value></data>
+  <data name="AdminChat.WorkspaceArtifact.Deleted" xml:space="preserve"><value>削除</value></data>
+  <data name="AdminChat.Action.OpenAgentTask" xml:space="preserve"><value>Agent タスクを開く：{0} #{1}</value></data>
+  <data name="AdminChat.Action.PreviewAgentTask" xml:space="preserve"><value>ライブプレビュー：{0} #{1}</value></data>
+  <data name="AdminChat.Action.AgentTaskPreviewTitle" xml:space="preserve"><value>Agent タスク実行プレビュー：{0} #{1}</value></data>
+  <data name="AdminChat.Action.OpenInTab" xml:space="preserve"><value>別ページで開く</value></data>
 </root>

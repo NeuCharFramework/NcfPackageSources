@@ -16,7 +16,23 @@ function adminChatModuleCommands() {
         moduleName: item.moduleName || item.ModuleName,
         moduleUid,
         accentColor,
-        values: []
+        values: [],
+        parameters: ((item.parameters || item.Parameters) || []).map(parameter => ({
+          name: parameter.name || parameter.Name,
+          label: parameter.label || parameter.Label,
+          hint: parameter.hint || parameter.Hint,
+          placeholder: parameter.placeholder || parameter.Placeholder,
+          prefix: parameter.prefix || parameter.Prefix || '',
+          required: parameter.required || parameter.Required || false,
+          isPositional: parameter.isPositional || parameter.IsPositional || false,
+          allowFreeform: parameter.allowFreeform !== false && parameter.AllowFreeform !== false,
+          hasOptionsProvider: parameter.hasOptionsProvider || parameter.HasOptionsProvider || false,
+          options: ((parameter.options || parameter.Options) || []).map(option => ({
+            value: option.value || option.Value,
+            label: option.label || option.Label,
+            description: option.description || option.Description || ''
+          }))
+        }))
       };
     })
     .filter(item => item.command && item.label);
@@ -335,14 +351,62 @@ var chatApp = new Vue({
       launcherModePopoverOpen: false,
       chatModePopoverOpen: false,
       chatCommandMenuOpen: false,
+      chatCommandActiveIndex: 0,
+      chatCommandPopoverBelow: false,
+      chatCommandPopoverMaxHeight: 260,
       chatCommandSuggestions: [
-        { command: '/mode', label: adminChatText('AdminChat.Command.Mode', 'Switch execution mode'), hint: 'simple / plan / execute', values: ['simple', 'plan', 'execute'] },
-        { command: '/help', label: adminChatText('AdminChat.Command.Help', 'Show available commands'), hint: 'Display command help', values: [] },
-        { command: '/maxtoken', label: adminChatText('AdminChat.Command.MaxToken', 'Set output limit'), hint: 'Recommended 256–8000', values: [] },
-        { command: '/maxiterations', label: adminChatText('AdminChat.Command.MaxIterations', 'Set Harness max iterations'), hint: '1–64', values: [] },
-        { command: '/harness', label: adminChatText('AdminChat.Command.Harness', 'Set Harness capabilities'), hint: 'todo / compact / file-memory / skills / web', values: [] }
+        {
+          command: '/mode',
+          label: adminChatText('AdminChat.Command.Mode', 'Switch execution mode'),
+          hint: 'simple / plan / execute',
+          values: ['simple', 'plan', 'execute'],
+          parameters: []
+        },
+        {
+          command: '/help',
+          label: adminChatText('AdminChat.Command.Help', 'Show available commands'),
+          hint: adminChatText('AdminChat.Command.HelpHint', 'Display command help'),
+          values: [],
+          parameters: []
+        },
+        {
+          command: '/maxtoken',
+          label: adminChatText('AdminChat.Command.MaxToken', 'Set output limit'),
+          hint: adminChatText('AdminChat.Command.MaxTokenHint', 'Recommended 256–8000'),
+          values: [],
+          parameters: [{
+            name: 'tokens', label: adminChatText('AdminChat.Command.MaxToken', 'Token limit'),
+            hint: '256–8000', placeholder: '2000', prefix: '', required: true, isPositional: true,
+            allowFreeform: true, hasOptionsProvider: false,
+            options: [256, 1000, 2000, 4000, 8000].map(value => ({ value: String(value), label: String(value), description: '' }))
+          }]
+        },
+        {
+          command: '/maxiterations',
+          label: adminChatText('AdminChat.Command.MaxIterations', 'Set Harness max iterations'),
+          hint: '1–64',
+          values: [],
+          parameters: [{
+            name: 'iterations', label: adminChatText('AdminChat.Command.MaxIterations', 'Iterations'),
+            hint: '1–64', placeholder: '32', prefix: '', required: true, isPositional: true,
+            allowFreeform: true, hasOptionsProvider: false,
+            options: [8, 16, 32, 64].map(value => ({ value: String(value), label: String(value), description: '' }))
+          }]
+        },
+        {
+          command: '/harness',
+          label: adminChatText('AdminChat.Command.Harness', 'Set Harness capabilities'),
+          hint: 'todo / compact / file-memory / skills / web',
+          values: [],
+          parameters: []
+        }
       ].concat(adminChatModuleCommands()),
       chatCommandSuggestionsFor: 'inputMessage',
+      chatCommandRemoteOptions: [],
+      chatCommandRemoteOptionsKey: '',
+      chatCommandOptionsLoading: false,
+      chatCommandOptionsTimer: null,
+      chatCommandOptionsSequence: 0,
       trajectoryDialogVisible: false,
       trajectoryLoading: false,
       trajectoryDetailLoading: false,
@@ -442,6 +506,9 @@ var chatApp = new Vue({
       userStatsLoading: false,
       userStatsList: [],
       workspacePreviewOpen: false,
+      workspaceArtifactExpandedMessages: {},
+      agentTaskPreviewVisible: false,
+      agentTaskPreviewAction: null,
       workspacePreviewWidth: 420,
       workspacePreviewMaxWidth: 420,
       workspacePreviewOverlay: false,
@@ -679,6 +746,12 @@ var chatApp = new Vue({
     }
   },
   watch: {
+    inputMessage(value) {
+      this.$nextTick(() => this.syncSlashCommandMenuAfterValueChange('inputMessage', value));
+    },
+    chatInputText(value) {
+      this.$nextTick(() => this.syncSlashCommandMenuAfterValueChange('chatInputText', value));
+    },
     messageList() {
       this.$nextTick(() => {
         this.observeMessageRail();
@@ -694,6 +767,10 @@ var chatApp = new Vue({
     }
   },
   mounted() {
+    this.chatCommandResizeHandler = () => {
+      if (this.chatCommandMenuOpen) this.positionSlashCommandPopover(this.chatCommandSuggestionsFor);
+    };
+    window.addEventListener('resize', this.chatCommandResizeHandler);
     this.workspacePreviewResizeObserver = new ResizeObserver(() => this.updateWorkspacePreviewLayout());
     this.workspacePreviewResizeObserver.observe(this.$refs.workspaceContainer.$el);
     if (window.INITIAL_DATA) {
@@ -771,6 +848,9 @@ var chatApp = new Vue({
     }
   },
   beforeDestroy() {
+    if (this.chatCommandResizeHandler) {
+      window.removeEventListener('resize', this.chatCommandResizeHandler);
+    }
     if (this.messageRailObserver) this.messageRailObserver.disconnect();
     clearTimeout(this.messageRailCloseTimer);
     clearTimeout(this.historySearchTimer);
@@ -2148,10 +2228,82 @@ var chatApp = new Vue({
       }
     },
 
+    messageActionAttachments(message) {
+      return ((message && message.attachments) || [])
+        .filter(attachment => !!attachment.actionType);
+    },
+
+    messageRegularAttachments(message) {
+      return ((message && message.attachments) || [])
+        .filter(attachment => !attachment.actionType && !attachment.isWorkspaceArtifact);
+    },
+
+    messageWorkspaceArtifacts(message) {
+      return ((message && message.attachments) || [])
+        .filter(attachment => attachment.isWorkspaceArtifact);
+    },
+
+    workspaceArtifactsExpanded(message) {
+      const artifacts = this.messageWorkspaceArtifacts(message);
+      return artifacts.length <= 3 || !!this.workspaceArtifactExpandedMessages[message && message.id];
+    },
+
+    toggleWorkspaceArtifacts(message) {
+      if (this.messageWorkspaceArtifacts(message).length <= 3 || !message) return;
+      const key = String(message.id);
+      this.$set(this.workspaceArtifactExpandedMessages, key, !this.workspaceArtifactExpandedMessages[key]);
+    },
+
+    workspaceArtifactStats(message) {
+      const artifacts = this.messageWorkspaceArtifacts(message);
+      return artifacts.reduce((stats, artifact) => {
+        const type = String(artifact.changeType || 'changed').toLowerCase();
+        if (type === 'created') stats.created += 1;
+        else if (type === 'deleted') stats.deleted += 1;
+        else stats.changed += 1;
+        stats.total += 1;
+        return stats;
+      }, { total: 0, created: 0, changed: 0, deleted: 0 });
+    },
+
+    workspaceArtifactChangeLabel(changeType) {
+      const key = String(changeType || '').toLowerCase() === 'created'
+        ? 'AdminChat.WorkspaceArtifact.Created'
+        : String(changeType || '').toLowerCase() === 'deleted'
+          ? 'AdminChat.WorkspaceArtifact.Deleted'
+          : 'AdminChat.WorkspaceArtifact.Changed';
+      return ncfT(key);
+    },
+
+    openMessageAttachmentAction(attachment) {
+      if (!attachment || attachment.actionType !== 'agents-task' || !attachment.actionTargetId) return;
+      const url = this.agentTaskUrl(attachment, false);
+      const title = `${attachment.name || 'Agent Task'} #${attachment.actionTargetId}`;
+      const opener = window.parent && window.parent !== window ? window.parent : window;
+      if (typeof opener.ncfOpenAdminPage === 'function' && opener.ncfOpenAdminPage(url, title)) return;
+      window.open(url, `ncf-agent-task-${attachment.actionTargetId}`, 'noopener');
+    },
+
+    agentTaskUrl(attachment, embedded) {
+      if (!attachment || !attachment.actionTargetId) return '';
+      const query = embedded ? '?embedded=1&ncfTab=1' : '';
+      return `/Admin/AgentsManager/Index${query}#tab=third&taskId=${encodeURIComponent(attachment.actionTargetId)}`;
+    },
+
+    openAgentTaskPreview(attachment) {
+      if (!attachment || attachment.actionType !== 'agents-task' || !attachment.actionTargetId) return;
+      this.agentTaskPreviewAction = attachment;
+      this.agentTaskPreviewVisible = true;
+    },
+
     async openWorkspaceArtifact(attachment) {
       if (!attachment || !attachment.relativePath) return;
+      if (attachment.changeType === 'deleted') return;
       this.workspacePreviewOpen = true;
       await this.$nextTick();
+      const path = this.normalizeWorkspacePath(attachment.relativePath);
+      const separator = path.lastIndexOf('/');
+      await this.loadWorkspaceEntries(separator >= 0 ? path.slice(0, separator) : '');
       await this.handleWorkspaceEntryClick({
         relativePath: attachment.relativePath,
         isDirectory: false
@@ -3022,6 +3174,138 @@ var chatApp = new Vue({
       return field === 'chatInputText' ? this.chatInputText : this.inputMessage;
     },
 
+    syncSlashCommandMenuAfterValueChange(field, value) {
+      if (String(value || '').trimStart().startsWith('/')) {
+        this.chatCommandActiveIndex = 0;
+        this.updateSlashCommandMenu(field);
+      } else if (this.chatCommandSuggestionsFor === field) {
+        this.chatCommandMenuOpen = false;
+        this.chatCommandOptionsLoading = false;
+      }
+    },
+
+    slashCommandDefinition(command) {
+      const normalized = String(command || '').toLowerCase();
+      return this.chatCommandSuggestions.find(item => item.command.toLowerCase() === normalized) || null;
+    },
+
+    slashCommandParameterContext(text, definition) {
+      if (!definition || !definition.parameters || !definition.parameters.length) return null;
+      const value = String(text || '').trimStart();
+      const commandMatch = value.match(/^(\S+)(?:\s+)?/);
+      if (!commandMatch || commandMatch[1].toLowerCase() !== definition.command.toLowerCase()) return null;
+      const commandLength = commandMatch[1].length;
+      const argumentText = value.slice(commandLength).trimStart();
+      const tokens = argumentText ? argumentText.match(/\S+/g) || [] : [];
+      const namedParameters = definition.parameters.filter(parameter => !parameter.isPositional);
+      const positionalParameter = definition.parameters
+        .filter(parameter => parameter.isPositional)
+        .sort((left, right) => Number(left.order || 0) - Number(right.order || 0))[0];
+      const activeToken = tokens[tokens.length - 1] || '';
+      const activeNamed = namedParameters.find(parameter =>
+        activeToken.toLowerCase().startsWith(parameter.prefix.toLowerCase()));
+      if (activeNamed && !value.endsWith(' ')) {
+        return {
+          definition,
+          parameter: activeNamed,
+          query: activeToken.slice(activeNamed.prefix.length),
+          value,
+          replaceStart: value.length - activeToken.length
+        };
+      }
+
+      const usedNames = new Set();
+      let hasPositionalValue = false;
+      tokens.forEach(token => {
+        const matched = namedParameters.find(parameter =>
+          token.toLowerCase().startsWith(parameter.prefix.toLowerCase()));
+        if (matched && token.length > matched.prefix.length) usedNames.add(matched.name);
+        if (!matched && token) hasPositionalValue = true;
+      });
+      if (hasPositionalValue) return null;
+
+      const nextNamed = namedParameters.find(parameter => !usedNames.has(parameter.name));
+      if (nextNamed) {
+        return {
+          definition,
+          parameter: nextNamed,
+          query: '',
+          value,
+          replaceStart: value.length
+        };
+      }
+      return positionalParameter ? {
+        definition,
+        parameter: positionalParameter,
+        query: argumentText,
+        value,
+        replaceStart: value.length
+      } : null;
+    },
+
+    slashCommandParameterOptionValue(context, option) {
+      const value = context.value;
+      const parameter = context.parameter;
+      if (parameter.isPositional) {
+        const separator = value.endsWith(' ') ? '' : ' ';
+        return option ? value + separator + option.value : value + separator;
+      }
+      const inserted = parameter.prefix + (option ? option.value : '');
+      return (value.slice(0, context.replaceStart).trimEnd() + ' ' + inserted).trimEnd();
+    },
+
+    chatCommandOptionKey(context) {
+      return [
+        context.definition.command,
+        context.parameter.name,
+        context.query || ''
+      ].join('|');
+    },
+
+    async loadSlashCommandParameterOptions(field) {
+      const text = this.slashCommandText(field);
+      const command = (text || '').trimStart().split(/\s+/)[0];
+      const definition = this.slashCommandDefinition(command);
+      const context = this.slashCommandParameterContext(text, definition);
+      if (!context || !context.parameter.hasOptionsProvider) return;
+      const key = this.chatCommandOptionKey(context);
+      if (this.chatCommandRemoteOptionsKey === key) return;
+
+      clearTimeout(this.chatCommandOptionsTimer);
+      const sequence = ++this.chatCommandOptionsSequence;
+      this.chatCommandRemoteOptions = [];
+      this.chatCommandRemoteOptionsKey = key;
+      this.chatCommandActiveIndex = 0;
+      this.chatCommandOptionsLoading = true;
+      this.chatCommandOptionsTimer = setTimeout(async () => {
+        try {
+          const response = await service.get(
+            '/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetChatToolParameterOptionsAsync',
+            {
+              params: {
+                command: context.definition.command,
+                parameter: context.parameter.name,
+                query: context.query || '',
+                limit: 50
+              }
+            });
+          if (sequence !== this.chatCommandOptionsSequence) return;
+          const result = response.data && response.data.data;
+          this.chatCommandRemoteOptions = (result && result.options) || [];
+          this.chatCommandOptionsLoading = false;
+          this.chatCommandMenuOpen = this.slashCommandOptions(field).length > 0;
+          this.positionSlashCommandPopover(field);
+        } catch (error) {
+          if (sequence !== this.chatCommandOptionsSequence) return;
+          this.chatCommandRemoteOptions = [];
+          this.chatCommandOptionsLoading = false;
+          this.$message.error((responseError => responseError && (responseError.errorMessage || responseError.msg))(error.response && error.response.data)
+            || error.message
+            || ncfT('AdminChat.Command.LoadFailed'));
+        }
+      }, 120);
+    },
+
     slashCommandOptions(field) {
       const text = (this.slashCommandText(field) || '').trimStart();
       if (!text.startsWith('/')) return [];
@@ -3033,7 +3317,8 @@ var chatApp = new Vue({
           { value: '/mode simple', label: 'Simple', hint: '普通单轮对话' },
           { value: '/mode plan', label: 'Plan', hint: 'MAF 计划模式' },
           { value: '/mode execute', label: 'Execute', hint: 'MAF 执行模式' }
-        ].filter(item => !prefix || item.value.split(' ')[1].startsWith(prefix));
+        ].filter(item => !prefix || item.value.split(' ')[1].startsWith(prefix))
+          .map(item => ({ ...item, matchQuery: prefix, executeOnSelect: true }));
       }
       if (command === '/harness') {
         const prefix = (parts[1] || '').toLowerCase();
@@ -3049,29 +3334,98 @@ var chatApp = new Vue({
           { value: '/harness skills off', label: `Agent Skills → off（当前 ${status('skills')}）`, hint: '默认关闭' },
           { value: '/harness web on', label: `Hosted Web Search → on（当前 ${status('webSearch')}）`, hint: '可能产生外部访问/费用' },
           { value: '/harness web off', label: `Hosted Web Search → off（当前 ${status('webSearch')}）`, hint: '默认关闭' }
-        ].filter(item => !prefix || item.value.split(' ')[1].startsWith(prefix));
+        ].filter(item => !prefix || item.value.split(' ')[1].startsWith(prefix))
+          .map(item => ({ ...item, matchQuery: prefix, executeOnSelect: true }));
       }
-      if (parts.length > 1) return [];
-      const prefix = command;
-      return this.chatCommandSuggestions
-        .filter(item => item.command.startsWith(prefix))
-        .map(item => ({
-          value: item.command,
-          label: item.label,
-          hint: item.hint,
-          moduleName: item.moduleName || '',
-          accentColor: item.accentColor || ''
-        }));
+      const exactDefinition = this.slashCommandDefinition(command);
+      if (parts.length === 1 && !text.endsWith(' ') && !exactDefinition) {
+        return this.chatCommandSuggestions
+          .filter(item => item.command.startsWith(command))
+          .map(item => ({
+            value: item.command,
+            displayValue: item.command,
+            label: item.label,
+            hint: item.hint,
+            moduleName: item.moduleName || '',
+            accentColor: item.accentColor || '',
+            matchQuery: command
+          }));
+      }
+
+      const definition = exactDefinition;
+      const context = this.slashCommandParameterContext(text, definition);
+      if (!context) return [];
+      const parameter = context.parameter;
+      const options = parameter.hasOptionsProvider
+        ? this.chatCommandRemoteOptionsKey === this.chatCommandOptionKey(context)
+          ? this.chatCommandRemoteOptions
+          : []
+        : (parameter.options || []).filter(option =>
+            !context.query
+            || option.value.toLowerCase().includes(context.query.toLowerCase())
+            || option.label.toLowerCase().includes(context.query.toLowerCase()));
+      const mapped = options.map(option => ({
+        value: this.slashCommandParameterOptionValue(context, option),
+        displayValue: parameter.prefix ? parameter.prefix + option.value : option.value,
+        label: option.label,
+        hint: option.description || parameter.hint,
+        moduleName: definition.moduleName || '',
+        accentColor: definition.accentColor || '',
+        matchQuery: context.query || '',
+        executeOnSelect: !definition.moduleName
+      }));
+      if (mapped.length) return mapped;
+      if (parameter.hasOptionsProvider && this.chatCommandOptionsLoading) return [];
+      return [{
+        value: this.slashCommandParameterOptionValue(context, null),
+        displayValue: parameter.isPositional ? parameter.placeholder : parameter.prefix + parameter.placeholder,
+        label: parameter.label,
+        hint: parameter.hint,
+        moduleName: definition.moduleName || '',
+        accentColor: definition.accentColor || '',
+        parameterPrompt: true,
+        matchQuery: context.query || ''
+      }];
     },
 
     updateSlashCommandMenu(field) {
       const options = this.slashCommandOptions(field);
       this.chatCommandSuggestionsFor = field;
-      this.chatCommandMenuOpen = options.length > 0;
+      if (this.chatCommandActiveIndex >= options.length) this.chatCommandActiveIndex = 0;
+      this.chatCommandMenuOpen = options.length > 0 || this.chatCommandOptionsLoading;
+      this.loadSlashCommandParameterOptions(field);
+      this.positionSlashCommandPopover(field);
+    },
+
+    positionSlashCommandPopover(field) {
+      this.$nextTick(() => {
+        if (!this.chatCommandMenuOpen) return;
+        const refName = field === 'chatInputText' ? 'promptLauncherInput' : 'promptMessageInput';
+        const component = this.$refs[refName];
+        const element = component && component.$el ? component.$el : component;
+        const anchor = element && typeof element.closest === 'function'
+          ? element.closest('.chat-mention-anchor')
+          : null;
+        if (!anchor || typeof anchor.getBoundingClientRect !== 'function') return;
+
+        const rect = anchor.getBoundingClientRect();
+        const viewportPadding = 12;
+        const gap = 6;
+        const spaceAbove = Math.max(0, rect.top - viewportPadding - gap);
+        const spaceBelow = Math.max(0, window.innerHeight - rect.bottom - viewportPadding - gap);
+        const estimatedHeight = Math.min(340, 28 + this.slashCommandOptions(field).length * 44);
+        const placeBelow = spaceAbove < Math.min(220, estimatedHeight) && spaceBelow > spaceAbove;
+        const available = placeBelow ? spaceBelow : spaceAbove;
+
+        this.chatCommandPopoverBelow = placeBelow;
+        this.chatCommandPopoverMaxHeight = Math.max(96, Math.min(340, available));
+      });
     },
 
     selectSlashCommand(field, option) {
-      const value = option && option.value ? option.value + ' ' : '';
+      const value = option && option.value
+        ? option.value + (option.parameterPrompt && !option.value.endsWith(' ') ? '' : ' ')
+        : '';
       if (field === 'chatInputText') this.chatInputText = value;
       else this.inputMessage = value;
       this.chatCommandSuggestionsFor = field;
@@ -3084,6 +3438,55 @@ var chatApp = new Vue({
           textarea.setSelectionRange(value.length, value.length);
         }
       });
+      this.loadSlashCommandParameterOptions(field);
+      if (option && option.executeOnSelect) {
+        this.$nextTick(() => {
+          this.chatCommandMenuOpen = false;
+          this.handleSlashCommandKeydown({
+            key: 'Enter',
+            preventDefault() {}
+          }, field);
+        });
+      }
+    },
+
+    highlightSlashCommandText(text, query) {
+      const source = String(text == null ? '' : text);
+      const needle = String(query || '');
+      if (!needle) return this.escapeChatCommandHtml(source);
+      const index = source.toLowerCase().indexOf(needle.toLowerCase());
+      if (index < 0) return this.escapeChatCommandHtml(source);
+      return this.escapeChatCommandHtml(source.slice(0, index))
+        + '<mark>'
+        + this.escapeChatCommandHtml(source.slice(index, index + needle.length))
+        + '</mark>'
+        + this.escapeChatCommandHtml(source.slice(index + needle.length));
+    },
+
+    escapeChatCommandHtml(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    },
+
+    selectActiveSlashCommand(field) {
+      const options = this.slashCommandOptions(field);
+      const option = options[this.chatCommandActiveIndex] || options[0];
+      if (!option || option.parameterPrompt) return false;
+      this.selectSlashCommand(field, option);
+      return true;
+    },
+
+    scrollActiveSlashCommand() {
+      this.$nextTick(() => {
+        const active = document.querySelector('.chat-command-popover .chat-command-option.is-active');
+        if (active && typeof active.scrollIntoView === 'function') {
+          active.scrollIntoView({ block: 'nearest' });
+        }
+      });
     },
 
     handleSlashCommandKeydown(event, field) {
@@ -3092,6 +3495,35 @@ var chatApp = new Vue({
         this.chatCommandMenuOpen = false;
         event.preventDefault();
         return true;
+      }
+      if (this.chatCommandMenuOpen) {
+        const options = this.slashCommandOptions(field);
+        if (event.key === 'ArrowDown' && options.length) {
+          this.chatCommandActiveIndex = (this.chatCommandActiveIndex + 1) % options.length;
+          this.scrollActiveSlashCommand();
+          event.preventDefault();
+          return true;
+        }
+        if (event.key === 'ArrowUp' && options.length) {
+          this.chatCommandActiveIndex = (this.chatCommandActiveIndex - 1 + options.length) % options.length;
+          this.scrollActiveSlashCommand();
+          event.preventDefault();
+          return true;
+        }
+        if ((event.key === 'Tab' || event.key === 'Enter') && options.length
+          && this.selectActiveSlashCommand(field)) {
+          event.preventDefault();
+          return true;
+        }
+        const shortcut = /^[1-9]$/.test(event.key) ? Number(event.key) - 1 : -1;
+        if (shortcut >= 0 && shortcut < options.length && shortcut < 9
+          && (event.altKey || !options[shortcut].matchQuery)) {
+          this.chatCommandActiveIndex = shortcut;
+          if (this.selectActiveSlashCommand(field)) {
+            event.preventDefault();
+            return true;
+          }
+        }
       }
       if (event.key !== 'Enter' || !text.startsWith('/')) return false;
 

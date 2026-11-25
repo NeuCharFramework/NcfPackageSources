@@ -36,14 +36,24 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Stores pending human-in-the-loop requests and completes them when an approval,
+/// rejection, human-turn input, cancellation, or execution failure is recorded.
 /// </summary>
 public sealed class HumanInTheLoopRequestStore
 {
     private readonly ConcurrentDictionary<string, PendingHumanRequest> _pending = new(StringComparer.Ordinal);
 
+    /// <summary>
+    /// Registers a tool approval request and returns its pending completion object.
+    /// </summary>
+    /// <param name="chatTaskId">The chat task waiting for the decision.</param>
+    /// <param name="agentName">The agent that requested approval.</param>
+    /// <param name="request">The tool approval content supplied by the model runtime.</param>
+    /// <param name="responseFactory">Factory that converts a decision into the runtime response object.</param>
+    /// <param name="correlationId">Optional execution correlation identifier.</param>
+    /// <param name="recipientUserId">Optional user identifier that should receive the request.</param>
+    /// <returns>The registered pending request.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> or <paramref name="responseFactory"/> is <see langword="null"/>.</exception>
     public PendingHumanRequest RegisterToolApproval(
         int chatTaskId,
         string agentName,
@@ -66,6 +76,17 @@ public sealed class HumanInTheLoopRequestStore
         return pending;
     }
 
+    /// <summary>
+    /// Registers a workflow tool approval and adapts the decision into the workflow's external response.
+    /// </summary>
+    /// <param name="chatTaskId">The chat task waiting for the decision.</param>
+    /// <param name="agentName">The agent that requested approval.</param>
+    /// <param name="externalRequest">The workflow request that must receive the decision response.</param>
+    /// <param name="request">The tool approval content supplied by the workflow.</param>
+    /// <param name="correlationId">Optional execution correlation identifier.</param>
+    /// <param name="recipientUserId">Optional user identifier that should receive the request.</param>
+    /// <returns>The registered pending request.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="externalRequest"/> or <paramref name="request"/> is <see langword="null"/>.</exception>
     public PendingHumanRequest RegisterWorkflowToolApproval(
         int chatTaskId,
         string agentName,
@@ -90,6 +111,16 @@ public sealed class HumanInTheLoopRequestStore
             recipientUserId);
     }
 
+    /// <summary>
+    /// Registers a human participant turn and waits for text input or a rejection decision.
+    /// </summary>
+    /// <param name="chatTaskId">The chat task waiting for human input.</param>
+    /// <param name="agentName">The displayed participant name.</param>
+    /// <param name="participantKey">The stable participant key used by the workflow.</param>
+    /// <param name="prompt">The prompt shown to the human participant.</param>
+    /// <param name="correlationId">Optional execution correlation identifier.</param>
+    /// <param name="recipientUserId">Optional user identifier that should receive the request.</param>
+    /// <returns>The registered pending request.</returns>
     public PendingHumanRequest RegisterHumanTurn(
         int chatTaskId,
         string agentName,
@@ -109,6 +140,13 @@ public sealed class HumanInTheLoopRequestStore
         return pending;
     }
 
+    /// <summary>
+    /// Resolves a pending request, creates its runtime response, and completes its awaitable decision.
+    /// </summary>
+    /// <param name="requestId">The pending request identifier.</param>
+    /// <param name="decision">The approval, rejection, or human-input decision.</param>
+    /// <param name="pending">Receives the removed pending request when it existed.</param>
+    /// <returns><see langword="true"/> when the request was resolved and its response created.</returns>
     public bool TryResolve(string requestId, HumanInTheLoopDecision decision, out PendingHumanRequest pending)
     {
         pending = null;
@@ -131,9 +169,21 @@ public sealed class HumanInTheLoopRequestStore
         }
     }
 
+    /// <summary>
+    /// Resolves a pending request without returning the removed request object.
+    /// </summary>
+    /// <param name="requestId">The pending request identifier.</param>
+    /// <param name="decision">The approval, rejection, or human-input decision.</param>
+    /// <returns><see langword="true"/> when the request was resolved.</returns>
     public bool TryResolve(string requestId, HumanInTheLoopDecision decision)
         => TryResolve(requestId, decision, out _);
 
+    /// <summary>
+    /// Looks up a pending request without removing it.
+    /// </summary>
+    /// <param name="requestId">The pending request identifier.</param>
+    /// <param name="pending">Receives the pending request when it exists.</param>
+    /// <returns><see langword="true"/> when the request exists.</returns>
     public bool TryGet(string requestId, out PendingHumanRequest pending)
     {
         pending = null;
@@ -141,6 +191,11 @@ public sealed class HumanInTheLoopRequestStore
             && _pending.TryGetValue(requestId.Trim(), out pending);
     }
 
+    /// <summary>
+    /// Removes and cancels a pending request.
+    /// </summary>
+    /// <param name="requestId">The pending request identifier.</param>
+    /// <returns><see langword="true"/> when a request was removed and canceled.</returns>
     public bool TryCancel(string requestId)
     {
         if (string.IsNullOrWhiteSpace(requestId)
@@ -153,6 +208,11 @@ public sealed class HumanInTheLoopRequestStore
         return true;
     }
 
+    /// <summary>
+    /// Returns pending requests for one chat task in creation order.
+    /// </summary>
+    /// <param name="chatTaskId">The chat task identifier.</param>
+    /// <returns>A snapshot of pending request DTOs.</returns>
     public IReadOnlyList<HumanInTheLoopRequestDto> GetPending(int chatTaskId)
         => _pending.Values
             .Where(z => z.ChatTaskId == chatTaskId)
@@ -160,6 +220,11 @@ public sealed class HumanInTheLoopRequestStore
             .Select(z => z.ToDto())
             .ToList();
 
+    /// <summary>
+    /// Returns pending requests associated with a correlation identifier.
+    /// </summary>
+    /// <param name="correlationId">The correlation identifier to match.</param>
+    /// <returns>A snapshot of matching pending requests in creation order.</returns>
     public IReadOnlyList<PendingHumanRequest> GetPendingByCorrelationId(string correlationId)
     {
         if (string.IsNullOrWhiteSpace(correlationId))
@@ -174,6 +239,11 @@ public sealed class HumanInTheLoopRequestStore
             .ToList();
     }
 
+    /// <summary>
+    /// Cancels and removes every pending request belonging to a chat task.
+    /// </summary>
+    /// <param name="chatTaskId">The chat task identifier.</param>
+    /// <returns>The requests that were removed and canceled.</returns>
     public IReadOnlyList<PendingHumanRequest> CancelForTask(int chatTaskId)
     {
         var cancelled = new List<PendingHumanRequest>();
@@ -198,6 +268,9 @@ public sealed class HumanInTheLoopRequestStore
     }
 }
 
+/// <summary>
+/// Contains the human decision used to approve a tool, reject an operation, or provide turn input.
+/// </summary>
 public sealed record HumanInTheLoopDecision(bool Approved, string Reason = null, string Input = null);
 
 public sealed class PendingHumanRequest

@@ -51,7 +51,12 @@
                 </ol>
                 <p style="margin-top:12px;">
                     <ncf-doc-help topic="sandbox.setup"></ncf-doc-help>
-                    <a class="el-button el-button--default" href="/Admin/Sandbox/Index?uid=@Model.XncfModuleUid">{{ ncfST('Frontend.Sandbox.OpenSandboxPanel') }}</a>
+                    <a
+                        class="el-button el-button--default"
+                        href="/Admin/Sandbox/Index?uid=@Model.XncfModuleUid"
+                        @@click.prevent="openSandboxPanel">
+                        {{ ncfST('Frontend.Sandbox.OpenSandboxPanel') }}
+                    </a>
                 </p>
                 <p style="color:#888;font-size:12px;margin-top:8px;">
                     {{ ncfST('Frontend.Sandbox.Documentation') }}<a :href="docsUrl" target="_blank" rel="noopener">{{ docsUrl }}</a>
@@ -68,6 +73,7 @@
             el: "#app",
             data() {
                 return {
+                    moduleUid: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.XncfModuleUid)),
                     dockerAvailable: @(Model.DockerAvailable ? "true" : "false"),
                     statusMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DockerStatusMessage)),
                     docsUrl: NcfDocHelp.resolve('sandbox.setup', document.documentElement.lang),
@@ -76,6 +82,17 @@
                 };
             },
             methods: {
+                openSandboxPanel() {
+                    const href = '/Admin/Sandbox/Index?uid=' + encodeURIComponent(this.moduleUid);
+                    const parentWindow = window.parent;
+                    if (parentWindow !== window &&
+                        typeof parentWindow.ncfOpenAdminPage === 'function') {
+                        parentWindow.ncfOpenAdminPage(href, ncfST('Frontend.Sandbox.OpenSandboxPanel'));
+                        return;
+                    }
+
+                    window.location.assign(href);
+                },
                 async probe() {
                     const res = await axios.get('?handler=Probe');
                     if (res.data) {

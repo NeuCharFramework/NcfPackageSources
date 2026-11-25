@@ -83,11 +83,21 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 {
     public class AIModelService : ServiceBase<AIModel>
     {
+        /// <summary>
+        /// Initializes the AI model persistence and execution service.
+        /// </summary>
+        /// <param name="repo">Repository for AI model records.</param>
+        /// <param name="serviceProvider">Dependency-injection provider.</param>
         public AIModelService(IRepositoryBase<AIModel> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {
         }
 
+        /// <summary>
+        /// Creates and persists an AI model configuration, enabling it for display.
+        /// </summary>
+        /// <param name="orEditRequest">The model platform, endpoint, credentials, and model identifiers.</param>
+        /// <returns>The persisted model DTO.</returns>
         public async Task<AIModelDto> AddAsync(AIModel_CreateOrEditRequest orEditRequest)
         {
             AIModel aiModel = new AIModel(orEditRequest);
@@ -102,6 +112,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return aiModelDto;
         }
 
+        /// <summary>
+        /// Updates an existing AI model while preserving stored credentials when the request omits them.
+        /// </summary>
+        /// <param name="request">The model update request.</param>
+        /// <returns>The updated model DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the target model does not exist.</exception>
         public async Task<AIModelDto> EditAsync(AIModel_CreateOrEditRequest request)
         {
             AIModel aiModel = await this.GetObjectAsync(z => z.Id == request.Id)
@@ -130,11 +146,13 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// build SenparcAiSetting
+        /// Converts an AI model DTO and optional vector model into the runtime
+        /// <see cref="SenparcAiSetting"/> structure used by AgentKernel.
         /// </summary>
-        /// <param name="aiModel"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
+        /// <param name="aiModel">The persisted AI model DTO.</param>
+        /// <param name="aIVectorDto">Optional vector model configuration.</param>
+        /// <returns>The runtime AI setting.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the platform or model type is unsupported.</exception>
         public SenparcAiSetting BuildSenparcAiSetting(AIModelDto aiModel, AIVectorDto aIVectorDto = null)
         {
             SenparcAiSetting aiSettings = new SenparcAiSetting
@@ -273,6 +291,17 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <param name="senparcAiSetting"></param>
         /// <param name="prompt"></param>
         /// <returns></returns>
+        /// <summary>
+        /// Runs a model request using the supplied runtime setting and optional prompt/session parameters.
+        /// </summary>
+        /// <param name="senparcAiSetting">The runtime AI model setting.</param>
+        /// <param name="prompt">The user prompt.</param>
+        /// <param name="systemMessage">Optional system message.</param>
+        /// <param name="promptTemplate">Optional prompt template.</param>
+        /// <param name="promptConfigParameter">Optional generation parameters.</param>
+        /// <param name="agentSession">Optional AgentKernel session.</param>
+        /// <param name="inStreamItemProcessing">Optional streaming update callback.</param>
+        /// <returns>The model result and usage information.</returns>
         public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string systemMessage, string promptTemplate, PromptConfigParameter promptConfigParameter = null, AgentSession agentSession = null, Action<AgentResponseUpdate> inStreamItemProcessing = null)
         {
             if (senparcAiSetting == null)
@@ -319,6 +348,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return aiResult;
         }
 
+        /// <summary>
+        /// Creates an AgentAiHandler bound to the explicitly supplied model setting.
+        /// </summary>
+        /// <param name="senparcAiSetting">The model setting.</param>
+        /// <returns>A handler using the supplied setting.</returns>
         private static AgentAiHandler CreateModelAgentHandler(SenparcAiSetting senparcAiSetting)
         {
             return new AgentAiHandler(senparcAiSetting);
@@ -388,6 +422,17 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Runs a ChatClientAgent request and returns the full agent response with usage data.
+        /// </summary>
+        /// <param name="runner">The configured AgentKernel runner.</param>
+        /// <param name="input">The user input.</param>
+        /// <param name="session">Optional agent session.</param>
+        /// <param name="options">Optional chat options.</param>
+        /// <param name="cancellationToken">Token used to cancel generation.</param>
+        /// <param name="model">Optional model metadata for diagnostics.</param>
+        /// <param name="source">Diagnostic source label.</param>
+        /// <returns>The generated agent response.</returns>
         public async Task<AgentResponse> RunChatResponseWithUsageAsync(
             IWantToRun runner,
             string prompt,
@@ -437,6 +482,17 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Streams an AgentKernel runner response and returns all captured updates.
+        /// </summary>
+        /// <param name="runner">The configured AgentKernel runner.</param>
+        /// <param name="input">The user input.</param>
+        /// <param name="session">Optional agent session.</param>
+        /// <param name="options">Optional chat options.</param>
+        /// <param name="cancellationToken">Token used to cancel generation.</param>
+        /// <param name="model">Optional model metadata for diagnostics.</param>
+        /// <param name="source">Diagnostic source label.</param>
+        /// <returns>The captured streaming updates.</returns>
         public async Task<IReadOnlyList<AgentResponseUpdate>> RunAgentStreamingWithUsageAsync(
             AIAgent agent,
             IList<ChatMessage> messages,
@@ -496,6 +552,17 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Streams a ChatClientAgent response and returns all captured updates.
+        /// </summary>
+        /// <param name="runner">The configured AgentKernel runner.</param>
+        /// <param name="input">The user input.</param>
+        /// <param name="session">Optional agent session.</param>
+        /// <param name="options">Optional chat options.</param>
+        /// <param name="cancellationToken">Token used to cancel generation.</param>
+        /// <param name="model">Optional model metadata for diagnostics.</param>
+        /// <param name="source">Diagnostic source label.</param>
+        /// <returns>The captured streaming updates.</returns>
         public async Task<IReadOnlyList<AgentResponseUpdate>> RunChatStreamingWithUsageAsync(
             IWantToRun runner,
             string prompt,
@@ -557,6 +624,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Records usage data in the token monitor when usage is available.
+        /// </summary>
+        /// <param name="modelAlias">The model alias.</param>
+        /// <param name="usage">Usage details.</param>
+        /// <param name="durationMs">Call duration in milliseconds.</param>
+        /// <param name="success">Whether the call succeeded.</param>
+        /// <param name="tenantId">The tenant bucket.</param>
         public void RecordUsage(
             AIModelDto model,
             string modelAlias,
@@ -569,6 +644,15 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             RecordTokenUsage(model, modelAlias, snapshot, durationMs, success, source, errorNote);
         }
 
+        /// <summary>
+        /// Executes a chat callback, records usage/timing diagnostics, and returns the normalized result.
+        /// </summary>
+        /// <param name="run">The chat execution callback.</param>
+        /// <param name="onUpdate">Optional streaming update callback.</param>
+        /// <param name="model">Optional model metadata for usage records.</param>
+        /// <param name="source">Usage source label.</param>
+        /// <param name="modelAlias">Optional model alias.</param>
+        /// <returns>A task containing the chat result and usage.</returns>
         private async Task<SenparcKernelAiResult<string>> RunTrackedChatAsync(
             Func<Action<AgentResponseUpdate>, Task<SenparcKernelAiResult<string>>> execute,
             Action<AgentResponseUpdate> onUpdate,
@@ -624,6 +708,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Records token usage for a completed chat result.
+        /// </summary>
+        /// <param name="model">Optional model metadata.</param>
+        /// <param name="usage">The provider usage details.</param>
+        /// <param name="source">The usage source.</param>
+        /// <param name="modelAlias">Optional model alias.</param>
+        /// <param name="elapsedMilliseconds">Elapsed request time.</param>
         private void RecordTokenUsage(
             AIModelDto model,
             string modelAlias,
@@ -643,6 +735,15 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 errorNote);
         }
 
+        /// <summary>
+        /// Records token usage from explicit token counters when provider usage details are unavailable.
+        /// </summary>
+        /// <param name="model">Optional model metadata.</param>
+        /// <param name="promptTokens">Prompt token count.</param>
+        /// <param name="completionTokens">Completion token count.</param>
+        /// <param name="source">The usage source.</param>
+        /// <param name="modelAlias">Optional model alias.</param>
+        /// <param name="elapsedMilliseconds">Elapsed request time.</param>
         private void RecordTokenUsage(
             AIModelDto model,
             string modelAlias,
@@ -692,6 +793,19 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         ///Legacy comment translated to English.
         ///Legacy comment translated to English.
         ///Legacy comment translated to English.
+        /// <summary>
+        /// Runs a model request with token-monitor progress and optional AgentSession context.
+        /// </summary>
+        /// <param name="aiModel">The model DTO to execute.</param>
+        /// <param name="systemMessage">The system message.</param>
+        /// <param name="prompt">The user prompt.</param>
+        /// <param name="promptConfigParameter">Optional generation parameters.</param>
+        /// <param name="monitor">Token monitor service.</param>
+        /// <param name="progress">Optional progress reporter.</param>
+        /// <param name="source">Diagnostic source label.</param>
+        /// <param name="runId">Optional run identifier.</param>
+        /// <param name="cancellationToken">Token used to cancel generation.</param>
+        /// <returns>The model result and usage information.</returns>
         public async Task<SenparcKernelAiResult<string>> RunModelWithMonitorAsync(
             AIModelDto aiModel,
             string prompt,
@@ -862,6 +976,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Converts provider usage details into the AIKernel token usage snapshot.
+        /// </summary>
+        /// <param name="usage">Provider usage details.</param>
+        /// <returns>A normalized usage snapshot.</returns>
         public static AITokenUsageSnapshot BuildUsageSnapshot(UsageDetails usage)
         {
             var snapshot = new AITokenUsageSnapshot();
@@ -878,6 +997,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return snapshot;
         }
 
+        /// <summary>
+        /// Truncates diagnostic text without exposing an unbounded model response.
+        /// </summary>
+        /// <param name="text">The text to truncate.</param>
+        /// <param name="maxLength">The maximum output length.</param>
+        /// <returns>The original or truncated text.</returns>
         private static string TruncatePreview(string text, int maxLength = 200)
         {
             if (string.IsNullOrEmpty(text))
@@ -888,6 +1013,13 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return text.Length <= maxLength ? text : text.Substring(0, maxLength) + "...";
         }
 
+        /// <summary>
+        /// Synchronizes NeuChar model metadata into persisted AI model records.
+        /// </summary>
+        /// <param name="modelResult">The provider model list response.</param>
+        /// <param name="developerId">The developer/owner identifier.</param>
+        /// <param name="apiKey">The provider API key used for new records.</param>
+        /// <returns>A task containing a synchronization summary.</returns>
         public async Task<string> UpdateModelsFromNeuCharAsync(NeuCharGetModelJsonResult modelResult, int developerId, string apiKey)
         {
             if (modelResult?.Result?.Data == null)
@@ -958,6 +1090,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <param name="llModel"></param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
+        /// <summary>
+        /// Converts an AI model DTO into runtime settings without vector configuration.
+        /// </summary>
+        /// <param name="llModel">The AI model DTO.</param>
+        /// <returns>The runtime AI setting.</returns>
         public SenparcAiSetting BuildSenparcAiSetting(AIModelDto llModel)
         {
             var aiSettings = new SenparcAiSetting
@@ -1044,6 +1181,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return aiSettings;
         }
 
+        /// <summary>
+        /// Builds a ModelName object with the appropriate field for the configured model type.
+        /// </summary>
+        /// <param name="aiModel">The AI model DTO.</param>
+        /// <returns>The unified model-name structure.</returns>
         private static ModelName BuildUnifiedModelName(AIModelDto aiModel)
         {
             var modelName = new ModelName()
@@ -1061,6 +1203,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return modelName;
         }
 
+        /// <summary>
+        /// Applies embedding-specific model metadata, including dimensions where supported.
+        /// </summary>
+        /// <param name="aiModel">The model DTO.</param>
+        /// <param name="modelName">The runtime model-name structure to update.</param>
         private static void ApplyEmbeddingModelMetadata(AIModelDto aiModel, ModelName modelName)
         {
             if (aiModel == null || modelName == null || string.IsNullOrWhiteSpace(modelName.Embedding))
@@ -1075,6 +1222,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Resolves embedding dimensions from model metadata, notes, or known model defaults.
+        /// </summary>
+        /// <param name="aiModel">The embedding model DTO.</param>
+        /// <returns>The resolved dimensions, or zero when unknown.</returns>
         private static int ResolveEmbeddingDimensions(AIModelDto aiModel)
         {
             if (aiModel == null)
@@ -1128,6 +1280,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return aiModel.ConfigModelType == ConfigModelType.TextEmbedding ? 1536 : 0;
         }
 
+        /// <summary>
+        /// Parses an embedding-dimension marker from model notes.
+        /// </summary>
+        /// <param name="note">The model note text.</param>
+        /// <param name="dimensions">Receives the parsed dimension count.</param>
+        /// <returns><see langword="true"/> when a positive dimension marker is found.</returns>
         private static bool TryParseEmbeddingDimensionsFromNote(string note, out int dimensions)
         {
             dimensions = 0;
@@ -1147,6 +1305,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                    && dimensions > 0;
         }
 
+        /// <summary>
+        /// Normalizes platform-specific endpoint formatting for runtime settings.
+        /// </summary>
+        /// <param name="platform">The AI platform.</param>
+        /// <param name="endpoint">The configured endpoint.</param>
+        /// <returns>The normalized endpoint.</returns>
         private static string NormalizeEndpoint(AiPlatform platform, string endpoint)
         {
             if (endpoint.IsNullOrWhiteSpace())
@@ -1166,6 +1330,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return normalized;
         }
 
+        /// <summary>
+        /// Returns the configured API version or the default supported version.
+        /// </summary>
+        /// <param name="apiVersion">The configured API version.</param>
+        /// <returns>A usable API version string.</returns>
         private static string GetApiVersionOrDefault(string apiVersion)
         {
             // AzureOpenAIKeys / NeuCharAIKeys both define 2022-12-01 as the legacy-compatible
@@ -1180,6 +1349,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <param name="currentModelDto"></param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
+        /// <summary>
+        /// Resolves a usable Chat model, applying the configured fallback policy when the current model is unavailable.
+        /// </summary>
+        /// <param name="currentModelDto">The preferred current model.</param>
+        /// <returns>The selected runtime setting, selected DTO, and whether fallback changed the model.</returns>
         public async Task<(SenparcAiSetting AiSetting,AIModelDto FinalAiModelDto, bool ModelChanged)> GetValiableChatModel(AIModelDto currentModelDto)
         {
             // getmodel

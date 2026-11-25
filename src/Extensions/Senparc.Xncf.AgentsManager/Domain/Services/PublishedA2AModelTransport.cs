@@ -31,7 +31,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Provides the shared HTTP transport and request-scoped diagnostics used by published A2A model calls.
+/// Diagnostic output is bounded and sanitizes credentials, tokens, URLs, and provider error text.
 /// </summary>
 internal static class PublishedA2AModelTransport
 {
@@ -41,8 +42,17 @@ internal static class PublishedA2AModelTransport
     private static readonly ConcurrentDictionary<string, ModelProviderFailure> LatestFailures = new();
     private static readonly HttpClient Client = new(new PublishedA2AModelHttpMessageHandler(), disposeHandler: true);
 
+    /// <summary>
+    /// Gets the shared HTTP client that applies published A2A model transport diagnostics.
+    /// </summary>
     public static HttpClient SharedClient => Client;
 
+    /// <summary>
+    /// Begins an async-local diagnostic scope for a published model request.
+    /// </summary>
+    /// <param name="diagnosticId">The correlation identifier used to store provider failures.</param>
+    /// <param name="apiVersionOverride">Optional API version applied to outgoing request URIs.</param>
+    /// <returns>A disposable scope that restores the previous request context.</returns>
     public static IDisposable Begin(string diagnosticId, string? apiVersionOverride = null)
     {
         diagnosticId = string.IsNullOrWhiteSpace(diagnosticId) ? "unset" : diagnosticId;
@@ -56,6 +66,12 @@ internal static class PublishedA2AModelTransport
         return new ContextScope(previous);
     }
 
+    /// <summary>
+    /// Retrieves the terminal provider failure recorded for a diagnostic identifier.
+    /// </summary>
+    /// <param name="diagnosticId">The diagnostic identifier to inspect.</param>
+    /// <param name="failure">Receives the terminal provider failure when one exists.</param>
+    /// <returns><see langword="true"/> when a terminal configuration failure is recorded.</returns>
     public static bool TryGetTerminalFailure(string? diagnosticId, out ModelProviderFailure failure)
     {
         failure = null;
@@ -64,6 +80,10 @@ internal static class PublishedA2AModelTransport
                && failure.IsTerminalConfigurationFailure;
     }
 
+    /// <summary>
+    /// Removes the recorded provider failure for a diagnostic identifier.
+    /// </summary>
+    /// <param name="diagnosticId">The diagnostic identifier whose failure should be removed.</param>
     public static void ClearFailure(string? diagnosticId)
     {
         if (!string.IsNullOrWhiteSpace(diagnosticId))
@@ -79,11 +99,18 @@ internal static class PublishedA2AModelTransport
         private readonly ModelRequestContext? _previous;
         private bool _disposed;
 
+        /// <summary>
+        /// Captures the previous async-local request context for restoration on disposal.
+        /// </summary>
+        /// <param name="previous">The context that was active before the new scope.</param>
         public ContextScope(ModelRequestContext? previous)
         {
             _previous = previous;
         }
 
+        /// <summary>
+        /// Restores the previous request context once.
+        /// </summary>
         public void Dispose()
         {
             if (_disposed)
@@ -98,6 +125,9 @@ internal static class PublishedA2AModelTransport
 
     private sealed class PublishedA2AModelHttpMessageHandler : DelegatingHandler
     {
+        /// <summary>
+        /// Initializes the delegating handler used by the shared model client.
+        /// </summary>
         public PublishedA2AModelHttpMessageHandler()
             : base(new HttpClientHandler())
         {
@@ -152,6 +182,12 @@ internal static class PublishedA2AModelTransport
             }
         }
 
+        /// <summary>
+        /// Builds bounded, credential-safe diagnostics from an outgoing model request body.
+        /// </summary>
+        /// <param name="request">The outgoing HTTP request.</param>
+        /// <param name="cancellationToken">Token used to cancel body inspection.</param>
+        /// <returns>A sanitized request summary.</returns>
         private static async Task<string> BuildRequestSummaryAsync(
             HttpRequestMessage request,
             CancellationToken cancellationToken)
@@ -220,6 +256,13 @@ internal static class PublishedA2AModelTransport
             }
         }
 
+        /// <summary>
+        /// Reads a bounded provider error body, restores the response content for downstream consumers,
+        /// and returns sanitized diagnostics.
+        /// </summary>
+        /// <param name="response">The provider response.</param>
+        /// <param name="cancellationToken">Token used to cancel reading.</param>
+        /// <returns>A sanitized provider error summary.</returns>
         private static async Task<string> ReadAndRestoreProviderErrorAsync(
             HttpResponseMessage response,
             CancellationToken cancellationToken)
@@ -266,6 +309,11 @@ internal static class PublishedA2AModelTransport
             return ExtractProviderError(Encoding.UTF8.GetString(bytes));
         }
 
+        /// <summary>
+        /// Extracts standard error fields from JSON or summarizes non-JSON provider text.
+        /// </summary>
+        /// <param name="text">The provider error body.</param>
+        /// <returns>A sanitized bounded error summary.</returns>
         private static string ExtractProviderError(string text)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -308,6 +356,11 @@ internal static class PublishedA2AModelTransport
             }
         }
 
+        /// <summary>
+        /// Determines whether provider error text indicates a terminal application/configuration failure.
+        /// </summary>
+        /// <param name="providerError">The sanitized provider error text.</param>
+        /// <returns><see langword="true"/> when retrying the same configuration is not useful.</returns>
         private static bool IsTerminalConfigurationFailure(string? providerError)
         {
             if (string.IsNullOrWhiteSpace(providerError))
@@ -321,6 +374,12 @@ internal static class PublishedA2AModelTransport
                    || providerError.Contains("AI application has been disabled", StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Adds a scalar JSON error field after sanitizing its value.
+        /// </summary>
+        /// <param name="fields">The diagnostic field list.</param>
+        /// <param name="error">The error JSON object.</param>
+        /// <param name="propertyName">The property name to read.</param>
         private static void AddSafeErrorField(List<string> fields, JsonElement error, string propertyName)
         {
             if (!error.TryGetProperty(propertyName, out var value)
@@ -332,6 +391,12 @@ internal static class PublishedA2AModelTransport
             fields.Add($"{propertyName}={SanitizeDiagnosticText(value.ToString())}");
         }
 
+        /// <summary>
+        /// Reads a scalar JSON diagnostic property and bounds its text.
+        /// </summary>
+        /// <param name="root">The JSON object.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The bounded value or <c>unset</c>.</returns>
         private static string GetSafeScalar(JsonElement root, string propertyName)
         {
             if (!root.TryGetProperty(propertyName, out var value)
@@ -343,6 +408,11 @@ internal static class PublishedA2AModelTransport
             return Summarize(value.ToString(), 64);
         }
 
+        /// <summary>
+        /// Removes markup, credentials, tokens, URLs, and excess whitespace from diagnostics.
+        /// </summary>
+        /// <param name="text">The raw diagnostic text.</param>
+        /// <returns>A sanitized bounded string.</returns>
         private static string SanitizeDiagnosticText(string? text)
         {
             var normalized = Regex.Replace(text ?? string.Empty, "<[^>]+>", " ");
@@ -357,6 +427,12 @@ internal static class PublishedA2AModelTransport
             return Summarize(normalized, MaxDiagnosticTextLength);
         }
 
+        /// <summary>
+        /// Replaces the api-version query parameter while preserving all other query values.
+        /// </summary>
+        /// <param name="uri">The original request URI.</param>
+        /// <param name="apiVersion">The replacement API version.</param>
+        /// <returns>The updated URI, or the original URI when no override is supplied.</returns>
         private static Uri? ReplaceApiVersion(Uri? uri, string apiVersion)
         {
             if (uri == null || string.IsNullOrWhiteSpace(apiVersion))
@@ -378,6 +454,11 @@ internal static class PublishedA2AModelTransport
             return builder.Uri;
         }
 
+        /// <summary>
+        /// Returns a route-only diagnostic representation with sensitive endpoint prefixes hidden.
+        /// </summary>
+        /// <param name="uri">The request URI.</param>
+        /// <returns>The safe host/path representation.</returns>
         private static string GetSafeRoute(Uri? uri)
         {
             if (uri == null)
@@ -397,6 +478,11 @@ internal static class PublishedA2AModelTransport
             return $"{uri.Host}{path}";
         }
 
+        /// <summary>
+        /// Extracts the api-version query value from a URI.
+        /// </summary>
+        /// <param name="uri">The request URI.</param>
+        /// <returns>The API version or <c>unset</c>.</returns>
         private static string GetApiVersion(Uri? uri)
         {
             if (uri == null)
@@ -415,6 +501,11 @@ internal static class PublishedA2AModelTransport
             return "unset";
         }
 
+        /// <summary>
+        /// Reports only the authentication mechanism shape, never its credential value.
+        /// </summary>
+        /// <param name="request">The outgoing request.</param>
+        /// <returns>The authentication scheme label.</returns>
         private static string GetAuthenticationShape(HttpRequestMessage request)
         {
             if (request.Headers.Contains("api-key"))
@@ -425,6 +516,11 @@ internal static class PublishedA2AModelTransport
             return request.Headers.Authorization?.Scheme ?? "none";
         }
 
+        /// <summary>
+        /// Extracts a provider request ID from known response headers.
+        /// </summary>
+        /// <param name="response">The provider response.</param>
+        /// <returns>The request ID or <c>unset</c>.</returns>
         private static string GetProviderRequestId(HttpResponseMessage response)
         {
             var headerNames = new[] { "x-request-id", "x-ms-request-id", "request-id" };
@@ -439,6 +535,12 @@ internal static class PublishedA2AModelTransport
             return "unset";
         }
 
+        /// <summary>
+        /// Normalizes whitespace and truncates diagnostic text to a bounded length.
+        /// </summary>
+        /// <param name="text">The text to summarize.</param>
+        /// <param name="maxLength">The maximum output length.</param>
+        /// <returns>The normalized bounded text.</returns>
         private static string Summarize(string? text, int maxLength = 240)
         {
             var normalized = (text ?? string.Empty).Replace('\r', ' ').Replace('\n', ' ').Trim();

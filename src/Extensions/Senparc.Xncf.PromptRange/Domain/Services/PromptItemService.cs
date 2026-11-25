@@ -53,6 +53,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     private readonly PromptRangeService _promptRangeService;
     // private readonly PromptResultService _promptResultService;
 
+    /// <summary>
+    /// Initializes PromptItem persistence and its PromptRange/model dependencies.
+    /// </summary>
+    /// <param name="repo">Repository for prompt-item records.</param>
+    /// <param name="serviceProvider">Dependency-injection provider used by the base service.</param>
+    /// <param name="aiModelService">Service used to resolve model metadata.</param>
+    /// <param name="promptRangeService">Service used to resolve PromptRange metadata.</param>
     public PromptItemService(
         IRepositoryBase<PromptItem> repo,
         IServiceProvider serviceProvider,
@@ -64,17 +71,23 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         _promptRangeService = promptRangeService;
     }
 
+    /// <summary>
+    /// Retrieves one prompt item directly for test or diagnostic callers.
+    /// </summary>
+    /// <param name="id">The prompt-item identifier.</param>
+    /// <returns>A task containing the matching prompt item, or the default value.</returns>
     public async Task<PromptItem> ForUnitTest(int id)
     {
         return await base.RepositoryBase.GetFirstOrDefaultObjectAsync(z => z.Id == id);
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Creates or derives a PromptItem version from a request, validating the requested
+    /// tactic/aiming branch and rejecting duplicate full-version identifiers.
     /// </summary>
-    /// <param name="request"></param>
-    /// <returns></returns>
-    /// <exception cref="NcfExceptionBase"></exception>
+    /// <param name="request">Prompt content, range, tactic, scoring, and generation options.</param>
+    /// <returns>A task containing the persisted prompt-item DTO.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the range is invalid, the request selects conflicting branches, or the generated version already exists.</exception>
     public async Task<PromptItemDto> AddPromptItemAsync(PromptItem_AddRequest request)
     {
         #region validate request dto
@@ -252,17 +265,22 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         return await this.TransEntityToDtoAsync(toSavePromptItem);
     }
 
+    /// <summary>
+    /// Builds the tactic tree rooted at the range and tactic of a prompt item.
+    /// </summary>
+    /// <param name="allPromptItems">The prompt items available for tree construction.</param>
+    /// <param name="promptItem">The prompt item whose range identifies the tree.</param>
+    /// <returns>A task containing tactic tree nodes.</returns>
     public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync(List<PromptItem> allPromptItems, PromptItem promptItem)
     {
         return await this.GenerateTacticTreeAsync(allPromptItems, promptItem.RangeName);
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Loads the score history for all scored versions in the same prompt range as the item.
     /// </summary>
-    /// <param name="promptItemId"></param>
-    /// <returns></returns>
+    /// <param name="promptItemId">The prompt-item identifier whose range history is requested.</param>
+    /// <returns>A task containing version identifiers and their average and maximum scores.</returns>
     public async Task<PromptItem_HistoryScoreResponse> GetHistoryScoreAsync(int promptItemId)
     {
         var versionHistoryList = new List<string>();
@@ -292,6 +310,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         );
     }
 
+    /// <summary>
+    /// Replaces the expected-result definition for one prompt item.
+    /// </summary>
+    /// <param name="promptItemId">The prompt-item identifier.</param>
+    /// <param name="expectedResults">The serialized expected-result definition.</param>
+    /// <returns>A task containing the updated prompt-item DTO.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the prompt item does not exist or the expected-result definition is invalid.</exception>
     public async Task<PromptItemDto> UpdateExpectedResultsAsync(int promptItemId, string expectedResults)
     {
         var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId) ??
@@ -304,6 +329,14 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         return this.Mapper.Map<PromptItemDto>(promptItem);
     }
 
+    /// <summary>
+    /// Groups scored prompt items by top-level tactic and builds chart points using either
+    /// average or maximum evaluation scores.
+    /// </summary>
+    /// <param name="promptItemId">The prompt-item identifier used to select the prompt range.</param>
+    /// <param name="isAvg">Whether average scores are used instead of maximum scores.</param>
+    /// <returns>A task containing the tactic-grouped chart response.</returns>
+    /// <exception cref="Exception">Thrown when the referenced prompt item cannot be found.</exception>
     public async Task<Statistic_TodayTacticResponse> GetLineChartDataAsync(int promptItemId, bool isAvg)
     {
         var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId) ??
@@ -348,6 +381,11 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         return resp;
     }
 
+    /// <summary>
+    /// Retrieves a prompt item and maps it to the service DTO shape.
+    /// </summary>
+    /// <param name="id">The prompt-item identifier.</param>
+    /// <returns>A task containing the prompt-item DTO.</returns>
     public async Task<PromptItemDto> GetAsync(int id)
     {
         var item = await this.GetObjectAsync(p => p.Id == id) ??
@@ -356,6 +394,12 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         return await this.TransEntityToDtoAsync(item, needRange: true);
     }
 
+    /// <summary>
+    /// Changes the draft flag for a prompt item.
+    /// </summary>
+    /// <param name="id">The prompt-item identifier.</param>
+    /// <param name="status">The new draft state.</param>
+    /// <returns>A task containing the updated prompt-item DTO.</returns>
     public async Task<PromptItemDto> DraftSwitch(int id, bool status)
     {
         var promptItem = await this.GetObjectAsync(p => p.Id == id) ??
@@ -369,15 +413,12 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Resolves a PromptRange version string and returns its item plus model/range metadata.
     /// </summary>
-    /// <param name="promptRangeVersion"></param>
-    ///Legacy comment translated to English.
-    /// <returns></returns>
-    /// <exception cref="NcfExceptionBase"></exception>
+    /// <param name="promptRangeVersion">The full PromptRange version identifier.</param>
+    /// <param name="isAvg">Whether average scoring data should be included.</param>
+    /// <returns>A task containing the resolved version response.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the version format or corresponding prompt item is invalid.</exception>
     public async Task<SenparcAI_GetByVersionResponse> GetWithVersionAsync(string promptRangeVersion, bool isAvg = true)
     {
         var promptItem = await GetBestPromptAsync(promptRangeVersion, isAvg);
@@ -398,15 +439,12 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Selects the best usable prompt item for a PromptRange version.
     /// </summary>
-    /// <param name="promptRangeVersion"></param>
-    ///Legacy comment translated to English.
-    /// <returns></returns>
-    /// <exception cref="NcfExceptionBase"></exception>
+    /// <param name="promptRangeVersion">The full PromptRange version identifier.</param>
+    /// <param name="isAvg">Whether average score selection is used.</param>
+    /// <returns>A task containing the selected prompt item.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the version cannot be resolved to a prompt item.</exception>
     public async Task<PromptItem> GetBestPromptAsync(string promptRangeVersion, bool isAvg)
     {
         PromptItem promptItem;
@@ -465,6 +503,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
 
+    /// <summary>
+    /// Maps a prompt item to its DTO and optionally loads its AI-model and prompt-range metadata.
+    /// </summary>
+    /// <param name="promptItem">The persisted prompt item to map.</param>
+    /// <param name="needModel">Whether to resolve and attach AI-model metadata.</param>
+    /// <param name="needRange">Whether to resolve and attach prompt-range metadata.</param>
+    /// <returns>A task containing the mapped DTO.</returns>
     private async Task<PromptItemDto> TransEntityToDtoAsync(PromptItem promptItem, bool needModel = true, bool needRange = true)
     {
         var promptItemDto = this.Mapper.Map<PromptItemDto>(promptItem);
@@ -513,10 +558,10 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
     /// <summary>
-    /// according toconfigurationgetmodel parameters
+    /// Builds model configuration parameters from the persisted prompt-item settings.
     /// </summary>
-    /// <param name="promptItem"></param>
-    /// <returns></returns>
+    /// <param name="promptItem">The prompt-item DTO containing generation settings.</param>
+    /// <returns>The normalized model configuration parameters.</returns>
     public PromptConfigParameter GetPromptConfigParameterFromAiSetting(PromptItemDto promptItem)
     {
         //Legacy comment translated to English.
@@ -534,10 +579,11 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Builds chat options from prompt-item generation settings and a system instruction.
     /// </summary>
-    /// <param name="promptItemDto"></param>
-    /// <param name="systemMessage"></param>
+    /// <param name="promptItemDto">The prompt-item DTO containing generation settings.</param>
+    /// <param name="systemMessage">The system instruction passed to the chat model.</param>
+    /// <returns>The configured chat options.</returns>
     public ChatOptions GetChatOptions(PromptItemDto promptItemDto, string systemMessage)
     {
         var chatOptions = new ChatOptions()
@@ -556,11 +602,11 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     #region Legacy section
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Builds a hierarchical tactic tree for all prompt items belonging to a prompt range.
     /// </summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    /// <exception cref="NcfExceptionBase"></exception>
+    /// <param name="allPromptitems">The prompt items available for tree construction.</param>
+    /// <param name="rangeName">The prompt-range name to include.</param>
+    /// <returns>A task containing root tactic nodes and their children.</returns>
     public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync(List<PromptItem> allPromptitems, string rangeName)
     {
         //Legacy comment translated to English.
@@ -650,9 +696,12 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Builds the selectable prompt-range/tactic tree used by the administration UI.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="showPromptRangeNode">Whether prompt-range root nodes are included.</param>
+    /// <param name="showTacticNode">Whether top-level tactic nodes are included.</param>
+    /// <param name="promptName">An optional exact prompt-range name filter.</param>
+    /// <returns>A task containing the generated tree list.</returns>
     public async Task<PromptItemTreeList> GetPromptRangeTreeList(bool showPromptRangeNode, bool showTacticNode, string promptName = null)
     {
         PromptItemTreeList tree = new();

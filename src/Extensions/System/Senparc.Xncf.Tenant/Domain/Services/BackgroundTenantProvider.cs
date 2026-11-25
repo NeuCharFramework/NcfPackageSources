@@ -28,11 +28,20 @@ namespace Senparc.Xncf.Tenant.Domain.Services
     {
         private readonly FullTenantInfoCache _tenantCache;
 
+        /// <summary>
+        /// Initializes the background tenant provider.
+        /// </summary>
+        /// <param name="tenantCache">Cache containing tenant records.</param>
         public BackgroundTenantProvider(FullTenantInfoCache tenantCache)
         {
             _tenantCache = tenantCache;
         }
 
+        /// <summary>
+        /// Loads enabled tenant records and converts them into matched background request contexts.
+        /// </summary>
+        /// <param name="cancellationToken">Token used to cancel cache access.</param>
+        /// <returns>Enabled tenant contexts ordered by the cache provider.</returns>
         public async Task<IReadOnlyList<RequestTenantInfo>> GetEnabledTenantsAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();

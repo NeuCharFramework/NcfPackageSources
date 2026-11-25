@@ -256,6 +256,31 @@
     padding: 0 0 12px;
 }
 
+.sandboxSessions .sandboxBoardTitleRow {
+    align-items: flex-start;
+}
+
+.sandboxSessionHeaderTools {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-width: 0;
+}
+
+.sandboxSessionSearch {
+    width: 190px;
+}
+
+.sandboxSessionFilter {
+    width: 118px;
+}
+
+.sandboxSessionHeaderTools > .el-tag {
+    flex: 0 0 auto;
+}
+
 .sandboxBoardTitleRow h2 {
     margin: 0;
     color: #273c55;
@@ -420,14 +445,48 @@
     min-width: 0;
 }
 
+.sessionIdRow {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    min-width: 0;
+}
+
+.sessionIdRowDialog {
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.sessionIdCopyBtn {
+    flex: 0 0 auto;
+    padding: 0 4px !important;
+    color: #5f87a8;
+}
+
+.sessionIdCopyBtn:hover {
+    color: #2c6078;
+}
+
 .sessionIdText {
     display: block;
+    flex: 1 1 auto;
+    min-width: 0;
     overflow: hidden;
     color: #536b82;
     font-family: monospace;
     font-size: 12px;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.sessionIdFull {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: #66798f;
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.45;
+    word-break: break-all;
 }
 
 .sessionAliasText {
@@ -455,6 +514,10 @@
 
 .sessionCardIdentity {
     min-width: 0;
+}
+
+.sessionCardSelector {
+    margin-right: 4px;
 }
 
 .sessionCardIdentity strong {
@@ -529,14 +592,6 @@
     gap: 14px;
 }
 
-.ttlSessionId {
-    overflow: hidden;
-    color: #66798f;
-    font-family: monospace;
-    font-size: 12px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
 
 .ttlMinutesInput {
     width: 180px;
@@ -565,14 +620,6 @@
     gap: 14px;
 }
 
-.aliasSessionId {
-    overflow: hidden;
-    color: #66798f;
-    font-family: monospace;
-    font-size: 12px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
 
 .aliasDialogHint {
     color: #718297;
@@ -705,5 +752,18 @@
 
     .sandboxSessions {
         padding: 12px;
+    }
+
+    .sandboxSessionHeaderTools {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .sandboxSessionSearch {
+        width: 100%;
+    }
+
+    .sandboxSessionFilter {
+        flex: 1 1 120px;
     }
 }

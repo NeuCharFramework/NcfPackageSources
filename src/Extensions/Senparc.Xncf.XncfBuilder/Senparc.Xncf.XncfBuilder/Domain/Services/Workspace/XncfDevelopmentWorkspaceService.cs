@@ -58,6 +58,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             "\\\"(?<path>[^\\\"\\r\\n]+\\.csproj)\\\"",
             RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
+        /// <summary>
+        /// Creates a sanitized source snapshot containing the solution/project closure while
+        /// excluding secrets, build output, package caches, and symbolic links.
+        /// </summary>
+        /// <param name="sourceSolutionFilePath">The source solution path.</param>
+        /// <param name="jobId">The development job identifier used for the temporary workspace.</param>
+        /// <param name="cancellationToken">Token used to cancel copying.</param>
+        /// <returns>The source root, workspace root, and copied solution path.</returns>
         internal static async Task<XncfDevelopmentWorkspaceSnapshot> CreateSnapshotAsync(
             string sourceSolutionFilePath,
             string jobId,
@@ -108,6 +116,15 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             }
         }
 
+        /// <summary>
+        /// Computes a module-level fingerprint and added/changed/removed file summary
+        /// between the target solution and isolated workspace.
+        /// </summary>
+        /// <param name="targetSolutionFilePath">The original target solution path.</param>
+        /// <param name="workspaceSolutionFilePath">The isolated workspace solution path.</param>
+        /// <param name="moduleProjectName">The full module project name.</param>
+        /// <param name="isNewModule">Whether the module was created in the workspace.</param>
+        /// <returns>The diff summary and workspace module fingerprint.</returns>
         internal static XncfDevelopmentWorkspaceDiff BuildModuleDiff(
             string targetSolutionFilePath,
             string workspaceSolutionFilePath,
@@ -140,6 +157,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
                 workspaceFingerprint);
         }
 
+        /// <summary>
+        /// Attempts to remove the temporary development workspace for a job.
+        /// Failure is intentionally ignored because the persisted job remains diagnostic evidence.
+        /// </summary>
+        /// <param name="jobId">The development job identifier.</param>
         internal static void TryDeleteWorkspace(string jobId)
         {
             if (string.IsNullOrWhiteSpace(jobId) || jobId.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)

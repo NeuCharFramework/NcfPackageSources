@@ -43,6 +43,16 @@ public sealed class NeuCharWorkflowWebhookConfig
     [JsonPropertyName("parameters")]
     public List<NeuCharWorkflowWebhookParameter> Parameters { get; set; } = new();
 
+    /// <summary>
+    /// Parses and normalizes client-supplied Webhook configuration, reusing an existing token when present.
+    /// </summary>
+    /// <param name="requestedJson">The requested configuration JSON.</param>
+    /// <param name="existingJson">Previously stored configuration JSON, if any.</param>
+    /// <param name="generateToken">Whether a missing token should be generated.</param>
+    /// <returns>A normalized Webhook configuration with bounded, unique parameters.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when JSON, access-key, method, parameter, or size constraints are invalid.
+    /// </exception>
     public static NeuCharWorkflowWebhookConfig Normalize(
         string requestedJson,
         string? existingJson = null,
@@ -74,18 +84,36 @@ public sealed class NeuCharWorkflowWebhookConfig
         };
     }
 
+    /// <summary>
+    /// Parses stored configuration without generating a new access token.
+    /// </summary>
+    /// <param name="json">The stored configuration JSON.</param>
+    /// <returns>The normalized stored configuration.</returns>
     public static NeuCharWorkflowWebhookConfig ParseStored(string json)
     {
         var config = Normalize(json, null, generateToken: false);
         return config;
     }
 
+    /// <summary>
+    /// Serializes the normalized configuration for persistent storage.
+    /// </summary>
+    /// <returns>The JSON representation of this configuration.</returns>
     public string ToJson() => JsonSerializer.Serialize(this, JsonOptions);
 
+    /// <summary>
+    /// Determines whether a request method is permitted by this configuration.
+    /// </summary>
+    /// <param name="method">The incoming HTTP method.</param>
+    /// <returns><see langword="true"/> when the configured method is unrestricted or matches.</returns>
     public bool IsMethodAllowed(string method) =>
         string.Equals(Method, "any", StringComparison.OrdinalIgnoreCase) ||
         string.Equals(Method, method, StringComparison.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// Generates a URL-safe cryptographic access token for a Webhook.
+    /// </summary>
+    /// <returns>A URL-safe token backed by 32 random bytes.</returns>
     public static string GenerateToken()
     {
         Span<byte> bytes = stackalloc byte[32];
@@ -93,6 +121,12 @@ public sealed class NeuCharWorkflowWebhookConfig
         return WebEncoders.Base64UrlEncode(bytes.ToArray());
     }
 
+    /// <summary>
+    /// Parses a JSON object and returns an empty element for blank or non-object input.
+    /// </summary>
+    /// <param name="json">The JSON text to parse.</param>
+    /// <returns>A cloned object element, or a default element when no object is present.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the text is malformed JSON.</exception>
     private static JsonElement ParseObject(string? json)
     {
         if (string.IsNullOrWhiteSpace(json))
@@ -112,6 +146,12 @@ public sealed class NeuCharWorkflowWebhookConfig
         }
     }
 
+    /// <summary>
+    /// Reads a string property from a JSON object without converting other JSON types.
+    /// </summary>
+    /// <param name="root">The object element to inspect.</param>
+    /// <param name="propertyName">The property name.</param>
+    /// <returns>The string value, or <see langword="null"/> when absent or not a string.</returns>
     private static string? GetString(JsonElement root, string propertyName)
     {
         return root.ValueKind == JsonValueKind.Object &&
@@ -121,6 +161,12 @@ public sealed class NeuCharWorkflowWebhookConfig
             : null;
     }
 
+    /// <summary>
+    /// Normalizes supported Webhook method labels to <c>any</c>, <c>get</c>, or <c>post</c>.
+    /// </summary>
+    /// <param name="value">The requested method label.</param>
+    /// <returns>The normalized method.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the method is unsupported.</exception>
     private static string NormalizeMethod(string? value) => value?.Trim().ToLowerInvariant() switch
     {
         null or "" or "any" or "*" => "any",
@@ -129,6 +175,12 @@ public sealed class NeuCharWorkflowWebhookConfig
         _ => throw new InvalidOperationException("The Webhook method must be GET, POST, or unrestricted.")
     };
 
+    /// <summary>
+    /// Parses bounded, unique Webhook parameter definitions from a configuration object.
+    /// </summary>
+    /// <param name="root">The parsed configuration object.</param>
+    /// <returns>The normalized parameter list.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when a parameter violates naming, uniqueness, or size rules.</exception>
     private static List<NeuCharWorkflowWebhookParameter> ParseParameters(JsonElement root)
     {
         var result = new List<NeuCharWorkflowWebhookParameter>();
@@ -179,8 +231,17 @@ public sealed class NeuCharWorkflowWebhookConfig
 
 public sealed class NeuCharWorkflowWebhookParameter
 {
+    /// <summary>
+    /// Initializes an empty parameter for JSON materialization.
+    /// </summary>
     public NeuCharWorkflowWebhookParameter() { }
 
+    /// <summary>
+    /// Initializes one normalized Webhook parameter definition.
+    /// </summary>
+    /// <param name="name">The parameter name.</param>
+    /// <param name="required">Whether the parameter is required.</param>
+    /// <param name="description">The optional parameter description.</param>
     public NeuCharWorkflowWebhookParameter(string name, bool required, string description)
     {
         Name = name;

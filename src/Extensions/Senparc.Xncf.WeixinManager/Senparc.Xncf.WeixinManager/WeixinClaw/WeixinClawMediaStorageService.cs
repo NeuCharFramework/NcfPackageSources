@@ -30,6 +30,10 @@ public sealed class WeixinClawMediaStorageService
 {
     private readonly string _rootPath;
 
+    /// <summary>
+    /// Initializes media storage below the application data directory.
+    /// </summary>
+    /// <param name="environment">Host environment used to resolve the storage root.</param>
     public WeixinClawMediaStorageService(IHostEnvironment environment)
     {
         _rootPath = Path.Combine(
@@ -38,6 +42,17 @@ public sealed class WeixinClawMediaStorageService
             "WeixinClawMedia");
     }
 
+    /// <summary>
+    /// Saves inbound media under an account-scoped sanitized storage key.
+    /// </summary>
+    /// <param name="accountId">The Weixin account identifier.</param>
+    /// <param name="identity">The message/media identity used in the file name.</param>
+    /// <param name="index">The media item index.</param>
+    /// <param name="fileName">The original file name used for extension preservation.</param>
+    /// <param name="bytes">The media content.</param>
+    /// <param name="cancellationToken">Token used to cancel writing.</param>
+    /// <returns>The relative storage key.</returns>
+    /// <exception cref="ArgumentException">Thrown when the content is empty.</exception>
     public async Task<string> SaveAsync(
         int accountId,
         string identity,
@@ -74,6 +89,12 @@ public sealed class WeixinClawMediaStorageService
         return storageKey;
     }
 
+    /// <summary>
+    /// Resolves an existing storage key to a file path without allowing path traversal.
+    /// </summary>
+    /// <param name="storageKey">The relative storage key.</param>
+    /// <param name="fullPath">Receives the resolved existing file path.</param>
+    /// <returns><see langword="true"/> when the key is valid and the file exists.</returns>
     public bool TryGetFile(
         string storageKey,
         out string fullPath)
