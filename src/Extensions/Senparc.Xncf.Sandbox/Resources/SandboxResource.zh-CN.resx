@@ -102,119 +102,131 @@
   <data name="Page.Random" xml:space="preserve">
     <value>随机</value>
   </data>
-  <data name="Frontend.001" xml:space="preserve"><value>扩展模块</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>面板</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>沙箱面板</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>环境准备</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>沙箱运行概览</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>已登记会话</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>运行中</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>交互式会话</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>刷新</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>全部 Function</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>环境文档</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>会话概览</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>全部会话</value></data>
-  <data name="Frontend.014" xml:space="preserve"><value>已登记</value></data>
-  <data name="Frontend.015" xml:space="preserve"><value>当前可用</value></data>
-  <data name="Frontend.016" xml:space="preserve"><value>Notebook / 预览</value></data>
-  <data name="Frontend.017" xml:space="preserve"><value>待处理</value></data>
-  <data name="Frontend.018" xml:space="preserve"><value>失败或已过期</value></data>
-  <data name="Frontend.019" xml:space="preserve"><value>Function 快捷操作</value></data>
-  <data name="Frontend.020" xml:space="preserve"><value>打开模块 Function</value></data>
-  <data name="Frontend.021" xml:space="preserve"><value>创建沙箱</value></data>
-  <data name="Frontend.022" xml:space="preserve"><value>执行代码</value></data>
-  <data name="Frontend.023" xml:space="preserve"><value>销毁沙箱</value></data>
-  <data name="Frontend.024" xml:space="preserve"><value>运行环境</value></data>
-  <data name="Frontend.025" xml:space="preserve"><value>生命周期</value></data>
-  <data name="Frontend.026" xml:space="preserve"><value>TTL 自动回收</value></data>
-  <data name="Frontend.027" xml:space="preserve"><value>检查环境</value></data>
-  <data name="Frontend.028" xml:space="preserve"><value>沙箱会话</value></data>
-  <data name="Frontend.029" xml:space="preserve"><value>模板</value></data>
-  <data name="Frontend.030" xml:space="preserve"><value>别名</value></data>
-  <data name="Frontend.031" xml:space="preserve"><value>运行时</value></data>
-  <data name="Frontend.032" xml:space="preserve"><value>状态</value></data>
-  <data name="Frontend.033" xml:space="preserve"><value>端口</value></data>
-  <data name="Frontend.034" xml:space="preserve"><value>附加端口</value></data>
-  <data name="Frontend.035" xml:space="preserve"><value>访问</value></data>
-  <data name="Frontend.036" xml:space="preserve"><value>打开交互式会话</value></data>
-  <data name="Frontend.037" xml:space="preserve"><value>打开</value></data>
-  <data name="Frontend.038" xml:space="preserve"><value>操作</value></data>
-  <data name="Frontend.039" xml:space="preserve"><value>修改别名</value></data>
-  <data name="Frontend.040" xml:space="preserve"><value>设置别名</value></data>
-  <data name="Frontend.041" xml:space="preserve"><value>延长或修改 TTL</value></data>
-  <data name="Frontend.042" xml:space="preserve"><value>销毁运行环境</value></data>
-  <data name="Frontend.043" xml:space="preserve"><value>永久删除会话记录</value></data>
-  <data name="Frontend.044" xml:space="preserve"><value>会话别名</value></data>
-  <data name="Frontend.045" xml:space="preserve"><value>留空表示清除别名</value></data>
-  <data name="Frontend.046" xml:space="preserve"><value>取消</value></data>
-  <data name="Frontend.047" xml:space="preserve"><value>保存</value></data>
-  <data name="Frontend.048" xml:space="preserve"><value>修改 TTL</value></data>
-  <data name="Frontend.049" xml:space="preserve"><value>定时回收</value></data>
-  <data name="Frontend.050" xml:space="preserve"><value>永久保持</value></data>
-  <data name="Frontend.051" xml:space="preserve"><value>本机检测</value></data>
-  <data name="Frontend.052" xml:space="preserve"><value>重新检测</value></data>
-  <data name="Frontend.053" xml:space="preserve"><value>可用</value></data>
-  <data name="Frontend.054" xml:space="preserve"><value>不可用</value></data>
-  <data name="Frontend.055" xml:space="preserve"><value>镜像仓库前缀</value></data>
-  <data name="Frontend.056" xml:space="preserve"><value>未配置（使用公开默认镜像；详见文档）</value></data>
-  <data name="Frontend.057" xml:space="preserve"><value>手动配置清单（摘要）</value></data>
-  <data name="Frontend.058" xml:space="preserve"><value>进入沙箱面板</value></data>
-  <data name="Frontend.059" xml:space="preserve"><value>文档链接：</value></data>
+  <data name="Frontend.Sandbox.ExtensionModules" xml:space="preserve"><value>扩展模块</value></data>
+  <data name="Frontend.Sandbox.Panel" xml:space="preserve"><value>面板</value></data>
+  <data name="Frontend.Sandbox.SandboxPanel" xml:space="preserve"><value>沙箱面板</value></data>
+  <data name="Frontend.Sandbox.EnvironmentSetup" xml:space="preserve"><value>环境准备</value></data>
+  <data name="Frontend.Sandbox.SandboxRuntimeOverview" xml:space="preserve"><value>沙箱运行概览</value></data>
+  <data name="Frontend.Sandbox.RegisteredSessions" xml:space="preserve"><value>已登记会话</value></data>
+  <data name="Frontend.Sandbox.Running" xml:space="preserve"><value>运行中</value></data>
+  <data name="Frontend.Sandbox.InteractiveSessions" xml:space="preserve"><value>交互式会话</value></data>
+  <data name="Frontend.Sandbox.Refresh" xml:space="preserve"><value>刷新</value></data>
+  <data name="Frontend.Sandbox.AllFunctions" xml:space="preserve"><value>全部 Function</value></data>
+  <data name="Frontend.Sandbox.EnvironmentDocs" xml:space="preserve"><value>环境文档</value></data>
+  <data name="Frontend.Sandbox.SessionOverview" xml:space="preserve"><value>会话概览</value></data>
+  <data name="Frontend.Sandbox.AllSessions" xml:space="preserve"><value>全部会话</value></data>
+  <data name="Frontend.Sandbox.Registered" xml:space="preserve"><value>已登记</value></data>
+  <data name="Frontend.Sandbox.CurrentlyAvailable" xml:space="preserve"><value>当前可用</value></data>
+  <data name="Frontend.Sandbox.NotebookPreview" xml:space="preserve"><value>Notebook / 预览</value></data>
+  <data name="Frontend.Sandbox.NeedsAttention" xml:space="preserve"><value>待处理</value></data>
+  <data name="Frontend.Sandbox.FailedOrExpired" xml:space="preserve"><value>失败或已过期</value></data>
+  <data name="Frontend.Sandbox.FunctionQuickActions" xml:space="preserve"><value>Function 快捷操作</value></data>
+  <data name="Frontend.Sandbox.OpenModuleFunction" xml:space="preserve"><value>打开模块 Function</value></data>
+  <data name="Frontend.Sandbox.CreateSandbox" xml:space="preserve"><value>创建沙箱</value></data>
+  <data name="Frontend.Sandbox.ExecuteCode" xml:space="preserve"><value>执行代码</value></data>
+  <data name="Frontend.Sandbox.DestroySandbox" xml:space="preserve"><value>销毁沙箱</value></data>
+  <data name="Frontend.Sandbox.RuntimeEnvironment" xml:space="preserve"><value>运行环境</value></data>
+  <data name="Frontend.Sandbox.Lifecycle" xml:space="preserve"><value>生命周期</value></data>
+  <data name="Frontend.Sandbox.AutomaticTTLCleanup" xml:space="preserve"><value>TTL 自动回收</value></data>
+  <data name="Frontend.Sandbox.CheckEnvironment" xml:space="preserve"><value>检查环境</value></data>
+  <data name="Frontend.Sandbox.SandboxSessions" xml:space="preserve"><value>沙箱会话</value></data>
+  <data name="Frontend.Sandbox.Template" xml:space="preserve"><value>模板</value></data>
+  <data name="Frontend.Sandbox.SessionId" xml:space="preserve"><value>会话 ID</value></data>
+  <data name="Frontend.Sandbox.CopySessionId" xml:space="preserve"><value>复制会话 ID</value></data>
+  <data name="Frontend.Sandbox.SessionIdCopied" xml:space="preserve"><value>已复制完整会话 ID</value></data>
+  <data name="Frontend.Sandbox.FailedToCopySessionId" xml:space="preserve"><value>复制会话 ID 失败，请手动选择后复制</value></data>
+  <data name="Frontend.Sandbox.Alias" xml:space="preserve"><value>别名</value></data>
+  <data name="Frontend.Sandbox.Runtime" xml:space="preserve"><value>运行时</value></data>
+  <data name="Frontend.Sandbox.Status" xml:space="preserve"><value>状态</value></data>
+  <data name="Frontend.Sandbox.Port" xml:space="preserve"><value>端口</value></data>
+  <data name="Frontend.Sandbox.AdditionalPorts" xml:space="preserve"><value>附加端口</value></data>
+  <data name="Frontend.Sandbox.Access" xml:space="preserve"><value>访问</value></data>
+  <data name="Frontend.Sandbox.OpenInteractiveSession" xml:space="preserve"><value>打开交互式会话</value></data>
+  <data name="Frontend.Sandbox.Open" xml:space="preserve"><value>打开</value></data>
+  <data name="Frontend.Sandbox.Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="Frontend.Sandbox.EditAlias" xml:space="preserve"><value>修改别名</value></data>
+  <data name="Frontend.Sandbox.SetAlias" xml:space="preserve"><value>设置别名</value></data>
+  <data name="Frontend.Sandbox.ExtendOrEditTTL" xml:space="preserve"><value>延长或修改 TTL</value></data>
+  <data name="Frontend.Sandbox.DestroyRuntime" xml:space="preserve"><value>销毁运行环境</value></data>
+  <data name="Frontend.Sandbox.PermanentlyDeleteSessionRecord" xml:space="preserve"><value>永久删除会话记录</value></data>
+  <data name="Frontend.Sandbox.SessionAlias" xml:space="preserve"><value>会话别名</value></data>
+  <data name="Frontend.Sandbox.LeaveEmptyToClearTheAlias" xml:space="preserve"><value>留空表示清除别名</value></data>
+  <data name="Frontend.Sandbox.Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Frontend.Sandbox.Save" xml:space="preserve"><value>保存</value></data>
+  <data name="Frontend.Sandbox.EditTTL" xml:space="preserve"><value>修改 TTL</value></data>
+  <data name="Frontend.Sandbox.ScheduledCleanup" xml:space="preserve"><value>定时回收</value></data>
+  <data name="Frontend.Sandbox.KeepForever" xml:space="preserve"><value>永久保持</value></data>
+  <data name="Frontend.Sandbox.LocalCheck" xml:space="preserve"><value>本机检测</value></data>
+  <data name="Frontend.Sandbox.CheckAgain" xml:space="preserve"><value>重新检测</value></data>
+  <data name="Frontend.Sandbox.Available" xml:space="preserve"><value>可用</value></data>
+  <data name="Frontend.Sandbox.Unavailable" xml:space="preserve"><value>不可用</value></data>
+  <data name="Frontend.Sandbox.ImageRegistryPrefix" xml:space="preserve"><value>镜像仓库前缀</value></data>
+  <data name="Frontend.Sandbox.NotConfiguredPublicDefaultImagesAreUsedSeeDocumentation" xml:space="preserve"><value>未配置（使用公开默认镜像；详见文档）</value></data>
+  <data name="Frontend.Sandbox.ManualConfigurationChecklistSummary" xml:space="preserve"><value>手动配置清单（摘要）</value></data>
+  <data name="Frontend.Sandbox.OpenSandboxPanel" xml:space="preserve"><value>进入沙箱面板</value></data>
+  <data name="Frontend.Sandbox.Documentation" xml:space="preserve"><value>文档链接：</value></data>
 
 
-  <data name="Frontend.060" xml:space="preserve"><value>Docker 可用性、镜像前缀和部署说明统一在环境准备页检查。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.061" xml:space="preserve"><value>不会</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.062" xml:space="preserve"><value>中配置前缀或覆盖项（说明见文档）。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.063" xml:space="preserve"><value>使用模块已注册的执行入口，参数校验和结果日志保持与模块 Function 页面一致。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.064" xml:space="preserve"><value>保存后从当前时刻重新计算，到期由后台自动销毁。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.065" xml:space="preserve"><value>创建</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.066" xml:space="preserve"><value>在 Exec 模板会话中提交短任务代码。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.067" xml:space="preserve"><value>在运行 NCF 的同一台机器上安装并启动 Docker（或兼容 CLI）。模块</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.068" xml:space="preserve"><value>如需内网仓库，可在宿主</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.069" xml:space="preserve"><value>执行</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.070" xml:space="preserve"><value>按官方文档预拉所需镜像；具体镜像名称与版本以文档为准。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.071" xml:space="preserve"><value>检测通过后，打开模块 Function「创建沙箱」，在模板下拉中选择 Python Exec，执行即可；无需在命令行输入模板名。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.072" xml:space="preserve"><value>状态：</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.073" xml:space="preserve"><value>的</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.074" xml:space="preserve"><value>自动安装 Docker。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.075" xml:space="preserve"><value>该会话不会被 TTL 扫描自动销毁，须由管理员手动销毁。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.076" xml:space="preserve"><value>输入 SessionId，停止并清理指定会话。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.077" xml:space="preserve"><value>选择运行模板与运行时，创建独立会话。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.078" xml:space="preserve"><value>通过站点反向代理访问交互式会话，访问链接不暴露容器 token。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.079" xml:space="preserve"><value>销毁</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.080" xml:space="preserve"><value>镜像仓库前缀：</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.081" xml:space="preserve"><value>集中查看会话状态，并通过模块 Function 创建、执行和清理隔离运行环境。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.082" xml:space="preserve"><value>状态更新于 {0}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.083" xml:space="preserve"><value>{0} 个会话</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.084" xml:space="preserve"><value>暂无沙箱会话</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.085" xml:space="preserve"><value>别名仅用于在列表、Function 结果与日志中识别会话；不影响运行环境。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.086" xml:space="preserve"><value>创建中</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.087" xml:space="preserve"><value>停止中</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.088" xml:space="preserve"><value>已停止</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.089" xml:space="preserve"><value>失败</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.090" xml:space="preserve"><value>已过期</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.091" xml:space="preserve"><value>未知({0})</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.092" xml:space="preserve"><value>Docker 检测通过，可以继续创建沙箱。</value></data>
-  <data name="Frontend.093" xml:space="preserve"><value>Docker 尚未就绪：请先按文档完成手动安装与镜像预拉。</value></data>
-  <data name="Frontend.094" xml:space="preserve"><value>请在运行 NCF 的同一台机器上安装并启动 Docker（或兼容 CLI）。模块不会自动安装 Docker。</value></data>
-  <data name="Frontend.095" xml:space="preserve"><value>如需内网仓库，请在宿主 appsettings.json 的 SenparcXncfSandbox:Images 中配置前缀或覆盖项（说明见文档）。</value></data>
-  <data name="Frontend.096" xml:space="preserve"><value>等待回收</value></data>
-  <data name="Frontend.097" xml:space="preserve"><value>刷新沙箱会话失败，请检查服务状态。</value></data>
-  <data name="Frontend.098" xml:space="preserve"><value>别名已更新。</value></data>
-  <data name="Frontend.099" xml:space="preserve"><value>别名已清除。</value></data>
-  <data name="Frontend.100" xml:space="preserve"><value>更新别名失败，请检查会话状态。</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>已设为永久保持。</value></data>
-  <data name="Frontend.102" xml:space="preserve"><value>TTL 已更新。</value></data>
-  <data name="Frontend.103" xml:space="preserve"><value>更新 TTL 失败，请检查会话状态和 TTL 设置。</value></data>
-  <data name="Frontend.104" xml:space="preserve"><value>销毁后将停止并删除对应运行环境，是否继续？</value></data>
-  <data name="Frontend.105" xml:space="preserve"><value>销毁沙箱</value></data>
-  <data name="Frontend.106" xml:space="preserve"><value>沙箱会话已销毁。</value></data>
-  <data name="Frontend.107" xml:space="preserve"><value>销毁沙箱会话失败，请检查服务日志。</value></data>
-  <data name="Frontend.108" xml:space="preserve"><value>该操作将永久删除会话记录，且无法恢复。请确认运行环境已经销毁，是否继续？</value></data>
-  <data name="Frontend.109" xml:space="preserve"><value>删除会话记录</value></data>
-  <data name="Frontend.110" xml:space="preserve"><value>沙箱会话记录已删除。</value></data>
-  <data name="Frontend.111" xml:space="preserve"><value>删除会话记录失败，请先销毁运行环境或检查服务日志。</value></data>
+  <data name="Frontend.Sandbox.CheckDockerAvailabilityImagePrefixesAndDeploymentNotesOnTheEnvironmentSetup" xml:space="preserve"><value>Docker 可用性、镜像前缀和部署说明统一在环境准备页检查。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.No" xml:space="preserve"><value>不会</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.ConfigurePrefixesOrOverridesHereSeeTheDocumentation" xml:space="preserve"><value>中配置前缀或覆盖项（说明见文档）。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.UsesTheExecutionEntryRegisteredByTheModuleParameterValidationAndResult" xml:space="preserve"><value>使用模块已注册的执行入口，参数校验和结果日志保持与模块 Function 页面一致。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.RecalculatesFromTheCurrentTimeAfterSavingAndDestroysTheSessionAutomatically" xml:space="preserve"><value>保存后从当前时刻重新计算，到期由后台自动销毁。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.Create" xml:space="preserve"><value>创建</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.SubmitShortTaskCodeInAnExecTemplateSession" xml:space="preserve"><value>在 Exec 模板会话中提交短任务代码。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.InstallAndStartDockerOrACompatibleCLIOnTheSameMachine" xml:space="preserve"><value>在运行 NCF 的同一台机器上安装并启动 Docker（或兼容 CLI）。模块</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.ForAnInternalRegistryConfigureItOnTheHost" xml:space="preserve"><value>如需内网仓库，可在宿主</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.Execute" xml:space="preserve"><value>执行</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.PrePullTheRequiredImagesAccordingToTheOfficialDocumentationUseThe" xml:space="preserve"><value>按官方文档预拉所需镜像；具体镜像名称与版本以文档为准。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.AfterTheCheckPassesOpenTheModuleFunctionCreateSandboxChoosePython" xml:space="preserve"><value>检测通过后，打开模块 Function「创建沙箱」，在模板下拉中选择 Python Exec，执行即可；无需在命令行输入模板名。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.StatusLabel" xml:space="preserve"><value>状态：</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.Of" xml:space="preserve"><value>的</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.InstallDockerAutomatically" xml:space="preserve"><value>自动安装 Docker。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.ThisSessionIsNotDestroyedByTheTTLScanAndMustBe" xml:space="preserve"><value>该会话不会被 TTL 扫描自动销毁，须由管理员手动销毁。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.EnterASessionIdToStopAndCleanUpTheSpecifiedSession" xml:space="preserve"><value>输入 SessionId，停止并清理指定会话。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.ChooseAnExecutionTemplateAndRuntimeToCreateAnIsolatedSession" xml:space="preserve"><value>选择运行模板与运行时，创建独立会话。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.AccessInteractiveSessionsThroughTheSiteReverseProxyLinksDoNotExpose" xml:space="preserve"><value>通过站点反向代理访问交互式会话，访问链接不暴露容器 token。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.Destroy" xml:space="preserve"><value>销毁</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.ImageRegistryPrefixLabel" xml:space="preserve"><value>镜像仓库前缀：</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.ReviewSessionStatusInOnePlaceAndCreateExecuteAndCleanIsolated" xml:space="preserve"><value>集中查看会话状态，并通过模块 Function 创建、执行和清理隔离运行环境。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.StatusUpdatedValue" xml:space="preserve"><value>状态更新于 {0}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.ValueSessions" xml:space="preserve"><value>{0} 个会话</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.NoSandboxSessions" xml:space="preserve"><value>暂无沙箱会话</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.SearchSessions" xml:space="preserve"><value>搜索会话 ID、别名或模板</value></data>
+  <data name="Frontend.Sandbox.AllStatuses" xml:space="preserve"><value>全部状态</value></data>
+  <data name="Frontend.Sandbox.AllTemplates" xml:space="preserve"><value>全部模板</value></data>
+  <data name="Frontend.Sandbox.BulkDelete" xml:space="preserve"><value>批量删除</value></data>
+  <data name="Frontend.Sandbox.SelectDeletable" xml:space="preserve"><value>选择可删除项</value></data>
+  <data name="Frontend.Sandbox.BulkDeleteConfirm" xml:space="preserve"><value>将永久删除选中的 {0} 条可删除会话记录，是否继续？</value></data>
+  <data name="Frontend.Sandbox.BulkDeleteCompleted" xml:space="preserve"><value>批量删除完成：删除 {0} 条，跳过 {1} 条。</value></data>
+  <data name="Frontend.Sandbox.FailedToBulkDelete" xml:space="preserve"><value>批量删除失败，请检查服务日志。</value></data>
+  <data name="Frontend.Sandbox.AliasesIdentifySessionsInListsFunctionResultsAndLogsTheyDoNot" xml:space="preserve"><value>别名仅用于在列表、Function 结果与日志中识别会话；不影响运行环境。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.Creating" xml:space="preserve"><value>创建中</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.Stopping" xml:space="preserve"><value>停止中</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.Stopped" xml:space="preserve"><value>已停止</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.Failed" xml:space="preserve"><value>失败</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.Expired" xml:space="preserve"><value>已过期</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.UnknownValue" xml:space="preserve"><value>未知({0})</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.Sandbox.DockerIsReadyYouCanContinueCreatingSandboxes" xml:space="preserve"><value>Docker 检测通过，可以继续创建沙箱。</value></data>
+  <data name="Frontend.Sandbox.DockerIsNotReadyCompleteTheManualInstallationAndPrePullThe" xml:space="preserve"><value>Docker 尚未就绪：请先按文档完成手动安装与镜像预拉。</value></data>
+  <data name="Frontend.Sandbox.InstallAndStartDockerOrACompatibleCLIOnTheSameMachineAlternate" xml:space="preserve"><value>请在运行 NCF 的同一台机器上安装并启动 Docker（或兼容 CLI）。模块不会自动安装 Docker。</value></data>
+  <data name="Frontend.Sandbox.ForAnInternalRegistryConfigureThePrefixOrOverridesInSenparcXncfSandboxImages" xml:space="preserve"><value>如需内网仓库，请在宿主 appsettings.json 的 SenparcXncfSandbox:Images 中配置前缀或覆盖项（说明见文档）。</value></data>
+  <data name="Frontend.Sandbox.WaitingForCleanup" xml:space="preserve"><value>等待回收</value></data>
+  <data name="Frontend.Sandbox.FailedToRefreshSandboxSessionsCheckTheServiceStatus" xml:space="preserve"><value>刷新沙箱会话失败，请检查服务状态。</value></data>
+  <data name="Frontend.Sandbox.AliasUpdated" xml:space="preserve"><value>别名已更新。</value></data>
+  <data name="Frontend.Sandbox.AliasCleared" xml:space="preserve"><value>别名已清除。</value></data>
+  <data name="Frontend.Sandbox.FailedToUpdateTheAliasCheckTheSessionStatus" xml:space="preserve"><value>更新别名失败，请检查会话状态。</value></data>
+  <data name="Frontend.Sandbox.SetToKeepPermanently" xml:space="preserve"><value>已设为永久保持。</value></data>
+  <data name="Frontend.Sandbox.TTLUpdated" xml:space="preserve"><value>TTL 已更新。</value></data>
+  <data name="Frontend.Sandbox.FailedToUpdateTTLCheckTheSessionStatusAndTTLSetting" xml:space="preserve"><value>更新 TTL 失败，请检查会话状态和 TTL 设置。</value></data>
+  <data name="Frontend.Sandbox.TheEnvironmentWillBeStoppedAndDeletedAfterDestructionContinue" xml:space="preserve"><value>销毁后将停止并删除对应运行环境，是否继续？</value></data>
+  <data name="Frontend.Sandbox.DestroySandboxAlternate" xml:space="preserve"><value>销毁沙箱</value></data>
+  <data name="Frontend.Sandbox.SandboxSessionDestroyed" xml:space="preserve"><value>沙箱会话已销毁。</value></data>
+  <data name="Frontend.Sandbox.FailedToDestroyTheSandboxSessionCheckTheServiceLogs" xml:space="preserve"><value>销毁沙箱会话失败，请检查服务日志。</value></data>
+  <data name="Frontend.Sandbox.ThisPermanentlyDeletesTheSessionRecordAndCannotBeUndoneConfirmThat" xml:space="preserve"><value>该操作将永久删除会话记录，且无法恢复。请确认运行环境已经销毁，是否继续？</value></data>
+  <data name="Frontend.Sandbox.DeleteSessionRecord" xml:space="preserve"><value>删除会话记录</value></data>
+  <data name="Frontend.Sandbox.SandboxSessionRecordDeleted" xml:space="preserve"><value>沙箱会话记录已删除。</value></data>
+  <data name="Frontend.Sandbox.FailedToDeleteTheSessionRecordDestroyTheRuntimeEnvironmentFirstOr" xml:space="preserve"><value>删除会话记录失败，请先销毁运行环境或检查服务日志。</value></data>
   <data name="Function.Sandbox.List.Name" xml:space="preserve"><value>沙箱列表</value></data>
   <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>查看最近沙箱会话。</value></data>
   <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>沙箱状态</value></data>
@@ -257,24 +269,24 @@
   <data name="Parameter.Sandbox.SessionId.Help" xml:space="preserve"><value>必须是正在运行的 JupyterLab 会话标识。</value></data>
   <data name="Parameter.Sandbox.MaxBytes" xml:space="preserve"><value>读取上限（字节）</value></data>
   <data name="Parameter.Sandbox.MaxBytes.Help" xml:space="preserve"><value>留空或 0 使用系统默认上限。</value></data>
-  <data name="Frontend.112" xml:space="preserve"><value>短任务执行 Python（Docker）</value></data>
-  <data name="Frontend.113" xml:space="preserve"><value>短任务执行 C#（Docker SDK 镜像）</value></data>
-  <data name="Frontend.114" xml:space="preserve"><value>交互式 Python Notebook（较耗内存）</value></data>
-  <data name="Frontend.115" xml:space="preserve"><value>交互式 C# Notebook（需先构建/配置镜像）</value></data>
-  <data name="Frontend.116" xml:space="preserve"><value>需要本机 Docker</value></data>
-  <data name="Frontend.117" xml:space="preserve"><value>一期占位，尚未可用</value></data>
+  <data name="Frontend.Sandbox.ShortPythonTaskDocker" xml:space="preserve"><value>短任务执行 Python（Docker）</value></data>
+  <data name="Frontend.Sandbox.ShortCTaskDockerSDKImage" xml:space="preserve"><value>短任务执行 C#（Docker SDK 镜像）</value></data>
+  <data name="Frontend.Sandbox.InteractivePythonNotebookMemoryIntensive" xml:space="preserve"><value>交互式 Python Notebook（较耗内存）</value></data>
+  <data name="Frontend.Sandbox.InteractiveCNotebookImageMustBeBuiltConfiguredFirst" xml:space="preserve"><value>交互式 C# Notebook（需先构建/配置镜像）</value></data>
+  <data name="Frontend.Sandbox.RequiresLocalDocker" xml:space="preserve"><value>需要本机 Docker</value></data>
+  <data name="Frontend.Sandbox.PlaceholderForTheFirstReleaseNotAvailableYet" xml:space="preserve"><value>一期占位，尚未可用</value></data>
   <data name="Function.Sandbox.LabUploadFiles.Name" xml:space="preserve"><value>批量上传 Lab 文件</value></data>
   <data name="Function.Sandbox.LabUploadFiles.Description" xml:space="preserve"><value>把多个已上传文件以流方式写入运行中的持久化 JupyterLab 工作区。</value></data>
-  <data name="Frontend.118" xml:space="preserve"><value>代码</value></data>
-  <data name="Frontend.119" xml:space="preserve"><value>短任务源码。Python 示例：print('hello from NCF Sandbox')；C# 示例：Console.WriteLine("hello from NCF Sandbox");（C# 字符串须用双引号）</value></data>
-  <data name="Frontend.120" xml:space="preserve"><value>命令</value></data>
-  <data name="Frontend.121" xml:space="preserve"><value>在 Lab 容器内通过 /bin/sh -lc 执行的命令；工作目录限制在 Lab 工作区</value></data>
-  <data name="Frontend.122" xml:space="preserve"><value>工作目录</value></data>
-  <data name="Frontend.123" xml:space="preserve"><value>相对于 Lab 工作区的目录，留空表示工作区根目录</value></data>
-  <data name="Frontend.124" xml:space="preserve"><value>超时（秒）</value></data>
-  <data name="Frontend.125" xml:space="preserve"><value>单次命令最长执行时间，默认 30 秒，最多 120 秒</value></data>
-  <data name="Frontend.126" xml:space="preserve"><value>标准输入</value></data>
-  <data name="Frontend.127" xml:space="preserve"><value>可选；填写后命令以 docker exec -i 执行，该内容会逐行写入程序 stdin，最长 32768 个字符</value></data>
+  <data name="Frontend.Sandbox.Code" xml:space="preserve"><value>代码</value></data>
+  <data name="Frontend.Sandbox.ShortTaskSourceCodePythonExamplePrintHelloFromNCFSandboxC" xml:space="preserve"><value>短任务源码。Python 示例：print('hello from NCF Sandbox')；C# 示例：Console.WriteLine("hello from NCF Sandbox");（C# 字符串须用双引号）</value></data>
+  <data name="Frontend.Sandbox.Command" xml:space="preserve"><value>命令</value></data>
+  <data name="Frontend.Sandbox.CommandExecutedThroughBinShLcInsideTheLabContainerTheWorking" xml:space="preserve"><value>在 Lab 容器内通过 /bin/sh -lc 执行的命令；工作目录限制在 Lab 工作区</value></data>
+  <data name="Frontend.Sandbox.WorkingDirectory" xml:space="preserve"><value>工作目录</value></data>
+  <data name="Frontend.Sandbox.DirectoryRelativeToTheLabWorkspaceLeaveEmptyForTheWorkspaceRoot" xml:space="preserve"><value>相对于 Lab 工作区的目录，留空表示工作区根目录</value></data>
+  <data name="Frontend.Sandbox.TimeoutSeconds" xml:space="preserve"><value>超时（秒）</value></data>
+  <data name="Frontend.Sandbox.MaximumDurationOfOneCommand30SecondsByDefaultAnd120Seconds" xml:space="preserve"><value>单次命令最长执行时间，默认 30 秒，最多 120 秒</value></data>
+  <data name="Frontend.Sandbox.StandardInput" xml:space="preserve"><value>标准输入</value></data>
+  <data name="Frontend.Sandbox.OptionalWhenProvidedTheCommandRunsWithDockerExecIAndThe" xml:space="preserve"><value>可选；填写后命令以 docker exec -i 执行，该内容会逐行写入程序 stdin，最长 32768 个字符</value></data>
   <data name="Parameter.Sandbox.RelativePath" xml:space="preserve"><value>工作区文件路径</value></data>
   <data name="Parameter.Sandbox.RelativePath.Help" xml:space="preserve"><value>只能填写工作区内的相对路径，例如 data/input.json。</value></data>
   <data name="Parameter.Sandbox.Base64" xml:space="preserve"><value>Base64 内容</value></data>
@@ -299,6 +311,6 @@
   <data name="Parameter.Sandbox.MaxItems.Help" xml:space="preserve"><value>留空或 0 使用系统默认上限。</value></data>
   <data name="Parameter.Sandbox.NotebookPath" xml:space="preserve"><value>工作区文件路径</value></data>
   <data name="Parameter.Sandbox.NotebookPath.Help" xml:space="preserve"><value>必须以 .ipynb 结尾，例如 notebooks/demo.ipynb。</value></data>
-  <data name="Frontend.220" xml:space="preserve"><value>标准 Python 3 内核</value></data>
-  <data name="Frontend.221" xml:space="preserve"><value>dotnet-interactive C# 内核（需 C# Jupyter 镜像）。</value></data>
+  <data name="Frontend.Sandbox.StandardPythonThreeKernel" xml:space="preserve"><value>标准 Python 3 内核</value></data>
+  <data name="Frontend.Sandbox.DotnetInteractiveCKernelACJupyterImageIsRequired" xml:space="preserve"><value>dotnet-interactive C# 内核（需 C# Jupyter 镜像）。</value></data>
 </root>

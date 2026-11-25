@@ -28,6 +28,10 @@ namespace Senparc.Ncf.Service
         //private INcfDbData _ncfDbData;
 
 
+        /// <summary>
+        /// Disables automatic change detection and enables NCF manual change tracking.
+        /// </summary>
+        /// <param name="serviceData">The service database boundary whose context is reconfigured.</param>
         public AutoDetectChangeContextWrap(IServiceDataBase serviceData)
         {
             //_service = service;
@@ -38,6 +42,9 @@ namespace Senparc.Ncf.Service
             ServiceData.BaseData.BaseDB.ManualDetectChangeObject = true;
         }
 
+        /// <summary>
+        /// Restores automatic change detection and disables manual change tracking.
+        /// </summary>
         public void Dispose()
         {
             //_service.BaseRepository.BaseDB.BaseDataContext.Configuration.AutoDetectChangesEnabled = false;
@@ -49,12 +56,19 @@ namespace Senparc.Ncf.Service
     public class CloseAutoDetectChangeContext : IDisposable
     {
         AutoDetectChangeContextWrap _wrap;
+        /// <summary>
+        /// Temporarily re-enables automatic change detection within an existing wrapper.
+        /// </summary>
+        /// <param name="wrap">The wrapper whose database context is being temporarily adjusted.</param>
         public CloseAutoDetectChangeContext(AutoDetectChangeContextWrap wrap)
         {
             _wrap = wrap;
             _wrap.ServiceData.BaseData.BaseDB.BaseDataContext.ChangeTracker.AutoDetectChangesEnabled = true;
         }
 
+        /// <summary>
+        /// Restores the wrapper's manual change-detection mode.
+        /// </summary>
         public void Dispose()
         {
             _wrap.ServiceData.BaseData.BaseDB.BaseDataContext.ChangeTracker.AutoDetectChangesEnabled = false;

@@ -61,6 +61,11 @@ namespace Senparc.Ncf.AreaBase.Admin//  Senparc.Areas.Admin
         public virtual List<IXncfRegister> XncfRegisterList => Senparc.Ncf.XncfBase.XncfRegisterManager.RegisterList;
 
 
+        /// <summary>
+        /// Renders the current page as the base error fallback for an administration request.
+        /// </summary>
+        /// <param name="message">The error message supplied by the caller.</param>
+        /// <returns>The current page result.</returns>
         public virtual IActionResult RenderError(string message)
         {
             //preserve the original controller and action information

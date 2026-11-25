@@ -53,12 +53,22 @@ using Senparc.Xncf.Sandbox;
 
 namespace Senparc.Xncf.Sandbox.Application.AppServices;
 
+/// <summary>
+/// Function-rendered application service for isolated Sandbox creation,
+/// execution, persistent workspace file operations, and session lifecycle.
+/// </summary>
 public class SandboxAppService : AppServiceBase
 {
     private const int MaxReferencedFilesPerUpload = 16;
     private readonly SandboxOrchestrator _orchestrator;
     private readonly IFunctionFileStore _fileStore;
 
+    /// <summary>
+    /// Initializes the Sandbox application service.
+    /// </summary>
+    /// <param name="serviceProvider">Dependency-injection provider.</param>
+    /// <param name="orchestrator">Sandbox session/runtime orchestrator.</param>
+    /// <param name="fileStore">Function file store used by bulk workspace uploads.</param>
     public SandboxAppService(
         IServiceProvider serviceProvider,
         SandboxOrchestrator orchestrator,
@@ -69,6 +79,10 @@ public class SandboxAppService : AppServiceBase
         _fileStore = fileStore;
     }
 
+    /// <summary>
+    /// Creates an isolated Sandbox session from a template and reports its access information.
+    /// </summary>
+    /// <param name="request">The runtime, template, TTL, alias, and port mapping options.</param>
     [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Create.Name", "Function.Sandbox.Create.Description",
         typeof(Register), "Create sandbox", "Create an isolated sandbox session from a template.", AllowGlobalPivot = true)]
     public async Task<StringAppResponse> Create(Sandbox_CreateRequest request)
@@ -111,6 +125,10 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Lists recent Sandbox sessions and their formatted status.
+    /// </summary>
+    /// <param name="request">The list request.</param>
     [FunctionRender(typeof(SandboxResource), "Function.Sandbox.List.Name", "Function.Sandbox.List.Description",
         typeof(Register), "List sandboxes", "View recent sandbox sessions.")]
     public async Task<StringAppResponse> List(Sandbox_ListRequest request)
@@ -130,6 +148,10 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Returns the status of one Sandbox session.
+    /// </summary>
+    /// <param name="request">The session identifier request.</param>
     [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Status.Name", "Function.Sandbox.Status.Description",
         typeof(Register), "Sandbox status", "Query a sandbox session by SessionId.")]
     public async Task<StringAppResponse> Status(Sandbox_SessionIdRequest request)
@@ -149,6 +171,10 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Executes code in an Exec-template Sandbox and returns bounded stdout/stderr.
+    /// </summary>
+    /// <param name="request">The session and code request.</param>
     [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Exec.Name", "Function.Sandbox.Exec.Description",
         typeof(Register), "Execute code", "Run a code snippet in an Exec template session.", AllowGlobalPivot = true)]
     public async Task<StringAppResponse> Exec(Sandbox_ExecRequest request)
@@ -163,6 +189,10 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Executes a bounded interactive command in a persistent Lab workspace.
+    /// </summary>
+    /// <param name="request">The session, command, working directory, timeout, and stdin.</param>
     [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabExec.Name", "Function.Sandbox.LabExec.Description",
         typeof(Register), "Execute Lab command", "Run a limited-duration Shell command in a running persistent JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabExec(Sandbox_LabCommandRequest request)
@@ -188,6 +218,10 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Decodes Base64 content and writes one file into a persistent Lab workspace.
+    /// </summary>
+    /// <param name="request">The session, relative path, content, and overwrite options.</param>
     [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabUploadFile.Name", "Function.Sandbox.LabUploadFile.Description",
         typeof(Register), "Upload Lab file", "Write Base64 file content into a running persistent JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabUploadFile(Sandbox_LabUploadFileRequest request)
@@ -224,6 +258,10 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Imports up to the service limit of FileManager-backed files into a persistent Lab workspace.
+    /// </summary>
+    /// <param name="request">The session, target directory, file references, and overwrite policy.</param>
     [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabUploadFiles.Name", "Function.Sandbox.LabUploadFiles.Description",
         typeof(Register), "Upload Lab files", "Write multiple uploaded files into a running persistent JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabUploadFiles(Sandbox_LabUploadFilesRequest request)
@@ -304,6 +342,10 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Reads one bounded file from a persistent Lab workspace and returns Base64 content.
+    /// </summary>
+    /// <param name="request">The session, relative path, and maximum byte count.</param>
     [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabDownloadFile.Name", "Function.Sandbox.LabDownloadFile.Description",
         typeof(Register), "Download Lab file", "Read a file from a running persistent JupyterLab workspace and return Base64 content.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabDownloadFile(Sandbox_LabFileRequest request)
@@ -331,6 +373,10 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Lists persistent Lab workspace files and returns both flat entries and a tree representation.
+    /// </summary>
+    /// <param name="request">The session, directory, recursion, and item-limit options.</param>
     [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabListFiles.Name", "Function.Sandbox.LabListFiles.Description",
         typeof(Register), "List Lab files", "List files in a running persistent JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabListFiles(Sandbox_LabListFilesRequest request)
@@ -365,6 +411,10 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Validates notebook language/path, creates notebook JSON, and writes it into the Lab workspace.
+    /// </summary>
+    /// <param name="request">The session, notebook path, language, title, cells, and overwrite policy.</param>
     [FunctionRender(typeof(SandboxResource), "Function.Sandbox.CreateNotebook.Name", "Function.Sandbox.CreateNotebook.Description",
         typeof(Register), "Create Notebook", "Create a Python or C# .ipynb file in a running JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabCreateNotebook(Sandbox_LabCreateNotebookRequest request)
@@ -429,6 +479,10 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Sets or clears the display alias of a Sandbox session.
+    /// </summary>
+    /// <param name="request">The session identifier and alias value.</param>
     [FunctionRender(typeof(SandboxResource), "Function.Sandbox.UpdateAlias.Name", "Function.Sandbox.UpdateAlias.Description",
         typeof(Register), "Update alias", "Set or clear the alias for a sandbox session.")]
     public async Task<StringAppResponse> UpdateAlias(Sandbox_UpdateAliasRequest request)
@@ -445,6 +499,10 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Stops and cleans up a Sandbox runtime session.
+    /// </summary>
+    /// <param name="request">The session identifier.</param>
     [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Destroy.Name", "Function.Sandbox.Destroy.Description",
         typeof(Register), "Destroy sandbox", "Stop and clean up the specified session.", AllowGlobalPivot = true)]
     public async Task<StringAppResponse> Destroy(Sandbox_SessionIdRequest request)
@@ -458,6 +516,10 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Permanently removes a terminal Sandbox session record after cleanup checks.
+    /// </summary>
+    /// <param name="request">The session identifier.</param>
     [FunctionRender(typeof(SandboxResource), "Function.Sandbox.DeleteRecord.Name", "Function.Sandbox.DeleteRecord.Description",
         typeof(Register), "Delete sandbox record", "Permanently delete a stopped, expired, or fully cleaned session record.")]
     public async Task<StringAppResponse> DeleteRecord(Sandbox_SessionIdRequest request)
@@ -471,6 +533,10 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Updates Sandbox retention duration or switches the session to keep-alive mode.
+    /// </summary>
+    /// <param name="request">The session, TTL, and keep-alive options.</param>
     [FunctionRender(typeof(SandboxResource), "Function.Sandbox.UpdateTtl.Name", "Function.Sandbox.UpdateTtl.Description",
         typeof(Register), "Update TTL", "Extend, shorten, or make the sandbox retention permanent.")]
     public async Task<StringAppResponse> UpdateTtl(Sandbox_UpdateTtlRequest request)
@@ -488,6 +554,11 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Formats session status as HTML-safe diagnostic text for FunctionRender responses.
+    /// </summary>
+    /// <param name="info">The session information.</param>
+    /// <returns>HTML-safe session summary text.</returns>
     private static string FormatSession(SandboxSessionInfo info)
     {
         return
@@ -503,6 +574,11 @@ public class SandboxAppService : AppServiceBase
             $"Message: {WebUtility.HtmlEncode(info.StatusMessage ?? "-")}";
     }
 
+    /// <summary>
+    /// Formats the session TTL state for user-facing output.
+    /// </summary>
+    /// <param name="info">The session information.</param>
+    /// <returns>A keep-alive or UTC expiration message.</returns>
     private static string FormatTtl(SandboxSessionInfo info)
     {
         return info.IsTtlUnlimited
@@ -510,6 +586,12 @@ public class SandboxAppService : AppServiceBase
             : $"Expires(UTC): {info.ExpiresAtUtc:u}";
     }
 
+    /// <summary>
+    /// Builds a nested directory/file tree from workspace-relative file entries.
+    /// </summary>
+    /// <param name="files">The workspace file entries.</param>
+    /// <param name="relativeDirectory">The directory represented as the tree root.</param>
+    /// <returns>A sorted workspace tree.</returns>
     internal static SandboxWorkspaceFileTreeNode BuildWorkspaceFileTree(
         IReadOnlyList<SandboxWorkspaceFileInfo> files,
         string? relativeDirectory)
@@ -575,6 +657,11 @@ public class SandboxAppService : AppServiceBase
         return root;
     }
 
+    /// <summary>
+    /// Formats a workspace tree as an indented text representation.
+    /// </summary>
+    /// <param name="root">The tree root.</param>
+    /// <returns>The formatted tree text.</returns>
     internal static string FormatWorkspaceFileTree(SandboxWorkspaceFileTreeNode root)
     {
         var builder = new StringBuilder();
@@ -583,6 +670,10 @@ public class SandboxAppService : AppServiceBase
         return builder.ToString();
     }
 
+    /// <summary>
+    /// Sorts tree nodes with directories/files grouped deterministically and recurses into directories.
+    /// </summary>
+    /// <param name="nodes">The nodes to sort in place.</param>
     private static void SortWorkspaceFileTree(List<SandboxWorkspaceFileTreeNode> nodes)
     {
         nodes.Sort((left, right) =>
@@ -606,6 +697,12 @@ public class SandboxAppService : AppServiceBase
         }
     }
 
+    /// <summary>
+    /// Appends one tree level to a text builder using branch markers.
+    /// </summary>
+    /// <param name="builder">The output builder.</param>
+    /// <param name="nodes">The child nodes.</param>
+    /// <param name="prefix">The visual indentation prefix.</param>
     private static void AppendWorkspaceFileTree(
         StringBuilder builder,
         IReadOnlyList<SandboxWorkspaceFileTreeNode> nodes,

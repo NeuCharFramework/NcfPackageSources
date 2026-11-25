@@ -142,12 +142,14 @@
 		    [2026-11-19] v0.0.19 Updated module behavior, localization metadata, and English source comments
 		    1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
 		    2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
-		</PackageReleaseNotes>
+        [2026-11-24] v0.0.19 Dependency compatibility update for affected Senparc modules.
+        1. Aligned dependent package metadata with the current Senparc module versions.
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
 		<Configurations>Debug;Release;TemplateRelease</Configurations>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Database.Sqlite\Senparc.Ncf.Database.Sqlite.csproj" />

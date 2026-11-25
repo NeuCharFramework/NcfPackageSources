@@ -27,7 +27,8 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Service.SignalrHubs
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides a process-wide ticker that invokes a callback at a configurable interval
+    /// for a SignalR hub type.
     /// </summary>
     public class SignalrTicker<THub>
         where THub : Hub
@@ -36,14 +37,20 @@ namespace Senparc.Ncf.Service.SignalrHubs
 
         private readonly IHubContext<THub> m_context;
 
+        /// <summary>
+        /// Gets the SignalR hub context used by the ticker.
+        /// </summary>
         public IHubContext<THub> GlobalContext
         {
             get { return m_context; }
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or creates the shared ticker instance for the hub type using the request's
+        /// service provider.
         /// </summary>
+        /// <param name="httpContext">The HTTP context used to resolve the hub context.</param>
+        /// <returns>The shared ticker, or <see langword="null"/> when no context is supplied.</returns>
         public static SignalrTicker<THub> Instance(HttpContext httpContext)
         {
             if (_instance == null)
@@ -58,35 +65,36 @@ namespace Senparc.Ncf.Service.SignalrHubs
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the delay between callback invocations, in milliseconds.
         /// </summary>
         public int SleepMillionSeconds { get; set; } = 500;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the callback invoked on each ticker iteration, with the ticker and iteration count.
         /// </summary>
         public Action<SignalrTicker<THub>, int> SenderAction { get; set; }
 
         /// <summary>
-        /// constructor
+        /// Initializes a ticker with the supplied SignalR hub context and starts its background sender loop.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">The hub context used by consumers of <see cref="GlobalContext"/>.</param>
         private SignalrTicker(IHubContext<THub> context)
         {
             m_context = context;
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
             Task.Run(() => Sender());
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reserved registration hook for compatibility with existing callers.
         /// </summary>
         public static void Register()
         {
-            //Legacy comment translated to English.
         }
 
+        /// <summary>
+        /// Runs the ticker loop, invoking <see cref="SenderAction"/> and sleeping for
+        /// <see cref="SleepMillionSeconds"/> between iterations.
+        /// </summary>
         public void Sender()
         {
             int count = 0;

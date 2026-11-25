@@ -22,12 +22,12 @@ using System.Text.RegularExpressions;
 using Senparc.Ncf.Core.Utility;
 using Microsoft.AspNetCore.Http;
 
-#pragma warning disable CS0675 //Legacy comment translated to English.
+#pragma warning disable CS0675 // The legacy IP database format uses bitwise operations on signed values.
 
 namespace Senparc.Ncf.Utility
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Reads location records from a QQWry-format local IP database.
     /// </summary>
     public class QQWry : IDisposable
     {
@@ -62,7 +62,7 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        ///Legacy comment translated to English.
+        /// The open QQWry database stream.
         /// </summary>
         #endregion
         private FileStream ipFile;
@@ -92,7 +92,7 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        ///Legacy comment translated to English.
+        /// The current location result being populated.
         /// </summary>
         #endregion
         private IPLocation loc;
@@ -119,7 +119,7 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        ///Legacy comment translated to English.
+        /// The default location returned when the database has no matching record.
         /// </summary>
         #endregion
         private byte[] b4;
@@ -162,15 +162,20 @@ namespace Senparc.Ncf.Utility
         /// </summary>
         ///Legacy comment translated to English.
         #endregion
+        /// <summary>
+        /// Opens a QQWry database file and reads its index boundaries.
+        /// </summary>
+        /// <param name="ipfile">The database path; the application default is used when null.</param>
+        /// <exception cref="Exception">Thrown when the database file cannot be opened.</exception>
         public QQWry(string ipfile)
         {
-            ipfile = ipfile ?? Server.GetMapPath("~/App_Data/QQWry.Dat");//Legacy comment translated to English.
+            ipfile = ipfile ?? Server.GetMapPath("~/App_Data/QQWry.Dat");
             buf = new byte[100];
             b3 = new byte[3];
             b4 = new byte[4];
             try
             {
-                ipFile = new FileStream(ipfile, FileMode.Open, FileAccess.Read, FileShare.Read);//Legacy comment translated to English.
+                ipFile = new FileStream(ipfile, FileMode.Open, FileAccess.Read, FileShare.Read);
             }
             catch (Exception ex)
             {
@@ -181,23 +186,29 @@ namespace Senparc.Ncf.Utility
             loc = new IPLocation();
         }
 
+        /// <summary>
+        /// Opens the default application QQWry database.
+        /// </summary>
         public QQWry()
             : this(null)
         { }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Looks up the current remote IP address and returns its database location.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The location associated with the current request IP.</returns>
         public IPLocation SearchIPLocation()
         {
             return SearchIPLocation(GetCurrentIP());
         }
 
+        /// <summary>
+        /// Gets the current request's remote IP address as text.
+        /// </summary>
+        /// <returns>The remote IP address string.</returns>
         public string GetCurrentIP()
         {
             //return HttpContext.Current.Request.UserHostAddress;
-            //Legacy comment translated to English.
             return SenparcHttpContext.Current.Connection.RemoteIpAddress.ToString();
         }
 
@@ -205,22 +216,21 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Searches the QQWry index for an IPv4 address and parses the associated country and area.
         /// </summary>
-        /// <param name="ip"></param>
-        /// <returns></returns>
+        /// <param name="ip">The dotted IPv4 address to look up.</param>
+        /// <returns>The matching location, or an unknown-location object when no record matches.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the address contains an unexpected number of segments.</exception>
         #endregion
         public IPLocation SearchIPLocation(string ip)
         {
             ip = ip ?? "";
-            //Legacy comment translated to English.
             string pattrn = @"(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])";
             if (!Regex.IsMatch(ip, pattrn))
             {
                 return new IPLocation() { country = "未知", area = "" };
             }
 
-            //Legacy comment translated to English.
             string[] ipSp = ip.Split('.');
             if (ipSp.Length != 4)
             {
@@ -253,22 +263,19 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        /// get detailed information
+        /// Reads one QQWry location record at an absolute database offset, following
+        /// the format's country and area redirection records when present.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <returns></returns>
+        /// <param name="offset">The absolute offset of the seven-byte IP record.</param>
+        /// <returns>The location parsed from the record.</returns>
         #endregion
         private IPLocation getIPLocation(long offset)
         {
             ipFile.Position = offset + 4;
-            //Legacy comment translated to English.
             byte one = (byte)ipFile.ReadByte();
             if (one == REDIRECT_MODE_1)
             {
-                //mode 1
-                //Legacy comment translated to English.
                 long countryOffset = readLong3();
-                //Legacy comment translated to English.
                 ipFile.Position = countryOffset;
                 //Legacy comment translated to English.
                 byte b = (byte)ipFile.ReadByte();
@@ -280,7 +287,6 @@ namespace Senparc.Ncf.Utility
                 else
                     loc.country = readString(countryOffset);
 
-                //Legacy comment translated to English.
                 loc.area = readArea(ipFile.Position);
 
             }
@@ -292,13 +298,12 @@ namespace Senparc.Ncf.Utility
             }
             else
             {
-                //Legacy comment translated to English.
                 loc.country = readString(--ipFile.Position);
                 loc.area = readString(ipFile.Position);
             }
 
-            loc.country = loc.country.Replace("CZ88.NET", "");//Legacy comment translated to English.
-            loc.area = loc.area.Replace("CZ88.NET", "");//Legacy comment translated to English.
+            loc.country = loc.country.Replace("CZ88.NET", "");
+            loc.area = loc.area.Replace("CZ88.NET", "");
 
             return loc;
         }
@@ -307,10 +312,11 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reads the area portion of a QQWry record, following a redirect when the first byte
+        /// indicates one of the supported redirect modes.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <returns></returns>
+        /// <param name="offset">The absolute offset at which the area record begins.</param>
+        /// <returns>The decoded area text or the unknown-area label.</returns>
         #endregion
         private string readArea(long offset)
         {
@@ -336,10 +342,10 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        /// read a string
+        /// Reads a null-terminated string from the database using the system default encoding.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <returns></returns>
+        /// <param name="offset">The absolute file offset of the string.</param>
+        /// <returns>The decoded string, or an empty string for an empty record.</returns>
         #endregion
         private string readString(long offset)
         {
@@ -357,24 +363,23 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        /// find the absolute offset of the IP address
+        /// Performs a binary search over the QQWry index and returns the location offset
+        /// for the requested four-byte address.
         /// </summary>
-        /// <param name="ip"></param>
-        /// <returns></returns>
+        /// <param name="ip">The four-byte address in comparison order.</param>
+        /// <returns>The location-record offset, or <c>-1</c> when no record matches.</returns>
         #endregion
         private long locateIP(byte[] ip)
         {
             long m = 0;
             int r;
 
-            //Legacy comment translated to English.
             readIP(ipBegin, b4);
             r = compareIP(ip, b4);
             if (r == 0)
                 return ipBegin;
             else if (r < 0)
                 return -1;
-            //Legacy comment translated to English.
             for (long i = ipBegin, j = ipEnd; i < j; )
             {
                 m = this.getMiddleOffset(i, j);
@@ -410,10 +415,10 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reads four bytes from the database and reverses their byte order into an IP address buffer.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="ip"></param>
+        /// <param name="offset">The absolute file offset.</param>
+        /// <param name="ip">The four-byte destination buffer.</param>
         #endregion
         private void readIP(long offset, byte[] ip)
         {
@@ -431,11 +436,11 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        /// compare IP addresses
+        /// Compares two four-byte IP addresses lexicographically.
         /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="beginIP"></param>
-        ///Legacy comment translated to English.
+        /// <param name="ip">The first address.</param>
+        /// <param name="beginIP">The second address.</param>
+        /// <returns>A positive, zero, or negative value according to address ordering.</returns>
         #endregion
         private int compareIP(byte[] ip, byte[] beginIP)
         {
@@ -452,11 +457,11 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        /// compare two bytes
+        /// Compares two unsigned byte values.
         /// </summary>
-        /// <param name="bsrc"></param>
-        /// <param name="bdst"></param>
-        /// <returns></returns>
+        /// <param name="bsrc">The first byte.</param>
+        /// <param name="bdst">The second byte.</param>
+        /// <returns>1 when the first byte is greater, 0 when equal, or -1 when less.</returns>
         #endregion
         private int compareByte(byte bsrc, byte bdst)
         {
@@ -472,10 +477,10 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reads a little-endian four-byte integer from an absolute database offset.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <returns></returns>
+        /// <param name="offset">The absolute file offset.</param>
+        /// <returns>The decoded unsigned 32-bit value represented as a long.</returns>
         #endregion
         private long readLong4(long offset)
         {
@@ -492,10 +497,10 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        /// read three bytes from the current position
+        /// Reads a little-endian three-byte integer from an absolute database offset.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <returns></returns>
+        /// <param name="offset">The absolute file offset.</param>
+        /// <returns>The decoded 24-bit value represented as a long.</returns>
         #endregion
         private long readLong3(long offset)
         {
@@ -511,9 +516,9 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        /// read three bytes from the current position
+        /// Reads a little-endian three-byte integer from the current stream position.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The decoded 24-bit value represented as a long.</returns>
         #endregion
         private long readLong3()
         {
@@ -528,11 +533,11 @@ namespace Senparc.Ncf.Utility
         #region Legacy section
         /**/
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Calculates a record-aligned midpoint between two index offsets for binary search.
         /// </summary>
-        /// <param name="begin"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
+        /// <param name="begin">The lower index offset.</param>
+        /// <param name="end">The upper index offset.</param>
+        /// <returns>A record-aligned midpoint offset.</returns>
         #endregion
         private long getMiddleOffset(long begin, long end)
         {
@@ -545,6 +550,9 @@ namespace Senparc.Ncf.Utility
 
         #region Legacy section
 
+        /// <summary>
+        /// Closes the underlying QQWry database stream.
+        /// </summary>
         public void Dispose()
         {
             ipFile.Close();
@@ -553,16 +561,26 @@ namespace Senparc.Ncf.Utility
         #endregion
     }
 
+    /// <summary>
+    /// Represents the country and area text returned by a QQWry lookup.
+    /// </summary>
     public class IPLocation
     {
         public String country;
         public String area;
 
+        /// <summary>
+        /// Initializes an empty location.
+        /// </summary>
         public IPLocation()
         {
             country = area = "";
         }
 
+        /// <summary>
+        /// Creates a separate location object containing the same country and area values.
+        /// </summary>
+        /// <returns>A copied location object.</returns>
         public IPLocation getCopy()
         {
             IPLocation ret = new IPLocation();
@@ -572,4 +590,4 @@ namespace Senparc.Ncf.Utility
         }
     }
 }
-#pragma warning restore CS0675 //Legacy comment translated to English.
+#pragma warning restore CS0675

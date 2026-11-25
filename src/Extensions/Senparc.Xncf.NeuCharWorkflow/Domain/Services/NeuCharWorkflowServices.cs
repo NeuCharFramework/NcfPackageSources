@@ -57,21 +57,31 @@ public sealed class NeuCharWorkflowService : WorkflowClientServiceBase<WorkflowE
         : base(repository, serviceProvider) { }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Persists runtime-start fields for a workflow without rewriting the full graph.
     /// </summary>
+    /// <param name="workflow">The workflow whose runtime fields were updated.</param>
     public Task SaveRuntimeStartedAsync(WorkflowEntity workflow) =>
         SaveRuntimePropertiesAsync(workflow,
             nameof(WorkflowEntity.LastRunAt),
             nameof(WorkflowEntity.NextRunAt),
             nameof(WorkflowEntity.LastUpdateTime));
 
+    /// <summary>
+    /// Persists runtime completion fields for a workflow without rewriting the full graph.
+    /// </summary>
+    /// <param name="workflow">The workflow whose completion fields were updated.</param>
     public Task SaveRuntimeCompletedAsync(WorkflowEntity workflow) =>
         SaveRuntimePropertiesAsync(workflow,
             nameof(WorkflowEntity.LastSucceeded),
             nameof(WorkflowEntity.LastError),
             nameof(WorkflowEntity.LastUpdateTime));
 
+    /// <summary>
+    /// Returns the administrator-owned workflow ID/name map ordered by identifier.
+    /// </summary>
+    /// <param name="adminUserId">The workflow owner identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>A workflow ID/name map.</returns>
     public async Task<IReadOnlyDictionary<int, string>> GetNameMapAsync(
         int adminUserId,
         CancellationToken cancellationToken = default)
@@ -103,6 +113,11 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
     public NeuCharWorkflowExecutionLogService(INeuCharWorkflowExecutionLogRepository repository, IServiceProvider serviceProvider)
         : base(repository, serviceProvider) { }
 
+    /// <summary>
+    /// Retrieves the newest execution log containing a replay snapshot.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <returns>The latest replayable log, or <see langword="null"/>.</returns>
     public async Task<NeuCharWorkflowExecutionLog?> GetLatestReplaySnapshotAsync(int workflowId)
     {
         var logs = await GetFullListAsync(
@@ -112,6 +127,11 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
         return logs.FirstOrDefault(log => !string.IsNullOrWhiteSpace(log.ReplaySnapshotJson));
     }
 
+    /// <summary>
+    /// Retrieves up to twenty recent successful execution logs for a workflow.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <returns>Recent completed execution logs.</returns>
     public async Task<IReadOnlyList<NeuCharWorkflowExecutionLog>> GetRecentCompletedAsync(int workflowId)
     {
         var logs = await GetObjectListAsync(
@@ -123,6 +143,13 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
         return logs.ToList();
     }
 
+    /// <summary>
+    /// Retrieves serialized replay-event payloads from recent successful workflow executions.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="maxLogs">Maximum number of logs to inspect.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>Serialized replay-event lists.</returns>
     public async Task<IReadOnlyList<string>> GetRecentCompletedReplayEventsAsync(
         int workflowId,
         int maxLogs = 5,
@@ -146,6 +173,17 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Retrieves a paged, filtered execution-log summary for workflow task lists.
+    /// </summary>
+    /// <param name="workflowIds">Workflow identifiers visible to the caller.</param>
+    /// <param name="beforeExecutionLogId">Optional descending pagination cursor.</param>
+    /// <param name="pageSize">Maximum number of summaries.</param>
+    /// <param name="statusFilter">Optional running/success/failed filter.</param>
+    /// <param name="fromUtc">Optional inclusive start time.</param>
+    /// <param name="toUtc">Optional exclusive end time.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>Task log summaries ordered newest first.</returns>
     public async Task<IReadOnlyList<NeuCharWorkflowTaskLogSummary>> GetTaskPageAsync(
         IReadOnlyCollection<int> workflowIds,
         int? beforeExecutionLogId,
@@ -208,6 +246,14 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Retrieves lightweight task-summary rows for workflow analytics.
+    /// </summary>
+    /// <param name="workflowIds">Workflow identifiers visible to the caller.</param>
+    /// <param name="fromUtc">Optional inclusive start time.</param>
+    /// <param name="toUtc">Optional exclusive end time.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>Task summary source rows.</returns>
     public async Task<IReadOnlyList<NeuCharWorkflowTaskSummarySource>> GetTaskSummaryAsync(
         IReadOnlyCollection<int> workflowIds,
         DateTime? fromUtc = null,
@@ -244,6 +290,15 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Retrieves the fields needed by analytics, excluding large replay snapshots.
+    /// </summary>
+    /// <param name="workflowIds">Workflow identifiers visible to the caller.</param>
+    /// <param name="statusFilter">Optional running/success/failed filter.</param>
+    /// <param name="fromUtc">Optional inclusive start time.</param>
+    /// <param name="toUtc">Optional exclusive end time.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>Analytics log rows.</returns>
     public async Task<IReadOnlyList<NeuCharWorkflowAnalyticsLog>> GetAnalyticsLogsAsync(
         IReadOnlyCollection<int> workflowIds,
         string? statusFilter = null,

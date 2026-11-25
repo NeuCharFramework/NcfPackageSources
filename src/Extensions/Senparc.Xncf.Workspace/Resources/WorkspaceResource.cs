@@ -21,9 +21,22 @@ namespace Senparc.Xncf.Workspace;
 
 public sealed class WorkspaceResource
 {
+    /// <summary>
+    /// Resolves a workspace localization key with an optional fallback.
+    /// </summary>
+    /// <param name="key">The resource key.</param>
+    /// <param name="fallback">The fallback text when no localized value exists.</param>
+    /// <returns>The localized or fallback text.</returns>
     public static string Get(string key, string? fallback = null) =>
         ResourceStringLocalizer.Get(typeof(WorkspaceResource), key, fallback);
 
+    /// <summary>
+    /// Resolves and formats a workspace localization key.
+    /// </summary>
+    /// <param name="key">The resource key.</param>
+    /// <param name="fallback">The fallback format string.</param>
+    /// <param name="arguments">The format arguments.</param>
+    /// <returns>The localized formatted text.</returns>
     public static string Format(string key, string fallback, params object[] arguments) =>
         ResourceStringLocalizer.Format(typeof(WorkspaceResource), key, fallback, arguments);
 }

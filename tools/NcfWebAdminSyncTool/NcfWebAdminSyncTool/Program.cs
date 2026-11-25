@@ -13,18 +13,25 @@
     Modified by: Senparc - 20261119
     Change description: v0.0.2 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261124
+    Change description: v0.0.3 UI localization (English default, optional Chinese)
+
+    Modified by: Senparc - 20261124
+    Change description: v0.0.3 Improved bilingual sync tool messages, language selection, and ignore handling.
+
 ----------------------------------------------------------------*/
 using Microsoft.Extensions.Logging;
 
 class Program
 {
     private static readonly ILogger _logger;
-    private static readonly string[] IgnoredFolders = new[] 
-    { 
+    private static SyncToolMessages M = SyncToolMessages.English;
+    private static readonly string[] IgnoredFolders = new[]
+    {
         "bin", "obj", "SenparcTraceLog", "logs", ".git" ,".vs","NcfFiles"
     };
-    private static readonly string[] IgnoredExtensions = new[] 
-    { 
+    private static readonly string[] IgnoredExtensions = new[]
+    {
         ".csproj", ".user", ".DS_Store", ".Development.config"
     };
     //Legacy comment translated to English.
@@ -37,8 +44,16 @@ class Program
     {
         "-backup-"  //Legacy comment translated to English.
     };
+    /// <summary>Relative path fragments skipped during baseline sync (module-specific App_Data, etc.).</summary>
+    private static readonly string[] IgnoredRelativePathFragments = new[]
+    {
+        "App_Data/Senparc.Xncf.AIKernel",
+        "App_Data/Senparc.Xncf.Installer",
+    };
     //Legacy comment translated to English.
     private static ConsoleKey? _autoUpdateChoice = null;
+    //Legacy comment translated to English.
+    private static ConsoleKey? _autoOverwriteChoice = null;
 
     static Program()
     {
@@ -53,8 +68,33 @@ class Program
     {
         try
         {
-            bool templateOnly = args.Any(z =>
+            var (lang, remainingArgs) = ParseLanguageArgument(args);
+            if (lang == null)
+            {
+                if (Console.IsInputRedirected)
+                {
+                    M = SyncToolMessages.English;
+                }
+                else
+                {
+                    ResolveLanguageInteractively();
+                }
+            }
+            else
+            {
+                M = lang.Value == UiLanguage.Chinese ? SyncToolMessages.Chinese : SyncToolMessages.English;
+            }
+
+            bool templateOnly = remainingArgs.Any(z =>
                 z.Equals("--template-only", StringComparison.OrdinalIgnoreCase));
+            bool nonInteractive = remainingArgs.Any(z =>
+                z.Equals("--non-interactive", StringComparison.OrdinalIgnoreCase)
+                || z.Equals("--yes", StringComparison.OrdinalIgnoreCase));
+            if (nonInteractive)
+            {
+                _autoOverwriteChoice = ConsoleKey.Y;
+                _autoUpdateChoice = ConsoleKey.U;
+            }
             string sourceDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..","..", "..", "..", "..", "NcfWebAdminBaseline"));
             string targetDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..","..", "..", "..", "..", "..", "..", "NCF", "src", "back-end"));
 
@@ -68,7 +108,7 @@ class Program
             if (!Directory.Exists(sourceDir))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"错误：源目录不存在：{sourceDir}");
+                Console.WriteLine($"{M.ErrorSourceDirMissing} {sourceDir}");
                 Console.ResetColor();
                 hasError = true;
             }
@@ -76,32 +116,32 @@ class Program
             if (!templateOnly && !Directory.Exists(targetDir))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"错误：目标目录不存在：{targetDir}");
+                Console.WriteLine($"{M.ErrorTargetDirMissing} {targetDir}");
                 Console.ResetColor();
                 hasError = true;
             }
 
             if (hasError)
             {
-                Console.WriteLine("程序终止：请确保源目录和目标目录都存在后再运行。");
+                Console.WriteLine(M.AbortEnsureDirsExist);
                 return;
             }
 
             //Legacy comment translated to English.
             string templateSourceDir = Path.Combine(sourceDir, "Template_OrgName.Xncf.Template_XncfName");
             string templateTargetDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..","..", "..", "..", "..", "..", "src", "Extensions", "Senparc.Xncf.XncfBuilder", "Senparc.Xncf.XncfBuilder.Template", "templates", "template1"));
-            
+
             if (Directory.Exists(templateSourceDir))
             {
                 Console.WriteLine($"\nTemplate source directory: {templateSourceDir}");
                 Console.WriteLine($"Template target directory: {templateTargetDir}");
-                
+
                 if (!Directory.Exists(templateTargetDir))
                 {
                     Directory.CreateDirectory(templateTargetDir);
-                    Console.WriteLine("创建模板目标目录");
+                    Console.WriteLine(M.CreatedTemplateTargetDir);
                 }
-                
+
                 await SyncTemplateDirectoryAsync(templateSourceDir, templateTargetDir);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Template directory synchronization completed.");
@@ -144,6 +184,11 @@ class Program
 
     static bool ShouldIgnore(string path)
     {
+        var normalizedPath = path.Replace('\\', '/');
+        if (IgnoredRelativePathFragments.Any(fragment =>
+                normalizedPath.Contains(fragment, StringComparison.OrdinalIgnoreCase)))
+            return true;
+
         // checkdirectory
         var relativePath = Path.GetDirectoryName(path);
         if (IgnoredFolders.Any(folder => relativePath?.Contains(folder) ?? false))
@@ -158,8 +203,8 @@ class Program
 
         //Legacy comment translated to English.
         var extension = Path.GetExtension(path);
-        if (IgnoredExtensions.Any(ext => 
-            ext.Equals(extension, StringComparison.OrdinalIgnoreCase) || 
+        if (IgnoredExtensions.Any(ext =>
+            ext.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
             fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
             return true;
 
@@ -184,8 +229,8 @@ class Program
             .Where(f => !ShouldIgnoreForTemplate(f))
             .ToList();
 
-        Console.WriteLine($"\n开始同步模板目录 (单向同步: 源 -> 目标)");
-        Console.WriteLine($"找到 {sourceFiles.Count} 个文件需要处理");
+        Console.WriteLine($"\n{M.TemplateSyncHeader}");
+        Console.WriteLine(string.Format(M.TemplateFilesFoundFormat, sourceFiles.Count));
 
         foreach (var sourceFile in sourceFiles)
         {
@@ -210,8 +255,8 @@ class Program
             return true;
 
         //Legacy comment translated to English.
-        if (templateIgnoredExtensions.Any(ext => 
-            ext.Equals(extension, StringComparison.OrdinalIgnoreCase) || 
+        if (templateIgnoredExtensions.Any(ext =>
+            ext.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
             fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
             return true;
 
@@ -324,7 +369,7 @@ class Program
                     //Legacy comment translated to English.
                     await FileExtensions.CopyAsync(sourceFile, targetFile, true);
                 }
-                
+
                 File.SetLastWriteTime(targetFile, File.GetLastWriteTime(sourceFile));
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"Template copied: {relativePath}");
@@ -343,7 +388,7 @@ class Program
     static List<(string Line, char Type)> GetDiff(string[] sourceLines, string[] targetLines)
     {
         var diff = new List<(string Line, char Type)>();
-        
+
         //Legacy comment translated to English.
         int[,] lcs = new int[sourceLines.Length + 1, targetLines.Length + 1];
         for (int i = 1; i <= sourceLines.Length; i++)
@@ -368,21 +413,21 @@ class Program
 
         while (sourceIndex > 0 || targetIndex > 0)
         {
-            if (sourceIndex > 0 && targetIndex > 0 && 
+            if (sourceIndex > 0 && targetIndex > 0 &&
                 sourceLines[sourceIndex - 1].Trim() == targetLines[targetIndex - 1].Trim())
             {
                 tempDiff.Add((sourceLines[sourceIndex - 1], ' '));
                 sourceIndex--;
                 targetIndex--;
             }
-            else if (targetIndex > 0 && 
+            else if (targetIndex > 0 &&
                     (sourceIndex == 0 || lcs[sourceIndex, targetIndex - 1] >= lcs[sourceIndex - 1, targetIndex]))
             {
                 //Legacy comment translated to English.
                 tempDiff.Add((targetLines[targetIndex - 1], '-'));
                 targetIndex--;
             }
-            else if (sourceIndex > 0 && 
+            else if (sourceIndex > 0 &&
                     (targetIndex == 0 || lcs[sourceIndex - 1, targetIndex] >= lcs[sourceIndex, targetIndex - 1]))
             {
                 //Legacy comment translated to English.
@@ -400,23 +445,23 @@ class Program
         var sourceLines = File.ReadAllLines(sourceFile);
         var targetLines = File.ReadAllLines(targetFile);
 
-        Console.WriteLine("\n差异对比：");
+        Console.WriteLine($"\n{M.DiffComparisonHeader}");
         Console.WriteLine("=".PadRight(50, '='));
-        Console.WriteLine($"源文件（新）: {Path.GetFileName(sourceFile)}");
-        Console.WriteLine($"目标文件（旧）: {Path.GetFileName(targetFile)}");
+        Console.WriteLine(string.Format(M.DiffSourceFileLabelFormat, Path.GetFileName(sourceFile)));
+        Console.WriteLine(string.Format(M.DiffTargetFileLabelFormat, Path.GetFileName(targetFile)));
         Console.WriteLine("-".PadRight(50, '-'));
 
         var diff = GetDiff(sourceLines, targetLines);
-        
+
         const int contextLines = 3;
         bool hasDiff = false;
         bool hasRealDiff = false;
-        
+
         for (int k = 0; k < diff.Count; k++)
         {
             var (line, type) = diff[k];
-            
-            bool showLine = type != ' ' || 
+
+            bool showLine = type != ' ' ||
                 Enumerable.Range(Math.Max(0, k - contextLines), Math.Min(contextLines * 2, diff.Count - k))
                     .Any(idx => diff[idx].Type != ' ');
 
@@ -451,13 +496,13 @@ class Program
         if (!hasDiff || !hasRealDiff)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("文件内容相同，仅修改时间不同");
+            Console.WriteLine(M.ContentSameTimestampOnly);
             Console.ResetColor();
         }
         else
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"文件内容存在差异: {sourceFile}");
+            Console.WriteLine(string.Format(M.ContentDiffersFormat, sourceFile));
             Console.ResetColor();
         }
 
@@ -508,26 +553,28 @@ class Program
                     Console.WriteLine($"Warning: Target file is newer than source file:");
                     Console.WriteLine($"Source: {relativePath} ({sourceTime})");
                     Console.WriteLine($"Target: {relativePath} ({targetTime})");
-                    Console.WriteLine("文件内容相同，仅修改时间不同");
+                    Console.WriteLine(M.ContentSameTimestampOnly);
                     Console.ResetColor();
 
                     if (_autoUpdateChoice == null)
                     {
-                        Console.WriteLine("请选择操作：");
-                        Console.WriteLine("U - 更新时间戳");
-                        Console.WriteLine("N - 跳过此文件");
-                        Console.WriteLine("A - 自动执行后续操作（之后每次都执行相同选择）");
+                        Console.WriteLine(M.ChooseAction);
+                        Console.WriteLine(M.OptionUpdateTimestamp);
+                        Console.WriteLine(M.OptionSkipFile);
+                        Console.WriteLine(M.OptionCoverAllTimestamp);
+                        Console.WriteLine(M.OptionAutoApply);
                     }
                     else
                     {
-                        Console.WriteLine($"自动执行操作：{(_autoUpdateChoice == ConsoleKey.U ? "更新时间戳" : "跳过")}");
+                        var autoLabel = _autoUpdateChoice == ConsoleKey.U ? M.AutoUpdateTimestamp : M.AutoSkip;
+                        Console.WriteLine(string.Format(M.AutoActionFormat, autoLabel));
                     }
 
                     if (_autoUpdateChoice != null)
                     {
                         shouldCopy = _autoUpdateChoice == ConsoleKey.U;
                         updateTimestampOnly = shouldCopy;
-                        Console.WriteLine($"自动{(shouldCopy ? "更新" : "跳过")}文件");
+                        Console.WriteLine(shouldCopy ? M.AutoFileUpdate : M.AutoFileSkip);
                     }
                     else
                     {
@@ -545,22 +592,29 @@ class Program
                                 case ConsoleKey.N:
                                     shouldCopy = false;
                                     break;
+                                case ConsoleKey.C:
+                                    _autoUpdateChoice = ConsoleKey.U;
+                                    shouldCopy = true;
+                                    updateTimestampOnly = true;
+                                    Console.WriteLine(M.CoverAllTimestampSet);
+                                    break;
                                 case ConsoleKey.A:
-                                    Console.Write("请选择要自动执行的操作 (U/N): ");
+                                    Console.Write(M.ChooseAutoActionPrompt);
                                     var autoChoice = Console.ReadKey();
                                     Console.WriteLine();
-                                    
+
                                     if (autoChoice.Key == ConsoleKey.U || autoChoice.Key == ConsoleKey.N)
                                     {
                                         _autoUpdateChoice = autoChoice.Key;
                                         shouldCopy = autoChoice.Key == ConsoleKey.U;
                                         updateTimestampOnly = shouldCopy;
-                                        Console.WriteLine($"已设置自动{(shouldCopy ? "更新" : "跳过")}后续内容相同的文件");
+                                        var verb = shouldCopy ? M.AutoVerbUpdate : M.AutoVerbSkip;
+                                        Console.WriteLine(string.Format(M.AutoSameContentSetFormat, verb));
                                         break;
                                     }
                                     continue;
                                 default:
-                                    Console.WriteLine("无效的输入，请重试");
+                                    Console.WriteLine(M.InvalidInputRetry);
                                     continue;
                             }
                             break;
@@ -591,36 +645,71 @@ class Program
                 Console.ResetColor();
 
                 ShowFileDifference(sourceFile, targetFile, false);
-                
-                Console.WriteLine("请选择操作：");
-                Console.WriteLine("Y - 用源文件覆盖目标文件");
-                Console.WriteLine("R - 用目标文件覆盖源文件（反向更新）");
-                Console.WriteLine("N - 跳过此文件");
-                
-                while (true)
-                {
-                    var response = Console.ReadKey();
-                    Console.WriteLine();
 
-                    if (response.Key == ConsoleKey.Y)
+                if (_autoOverwriteChoice != null)
+                {
+                    var autoLabel = _autoOverwriteChoice switch
                     {
-                        shouldCopy = true;
-                    }
-                    else if (response.Key == ConsoleKey.R)
+                        ConsoleKey.Y => M.AutoOverwriteSourceToTarget,
+                        ConsoleKey.R => M.AutoOverwriteTargetToSource,
+                        _ => M.AutoOverwriteSkip
+                    };
+                    Console.WriteLine(string.Format(M.AutoActionFormat, autoLabel));
+                }
+                else
+                {
+                    Console.WriteLine(M.ChooseAction);
+                    Console.WriteLine(M.OptionOverwriteSourceToTarget);
+                    Console.WriteLine(M.OptionOverwriteTargetToSource);
+                    Console.WriteLine(M.OptionSkipFile);
+                    Console.WriteLine(M.OptionCoverAllOverwrite);
+                }
+
+                if (_autoOverwriteChoice != null)
+                {
+                    shouldCopy = _autoOverwriteChoice != ConsoleKey.N;
+                    isReverseUpdate = _autoOverwriteChoice == ConsoleKey.R;
+                    var shortLabel = _autoOverwriteChoice switch
                     {
-                        shouldCopy = true;
-                        isReverseUpdate = true;
-                    }
-                    else if (response.Key == ConsoleKey.N)
+                        ConsoleKey.Y => M.AutoOverwriteSourceToTargetShort,
+                        ConsoleKey.R => M.AutoOverwriteTargetToSourceShort,
+                        _ => M.AutoOverwriteSkipShort
+                    };
+                    Console.WriteLine(string.Format(M.AutoOverwriteFileFormat, shortLabel));
+                }
+                else
+                {
+                    while (true)
                     {
-                        shouldCopy = false;
+                        var response = Console.ReadKey();
+                        Console.WriteLine();
+
+                        if (response.Key == ConsoleKey.Y)
+                        {
+                            shouldCopy = true;
+                        }
+                        else if (response.Key == ConsoleKey.R)
+                        {
+                            shouldCopy = true;
+                            isReverseUpdate = true;
+                        }
+                        else if (response.Key == ConsoleKey.N)
+                        {
+                            shouldCopy = false;
+                        }
+                        else if (response.Key == ConsoleKey.C)
+                        {
+                            _autoOverwriteChoice = ConsoleKey.Y;
+                            shouldCopy = true;
+                            Console.WriteLine(M.CoverAllOverwriteSet);
+                        }
+                        else
+                        {
+                            Console.WriteLine(M.InvalidInputRetry);
+                            continue;
+                        }
+                        break;
                     }
-                    else
-                    {
-                        Console.WriteLine("无效的输入，请重试");
-                        continue;
-                    }
-                    break;
                 }
             }
         }
@@ -673,6 +762,92 @@ class Program
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine($"Skipped: {relativePath}");
             Console.ResetColor();
+        }
+    }
+
+    enum UiLanguage
+    {
+        English,
+        Chinese
+    }
+
+    static (UiLanguage? Lang, string[] RemainingArgs) ParseLanguageArgument(string[] args)
+    {
+        var remaining = new List<string>(args.Length);
+        UiLanguage? lang = null;
+
+        for (var i = 0; i < args.Length; i++)
+        {
+            var arg = args[i];
+            if (arg.Equals("--lang", StringComparison.OrdinalIgnoreCase)
+                || arg.Equals("-l", StringComparison.OrdinalIgnoreCase))
+            {
+                if (i + 1 < args.Length)
+                {
+                    lang = ParseLanguageCode(args[++i]);
+                }
+                continue;
+            }
+
+            if (arg.StartsWith("--lang=", StringComparison.OrdinalIgnoreCase))
+            {
+                lang = ParseLanguageCode(arg[(arg.IndexOf('=') + 1)..]);
+                continue;
+            }
+
+            remaining.Add(arg);
+        }
+
+        return (lang, remaining.ToArray());
+    }
+
+    static UiLanguage? ParseLanguageCode(string code)
+    {
+        if (code.Equals("en", StringComparison.OrdinalIgnoreCase)
+            || code.Equals("eng", StringComparison.OrdinalIgnoreCase)
+            || code.Equals("english", StringComparison.OrdinalIgnoreCase))
+        {
+            return UiLanguage.English;
+        }
+
+        if (code.Equals("zh", StringComparison.OrdinalIgnoreCase)
+            || code.Equals("cn", StringComparison.OrdinalIgnoreCase)
+            || code.Equals("chinese", StringComparison.OrdinalIgnoreCase))
+        {
+            return UiLanguage.Chinese;
+        }
+
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine($"Unknown language code '{code}', using English.");
+        Console.ResetColor();
+        return UiLanguage.English;
+    }
+
+    static void ResolveLanguageInteractively()
+    {
+        // Language picker uses bilingual prompts so either audience can choose before M is set.
+        Console.WriteLine(SyncToolMessages.English.LanguagePromptTitle);
+        Console.WriteLine(SyncToolMessages.English.LanguageOptionEnglish);
+        Console.WriteLine(SyncToolMessages.English.LanguageOptionChinese);
+        Console.Write(SyncToolMessages.English.LanguageChoicePrompt);
+
+        var key = Console.ReadKey(intercept: true);
+        Console.WriteLine();
+
+        if (key.Key == ConsoleKey.Z)
+        {
+            M = SyncToolMessages.Chinese;
+            Console.WriteLine("UI language: 中文");
+        }
+        else if (key.Key == ConsoleKey.Enter || key.Key == ConsoleKey.E || key.Key == ConsoleKey.Spacebar)
+        {
+            M = SyncToolMessages.English;
+            Console.WriteLine("UI language: English");
+        }
+        else
+        {
+            M = SyncToolMessages.English;
+            Console.WriteLine($"UI language: English (unrecognized key '{key.KeyChar}', defaulting to English)");
         }
     }
 }

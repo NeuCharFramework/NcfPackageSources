@@ -64,6 +64,7 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             _folderService = folderService;
         }
 
+        /// <summary>Initializes upload and delete endpoint URLs for the admin page.</summary>
         public Task OnGetAsync()
         {
             UpFileUrl = $"{BaseUrl}/api/FileManager/Index/OnPostUploadAsync";
@@ -71,6 +72,8 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             return Task.CompletedTask;
         }
 
+        /// <summary>Returns a paged file list filtered by folder and resource scope.</summary>
+        /// <param name="page">The one-based page number.</param><param name="pageSize">The page size.</param><param name="folderId">Optional folder filter.</param><param name="resourceScope">The resource boundary.</param>
         public async Task<IActionResult> OnGetListAsync(
             int page = 1,
             int pageSize = 10,
@@ -93,6 +96,8 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             });
         }
 
+        /// <summary>Returns dashboard totals and capacity trends for the selected date range.</summary>
+        /// <param name="startDate">Optional inclusive start date.</param><param name="endDate">Optional inclusive end date.</param>
         public async Task<IActionResult> OnGetDashboardStatsAsync(
             DateTime? startDate = null,
             DateTime? endDate = null)
@@ -101,6 +106,8 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             return Ok(stats);
         }
 
+        /// <summary>Returns a paged report of file references and physical state.</summary>
+        /// <param name="page">The one-based report page.</param><param name="pageSize">The report page size.</param><param name="resourceScope">Optional scope filter.</param><param name="onlyUnreferenced">Whether to return only unreferenced files.</param>
         public async Task<IActionResult> OnGetReferenceReportAsync(
             int page = 1,
             int pageSize = 50,
@@ -115,6 +122,8 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             return Ok(report);
         }
 
+        /// <summary>Lists child folders under an optional parent and resource scope.</summary>
+        /// <param name="parentId">Optional parent folder identifier.</param><param name="resourceScope">The resource boundary.</param>
         public async Task<IActionResult> OnGetFoldersAsync(
             int? parentId = null,
             NcfFileResourceScope resourceScope = NcfFileResourceScope.KnowledgeBase)
@@ -123,6 +132,8 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             return Ok(folders);
         }
 
+        /// <summary>Returns the ancestor path for a folder.</summary>
+        /// <param name="folderId">The folder identifier.</param><param name="resourceScope">The resource boundary.</param>
         public async Task<IActionResult> OnGetFolderPathAsync(
             int folderId,
             NcfFileResourceScope resourceScope = NcfFileResourceScope.KnowledgeBase)
@@ -151,6 +162,8 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
 
         [ApiBind("FileManager", ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         [RequestSizeLimit(NcfFileService.MaxTotalUploadBytes)]
+        /// <summary>Validates and stores one bounded batch of uploaded files.</summary>
+        /// <param name="model">Files, descriptions, folder paths, and resource scope.</param>
         public async Task<IActionResult> OnPostUploadAsync([FromForm] FileUploadModel model)
         {
             if (model.files == null || !model.files.Any())
@@ -207,6 +220,8 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
 
         public record UpdateFileNoteRequest(int Id, string Note);
 
+        /// <summary>Updates one file's administrative note.</summary>
+        /// <param name="request">The file identifier and note.</param>
         public async Task<IActionResult> OnPostEditNoteAsync([FromBody] UpdateFileNoteRequest request)
         {
             await _fileService.UpdateFileNoteAsync(request.Id, request.Note);
@@ -215,6 +230,8 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
 
         public record SetSiteAssetPublicationRequest(int Id, bool Publish);
 
+        /// <summary>Publishes or unpublishes a public SiteAsset file.</summary>
+        /// <param name="request">The file identifier and publication flag.</param>
         public async Task<IActionResult> OnPostSetSiteAssetPublicationAsync([FromBody] SetSiteAssetPublicationRequest request)
         {
             await _fileService.SetSiteAssetPublicationAsync(request.Id, request.Publish);
@@ -222,6 +239,8 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
         }
 
         [ApiBind("FileManager", ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
+        /// <summary>Moves one file through the configured deletion/recycle workflow.</summary>
+        /// <param name="id">The file identifier.</param>
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             await _fileService.DeleteFileAsync(id);
@@ -274,6 +293,8 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             });
         }
 
+        /// <summary>Returns a file as an attachment after physical-path validation.</summary>
+        /// <param name="id">The file identifier.</param>
         public async Task<IActionResult> OnGetDownloadAsync(int id)
         {
             var located = await _fileService.TryGetPhysicalPathAsync(id);
@@ -290,6 +311,8 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             return PhysicalFile(fullPath, contentType, file.FileName);
         }
 
+        /// <summary>Returns a file inline after physical-path validation.</summary>
+        /// <param name="id">The file identifier.</param>
         public async Task<IActionResult> OnGetPreviewAsync(int id)
         {
             var located = await _fileService.TryGetPhysicalPathAsync(id);
@@ -311,6 +334,8 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             return PhysicalFile(fullPath, contentType);
         }
 
+        /// <summary>Extracts bounded preview text from a supported file.</summary>
+        /// <param name="id">The file identifier.</param>
         public async Task<IActionResult> OnGetPreviewContentAsync(int id)
         {
             try
@@ -349,6 +374,8 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
         }
 
         // Folder handlers
+        /// <summary>Creates a folder after model-state and resource-scope validation.</summary>
+        /// <param name="request">The folder name, parent, description, and resource scope.</param>
         public async Task<IActionResult> OnPostCreateFolderAsync([FromBody] CreateFolderRequest request)
         {
             if (!ModelState.IsValid)
@@ -370,12 +397,16 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
 
         public record UpdateFolderRequest(int Id, string Name, string Description);
 
+        /// <summary>Updates one folder's name and description.</summary>
+        /// <param name="request">The folder identifier and new metadata.</param>
         public async Task<IActionResult> OnPostUpdateFolderAsync([FromBody] UpdateFolderRequest request)
         {
             await _folderService.UpdateFolderAsync(request.Id, request.Name, request.Description);
             return Ok(true);
         }
 
+        /// <summary>Deletes one folder through the FileManager folder service.</summary>
+        /// <param name="id">The folder identifier.</param>
         public async Task<IActionResult> OnPostDeleteFolderAsync(int id)
         {
             await _folderService.DeleteFolderAsync(id);

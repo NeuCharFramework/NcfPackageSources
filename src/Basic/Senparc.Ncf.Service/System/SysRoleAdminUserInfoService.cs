@@ -27,21 +27,30 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 
 namespace Senparc.Ncf.Service
 {
+    /// <summary>
+    /// Manages the association between administrator accounts and system roles.
+    /// </summary>
     public class SysRoleAdminUserInfoService : ClientServiceBase<SysRoleAdminUserInfo>
     {
         private readonly SysRoleService _sysRoleService;
 
+        /// <summary>
+        /// Initializes the administrator-role association service.
+        /// </summary>
+        /// <param name="repo">The repository used to persist role associations.</param>
+        /// <param name="serviceProvider">The provider used to resolve the role service.</param>
         public SysRoleAdminUserInfoService(ClientRepositoryBase<SysRoleAdminUserInfo> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             _sysRoleService = _serviceProvider.GetService<SysRoleService>();
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces all role associations for an administrator account with the supplied role identifiers.
+        /// The deletion and insertion are executed through a resilient transaction.
         /// </summary>
-        /// <param name="roleId"></param>
-        /// <param name="accountId"></param>
-        /// <returns></returns>
+        /// <param name="roleId">The role identifiers to associate with the account.</param>
+        /// <param name="accountId">The administrator account identifier.</param>
+        /// <returns>A task that completes after the replacement associations are persisted.</returns>
         public async Task AddAsync(IEnumerable<string> roleId, int accountId)
         {
             IList<SysRoleAdminUserInfo> sysRoleAdminUserInfos = new List<SysRoleAdminUserInfo>();

@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261124
+    Change description: v0.31.1-preview12 Improved frontend localization catalog filtering and fallback behavior.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -36,7 +39,7 @@ public static class FrontendTranslationCatalog
 
         var activeCulture = CultureInfo.CurrentUICulture;
         var neutral = GetStrings(factory, resourceType, CultureInfo.InvariantCulture)
-            .Where(item => item.Name.StartsWith("Frontend.", StringComparison.Ordinal))
+            .Where(IsFrontendKey)
             .ToDictionary(
                 item => item.Name,
                 item => LegacyNeutralSource(item.Value),
@@ -55,7 +58,7 @@ public static class FrontendTranslationCatalog
 
         var localized = factory.Create(resourceType)
             .GetAllStrings(includeParentCultures: false)
-            .Where(item => item.Name.StartsWith("Frontend.", StringComparison.Ordinal));
+            .Where(IsFrontendKey);
         foreach (var item in localized)
         {
             var target = LegacyLocalizedTarget(item.Value);
@@ -124,4 +127,8 @@ public static class FrontendTranslationCatalog
 
     private static string[] SplitLegacy(string value) =>
         (value ?? string.Empty).Split(new[] { "||" }, 2, StringSplitOptions.None);
+
+    private static bool IsFrontendKey(LocalizedString item) =>
+        item.Name.StartsWith("Frontend.", StringComparison.Ordinal)
+        || item.Name.StartsWith("Global.", StringComparison.Ordinal);
 }

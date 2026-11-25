@@ -41,7 +41,7 @@ using Senparc.Xncf.Sandbox.Domain.Services;
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Implements isolated Docker-backed Sandbox creation, execution, cleanup, and port discovery.
 /// </summary>
 public sealed class DockerSandboxRuntime : ISandboxRuntime
 {
@@ -51,6 +51,13 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
     private readonly SandboxDockerOptions _dockerOptions;
     private readonly IIsolatedRuntimeProvider _runtimeProvider;
 
+    /// <summary>
+    /// Initializes the Docker runtime over an isolated-runtime provider and image resolver.
+    /// </summary>
+    /// <param name="logger">Runtime logger.</param>
+    /// <param name="imageResolver">Sandbox image resolver.</param>
+    /// <param name="isolatedRuntimeProviders">Available isolated runtime providers; Docker is required.</param>
+    /// <param name="dockerOptions">Optional Docker limits and timeouts.</param>
     public DockerSandboxRuntime(
         ILogger<DockerSandboxRuntime> logger,
         ISandboxImageResolver imageResolver,
@@ -66,11 +73,13 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
 
     public SandboxRuntimeKind Kind => SandboxRuntimeKind.Docker;
 
+    /// <inheritdoc />
     public async Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default)
     {
         return await _runtimeProvider.IsAvailableAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async Task<SandboxCreateRuntimeResult> CreateInteractiveAsync(
         SandboxCreateRuntimeRequest request,
         CancellationToken cancellationToken = default)
@@ -303,6 +312,7 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         };
     }
 
+    /// <inheritdoc />
     public async Task<SandboxExecResult> ExecAsync(
         SandboxExecRequest request,
         CancellationToken cancellationToken = default)
@@ -329,7 +339,7 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         }
         else if (string.Equals(request.Template.Key, SandboxTemplateKeys.CsharpExec, StringComparison.OrdinalIgnoreCase))
         {
-            //Legacy comment translated to English.
+            // C# execution needs a writable temporary workspace for source and offline build metadata.
             fileName = "main.cs";
             await File.WriteAllTextAsync(Path.Combine(workDir, fileName), request.Code, cancellationToken).ConfigureAwait(false);
             await File.WriteAllTextAsync(Path.Combine(workDir, "nuget.config"), OfflineNuGetConfig, cancellationToken)
@@ -337,7 +347,7 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             await File.WriteAllTextAsync(Path.Combine(workDir, "Directory.Build.props"), OfflineDirectoryBuildProps, cancellationToken)
                 .ConfigureAwait(false);
 
-            mountReadOnly = false; //Legacy comment translated to English.
+            mountReadOnly = false;
             environment = new Dictionary<string, string>(StringComparer.Ordinal)
             {
                 ["HOME"] = "/tmp",
@@ -408,6 +418,7 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         };
     }
 
+    /// <inheritdoc />
     public async Task<SandboxExecResult> ExecInteractiveAsync(
         SandboxInteractiveExecRequest request,
         CancellationToken cancellationToken = default)
@@ -456,6 +467,7 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         };
     }
 
+    /// <inheritdoc />
     public async Task DestroyAsync(string runtimeHandle, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(runtimeHandle))
@@ -468,16 +480,24 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<string>> ListOrphanHandlesAsync(CancellationToken cancellationToken = default)
     {
         return await ListHandlesAsync(all: true, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<string>> ListRunningHandlesAsync(CancellationToken cancellationToken = default)
     {
         return await ListHandlesAsync(all: false, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Lists Docker handles carrying the NCF Sandbox label, optionally including stopped containers.
+    /// </summary>
+    /// <param name="all">Whether stopped and running handles should be returned.</param>
+    /// <param name="cancellationToken">Token used to cancel provider discovery.</param>
+    /// <returns>The matching runtime handles.</returns>
     private async Task<IReadOnlyList<string>> ListHandlesAsync(bool all, CancellationToken cancellationToken)
     {
         return await _runtimeProvider.ListHandlesAsync(
@@ -491,7 +511,7 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Offline NuGet configuration used by the C# execution template.
     /// </summary>
     private const string OfflineNuGetConfig =
         """
@@ -504,7 +524,7 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         """;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Build properties that disable network-dependent or AOT behavior in the C# execution template.
     /// </summary>
     private const string OfflineDirectoryBuildProps =
         """
@@ -516,6 +536,14 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         </Project>
         """;
 
+    /// <summary>
+    /// Resolves requested additional port mappings and allocates unused host ports for zero-valued mappings.
+    /// </summary>
+    /// <param name="extraPortMappings">The requested additional mappings.</param>
+    /// <param name="mainContainerPort">The main container port, retained for mapping-context compatibility.</param>
+    /// <param name="mainHostPort">The already allocated main host port.</param>
+    /// <returns>Mappings with concrete host ports.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when a host port is duplicated or allocation fails.</exception>
     private static IReadOnlyList<SandboxPortMapping> ResolveExtraPortMappings(
         IReadOnlyList<SandboxPortMapping>? extraPortMappings,
         int mainContainerPort,
@@ -546,6 +574,12 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         return resolved;
     }
 
+    /// <summary>
+    /// Allocates a free loopback TCP port that is not already in the supplied set.
+    /// </summary>
+    /// <param name="taken">The host ports that must not be returned.</param>
+    /// <returns>An available host port.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when no distinct port is found after bounded retries.</exception>
     private static int GetFreeTcpPortExcluding(HashSet<int> taken)
     {
         for (var attempt = 0; attempt < 16; attempt++)
@@ -560,6 +594,10 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         throw new InvalidOperationException("无法为附加端口分配空闲宿主端口，请显式指定 hostPort:containerPort。");
     }
 
+    /// <summary>
+    /// Asks the operating system for a currently free loopback TCP port.
+    /// </summary>
+    /// <returns>The allocated-and-released port number.</returns>
     private static int GetFreeTcpPort()
     {
         var listener = new TcpListener(IPAddress.Loopback, 0);
@@ -569,6 +607,14 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         return port;
     }
 
+    /// <summary>
+    /// Polls a loopback port until a TCP connection succeeds or the timeout expires.
+    /// </summary>
+    /// <param name="port">The loopback port to probe.</param>
+    /// <param name="timeout">The maximum wait duration.</param>
+    /// <param name="cancellationToken">Token used to cancel probing.</param>
+    /// <returns>A task that completes when the port accepts a connection.</returns>
+    /// <exception cref="TimeoutException">Thrown when the port does not open before the deadline.</exception>
     private static async Task WaitForOpenTcpPortAsync(int port, TimeSpan timeout, CancellationToken cancellationToken)
     {
         var deadline = DateTimeOffset.UtcNow.Add(timeout);
@@ -596,9 +642,20 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         throw new TimeoutException($"NCF preview port {port} did not become available: {lastError?.Message}");
     }
 
+    /// <summary>
+    /// Checks that a Docker network name contains only conservative identifier characters.
+    /// </summary>
+    /// <param name="value">The network name to validate.</param>
+    /// <returns><see langword="true"/> when the name contains only letters, digits, hyphens, underscores, or dots.</returns>
     private static bool IsSafeDockerNetworkName(string value) =>
         value.All(ch => char.IsLetterOrDigit(ch) || ch is '-' or '_' or '.');
 
+    /// <summary>
+    /// Rejects rooted, traversing, or control-character-containing NCF preview path values.
+    /// </summary>
+    /// <param name="value">The preview path or project value.</param>
+    /// <param name="parameterName">The argument name used in the validation exception.</param>
+    /// <exception cref="ArgumentException">Thrown when the value is unsafe or blank.</exception>
     private static void ValidateNcfPreviewValue(string value, string parameterName)
     {
         if (string.IsNullOrWhiteSpace(value)
@@ -622,6 +679,11 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         exec dotnet /workspace/.ncf-preview-publish/Senparc.Web.dll --urls=http://0.0.0.0:8080 --environment=XncfPreview
         """;
 
+    /// <summary>
+    /// Creates the labels used to identify and reconcile Sandbox runtime containers.
+    /// </summary>
+    /// <param name="sessionId">The session identifier associated with the container.</param>
+    /// <returns>A deterministic label dictionary for the isolated-runtime provider.</returns>
     private static IReadOnlyDictionary<string, string> CreateLabels(string sessionId)
     {
         return new Dictionary<string, string>(StringComparer.Ordinal)

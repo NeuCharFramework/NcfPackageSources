@@ -3,51 +3,53 @@ name: develop-xncf-modules
 description: Route NeuCharFramework XNCF work across creation, integration, feature development, maintenance, bounded-context splits, template upkeep, and release. Use when the user mentions XNCF, NCF module, XncfBuilder, dotnet new XNCF, module install, or publishing an XNCF. Hand the concrete procedure to create-xncf-module, maintain-xncf-module, or publish-xncf-module.
 ---
 
-# 开发 XNCF 模块
+# Develop XNCF modules
 
-先判断任务属于哪一条链路，再读取对应技能。不要手抄一个旧模块来代替模板生成。
+Identify the workflow first, then open the matching skill. Do not copy an old module instead of using the template.
 
-| 任务 | 技能 |
+| Task | Skill |
 | --- | --- |
-| 新建模块、从模板生成、接入解决方案或宿主 | [create-xncf-module](../create-xncf-module/SKILL.md) |
-| 给已有模块加用例、实体、页面、Function、WebApi、迁移、测试 | [maintain-xncf-module](../maintain-xncf-module/SKILL.md) |
-| 对齐版本、更新日志、打包、发布 | [publish-xncf-module](../publish-xncf-module/SKILL.md) |
-| 修改 XNCF 模板本身 | [references/template-maintenance.md](references/template-maintenance.md) |
-| 只审查边界、依赖、拆分，不改代码 | 本文件的判断规则，加上下面两份参考 |
+| New module, template generation, solution or host integration | [create-xncf-module](../create-xncf-module/SKILL.md) |
+| Use cases, entities, pages, Functions, WebApi, migrations, tests on an existing module | [maintain-xncf-module](../maintain-xncf-module/SKILL.md) |
+| Version alignment, changelog, pack, publish | [publish-xncf-module](../publish-xncf-module/SKILL.md) |
+| Edit the XNCF template package itself | [references/template-maintenance.md](references/template-maintenance.md) |
+| Boundary review, dependencies, split plan without code changes | Rules below plus the reference docs |
 
-设计判断读 [references/architecture.md](references/architecture.md)。拆分、合并、上下文地图读 [references/bounded-context-splitting.md](references/bounded-context-splitting.md)。验证证据的边界读 [references/creation-and-validation.md](references/creation-and-validation.md)。
+Read [references/architecture.md](references/architecture.md) for design. Read [references/bounded-context-splitting.md](references/bounded-context-splitting.md) for splits and context maps. Read [references/creation-and-validation.md](references/creation-and-validation.md) for validation boundaries.
 
-## 先定边界，再定项目
+For create and maintain work, user-visible text follows [references/develop-and-maintain.md](references/develop-and-maintain.md#%E6%9C%AC%E5%9C%B0%E5%8C%96): module resources only—no hard-coded strings in C#, Razor, JavaScript, or attributes; keep seven resource files in sync and verify equal key sets.
 
-一个 XNCF 对应一组共享语言、不变量、数据所有者和发布节奏的能力。页面、表、控制器、目录大小都不是拆分理由。一个聚合的写事务只属于一个 XNCF。
+## Boundaries before projects
 
-默认做一个模块。只有在语言冲突、数据所有者不同、可独立安装或发布、安全或可用性边界不同、或者依赖可以收成稳定契约时，才拆成多个。拆分前先给出上下文地图，并等用户确认。
+One XNCF owns one shared language, invariants, data ownership, and release cadence. Page count, table count, controllers, or folder size are not split criteria. A single aggregate write transaction belongs to one XNCF.
 
-模块内部依赖方向：
+Default to one module. Split only when language diverges, data owners differ, install or release independence is required, security or availability boundaries differ, or dependencies can be frozen behind a stable contract. Draw a context map and get user confirmation before splitting.
+
+Internal dependency direction:
 
 ```text
-Areas / OHS / 适配器 -> Application -> Domain
-Register 只做组合，不写用例
+Areas / OHS / adapters -> Application -> Domain
+Register composes only; no use cases inside Register
 ```
 
-跨模块只共享 `.Abstractions` 里的 ID、快照、命令结果和集成事件。不要引用另一个模块的实体、仓储、映射或 `DbContext`。EventBus 是进程内通信，不是安全边界，也不是持久投递。
+Cross-module sharing is limited to IDs, snapshots, command results, and integration events in `.Abstractions`. Do not reference another module's entities, repositories, mappings, or `DbContext`. EventBus is in-process, not a security boundary or durable delivery.
 
-## 身份一旦发布就固定
+## Identity is fixed after release
 
-- `Register.Uid` 是大写 GUID。已发布模块的 UID 冲突时，改新模块，不改旧模块。
-- `DatabaseUniquePrefix` 发布后不改。表名使用 `Register.DATABASE_PREFIX + nameof(实体)`。
-- `Register.Version` 与 csproj `<Version>` 使用同一个语义化版本。
-- 不要把模板自带的 `1.1.x` 更新历史留在新模块里。
+- `Register.Uid` is an uppercase GUID. On UID collision with a published module, change the new module, never the old one.
+- `DatabaseUniquePrefix` does not change after release. Table names use `Register.DATABASE_PREFIX + nameof(Entity)`.
+- `Register.Version` must match csproj `<Version>` (same semantic version).
+- Do not keep the template's `1.1.x` history on a new module.
 
-## 运行位置
+## Where skills run
 
-技能运行在用户正在开发的 NCF 站点上。这个站点可能只有 `Senparc.Web` 项目和 NuGet 上的程序集，没有基础库源码。
+Skills run against the NCF site the user is developing—often only `Senparc.Web` plus NuGet assemblies, without base-library source in the tree.
 
-- 模板只安装 NuGet 包 `Senparc.Xncf.XncfBuilder.Template`。
-- 基础库版本从宿主已引用的包读取；宿主没有的包再查询 nuget.org。
-- 新模块放在 `Senparc.Web` 同级，并用 `PackageReference` 引用这些包。
-- 生成前先跑 `skills/develop-xncf-modules/scripts/prepare_xncf.py`，`--root` 传站点根目录。用脚本输出的命令和版本，不要写死源码仓库路径。
+- Install the template only from NuGet `Senparc.Xncf.XncfBuilder.Template`.
+- Base-library versions come from the host's references; query nuget.org only for packages the host lacks.
+- Place new modules beside `Senparc.Web` and reference packages via `PackageReference`.
+- Before generation, run `skills/develop-xncf-modules/scripts/prepare_xncf.py` with `--root` set to the site root. Use script output for commands and versions; do not hard-code source-repo paths.
 
-只有用户明确要求修改模板包的源码时，才阅读 [references/template-maintenance.md](references/template-maintenance.md)。那份文档里的目录不属于普通创建流程。
+Read [references/template-maintenance.md](references/template-maintenance.md) only when the user explicitly asks to change the template package source. Those directories are not part of ordinary creation.
 
-用户只要方案时，给出方案后停止，不安装模板、不生成项目、不改解决方案。
+If the user only wants a plan, stop after the plan—no template install, no project generation, no solution edits.

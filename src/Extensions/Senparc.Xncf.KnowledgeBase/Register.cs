@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261125
+    Change description: v0.8.4 Registered and localized KnowledgeBase chat-tool services.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -112,6 +115,7 @@ namespace Senparc.Xncf.KnowledgeBase
         {
             services.AddScoped<ColorAppService>();
             services.AddScoped<Domain.Services.KnowledgeBaseService>();
+            AddChatToolServices(services);
             services.AddScoped<Senparc.Xncf.FileManager.Domain.Services.INcfFileDeletionGuard, Domain.Services.KnowledgeBaseFileDeletionGuard>();
             services.AddAutoMapper(z =>
             {

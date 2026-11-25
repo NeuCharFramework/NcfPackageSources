@@ -508,6 +508,7 @@
             }
         });
         var hasMenuTitle = menuIndex !== undefined && menuIndex !== null && menuIndex !== '';
+        var hasExplicitTitle = !!String(title || '').trim();
 
         var existing = null;
         current.tabs.forEach(function (tab) {
@@ -516,9 +517,10 @@
             }
         });
         if (existing) {
-            if (hasMenuTitle && title && !existing.isShell) {
+            if (title && !existing.isShell &&
+                (hasMenuTitle || existing.titleSource === 'path')) {
                 existing.title = title;
-                existing.titleSource = 'menu';
+                existing.titleSource = hasMenuTitle ? 'menu' : 'page';
             }
             if (hasMenuTitle) {
                 existing.menuIndex = String(menuIndex);
@@ -539,8 +541,10 @@
 
         var created = createTab(parsed, {
             shellId: current.shellId,
-            title: hasMenuTitle ? title : titleFromPath(parsed, textOf('untitled', 'Untitled')),
-            titleSource: hasMenuTitle ? 'menu' : 'path',
+            title: hasMenuTitle || hasExplicitTitle
+                ? title
+                : titleFromPath(parsed, textOf('untitled', 'Untitled')),
+            titleSource: hasMenuTitle ? 'menu' : (hasExplicitTitle ? 'page' : 'path'),
             menuIndex: menuIndex,
             moduleName: source && source.moduleName,
             moduleUid: source && source.moduleUid || moduleUidFromUrl(parsed.url, baseHref),
@@ -770,7 +774,7 @@
         return { state: current, changed: true, tab: target };
     }
 
-    function updateTabPageTitle(state, id, pageTitle) {
+    function updateTabPageTitle(state, id, pageTitle, force) {
         var current = cloneState(state);
         var title = String(pageTitle || '').replace(/\s+/g, ' ').trim();
         if (!title) {
@@ -783,7 +787,7 @@
                 target = tab;
             }
         });
-        if (!target || target.isShell || target.titleSource === 'menu' || target.title === title) {
+        if (!target || target.isShell || (!force && target.titleSource === 'menu') || target.title === title) {
             return { state: current, changed: false, tab: target };
         }
 
@@ -1172,6 +1176,29 @@
             }
             return false;
         };
+        root.ncfSetAdminPageTitle = function (title) {
+            try {
+                if (root.parent && root.parent !== root &&
+                    typeof root.parent.ncfReportAdminTabTitle === 'function') {
+                    root.parent.ncfReportAdminTabTitle(root.location.href, title);
+                    return true;
+                }
+            } catch (error) {
+                console.debug('[NCF][AdminTabs] 无法同步页面标题', error && error.message);
+            }
+            return false;
+        };
+        root.ncfReturnToAdminPageSource = function () {
+            try {
+                if (root.parent && root.parent !== root &&
+                    typeof root.parent.ncfReturnCurrentAdminTabToSource === 'function') {
+                    return root.parent.ncfReturnCurrentAdminTabToSource();
+                }
+            } catch (error) {
+                console.debug('[NCF][AdminTabs] 无法返回来源标签', error && error.message);
+            }
+            return false;
+        };
 
         if (!root.document || root.top === root) {
             return;
@@ -1191,13 +1218,13 @@
             }
             var href = anchor.href || anchor.getAttribute('href');
             var parentWindow = root.parent;
-            if (!parentWindow || typeof parentWindow.ncfHasAdminTab !== 'function' || !parentWindow.ncfHasAdminTab(href)) {
+            if (!parentWindow || typeof parentWindow.ncfOpenAdminPage !== 'function') {
                 return;
             }
             var label = (anchor.getAttribute('data-ncf-tab-title') || anchor.textContent || '').replace(/\s+/g, ' ').trim();
-            if (typeof parentWindow.ncfOpenAdminPage === 'function' && parentWindow.ncfOpenAdminPage(href, label)) {
+            if (parentWindow.ncfOpenAdminPage(href, label)) {
                 event.preventDefault();
-                console.debug('[NCF][AdminTabs] 页面已打开，切到已有标签', href);
+                console.debug('[NCF][AdminTabs] 页面在后台标签中打开', href);
             }
         }, true);
     }
@@ -1264,6 +1291,21 @@
             publish(followed.state, 'iframe-url');
         };
 
+        root.ncfReportAdminTabTitle = function (liveHref, title) {
+            var current = snapshot();
+            if (!current.enabled) {
+                return;
+            }
+            var followed = rememberTabAddress(current, liveHref, liveHref);
+            if (!followed.tab) {
+                return;
+            }
+            var updated = updateTabPageTitle(followed.state, followed.tab.id, title, true);
+            if (updated.changed || followed.changed) {
+                publish(updated.state, 'iframe-title');
+            }
+        };
+
         root.ncfHasAdminTab = function (url) {
             var parsed = parseAdminUrl(url, root.location.href);
             if (!parsed || !parsed.hijack) {
@@ -1303,6 +1345,9 @@
             }
             publish(result.state, 'source');
             return true;
+        };
+        root.ncfReturnCurrentAdminTabToSource = function () {
+            return root.ncfReturnAdminTabToSource(snapshot().activeId);
         };
 
         root.ncfScrollAdminTabs = scrollAdminTabs;

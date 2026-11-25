@@ -65,17 +65,33 @@ public static class NcfFileResourcePolicy
 
     private static readonly FileExtensionContentTypeProvider ContentTypeProvider = new();
 
+    /// <summary>
+    /// Determines whether a resource scope is supported by the file policy.
+    /// </summary>
+    /// <param name="scope">The scope to inspect.</param>
+    /// <returns><see langword="true"/> for supported resource scopes.</returns>
     public static bool IsValidScope(NcfFileResourceScope scope) =>
         scope is NcfFileResourceScope.KnowledgeBase
             or NcfFileResourceScope.SiteAsset
             or NcfFileResourceScope.PrivateAttachment
             or NcfFileResourceScope.Skill;
 
+    /// <summary>
+    /// Extracts and lowercases a file extension for policy comparison.
+    /// </summary>
+    /// <param name="fileName">The file name.</param>
+    /// <returns>The lowercase extension including its leading period.</returns>
     public static string NormalizeExtension(string fileName)
     {
         return Path.GetExtension(fileName ?? string.Empty).ToLowerInvariant();
     }
 
+    /// <summary>
+    /// Determines whether a new upload extension is allowed for a resource scope.
+    /// </summary>
+    /// <param name="scope">The resource scope.</param>
+    /// <param name="extension">The normalized extension.</param>
+    /// <returns><see langword="true"/> when the extension is allowed.</returns>
     public static bool IsAllowedExtension(NcfFileResourceScope scope, string extension)
     {
         return scope switch
@@ -93,6 +109,12 @@ public static class NcfFileResourcePolicy
     /// longer accepted for new KnowledgeBase uploads. They remain readable and
     /// downloadable, but cannot bypass the newer ingestion policy.
     /// </summary>
+    /// <summary>
+    /// Determines whether an existing stored extension remains readable under compatibility rules.
+    /// </summary>
+    /// <param name="scope">The resource scope.</param>
+    /// <param name="extension">The normalized extension.</param>
+    /// <returns><see langword="true"/> when the stored file can be accessed.</returns>
     public static bool IsAllowedStoredExtension(NcfFileResourceScope scope, string extension)
     {
         if (IsAllowedExtension(scope, extension))
@@ -105,6 +127,11 @@ public static class NcfFileResourcePolicy
             ".doc" or ".xls" or ".ppt" or ".zip";
     }
 
+    /// <summary>
+    /// Resolves a content type from a file extension with an octet-stream fallback.
+    /// </summary>
+    /// <param name="extension">The file extension.</param>
+    /// <returns>The resolved MIME type.</returns>
     public static string GetContentType(string extension)
     {
         if (!ContentTypeProvider.TryGetContentType($"file{extension}", out var contentType))
@@ -115,6 +142,12 @@ public static class NcfFileResourcePolicy
         return contentType;
     }
 
+    /// <summary>
+    /// Gets the storage-root segment for a resource scope.
+    /// </summary>
+    /// <param name="scope">The resource scope.</param>
+    /// <returns>The relative storage-root segment.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the scope is unsupported.</exception>
     public static string GetStorageRoot(NcfFileResourceScope scope)
     {
         return scope switch
@@ -127,6 +160,11 @@ public static class NcfFileResourcePolicy
         };
     }
 
+    /// <summary>
+    /// Validates that a file is a site asset with a complete content hash before public publication.
+    /// </summary>
+    /// <param name="file">The file metadata to validate.</param>
+    /// <exception cref="InvalidOperationException">Thrown when the file scope or integrity hash is invalid.</exception>
     public static void EnsureCanPublish(NcfFile file)
     {
         if (file == null || file.ResourceScope != NcfFileResourceScope.SiteAsset)

@@ -32,6 +32,17 @@ public sealed class WeixinClawMediaPlaybackService
     private const int MaximumPacketBytes = 1024 * 5;
     private static readonly SemaphoreSlim ConversionGate = new(1, 1);
 
+    /// <summary>
+    /// Returns a playable media path, converting validated SILK voice input to WAV when required.
+    /// Conversion is serialized and bounded by the configured 50 MiB input/output limits.
+    /// </summary>
+    /// <param name="path">The stored media path.</param>
+    /// <param name="kind">The Weixin media kind.</param>
+    /// <param name="contentType">The stored or detected content type.</param>
+    /// <param name="cancellationToken">Token used to cancel conversion.</param>
+    /// <returns>A playable file path and MIME type.</returns>
+    /// <exception cref="InvalidDataException">Thrown when SILK headers, packets, size, or decoded PCM are invalid.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the native decoder cannot be loaded.</exception>
     public async Task<WeixinClawPlaybackFile> GetPlayableFileAsync(
         string path,
         string kind,

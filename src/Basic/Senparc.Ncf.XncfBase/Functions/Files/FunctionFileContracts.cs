@@ -75,6 +75,9 @@ public sealed class FunctionFileContent : IAsyncDisposable
 
     public Stream Content { get; init; } = null!;
 
+    /// <summary>
+    /// Disposes the caller-owned file stream.
+    /// </summary>
     public ValueTask DisposeAsync() => Content.DisposeAsync();
 }
 
@@ -151,6 +154,12 @@ public sealed class LocalFunctionFileStore : IFunctionFileStore
         Directory.CreateDirectory(_options.RootPath);
     }
 
+    /// <summary>
+    /// Saves one uploaded Function file under the current tenant boundary.
+    /// </summary>
+    /// <param name="upload">The readable file upload.</param>
+    /// <param name="cancellationToken">Token used to cancel storage.</param>
+    /// <returns>A task containing persisted metadata and hash.</returns>
     public async Task<FunctionFileReference> SaveAsync(
         FunctionFileUpload upload,
         CancellationToken cancellationToken = default)
@@ -160,6 +169,12 @@ public sealed class LocalFunctionFileStore : IFunctionFileStore
         return result[0];
     }
 
+    /// <summary>
+    /// Saves a bounded batch of uploads atomically enough to clean up partial files on failure.
+    /// </summary>
+    /// <param name="uploads">The file uploads.</param>
+    /// <param name="cancellationToken">Token used to cancel storage.</param>
+    /// <returns>A task containing persisted references.</returns>
     public async Task<IReadOnlyList<FunctionFileReference>> SaveManyAsync(
         IReadOnlyCollection<FunctionFileUpload> uploads,
         CancellationToken cancellationToken = default)
@@ -235,6 +250,12 @@ public sealed class LocalFunctionFileStore : IFunctionFileStore
         }
     }
 
+    /// <summary>
+    /// Gets non-expired file metadata for the current tenant.
+    /// </summary>
+    /// <param name="fileId">The 32-character file ID.</param>
+    /// <param name="cancellationToken">Token used to cancel metadata reading.</param>
+    /// <returns>A task containing metadata, or <see langword="null"/> when missing/expired.</returns>
     public async Task<FunctionFileReference?> GetAsync(
         string fileId,
         CancellationToken cancellationToken = default)
@@ -272,6 +293,13 @@ public sealed class LocalFunctionFileStore : IFunctionFileStore
         return reference;
     }
 
+    /// <summary>
+    /// Opens a non-expired tenant-scoped file stream; the caller owns the returned stream.
+    /// </summary>
+    /// <param name="fileId">The 32-character file ID.</param>
+    /// <param name="cancellationToken">Token used to cancel metadata lookup.</param>
+    /// <returns>A task containing metadata and an open stream.</returns>
+    /// <exception cref="FileNotFoundException">Thrown when the file is missing or expired.</exception>
     public async Task<FunctionFileContent> OpenReadAsync(
         string fileId,
         CancellationToken cancellationToken = default)
@@ -294,6 +322,11 @@ public sealed class LocalFunctionFileStore : IFunctionFileStore
         };
     }
 
+    /// <summary>
+    /// Deletes the current-tenant file content and metadata when present.
+    /// </summary>
+    /// <param name="fileId">The 32-character file ID.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
     public async Task DeleteAsync(
         string fileId,
         CancellationToken cancellationToken = default)
@@ -309,6 +342,14 @@ public sealed class LocalFunctionFileStore : IFunctionFileStore
 
     }
 
+    /// <summary>
+    /// Streams one upload to a temporary tenant-scoped file, computes SHA-256,
+    /// and atomically persists content plus metadata.
+    /// </summary>
+    /// <param name="upload">The file upload.</param>
+    /// <param name="tenantId">The resolved tenant identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel storage.</param>
+    /// <returns>A task containing the persisted file reference.</returns>
     private async Task<FunctionFileReference> SaveOneAsync(
         FunctionFileUpload upload,
         int tenantId,
@@ -411,12 +452,23 @@ public sealed class LocalFunctionFileStore : IFunctionFileStore
         }
     }
 
+    /// <summary>Builds the tenant-scoped content-file path.</summary>
+    /// <param name="fileId">The normalized file ID.</param>
+    /// <param name="tenantId">The tenant identifier.</param>
+    /// <returns>The content path.</returns>
     private string GetContentPath(string fileId, int tenantId) =>
         Path.Combine(_options.RootPath, tenantId.ToString(CultureInfo.InvariantCulture), fileId + ".bin");
 
+    /// <summary>Builds the tenant-scoped metadata-file path.</summary>
+    /// <param name="fileId">The normalized file ID.</param>
+    /// <param name="tenantId">The tenant identifier.</param>
+    /// <returns>The metadata path.</returns>
     private string GetMetadataPath(string fileId, int tenantId) =>
         Path.Combine(_options.RootPath, tenantId.ToString(CultureInfo.InvariantCulture), fileId + ".json");
 
+    /// <summary>Deletes tenant-scoped content and metadata files when present.</summary>
+    /// <param name="fileId">The normalized file ID.</param>
+    /// <param name="tenantId">The tenant identifier.</param>
     private void DeleteFiles(string fileId, int tenantId)
     {
         var contentPath = GetContentPath(fileId, tenantId);
@@ -432,6 +484,11 @@ public sealed class LocalFunctionFileStore : IFunctionFileStore
         }
     }
 
+    /// <summary>
+    /// Resolves the current tenant ID and rejects unresolved tenant context in multi-tenant mode.
+    /// </summary>
+    /// <returns>The current tenant ID, or zero when tenant mode/context is not active.</returns>
+    /// <exception cref="NcfTenantException">Thrown when a multi-tenant request has no resolved tenant.</exception>
     private int GetCurrentTenantId()
     {
         if (_requestTenantInfo == null)
@@ -449,12 +506,23 @@ public sealed class LocalFunctionFileStore : IFunctionFileStore
         return _requestTenantInfo.Id;
     }
 
+    /// <summary>
+    /// Removes path components from an uploaded file name and applies a safe fallback.
+    /// </summary>
+    /// <param name="fileName">The client-provided file name.</param>
+    /// <returns>A path-free file name.</returns>
     private static string NormalizeFileName(string fileName)
     {
         var normalized = Path.GetFileName((fileName ?? string.Empty).Trim());
         return string.IsNullOrWhiteSpace(normalized) ? "upload.bin" : normalized;
     }
 
+    /// <summary>
+    /// Validates and normalizes a 32-character hexadecimal Function file ID.
+    /// </summary>
+    /// <param name="fileId">The file ID to normalize.</param>
+    /// <returns>A lowercase normalized file ID.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the ID format is invalid.</exception>
     private static string NormalizeFileId(string fileId)
     {
         var normalized = (fileId ?? string.Empty).Trim();

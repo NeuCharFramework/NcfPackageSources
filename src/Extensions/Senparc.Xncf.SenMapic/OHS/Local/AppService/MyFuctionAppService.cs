@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261124
+    Change description: v0.4.13 Integrated localization, tooling, and runtime improvements across the module.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -48,7 +51,7 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
             _senMapicTaskService = senMapicTaskService;
         }
 
-        
+
         //[McpServerTool]
         [FunctionRender(typeof(SenMapicResource), "Function.SenMapic.Crawl.Name", "Function.SenMapic.Crawl.Description", typeof(Register))]
         public async Task<StringAppResponse> WebSpider(MyFunction_SenMapicRequest request)
@@ -63,20 +66,21 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
         //Legacy comment translated to English.
         //Legacy comment translated to English.
         //Legacy comment translated to English.
-           
+
         //      await _senMapicTaskService.StartTaskAsync(crawTask);
 
             List<KeyValuePair<ContentType, string>> contentMap = new List<KeyValuePair<ContentType, string>>();
 
-            Console.WriteLine($"Crawl: {request.Url}, depth: {request.Deepth}, max pages: {request.PageNumber}");
+            var maxPageCount = request.GetEffectivePageCount();
+            Console.WriteLine($"Crawl: {request.Url}, depth: {request.Deepth}, max pages: {maxPageCount}");
 
             var senMapicEngine = new SenMapicEngine(
                                 serviceProvider: base.ServiceProvider,
                                 urls: new[] { request.Url },
-                                maxThread: 20,
+                                maxThread: 4,
                                 maxBuildMinutesForSingleSite: 5,
                                 maxDeep: request.Deepth,
-                                maxPageCount: request.PageNumber);
+                                maxPageCount: maxPageCount);
 
             var senMapicResult = senMapicEngine.Build();
 
@@ -102,7 +106,7 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
 
                   * Legacy comment translated to English.
 
-                  * 
+                  *
 
                   * Legacy comment translated to English.
 

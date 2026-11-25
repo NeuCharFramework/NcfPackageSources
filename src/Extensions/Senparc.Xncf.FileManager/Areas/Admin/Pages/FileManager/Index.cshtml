@@ -1467,30 +1467,30 @@
     <div class="file-manager-layout-left">
         <nav class="file-manager-nav-panel">
             <ul class="file-manager-nav-list">
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'home' }" @@click="onNavClick({ key: 'home', label: ncfST('Frontend.029') })">
-                    <i class="el-icon-s-home"></i><span>{{ ncfST('Frontend.029') }}</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'home' }" @@click="onNavClick({ key: 'home', label: ncfST('Frontend.FileManager.Home') })">
+                    <i class="el-icon-s-home"></i><span>{{ ncfST('Frontend.FileManager.Home') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'favorite' }" @@click="onNavClick({ key: 'favorite', label: ncfST('Frontend.119') })">
-                    <i :class="activeNavKey === 'favorite' ? 'el-icon-star-on' : 'el-icon-star-off'"></i><span>{{ ncfST('Frontend.119') }}</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'favorite' }" @@click="onNavClick({ key: 'favorite', label: ncfST('Frontend.FileManager.Favorite') })">
+                    <i :class="activeNavKey === 'favorite' ? 'el-icon-star-on' : 'el-icon-star-off'"></i><span>{{ ncfST('Frontend.FileManager.Favorite') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'enterprise' }" @@click="onNavClick({ key: 'enterprise', label: ncfST('Frontend.072'), scope: 100 })">
-                    <i class="el-icon-folder"></i><span>{{ ncfST('Frontend.072') }}</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'enterprise' }" @@click="onNavClick({ key: 'enterprise', label: ncfST('Frontend.FileManager.EnterpriseDocuments'), scope: 100 })">
+                    <i class="el-icon-folder"></i><span>{{ ncfST('Frontend.FileManager.EnterpriseDocuments') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'fine-tuning' }" @@click="onNavClick({ key: 'fine-tuning', label: ncfST('Frontend.106'), scope: 300 })">
-                    <i class="el-icon-s-data"></i><span>{{ ncfST('Frontend.106') }}</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'fine-tuning' }" @@click="onNavClick({ key: 'fine-tuning', label: ncfST('Frontend.FileManager.FineTuningArtifacts'), scope: 300 })">
+                    <i class="el-icon-s-data"></i><span>{{ ncfST('Frontend.FileManager.FineTuningArtifacts') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'recycle' }" @@click="onNavClick({ key: 'recycle', label: ncfST('Frontend.096') })">
-                    <i class="el-icon-delete"></i><span>{{ ncfST('Frontend.096') }}</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'recycle' }" @@click="onNavClick({ key: 'recycle', label: ncfST('Frontend.FileManager.RecycleBin') })">
+                    <i class="el-icon-delete"></i><span>{{ ncfST('Frontend.FileManager.RecycleBin') }}</span>
                 </li>
                 <li class="file-manager-nav-item is-divider"></li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'dashboard' }" @@click="onNavClick({ key: 'dashboard', label: ncfST('Frontend.120') })">
-                    <i class="el-icon-data-line"></i><span>{{ ncfST('Frontend.120') }}</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'dashboard' }" @@click="onNavClick({ key: 'dashboard', label: ncfST('Frontend.FileManager.DataDashboard') })">
+                    <i class="el-icon-data-line"></i><span>{{ ncfST('Frontend.FileManager.DataDashboard') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'tags' }" @@click="onNavClick({ key: 'tags', label: ncfST('Frontend.143') })">
-                    <i class="el-icon-price-tag"></i><span>{{ ncfST('Frontend.143') }}</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'tags' }" @@click="onNavClick({ key: 'tags', label: ncfST('Frontend.FileManager.TagManagement') })">
+                    <i class="el-icon-price-tag"></i><span>{{ ncfST('Frontend.FileManager.TagManagement') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'settings' }" @@click="onNavClick({ key: 'settings', label: ncfST('Frontend.157') })">
-                    <i class="el-icon-setting"></i><span>{{ ncfST('Frontend.157') }}</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'settings' }" @@click="onNavClick({ key: 'settings', label: ncfST('Frontend.FileManager.Settings') })">
+                    <i class="el-icon-setting"></i><span>{{ ncfST('Frontend.FileManager.Settings') }}</span>
                 </li>
             </ul>
         </nav>
@@ -1509,7 +1509,7 @@
                         <el-input
                             v-model="treeFilter"
                             size="small"
-                            :placeholder="ncfST('Frontend.117')"
+                            :placeholder="ncfST('Frontend.FileManager.SearchDirectories')"
                             prefix-icon="el-icon-search"
                             clearable>
                         </el-input>
@@ -1553,28 +1553,28 @@
                             <el-input
                                 v-model="fileSearchKeyword"
                                 size="small"
-                                :placeholder="ncfST('Frontend.115')"
+                                :placeholder="ncfST('Frontend.FileManager.SearchFilesFolders')"
                                 prefix-icon="el-icon-search"
                                 clearable>
                             </el-input>
                         </div>
                         <div class="file-manager-top-actions">
-                            <el-button size="small" icon="el-icon-refresh" @@click="reloadFolderTree" :title="ncfST('Frontend.087')"></el-button>
+                            <el-button size="small" icon="el-icon-refresh" @@click="reloadFolderTree" :title="ncfST('Frontend.FileManager.Refresh')"></el-button>
                             <el-dropdown trigger="click" @@command="handleCreateCommand">
                                 <el-button size="small">
-                                    {{ ncfST('Frontend.021') }}<i class="el-icon-arrow-down el-icon--right"></i>
+                                    {{ ncfST('Frontend.FileManager.New') }}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </el-button>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="folder">{{ ncfST('Frontend.185') }}</el-dropdown-item>
+                                    <el-dropdown-item command="folder">{{ ncfST('Frontend.FileManager.NewFolderAlternate') }}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                             <el-dropdown trigger="click" @@command="handleUploadCommand">
                                 <el-button type="primary" size="small">
-                                    {{ ncfST('Frontend.016') }}<i class="el-icon-arrow-down el-icon--right"></i>
+                                    {{ ncfST('Frontend.FileManager.Actions') }}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </el-button>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="files">{{ ncfST('Frontend.002') }}</el-dropdown-item>
-                                    <el-dropdown-item command="folder">{{ ncfST('Frontend.066') }}</el-dropdown-item>
+                                    <el-dropdown-item command="files">{{ ncfST('Frontend.FileManager.UploadFile') }}</el-dropdown-item>
+                                    <el-dropdown-item command="folder">{{ ncfST('Frontend.FileManager.UploadFolder') }}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -1585,7 +1585,7 @@
                             v-if="canGoParent"
                             class="file-manager-back-link"
                             href="javascript:void(0)"
-                            @@click="enterParentFolder">{{ ncfST('Frontend.170') }}</a>
+                            @@click="enterParentFolder">{{ ncfST('Frontend.FileManager.BackToParent') }}</a>
                         <span v-if="canGoParent" class="file-manager-nav-divider">|</span>
                         <el-breadcrumb separator="/">
                             <el-breadcrumb-item><a href="javascript:void(0)" @@click="enterFolder(null)">{{ rootFolderName }}</a></el-breadcrumb-item>
@@ -1601,12 +1601,12 @@
                             <template slot="empty">
                                 <div class="file-manager-empty">
                                     <i class="el-icon-document"></i>
-                                    <strong>{{ ncfST('Frontend.133') }}</strong>
-                                    <el-button type="primary" size="mini" @@click="showUploadDialog">{{ ncfST('Frontend.002') }}</el-button>
+                                    <strong>{{ ncfST('Frontend.FileManager.NoDocuments') }}</strong>
+                                    <el-button type="primary" size="mini" @@click="showUploadDialog">{{ ncfST('Frontend.FileManager.UploadFile') }}</el-button>
                                 </div>
                             </template>
                             <el-table-column type="selection" width="48"></el-table-column>
-                            <el-table-column :label="ncfST('Frontend.122')" min-width="260">
+                            <el-table-column :label="ncfST('Frontend.FileManager.FileNameAlternate')" min-width="260">
                                 <template slot-scope="scope">
                                     <div class="file-manager-file-name-cell">
                                         <div class="file-manager-file-name-main">
@@ -1614,7 +1614,7 @@
                                             <i
                                                 class="file-manager-favorite-star"
                                                 :class="isFileFavorited(scope.row) ? 'el-icon-star-on is-on' : 'el-icon-star-off'"
-                                                :title="isFileFavorited(scope.row) ? ncfST('Frontend.090') : ncfST('Frontend.119')"
+                                                :title="isFileFavorited(scope.row) ? ncfST('Frontend.FileManager.RemoveFavorite') : ncfST('Frontend.FileManager.Favorite')"
                                                 @@click.stop="toggleFavorite(scope.row)">
                                             </i>
                                         </div>
@@ -1629,33 +1629,33 @@
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column :label="ncfST('Frontend.136')" width="120" show-overflow-tooltip>
+                            <el-table-column :label="ncfST('Frontend.FileManager.UpdatedBy')" width="120" show-overflow-tooltip>
                                 <template slot-scope="scope">{{ updatedByLabel(scope.row) }}</template>
                             </el-table-column>
-                            <el-table-column prop="fileSize" :label="ncfST('Frontend.014')" width="110">
+                            <el-table-column prop="fileSize" :label="ncfST('Frontend.FileManager.Size')" width="110">
                                 <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
                             </el-table-column>
-                            <el-table-column prop="uploadTime" :label="ncfST('Frontend.135')" width="170">
+                            <el-table-column prop="uploadTime" :label="ncfST('Frontend.FileManager.UpdatedAt')" width="170">
                                 <template slot-scope="scope">{{ dateFormatter(scope.row.uploadTime) }}</template>
                             </el-table-column>
-                            <el-table-column :label="ncfST('Frontend.016')" width="90" fixed="right" class-name="ncf-table-actions-column">
+                            <el-table-column :label="ncfST('Frontend.FileManager.Actions')" width="90" fixed="right" class-name="ncf-table-actions-column">
                                 <template slot-scope="scope">
-                                    <el-tooltip :content="ncfST('Frontend.134')" placement="top" :open-delay="180">
+                                    <el-tooltip :content="ncfST('Frontend.FileManager.More')" placement="top" :open-delay="180">
                                     <el-dropdown trigger="click" @@command="handleRowCommand($event, scope.row)">
                                         <el-button type="text" size="mini" icon="el-icon-more"
-                                            class="ncf-table-action-more" :title="ncfST('Frontend.134')" :aria-label="ncfST('Frontend.134')"></el-button>
+                                            class="ncf-table-action-more" :title="ncfST('Frontend.FileManager.More')" :aria-label="ncfST('Frontend.FileManager.More')"></el-button>
                                         <el-dropdown-menu slot="dropdown">
-                                            <el-dropdown-item command="download" icon="el-icon-download">{{ ncfST('Frontend.004') }}</el-dropdown-item>
-                                            <el-dropdown-item command="preview" icon="el-icon-view">{{ ncfST('Frontend.098') }}</el-dropdown-item>
-                                            <el-dropdown-item v-if="isSiteAsset" command="togglePublish" icon="el-icon-s-promotion">{{ scope.row.accessLevel === 100 ? ncfST('Frontend.241') : ncfST('Frontend.240') }}</el-dropdown-item>
-                                            <el-dropdown-item v-if="isSiteAsset && scope.row.publicUrl" command="copyUrl" icon="el-icon-document-copy">{{ ncfST('Frontend.099') }}</el-dropdown-item>
-                                            <el-dropdown-item command="editNote" icon="el-icon-edit">{{ ncfST('Frontend.156') }}</el-dropdown-item>
+                                            <el-dropdown-item command="download" icon="el-icon-download">{{ ncfST('Frontend.FileManager.Download') }}</el-dropdown-item>
+                                            <el-dropdown-item command="preview" icon="el-icon-view">{{ ncfST('Frontend.FileManager.OnlinePreview') }}</el-dropdown-item>
+                                            <el-dropdown-item v-if="isSiteAsset" command="togglePublish" icon="el-icon-s-promotion">{{ scope.row.accessLevel === 100 ? ncfST('Frontend.FileManager.ResourceMadePrivate') : ncfST('Frontend.FileManager.ResourcePublished') }}</el-dropdown-item>
+                                            <el-dropdown-item v-if="isSiteAsset && scope.row.publicUrl" command="copyUrl" icon="el-icon-document-copy">{{ ncfST('Frontend.FileManager.CopyURL') }}</el-dropdown-item>
+                                            <el-dropdown-item command="editNote" icon="el-icon-edit">{{ ncfST('Frontend.FileManager.EditNote') }}</el-dropdown-item>
                                             <el-dropdown-item command="toggleQuickAccess" icon="el-icon-s-opportunity">
-                                                {{ isInQuickAccess(scope.row) ? ncfST('Frontend.071') : ncfST('Frontend.147') }}
+                                                {{ isInQuickAccess(scope.row) ? ncfST('Frontend.FileManager.RemoveFromQuickAccess') : ncfST('Frontend.FileManager.UseQuickAccessFlexiblyForFasterWork') }}
                                             </el-dropdown-item>
-                                            <el-dropdown-item command="manageTags" icon="el-icon-price-tag">{{ ncfST('Frontend.143') }}</el-dropdown-item>
+                                            <el-dropdown-item command="manageTags" icon="el-icon-price-tag">{{ ncfST('Frontend.FileManager.TagManagement') }}</el-dropdown-item>
                                             <el-dropdown-item command="delete" divided icon="el-icon-delete"
-                                                class="ncf-table-action-danger">{{ ncfST('Frontend.007') }}</el-dropdown-item>
+                                                class="ncf-table-action-danger">{{ ncfST('Frontend.FileManager.Delete') }}</el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </template>
@@ -1682,14 +1682,14 @@
             <div class="file-manager-dashboard-grid">
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
-                        <span>{{ ncfST('Frontend.124') }}</span>
-                        <i class="el-icon-question" :title="ncfST('Frontend.070')"></i>
+                        <span>{{ ncfST('Frontend.FileManager.FileLibraryCapacity') }}</span>
+                        <i class="el-icon-question" :title="ncfST('Frontend.FileManager.EnterpriseDocumentsOnlyShowFileCountAndTotalSizeOverTime')"></i>
                     </div>
                     <div class="file-manager-dash-toolbar">
                         <el-radio-group v-model="dashboard.capacityRange" size="mini" @@change="onDashboardRangeChange">
-                            <el-radio-button label="7d">{{ ncfST('Frontend.167') }}</el-radio-button>
-                            <el-radio-button label="30d">{{ ncfST('Frontend.168') }}</el-radio-button>
-                            <el-radio-button label="365d">{{ ncfST('Frontend.169') }}</el-radio-button>
+                            <el-radio-button label="7d">{{ ncfST('Frontend.FileManager.LastSevenDays') }}</el-radio-button>
+                            <el-radio-button label="30d">{{ ncfST('Frontend.FileManager.LastMonth') }}</el-radio-button>
+                            <el-radio-button label="365d">{{ ncfST('Frontend.FileManager.LastYear') }}</el-radio-button>
                         </el-radio-group>
                         <el-date-picker
                             v-model="dashboard.capacityDates"
@@ -1697,8 +1697,8 @@
                             size="mini"
                             value-format="yyyy-MM-dd"
                             range-separator="~"
-                            :start-placeholder="ncfST('Frontend.105')"
-                            :end-placeholder="ncfST('Frontend.154')"
+                            :start-placeholder="ncfST('Frontend.FileManager.StartDate')"
+                            :end-placeholder="ncfST('Frontend.FileManager.EndDate')"
                             style="width: 240px;"
                             @@change="loadDashboardStats">
                         </el-date-picker>
@@ -1708,17 +1708,17 @@
 
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
-                        <span>{{ ncfST('Frontend.073') }}</span>
-                        <i class="el-icon-question" :title="ncfST('Frontend.102')"></i>
+                        <span>{{ ncfST('Frontend.FileManager.EnterpriseDocumentCapacity') }}</span>
+                        <i class="el-icon-question" :title="ncfST('Frontend.FileManager.ShowCurrentSpaceUsedByTheEnterpriseDocumentLibrary')"></i>
                     </div>
                     <div class="file-manager-dash-meta">
-                        <span>{{ ncfST('Frontend.178') }}：{{ dashboard.statsCutoff }}</span>
-                        <span class="file-manager-dash-used-tag">{{ ncfST('Frontend.179') }} {{ dashboard.enterpriseUsed }}</span>
+                        <span>{{ ncfST('Frontend.FileManager.StatisticsCutoffTime') }}：{{ dashboard.statsCutoff }}</span>
+                        <span class="file-manager-dash-used-tag">{{ ncfST('Frontend.FileManager.EnterpriseDocumentsUsed') }} {{ dashboard.enterpriseUsed }}</span>
                     </div>
                     <div class="file-manager-dash-org-list">
                         <div class="file-manager-dash-org-head">
-                            <span>{{ ncfST('Frontend.151') }}</span>
-                            <span>{{ ncfST('Frontend.104') }}</span>
+                            <span>{{ ncfST('Frontend.FileManager.TenantOrganizationName') }}</span>
+                            <span>{{ ncfST('Frontend.FileManager.UsedSpace') }}</span>
                         </div>
                         <div class="file-manager-dash-org-row" v-for="org in dashboard.orgUsages" :key="org.name">
                             <span class="file-manager-dash-org-name"><i class="el-icon-office-building"></i>{{ org.name }}</span>
@@ -1729,22 +1729,22 @@
 
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
-                        <span>{{ ncfST('Frontend.123') }}</span>
-                        <i class="el-icon-question" :title="ncfST('Frontend.111')"></i>
+                        <span>{{ ncfST('Frontend.FileManager.FileSizeStatistics') }}</span>
+                        <i class="el-icon-question" :title="ncfST('Frontend.FileManager.CapacityShareByFileType')"></i>
                     </div>
                     <div class="file-manager-dash-meta">
-                        <span>{{ ncfST('Frontend.178') }}：{{ dashboard.statsCutoff }}</span>
+                        <span>{{ ncfST('Frontend.FileManager.StatisticsCutoffTime') }}：{{ dashboard.statsCutoff }}</span>
                     </div>
                     <div ref="sizeChart" class="file-manager-dash-chart"></div>
                 </section>
 
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
-                        <span>{{ ncfST('Frontend.121') }}</span>
-                        <i class="el-icon-question" :title="ncfST('Frontend.112')"></i>
+                        <span>{{ ncfST('Frontend.FileManager.FileCountStatistics') }}</span>
+                        <i class="el-icon-question" :title="ncfST('Frontend.FileManager.FileCountShareByFileType')"></i>
                     </div>
                     <div class="file-manager-dash-meta">
-                        <span>{{ ncfST('Frontend.178') }}：{{ dashboard.statsCutoff }}</span>
+                        <span>{{ ncfST('Frontend.FileManager.StatisticsCutoffTime') }}：{{ dashboard.statsCutoff }}</span>
                     </div>
                     <div ref="countChart" class="file-manager-dash-chart"></div>
                 </section>
@@ -1752,19 +1752,19 @@
         </div>
 
         <div class="file-manager-settings-panel" v-if="activeNavKey === 'settings' && uploadSettings">
-            <h2 class="file-manager-settings-title">{{ ncfST('Frontend.067') }}<ncf-doc-help topic="files.uploads"></ncf-doc-help></h2>
-            <p class="file-manager-settings-desc">{{ ncfST('Frontend.172') }}</p>
+            <h2 class="file-manager-settings-title">{{ ncfST('Frontend.FileManager.UploadSettings') }}<ncf-doc-help topic="files.uploads"></ncf-doc-help></h2>
+            <p class="file-manager-settings-desc">{{ ncfST('Frontend.FileManager.ConfigureAllowedTypesSizeLimitsAndBlockedExtensionsForUploadsSavedSettings') }}</p>
             <el-form class="file-manager-settings-form" label-position="top" size="small">
-                <el-form-item :label="ncfST('Frontend.077')">
+                <el-form-item :label="ncfST('Frontend.FileManager.AllowedUploadFileTypes')">
                     <el-input
                         type="textarea"
                         :rows="8"
                         v-model="uploadSettings.allowedTypesText"
-                        :placeholder="ncfST('Frontend.144')">
+                        :placeholder="ncfST('Frontend.FileManager.OneExtensionPerLineForExampleDocxXlsxPdf')">
                     </el-input>
-                    <div class="file-manager-settings-hint">{{ ncfST('Frontend.118') }}</div>
+                    <div class="file-manager-settings-hint">{{ ncfST('Frontend.FileManager.UseOneExtensionPerLineOrSeparateExtensionsWithCommasALeading') }}</div>
                 </el-form-item>
-                <el-form-item :label="ncfST('Frontend.088')">
+                <el-form-item :label="ncfST('Frontend.FileManager.MaximumSingleFileUploadSizeMB')">
                     <el-input-number
                         v-model="uploadSettings.maxSizeMb"
                         :min="1"
@@ -1772,20 +1772,20 @@
                         :step="1"
                         controls-position="right">
                     </el-input-number>
-                    <div class="file-manager-settings-hint">{{ ncfST('Frontend.176') }}</div>
+                    <div class="file-manager-settings-hint">{{ ncfST('Frontend.FileManager.TheDefaultIs50MBLargerFilesAreBlockedBeforeUpload') }}</div>
                 </el-form-item>
-                <el-form-item :label="ncfST('Frontend.174')">
+                <el-form-item :label="ncfST('Frontend.FileManager.FileTypesToFilter')">
                     <el-input
                         type="textarea"
                         :rows="6"
                         v-model="uploadSettings.blockedTypesText"
-                        :placeholder="ncfST('Frontend.145')">
+                        :placeholder="ncfST('Frontend.FileManager.OneExtensionPerLineForExampleExeBatJs')">
                     </el-input>
-                    <div class="file-manager-settings-hint">{{ ncfST('Frontend.175') }}</div>
+                    <div class="file-manager-settings-hint">{{ ncfST('Frontend.FileManager.BlockedExtensionsMatchingFilesCannotBeUploadedAndThisTakesPriorityOver') }}</div>
                 </el-form-item>
                 <div class="file-manager-settings-actions">
-                    <el-button type="primary" @@click="saveUploadSettings">{{ ncfST('Frontend.075') }}</el-button>
-                    <el-button @@click="resetUploadSettings">{{ ncfST('Frontend.173') }}</el-button>
+                    <el-button type="primary" @@click="saveUploadSettings">{{ ncfST('Frontend.FileManager.SaveSettings') }}</el-button>
+                    <el-button @@click="resetUploadSettings">{{ ncfST('Frontend.FileManager.Reset') }}</el-button>
                 </div>
             </el-form>
         </div>
@@ -1793,19 +1793,19 @@
         <div class="file-manager-tags-panel" v-if="activeNavKey === 'tags' && tagManager">
             <div class="file-manager-tags-filter">
                 <div class="file-manager-tags-filter-item">
-                    <span>{{ ncfST('Frontend.114') }}</span>
+                    <span>{{ ncfST('Frontend.FileManager.Search') }}</span>
                     <el-input
                         v-model="tagManager.keyword"
                         size="small"
-                        :placeholder="ncfST('Frontend.116')"
+                        :placeholder="ncfST('Frontend.FileManager.SearchTagNames')"
                         prefix-icon="el-icon-search"
                         clearable
                         @@keyup.enter.native="searchTags">
                     </el-input>
                 </div>
                 <div class="file-manager-tags-filter-item">
-                    <span>{{ ncfST('Frontend.081') }}</span>
-                    <el-select v-model="tagManager.category" size="small" :placeholder="ncfST('Frontend.171')" clearable>
+                    <span>{{ ncfST('Frontend.FileManager.Category') }}</span>
+                    <el-select v-model="tagManager.category" size="small" :placeholder="ncfST('Frontend.FileManager.SelectCategory')" clearable>
                         <el-option
                             v-for="item in tagManager.categoryOptions"
                             :key="item.value"
@@ -1815,29 +1815,29 @@
                     </el-select>
                 </div>
                 <div class="file-manager-tags-filter-item">
-                    <span>{{ ncfST('Frontend.148') }}</span>
-                    <el-select v-model="tagManager.status" size="small" :placeholder="ncfST('Frontend.079')" clearable>
-                        <el-option :label="ncfST('Frontend.079')" value=""></el-option>
-                        <el-option :label="ncfST('Frontend.095')" value="enabled"></el-option>
-                        <el-option :label="ncfST('Frontend.076')" value="disabled"></el-option>
+                    <span>{{ ncfST('Frontend.FileManager.Status') }}</span>
+                    <el-select v-model="tagManager.status" size="small" :placeholder="ncfST('Frontend.FileManager.All')" clearable>
+                        <el-option :label="ncfST('Frontend.FileManager.All')" value=""></el-option>
+                        <el-option :label="ncfST('Frontend.FileManager.Enable')" value="enabled"></el-option>
+                        <el-option :label="ncfST('Frontend.FileManager.Disable')" value="disabled"></el-option>
                     </el-select>
                 </div>
                 <div class="file-manager-tags-filter-actions">
                     <el-button type="primary" size="small" icon="el-icon-search" @@click="searchTags"></el-button>
-                    <el-button type="text" size="small" @@click="resetTagFilters">{{ ncfST('Frontend.173') }}</el-button>
+                    <el-button type="text" size="small" @@click="resetTagFilters">{{ ncfST('Frontend.FileManager.Reset') }}</el-button>
                 </div>
             </div>
 
             <div class="file-manager-tags-toolbar">
-                <el-button type="primary" size="small" @@click="createTag">{{ ncfST('Frontend.129') }}</el-button>
-                <el-button size="small" @@click="createTagCategory">{{ ncfST('Frontend.128') }}</el-button>
+                <el-button type="primary" size="small" @@click="createTag">{{ ncfST('Frontend.FileManager.AddTag') }}</el-button>
+                <el-button size="small" @@click="createTagCategory">{{ ncfST('Frontend.FileManager.AddCategory') }}</el-button>
                 <el-button size="small" @@click="expandTagRows">
-                    {{ tagManager.treeExpanded ? ncfST('Frontend.191') : ncfST('Frontend.192') }}<i class="el-icon-arrow-down el-icon--right"></i>
+                    {{ tagManager.treeExpanded ? ncfST('Frontend.FileManager.Collapse') : ncfST('Frontend.FileManager.Expand') }}<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
-                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="enableSelectedTags">{{ ncfST('Frontend.095') }}</el-button>
-                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="disableSelectedTags">{{ ncfST('Frontend.076') }}</el-button>
-                <el-button size="small" @@click="importTags">{{ ncfST('Frontend.100') }}</el-button>
-                <el-button size="small" @@click="exportTags">{{ ncfST('Frontend.101') }}</el-button>
+                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="enableSelectedTags">{{ ncfST('Frontend.FileManager.Enable') }}</el-button>
+                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="disableSelectedTags">{{ ncfST('Frontend.FileManager.Disable') }}</el-button>
+                <el-button size="small" @@click="importTags">{{ ncfST('Frontend.FileManager.Import') }}</el-button>
+                <el-button size="small" @@click="exportTags">{{ ncfST('Frontend.FileManager.Export') }}</el-button>
             </div>
 
             <div class="file-manager-tags-table-wrap">
@@ -1855,31 +1855,31 @@
                     <template slot="empty">
                         <div class="file-manager-tags-empty">
                             <i class="el-icon-document"></i>
-                            <strong>{{ ncfST('Frontend.132') }}</strong>
+                            <strong>{{ ncfST('Frontend.FileManager.NoData') }}</strong>
                         </div>
                     </template>
                     <el-table-column type="expand" width="44">
                         <template slot-scope="scope">
                             <div class="tag-row-actions">
-                                <el-button size="mini" @@click="editTagRow(scope.row)">{{ ncfST('Frontend.155') }}</el-button>
-                                <el-button size="mini" @@click="deleteTagRow(scope.row)">{{ ncfST('Frontend.007') }}</el-button>
+                                <el-button size="mini" @@click="editTagRow(scope.row)">{{ ncfST('Frontend.FileManager.Edit') }}</el-button>
+                                <el-button size="mini" @@click="deleteTagRow(scope.row)">{{ ncfST('Frontend.FileManager.Delete') }}</el-button>
                                 <el-button size="mini" @@click="toggleTagRowStatus(scope.row)">
-                                    {{ isTagRowEnabled(scope.row) ? ncfST('Frontend.076') : ncfST('Frontend.095') }}
+                                    {{ isTagRowEnabled(scope.row) ? ncfST('Frontend.FileManager.Disable') : ncfST('Frontend.FileManager.Enable') }}
                                 </el-button>
                                 <el-button
                                     v-if="isTagCategoryRow(scope.row)"
                                     size="mini"
-                                    @@click="createTagUnder(scope.row)">{{ ncfST('Frontend.189') }}</el-button>
+                                    @@click="createTagUnder(scope.row)">{{ ncfST('Frontend.FileManager.AddTag') }}</el-button>
                                 <el-button
                                     v-if="isTagCategoryRow(scope.row)"
                                     size="mini"
-                                    @@click="createTagCategoryUnder(scope.row)">{{ ncfST('Frontend.187') }}</el-button>
+                                    @@click="createTagCategoryUnder(scope.row)">{{ ncfST('Frontend.FileManager.AddCategory') }}</el-button>
                             </div>
                         </template>
                     </el-table-column>
                     <el-table-column type="selection" width="48"></el-table-column>
-                            <el-table-column prop="name" :label="ncfST('Frontend.122')" min-width="200" show-overflow-tooltip></el-table-column>
-                            <el-table-column prop="type" :label="ncfST('Frontend.025')" width="120">
+                            <el-table-column prop="name" :label="ncfST('Frontend.FileManager.FileNameAlternate')" min-width="200" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="type" :label="ncfST('Frontend.FileManager.Kind')" width="120">
                         <template slot-scope="scope">
                             <el-tag
                                 class="file-manager-tags-type-tag"
@@ -1888,28 +1888,28 @@
                                 effect="plain">{{ scope.row.type }}</el-tag>
                         </template>
                     </el-table-column>
-                            <el-table-column prop="status" :label="ncfST('Frontend.148')" width="100">
+                            <el-table-column prop="status" :label="ncfST('Frontend.FileManager.Status')" width="100">
                         <template slot-scope="scope">
                             <el-tag :type="isTagRowEnabled(scope.row) ? 'success' : 'info'" size="mini">
-                                {{ isTagRowEnabled(scope.row) ? ncfST('Frontend.095') : ncfST('Frontend.076') }}
+                                {{ isTagRowEnabled(scope.row) ? ncfST('Frontend.FileManager.Enable') : ncfST('Frontend.FileManager.Disable') }}
                             </el-tag>
                         </template>
                     </el-table-column>
-                            <el-table-column prop="tagCount" :label="ncfST('Frontend.142')" width="110">
+                            <el-table-column prop="tagCount" :label="ncfST('Frontend.FileManager.TagCount')" width="110">
                         <template slot-scope="scope">
                             {{ scope.row.nodeType === 'tag' ? '-' : (scope.row.tagCount || 0) }}
                         </template>
                     </el-table-column>
-                            <el-table-column prop="updatedAt" :label="ncfST('Frontend.138')" width="170"></el-table-column>
-                            <el-table-column prop="updatedBy" :label="ncfST('Frontend.137')" width="120" show-overflow-tooltip></el-table-column>
-                            <el-table-column prop="admin" :label="ncfST('Frontend.153')" width="120" show-overflow-tooltip>
+                            <el-table-column prop="updatedAt" :label="ncfST('Frontend.FileManager.LastUpdatedAt')" width="170"></el-table-column>
+                            <el-table-column prop="updatedBy" :label="ncfST('Frontend.FileManager.LastUpdatedBy')" width="120" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="admin" :label="ncfST('Frontend.FileManager.Administrator')" width="120" show-overflow-tooltip>
                         <template slot-scope="scope">
                             {{ scope.row.nodeType === 'tag' ? '-' : (scope.row.admin || '-') }}
                         </template>
                     </el-table-column>
                     <el-table-column width="48" align="center">
                         <template slot="header">
-                            <i class="el-icon-s-operation" :title="ncfST('Frontend.122')"></i>
+                            <i class="el-icon-s-operation" :title="ncfST('Frontend.FileManager.FileNameAlternate')"></i>
                         </template>
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-more" size="mini" @@click="openTagRowMenu(scope.row)"></el-button>
@@ -1926,7 +1926,7 @@
                     size="small"
                     icon="el-icon-delete"
                     :loading="!!recycleBin.emptying"
-                    @@click.stop.prevent="emptyRecycleBin">{{ ncfST('Frontend.064') }}</el-button>
+                    @@click.stop.prevent="emptyRecycleBin">{{ ncfST('Frontend.FileManager.ClearAll') }}</el-button>
             </div>
             <div class="file-manager-recycle-table-wrap">
                 <el-table
@@ -1938,11 +1938,11 @@
                     <template slot="empty">
                         <div class="file-manager-recycle-empty">
                             <i class="el-icon-document"></i>
-                            <strong>{{ ncfST('Frontend.133') }}</strong>
+                            <strong>{{ ncfST('Frontend.FileManager.NoDocuments') }}</strong>
                         </div>
                     </template>
                     <el-table-column type="selection" width="48"></el-table-column>
-                    <el-table-column :label="ncfST('Frontend.122')" min-width="280">
+                    <el-table-column :label="ncfST('Frontend.FileManager.FileNameAlternate')" min-width="280">
                         <template slot-scope="scope">
                             <div class="file-manager-favorite-name-cell">
                                 <span class="file-manager-favorite-name" :title="scope.row.fileName">{{ scope.row.fileName }}</span>
@@ -1950,13 +1950,13 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="updatedBy" :label="ncfST('Frontend.136')" width="120" show-overflow-tooltip>
+                    <el-table-column prop="updatedBy" :label="ncfST('Frontend.FileManager.UpdatedBy')" width="120" show-overflow-tooltip>
                         <template slot-scope="scope">{{ scope.row.updatedBy || updatedByLabel(scope.row) }}</template>
                     </el-table-column>
-                    <el-table-column prop="fileSize" :label="ncfST('Frontend.014')" width="110">
+                    <el-table-column prop="fileSize" :label="ncfST('Frontend.FileManager.Size')" width="110">
                         <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
                     </el-table-column>
-                    <el-table-column prop="deletedAt" :label="ncfST('Frontend.086')" width="180">
+                    <el-table-column prop="deletedAt" :label="ncfST('Frontend.FileManager.DeletedAt')" width="180">
                         <template slot-scope="scope">{{ dateFormatter(scope.row.deletedAt) }}</template>
                     </el-table-column>
                 </el-table>
@@ -1980,7 +1980,7 @@
                     <el-input
                         v-model="favoriteList.keyword"
                         size="small"
-                        :placeholder="ncfST('Frontend.115')"
+                        :placeholder="ncfST('Frontend.FileManager.SearchFilesFolders')"
                         prefix-icon="el-icon-search"
                         clearable
                         @@input="searchFavorites"
@@ -1998,17 +1998,17 @@
                     <template slot="empty">
                         <div class="file-manager-favorite-empty">
                             <i class="el-icon-document"></i>
-                            <strong>{{ ncfST('Frontend.133') }}</strong>
+                            <strong>{{ ncfST('Frontend.FileManager.NoDocuments') }}</strong>
                         </div>
                     </template>
-                    <el-table-column :label="ncfST('Frontend.122')" min-width="280">
+                    <el-table-column :label="ncfST('Frontend.FileManager.FileNameAlternate')" min-width="280">
                         <template slot-scope="scope">
                             <div class="file-manager-favorite-name-cell">
                                 <div class="file-manager-file-name-main">
                                     <span class="file-manager-favorite-name" :title="scope.row.fileName">{{ scope.row.fileName }}</span>
                                     <i
                                         class="file-manager-favorite-star is-on el-icon-star-on"
-                                        :title="ncfST('Frontend.090')"
+                                        :title="ncfST('Frontend.FileManager.RemoveFavorite')"
                                         @@click.stop="toggleFavorite(scope.row)">
                                     </i>
                                 </div>
@@ -2016,13 +2016,13 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="updatedBy" :label="ncfST('Frontend.136')" width="120" show-overflow-tooltip>
+                    <el-table-column prop="updatedBy" :label="ncfST('Frontend.FileManager.UpdatedBy')" width="120" show-overflow-tooltip>
                         <template slot-scope="scope">{{ scope.row.updatedBy || updatedByLabel(scope.row) }}</template>
                     </el-table-column>
-                    <el-table-column prop="fileSize" :label="ncfST('Frontend.014')" width="110">
+                    <el-table-column prop="fileSize" :label="ncfST('Frontend.FileManager.Size')" width="110">
                         <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.135')" width="180">
+                    <el-table-column :label="ncfST('Frontend.FileManager.UpdatedAt')" width="180">
                         <template slot-scope="scope">{{ dateFormatter(scope.row.updatedAt || scope.row.uploadTime) }}</template>
                     </el-table-column>
                 </el-table>
@@ -2046,7 +2046,7 @@
                     <el-input
                         v-model="homePage.keyword"
                         size="small"
-                        :placeholder="ncfST('Frontend.115')"
+                        :placeholder="ncfST('Frontend.FileManager.SearchFilesFolders')"
                         prefix-icon="el-icon-search"
                         clearable
                         @@input="searchHomeRecent"
@@ -2056,19 +2056,19 @@
                 <div class="file-manager-home-actions">
                     <el-dropdown trigger="click" @@command="handleCreateCommand">
                         <el-button size="small">
-                            {{ ncfST('Frontend.021') }}<i class="el-icon-arrow-down el-icon--right"></i>
+                            {{ ncfST('Frontend.FileManager.New') }}<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="folder">{{ ncfST('Frontend.185') }}</el-dropdown-item>
+                            <el-dropdown-item command="folder">{{ ncfST('Frontend.FileManager.NewFolderAlternate') }}</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                     <el-dropdown trigger="click" @@command="handleUploadCommand">
                         <el-button type="primary" size="small">
-                            {{ ncfST('Frontend.016') }}<i class="el-icon-arrow-down el-icon--right"></i>
+                            {{ ncfST('Frontend.FileManager.Actions') }}<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="files">{{ ncfST('Frontend.002') }}</el-dropdown-item>
-                            <el-dropdown-item command="folder">{{ ncfST('Frontend.066') }}</el-dropdown-item>
+                            <el-dropdown-item command="files">{{ ncfST('Frontend.FileManager.UploadFile') }}</el-dropdown-item>
+                            <el-dropdown-item command="folder">{{ ncfST('Frontend.FileManager.UploadFolder') }}</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
@@ -2076,22 +2076,22 @@
 
             <div class="file-manager-home-banner" v-if="!(homePage.quickAccess && homePage.quickAccess.length)">
                 <div class="file-manager-home-banner-text">
-                    <h3>{{ ncfST('Frontend.147') }}</h3>
-                    <p>{{ ncfST('Frontend.091') }}</p>
+                    <h3>{{ ncfST('Frontend.FileManager.UseQuickAccessFlexiblyForFasterWork') }}</h3>
+                    <p>{{ ncfST('Frontend.FileManager.AddFrequentlyUsedFilesAndFoldersToQuickAccessChooseMoreIn') }}</p>
                 </div>
                 <div class="file-manager-home-banner-art" aria-hidden="true"></div>
             </div>
 
             <div class="file-manager-home-quick-access" v-else>
-                <div class="file-manager-home-quick-title">{{ ncfST('Frontend.107') }}</div>
+                <div class="file-manager-home-quick-title">{{ ncfST('Frontend.FileManager.QuickAccess') }}</div>
                 <div class="file-manager-home-quick-list">
-                    <div class="file-manager-home-quick-card" v-for="item in homePage.quickAccess" :key="item.id" @@dblclick.native="previewFile(item)" :title="ncfST('Frontend.089')">
+                    <div class="file-manager-home-quick-card" v-for="item in homePage.quickAccess" :key="item.id" @@dblclick.native="previewFile(item)" :title="ncfST('Frontend.FileManager.DoubleClickToPreview')">
                         <span class="file-manager-home-quick-icon"><i class="el-icon-document"></i></span>
                         <span class="file-manager-home-quick-name" :title="item.fileName">{{ item.fileName }}</span>
                         <el-dropdown trigger="click" @@command="handleQuickAccessCommand($event, item)">
                             <el-button type="text" class="file-manager-home-quick-more" icon="el-icon-more"></el-button>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="remove">{{ ncfST('Frontend.071') }}</el-dropdown-item>
+                                <el-dropdown-item command="remove">{{ ncfST('Frontend.FileManager.RemoveFromQuickAccess') }}</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -2100,8 +2100,8 @@
 
             <div class="file-manager-home-recent">
                 <div class="file-manager-home-recent-title">
-                    <span>{{ ncfST('Frontend.139') }}</span>
-                    <i class="el-icon-sort" :title="ncfST('Frontend.113')"></i>
+                    <span>{{ ncfST('Frontend.FileManager.LastAccessed') }}</span>
+                    <i class="el-icon-sort" :title="ncfST('Frontend.FileManager.Sort')"></i>
                 </div>
                 <div class="file-manager-home-table-wrap">
                     <el-table
@@ -2113,18 +2113,18 @@
                         <template slot="empty">
                             <div class="file-manager-home-empty">
                                 <i class="el-icon-document"></i>
-                                <strong>{{ ncfST('Frontend.133') }}</strong>
+                                <strong>{{ ncfST('Frontend.FileManager.NoDocuments') }}</strong>
                             </div>
                         </template>
-                        <el-table-column prop="fileName" :label="ncfST('Frontend.122')" min-width="200" show-overflow-tooltip sortable></el-table-column>
-                        <el-table-column prop="updatedBy" :label="ncfST('Frontend.136')" width="120" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="fileSize" :label="ncfST('Frontend.014')" width="110">
+                        <el-table-column prop="fileName" :label="ncfST('Frontend.FileManager.FileNameAlternate')" min-width="200" show-overflow-tooltip sortable></el-table-column>
+                        <el-table-column prop="updatedBy" :label="ncfST('Frontend.FileManager.UpdatedBy')" width="120" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="fileSize" :label="ncfST('Frontend.FileManager.Size')" width="110">
                             <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
                         </el-table-column>
-                        <el-table-column prop="updatedAt" :label="ncfST('Frontend.135')" width="170">
+                        <el-table-column prop="updatedAt" :label="ncfST('Frontend.FileManager.UpdatedAt')" width="170">
                             <template slot-scope="scope">{{ dateFormatter(scope.row.updatedAt) }}</template>
                         </el-table-column>
-                        <el-table-column prop="accessedAt" :label="ncfST('Frontend.158')" width="170">
+                        <el-table-column prop="accessedAt" :label="ncfST('Frontend.FileManager.AccessTime')" width="170">
                             <template slot-scope="scope">{{ dateFormatter(scope.row.accessedAt) }}</template>
                         </el-table-column>
                     </el-table>
@@ -2144,14 +2144,14 @@
     <div class="file-manager-upload-toolbar">
         <el-dropdown trigger="click" @@command="handleUploadPickerCommand">
             <el-button size="small">
-                {{ ncfST('Frontend.002') }}<i class="el-icon-arrow-down el-icon--right"></i>
+                {{ ncfST('Frontend.FileManager.UploadFile') }}<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="files">{{ ncfST('Frontend.002') }}</el-dropdown-item>
-                <el-dropdown-item command="folder">{{ ncfST('Frontend.066') }}</el-dropdown-item>
+                <el-dropdown-item command="files">{{ ncfST('Frontend.FileManager.UploadFile') }}</el-dropdown-item>
+                <el-dropdown-item command="folder">{{ ncfST('Frontend.FileManager.UploadFolder') }}</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
-        <el-button type="text" size="small" @@click="clearUploadList">{{ ncfST('Frontend.146') }}</el-button>
+        <el-button type="text" size="small" @@click="clearUploadList">{{ ncfST('Frontend.FileManager.ClearList') }}</el-button>
     </div>
 
     <el-upload
@@ -2165,19 +2165,19 @@
         :on-change="handleFileChange"
         :before-upload="beforeUpload"
         :file-list="uploadDialog.fileList">
-        <div class="file-manager-upload-drop-hint">{{ ncfST('Frontend.160') }}</div>
+        <div class="file-manager-upload-drop-hint">{{ ncfST('Frontend.FileManager.DragFilesFoldersToUploadHere') }}</div>
     </el-upload>
     <input ref="folderUploadInput" class="file-manager-folder-input" type="file" webkitdirectory directory multiple @@change="handleFolderSelection" />
 
     <div v-if="uploadDialog.fileList.length" class="file-manager-upload-filelist">
         <el-table :data="uploadDialog.fileList" size="mini" border max-height="180">
-            <el-table-column prop="name" :label="ncfST('Frontend.122')" min-width="220" show-overflow-tooltip></el-table-column>
-            <el-table-column :label="ncfST('Frontend.014')" width="100">
+            <el-table-column prop="name" :label="ncfST('Frontend.FileManager.FileNameAlternate')" min-width="220" show-overflow-tooltip></el-table-column>
+            <el-table-column :label="ncfST('Frontend.FileManager.Size')" width="100">
                 <template slot-scope="scope">{{ formatFileSize(scope.row.size || (scope.row.raw && scope.row.raw.size) || 0) }}</template>
             </el-table-column>
-            <el-table-column :label="ncfST('Frontend.012')" min-width="160">
+            <el-table-column :label="ncfST('Frontend.FileManager.Notes')" min-width="160">
                 <template slot-scope="scope">
-                    <el-input v-model="scope.row.description" size="mini" :placeholder="ncfST('Frontend.093')"></el-input>
+                    <el-input v-model="scope.row.description" size="mini" :placeholder="ncfST('Frontend.FileManager.OptionalNote')"></el-input>
                 </template>
             </el-table-column>
         </el-table>
@@ -2191,7 +2191,7 @@
         show-icon
         :title="uploadFolderSummary">
     </el-alert>
-    <div class="file-manager-upload-tip">{{ uploadExtensionHint }}。{{ ncfST('Frontend.219') }}</div>
+    <div class="file-manager-upload-tip">{{ uploadExtensionHint }}。{{ ncfST('Frontend.FileManager.SelectedFolderValueWithValueFilesTheOriginalDirectoryStructureWillBe') }}</div>
     <el-progress v-if="uploadDialog.uploading" :percentage="uploadDialog.progress" :stroke-width="10" status="success" style="margin-top: 10px;"></el-progress>
 
     <span slot="footer" class="dialog-footer">
@@ -2200,27 +2200,27 @@
             size="small"
             @@click="submitUpload"
             :loading="uploadDialog.uploading">
-            {{ ncfST('Frontend.182') }}
+            {{ ncfST('Frontend.FileManager.StartUpload') }}
         </el-button>
     </span>
 </el-dialog>
 
-<el-dialog :title="folderDialog.editing ? ncfST('Frontend.184') : ncfST('Frontend.185')" :visible.sync="folderDialog.visible" width="420px" append-to-body>
+<el-dialog :title="folderDialog.editing ? ncfST('Frontend.FileManager.EditFolder') : ncfST('Frontend.FileManager.NewFolderAlternate')" :visible.sync="folderDialog.visible" width="420px" append-to-body>
     <el-form :model="folderDialog.form" label-width="80px">
-        <el-form-item :label="ncfST('Frontend.011')"><el-input v-model="folderDialog.form.name" :placeholder="ncfST('Frontend.027')"></el-input></el-form-item>
-        <el-form-item :label="ncfST('Frontend.012')"><el-input type="textarea" v-model="folderDialog.form.description" :placeholder="ncfST('Frontend.092')" rows="3"></el-input></el-form-item>
+        <el-form-item :label="ncfST('Frontend.FileManager.Name')"><el-input v-model="folderDialog.form.name" :placeholder="ncfST('Frontend.FileManager.EnterFolderName')"></el-input></el-form-item>
+        <el-form-item :label="ncfST('Frontend.FileManager.Notes')"><el-input type="textarea" v-model="folderDialog.form.description" :placeholder="ncfST('Frontend.FileManager.Optional')" rows="3"></el-input></el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="folderDialog.visible=false">{{ ncfST('Frontend.009') }}</el-button>
-        <el-button type="primary" @@click="submitFolder" :loading="folderDialog.loading">{{ ncfST('Frontend.024') }}</el-button>
+        <el-button @@click="folderDialog.visible=false">{{ ncfST('Frontend.FileManager.Cancel') }}</el-button>
+        <el-button type="primary" @@click="submitFolder" :loading="folderDialog.loading">{{ ncfST('Frontend.FileManager.OK') }}</el-button>
     </span>
 </el-dialog>
 
-<el-dialog :title="ncfST('Frontend.156')" :visible.sync="noteDialog.visible" width="420px" append-to-body>
-    <el-input type="textarea" v-model="noteDialog.note" rows="4" :placeholder="ncfST('Frontend.162')"></el-input>
+<el-dialog :title="ncfST('Frontend.FileManager.EditNote')" :visible.sync="noteDialog.visible" width="420px" append-to-body>
+    <el-input type="textarea" v-model="noteDialog.note" rows="4" :placeholder="ncfST('Frontend.FileManager.EnterAFileNote')"></el-input>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="noteDialog.visible=false">{{ ncfST('Frontend.009') }}</el-button>
-        <el-button type="primary" @@click="submitNote" :loading="noteDialog.loading">{{ ncfST('Frontend.074') }}</el-button>
+        <el-button @@click="noteDialog.visible=false">{{ ncfST('Frontend.FileManager.Cancel') }}</el-button>
+        <el-button type="primary" @@click="submitNote" :loading="noteDialog.loading">{{ ncfST('Frontend.FileManager.Save') }}</el-button>
     </span>
 </el-dialog>
 
@@ -2235,27 +2235,27 @@
     <div class="file-manager-recycle-empty-body">
         <i class="el-icon-warning"></i>
         <div class="file-manager-recycle-empty-text">
-            <strong>{{ ncfST('Frontend.125') }}</strong>
-            <p>{{ ncfST('Frontend.150') }}</p>
+            <strong>{{ ncfST('Frontend.FileManager.ClearingFilesWillPermanentlyDeleteThemAndCannotBeUndoneContinue') }}</strong>
+            <p>{{ ncfST('Frontend.FileManager.Continue') }}</p>
         </div>
     </div>
     <span slot="footer" class="dialog-footer">
-        <el-button :disabled="!!(recycleBin && recycleBin.emptying)" @@click.stop="cancelEmptyRecycleBin">{{ ncfST('Frontend.009') }}</el-button>
-        <el-button type="danger" :loading="!!(recycleBin && recycleBin.emptying)" @@click.stop="confirmEmptyRecycleBin">{{ ncfST('Frontend.024') }}</el-button>
+        <el-button :disabled="!!(recycleBin && recycleBin.emptying)" @@click.stop="cancelEmptyRecycleBin">{{ ncfST('Frontend.FileManager.Cancel') }}</el-button>
+        <el-button type="danger" :loading="!!(recycleBin && recycleBin.emptying)" @@click.stop="confirmEmptyRecycleBin">{{ ncfST('Frontend.FileManager.OK') }}</el-button>
     </span>
 </el-dialog>
 
 <el-dialog
-    :title="ncfST('Frontend.143')"
+    :title="ncfST('Frontend.FileManager.TagManagement')"
     :visible.sync="fileTagDialog.visible"
     width="520px"
     custom-class="file-tag-dialog"
     append-to-body
     @@closed="onFileTagDialogClosed">
     <div class="file-tag-dialog-toolbar">
-        <span class="file-tag-dialog-label">{{ ncfST('Frontend.069') }}</span>
+        <span class="file-tag-dialog-label">{{ ncfST('Frontend.FileManager.SetFileTags') }}</span>
     </div>
-    <p class="file-tag-dialog-hint">{{ ncfST('Frontend.094') }}</p>
+    <p class="file-tag-dialog-hint">{{ ncfST('Frontend.FileManager.OptionalTagsComeFromTagManagementSelectedTagsAreWrittenToThe') }}</p>
     <el-select
         class="file-tag-dialog-select"
         v-model="fileTagDialog.selectedIds"
@@ -2263,7 +2263,7 @@
         filterable
         clearable
         collapse-tags
-        :placeholder="ncfST('Frontend.165')"
+        :placeholder="ncfST('Frontend.FileManager.SelectTagsFromTagManagement')"
         :disabled="!(fileTagCatalogOptions && fileTagCatalogOptions.length)">
         <el-option-group
             v-for="group in fileTagCatalogGroups"
@@ -2288,48 +2288,48 @@
                 @@close="removeSelectedFileTag(item.id)">{{ item.name }}</el-tag>
         </template>
         <div v-else class="file-tag-dialog-empty">
-            <template v-if="fileTagCatalogOptions && fileTagCatalogOptions.length">{{ ncfST('Frontend.159') }}</template>
-            <template v-else>{{ ncfST('Frontend.130') }}</template>
+            <template v-if="fileTagCatalogOptions && fileTagCatalogOptions.length">{{ ncfST('Frontend.FileManager.SelectATagAbove') }}</template>
+            <template v-else>{{ ncfST('Frontend.FileManager.NoTagsAreAvailableAddATagInTagManagementOnThe') }}</template>
         </div>
     </div>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="fileTagDialog.visible=false">{{ ncfST('Frontend.009') }}</el-button>
-        <el-button type="primary" @@click="submitFileTags" :loading="fileTagDialog.loading">{{ ncfST('Frontend.024') }}</el-button>
+        <el-button @@click="fileTagDialog.visible=false">{{ ncfST('Frontend.FileManager.Cancel') }}</el-button>
+        <el-button type="primary" @@click="submitFileTags" :loading="fileTagDialog.loading">{{ ncfST('Frontend.FileManager.OK') }}</el-button>
     </span>
 </el-dialog>
 
 <el-dialog
-    :title="tagCategoryDialog.editing ? ncfST('Frontend.186') : ncfST('Frontend.187')"
+    :title="tagCategoryDialog.editing ? ncfST('Frontend.FileManager.EditCategory') : ncfST('Frontend.FileManager.AddCategory')"
     :visible.sync="tagCategoryDialog.visible"
     width="520px"
     custom-class="tag-manage-dialog"
     append-to-body
     @@closed="onTagCategoryDialogClosed">
     <el-form ref="tagCategoryForm" :model="tagCategoryDialog.form" :rules="tagCategoryRules" label-width="100px" size="small">
-        <el-form-item :label="ncfST('Frontend.082')" prop="name">
+        <el-form-item :label="ncfST('Frontend.FileManager.CategoryName')" prop="name">
             <div class="tag-manage-name-field">
                 <el-input
                     v-model="tagCategoryDialog.form.name"
                     maxlength="50"
-                    :placeholder="ncfST('Frontend.161')">
+                    :placeholder="ncfST('Frontend.FileManager.EnterACategoryNameUpTo50Characters')">
                 </el-input>
                 <span class="tag-manage-lang-badge">CN</span>
             </div>
         </el-form-item>
-        <el-form-item :label="ncfST('Frontend.083')" prop="description">
+        <el-form-item :label="ncfST('Frontend.FileManager.CategoryDescription')" prop="description">
             <el-input
                 type="textarea"
                 v-model="tagCategoryDialog.form.description"
                 :rows="3"
                 maxlength="200"
                 show-word-limit
-                :placeholder="ncfST('Frontend.083')">
+                :placeholder="ncfST('Frontend.FileManager.CategoryDescription')">
             </el-input>
         </el-form-item>
-        <el-form-item :label="ncfST('Frontend.081')" prop="parentId">
+        <el-form-item :label="ncfST('Frontend.FileManager.Category')" prop="parentId">
             <el-select
                 v-model="tagCategoryDialog.form.parentId"
-                :placeholder="ncfST('Frontend.171')"
+                :placeholder="ncfST('Frontend.FileManager.SelectCategory')"
                 clearable
                 filterable
                 style="width: 100%;">
@@ -2341,10 +2341,10 @@
                 </el-option>
             </el-select>
         </el-form-item>
-        <el-form-item :label="ncfST('Frontend.084')" prop="admin">
+        <el-form-item :label="ncfST('Frontend.FileManager.CategoryAdministrators')" prop="admin">
             <el-select
                 v-model="tagCategoryDialog.form.admin"
-                :placeholder="ncfST('Frontend.166')"
+                :placeholder="ncfST('Frontend.FileManager.SelectAdministrators')"
                 clearable
                 filterable
                 allow-create
@@ -2360,43 +2360,43 @@
         </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="tagCategoryDialog.visible = false">{{ ncfST('Frontend.009') }}</el-button>
-        <el-button type="primary" :loading="tagCategoryDialog.loading" @@click="submitTagCategory">{{ ncfST('Frontend.074') }}</el-button>
+        <el-button @@click="tagCategoryDialog.visible = false">{{ ncfST('Frontend.FileManager.Cancel') }}</el-button>
+        <el-button type="primary" :loading="tagCategoryDialog.loading" @@click="submitTagCategory">{{ ncfST('Frontend.FileManager.Save') }}</el-button>
     </span>
 </el-dialog>
 
 <el-dialog
-    :title="tagCreateDialog.editing ? ncfST('Frontend.188') : ncfST('Frontend.189')"
+    :title="tagCreateDialog.editing ? ncfST('Frontend.FileManager.EditTag') : ncfST('Frontend.FileManager.AddTag')"
     :visible.sync="tagCreateDialog.visible"
     width="520px"
     custom-class="tag-manage-dialog"
     append-to-body
     @@closed="onTagCreateDialogClosed">
     <el-form ref="tagCreateForm" :model="tagCreateDialog.form" :rules="tagCreateRules" label-width="100px" size="small">
-        <el-form-item :label="ncfST('Frontend.140')" prop="name">
+        <el-form-item :label="ncfST('Frontend.FileManager.TagName')" prop="name">
             <div class="tag-manage-name-field">
                 <el-input
                     v-model="tagCreateDialog.form.name"
                     maxlength="30"
-                    :placeholder="ncfST('Frontend.163')">
+                    :placeholder="ncfST('Frontend.FileManager.EnterATagNameUpTo30Characters')">
                 </el-input>
                 <span class="tag-manage-lang-badge">CN</span>
             </div>
         </el-form-item>
-        <el-form-item :label="ncfST('Frontend.141')" prop="description">
+        <el-form-item :label="ncfST('Frontend.FileManager.TagDescription')" prop="description">
             <el-input
                 type="textarea"
                 v-model="tagCreateDialog.form.description"
                 :rows="3"
                 maxlength="100"
                 show-word-limit
-                :placeholder="ncfST('Frontend.164')">
+                :placeholder="ncfST('Frontend.FileManager.EnterATagDescription')">
             </el-input>
         </el-form-item>
-        <el-form-item :label="ncfST('Frontend.081')" prop="categoryId">
+        <el-form-item :label="ncfST('Frontend.FileManager.Category')" prop="categoryId">
             <el-select
                 v-model="tagCreateDialog.form.categoryId"
-                :placeholder="ncfST('Frontend.171')"
+                :placeholder="ncfST('Frontend.FileManager.SelectCategory')"
                 clearable
                 filterable
                 style="width: 100%;">
@@ -2410,13 +2410,13 @@
         </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="tagCreateDialog.visible = false">{{ ncfST('Frontend.009') }}</el-button>
-        <el-button type="primary" :loading="tagCreateDialog.loading" @@click="submitTagCreate">{{ ncfST('Frontend.074') }}</el-button>
+        <el-button @@click="tagCreateDialog.visible = false">{{ ncfST('Frontend.FileManager.Cancel') }}</el-button>
+        <el-button type="primary" :loading="tagCreateDialog.loading" @@click="submitTagCreate">{{ ncfST('Frontend.FileManager.Save') }}</el-button>
     </span>
 </el-dialog>
 
 <el-dialog
-    :title="filePreviewDialog.fileName || ncfST('Frontend.190')"
+    :title="filePreviewDialog.fileName || ncfST('Frontend.FileManager.FilePreview')"
     :visible.sync="filePreviewDialog.visible"
     width="92%"
     top="4vh"
@@ -2425,7 +2425,7 @@
     @@closed="onFilePreviewClosed">
     <div class="file-preview-toolbar">
         <span class="file-preview-toolbar-name">{{ filePreviewDialog.fileName }}</span>
-        <el-button size="mini" icon="el-icon-download" @@click="downloadFile(filePreviewDialog.row)" v-if="filePreviewDialog.row">{{ ncfST('Frontend.004') }}</el-button>
+        <el-button size="mini" icon="el-icon-download" @@click="downloadFile(filePreviewDialog.row)" v-if="filePreviewDialog.row">{{ ncfST('Frontend.FileManager.Download') }}</el-button>
     </div>
     <div class="file-preview-body" v-loading="filePreviewDialog.loading">
         <iframe v-if="filePreviewDialog.mode === 'pdf'" class="file-preview-frame" :src="filePreviewDialog.url"></iframe>
@@ -2436,23 +2436,23 @@
         <div v-else-if="filePreviewDialog.mode === 'excel'" class="file-preview-excel" v-html="filePreviewDialog.html"></div>
         <div v-else-if="filePreviewDialog.mode === 'slides'" class="file-preview-slides">
             <div class="file-preview-slide" v-for="(slide, index) in filePreviewDialog.slides" :key="'slide-' + index">
-                <p class="file-preview-slide-title">{{ ncfST('Frontend.183') }} {{ index + 1 }}</p>
+                <p class="file-preview-slide-title">{{ ncfST('Frontend.FileManager.Slides') }} {{ index + 1 }}</p>
                 <pre class="file-preview-text">{{ slide }}</pre>
             </div>
         </div>
         <div v-else-if="filePreviewDialog.error" class="file-preview-error">{{ filePreviewDialog.error }}</div>
-        <div v-else class="file-preview-empty">{{ ncfST('Frontend.194') }}</div>
+        <div v-else class="file-preview-empty">{{ ncfST('Frontend.FileManager.SiteStaticResourcesArePrivateByDefaultAfterPublicationASHA256') }}</div>
     </div>
 </el-dialog>
 
-<el-dialog :title="ncfST('Frontend.127')" :visible.sync="guideDialogVisible" width="520px" append-to-body>
+<el-dialog :title="ncfST('Frontend.FileManager.FileResourceManagementGuide')" :visible.sync="guideDialogVisible" width="520px" append-to-body>
     <ol class="file-manager-guide">
-        <li><strong>{{ ncfST('Frontend.078') }}</strong>{{ ncfST('Frontend.103') }}</li>
-        <li><strong>{{ ncfST('Frontend.080') }}</strong>{{ ncfST('Frontend.097') }}</li>
-        <li v-if="!isSiteAsset"><strong>{{ ncfST('Frontend.072') }}</strong>{{ ncfST('Frontend.065') }}</li>
-        <li v-else><strong>{{ ncfST('Frontend.072') }}</strong>{{ ncfST('Frontend.194') }}</li>
+        <li><strong>{{ ncfST('Frontend.FileManager.ChooseAScopeFirst') }}</strong>{{ ncfST('Frontend.FileManager.UseEnterpriseDocumentsOnTheLeftToManageKnowledgeBaseMaterialsSite') }}</li>
+        <li><strong>{{ ncfST('Frontend.FileManager.ThenChooseALocation') }}</strong>{{ ncfST('Frontend.FileManager.SelectOrCreateAFolderInTheDirectoryTreeAfterRefreshThe') }}</li>
+        <li v-if="!isSiteAsset"><strong>{{ ncfST('Frontend.FileManager.EnterpriseDocuments') }}</strong>{{ ncfST('Frontend.FileManager.AfterUploadingAssociateTheMaterialUnderKnowledgeBaseManagementConfigurationSaveThen') }}</li>
+        <li v-else><strong>{{ ncfST('Frontend.FileManager.EnterpriseDocuments') }}</strong>{{ ncfST('Frontend.FileManager.SiteStaticResourcesArePrivateByDefaultAfterPublicationASHA256') }}</li>
     </ol>
-    <span slot="footer" class="dialog-footer"><el-button type="primary" @@click="guideDialogVisible = false">{{ ncfST('Frontend.109') }}</el-button></span>
+    <span slot="footer" class="dialog-footer"><el-button type="primary" @@click="guideDialogVisible = false">{{ ncfST('Frontend.FileManager.GotIt') }}</el-button></span>
 </el-dialog>
 
 @section scripts {
@@ -2523,7 +2523,7 @@
                             blockedTypesText: ''
                         },
                         tagManagerStorageKey: 'ncf.fileManager.tagManager',
-                        tagAdminOptions: [ncfST('Frontend.153'), ncfST('Frontend.226')],
+                        tagAdminOptions: [ncfST('Frontend.FileManager.Administrator'), ncfST('Frontend.FileManager.CurrentUser')],
                         tagCategoryDialog: {
                             visible: false,
                             loading: false,
@@ -2538,17 +2538,17 @@
                         },
                         tagCategoryRules: {
                             name: [
-                                { required: true, message: ncfST('Frontend.161'), trigger: 'blur' },
-                                { max: 50, message: ncfST('Frontend.281'), trigger: 'blur' }
+                                { required: true, message: ncfST('Frontend.FileManager.EnterACategoryNameUpTo50Characters'), trigger: 'blur' },
+                                { max: 50, message: ncfST('Frontend.FileManager.CategoryNameMustBeAtMost50Characters'), trigger: 'blur' }
                             ]
                         },
                         tagCreateRules: {
                             name: [
-                                { required: true, message: ncfST('Frontend.163'), trigger: 'blur' },
-                                { max: 30, message: ncfST('Frontend.282'), trigger: 'blur' }
+                                { required: true, message: ncfST('Frontend.FileManager.EnterATagNameUpTo30Characters'), trigger: 'blur' },
+                                { max: 30, message: ncfST('Frontend.FileManager.TagNameMustBeAtMost30Characters'), trigger: 'blur' }
                             ],
                             categoryId: [
-                                { required: true, message: ncfST('Frontend.171'), trigger: 'change' }
+                                { required: true, message: ncfST('Frontend.FileManager.SelectCategory'), trigger: 'change' }
                             ]
                         }
                     };
@@ -2577,7 +2577,7 @@
                         categories.forEach(function (cat) { known[cat.id] = true; });
                         var orphanTags = tags.filter(function (tag) { return !tag.categoryId || !known[tag.categoryId]; });
                         if (orphanTags.length) {
-                            groups.push({ id: '__other__', name: ncfST('Frontend.220'), tags: orphanTags });
+                            groups.push({ id: '__other__', name: ncfST('Frontend.FileManager.Uncategorized'), tags: orphanTags });
                         }
                         return groups;
                     },
@@ -2655,9 +2655,9 @@
                                     blockedTypesText: this.uploadSettings.blockedTypesText || ''
                                 })
                             );
-                            this.$message.success(ncfST('Frontend.075'));
+                            this.$message.success(ncfST('Frontend.FileManager.SaveSettings'));
                         } catch (e) {
-                            this.$message.error(ncfST('Frontend.271'));
+                            this.$message.error(ncfST('Frontend.FileManager.SaveFailedCheckWhetherBrowserLocalStorageIsAvailable'));
                         }
                     },
                     resetUploadSettings: function () {
@@ -2671,9 +2671,9 @@
                                     blockedTypesText: this.uploadSettings.blockedTypesText || ''
                                 })
                             );
-                            this.$message.success(ncfST('Frontend.108'));
+                            this.$message.success(ncfST('Frontend.FileManager.RestoreDefaults'));
                         } catch (e) {
-                            this.$message.error(ncfST('Frontend.273'));
+                            this.$message.error(ncfST('Frontend.FileManager.FailedToRestoreDefaults'));
                         }
                     },
                     getMaxUploadSizeBytes: function () {
@@ -2686,15 +2686,15 @@
                         var ext = extMatch ? extMatch[0].toLowerCase() : '';
                         var blocked = this.parseExtensionList((this.uploadSettings && this.uploadSettings.blockedTypesText) || '');
                         if (ext && blocked.indexOf(ext) !== -1) {
-                            return ncfST('Frontend.216', name, ext);
+                            return ncfST('Frontend.FileManager.FileValueWithTypeValueHasBeenFilteredAndCannotBeUploaded', name, ext);
                         }
                         var allowed = this.parseExtensionList((this.uploadSettings && this.uploadSettings.allowedTypesText) || '');
                         if (allowed.length && (!ext || allowed.indexOf(ext) === -1)) {
-                            return ncfST('Frontend.217', name);
+                            return ncfST('Frontend.FileManager.FileValueHasATypeThatIsNotInTheAllowedUpload', name);
                         }
                         var maxBytes = this.getMaxUploadSizeBytes();
                         if (fileSize > maxBytes) {
-                            return ncfST('Frontend.218', name, Math.round(maxBytes / 1024 / 1024));
+                            return ncfST('Frontend.FileManager.FileValueExceedsValueMBAndCannotBeUploaded', name, Math.round(maxBytes / 1024 / 1024));
                         }
                         return '';
                     },
@@ -2737,7 +2737,7 @@
                         }
                         if (index >= 0) {
                             list.splice(index, 1);
-                            this.$message.success(ncfST('Frontend.071'));
+                            this.$message.success(ncfST('Frontend.FileManager.RemoveFromQuickAccess'));
                         } else {
                             list.unshift({
                                 id: row.id,
@@ -2747,7 +2747,7 @@
                                 folderPathText: typeof this.buildFavoritePathText === 'function' ? this.buildFavoritePathText() : '',
                                 resourceScope: this.resourceScope
                             });
-                            this.$message.success(ncfST('Frontend.119'));
+                            this.$message.success(ncfST('Frontend.FileManager.Favorite'));
                         }
                         this.saveQuickAccessToStorage();
                     },
@@ -2799,7 +2799,7 @@
                     createTag: function () {
                         if (typeof this.loadTagManagerFromStorage === 'function') this.loadTagManagerFromStorage();
                         if (!(this.tagManager && this.tagManager.list && this.tagManager.list.length)) {
-                            this.$message.warning(ncfST('Frontend.269'));
+                            this.$message.warning(ncfST('Frontend.FileManager.CreateACategoryBeforeCreatingATag'));
                             return;
                         }
                         this.tagCreateDialog = {
@@ -2849,7 +2849,7 @@
                             var editing = !!self.tagCategoryDialog.editing;
                             var currentId = form.id || '';
                             if (!name) {
-                                self.$message.warning(ncfST('Frontend.161'));
+                                self.$message.warning(ncfST('Frontend.FileManager.EnterACategoryNameUpTo50Characters'));
                                 return;
                             }
                             if (!self.tagManager) {
@@ -2860,7 +2860,7 @@
                                 });
                             }
                             if (form.parentId && form.parentId === currentId) {
-                                self.$message.warning(ncfST('Frontend.260'));
+                                self.$message.warning(ncfST('Frontend.FileManager.ACategoryCannotSelectItself'));
                                 return;
                             }
                             var exists = (self.tagManager.list || []).some(function (row) {
@@ -2868,7 +2868,7 @@
                                 return String(row.name || '').toLowerCase() === name.toLowerCase();
                             });
                             if (exists) {
-                                self.$message.warning(ncfST('Frontend.274'));
+                                self.$message.warning(ncfST('Frontend.FileManager.CategoryNameAlreadyExists'));
                                 return;
                             }
                             self.tagCategoryDialog.loading = true;
@@ -2876,28 +2876,28 @@
                                 var now = self.formatTagDateTime(new Date());
                                 if (editing) {
                                     var target = (self.tagManager.list || []).find(function (row) { return row.id === currentId; });
-                                    if (!target) { self.$message.error(ncfST('Frontend.261')); return; }
+                                    if (!target) { self.$message.error(ncfST('Frontend.FileManager.CategoryDoesNotExist')); return; }
                                     target.name = name;
                                     target.description = (form.description || '').trim();
                                     target.parentId = form.parentId || '';
                                     target.admin = form.admin || '-';
                                     target.updatedAt = now;
-                            target.updatedBy = ncfST('Frontend.226');
-                                    self.$message.success(ncfST('Frontend.275'));
+                            target.updatedBy = ncfST('Frontend.FileManager.CurrentUser');
+                                    self.$message.success(ncfST('Frontend.FileManager.CategoryUpdated'));
                                 } else {
                                     self.tagManager.list.unshift({
                                         id: 'cat-' + Date.now(),
                                         name: name,
                                         description: (form.description || '').trim(),
                                         parentId: form.parentId || '',
-                                        type: ncfST('Frontend.081'),
+                                        type: ncfST('Frontend.FileManager.Category'),
                                         status: '启用',
                                         tagCount: 0,
                                         updatedAt: now,
-                                        updatedBy: ncfST('Frontend.226'),
+                                        updatedBy: ncfST('Frontend.FileManager.CurrentUser'),
                                         admin: form.admin || '-'
                                     });
-                                    self.$message.success(ncfST('Frontend.276'));
+                                    self.$message.success(ncfST('Frontend.FileManager.CategoryCreated'));
                                 }
                                 self.syncTagCategoryOptions();
                                 self.saveTagManagerToStorage();
@@ -2920,16 +2920,16 @@
                             var editing = !!self.tagCreateDialog.editing;
                             var currentId = form.id || '';
                             if (!name) {
-                                self.$message.warning(ncfST('Frontend.163'));
+                                self.$message.warning(ncfST('Frontend.FileManager.EnterATagNameUpTo30Characters'));
                                 return;
                             }
                             if (!categoryId) {
-                                self.$message.warning(ncfST('Frontend.171'));
+                                self.$message.warning(ncfST('Frontend.FileManager.SelectCategory'));
                                 return;
                             }
                             var category = (self.tagManager.list || []).find(function (row) { return row.id === categoryId; });
                             if (!category) {
-                                self.$message.warning(ncfST('Frontend.262'));
+                                self.$message.warning(ncfST('Frontend.FileManager.TheSelectedCategoryDoesNotExistSelectAnother'));
                                 return;
                             }
                             if (!Array.isArray(self.tagManager.tags)) self.tagManager.tags = [];
@@ -2939,7 +2939,7 @@
                                     && String(tag.name || '').toLowerCase() === name.toLowerCase();
                             });
                             if (dup) {
-                                self.$message.warning(ncfST('Frontend.277'));
+                                self.$message.warning(ncfST('Frontend.FileManager.ATagWithTheSameNameAlreadyExistsInThisCategory'));
                                 return;
                             }
                             self.tagCreateDialog.loading = true;
@@ -2947,20 +2947,20 @@
                                 var now = self.formatTagDateTime(new Date());
                                 if (editing) {
                                     var target = self.tagManager.tags.find(function (tag) { return tag.id === currentId; });
-                                    if (!target) { self.$message.error(ncfST('Frontend.263')); return; }
+                                    if (!target) { self.$message.error(ncfST('Frontend.FileManager.TagDoesNotExist')); return; }
                                     var oldCategoryId = target.categoryId;
                                     target.name = name;
                                     target.description = (form.description || '').trim();
                                     target.categoryId = categoryId;
                                     target.categoryName = category.name;
                                     target.updatedAt = now;
-                                    target.updatedBy = ncfST('Frontend.226');
+                                    target.updatedBy = ncfST('Frontend.FileManager.CurrentUser');
                                     if (oldCategoryId !== categoryId) {
                                         var oldCat = (self.tagManager.list || []).find(function (row) { return row.id === oldCategoryId; });
                                         if (oldCat) oldCat.tagCount = Math.max(0, (oldCat.tagCount || 0) - 1);
                                         category.tagCount = (category.tagCount || 0) + 1;
                                     }
-                                    self.$message.success(ncfST('Frontend.278'));
+                                    self.$message.success(ncfST('Frontend.FileManager.TagUpdated'));
                                 } else {
                                     self.tagManager.tags.unshift({
                                         id: 'tag-' + Date.now(),
@@ -2970,12 +2970,12 @@
                                         categoryName: category.name,
                                         status: '启用',
                                         updatedAt: now,
-                                        updatedBy: ncfST('Frontend.226')
+                                        updatedBy: ncfST('Frontend.FileManager.CurrentUser')
                                     });
                                     category.tagCount = (category.tagCount || 0) + 1;
                                     category.updatedAt = now;
-                                    category.updatedBy = ncfST('Frontend.226');
-                                    self.$message.success(ncfST('Frontend.279'));
+                                    category.updatedBy = ncfST('Frontend.FileManager.CurrentUser');
+                                    self.$message.success(ncfST('Frontend.FileManager.TagCreated'));
                                 }
                                 self.saveTagManagerToStorage();
                                 if (typeof self.searchTags === 'function') self.searchTags();
@@ -2990,7 +2990,7 @@
                         if (typeof this.loadFileTagMapFromStorage === 'function') this.loadFileTagMapFromStorage();
                         var catalog = (this.tagManager && this.tagManager.tags) || [];
                         if (!catalog.length) {
-                            this.$message.warning(ncfST('Frontend.130'));
+                            this.$message.warning(ncfST('Frontend.FileManager.NoTagsAreAvailableAddATagInTagManagementOnThe'));
                         }
                         var existingItems = this.getFileTagItems(row);
                         var selectedIds = existingItems.map(function (item) { return item.id; }).filter(Boolean);
@@ -3094,7 +3094,7 @@
                             this.$set(row, 'tags', items.map(function (item) { return item.name; }));
                             this.$set(row, 'tagIds', items.map(function (item) { return item.id; }));
                             this.fileTagDialog.visible = false;
-                            this.$message.success(items.length ? ncfST('Frontend.227') : ncfST('Frontend.228'));
+                            this.$message.success(items.length ? ncfST('Frontend.FileManager.FileTagsUpdated') : ncfST('Frontend.FileManager.FileTagsCleared'));
                         } finally {
                             this.fileTagDialog.loading = false;
                         }
@@ -3104,7 +3104,7 @@
                         return (this.favoriteList.list || []).some(function (item) { return item.id === row.id; });
                     },
                     buildFavoritePathText: function () {
-                        var segments = [this.rootFolderName || ncfST('Frontend.289'), this.orgName || ''].concat(
+                        var segments = [this.rootFolderName || ncfST('Frontend.FileManager.EnterpriseDocuments'), this.orgName || ''].concat(
                             (this.folderPath || []).map(function (item) { return item.name; })
                         ).filter(function (name) { return !!name; });
                         return segments.join(' > ');
@@ -3147,7 +3147,7 @@
                         if (index >= 0) {
                             list.splice(index, 1);
                             this.$set(row, 'isFavorite', false);
-                            this.$message.success(ncfST('Frontend.177'));
+                            this.$message.success(ncfST('Frontend.FileManager.RemoveFromFavorites'));
                         } else {
                             list.unshift({
                                 id: row.id,
@@ -3161,7 +3161,7 @@
                                 isFavorite: true
                             });
                             this.$set(row, 'isFavorite', true);
-                            this.$message.success(ncfST('Frontend.119'));
+                            this.$message.success(ncfST('Frontend.FileManager.Favorite'));
                         }
                         this.favoriteList.list = list;
                         this.saveFavoritesToStorage();
@@ -3171,7 +3171,7 @@
                     emptyRecycleBin: function () {
                         var list = (this.recycleBin && (this.recycleBin.list || this.recycleBin.displayList)) || [];
                         if (!list.length) {
-                            this.$message.info(ncfST('Frontend.133'));
+                            this.$message.info(ncfST('Frontend.FileManager.NoDocuments'));
                             return;
                         }
                         if (!this.recycleEmptyDialog) {
@@ -3192,7 +3192,7 @@
                             : (this.recycleBin.displayList || [])).slice();
                         if (!items.length) {
                             if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
-                            this.$message.info(ncfST('Frontend.133'));
+                            this.$message.info(ncfST('Frontend.FileManager.NoDocuments'));
                             return;
                         }
                         this.$set(this.recycleBin, 'emptying', true);
@@ -3221,13 +3221,13 @@
                                 localStorage.setItem(this.recycleStorageKey || 'ncf.fileManager.recycleBin', JSON.stringify(remaining));
                             } catch (e) { /* ignore */ }
                             if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
-                            if (remaining.length === 0) this.$message.success((result && result.message) || ncfST('Frontend.229'));
-                            else if (remaining.length < items.length) this.$message.warning((result && result.message) || ncfST('Frontend.231', remaining.length));
-                            else this.$message.error((result && result.message) || ncfST('Frontend.232'));
+                            if (remaining.length === 0) this.$message.success((result && result.message) || ncfST('Frontend.FileManager.RecycleBinEmptiedSuccessfully'));
+                            else if (remaining.length < items.length) this.$message.warning((result && result.message) || ncfST('Frontend.FileManager.SomeFilesCouldNotBeDeletedValueRemainInTheRecycleBin', remaining.length));
+                            else this.$message.error((result && result.message) || ncfST('Frontend.FileManager.CouldNotEmptyTheRecycleBinCompletely'));
                         } catch (error) {
                             var data = error && error.response && error.response.data;
-                            var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title || data.msg)) || (error && error.message) || ncfST('Frontend.280');
-                            this.$message.error(ncfST('Frontend.233', message));
+                            var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title || data.msg)) || (error && error.message) || ncfST('Frontend.FileManager.RequestFailed');
+                            this.$message.error(ncfST('Frontend.FileManager.FailedToEmptyTheRecycleBinValue', message));
                         } finally {
                             this.$set(this.recycleBin, 'emptying', false);
                         }
@@ -3275,18 +3275,18 @@
                         sizeTotalLabel: '0B',
                         countTotalLabel: '0',
                         sizeSlices: [
-                            { name: ncfST('Frontend.206'), value: 0, color: '#95de64' },
-                            { name: ncfST('Frontend.207'), value: 0, color: '#597ef7' },
-                            { name: ncfST('Frontend.208'), value: 0, color: '#ffd666' },
-                            { name: ncfST('Frontend.209'), value: 0, color: '#ff9c6e' },
-                            { name: ncfST('Frontend.210'), value: 0, color: '#91d5ff' }
+                            { name: ncfST('Frontend.FileManager.Documents'), value: 0, color: '#95de64' },
+                            { name: ncfST('Frontend.FileManager.Images'), value: 0, color: '#597ef7' },
+                            { name: ncfST('Frontend.FileManager.Videos'), value: 0, color: '#ffd666' },
+                            { name: ncfST('Frontend.FileManager.Audio'), value: 0, color: '#ff9c6e' },
+                            { name: ncfST('Frontend.FileManager.OtherAlternate'), value: 0, color: '#91d5ff' }
                         ],
                         countSlices: [
-                            { name: ncfST('Frontend.206'), value: 0, color: '#95de64' },
-                            { name: ncfST('Frontend.207'), value: 0, color: '#597ef7' },
-                            { name: ncfST('Frontend.208'), value: 0, color: '#ffd666' },
-                            { name: ncfST('Frontend.209'), value: 0, color: '#ff9c6e' },
-                            { name: ncfST('Frontend.210'), value: 0, color: '#91d5ff' }
+                            { name: ncfST('Frontend.FileManager.Documents'), value: 0, color: '#95de64' },
+                            { name: ncfST('Frontend.FileManager.Images'), value: 0, color: '#597ef7' },
+                            { name: ncfST('Frontend.FileManager.Videos'), value: 0, color: '#ffd666' },
+                            { name: ncfST('Frontend.FileManager.Audio'), value: 0, color: '#ff9c6e' },
+                            { name: ncfST('Frontend.FileManager.OtherAlternate'), value: 0, color: '#91d5ff' }
                         ]
                     });
                 } else if (!vm.dashboard.capacityTrend) {
@@ -3415,7 +3415,7 @@
                 } else if (vm.tagCreateDialog.editing == null) {
                     Vue.set(vm.tagCreateDialog, 'editing', false);
                 }
-                if (!vm.tagAdminOptions) Vue.set(vm, 'tagAdminOptions', [ncfST('Frontend.153'), ncfST('Frontend.226')]);
+                if (!vm.tagAdminOptions) Vue.set(vm, 'tagAdminOptions', [ncfST('Frontend.FileManager.Administrator'), ncfST('Frontend.FileManager.CurrentUser')]);
                 if (!vm.tagManagerStorageKey) Vue.set(vm, 'tagManagerStorageKey', 'ncf.fileManager.tagManager');
 
                 vm.isTagRowEnabled = function (row) { return !!(row && row.status === '启用'); };
@@ -3440,7 +3440,7 @@
                     });
                     categories.forEach(function (cat) {
                         var hasParent = !!(cat.parentId && categoryMap[cat.parentId]);
-                        cat.type = hasParent ? ncfST('Frontend.222') : ncfST('Frontend.223');
+                        cat.type = hasParent ? ncfST('Frontend.FileManager.Subcategory') : ncfST('Frontend.FileManager.CategorySupplemental');
                         cat.level = hasParent ? 2 : 1;
                         if (hasParent) {
                             categoryMap[cat.parentId].children.push(cat);
@@ -3449,7 +3449,7 @@
                     });
                     (this.tagManager.tags || []).forEach(function (row) {
                         var tag = Object.assign({}, row, {
-                            nodeType: 'tag', type: ncfST('Frontend.224'), tagCount: '-', admin: '-', children: []
+                            nodeType: 'tag', type: ncfST('Frontend.FileManager.Tag'), tagCount: '-', admin: '-', children: []
                         });
                         if (tag.categoryId && categoryMap[tag.categoryId]) {
                             categoryMap[tag.categoryId].children.push(tag);
@@ -3520,9 +3520,9 @@
                     if (!row) return;
                     var self = this;
                     var tip = row.nodeType === 'tag'
-                        ? ncfST('Frontend.257', row.name)
-                        : ncfST('Frontend.258', row.name);
-                    this.$confirm(tip, ncfST('Frontend.259'), { type: 'warning' }).then(function () {
+                        ? ncfST('Frontend.FileManager.DeleteTagValue', row.name)
+                        : ncfST('Frontend.FileManager.DeleteCategoryValueAndItsChildTags', row.name);
+                    this.$confirm(tip, ncfST('Frontend.FileManager.NoticeAlternate'), { type: 'warning' }).then(function () {
                         if (row.nodeType === 'tag') {
                             self.tagManager.tags = (self.tagManager.tags || []).filter(function (item) { return item.id !== row.id; });
                             var category = (self.tagManager.list || []).find(function (item) { return item.id === row.categoryId; });
@@ -3539,7 +3539,7 @@
                         if (typeof self.syncTagCategoryOptions === 'function') self.syncTagCategoryOptions();
                         if (typeof self.saveTagManagerToStorage === 'function') self.saveTagManagerToStorage();
                         self.searchTags();
-                        self.$message.success(ncfST('Frontend.039'));
+                        self.$message.success(ncfST('Frontend.FileManager.DeletedSuccessfully'));
                     }).catch(function () { /* cancel */ });
                 };
                 vm.toggleTagRowStatus = function (row) {
@@ -3560,11 +3560,11 @@
                     }
                     if (typeof this.saveTagManagerToStorage === 'function') this.saveTagManagerToStorage();
                     this.searchTags();
-                    this.$message.success(enabled ? ncfST('Frontend.225') : ncfST('Frontend.095'));
+                    this.$message.success(enabled ? ncfST('Frontend.FileManager.Disabled') : ncfST('Frontend.FileManager.Enable'));
                 };
                 vm.setSelectedTagStatus = function (enabled) {
                     var ids = (this.tagManager && this.tagManager.selectedIds) || [];
-                    if (!ids.length) { this.$message.warning(ncfST('Frontend.283')); return; }
+                    if (!ids.length) { this.$message.warning(ncfST('Frontend.FileManager.SelectDataFirst')); return; }
                     var idMap = {};
                     ids.forEach(function (id) { idMap[id] = true; });
                     var nextStatus = enabled ? '启用' : '已停用';
@@ -3577,7 +3577,7 @@
                     });
                     if (typeof this.saveTagManagerToStorage === 'function') this.saveTagManagerToStorage();
                     this.searchTags();
-                    this.$message.success(enabled ? ncfST('Frontend.095') : ncfST('Frontend.225'));
+                    this.$message.success(enabled ? ncfST('Frontend.FileManager.Enable') : ncfST('Frontend.FileManager.Disabled'));
                 };
                 vm.enableSelectedTags = function () { this.setSelectedTagStatus(true); };
                 vm.disableSelectedTags = function () { this.setSelectedTagStatus(false); };
@@ -3585,7 +3585,7 @@
                 vm.createTag = function (presetCategoryId) {
                     if (typeof this.loadTagManagerFromStorage === 'function') this.loadTagManagerFromStorage();
                     if (!(this.tagManager && this.tagManager.list && this.tagManager.list.length)) {
-                        this.$message.warning(ncfST('Frontend.269'));
+                        this.$message.warning(ncfST('Frontend.FileManager.CreateACategoryBeforeCreatingATag'));
                         return;
                     }
                     this.tagCreateDialog = {
@@ -3714,7 +3714,7 @@
                 vm.emptyRecycleBin = function () {
                     var list = (this.recycleBin && (this.recycleBin.list || this.recycleBin.displayList)) || [];
                     if (!list.length) {
-                        this.$message.info(ncfST('Frontend.133'));
+                        this.$message.info(ncfST('Frontend.FileManager.NoDocuments'));
                         return;
                     }
                     if (!this.recycleEmptyDialog) {
@@ -3735,7 +3735,7 @@
                         : (this.recycleBin.displayList || [])).slice();
                     if (!items.length) {
                         if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
-                        this.$message.info(ncfST('Frontend.133'));
+                        this.$message.info(ncfST('Frontend.FileManager.NoDocuments'));
                         return;
                     }
                     this.$set(this.recycleBin, 'emptying', true);
@@ -3777,8 +3777,8 @@
                                 deletedCount: successFallback,
                                 failedIds: remainingFallback.map(function (x) { return x.id; }),
                                 message: remainingFallback.length === 0
-                                    ? ncfST('Frontend.229')
-                                    : ncfST('Frontend.230', successFallback, remainingFallback.length, lastError || '-')
+                                    ? ncfST('Frontend.FileManager.RecycleBinEmptiedSuccessfully')
+                                    : ncfST('Frontend.FileManager.DeletedValueFailedValueValue', successFallback, remainingFallback.length, lastError || '-')
                             };
                         }
                         var failedIds = (result && result.failedIds) || [];
@@ -3793,16 +3793,16 @@
                         this.loadRecycleBin();
                         if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
                         if (remaining.length === 0) {
-                            this.$message.success((result && result.message) || ncfST('Frontend.229'));
+                            this.$message.success((result && result.message) || ncfST('Frontend.FileManager.RecycleBinEmptiedSuccessfully'));
                         } else if (remaining.length < items.length) {
-                            this.$message.warning((result && result.message) || ncfST('Frontend.231', remaining.length));
+                            this.$message.warning((result && result.message) || ncfST('Frontend.FileManager.SomeFilesCouldNotBeDeletedValueRemainInTheRecycleBin', remaining.length));
                         } else {
-                            this.$message.error((result && result.message) || ncfST('Frontend.232'));
+                            this.$message.error((result && result.message) || ncfST('Frontend.FileManager.CouldNotEmptyTheRecycleBinCompletely'));
                         }
                     } catch (error) {
                         var errData = error && error.response && error.response.data;
-                        var message = typeof errData === 'string' ? errData : (errData && (errData.errorMessage || errData.message || errData.title || errData.msg)) || (error && error.message) || ncfST('Frontend.280');
-                        this.$message.error(ncfST('Frontend.233', message));
+                        var message = typeof errData === 'string' ? errData : (errData && (errData.errorMessage || errData.message || errData.title || errData.msg)) || (error && error.message) || ncfST('Frontend.FileManager.RequestFailed');
+                        this.$message.error(ncfST('Frontend.FileManager.FailedToEmptyTheRecycleBinValue', message));
                     } finally {
                         this.$set(this.recycleBin, 'emptying', false);
                     }
@@ -3811,17 +3811,17 @@
                     try {
                         var shortName = String(row.fileName || '').replace(/\.[^.]+$/, '') || row.fileName;
                         await this.$confirm(
-                            ncfST('Frontend.236'),
-                            ncfST('Frontend.237', shortName),
-                            { type: 'warning', confirmButtonText: ncfST('Frontend.024'), cancelButtonText: ncfST('Frontend.038') }
+                            ncfST('Frontend.FileManager.ThisWillMoveTheFileToTheRecycleBinContinue'),
+                            ncfST('Frontend.FileManager.DeleteValue', shortName),
+                            { type: 'warning', confirmButtonText: ncfST('Frontend.FileManager.OK'), cancelButtonText: ncfST('Frontend.FileManager.CancelAlternate') }
                         );
                         this.moveFileToRecycleBin(row);
-                        this.$message.success(ncfST('Frontend.238'));
+                        this.$message.success(ncfST('Frontend.FileManager.MovedToTheRecycleBin'));
                     } catch (error) {
                         if (error !== 'cancel') {
                             var data = error && error.response && error.response.data;
                             var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
-                            this.$message.error(ncfST('Frontend.239', message || (error && error.message) || ncfST('Frontend.280')));
+                            this.$message.error(ncfST('Frontend.FileManager.DeleteFailedValue', message || (error && error.message) || ncfST('Frontend.FileManager.RequestFailed')));
                         }
                     }
                 };
@@ -3868,7 +3868,7 @@
                     } catch (e) { /* ignore */ }
                 };
                 vm.buildFavoritePathText = function () {
-                    var segments = [this.rootFolderName || ncfST('Frontend.289'), this.orgName || ''].concat(
+                    var segments = [this.rootFolderName || ncfST('Frontend.FileManager.EnterpriseDocuments'), this.orgName || ''].concat(
                         (this.folderPath || []).map(function (item) { return item.name; })
                     ).filter(function (name) { return !!name; });
                     return segments.join(' > ');
@@ -3896,7 +3896,7 @@
                     if (index >= 0) {
                         list.splice(index, 1);
                         this.$set(row, 'isFavorite', false);
-                        this.$message.success(ncfST('Frontend.177'));
+                        this.$message.success(ncfST('Frontend.FileManager.RemoveFromFavorites'));
                     } else {
                         list.unshift({
                             id: row.id,
@@ -3910,7 +3910,7 @@
                             isFavorite: true
                         });
                         this.$set(row, 'isFavorite', true);
-                        this.$message.success(ncfST('Frontend.119'));
+                        this.$message.success(ncfST('Frontend.FileManager.Favorite'));
                     }
                     this.favoriteList.list = list;
                     this.saveFavoritesToStorage();
@@ -3996,7 +3996,7 @@
                     }
                     if (index >= 0) {
                         list.splice(index, 1);
-                        this.$message.success(ncfST('Frontend.071'));
+                        this.$message.success(ncfST('Frontend.FileManager.RemoveFromQuickAccess'));
                     } else {
                         list.unshift({
                             id: row.id,
@@ -4006,7 +4006,7 @@
                             folderPathText: typeof this.buildFavoritePathText === 'function' ? this.buildFavoritePathText() : '',
                             resourceScope: this.resourceScope
                         });
-                        this.$message.success(ncfST('Frontend.119'));
+                        this.$message.success(ncfST('Frontend.FileManager.Favorite'));
                     }
                     this.saveQuickAccessToStorage();
                 };
@@ -4090,9 +4090,9 @@
                                 blockedTypesText: this.uploadSettings.blockedTypesText || ''
                             })
                         );
-                            this.$message.success(ncfST('Frontend.270'));
+                            this.$message.success(ncfST('Frontend.FileManager.UploadSettingsSaved'));
                     } catch (e) {
-                            this.$message.error(ncfST('Frontend.271'));
+                            this.$message.error(ncfST('Frontend.FileManager.SaveFailedCheckWhetherBrowserLocalStorageIsAvailable'));
                     }
                 }.bind(vm);
                 vm.resetUploadSettings = function () {
@@ -4106,9 +4106,9 @@
                                 blockedTypesText: this.uploadSettings.blockedTypesText || ''
                             })
                         );
-                            this.$message.success(ncfST('Frontend.272'));
+                            this.$message.success(ncfST('Frontend.FileManager.DefaultUploadSettingsRestored'));
                     } catch (e) {
-                            this.$message.error(ncfST('Frontend.273'));
+                            this.$message.error(ncfST('Frontend.FileManager.FailedToRestoreDefaults'));
                     }
                 }.bind(vm);
                 vm.getMaxUploadSizeBytes = function () {
@@ -4121,15 +4121,15 @@
                     var ext = extMatch ? extMatch[0].toLowerCase() : '';
                     var blocked = this.parseExtensionList((this.uploadSettings && this.uploadSettings.blockedTypesText) || '');
                     if (ext && blocked.indexOf(ext) !== -1) {
-                        return ncfST('Frontend.216', name, ext);
+                        return ncfST('Frontend.FileManager.FileValueWithTypeValueHasBeenFilteredAndCannotBeUploaded', name, ext);
                     }
                     var allowed = this.parseExtensionList((this.uploadSettings && this.uploadSettings.allowedTypesText) || '');
                     if (allowed.length && (!ext || allowed.indexOf(ext) === -1)) {
-                        return ncfST('Frontend.217', name);
+                        return ncfST('Frontend.FileManager.FileValueHasATypeThatIsNotInTheAllowedUpload', name);
                     }
                     var maxBytes = this.getMaxUploadSizeBytes();
                     if (fileSize > maxBytes) {
-                        return ncfST('Frontend.218', name, Math.round(maxBytes / 1024 / 1024));
+                        return ncfST('Frontend.FileManager.FileValueExceedsValueMBAndCannotBeUploaded', name, Math.round(maxBytes / 1024 / 1024));
                     }
                     return '';
                 };
@@ -4155,12 +4155,12 @@
                         var batchBytes = 0;
                         (fileList || []).forEach(function (file) {
                             var rawFile = file.raw || file;
-                            if (!rawFile || !rawFile.size) throw new Error(ncfST('Frontend.248'));
+                            if (!rawFile || !rawFile.size) throw new Error(ncfST('Frontend.FileManager.SomeFilesCouldNotBeReadSelectAgain'));
                             if (typeof self.validateUploadFile === 'function') {
                                 var reason = self.validateUploadFile(file.name || rawFile.name, rawFile.size);
                                 if (reason) throw new Error(reason);
                             } else if (rawFile.size > maxBytes) {
-                                throw new Error(ncfST('Frontend.218', file.name, maxMb));
+                                throw new Error(ncfST('Frontend.FileManager.FileValueExceedsValueMBAndCannotBeUploaded', file.name, maxMb));
                             }
                             if (batch.length && (batch.length >= maxFilesPerUpload || batchBytes + rawFile.size > maxTotalUploadBytes)) {
                                 batches.push(batch);
@@ -4191,8 +4191,8 @@
                 if (!vm.$options.computed) vm.$options.computed = {};
                 if (typeof vm.getUploadDialogTitle !== 'function') {
                     vm.getUploadDialogTitle = function () {
-                        var segments = [this.rootFolderName || ncfST('Frontend.023')].concat((this.folderPath || []).map(function (item) { return item.name; }));
-                        return ncfST('Frontend.234', segments.join('/'));
+                        var segments = [this.rootFolderName || ncfST('Frontend.FileManager.Root')].concat((this.folderPath || []).map(function (item) { return item.name; }));
+                        return ncfST('Frontend.FileManager.UploadFilesToValueResumableUploadSupported', segments.join('/'));
                     };
                 }
 
@@ -4328,22 +4328,22 @@
                                     if (!params || !params.length) return '';
                                     var lines = [params[0].axisValue];
                                     params.forEach(function (p) {
-                                        var unit = p.seriesName === ncfST('Frontend.284') ? ' ' + ncfST('Frontend.288') : ' MB';
+                                        var unit = p.seriesName === ncfST('Frontend.FileManager.FileCount') ? ' ' + ncfST('Frontend.FileManager.Items') : ' MB';
                                         lines.push(p.marker + p.seriesName + '：' + p.data + unit);
                                     });
                                     return lines.join('<br/>');
                                 }
                             },
-                            legend: { bottom: 0, data: [ncfST('Frontend.284'), ncfST('Frontend.285')] },
+                            legend: { bottom: 0, data: [ncfST('Frontend.FileManager.FileCount'), ncfST('Frontend.FileManager.TotalSize')] },
                             grid: { left: 48, right: 56, top: 28, bottom: 48 },
                             xAxis: { type: 'category', boundaryGap: false, data: labels },
                             yAxis: [
-                                { type: 'value', name: ncfST('Frontend.286'), minInterval: 1, axisLabel: { formatter: '{value}' }, splitLine: { lineStyle: { type: 'dashed' } } },
-                                { type: 'value', name: ncfST('Frontend.287'), axisLabel: { formatter: '{value}MB' }, splitLine: { show: false } }
+                                { type: 'value', name: ncfST('Frontend.FileManager.Count'), minInterval: 1, axisLabel: { formatter: '{value}' }, splitLine: { lineStyle: { type: 'dashed' } } },
+                                { type: 'value', name: ncfST('Frontend.FileManager.Size'), axisLabel: { formatter: '{value}MB' }, splitLine: { show: false } }
                             ],
                             series: [
-                                { name: ncfST('Frontend.284'), type: 'line', smooth: true, yAxisIndex: 0, data: fileCounts, areaStyle: { opacity: 0.08 } },
-                                { name: ncfST('Frontend.285'), type: 'line', smooth: true, yAxisIndex: 1, data: sizeMb }
+                                { name: ncfST('Frontend.FileManager.FileCount'), type: 'line', smooth: true, yAxisIndex: 0, data: fileCounts, areaStyle: { opacity: 0.08 } },
+                                { name: ncfST('Frontend.FileManager.TotalSize'), type: 'line', smooth: true, yAxisIndex: 1, data: sizeMb }
                             ]
                         }, true);
                     }
@@ -4367,11 +4367,11 @@
                     var countChart = this.getOrCreateChart(this.$refs.countChart);
                     if (countChart) {
                         countChart.setOption({
-                            tooltip: { trigger: 'item', formatter: '{b}: {c} ' + ncfST('Frontend.288') + ' ({d}%)' },
+                            tooltip: { trigger: 'item', formatter: '{b}: {c} ' + ncfST('Frontend.FileManager.Items') + ' ({d}%)' },
                             legend: { bottom: 0 },
                             series: [{
                                 type: 'pie', radius: ['48%', '68%'], center: ['50%', '46%'],
-                                label: { formatter: '{b}\n{c}' + ncfST('Frontend.288') },
+                                label: { formatter: '{b}\n{c}' + ncfST('Frontend.FileManager.Items') },
                                 data: (countSlices.length ? countSlices : this.dashboard.countSlices).map(function (x) {
                                     return { name: x.name, value: Number(x.value || 0), itemStyle: { color: x.color } };
                                 })
@@ -4404,7 +4404,7 @@
                     } catch (error) {
                         var data = error && error.response && error.response.data;
                         var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
-                        this.$message.error(ncfST('Frontend.030') + ': ' + (message || (error && error.message) || ncfST('Frontend.280')));
+                        this.$message.error(ncfST('Frontend.FileManager.FailedToLoadTheList') + ': ' + (message || (error && error.message) || ncfST('Frontend.FileManager.RequestFailed')));
                     } finally {
                         this.tableLoading = false;
                     }
@@ -4491,7 +4491,7 @@
                     this.loadFileTagMapFromStorage();
                     var catalog = (this.tagManager && this.tagManager.tags) || [];
                     if (!catalog.length) {
-                        this.$message.warning(ncfST('Frontend.130'));
+                        this.$message.warning(ncfST('Frontend.FileManager.NoTagsAreAvailableAddATagInTagManagementOnThe'));
                     }
                     var existingItems = this.getFileTagItems(row);
                     var selectedIds = existingItems.map(function (item) { return item.id; }).filter(Boolean);
@@ -4531,7 +4531,7 @@
                         this.$set(row, 'tags', items.map(function (item) { return item.name; }));
                         this.$set(row, 'tagIds', items.map(function (item) { return item.id; }));
                         this.fileTagDialog.visible = false;
-                        this.$message.success(items.length ? ncfST('Frontend.227') : ncfST('Frontend.228'));
+                        this.$message.success(items.length ? ncfST('Frontend.FileManager.FileTagsUpdated') : ncfST('Frontend.FileManager.FileTagsCleared'));
                     } finally {
                         this.fileTagDialog.loading = false;
                     }
@@ -4612,10 +4612,10 @@
                     };
                     vm.previewFile = async function (row) {
                         if (!row || row.id == null) {
-                            this.$message.warning(ncfST('Frontend.131'));
+                            this.$message.warning(ncfST('Frontend.FileManager.NoPreviewableContent'));
                             return;
                         }
-                        var fileName = row.fileName || row.name || ncfST('Frontend.235');
+                        var fileName = row.fileName || row.name || ncfST('Frontend.FileManager.UnnamedFile');
                         var kind = this.getPreviewKind(fileName);
                         var pageUrl = window.location.pathname || '/Admin/FileManager/Index';
                         var previewUrl = this.buildPreviewUrl(row.id);
@@ -4638,12 +4638,12 @@
                             }
                             if (kind === 'legacy-office') {
                                 this.filePreviewDialog.mode = 'error';
-                                this.filePreviewDialog.error = ncfST('Frontend.200');
+                                this.filePreviewDialog.error = ncfST('Frontend.FileManager.LegacyOfficeFormatsDocXlsPptCannotBePreviewedOnlineDownloadThe');
                                 return;
                             }
                             if (kind === 'unsupported') {
                                 this.filePreviewDialog.mode = 'error';
-                                this.filePreviewDialog.error = ncfST('Frontend.201');
+                                this.filePreviewDialog.error = ncfST('Frontend.FileManager.ThisFileTypeCannotBePreviewedOnlineTryDownloadingItInstead');
                                 return;
                             }
                             var response = await axios.get(previewUrl, { responseType: 'arraybuffer' });
@@ -4651,7 +4651,7 @@
                             if (kind === 'docx' && typeof mammoth !== 'undefined') {
                                 var docResult = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
                                 this.filePreviewDialog.mode = 'html';
-                                this.filePreviewDialog.html = docResult.value || `<p>${ncfST('Frontend.202')}</p>`;
+                                this.filePreviewDialog.html = docResult.value || `<p>${ncfST('Frontend.FileManager.TheDocumentIsEmpty')}</p>`;
                                 return;
                             }
                             if (kind === 'xlsx' && typeof XLSX !== 'undefined') {
@@ -4659,7 +4659,7 @@
                                 var sheetName = workbook.SheetNames && workbook.SheetNames[0];
                                 if (!sheetName) {
                                     this.filePreviewDialog.mode = 'error';
-                            this.filePreviewDialog.error = ncfST('Frontend.203');
+                            this.filePreviewDialog.error = ncfST('Frontend.FileManager.TheExcelFileHasNoPreviewableWorksheets');
                                     return;
                                 }
                                 this.filePreviewDialog.mode = 'excel';
@@ -4688,12 +4688,12 @@
                                 return;
                             }
                             this.filePreviewDialog.mode = 'error';
-                            this.filePreviewDialog.error = ncfST('Frontend.204');
+                            this.filePreviewDialog.error = ncfST('Frontend.FileManager.ThisFileTypeDoesNotSupportOnlinePreview');
                         } catch (error) {
                             this.filePreviewDialog.mode = 'error';
                             var data = error && error.response && error.response.data;
                             var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
-                            this.filePreviewDialog.error = ncfST('Frontend.205', message || (error && error.message) || ncfST('Frontend.280'));
+                            this.filePreviewDialog.error = ncfST('Frontend.FileManager.PreviewFailedValue', message || (error && error.message) || ncfST('Frontend.FileManager.RequestFailed'));
                         } finally {
                             this.filePreviewDialog.loading = false;
                         }

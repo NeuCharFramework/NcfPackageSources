@@ -25,12 +25,12 @@ var AgentsAppData = {
         drawerMcpSelect: false, //Legacy comment translated to English.
       },
       taskStateText: {
-        0: ncfST('Frontend.021'),  // wait Waiting stand #3376cd
-        1: ncfST('Frontend.022'),
-        2: ncfST('Frontend.023'),
-        3: ncfST('Frontend.024'), // complete Finished success #67C23A
-        4: ncfST('Frontend.025'),
-        5: ncfST('Frontend.152'),
+        0: ncfST('Frontend.AgentsManager.Waiting'),  // wait Waiting stand #3376cd
+        1: ncfST('Frontend.AgentsManager.Chatting'),
+        2: ncfST('Frontend.AgentsManager.Paused'),
+        3: ncfST('Frontend.AgentsManager.Done'), // complete Finished success #67C23A
+        4: ncfST('Frontend.AgentsManager.Cancel'),
+        5: ncfST('Frontend.AgentsManager.Failed'),
       },
       taskStateColor: {
         0: 'waitColor',
@@ -49,9 +49,9 @@ var AgentsAppData = {
         5: 'fas fa-times-circle',// el-icon-error
       },
       agentStateText: {
-        1: ncfST('Frontend.150'),
-        2: ncfST('Frontend.154'),
-        3: ncfST('Frontend.043'),
+        1: ncfST('Frontend.AgentsManager.Standby'),
+        2: ncfST('Frontend.AgentsManager.Running'),
+        3: ncfST('Frontend.AgentsManager.Disabled'),
       },
       agentStateColor: {
         1: 'standColor',
@@ -78,22 +78,22 @@ var AgentsAppData = {
       agentFCPVisible: false, //Legacy comment translated to English.
       agentFilterCriteria: [
         {
-          label: ncfST('Frontend.148'),
+          label: ncfST('Frontend.AgentsManager.All'),
           value: 'all',
           checked: true
         },
         {
-          label: ncfST('Frontend.154'),
+          label: ncfST('Frontend.AgentsManager.Running'),
           value: 'proce',
           checked: false
         },
         {
-          label: ncfST('Frontend.043'),
+          label: ncfST('Frontend.AgentsManager.Disabled'),
           value: 'stop',
           checked: false
         },
         {
-          label: ncfST('Frontend.150'),
+          label: ncfST('Frontend.AgentsManager.Standby'),
           value: 'stand',
           checked: false
         }
@@ -120,8 +120,8 @@ var AgentsAppData = {
         timeoutSeconds: 60,
       },
       remoteAgentFormRules: {
-        name: [{ required: true, message: ncfST('Frontend.298'), trigger: 'blur' }],
-        agentCardUrl: [{ required: true, message: ncfST('Frontend.338'), trigger: 'blur' }]
+        name: [{ required: true, message: ncfST('Frontend.AgentsManager.EnterAgentName'), trigger: 'blur' }],
+        agentCardUrl: [{ required: true, message: ncfST('Frontend.AgentsManager.AgentCardURL'), trigger: 'blur' }]
       },
       publishedA2AForm: {
         id: 0,
@@ -141,7 +141,7 @@ var AgentsAppData = {
         agentCardUrl: ''
       },
       publishedA2AFormRules: {
-        publicAgentKey: [{ required: true, message: ncfST('Frontend.374'), trigger: 'blur' }]
+        publicAgentKey: [{ required: true, message: ncfST('Frontend.AgentsManager.PublicIdentifier'), trigger: 'blur' }]
       },
       knowledgeBaseOptions: [],
       knowledgeBaseOptionsLoaded: false,
@@ -214,22 +214,22 @@ var AgentsAppData = {
       groupFCPVisible: false, //Legacy comment translated to English.
       groupFilterCriteria: [
         {
-          label: ncfST('Frontend.148'),
+          label: ncfST('Frontend.AgentsManager.All'),
           value: 'all',
           checked: true
         },
         {
-          label: ncfST('Frontend.154'),
+          label: ncfST('Frontend.AgentsManager.Running'),
           value: 'proce',
           checked: false
         },
         {
-          label: ncfST('Frontend.043'),
+          label: ncfST('Frontend.AgentsManager.Disabled'),
           value: 'stop',
           checked: false
         },
         {
-          label: ncfST('Frontend.150'),
+          label: ncfST('Frontend.AgentsManager.Standby'),
           value: 'stand',
           checked: false
         }
@@ -296,30 +296,30 @@ var AgentsAppData = {
       },
       taskArchiveScope: 'active', // active | archived | all
       taskArchiveScopeOptions: [
-        { label: ncfST('Frontend.148'), value: 'active' },
-        { label: ncfST('Frontend.153'), value: 'archived' },
-        { label: ncfST('Frontend.148'), value: 'all' }
+        { label: ncfST('Frontend.AgentsManager.All'), value: 'active' },
+        { label: ncfST('Frontend.AgentsManager.Archive'), value: 'archived' },
+        { label: ncfST('Frontend.AgentsManager.All'), value: 'all' }
       ],
       taskArchiveSavingId: 0,
       taskFCPVisible: false, //Legacy comment translated to English.
       taskFilterCriteria: [
         {
-          label: ncfST('Frontend.148'),
+          label: ncfST('Frontend.AgentsManager.All'),
           value: 'all',
           checked: true
         },
         {
-          label: ncfST('Frontend.154'),
+          label: ncfST('Frontend.AgentsManager.Running'),
           value: 'proce',
           checked: false
         },
         {
-          label: ncfST('Frontend.043'),
+          label: ncfST('Frontend.AgentsManager.Disabled'),
           value: 'stop',
           checked: false
         },
         {
-          label: ncfST('Frontend.150'),
+          label: ncfST('Frontend.AgentsManager.Standby'),
           value: 'stand',
           checked: false
         }
@@ -332,6 +332,20 @@ var AgentsAppData = {
       taskMemberList: [],
       taskMemberfilter: '',
       taskMemberfilterList: [],
+      taskDetailRequestTokens: {
+        task: 0,
+        agentTask: 0,
+        agentGroupTask: 0,
+        groupTask: 0
+      },
+      taskConversationLoading: {
+        task: false,
+        agentTask: false,
+        agentGroupTask: false,
+        groupTask: false
+      },
+      taskConversationCache: {},
+      taskConversationCacheOrder: [],
       // task task ---end
       // agent add|edit
       agentForm: {
@@ -357,25 +371,25 @@ var AgentsAppData = {
       agentPromptConversionLoading: false,
       agentFormRules: {
         name: [
-          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.AgentsManager.PleaseFillIn'), trigger: 'blur' },
         ],
         systemMessage: [
-          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
+          { required: true, message: ncfST('Frontend.AgentsManager.SelectAlternate'), trigger: 'change' },
         ],
         // description: [
         //     { required: true, message: 'please enter a value', trigger: 'blur' },
         // ],
         hookRobotType: [
-          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
+          { required: true, message: ncfST('Frontend.AgentsManager.SelectAlternate'), trigger: 'change' },
         ],
         // hookRobotParameter: [
         //     { required: true, message: 'please enter a value', trigger: 'blur' },
         // ],
         avastar: [
-          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
+          { required: true, message: ncfST('Frontend.AgentsManager.SelectAlternate'), trigger: 'change' },
         ],
         functionCallNames: [
-          { required: false, message: ncfST('Frontend.156'), trigger: 'change' }
+          { required: false, message: ncfST('Frontend.AgentsManager.EnterTheFunctionCallName'), trigger: 'change' }
         ]
       },
       // group add|edit
@@ -392,16 +406,16 @@ var AgentsAppData = {
       },
       groupFormRules: {
         name: [
-          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.AgentsManager.PleaseFillIn'), trigger: 'blur' },
         ],
         members: [
-          { required: true, message: ncfST('Frontend.099'), trigger: 'change' },
+          { required: true, message: ncfST('Frontend.AgentsManager.PleaseFillIn'), trigger: 'change' },
         ],
         adminAgentTemplateId: [
-          { required: true, message: ncfST('Frontend.099'), trigger: 'change' },
+          { required: true, message: ncfST('Frontend.AgentsManager.PleaseFillIn'), trigger: 'change' },
         ],
         enterAgentTemplateId: [
-          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
+          { required: true, message: ncfST('Frontend.AgentsManager.SelectAlternate'), trigger: 'change' },
         ],
         // description: [
         //     { required: true, message: 'please enter a value', trigger: 'blur' },
@@ -432,16 +446,16 @@ var AgentsAppData = {
       groupStartPromptCaretEnd: 0,
       groupStartFormRules: {
         chatGroupId: [
-          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.AgentsManager.PleaseFillIn'), trigger: 'blur' },
         ],
         name: [
-          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.AgentsManager.PleaseFillIn'), trigger: 'blur' },
         ],
         aiModelId: [
-          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
+          { required: true, message: ncfST('Frontend.AgentsManager.SelectAlternate'), trigger: 'change' },
         ],
         promptCommand: [
-          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.AgentsManager.PleaseFillIn'), trigger: 'blur' },
         ],
       },
       // task evaluation
@@ -452,10 +466,10 @@ var AgentsAppData = {
       evaluationFormRules: {
         // change
         score: [
-          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.AgentsManager.PleaseFillIn'), trigger: 'blur' },
         ],
         evaluation: [
-          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.AgentsManager.PleaseFillIn'), trigger: 'blur' },
         ]
       },
       //Legacy comment translated to English.
@@ -537,10 +551,10 @@ var AgentsAppData = {
       agentListViewMode: 'panel',
       agentStatisticMetric: 'totalTokens',
       agentStatisticMetricOptions: [
-        { value: 'totalTokens', label: ncfST('Frontend.084'), unit: 'Token' },
-        { value: 'completedConversationRounds', label: ncfST('Frontend.497'), unit: ncfST('Frontend.088') },
-        { value: 'chattingCount', label: ncfST('Frontend.155'), unit: ncfST('Frontend.075') },
-        { value: 'score', label: ncfST('Frontend.015'), unit: ncfST('Frontend.015') }
+        { value: 'totalTokens', label: ncfST('Frontend.AgentsManager.TotalToken'), unit: 'Token' },
+        { value: 'completedConversationRounds', label: ncfST('Frontend.AgentsManager.CompletedRounds'), unit: ncfST('Frontend.AgentsManager.Round') },
+        { value: 'chattingCount', label: ncfST('Frontend.AgentsManager.Chat'), unit: ncfST('Frontend.AgentsManager.Agents') },
+        { value: 'score', label: ncfST('Frontend.AgentsManager.Score'), unit: ncfST('Frontend.AgentsManager.Score') }
       ],
       agentGraphSnapshot: {
         agents: [],

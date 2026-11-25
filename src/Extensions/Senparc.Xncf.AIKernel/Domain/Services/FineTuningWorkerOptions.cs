@@ -46,10 +46,20 @@ public sealed class FineTuningWorkerOptions
     public IEnumerable<string> ConfiguredWorkerAliases => WorkerApiKeys
         .Where(item => IsValidApiKey(item.Value)).Select(item => item.Key);
 
+    /// <summary>
+    /// Validates the minimum worker API-key shape without revealing its value.
+    /// </summary>
+    /// <param name="apiKey">The candidate API key.</param>
+    /// <returns><see langword="true"/> when the key is non-empty, trimmed, newline-free, and at least 32 characters.</returns>
     public static bool IsValidApiKey(string apiKey) =>
         !string.IsNullOrWhiteSpace(apiKey) && apiKey.Length >= 32
         && apiKey == apiKey.Trim() && !apiKey.Contains('\r') && !apiKey.Contains('\n');
 
+    /// <summary>
+    /// Determines whether a host is localhost or an IP loopback address.
+    /// </summary>
+    /// <param name="host">The host text to inspect.</param>
+    /// <returns><see langword="true"/> for localhost or an IP loopback address.</returns>
     public static bool IsLoopbackHost(string host)
     {
         if (string.IsNullOrWhiteSpace(host))
@@ -60,6 +70,12 @@ public sealed class FineTuningWorkerOptions
         return IPAddress.TryParse(host, out var address) && IPAddress.IsLoopback(address);
     }
 
+    /// <summary>
+    /// Retrieves a valid configured API key for a worker alias.
+    /// </summary>
+    /// <param name="workerAlias">The worker alias.</param>
+    /// <returns>The configured API key.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when local fine-tuning is disabled or no valid key is configured.</exception>
     public string GetWorkerApiKey(string workerAlias)
     {
         if (!Enabled)
@@ -70,6 +86,15 @@ public sealed class FineTuningWorkerOptions
         return apiKey;
     }
 
+    /// <summary>
+    /// Validates a worker endpoint against HTTP(S), credential-free URI, host allowlist,
+    /// and timeout constraints.
+    /// </summary>
+    /// <param name="workerAlias">The selected worker alias.</param>
+    /// <param name="workerEndpoint">The absolute worker endpoint.</param>
+    /// <param name="requestTimeoutSeconds">The request timeout in seconds.</param>
+    /// <returns>A normalized endpoint URI with a trailing slash.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when enablement, URI, host, or timeout validation fails.</exception>
     public Uri GetValidatedEndpoint(string workerAlias, string workerEndpoint, int requestTimeoutSeconds)
     {
         if (!Enabled)
@@ -94,6 +119,11 @@ public sealed class FineTuningWorkerOptions
     [Obsolete("Use GetValidatedEndpoint(workerAlias, workerEndpoint, requestTimeoutSeconds).")]
     public Uri GetValidatedEndpoint() => GetLegacyConfiguration().Endpoint;
 
+    /// <summary>
+    /// Adapts legacy single-worker options into a database-provider configuration.
+    /// </summary>
+    /// <returns>The legacy default worker configuration.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when legacy endpoint/key validation fails.</exception>
     public FineTuningWorkerConfiguration GetLegacyConfiguration()
     {
         var originalKeys = WorkerApiKeys;

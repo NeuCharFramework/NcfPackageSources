@@ -47,6 +47,14 @@ public sealed class WeixinClawMediaService
     private readonly WeixinClawMediaStorageService _storage;
     private readonly WeixinClawFileManagerBridge _fileManagerBridge;
 
+    /// <summary>
+    /// Initializes inbound/outbound media download, storage, record, API, and FileManager dependencies.
+    /// </summary>
+    /// <param name="accountService">Weixin account and token service.</param>
+    /// <param name="recordService">Inbound message record service.</param>
+    /// <param name="api">Weixin Claw protocol client.</param>
+    /// <param name="storage">Local media storage service.</param>
+    /// <param name="fileManagerBridge">Optional FileManager import bridge.</param>
     public WeixinClawMediaService(
         WeixinClawAccountService accountService,
         WeixinClawMessageRecordService recordService,
@@ -61,6 +69,16 @@ public sealed class WeixinClawMediaService
         _fileManagerBridge = fileManagerBridge;
     }
 
+    /// <summary>
+    /// Downloads media items from an inbound message, stores them locally, and attempts FileManager import.
+    /// Individual media failures are recorded on the item while allowing other items to continue.
+    /// </summary>
+    /// <param name="tenantId">The tenant receiving the media.</param>
+    /// <param name="accountId">The Weixin account identifier.</param>
+    /// <param name="identity">The message identity used for storage naming.</param>
+    /// <param name="items">Inbound message items to inspect.</param>
+    /// <param name="cancellationToken">Token used to cancel downloads.</param>
+    /// <returns>Stored media results including errors for failed items.</returns>
     public async Task<List<WeixinClawStoredMedia>> DownloadInboundAsync(
         int tenantId,
         int accountId,
@@ -120,6 +138,21 @@ public sealed class WeixinClawMediaService
         return storedItems;
     }
 
+    /// <summary>
+    /// Encrypts, uploads, and sends outbound image, file, or voice media to a Weixin conversation.
+    /// </summary>
+    /// <param name="accountId">The connected Weixin account identifier.</param>
+    /// <param name="fileName">The display/file name.</param>
+    /// <param name="contentType">The source content type.</param>
+    /// <param name="bytes">The plaintext media bytes, limited to 50 MiB.</param>
+    /// <param name="kind">The protocol media kind.</param>
+    /// <param name="toUserId">Optional destination user; recent conversation is used when absent.</param>
+    /// <param name="replyToRecordId">Optional inbound record to reply to.</param>
+    /// <param name="cancellationToken">Token used to cancel upload or send.</param>
+    /// <returns>The outbound send result.</returns>
+    /// <exception cref="ArgumentException">Thrown when media content is empty.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="kind"/> is unsupported.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when account, session, upload, or media limits are invalid.</exception>
     public async Task<WeixinClawSendTextResult> SendAsync(
         int accountId,
         string fileName,

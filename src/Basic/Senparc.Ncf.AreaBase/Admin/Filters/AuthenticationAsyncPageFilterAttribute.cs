@@ -44,6 +44,12 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
         private readonly IAdminWorkContextProvider _adminWorkContextProvider;
         private readonly SysMenuService _sysMenuService;
 
+        /// <summary>
+        /// Initializes the legacy page filter used to authenticate and authorize administration pages.
+        /// </summary>
+        /// <param name="sysPermissionService">The service used to evaluate route permissions.</param>
+        /// <param name="adminWorkContextProvider">The provider used to load the current administrator.</param>
+        /// <param name="_sysMenuService">The menu service retained for compatibility with the legacy filter.</param>
         public AuthenticationAsyncPageFilterAttribute(SysRolePermissionService sysPermissionService, Core.WorkContext.Provider.IAdminWorkContextProvider adminWorkContextProvider, SysMenuService _sysMenuService)
         {
             this._sysPermissionService = sysPermissionService;
@@ -51,6 +57,12 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
             this._sysMenuService = _sysMenuService;
         }
 
+        /// <summary>
+        /// Authenticates the request and redirects or returns JSON when page permission is missing.
+        /// </summary>
+        /// <param name="context">The page-handler execution context.</param>
+        /// <param name="next">The delegate to invoke when authentication and authorization succeed.</param>
+        /// <returns>A task that completes after filter processing.</returns>
         public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
             //Perform asyncinvoke before ininvokehandlingprogrammethod, but after inmodel binding end.
@@ -91,6 +103,11 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
             await next.Invoke();
         }
 
+        /// <summary>
+        /// Completes page-handler selection without changing the selected handler.
+        /// </summary>
+        /// <param name="context">The selected page-handler context.</param>
+        /// <returns>A completed task.</returns>
         public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
         {
             //After selecting the handling program method, but before the model binding occurs, perform an async invoke.

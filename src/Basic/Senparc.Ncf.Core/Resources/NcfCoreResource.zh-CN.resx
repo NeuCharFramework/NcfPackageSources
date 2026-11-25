@@ -23,82 +23,82 @@
   <data name="Auth.Forbidden" xml:space="preserve"><value>您没有权限访问</value></data>
 
 
-  <data name="Frontend.900" xml:space="preserve"><value>检查微调 Worker</value></data>
-  <data name="Frontend.901" xml:space="preserve"><value>检查指定微调 Worker 的健康状态、能力和队列情况。只配置了一个可用 Worker 时会自动选中。</value></data>
-  <data name="Frontend.902" xml:space="preserve"><value>检查微调环境</value></data>
-  <data name="Frontend.903" xml:space="preserve"><value>检查微调开关、密钥、Worker、模型目录和 FileManager 状态，不执行安装或命令。只配置了一个可用 Worker 时会自动选中。</value></data>
-  <data name="Frontend.904" xml:space="preserve"><value>上传微调数据集文件</value></data>
-  <data name="Frontend.905" xml:space="preserve"><value>以流方式保存并上传 JSONL 微调数据集，适合大文件。</value></data>
-  <data name="Frontend.906" xml:space="preserve"><value>创建微调数据集</value></data>
-  <data name="Frontend.907" xml:space="preserve"><value>保存经过 Worker 校验的 JSONL 微调数据集。Worker 会自动载入；适合在 Workflow 中提交小规模 JSONL 文本。</value></data>
-  <data name="Frontend.908" xml:space="preserve"><value>创建微调任务</value></data>
-  <data name="Frontend.909" xml:space="preserve"><value>使用已批准的本地模型、数据集和训练参数创建微调任务。Worker、模型和数据集会自动载入，训练参数带有默认值，Workflow 可以按这些默认值直接运行。</value></data>
-  <data name="Frontend.910" xml:space="preserve"><value>验证微调 Adapter</value></data>
-  <data name="Frontend.911" xml:space="preserve"><value>对已成功的微调任务按选择的 CPU、CUDA 或 MLX 后端运行受限的离线测试提示；与任务记录不一致时必须明确确认。</value></data>
-  <data name="Frontend.912" xml:space="preserve"><value>创建隔离 XNCF 开发任务</value></data>
-  <data name="Frontend.913" xml:space="preserve"><value>创建源码快照；新模块仅在隔离工作区由本机已安装模板生成，现有模块仅复制后修改。不会写入目标源码。</value></data>
-  <data name="Frontend.914" xml:space="preserve"><value>读取隔离 XNCF 文件</value></data>
-  <data name="Frontend.915" xml:space="preserve"><value>读取隔离工作区中指定模块的文本文件和 SHA-256；不能读取目标源码或工作区外的文件。</value></data>
-  <data name="Frontend.916" xml:space="preserve"><value>写入隔离 XNCF 文件</value></data>
-  <data name="Frontend.917" xml:space="preserve"><value>原子写入隔离工作区内的代码文件。项目、NuGet、MSBuild 和应用配置文件不可修改，建议传回读取时的 SHA-256。</value></data>
-  <data name="Frontend.918" xml:space="preserve"><value>校验隔离 XNCF 开发任务</value></data>
-  <data name="Frontend.919" xml:space="preserve"><value>校验隔离工作区的模块路径和 Senparc.Web 对源码项目的直接引用，并生成受控差异摘要。</value></data>
-  <data name="Frontend.920" xml:space="preserve"><value>启动 Sandbox XNCF 预览</value></data>
-  <data name="Frontend.921" xml:space="preserve"><value>把已清洗的隔离工作区副本交给 Sandbox 构建和运行；Sandbox 不可用时会安全失败，绝不回退到主站进程。</value></data>
-  <data name="Frontend.922" xml:space="preserve"><value>获取隔离 XNCF 开发任务状态</value></data>
-  <data name="Frontend.923" xml:space="preserve"><value>返回隔离工作区、差异、校验、Sandbox 预览和人工审批状态。</value></data>
-  <data name="Frontend.924" xml:space="preserve"><value>请求人工合入 XNCF 任务</value></data>
-  <data name="Frontend.925" xml:space="preserve"><value>冻结当前隔离工作区差异并请求管理员审批。此操作不会写入目标源码。</value></data>
-  <data name="Frontend.926" xml:space="preserve"><value>丢弃隔离 XNCF 开发任务</value></data>
-  <data name="Frontend.927" xml:space="preserve"><value>停止对应 Sandbox 预览并回收隔离工作区；不会修改目标源码。</value></data>
-  <data name="Frontend.928" xml:space="preserve"><value>创建沙箱</value></data>
-  <data name="Frontend.929" xml:space="preserve"><value>按模板创建独立沙箱会话（Docker / Wasm Stub）</value></data>
-  <data name="Frontend.930" xml:space="preserve"><value>沙箱列表</value></data>
-  <data name="Frontend.931" xml:space="preserve"><value>查看最近沙箱会话</value></data>
-  <data name="Frontend.932" xml:space="preserve"><value>沙箱状态</value></data>
-  <data name="Frontend.933" xml:space="preserve"><value>按 SessionId 查询</value></data>
-  <data name="Frontend.934" xml:space="preserve"><value>执行代码</value></data>
-  <data name="Frontend.935" xml:space="preserve"><value>在 Exec 模板会话中运行代码片段</value></data>
-  <data name="Frontend.936" xml:space="preserve"><value>执行 Lab 命令</value></data>
-  <data name="Frontend.937" xml:space="preserve"><value>在运行中的持久化 JupyterLab 容器工作区内执行受限时长的 Shell 命令</value></data>
-  <data name="Frontend.938" xml:space="preserve"><value>上传 Lab 文件</value></data>
-  <data name="Frontend.939" xml:space="preserve"><value>把 Base64 文件内容写入运行中的持久化 JupyterLab 工作区</value></data>
-  <data name="Frontend.940" xml:space="preserve"><value>批量上传 Lab 文件</value></data>
-  <data name="Frontend.941" xml:space="preserve"><value>把多个已上传文件以流方式写入运行中的持久化 JupyterLab 工作区</value></data>
-  <data name="Frontend.942" xml:space="preserve"><value>下载 Lab 文件</value></data>
-  <data name="Frontend.943" xml:space="preserve"><value>读取运行中的持久化 JupyterLab 工作区文件并返回 Base64 内容</value></data>
-  <data name="Frontend.944" xml:space="preserve"><value>列举 Lab 文件</value></data>
-  <data name="Frontend.945" xml:space="preserve"><value>列举运行中的持久化 JupyterLab 工作区文件</value></data>
-  <data name="Frontend.946" xml:space="preserve"><value>创建 Notebook</value></data>
-  <data name="Frontend.947" xml:space="preserve"><value>在运行中的 JupyterLab 工作区创建 Python 或 C# .ipynb 文件</value></data>
-  <data name="Frontend.948" xml:space="preserve"><value>修改别名</value></data>
-  <data name="Frontend.949" xml:space="preserve"><value>为沙箱会话设置或清除别名（留空清除）</value></data>
-  <data name="Frontend.950" xml:space="preserve"><value>销毁沙箱</value></data>
-  <data name="Frontend.951" xml:space="preserve"><value>停止并清理指定会话</value></data>
-  <data name="Frontend.952" xml:space="preserve"><value>删除沙箱记录</value></data>
-  <data name="Frontend.953" xml:space="preserve"><value>永久删除已停止、已过期或已清理完成的会话记录</value></data>
-  <data name="Frontend.954" xml:space="preserve"><value>修改 TTL</value></data>
-  <data name="Frontend.955" xml:space="preserve"><value>延长、缩短或设为永久保持</value></data>
-  <data name="Frontend.956" xml:space="preserve"><value>管理员登录</value></data>
-  <data name="Frontend.957" xml:space="preserve"><value>测试当前管理员登录</value></data>
-  <data name="Frontend.958" xml:space="preserve"><value>设置数字管</value></data>
-  <data name="Frontend.959" xml:space="preserve"><value>设置数字管显示</value></data>
-  <data name="Frontend.960" xml:space="preserve"><value>查看登录过期配置</value></data>
-  <data name="Frontend.961" xml:space="preserve"><value>查看 Admin 模块中的网页登录过期与 JWT 过期配置</value></data>
-  <data name="Frontend.962" xml:space="preserve"><value>设置登录过期配置</value></data>
-  <data name="Frontend.963" xml:space="preserve"><value>设置网页登录持续时间与 JWT 过期时间（分钟）</value></data>
-  <data name="Frontend.964" xml:space="preserve"><value>纽铃可见提醒测试</value></data>
-  <data name="Frontend.965" xml:space="preserve"><value>发送或消费可在 Admin Footer 弹窗与徽标中看到的纽铃测试提醒；发送提醒时可配置 WebHook 地址、请求方式和多行 Body 模板，创建成功后异步请求并记录请求数据与结果</value></data>
-  <data name="Frontend.966" xml:space="preserve"><value>缓存测试</value></data>
-  <data name="Frontend.967" xml:space="preserve"><value>测试当前缓存类型及分布式锁</value></data>
-  <data name="Frontend.968" xml:space="preserve"><value>Agent 模板管理</value></data>
-  <data name="Frontend.969" xml:space="preserve"><value>Agent 模板管理</value></data>
-  <data name="Frontend.970" xml:space="preserve"><value>设置参数</value></data>
-  <data name="Frontend.971" xml:space="preserve"><value>设置备份间隔时间、备份文件路径等参数</value></data>
-  <data name="Frontend.972" xml:space="preserve"><value>设置智能体</value></data>
-  <data name="Frontend.973" xml:space="preserve"><value>测试简单值 + 下拉元数据</value></data>
-  <data name="Frontend.974" xml:space="preserve"><value>设置多行参数</value></data>
-  <data name="Frontend.975" xml:space="preserve"><value>测试多行文本参数元数据</value></data>
-  <data name="Frontend.976" xml:space="preserve"><value>我的函数</value></data>
-  <data name="Frontend.977" xml:space="preserve"><value>我的函数的注释</value></data>
+  <data name="Global.InspectFineTuningWorker" xml:space="preserve"><value>检查微调 Worker</value></data>
+  <data name="Global.InspectTheSelectedFineTuningWorkerHealthCapabilitiesAndQueueASingle" xml:space="preserve"><value>检查指定微调 Worker 的健康状态、能力和队列情况。只配置了一个可用 Worker 时会自动选中。</value></data>
+  <data name="Global.InspectFineTuningEnvironment" xml:space="preserve"><value>检查微调环境</value></data>
+  <data name="Global.InspectFineTuningSwitchesSecretsWorkersModelDirectoriesAndFileManagerStatusWithout" xml:space="preserve"><value>检查微调开关、密钥、Worker、模型目录和 FileManager 状态，不执行安装或命令。只配置了一个可用 Worker 时会自动选中。</value></data>
+  <data name="Global.UploadFineTuningDatasetFile" xml:space="preserve"><value>上传微调数据集文件</value></data>
+  <data name="Global.SaveAndUploadAJSONLFineTuningDatasetAsAStreamFor" xml:space="preserve"><value>以流方式保存并上传 JSONL 微调数据集，适合大文件。</value></data>
+  <data name="Global.CreateFineTuningDataset" xml:space="preserve"><value>创建微调数据集</value></data>
+  <data name="Global.SaveAJSONLFineTuningDatasetValidatedByTheWorkerTheWorker" xml:space="preserve"><value>保存经过 Worker 校验的 JSONL 微调数据集。Worker 会自动载入；适合在 Workflow 中提交小规模 JSONL 文本。</value></data>
+  <data name="Global.CreateFineTuningTask" xml:space="preserve"><value>创建微调任务</value></data>
+  <data name="Global.CreateAFineTuningTaskWithAnApprovedLocalModelDatasetAnd" xml:space="preserve"><value>使用已批准的本地模型、数据集和训练参数创建微调任务。Worker、模型和数据集会自动载入，训练参数带有默认值，Workflow 可以按这些默认值直接运行。</value></data>
+  <data name="Global.ValidateFineTuningAdapter" xml:space="preserve"><value>验证微调 Adapter</value></data>
+  <data name="Global.RunARestrictedOfflineTestPromptForASuccessfulFineTuningTask" xml:space="preserve"><value>对已成功的微调任务按选择的 CPU、CUDA 或 MLX 后端运行受限的离线测试提示；与任务记录不一致时必须明确确认。</value></data>
+  <data name="Global.CreateIsolatedXNCFDevelopmentTask" xml:space="preserve"><value>创建隔离 XNCF 开发任务</value></data>
+  <data name="Global.CreateASourceSnapshotNewModulesAreGeneratedFromLocallyInstalledTemplates" xml:space="preserve"><value>创建源码快照；新模块仅在隔离工作区由本机已安装模板生成，现有模块仅复制后修改。不会写入目标源码。</value></data>
+  <data name="Global.ReadIsolatedXNCFFile" xml:space="preserve"><value>读取隔离 XNCF 文件</value></data>
+  <data name="Global.ReadTextFilesAndSHA256ValuesForAModuleInThe" xml:space="preserve"><value>读取隔离工作区中指定模块的文本文件和 SHA-256；不能读取目标源码或工作区外的文件。</value></data>
+  <data name="Global.WriteIsolatedXNCFFile" xml:space="preserve"><value>写入隔离 XNCF 文件</value></data>
+  <data name="Global.AtomicallyWriteCodeFilesInTheIsolatedWorkspaceProjectNuGetMSBuildAnd" xml:space="preserve"><value>原子写入隔离工作区内的代码文件。项目、NuGet、MSBuild 和应用配置文件不可修改，建议传回读取时的 SHA-256。</value></data>
+  <data name="Global.ValidateIsolatedXNCFDevelopmentTask" xml:space="preserve"><value>校验隔离 XNCF 开发任务</value></data>
+  <data name="Global.ValidateTheIsolatedModulePathAndSenparcWebDirectProjectReferenceThen" xml:space="preserve"><value>校验隔离工作区的模块路径和 Senparc.Web 对源码项目的直接引用，并生成受控差异摘要。</value></data>
+  <data name="Global.StartSandboxXNCFPreview" xml:space="preserve"><value>启动 Sandbox XNCF 预览</value></data>
+  <data name="Global.BuildAndRunTheCleanedIsolatedWorkspaceCopyInSandboxFailSafely" xml:space="preserve"><value>把已清洗的隔离工作区副本交给 Sandbox 构建和运行；Sandbox 不可用时会安全失败，绝不回退到主站进程。</value></data>
+  <data name="Global.GetIsolatedXNCFDevelopmentTaskStatus" xml:space="preserve"><value>获取隔离 XNCF 开发任务状态</value></data>
+  <data name="Global.ReturnIsolatedWorkspaceDiffValidationSandboxPreviewAndHumanApprovalStatus" xml:space="preserve"><value>返回隔离工作区、差异、校验、Sandbox 预览和人工审批状态。</value></data>
+  <data name="Global.RequestHumanMergeForXNCFTask" xml:space="preserve"><value>请求人工合入 XNCF 任务</value></data>
+  <data name="Global.FreezeTheCurrentIsolatedWorkspaceDiffAndRequestAdministratorApprovalThisOperation" xml:space="preserve"><value>冻结当前隔离工作区差异并请求管理员审批。此操作不会写入目标源码。</value></data>
+  <data name="Global.DiscardIsolatedXNCFDevelopmentTask" xml:space="preserve"><value>丢弃隔离 XNCF 开发任务</value></data>
+  <data name="Global.StopTheCorrespondingSandboxPreviewAndReclaimTheIsolatedWorkspaceTargetSource" xml:space="preserve"><value>停止对应 Sandbox 预览并回收隔离工作区；不会修改目标源码。</value></data>
+  <data name="Global.CreateSandbox" xml:space="preserve"><value>创建沙箱</value></data>
+  <data name="Global.CreateAnIsolatedSandboxSessionFromATemplateDockerWasmStub" xml:space="preserve"><value>按模板创建独立沙箱会话（Docker / Wasm Stub）</value></data>
+  <data name="Global.ListSandboxes" xml:space="preserve"><value>沙箱列表</value></data>
+  <data name="Global.ViewRecentSandboxSessions" xml:space="preserve"><value>查看最近沙箱会话</value></data>
+  <data name="Global.GetSandboxStatus" xml:space="preserve"><value>沙箱状态</value></data>
+  <data name="Global.QueryBySessionId" xml:space="preserve"><value>按 SessionId 查询</value></data>
+  <data name="Global.ExecuteCode" xml:space="preserve"><value>执行代码</value></data>
+  <data name="Global.RunACodeSnippetInAnExecTemplateSession" xml:space="preserve"><value>在 Exec 模板会话中运行代码片段</value></data>
+  <data name="Global.ExecuteLabCommand" xml:space="preserve"><value>执行 Lab 命令</value></data>
+  <data name="Global.RunATimeLimitedShellCommandInARunningPersistentJupyterLabWorkspace" xml:space="preserve"><value>在运行中的持久化 JupyterLab 容器工作区内执行受限时长的 Shell 命令</value></data>
+  <data name="Global.UploadLabFile" xml:space="preserve"><value>上传 Lab 文件</value></data>
+  <data name="Global.WriteBase64FileContentToARunningPersistentJupyterLabWorkspace" xml:space="preserve"><value>把 Base64 文件内容写入运行中的持久化 JupyterLab 工作区</value></data>
+  <data name="Global.UploadLabFiles" xml:space="preserve"><value>批量上传 Lab 文件</value></data>
+  <data name="Global.WriteMultipleUploadedFilesAsAStreamToARunningPersistentJupyterLab" xml:space="preserve"><value>把多个已上传文件以流方式写入运行中的持久化 JupyterLab 工作区</value></data>
+  <data name="Global.DownloadLabFile" xml:space="preserve"><value>下载 Lab 文件</value></data>
+  <data name="Global.ReadAFileFromARunningPersistentJupyterLabWorkspaceAndReturnBase" xml:space="preserve"><value>读取运行中的持久化 JupyterLab 工作区文件并返回 Base64 内容</value></data>
+  <data name="Global.ListLabFiles" xml:space="preserve"><value>列举 Lab 文件</value></data>
+  <data name="Global.ListFilesInARunningPersistentJupyterLabWorkspace" xml:space="preserve"><value>列举运行中的持久化 JupyterLab 工作区文件</value></data>
+  <data name="Global.CreateNotebook" xml:space="preserve"><value>创建 Notebook</value></data>
+  <data name="Global.CreateAPythonOrCIpynbFileInARunningJupyterLabWorkspace" xml:space="preserve"><value>在运行中的 JupyterLab 工作区创建 Python 或 C# .ipynb 文件</value></data>
+  <data name="Global.UpdateAlias" xml:space="preserve"><value>修改别名</value></data>
+  <data name="Global.SetOrClearTheSandboxSessionAliasLeaveEmptyToClearIt" xml:space="preserve"><value>为沙箱会话设置或清除别名（留空清除）</value></data>
+  <data name="Global.DestroySandbox" xml:space="preserve"><value>销毁沙箱</value></data>
+  <data name="Global.StopAndCleanUpTheSpecifiedSession" xml:space="preserve"><value>停止并清理指定会话</value></data>
+  <data name="Global.DeleteSandboxRecord" xml:space="preserve"><value>删除沙箱记录</value></data>
+  <data name="Global.PermanentlyDeleteAStoppedExpiredOrCleanedSessionRecord" xml:space="preserve"><value>永久删除已停止、已过期或已清理完成的会话记录</value></data>
+  <data name="Global.UpdateTTL" xml:space="preserve"><value>修改 TTL</value></data>
+  <data name="Global.ExtendShortenOrSetPermanentRetention" xml:space="preserve"><value>延长、缩短或设为永久保持</value></data>
+  <data name="Global.AdministratorLogin" xml:space="preserve"><value>管理员登录</value></data>
+  <data name="Global.TestTheCurrentAdministratorLogin" xml:space="preserve"><value>测试当前管理员登录</value></data>
+  <data name="Global.ConfigureDigitalPipe" xml:space="preserve"><value>设置数字管</value></data>
+  <data name="Global.ConfigureDigitalPipeDisplay" xml:space="preserve"><value>设置数字管显示</value></data>
+  <data name="Global.ViewLoginExpirationSettings" xml:space="preserve"><value>查看登录过期配置</value></data>
+  <data name="Global.ViewWebLoginAndJWTExpirationSettingsInTheAdminModule" xml:space="preserve"><value>查看 Admin 模块中的网页登录过期与 JWT 过期配置</value></data>
+  <data name="Global.ConfigureLoginExpirationSettings" xml:space="preserve"><value>设置登录过期配置</value></data>
+  <data name="Global.ConfigureWebLoginDurationAndJWTExpirationInMinutes" xml:space="preserve"><value>设置网页登录持续时间与 JWT 过期时间（分钟）</value></data>
+  <data name="Global.TestVisibleNeuBellReminders" xml:space="preserve"><value>纽铃可见提醒测试</value></data>
+  <data name="Global.SendOrConsumeNeuBellTestRemindersShownInTheAdminFooterPopup" xml:space="preserve"><value>发送或消费可在 Admin Footer 弹窗与徽标中看到的纽铃测试提醒；发送提醒时可配置 WebHook 地址、请求方式和多行 Body 模板，创建成功后异步请求并记录请求数据与结果</value></data>
+  <data name="Global.TestCache" xml:space="preserve"><value>缓存测试</value></data>
+  <data name="Global.TestTheCurrentCacheTypeAndDistributedLock" xml:space="preserve"><value>测试当前缓存类型及分布式锁</value></data>
+  <data name="Global.ManageAgentTemplates" xml:space="preserve"><value>Agent 模板管理</value></data>
+  <data name="Global.ManageAgentTemplatesAlternate" xml:space="preserve"><value>Agent 模板管理</value></data>
+  <data name="Global.ConfigureParameters" xml:space="preserve"><value>设置参数</value></data>
+  <data name="Global.ConfigureBackupIntervalBackupPathAndRelatedParameters" xml:space="preserve"><value>设置备份间隔时间、备份文件路径等参数</value></data>
+  <data name="Global.ConfigureAgent" xml:space="preserve"><value>设置智能体</value></data>
+  <data name="Global.TestSimpleValuesAndSelectionMetadata" xml:space="preserve"><value>测试简单值 + 下拉元数据</value></data>
+  <data name="Global.ConfigureMultilineParameters" xml:space="preserve"><value>设置多行参数</value></data>
+  <data name="Global.TestMultilineTextParameterMetadata" xml:space="preserve"><value>测试多行文本参数元数据</value></data>
+  <data name="Global.MyFunction" xml:space="preserve"><value>我的函数</value></data>
+  <data name="Global.DescriptionOfMyFunction" xml:space="preserve"><value>我的函数的注释</value></data>
 </root>

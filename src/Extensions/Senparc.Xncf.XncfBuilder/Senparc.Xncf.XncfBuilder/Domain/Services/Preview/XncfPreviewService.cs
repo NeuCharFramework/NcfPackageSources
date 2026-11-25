@@ -99,6 +99,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         private string _persistenceErrorMessage;
         private DateTimeOffset _persistenceStatusUpdatedAt;
 
+        /// <summary>
+        /// Initializes the preview process manager and optional persisted-state store.
+        /// </summary>
+        /// <param name="logger">Optional logger for build and process diagnostics.</param>
+        /// <param name="stateStore">Optional store for recovering preview state after restart.</param>
         public XncfPreviewService(
             ILogger<XncfPreviewService> logger = null,
             IXncfPreviewStateStore stateStore = null)
@@ -113,12 +118,22 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             _persistenceStatusUpdatedAt = DateTimeOffset.Now;
         }
 
+        /// <summary>
+        /// Creates the local preview root used for isolated publish output.
+        /// </summary>
+        /// <param name="cancellationToken">Token checked by the hosted-service lifecycle.</param>
+        /// <returns>A completed task after root initialization.</returns>
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Directory.CreateDirectory(_previewRoot);
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Loads recent persisted preview sessions and marks interrupted sessions for recovery.
+        /// Persistence failures disable the store without stopping the host.
+        /// </summary>
+        /// <param name="cancellationToken">Token used to cancel state loading.</param>
         internal async Task InitializePersistenceAsync(CancellationToken cancellationToken)
         {
             if (_stateStore == null)
@@ -148,6 +163,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Stops active preview processes, persists terminal state where possible,
+        /// and clears in-memory session indexes during host shutdown.
+        /// </summary>
+        /// <param name="cancellationToken">Token controlling bounded shutdown cleanup.</param>
+        /// <returns>A task that completes after cleanup or cancellation.</returns>
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             RequestHostStopForActiveSessions();
@@ -209,9 +230,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Attempts to acquire the operation lock within the normal or short shutdown wait window.
         /// </summary>
+        /// <param name="cancellationToken">Token used for the normal wait.</param>
+        /// <returns><see langword="true"/> when the lock is acquired.</returns>
         private async Task<bool> TryAcquireOperationLockForShutdownAsync(CancellationToken cancellationToken)
         {
             if (!cancellationToken.IsCancellationRequested)
@@ -229,6 +251,17 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             return await _operationLock.WaitAsync(TimeSpan.FromMilliseconds(200)).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Builds, publishes, verifies, and starts an isolated XNCF preview host.
+        /// The source fingerprint and published assembly hash are recorded for diagnostics.
+        /// </summary>
+        /// <param name="options">Preview project, solution, environment, and runtime options.</param>
+        /// <param name="log">Optional callback receiving process output.</param>
+        /// <param name="cancellationToken">Token used to cancel preparation or startup.</param>
+        /// <param name="ambientTenant">Optional tenant context captured for the preview session.</param>
+        /// <returns>The current preview session information.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is <see langword="null"/>.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when project paths, restore, publish, verification, or health checks fail.</exception>
         public async Task<XncfPreviewSessionInfo> StartAsync(
             XncfPreviewStartOptions options,
             Action<string> log = null,
@@ -492,6 +525,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Stops one preview session, terminates its host process, and optionally deletes its files.
+        /// </summary>
+        /// <param name="sessionId">The preview session identifier.</param>
+        /// <param name="deleteFiles">Whether the publish directory should be removed.</param>
+        /// <param name="cancellationToken">Token used to cancel shutdown.</param>
+        /// <returns><see langword="true"/> when a session was found and stop processing completed.</returns>
         public async Task<bool> StopAsync(
             string sessionId,
             Action<string> log = null,
@@ -556,6 +596,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Gets current and retained terminal preview sessions.
+        /// </summary>
+        /// <param name="includeOutput">Whether bounded process output should be included.</param>
+        /// <returns>A snapshot ordered by session update time.</returns>
         public IReadOnlyList<XncfPreviewSessionInfo> GetSessions(bool includeOutput = false)
         {
             return _sessions.Values
@@ -564,6 +609,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                 .ToArray();
         }
 
+        /// <summary>
+        /// Gets one preview session by identifier.
+        /// </summary>
+        /// <param name="sessionId">The preview session identifier.</param>
+        /// <param name="includeOutput">Whether bounded process output should be included.</param>
+        /// <returns>The session information, or <see langword="null"/> when not found.</returns>
         public XncfPreviewSessionInfo GetSession(string sessionId, bool includeOutput = false)
         {
             return !string.IsNullOrWhiteSpace(sessionId)
@@ -572,6 +623,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                 : null;
         }
 
+        /// <summary>
+        /// Returns the current persisted-state availability and last error information.
+        /// </summary>
+        /// <returns>Persistence status metadata.</returns>
         public XncfPreviewPersistenceInfo GetPersistenceStatus()
         {
             lock (_persistenceStatusLock)
@@ -586,6 +641,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Resolves the module project, web host project, and solution paths used by preview publishing.
+        /// </summary>
+        /// <param name="solutionFilePath">The solution file path.</param>
+        /// <param name="moduleProjectName">The XNCF module project name.</param>
+        /// <returns>The resolved preview project paths.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the solution or expected projects cannot be resolved.</exception>
         internal static XncfPreviewProjectPaths ResolveProjectPaths(string solutionFilePath, string moduleProjectName)
         {
             if (string.IsNullOrWhiteSpace(solutionFilePath)
@@ -622,6 +684,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             return new XncfPreviewProjectPaths(solutionDirectory, webProjectFilePath, moduleProjectFilePath);
         }
 
+        /// <summary>
+        /// Verifies that the web host project references the requested XNCF module project.
+        /// </summary>
+        /// <param name="paths">The resolved preview project paths.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the project reference is missing.</exception>
         internal static void ValidateHostProjectReference(XncfPreviewProjectPaths paths)
         {
             ArgumentNullException.ThrowIfNull(paths);
@@ -653,6 +720,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Creates the dotnet publish process configuration for the preview host.
+        /// </summary>
+        /// <param name="webProjectFilePath">The host project file.</param>
+        /// <param name="publishDirectory">The isolated publish directory.</param>
+        /// <returns>The configured process start information.</returns>
         internal static ProcessStartInfo CreatePublishStartInfo(string webProjectFilePath, string publishDirectory)
         {
             var startInfo = CreateDotNetStartInfo(Path.GetDirectoryName(webProjectFilePath));
@@ -670,6 +743,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             return startInfo;
         }
 
+        /// <summary>
+        /// Creates the dotnet restore process configuration for the preview host.
+        /// </summary>
+        /// <param name="webProjectFilePath">The host project file.</param>
+        /// <returns>The configured process start information.</returns>
         internal static ProcessStartInfo CreateRestoreStartInfo(string webProjectFilePath)
         {
             var startInfo = CreateDotNetStartInfo(Path.GetDirectoryName(webProjectFilePath));
@@ -680,12 +758,24 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             return startInfo;
         }
 
+        /// <summary>
+        /// Determines whether source project/package metadata requires a restore before publishing.
+        /// </summary>
+        /// <param name="paths">The resolved preview project paths.</param>
+        /// <returns><see langword="true"/> when restore inputs are newer than the relevant assets.</returns>
         internal static bool RequiresRestore(XncfPreviewProjectPaths paths)
         {
             return ProjectRequiresRestore(paths.WebProjectFilePath)
                    || ProjectRequiresRestore(paths.ModuleProjectFilePath);
         }
 
+        /// <summary>
+        /// Creates the dotnet host process configuration for the published preview.
+        /// </summary>
+        /// <param name="publishDirectory">The directory containing the published host.</param>
+        /// <param name="port">The loopback port exposed by the host.</param>
+        /// <param name="environmentName">The ASP.NET Core environment name.</param>
+        /// <returns>The configured process start information.</returns>
         internal static ProcessStartInfo CreateWebStartInfo(string publishDirectory, int port, string environmentName)
         {
             var startInfo = CreateDotNetStartInfo(publishDirectory);
@@ -716,6 +806,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             return startInfo;
         }
 
+        /// <summary>
+        /// Removes environment variables that are not allowed to flow into a preview process.
+        /// </summary>
+        /// <param name="environment">The environment dictionary to sanitize.</param>
         internal static void SanitizePreviewEnvironment(IDictionary<string, string> environment)
         {
             var allowedValues = environment
@@ -728,6 +822,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Creates common dotnet process-start settings for preview commands.
+        /// </summary>
+        /// <param name="workingDirectory">The process working directory.</param>
+        /// <returns>The base process-start configuration.</returns>
         private static ProcessStartInfo CreateDotNetStartInfo(string workingDirectory)
         {
             return new ProcessStartInfo
@@ -743,6 +842,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             };
         }
 
+        /// <summary>
+        /// Determines whether a project file or NuGet metadata is newer than its assets file.
+        /// </summary>
+        /// <param name="projectFilePath">The project file path.</param>
+        /// <returns><see langword="true"/> when restore appears necessary.</returns>
         private static bool ProjectRequiresRestore(string projectFilePath)
         {
             var assetsFilePath = Path.Combine(
@@ -753,6 +857,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                    || File.GetLastWriteTimeUtc(projectFilePath) > File.GetLastWriteTimeUtc(assetsFilePath);
         }
 
+        /// <summary>
+        /// Validates preview startup paths, names, ports, and environment settings.
+        /// </summary>
+        /// <param name="options">The startup options to validate.</param>
+        /// <exception cref="InvalidOperationException">Thrown when an option is invalid.</exception>
         private static void ValidateOptions(XncfPreviewStartOptions options)
         {
             if (options.Port is > 0 and < 1024 or > 65535)
@@ -780,6 +889,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Runs a preview command, captures output, and returns its exit code and output text.
+        /// </summary>
+        /// <param name="startInfo">The process-start configuration.</param>
+        /// <param name="log">Optional output callback.</param>
+        /// <param name="cancellationToken">Token used to stop the process.</param>
+        /// <returns>A task containing command result information.</returns>
         private async Task<CommandResult> RunCommandAsync(
             ProcessStartInfo startInfo,
             Action<string> log,
@@ -813,6 +929,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             return new CommandResult(process.ExitCode, output);
         }
 
+        /// <summary>
+        /// Reads a process output stream to completion while forwarding each line to a callback.
+        /// </summary>
+        /// <param name="reader">The process output reader.</param>
+        /// <param name="log">Optional line callback.</param>
+        /// <returns>A task containing the complete output text.</returns>
         private static async Task<string> ReadOutputAsync(
             StreamReader reader,
             Action<string> log,
@@ -827,6 +949,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             return output.ToString();
         }
 
+        /// <summary>
+        /// Attaches asynchronous stdout/stderr handlers to a preview process.
+        /// </summary>
+        /// <param name="process">The process whose output is observed.</param>
+        /// <param name="state">The preview state receiving output lines.</param>
         private void AttachOutput(Process process, PreviewProcessState state)
         {
             process.OutputDataReceived += (_, args) => AppendProcessOutput(state, args.Data);
@@ -865,6 +992,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             };
         }
 
+        /// <summary>
+        /// Appends one process-output line to bounded session history.
+        /// </summary>
+        /// <param name="state">The preview state receiving the line.</param>
+        /// <param name="line">The output line.</param>
         private static void AppendProcessOutput(PreviewProcessState state, string line)
         {
             if (string.IsNullOrWhiteSpace(line))
@@ -881,6 +1013,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             WriteLog(state.StartupLog, line);
         }
 
+        /// <summary>
+        /// Polls the preview health endpoint until it responds successfully or the timeout expires.
+        /// </summary>
+        /// <param name="state">The preview process state.</param>
+        /// <param name="cancellationToken">Token used to stop health polling.</param>
+        /// <returns>A task that completes when the host is healthy.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when health cannot be established.</exception>
         private static async Task WaitForHealthyAsync(
             PreviewProcessState state,
             TimeSpan timeout,
@@ -925,6 +1064,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                 $"预览进程未在 {timeout.TotalSeconds:0} 秒内通过健康检查。{GetOutputTail(string.Join(Environment.NewLine, state.Output))}");
         }
 
+        /// <summary>
+        /// Stops a preview process, waits for exit, and optionally removes its publish directory.
+        /// </summary>
+        /// <param name="state">The preview state to stop.</param>
+        /// <param name="deleteFiles">Whether the publish directory should be deleted.</param>
+        /// <param name="log">Optional output callback.</param>
+        /// <param name="cancellationToken">Token used to bound shutdown.</param>
+        /// <returns>A task that completes after process cleanup.</returns>
         private static async Task StopStateAsync(
             PreviewProcessState state,
             bool deleteFiles,
@@ -971,6 +1118,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Best-effort deletes a preview publish directory and suppresses cleanup failures.
+        /// </summary>
+        /// <param name="publishDirectory">The directory to delete.</param>
         private static void TryDeleteSessionDirectory(string publishDirectory)
         {
             if (string.IsNullOrWhiteSpace(publishDirectory))
@@ -992,6 +1143,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Gets an operating-system-assigned available loopback TCP port.
+        /// </summary>
+        /// <returns>The available port number.</returns>
         private static int GetAvailableLoopbackPort()
         {
             using var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
@@ -1001,6 +1156,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             return port;
         }
 
+        /// <summary>
+        /// Verifies that a requested loopback port can be bound.
+        /// </summary>
+        /// <param name="port">The port to test.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the port is unavailable.</exception>
         private static void EnsurePortAvailable(int port)
         {
             try
@@ -1015,6 +1175,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Computes a deterministic SHA-256 fingerprint over source files relevant to preview publishing.
+        /// </summary>
+        /// <param name="moduleDirectory">The module source directory.</param>
+        /// <returns>The lowercase hexadecimal source fingerprint.</returns>
         internal static string ComputeSourceFingerprint(string moduleDirectory)
         {
             if (string.IsNullOrWhiteSpace(moduleDirectory) || !Directory.Exists(moduleDirectory))
@@ -1044,6 +1209,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             return Convert.ToHexString(hash.GetHashAndReset()).ToLowerInvariant();
         }
 
+        /// <summary>
+        /// Enumerates source files below a directory while excluding build, VCS, and package directories.
+        /// </summary>
+        /// <param name="rootDirectory">The directory to enumerate.</param>
+        /// <returns>Normalized source file paths.</returns>
         private static IEnumerable<string> EnumerateSourceFiles(string rootDirectory)
         {
             var pending = new Stack<string>();
@@ -1074,12 +1244,22 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Computes the SHA-256 digest of one file.
+        /// </summary>
+        /// <param name="filePath">The file path to hash.</param>
+        /// <returns>The lowercase hexadecimal SHA-256 digest.</returns>
         private static string ComputeFileSha256(string filePath)
         {
             using var stream = File.OpenRead(filePath);
             return Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant();
         }
 
+        /// <summary>
+        /// Creates a bounded unique preview session identifier.
+        /// </summary>
+        /// <param name="moduleProjectName">The module project name used as a prefix.</param>
+        /// <returns>A session identifier safe for paths and logs.</returns>
         private static string CreateSessionId(string moduleProjectName)
         {
             var safeName = string.Concat(moduleProjectName.Select(ch => char.IsLetterOrDigit(ch) ? ch : '-'));
@@ -1087,6 +1267,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             return $"{safeName}-{DateTimeOffset.UtcNow:yyyyMMddHHmmssfff}-{Guid.NewGuid():N}";
         }
 
+        /// <summary>
+        /// Converts internal preview state into a thread-safe public session snapshot.
+        /// </summary>
+        /// <param name="state">The internal preview state.</param>
+        /// <param name="includeOutput">Whether recent process output is included.</param>
+        /// <returns>The public session information.</returns>
         private static XncfPreviewSessionInfo ToInfo(PreviewProcessState state, bool includeOutput)
         {
             string url;
@@ -1173,6 +1359,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             };
         }
 
+        /// <summary>
+        /// Reads a preview stage under the session synchronization lock.
+        /// </summary>
+        /// <param name="state">The preview state.</param>
+        /// <returns>The current stage.</returns>
         private static XncfPreviewStage GetStage(PreviewProcessState state)
         {
             lock (state.SyncRoot)
@@ -1181,6 +1372,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Updates stage, progress, host status, timestamps, and bounded output diagnostics.
+        /// </summary>
+        /// <param name="state">The preview state to update.</param>
+        /// <param name="stage">The new lifecycle stage.</param>
+        /// <param name="statusMessage">The user-facing status message.</param>
+        /// <param name="errorMessage">The optional error message.</param>
         private static void SetStage(
             PreviewProcessState state,
             XncfPreviewStage stage,
@@ -1227,6 +1425,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Updates a preview stage and persists the resulting state when persistence is available.
+        /// </summary>
+        /// <param name="state">The preview state to update.</param>
+        /// <param name="stage">The new lifecycle stage.</param>
+        /// <param name="statusMessage">The user-facing status message.</param>
+        /// <param name="errorMessage">The optional error message.</param>
+        /// <param name="cancellationToken">Token used for persistence.</param>
         private async Task SetStageAndPersistAsync(
             PreviewProcessState state,
             XncfPreviewStage stage,
@@ -1238,6 +1444,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             await PersistStateAsync(state, cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Persists a state snapshot when the optional state store is available;
+        /// persistence failures downgrade to in-memory operation.
+        /// </summary>
+        /// <param name="state">The preview state to persist.</param>
+        /// <param name="cancellationToken">Token used for the persistence operation.</param>
         private async Task PersistStateAsync(
             PreviewProcessState state,
             CancellationToken cancellationToken)
@@ -1260,6 +1472,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Gets whether preview state persistence is currently available.
+        /// </summary>
+        /// <returns><see langword="true"/> when the state store may be used.</returns>
         private bool IsPersistenceAvailable()
         {
             lock (_persistenceStatusLock)
@@ -1268,6 +1484,9 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Marks preview persistence as healthy and clears the previous error status.
+        /// </summary>
         private void SetPersistenceAvailable()
         {
             lock (_persistenceStatusLock)
@@ -1279,6 +1498,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Disables preview persistence after a store failure while preserving in-memory operation.
+        /// </summary>
+        /// <param name="statusMessage">The status exposed to callers.</param>
+        /// <param name="exception">The failure used for diagnostics.</param>
         private void DisablePersistence(string statusMessage, Exception exception)
         {
             lock (_persistenceStatusLock)
@@ -1294,6 +1518,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                 "XNCF preview persistence is unavailable. The host will continue with in-memory state.");
         }
 
+        /// <summary>
+        /// Best-effort persists a state snapshot for asynchronous output/event paths.
+        /// </summary>
+        /// <param name="state">The preview state to persist.</param>
         private async Task TryPersistStateAsync(PreviewProcessState state)
         {
             try
@@ -1310,6 +1538,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Copies synchronized preview state into a bounded persistence snapshot.
+        /// </summary>
+        /// <param name="state">The internal preview state.</param>
+        /// <returns>The persistence snapshot.</returns>
         private static XncfPreviewPersistenceSnapshot CreatePersistenceSnapshot(PreviewProcessState state)
         {
             XncfPreviewPersistenceSnapshot snapshot;
@@ -1354,6 +1587,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             return snapshot;
         }
 
+        /// <summary>
+        /// Reconstructs an in-memory preview state from persisted snapshot data.
+        /// </summary>
+        /// <param name="snapshot">The persisted snapshot.</param>
+        /// <returns>The restored preview state.</returns>
         private static PreviewProcessState RestoreState(XncfPreviewPersistenceSnapshot snapshot)
         {
             var state = new PreviewProcessState(
@@ -1398,6 +1636,9 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             return state;
         }
 
+        /// <summary>
+        /// Removes terminal sessions beyond the configured retained-history limit.
+        /// </summary>
         private void TrimTerminalHistory()
         {
             var expired = _sessions.Values
@@ -1412,6 +1653,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Returns a bounded tail of command output for exception messages.
+        /// </summary>
+        /// <param name="output">The complete command output.</param>
+        /// <returns>A bounded diagnostic tail.</returns>
         private static string GetOutputTail(string output)
         {
             if (string.IsNullOrWhiteSpace(output))
@@ -1424,6 +1670,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             return trimmed.Length <= maxLength ? trimmed : trimmed[^maxLength..];
         }
 
+        /// <summary>
+        /// Reads a process exit code without propagating process-state exceptions.
+        /// </summary>
+        /// <param name="process">The process to inspect.</param>
+        /// <returns>The exit code, or <c>-1</c> when unavailable.</returns>
         private static int TryGetExitCode(Process process)
         {
             try
@@ -1436,6 +1687,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Best-effort terminates a process tree when the process is still running.
+        /// </summary>
+        /// <param name="process">The process to terminate.</param>
         private static void TryKill(Process process)
         {
             try
@@ -1451,6 +1706,9 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Signals all active preview sessions to stop and terminates their host processes.
+        /// </summary>
         private void RequestHostStopForActiveSessions()
         {
             foreach (var state in _sessions.Values.ToArray())
@@ -1476,6 +1734,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Forwards a non-empty message to an optional preview log callback.
+        /// </summary>
+        /// <param name="log">The optional callback.</param>
+        /// <param name="message">The message to forward.</param>
         private static void WriteLog(Action<string> log, string message)
         {
             if (!string.IsNullOrWhiteSpace(message))
@@ -1484,11 +1747,17 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Contains the resolved solution, web-host, and XNCF module project paths.
+        /// </summary>
         internal sealed record XncfPreviewProjectPaths(
             string SolutionDirectory,
             string WebProjectFilePath,
             string ModuleProjectFilePath);
 
+        /// <summary>
+        /// Contains a preview command exit code and captured output.
+        /// </summary>
         private sealed record CommandResult(int ExitCode, string Output);
 
         private sealed class PreviewProcessState

@@ -273,6 +273,19 @@ public class WorkspaceAssetTests
     }
 
     [TestMethod]
+    public void WorkspaceCapability_IsSingleFileScopedAndRejectsInvalidToken()
+    {
+        var store = new WorkspaceAssetCapabilityStore();
+        var capability = store.Create(42, "workspace-1", "models/robot.glb", "etag-1");
+        Assert.IsTrue(store.TryGet(capability.Id, capability.Token, out var resolved));
+        Assert.AreEqual("models/robot.glb", resolved.Path);
+        Assert.AreEqual("etag-1", resolved.ETag);
+        Assert.IsFalse(store.TryGet(capability.Id, capability.Token + "x", out _));
+        Assert.ThrowsException<ArgumentException>(
+            () => store.Create(42, "workspace-1", "../secret.txt", "etag"));
+    }
+
+    [TestMethod]
     public async Task Controller_ExternalPreviewHasSandboxAndAnonymousSurfaceIsOnlySnapshotGet()
     {
         Put("index.html", "<h1>Safe preview</h1>");
@@ -294,8 +307,8 @@ public class WorkspaceAssetTests
         Assert.AreEqual("no-referrer", headers["Referrer-Policy"].ToString());
         var anonymous = typeof(AdminChatWorkspaceAssetsController).GetMethods()
             .Where(method => method.GetCustomAttributes(typeof(AllowAnonymousAttribute), false).Length > 0).ToArray();
-        Assert.AreEqual(1, anonymous.Length);
-        Assert.AreEqual("Shared", anonymous[0].Name);
+        Assert.AreEqual(2, anonymous.Length);
+        CollectionAssert.AreEquivalent(new[] { "Shared", "Asset" }, anonymous.Select(method => method.Name).ToArray());
         controller.HttpContext.User = User(8);
         Assert.IsInstanceOfType<NotFoundObjectResult>(await controller.Preview(42, "index.html", default));
     }

@@ -32,9 +32,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.WeixinManager.WeixinClaw;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Generates private Weixin Claw replies through a cached PromptRange AgentKernel runner.
+/// Group messages are intentionally ignored by this handler.
 /// </summary>
 public sealed class WeixinClawAiMessageHandler : IWeixinClawMessageHandler
 {
@@ -46,6 +45,14 @@ public sealed class WeixinClawAiMessageHandler : IWeixinClawMessageHandler
     private readonly AgentAiHandler _agentAiHandler;
     private readonly ILogger<WeixinClawAiMessageHandler> _logger;
 
+    /// <summary>
+    /// Initializes the AI message handler and its account, prompt, message, and model dependencies.
+    /// </summary>
+    /// <param name="accountService">Weixin account service.</param>
+    /// <param name="messageService">Outbound message service.</param>
+    /// <param name="promptItemService">PromptRange version resolver.</param>
+    /// <param name="aiHandler">AgentKernel AI handler.</param>
+    /// <param name="logger">Handler logger.</param>
     public WeixinClawAiMessageHandler(
         WeixinClawAccountService accountService,
         WeixinClawMessageService messageService,
@@ -60,6 +67,12 @@ public sealed class WeixinClawAiMessageHandler : IWeixinClawMessageHandler
         _logger = logger;
     }
 
+    /// <summary>
+    /// Handles a private inbound message, runs the account's PromptRange agent,
+    /// and sends a non-empty reply while logging failures.
+    /// </summary>
+    /// <param name="context">The inbound message and account context.</param>
+    /// <param name="cancellationToken">Token used to cancel outbound sending.</param>
     public async Task HandleAsync(WeixinClawMessageReceivedContext context, CancellationToken cancellationToken = default)
     {
         try

@@ -35,6 +35,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.4.4 Updated sandbox request handling and localized runtime surfaces.
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;
@@ -112,7 +115,7 @@ public class Sandbox_ExecRequest : FunctionAppRequestBase
     public string SessionId { get; set; } = string.Empty;
 
     [Required]
-    [LocalizedDescription(typeof(SandboxResource), "Frontend.118", "Frontend.119")]
+    [LocalizedDescription(typeof(SandboxResource), "Frontend.Sandbox.Code", "Frontend.Sandbox.ShortTaskSourceCodePythonExamplePrintHelloFromNCFSandboxC")]
     public string Code { get; set; } = SandboxExecCodeDefaults.PythonHello;
 }
 
@@ -125,18 +128,18 @@ public class Sandbox_LabCommandRequest : FunctionAppRequestBase
 
     [Required]
     [MaxLength(8000)]
-    [LocalizedDescription(typeof(SandboxResource), "Frontend.120", "Frontend.121")]
+    [LocalizedDescription(typeof(SandboxResource), "Frontend.Sandbox.Command", "Frontend.Sandbox.CommandExecutedThroughBinShLcInsideTheLabContainerTheWorking")]
     public string Command { get; set; } = string.Empty;
 
     [MaxLength(512)]
-    [LocalizedDescription(typeof(SandboxResource), "Frontend.122", "Frontend.123")]
+    [LocalizedDescription(typeof(SandboxResource), "Frontend.Sandbox.WorkingDirectory", "Frontend.Sandbox.DirectoryRelativeToTheLabWorkspaceLeaveEmptyForTheWorkspaceRoot")]
     public string WorkingDirectory { get; set; } = string.Empty;
 
-    [LocalizedDescription(typeof(SandboxResource), "Frontend.124", "Frontend.125")]
+    [LocalizedDescription(typeof(SandboxResource), "Frontend.Sandbox.TimeoutSeconds", "Frontend.Sandbox.MaximumDurationOfOneCommand30SecondsByDefaultAnd120Seconds")]
     public int TimeoutSeconds { get; set; } = 30;
 
     [MaxLength(32_768)]
-    [LocalizedDescription(typeof(SandboxResource), "Frontend.126", "Frontend.127")]
+    [LocalizedDescription(typeof(SandboxResource), "Frontend.Sandbox.StandardInput", "Frontend.Sandbox.OptionalWhenProvidedTheCommandRunsWithDockerExecIAndThe")]
     public string StdinContent { get; set; } = string.Empty;
 }
 

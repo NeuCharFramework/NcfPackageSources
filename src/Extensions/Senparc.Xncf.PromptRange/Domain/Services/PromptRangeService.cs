@@ -41,6 +41,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services;
 
 public class PromptRangeService : ServiceBase<Models.DatabaseModel.PromptRange>
 {
+    /// <summary>
+    /// Initializes PromptRange persistence and module dependencies.
+    /// </summary>
+    /// <param name="repo">Repository for PromptRange records.</param>
+    /// <param name="serviceProvider">Dependency-injection provider.</param>
     public PromptRangeService(IRepositoryBase<Models.DatabaseModel.PromptRange> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
     {
     }
@@ -58,6 +63,12 @@ public class PromptRangeService : ServiceBase<Models.DatabaseModel.PromptRange>
     // }
 
 
+    /// <summary>
+    /// Retrieves one PromptRange DTO by identifier.
+    /// </summary>
+    /// <param name="Id">The PromptRange identifier.</param>
+    /// <returns>The mapped PromptRange DTO.</returns>
+    /// <exception cref="Exception">Thrown when the range does not exist.</exception>
     public async Task<PromptRangeDto> GetAsync(int Id)
     {
         var promptRange = await this.GetObjectAsync(p => p.Id == Id) ??
@@ -66,6 +77,10 @@ public class PromptRangeService : ServiceBase<Models.DatabaseModel.PromptRange>
         return this.TransEntityToDto(promptRange);
     }
 
+    /// <summary>
+    /// Retrieves all PromptRange records as DTOs.
+    /// </summary>
+    /// <returns>The PromptRange DTO list.</returns>
     public async Task<List<PromptRangeDto>> GetListAsync()
     {
         var promptRange = await this.GetFullListAsync(p => true);
@@ -73,6 +88,11 @@ public class PromptRangeService : ServiceBase<Models.DatabaseModel.PromptRange>
         return promptRange.Select(TransEntityToDto).ToList();
     }
 
+    /// <summary>
+    /// Creates a new PromptRange with a date-based unique range name.
+    /// </summary>
+    /// <param name="alias">The display alias.</param>
+    /// <returns>The persisted PromptRange DTO.</returns>
     public async Task<PromptRangeDto> AddAsync(string alias)
     {
         try
@@ -103,6 +123,13 @@ public class PromptRangeService : ServiceBase<Models.DatabaseModel.PromptRange>
 
     }
 
+    /// <summary>
+    /// Changes a PromptRange display alias.
+    /// </summary>
+    /// <param name="rangeId">The PromptRange identifier.</param>
+    /// <param name="alias">The replacement alias.</param>
+    /// <returns>The updated DTO.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the range does not exist.</exception>
     public async Task<PromptRangeDto> ChangeAliasAsync(int rangeId, string alias)
     {
         var promptRange = await this.GetObjectAsync(r => r.Id == rangeId)
@@ -115,6 +142,13 @@ public class PromptRangeService : ServiceBase<Models.DatabaseModel.PromptRange>
         return this.TransEntityToDto(promptRange);
     }
 
+    /// <summary>
+    /// Changes the semantic kind of a PromptRange.
+    /// </summary>
+    /// <param name="rangeId">The PromptRange identifier.</param>
+    /// <param name="kind">The new PromptRange kind.</param>
+    /// <returns>The updated DTO.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the range does not exist.</exception>
     public async Task<PromptRangeDto> ChangeKindAsync(int rangeId, SkillKind kind)
     {
         var promptRange = await this.GetObjectAsync(r => r.Id == rangeId)
@@ -125,6 +159,15 @@ public class PromptRangeService : ServiceBase<Models.DatabaseModel.PromptRange>
         return this.TransEntityToDto(promptRange);
     }
 
+    /// <summary>
+    /// Updates the external source metadata associated with a PromptRange.
+    /// </summary>
+    /// <param name="rangeId">The PromptRange identifier.</param>
+    /// <param name="sourceFileId">Optional FileManager source file identifier.</param>
+    /// <param name="sourceType">The source type label.</param>
+    /// <param name="sourceUrl">The source URL.</param>
+    /// <returns>The updated DTO.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the range does not exist.</exception>
     public async Task<PromptRangeDto> UpdateSourceAsync(
         int rangeId,
         int? sourceFileId,
@@ -143,6 +186,11 @@ public class PromptRangeService : ServiceBase<Models.DatabaseModel.PromptRange>
         return this.Mapper.Map<PromptRangeDto>(promptRange);
     }
 
+    /// <summary>
+    /// Deletes a PromptRange and all prompt items belonging to it.
+    /// </summary>
+    /// <param name="rangeId">The PromptRange identifier.</param>
+    /// <returns><see langword="true"/> after the cascade completes.</returns>
     public async Task<bool> DeleteAsync(int rangeId)
     {
         await base.DeleteObjectAsync(p => p.Id == rangeId);

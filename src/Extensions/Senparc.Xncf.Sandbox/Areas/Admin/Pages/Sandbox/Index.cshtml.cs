@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261125
+    Change description: v0.4.4 Improved Sandbox setup, orchestration, and localized user feedback.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -93,6 +96,17 @@ public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
         }
 
         return new JsonResult(new { success = true });
+    }
+
+    public async Task<IActionResult> OnPostBulkDeleteAsync([FromForm] string[] sessionIds)
+    {
+        var result = await _orchestrator.DeleteRecordsAsync(sessionIds).ConfigureAwait(false);
+        return new JsonResult(new
+        {
+            success = true,
+            deleted = result.Deleted,
+            skipped = result.Skipped
+        });
     }
 
     public async Task<IActionResult> OnPostUpdateTtlAsync([FromForm] Sandbox_UpdateTtlRequest request)

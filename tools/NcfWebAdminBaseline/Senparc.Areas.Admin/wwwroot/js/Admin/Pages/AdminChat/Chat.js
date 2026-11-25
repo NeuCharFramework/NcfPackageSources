@@ -2,6 +2,42 @@
   return typeof ncfT === 'function' ? ncfT(key) : fallback;
 }
 
+function adminChatModuleCommands() {
+  return ((window.INITIAL_DATA && window.INITIAL_DATA.chatTools) || [])
+    .map(item => {
+      const moduleUid = item.moduleUid || item.ModuleUid || '';
+      const accentColor = window.NcfAdminTabs && typeof window.NcfAdminTabs.accentColorFromUid === 'function'
+        ? window.NcfAdminTabs.accentColorFromUid(moduleUid)
+        : '#909399';
+      return {
+        command: item.command || item.Command,
+        label: item.label || item.Label,
+        hint: item.hint || item.Hint,
+        moduleName: item.moduleName || item.ModuleName,
+        moduleUid,
+        accentColor,
+        values: [],
+        parameters: ((item.parameters || item.Parameters) || []).map(parameter => ({
+          name: parameter.name || parameter.Name,
+          label: parameter.label || parameter.Label,
+          hint: parameter.hint || parameter.Hint,
+          placeholder: parameter.placeholder || parameter.Placeholder,
+          prefix: parameter.prefix || parameter.Prefix || '',
+          required: parameter.required || parameter.Required || false,
+          isPositional: parameter.isPositional || parameter.IsPositional || false,
+          allowFreeform: parameter.allowFreeform !== false && parameter.AllowFreeform !== false,
+          hasOptionsProvider: parameter.hasOptionsProvider || parameter.HasOptionsProvider || false,
+          options: ((parameter.options || parameter.Options) || []).map(option => ({
+            value: option.value || option.Value,
+            label: option.label || option.Label,
+            description: option.description || option.Description || ''
+          }))
+        }))
+      };
+    })
+    .filter(item => item.command && item.label);
+}
+
 function workspaceCodeWords(text, ignoreCase) {
   const values = text.split(/\s+/).filter(Boolean);
   return new Set(ignoreCase ? values.map(value => value.toLowerCase()) : values);
@@ -246,6 +282,23 @@ function logAdminChat(level, message, detail) {
   if (typeof write === 'function') write.call(console, message, detail === undefined ? '' : detail);
 }
 
+function showAdminChatMessage(vm, type, message) {
+  if (typeof window !== 'undefined' && typeof window.ncfShowAdminChatMessage === 'function') {
+    window.ncfShowAdminChatMessage(vm, type, message);
+    return;
+  }
+  const text = typeof message === 'string' ? message : message && message.message
+    ? message.message : String(message || '');
+  const messageApi = vm && vm.$message;
+  if (messageApi && typeof messageApi[type] === 'function') {
+    messageApi[type](text);
+  } else if (typeof messageApi === 'function') {
+    messageApi({ type, message: text });
+  } else if (typeof console !== 'undefined' && console) {
+    console.error(text);
+  }
+}
+
 var chatApp = new Vue({
   el: '#app',
   mixins: [window.ChatLauncherMixin],
@@ -298,14 +351,62 @@ var chatApp = new Vue({
       launcherModePopoverOpen: false,
       chatModePopoverOpen: false,
       chatCommandMenuOpen: false,
+      chatCommandActiveIndex: 0,
+      chatCommandPopoverBelow: false,
+      chatCommandPopoverMaxHeight: 260,
       chatCommandSuggestions: [
-        { command: '/mode', label: adminChatText('AdminChat.Command.Mode', 'Switch execution mode'), hint: 'simple / plan / execute', values: ['simple', 'plan', 'execute'] },
-        { command: '/help', label: adminChatText('AdminChat.Command.Help', 'Show available commands'), hint: 'Display command help', values: [] },
-        { command: '/maxtoken', label: adminChatText('AdminChat.Command.MaxToken', 'Set output limit'), hint: 'Recommended 256–8000', values: [] },
-        { command: '/maxiterations', label: adminChatText('AdminChat.Command.MaxIterations', 'Set Harness max iterations'), hint: '1–64', values: [] },
-        { command: '/harness', label: adminChatText('AdminChat.Command.Harness', 'Set Harness capabilities'), hint: 'todo / compact / file-memory / skills / web', values: [] }
-      ],
+        {
+          command: '/mode',
+          label: adminChatText('AdminChat.Command.Mode', 'Switch execution mode'),
+          hint: 'simple / plan / execute',
+          values: ['simple', 'plan', 'execute'],
+          parameters: []
+        },
+        {
+          command: '/help',
+          label: adminChatText('AdminChat.Command.Help', 'Show available commands'),
+          hint: adminChatText('AdminChat.Command.HelpHint', 'Display command help'),
+          values: [],
+          parameters: []
+        },
+        {
+          command: '/maxtoken',
+          label: adminChatText('AdminChat.Command.MaxToken', 'Set output limit'),
+          hint: adminChatText('AdminChat.Command.MaxTokenHint', 'Recommended 256–8000'),
+          values: [],
+          parameters: [{
+            name: 'tokens', label: adminChatText('AdminChat.Command.MaxToken', 'Token limit'),
+            hint: '256–8000', placeholder: '2000', prefix: '', required: true, isPositional: true,
+            allowFreeform: true, hasOptionsProvider: false,
+            options: [256, 1000, 2000, 4000, 8000].map(value => ({ value: String(value), label: String(value), description: '' }))
+          }]
+        },
+        {
+          command: '/maxiterations',
+          label: adminChatText('AdminChat.Command.MaxIterations', 'Set Harness max iterations'),
+          hint: '1–64',
+          values: [],
+          parameters: [{
+            name: 'iterations', label: adminChatText('AdminChat.Command.MaxIterations', 'Iterations'),
+            hint: '1–64', placeholder: '32', prefix: '', required: true, isPositional: true,
+            allowFreeform: true, hasOptionsProvider: false,
+            options: [8, 16, 32, 64].map(value => ({ value: String(value), label: String(value), description: '' }))
+          }]
+        },
+        {
+          command: '/harness',
+          label: adminChatText('AdminChat.Command.Harness', 'Set Harness capabilities'),
+          hint: 'todo / compact / file-memory / skills / web',
+          values: [],
+          parameters: []
+        }
+      ].concat(adminChatModuleCommands()),
       chatCommandSuggestionsFor: 'inputMessage',
+      chatCommandRemoteOptions: [],
+      chatCommandRemoteOptionsKey: '',
+      chatCommandOptionsLoading: false,
+      chatCommandOptionsTimer: null,
+      chatCommandOptionsSequence: 0,
       trajectoryDialogVisible: false,
       trajectoryLoading: false,
       trajectoryDetailLoading: false,
@@ -383,11 +484,31 @@ var chatApp = new Vue({
       autoScrollEnabled: true,
       isManageMode: false,
       selectedMessageIds: [],
+      selectionShotVisible: false,
+      selectionShotText: '',
+      selectionShotLeft: 0,
+      selectionShotTop: 0,
+      promptShottingVisible: false,
+      promptShottingLoading: false,
+      promptShottingSaving: false,
+      promptShottingRanges: [],
+      promptShottingRangeMode: 'existing',
+      promptShottingRangeId: null,
+      promptShottingNewRangeName: '',
+      promptShottingPrompt: '',
+      promptShottingModelId: 0,
+      promptShottingResult: null,
+      promptShottingMessageId: 0,
+      promptShottingStart: 0,
+      promptShottingLength: 0,
       isSuperAdmin: false,
       userStatsDrawerVisible: false,
       userStatsLoading: false,
       userStatsList: [],
       workspacePreviewOpen: false,
+      workspaceArtifactExpandedMessages: {},
+      agentTaskPreviewVisible: false,
+      agentTaskPreviewAction: null,
       workspacePreviewWidth: 420,
       workspacePreviewMaxWidth: 420,
       workspacePreviewOverlay: false,
@@ -434,6 +555,34 @@ var chatApp = new Vue({
     };
   },
   computed: {
+    sessionContextReferences() {
+      const modules = (this.currentSessionModules || []).map((module, index) => {
+        const detail = this.resolveModuleDetail(module);
+        return {
+          key: `module-${detail.uid || module.id || index}`,
+          kind: 'module',
+          detail
+        };
+      });
+      const workflows = (this.currentSessionWorkflows || []).map((workflow, index) => {
+        const detail = this.resolveWorkflowDetail(workflow);
+        return {
+          key: `workflow-${detail.id || workflow.id || index}`,
+          kind: 'workflow',
+          detail
+        };
+      });
+      return modules.concat(workflows);
+    },
+    visibleSessionContextReferences() {
+      const modules = this.sessionContextReferences.filter(reference => reference.kind === 'module').slice(0, 3);
+      const workflows = this.sessionContextReferences.filter(reference => reference.kind === 'workflow').slice(0, 1);
+      return modules.concat(workflows);
+    },
+    overflowSessionContextReferences() {
+      const visibleKeys = new Set(this.visibleSessionContextReferences.map(reference => reference.key));
+      return this.sessionContextReferences.filter(reference => !visibleKeys.has(reference.key));
+    },
     chatModeOptions() {
       return [
         { value: 'simple', label: adminChatText('AdminChat.Mode.Simple', 'Chat'), icon: 'fa fa-comment', description: adminChatText('AdminChat.Mode.SimpleDescription', 'One response without the MAF long-running task loop.') },
@@ -481,6 +630,11 @@ var chatApp = new Vue({
     workspacePreviewIsDocument() {
       return !!this.workspacePreviewData
         && ['text/html', 'text/markdown'].includes(this.workspacePreviewData.contentType);
+    },
+    workspacePreviewIs3D() {
+      return !!this.workspacePreviewData
+        && ['model/gltf-binary', 'model/gltf+json', 'model/obj', 'model/stl', 'application/x-ply']
+          .includes(this.workspacePreviewData.contentType);
     },
     workspacePreviewIsCode() {
       const data = this.workspacePreviewData;
@@ -592,6 +746,12 @@ var chatApp = new Vue({
     }
   },
   watch: {
+    inputMessage(value) {
+      this.$nextTick(() => this.syncSlashCommandMenuAfterValueChange('inputMessage', value));
+    },
+    chatInputText(value) {
+      this.$nextTick(() => this.syncSlashCommandMenuAfterValueChange('chatInputText', value));
+    },
     messageList() {
       this.$nextTick(() => {
         this.observeMessageRail();
@@ -607,6 +767,10 @@ var chatApp = new Vue({
     }
   },
   mounted() {
+    this.chatCommandResizeHandler = () => {
+      if (this.chatCommandMenuOpen) this.positionSlashCommandPopover(this.chatCommandSuggestionsFor);
+    };
+    window.addEventListener('resize', this.chatCommandResizeHandler);
     this.workspacePreviewResizeObserver = new ResizeObserver(() => this.updateWorkspacePreviewLayout());
     this.workspacePreviewResizeObserver.observe(this.$refs.workspaceContainer.$el);
     if (window.INITIAL_DATA) {
@@ -617,7 +781,11 @@ var chatApp = new Vue({
       
       if (window.INITIAL_DATA.initialMessage) {
         const initialMessage = decodeURIComponent(window.INITIAL_DATA.initialMessage);
-        if (this.currentSessionId > 0) {
+        const shouldTypeInitialMessage = new URLSearchParams(window.location.search || '')
+          .get('typeInitialMessage') === '1';
+        if (shouldTypeInitialMessage) {
+          this.typeInitialMessage(initialMessage);
+        } else if (this.currentSessionId > 0) {
           this.inputMessage = initialMessage;
         } else {
           this.chatInputText = initialMessage;
@@ -663,6 +831,7 @@ var chatApp = new Vue({
     this.loadSessionList();
     this.loadArchivedSessionList();
     this.bindChatSettingsDismiss();
+    this.bindPromptShottingSelectionDismiss();
     
       if (this.currentSessionId > 0) {
       this.loadSessionDetail().then(async () => {
@@ -679,6 +848,9 @@ var chatApp = new Vue({
     }
   },
   beforeDestroy() {
+    if (this.chatCommandResizeHandler) {
+      window.removeEventListener('resize', this.chatCommandResizeHandler);
+    }
     if (this.messageRailObserver) this.messageRailObserver.disconnect();
     clearTimeout(this.messageRailCloseTimer);
     clearTimeout(this.historySearchTimer);
@@ -697,8 +869,220 @@ var chatApp = new Vue({
     this.stopSidebarResize();
     this.clearPendingAttachments();
     this.unbindChatSettingsDismiss();
+    this.unbindPromptShottingSelectionDismiss();
   },
   methods: {
+    typeInitialMessage(message) {
+      const value = String(message || '');
+      const target = this.currentSessionId > 0 ? 'inputMessage' : 'chatInputText';
+      this[target] = '';
+      const characters = Array.from(value);
+      let index = 0;
+      this.$nextTick(() => {
+        const refName = target === 'inputMessage' ? 'promptMessageInput' : 'promptLauncherInput';
+        const component = this.$refs[refName];
+        const textarea = component && component.$el
+          ? component.$el.querySelector('textarea')
+          : null;
+        if (textarea) textarea.focus();
+        const typeNext = () => {
+          if (index >= characters.length) {
+            if (textarea) {
+              textarea.focus();
+              textarea.setSelectionRange(value.length, value.length);
+            }
+            return;
+          }
+          const chunkSize = Math.random() > .7 ? 2 : 1;
+          this[target] += characters.slice(index, index + chunkSize).join('');
+          index += chunkSize;
+          window.setTimeout(typeNext, 18 + Math.random() * 28);
+        };
+        window.setTimeout(typeNext, 180);
+      });
+    },
+    bindPromptShottingSelectionDismiss() {
+      if (this.promptShottingDismissHandler) return;
+      this.promptShottingDismissHandler = (event) => {
+        if (event.target && event.target.closest
+          && event.target.closest('.chat-selection-shot, .message-text')) return;
+        this.selectionShotVisible = false;
+      };
+      document.addEventListener('pointerdown', this.promptShottingDismissHandler);
+    },
+    unbindPromptShottingSelectionDismiss() {
+      if (!this.promptShottingDismissHandler) return;
+      document.removeEventListener('pointerdown', this.promptShottingDismissHandler);
+      this.promptShottingDismissHandler = null;
+    },
+    handleMessageSelectionEnd(event) {
+      if (!event || event.target.closest('.chat-selection-shot')) return;
+      const selection = window.getSelection();
+      if (!selection || selection.isCollapsed || !selection.rangeCount) {
+        this.selectionShotVisible = false;
+        return;
+      }
+      const selectedText = selection.toString().trim();
+      const range = selection.getRangeAt(0);
+      const container = range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+        ? range.commonAncestorContainer
+        : range.commonAncestorContainer.parentElement;
+      const messageText = container && container.closest('.message-text');
+      if (!selectedText || !messageText || !this.$refs.messagesContainer.contains(messageText)) {
+        this.selectionShotVisible = false;
+        return;
+      }
+      const rect = range.getBoundingClientRect();
+      const messageElement = messageText.closest('[data-message-id]');
+      const messageId = Number(messageElement && messageElement.getAttribute('data-message-id')) || 0;
+      const sourceMessage = this.messageList.find(message => Number(message.id) === messageId);
+      const selectedStart = sourceMessage ? sourceMessage.content.indexOf(selectedText) : -1;
+      this.selectionShotText = selectedText;
+      this.promptShottingMessageId = messageId;
+      this.promptShottingStart = selectedStart;
+      this.promptShottingLength = selectedStart >= 0 ? selectedText.length : 0;
+      this.selectionShotLeft = Math.max(12, Math.min(window.innerWidth - 180, rect.left + rect.width / 2 - 78));
+      this.selectionShotTop = Math.max(12, rect.top - 42);
+      this.selectionShotVisible = true;
+    },
+    async openPromptShotting(prompt, message) {
+      const content = String(prompt || this.selectionShotText || '').trim();
+      if (!content) {
+        this.showChatToast('warning', ncfT('AdminChat.PromptShotting.PromptRequired'));
+        return;
+      }
+      this.selectionShotVisible = false;
+      this.promptShottingPrompt = content;
+      this.promptShottingModelId = this.normalizeAiModelId(this.currentSessionAiModelId);
+      this.promptShottingRangeMode = 'existing';
+      this.promptShottingRangeId = null;
+      this.promptShottingNewRangeName = '';
+      this.promptShottingResult = null;
+      if (message) {
+        this.promptShottingMessageId = Number(message.id) || 0;
+        this.promptShottingStart = 0;
+        this.promptShottingLength = content.length;
+      }
+      this.promptShottingVisible = true;
+      await this.loadPromptShottingRanges();
+    },
+    async loadPromptShottingRanges() {
+      this.promptShottingLoading = true;
+      try {
+        const response = await service.get(
+          '/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetPromptShottingRangesAsync');
+        if (!(response.data && response.data.success)) {
+          throw new Error((response.data && (response.data.msg || response.data.errorMessage))
+            || ncfT('AdminChat.PromptShotting.LoadFailed'));
+        }
+        this.promptShottingRanges = response.data.data || [];
+        if (!this.promptShottingRanges.length) {
+          this.promptShottingRangeMode = 'new';
+        } else if (!this.promptShottingRangeId) {
+          this.promptShottingRangeId = this.promptShottingRanges[0].id;
+        }
+      } catch (error) {
+        this.showChatToast('error', error.message || ncfT('AdminChat.PromptShotting.LoadFailed'));
+        this.promptShottingRangeMode = 'new';
+      } finally {
+        this.promptShottingLoading = false;
+      }
+    },
+    async savePromptShot(run) {
+      const newRangeName = this.promptShottingRangeMode === 'new'
+        ? this.promptShottingNewRangeName.trim()
+        : '';
+      if (!this.promptShottingPrompt.trim()) {
+        this.showChatToast('warning', ncfT('AdminChat.PromptShotting.PromptRequired'));
+        return;
+      }
+      if (!newRangeName && (this.promptShottingRangeMode !== 'existing' || !this.promptShottingRangeId)) {
+        this.showChatToast('warning', ncfT('AdminChat.PromptShotting.RangeRequired'));
+        return;
+      }
+      this.promptShottingSaving = true;
+      this.promptShottingResult = null;
+      try {
+        const response = await service.post(
+          '/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.SavePromptShotAsync',
+          {
+            shotting: {
+              rangeId: newRangeName ? null : Number(this.promptShottingRangeId),
+              newRangeName: newRangeName || null,
+              prompt: this.promptShottingPrompt,
+              modelId: this.normalizeAiModelId(this.promptShottingModelId),
+              run: !!run
+            },
+            messageId: this.promptShottingLength > 0 ? this.promptShottingMessageId : 0,
+            start: this.promptShottingStart,
+            length: this.promptShottingLength
+          });
+        if (!(response.data && response.data.success && response.data.data)) {
+          throw new Error((response.data && (response.data.msg || response.data.errorMessage))
+            || ncfT('AdminChat.PromptShotting.SaveFailed'));
+        }
+        const payload = response.data.data;
+        this.promptShottingResult = payload.shotting || payload;
+        if (payload.message) {
+          const index = this.messageList.findIndex(message => Number(message.id) === Number(payload.message.id));
+          if (index >= 0) this.$set(this.messageList, index, payload.message);
+        }
+        this.showChatToast('success', ncfT(run
+          ? 'AdminChat.PromptShotting.ShotSuccess'
+          : 'AdminChat.PromptShotting.SaveSuccess', this.promptShottingResult.promptCode));
+        await this.loadPromptShottingRanges();
+      } catch (error) {
+        this.showChatToast('error', error.message || ncfT('AdminChat.PromptShotting.SaveFailed'));
+      } finally {
+        this.promptShottingSaving = false;
+      }
+    },
+    openPromptShottingTarget(rangeId, promptItemId) {
+      const params = new URLSearchParams();
+      if (Number(rangeId) > 0) params.set('rangeId', String(rangeId));
+      if (Number(promptItemId) > 0) params.set('promptId', String(promptItemId));
+      window.open('/Admin/PromptRange/Prompt#' + params.toString(), '_blank', 'noopener');
+    },
+    async copyMessageContent(content) {
+      try {
+        await this.writeClipboardText(String(content || ''));
+        this.showChatToast('success', ncfT('AdminChat.Copied'));
+      } catch (error) {
+        this.showChatToast('error', error.message || ncfT('AdminChat.CopyFailed'));
+      }
+    },
+    async writeClipboardText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+          await navigator.clipboard.writeText(text);
+          return;
+        } catch (error) {
+          console.warn('Clipboard API copy failed; using the DOM fallback:', error);
+        }
+      }
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      const copied = document.execCommand('copy');
+      textarea.remove();
+      if (!copied) throw new Error(ncfT('AdminChat.CopyFailed'));
+    },
+    showChatToast(type, message) {
+      if (typeof this.$message === 'function') {
+        this.$message({ type, message });
+        return;
+      }
+      if (this.$message && typeof this.$message[type] === 'function') {
+        this.$message[type](message);
+        return;
+      }
+      if (typeof ELEMENT !== 'undefined' && ELEMENT && typeof ELEMENT.Message === 'function') {
+        ELEMENT.Message({ type, message });
+      }
+    },
     bindChatSettingsDismiss() {
       if (this.chatSettingsPointerHandler) return;
       this.chatSettingsPointerHandler = (event) => {
@@ -1612,7 +1996,11 @@ var chatApp = new Vue({
       this.workspaceJsonRoot = null;
       this.prepareWorkspaceLinePreview(data);
       if (data && data.startLine) this.workspacePreviewJumpLine = data.startLine;
-      if (!data || !this.workspacePreviewIsDocument) return;
+      if (!data || !this.workspacePreviewIsDocument && !this.workspacePreviewIs3D) return;
+      if (this.workspacePreviewIs3D) {
+        this.workspacePreviewSrcdoc = await this.buildWorkspace3DPreview(data);
+        return;
+      }
       const isMarkdown = data.contentType === 'text/markdown';
       const html = isMarkdown ? this.formatMessageContent(data.content || '') : (data.content || '');
       console.debug('Workspace 预览:', data.path, data.contentType, isMarkdown ? 'markdown' : 'document');
@@ -1840,7 +2228,101 @@ var chatApp = new Vue({
       }
     },
 
+    messageActionAttachments(message) {
+      return ((message && message.attachments) || [])
+        .filter(attachment => !!attachment.actionType);
+    },
+
+    messageRegularAttachments(message) {
+      return ((message && message.attachments) || [])
+        .filter(attachment => !attachment.actionType && !attachment.isWorkspaceArtifact);
+    },
+
+    messageWorkspaceArtifacts(message) {
+      return ((message && message.attachments) || [])
+        .filter(attachment => attachment.isWorkspaceArtifact);
+    },
+
+    workspaceArtifactsExpanded(message) {
+      const artifacts = this.messageWorkspaceArtifacts(message);
+      return artifacts.length <= 3 || !!this.workspaceArtifactExpandedMessages[message && message.id];
+    },
+
+    toggleWorkspaceArtifacts(message) {
+      if (this.messageWorkspaceArtifacts(message).length <= 3 || !message) return;
+      const key = String(message.id);
+      this.$set(this.workspaceArtifactExpandedMessages, key, !this.workspaceArtifactExpandedMessages[key]);
+    },
+
+    workspaceArtifactStats(message) {
+      const artifacts = this.messageWorkspaceArtifacts(message);
+      return artifacts.reduce((stats, artifact) => {
+        const type = String(artifact.changeType || 'changed').toLowerCase();
+        if (type === 'created') stats.created += 1;
+        else if (type === 'deleted') stats.deleted += 1;
+        else stats.changed += 1;
+        stats.total += 1;
+        return stats;
+      }, { total: 0, created: 0, changed: 0, deleted: 0 });
+    },
+
+    workspaceArtifactChangeLabel(changeType) {
+      const key = String(changeType || '').toLowerCase() === 'created'
+        ? 'AdminChat.WorkspaceArtifact.Created'
+        : String(changeType || '').toLowerCase() === 'deleted'
+          ? 'AdminChat.WorkspaceArtifact.Deleted'
+          : 'AdminChat.WorkspaceArtifact.Changed';
+      return ncfT(key);
+    },
+
+    openMessageAttachmentAction(attachment) {
+      if (!attachment || attachment.actionType !== 'agents-task' || !attachment.actionTargetId) return;
+      const url = this.agentTaskUrl(attachment, false);
+      const title = `${attachment.name || 'Agent Task'} #${attachment.actionTargetId}`;
+      const opener = window.parent && window.parent !== window ? window.parent : window;
+      if (typeof opener.ncfOpenAdminPage === 'function' && opener.ncfOpenAdminPage(url, title)) return;
+      window.open(url, `ncf-agent-task-${attachment.actionTargetId}`, 'noopener');
+    },
+
+    agentTaskUrl(attachment, embedded) {
+      if (!attachment || !attachment.actionTargetId) return '';
+      const query = embedded ? '?embedded=1&ncfTab=1' : '';
+      return `/Admin/AgentsManager/Index${query}#tab=third&taskId=${encodeURIComponent(attachment.actionTargetId)}`;
+    },
+
+    openAgentTaskPreview(attachment) {
+      if (!attachment || attachment.actionType !== 'agents-task' || !attachment.actionTargetId) return;
+      this.agentTaskPreviewAction = attachment;
+      this.agentTaskPreviewVisible = true;
+    },
+
+    async openWorkspaceArtifact(attachment) {
+      if (!attachment || !attachment.relativePath) return;
+      if (attachment.changeType === 'deleted') return;
+      this.workspacePreviewOpen = true;
+      await this.$nextTick();
+      const path = this.normalizeWorkspacePath(attachment.relativePath);
+      const separator = path.lastIndexOf('/');
+      await this.loadWorkspaceEntries(separator >= 0 ? path.slice(0, separator) : '');
+      await this.handleWorkspaceEntryClick({
+        relativePath: attachment.relativePath,
+        isDirectory: false
+      });
+      this.$nextTick(() => this.updateWorkspacePreviewLayout());
+    },
+
     async buildWorkspaceHtmlPreview(content, filePath, isMarkdown = false, previewKind = '') {
+      let runtimeManifest = null;
+      if (!isMarkdown) {
+        const response = await service.post(
+          `/api/Senparc.Areas.Admin/WorkspaceAssets/${this.currentSessionId}/manifest`,
+          { path: filePath }, { customAlert: true });
+        if (!response.data || !response.data.assets) {
+          throw new Error((response.data && response.data.message)
+            || 'Unable to build the Workspace dependency manifest.');
+        }
+        runtimeManifest = response.data;
+      }
       const parser = new DOMParser();
       const document = parser.parseFromString(content, 'text/html');
       document.querySelectorAll('iframe, object, embed, form, base, meta[http-equiv]').forEach((element) => element.remove());
@@ -1947,15 +2429,154 @@ var chatApp = new Vue({
           .tok-number{color:#b45309;}
         `;
       }
+      if (runtimeManifest) {
+        const script = document.createElement('script');
+        const scope = runtimeManifest.scope || '';
+        const routes = Object.fromEntries(Object.entries(runtimeManifest.assets)
+          .map(([path, asset]) => [path, asset.url]));
+        const bootstrap = `
+(() => {
+  const routes = ${JSON.stringify(routes)};
+  const scope = ${JSON.stringify(scope)};
+  const source = ${JSON.stringify(filePath)};
+  const nativeFetch = window.fetch.bind(window);
+  const resolve = input => {
+    const raw = input instanceof Request ? input.url : String(input);
+    if (/^(data:|blob:|#)/i.test(raw)) return raw;
+    const root = source.includes('/') ? source.slice(0, source.lastIndexOf('/') + 1) : '';
+    const parts = (root + raw).replace(/\\\\/g, '/').split('/');
+    const normalized = [];
+    for (const part of parts) {
+      if (!part || part === '.') continue;
+      if (part === '..') { if (!normalized.length) throw new Error('Workspace path traversal blocked.'); normalized.pop(); }
+      else normalized.push(part);
+    }
+    const path = normalized.join('/');
+    if (!scope || path === scope || path.startsWith(scope + '/')) {
+      if (routes[path]) return routes[path];
+    }
+    throw new Error('Workspace dependency blocked: ' + raw);
+  };
+  window.fetch = (input, init) => nativeFetch(input instanceof Request ? new Request(resolve(input), input) : resolve(input), Object.assign({ credentials: 'omit', referrerPolicy: 'no-referrer' }, init));
+  const NativeXHR = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function(method, input) {
+    const args = Array.from(arguments);
+    args[1] = resolve(input);
+    return NativeXHR.apply(this, args);
+  };
+  const attribute = Element.prototype.setAttribute;
+  Element.prototype.setAttribute = function(name, value) {
+    if (/^(src|href|poster)$/i.test(name) && typeof value === 'string' && !/^(data:|blob:|https?:|#)/i.test(value)) {
+      try { value = resolve(value); } catch (_) { }
+    }
+    return attribute.call(this, name, value);
+  };
+  const observer = new MutationObserver(mutations => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes || []) {
+        if (!(node instanceof Element)) continue;
+        for (const element of [node].concat(Array.from(node.querySelectorAll('*')))) {
+          for (const name of ['src', 'href', 'poster']) {
+            const value = element.getAttribute(name);
+            if (!value || /^(data:|blob:|https?:|#)/i.test(value)) continue;
+            try { element.setAttribute(name, resolve(value)); } catch (_) { element.removeAttribute(name); }
+          }
+        }
+      }
+    }
+  });
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+})();`;
+        script.setAttribute('src', `data:text/javascript;base64,${this.encodeWorkspaceText(bootstrap)}`);
+        document.head.insertBefore(script, document.head.firstChild);
+      }
       document.head.appendChild(style);
       const csp = document.createElement('meta');
       csp.httpEquiv = 'Content-Security-Policy';
-      csp.content = "default-src 'none'; script-src data:; img-src data:; " +
-        "style-src 'unsafe-inline' data:; font-src data:; media-src data:; " +
-        "base-uri 'none'; form-action 'none'; connect-src 'none'; frame-src 'none'; " +
+      csp.content = `default-src 'none'; script-src data: ${runtimeManifest ? window.location.origin : ''}; ` +
+        `img-src data: ${runtimeManifest ? window.location.origin : ''}; ` +
+        `style-src 'unsafe-inline' data:; font-src data: ${runtimeManifest ? window.location.origin : ''}; ` +
+        `media-src data: ${runtimeManifest ? window.location.origin : ''}; ` +
+        `base-uri 'none'; form-action 'none'; connect-src ${runtimeManifest ? window.location.origin : "'none'"}; frame-src 'none'; ` +
         "child-src 'none'; object-src 'none'; worker-src 'none'; navigate-to 'none';";
       document.head.insertBefore(csp, document.head.firstChild);
       return '<!doctype html>' + document.documentElement.outerHTML;
+    },
+
+    async createWorkspaceAssetCapability(path) {
+      const response = await service.post(
+        `/api/Senparc.Areas.Admin/WorkspaceAssets/${this.currentSessionId}/capabilities`,
+        { path }, { customAlert: true });
+      if (!(response.data && response.data.url)) {
+        throw new Error((response.data && response.data.message) || 'Unable to authorize the Workspace asset.');
+      }
+      return response.data;
+    },
+
+    resolveWorkspaceCapabilityPath(rootPath, reference) {
+      const base = rootPath.includes('/') ? rootPath.slice(0, rootPath.lastIndexOf('/') + 1) : '';
+      const parts = (base + String(reference || '').replace(/\\/g, '/')).split('/');
+      const resolved = [];
+      for (const part of parts) {
+        if (!part || part === '.') continue;
+        if (part === '..') {
+          if (!resolved.length) throw new Error('3D dependency escapes the Workspace model directory.');
+          resolved.pop();
+        } else resolved.push(part);
+      }
+      return resolved.join('/');
+    },
+
+    async buildWorkspace3DPreview(data) {
+      const main = await this.createWorkspaceAssetCapability(data.path);
+      const dependencies = {};
+      const extension = data.path.split('.').pop().toLowerCase();
+      if (extension === 'gltf') {
+        const response = await fetch(main.url, { credentials: 'omit', referrerPolicy: 'no-referrer' });
+        if (!response.ok) throw new Error('Unable to read the glTF manifest.');
+        const gltf = await response.json();
+        const references = []
+          .concat((gltf.buffers || []).map(item => item.uri))
+          .concat((gltf.images || []).map(item => item.uri));
+        for (const reference of references.filter(Boolean).filter(value => !value.startsWith('data:'))) {
+          const path = this.resolveWorkspaceCapabilityPath(data.path, reference);
+          dependencies[path] = (await this.createWorkspaceAssetCapability(path)).url;
+        }
+      } else if (extension === 'obj') {
+        const response = await fetch(main.url, { credentials: 'omit', referrerPolicy: 'no-referrer' });
+        if (!response.ok) throw new Error('Unable to read the OBJ manifest.');
+        const text = await response.text();
+        const materials = Array.from(text.matchAll(/^\s*mtllib\s+(.+?)\s*$/gmi)).map(match => match[1]);
+        for (const material of materials) {
+          const path = this.resolveWorkspaceCapabilityPath(data.path, material);
+          const mtl = await this.createWorkspaceAssetCapability(path);
+          dependencies[path] = mtl.url;
+          const mtlResponse = await fetch(mtl.url, { credentials: 'omit', referrerPolicy: 'no-referrer' });
+          if (!mtlResponse.ok) continue;
+          const mtlText = await mtlResponse.text();
+          const textures = Array.from(mtlText.matchAll(/^\s*map_(?:Kd|Ka|Ks|Bump)\s+(.+?)\s*$/gmi))
+            .map(match => match[1]);
+          for (const texture of textures) {
+            const texturePath = this.resolveWorkspaceCapabilityPath(path, texture);
+            dependencies[texturePath] = (await this.createWorkspaceAssetCapability(texturePath)).url;
+          }
+        }
+      }
+      const manifest = this.encodeWorkspaceText(JSON.stringify({
+        path: data.path,
+        url: main.url,
+        dependencies,
+        origin: window.location.origin,
+        loading: ncfT('AdminChat.Workspace3D.Loading'),
+        loadError: ncfT('AdminChat.Workspace3D.LoadError')
+      }));
+      return `<!doctype html><html data-manifest="${manifest}"><head>`
+        + `<meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src ${window.location.origin} 'self'; connect-src ${window.location.origin} 'self'; img-src ${window.location.origin} 'self' data: blob:; style-src 'unsafe-inline';">`
+        + `<style>html,body,#viewport{width:100%;height:100%;margin:0;overflow:hidden;background:#f5f7fa}#status{position:absolute;left:12px;bottom:10px;right:12px;color:#64748b;font:12px/1.4 system-ui}#status.error{color:#b91c1c;background:#fff;padding:8px;border-radius:6px}</style></head><body>`
+        + `<div id="viewport"></div><div id="status"></div>`
+        + `<script src="/js/PromptRange/lib/three.min.js"></script>`
+        + `<script src="/js/PromptRange/lib/OrbitControls.js"></script>`
+        + `<script src="/js/Admin/Pages/AdminChat/Workspace3DViewer.js"></script></body></html>`;
     },
 
     isWorkspaceExecutableScriptType(type) {
@@ -2553,6 +3174,138 @@ var chatApp = new Vue({
       return field === 'chatInputText' ? this.chatInputText : this.inputMessage;
     },
 
+    syncSlashCommandMenuAfterValueChange(field, value) {
+      if (String(value || '').trimStart().startsWith('/')) {
+        this.chatCommandActiveIndex = 0;
+        this.updateSlashCommandMenu(field);
+      } else if (this.chatCommandSuggestionsFor === field) {
+        this.chatCommandMenuOpen = false;
+        this.chatCommandOptionsLoading = false;
+      }
+    },
+
+    slashCommandDefinition(command) {
+      const normalized = String(command || '').toLowerCase();
+      return this.chatCommandSuggestions.find(item => item.command.toLowerCase() === normalized) || null;
+    },
+
+    slashCommandParameterContext(text, definition) {
+      if (!definition || !definition.parameters || !definition.parameters.length) return null;
+      const value = String(text || '').trimStart();
+      const commandMatch = value.match(/^(\S+)(?:\s+)?/);
+      if (!commandMatch || commandMatch[1].toLowerCase() !== definition.command.toLowerCase()) return null;
+      const commandLength = commandMatch[1].length;
+      const argumentText = value.slice(commandLength).trimStart();
+      const tokens = argumentText ? argumentText.match(/\S+/g) || [] : [];
+      const namedParameters = definition.parameters.filter(parameter => !parameter.isPositional);
+      const positionalParameter = definition.parameters
+        .filter(parameter => parameter.isPositional)
+        .sort((left, right) => Number(left.order || 0) - Number(right.order || 0))[0];
+      const activeToken = tokens[tokens.length - 1] || '';
+      const activeNamed = namedParameters.find(parameter =>
+        activeToken.toLowerCase().startsWith(parameter.prefix.toLowerCase()));
+      if (activeNamed && !value.endsWith(' ')) {
+        return {
+          definition,
+          parameter: activeNamed,
+          query: activeToken.slice(activeNamed.prefix.length),
+          value,
+          replaceStart: value.length - activeToken.length
+        };
+      }
+
+      const usedNames = new Set();
+      let hasPositionalValue = false;
+      tokens.forEach(token => {
+        const matched = namedParameters.find(parameter =>
+          token.toLowerCase().startsWith(parameter.prefix.toLowerCase()));
+        if (matched && token.length > matched.prefix.length) usedNames.add(matched.name);
+        if (!matched && token) hasPositionalValue = true;
+      });
+      if (hasPositionalValue) return null;
+
+      const nextNamed = namedParameters.find(parameter => !usedNames.has(parameter.name));
+      if (nextNamed) {
+        return {
+          definition,
+          parameter: nextNamed,
+          query: '',
+          value,
+          replaceStart: value.length
+        };
+      }
+      return positionalParameter ? {
+        definition,
+        parameter: positionalParameter,
+        query: argumentText,
+        value,
+        replaceStart: value.length
+      } : null;
+    },
+
+    slashCommandParameterOptionValue(context, option) {
+      const value = context.value;
+      const parameter = context.parameter;
+      if (parameter.isPositional) {
+        const separator = value.endsWith(' ') ? '' : ' ';
+        return option ? value + separator + option.value : value + separator;
+      }
+      const inserted = parameter.prefix + (option ? option.value : '');
+      return (value.slice(0, context.replaceStart).trimEnd() + ' ' + inserted).trimEnd();
+    },
+
+    chatCommandOptionKey(context) {
+      return [
+        context.definition.command,
+        context.parameter.name,
+        context.query || ''
+      ].join('|');
+    },
+
+    async loadSlashCommandParameterOptions(field) {
+      const text = this.slashCommandText(field);
+      const command = (text || '').trimStart().split(/\s+/)[0];
+      const definition = this.slashCommandDefinition(command);
+      const context = this.slashCommandParameterContext(text, definition);
+      if (!context || !context.parameter.hasOptionsProvider) return;
+      const key = this.chatCommandOptionKey(context);
+      if (this.chatCommandRemoteOptionsKey === key) return;
+
+      clearTimeout(this.chatCommandOptionsTimer);
+      const sequence = ++this.chatCommandOptionsSequence;
+      this.chatCommandRemoteOptions = [];
+      this.chatCommandRemoteOptionsKey = key;
+      this.chatCommandActiveIndex = 0;
+      this.chatCommandOptionsLoading = true;
+      this.chatCommandOptionsTimer = setTimeout(async () => {
+        try {
+          const response = await service.get(
+            '/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetChatToolParameterOptionsAsync',
+            {
+              params: {
+                command: context.definition.command,
+                parameter: context.parameter.name,
+                query: context.query || '',
+                limit: 50
+              }
+            });
+          if (sequence !== this.chatCommandOptionsSequence) return;
+          const result = response.data && response.data.data;
+          this.chatCommandRemoteOptions = (result && result.options) || [];
+          this.chatCommandOptionsLoading = false;
+          this.chatCommandMenuOpen = this.slashCommandOptions(field).length > 0;
+          this.positionSlashCommandPopover(field);
+        } catch (error) {
+          if (sequence !== this.chatCommandOptionsSequence) return;
+          this.chatCommandRemoteOptions = [];
+          this.chatCommandOptionsLoading = false;
+          this.$message.error((responseError => responseError && (responseError.errorMessage || responseError.msg))(error.response && error.response.data)
+            || error.message
+            || ncfT('AdminChat.Command.LoadFailed'));
+        }
+      }, 120);
+    },
+
     slashCommandOptions(field) {
       const text = (this.slashCommandText(field) || '').trimStart();
       if (!text.startsWith('/')) return [];
@@ -2564,7 +3317,8 @@ var chatApp = new Vue({
           { value: '/mode simple', label: 'Simple', hint: '普通单轮对话' },
           { value: '/mode plan', label: 'Plan', hint: 'MAF 计划模式' },
           { value: '/mode execute', label: 'Execute', hint: 'MAF 执行模式' }
-        ].filter(item => !prefix || item.value.split(' ')[1].startsWith(prefix));
+        ].filter(item => !prefix || item.value.split(' ')[1].startsWith(prefix))
+          .map(item => ({ ...item, matchQuery: prefix, executeOnSelect: true }));
       }
       if (command === '/harness') {
         const prefix = (parts[1] || '').toLowerCase();
@@ -2580,23 +3334,98 @@ var chatApp = new Vue({
           { value: '/harness skills off', label: `Agent Skills → off（当前 ${status('skills')}）`, hint: '默认关闭' },
           { value: '/harness web on', label: `Hosted Web Search → on（当前 ${status('webSearch')}）`, hint: '可能产生外部访问/费用' },
           { value: '/harness web off', label: `Hosted Web Search → off（当前 ${status('webSearch')}）`, hint: '默认关闭' }
-        ].filter(item => !prefix || item.value.split(' ')[1].startsWith(prefix));
+        ].filter(item => !prefix || item.value.split(' ')[1].startsWith(prefix))
+          .map(item => ({ ...item, matchQuery: prefix, executeOnSelect: true }));
       }
-      if (parts.length > 1) return [];
-      const prefix = command;
-      return this.chatCommandSuggestions
-        .filter(item => item.command.startsWith(prefix))
-        .map(item => ({ value: item.command, label: item.label, hint: item.hint }));
+      const exactDefinition = this.slashCommandDefinition(command);
+      if (parts.length === 1 && !text.endsWith(' ') && !exactDefinition) {
+        return this.chatCommandSuggestions
+          .filter(item => item.command.startsWith(command))
+          .map(item => ({
+            value: item.command,
+            displayValue: item.command,
+            label: item.label,
+            hint: item.hint,
+            moduleName: item.moduleName || '',
+            accentColor: item.accentColor || '',
+            matchQuery: command
+          }));
+      }
+
+      const definition = exactDefinition;
+      const context = this.slashCommandParameterContext(text, definition);
+      if (!context) return [];
+      const parameter = context.parameter;
+      const options = parameter.hasOptionsProvider
+        ? this.chatCommandRemoteOptionsKey === this.chatCommandOptionKey(context)
+          ? this.chatCommandRemoteOptions
+          : []
+        : (parameter.options || []).filter(option =>
+            !context.query
+            || option.value.toLowerCase().includes(context.query.toLowerCase())
+            || option.label.toLowerCase().includes(context.query.toLowerCase()));
+      const mapped = options.map(option => ({
+        value: this.slashCommandParameterOptionValue(context, option),
+        displayValue: parameter.prefix ? parameter.prefix + option.value : option.value,
+        label: option.label,
+        hint: option.description || parameter.hint,
+        moduleName: definition.moduleName || '',
+        accentColor: definition.accentColor || '',
+        matchQuery: context.query || '',
+        executeOnSelect: !definition.moduleName
+      }));
+      if (mapped.length) return mapped;
+      if (parameter.hasOptionsProvider && this.chatCommandOptionsLoading) return [];
+      return [{
+        value: this.slashCommandParameterOptionValue(context, null),
+        displayValue: parameter.isPositional ? parameter.placeholder : parameter.prefix + parameter.placeholder,
+        label: parameter.label,
+        hint: parameter.hint,
+        moduleName: definition.moduleName || '',
+        accentColor: definition.accentColor || '',
+        parameterPrompt: true,
+        matchQuery: context.query || ''
+      }];
     },
 
     updateSlashCommandMenu(field) {
       const options = this.slashCommandOptions(field);
       this.chatCommandSuggestionsFor = field;
-      this.chatCommandMenuOpen = options.length > 0;
+      if (this.chatCommandActiveIndex >= options.length) this.chatCommandActiveIndex = 0;
+      this.chatCommandMenuOpen = options.length > 0 || this.chatCommandOptionsLoading;
+      this.loadSlashCommandParameterOptions(field);
+      this.positionSlashCommandPopover(field);
+    },
+
+    positionSlashCommandPopover(field) {
+      this.$nextTick(() => {
+        if (!this.chatCommandMenuOpen) return;
+        const refName = field === 'chatInputText' ? 'promptLauncherInput' : 'promptMessageInput';
+        const component = this.$refs[refName];
+        const element = component && component.$el ? component.$el : component;
+        const anchor = element && typeof element.closest === 'function'
+          ? element.closest('.chat-mention-anchor')
+          : null;
+        if (!anchor || typeof anchor.getBoundingClientRect !== 'function') return;
+
+        const rect = anchor.getBoundingClientRect();
+        const viewportPadding = 12;
+        const gap = 6;
+        const spaceAbove = Math.max(0, rect.top - viewportPadding - gap);
+        const spaceBelow = Math.max(0, window.innerHeight - rect.bottom - viewportPadding - gap);
+        const estimatedHeight = Math.min(340, 28 + this.slashCommandOptions(field).length * 44);
+        const placeBelow = spaceAbove < Math.min(220, estimatedHeight) && spaceBelow > spaceAbove;
+        const available = placeBelow ? spaceBelow : spaceAbove;
+
+        this.chatCommandPopoverBelow = placeBelow;
+        this.chatCommandPopoverMaxHeight = Math.max(96, Math.min(340, available));
+      });
     },
 
     selectSlashCommand(field, option) {
-      const value = option && option.value ? option.value + ' ' : '';
+      const value = option && option.value
+        ? option.value + (option.parameterPrompt && !option.value.endsWith(' ') ? '' : ' ')
+        : '';
       if (field === 'chatInputText') this.chatInputText = value;
       else this.inputMessage = value;
       this.chatCommandSuggestionsFor = field;
@@ -2609,6 +3438,55 @@ var chatApp = new Vue({
           textarea.setSelectionRange(value.length, value.length);
         }
       });
+      this.loadSlashCommandParameterOptions(field);
+      if (option && option.executeOnSelect) {
+        this.$nextTick(() => {
+          this.chatCommandMenuOpen = false;
+          this.handleSlashCommandKeydown({
+            key: 'Enter',
+            preventDefault() {}
+          }, field);
+        });
+      }
+    },
+
+    highlightSlashCommandText(text, query) {
+      const source = String(text == null ? '' : text);
+      const needle = String(query || '');
+      if (!needle) return this.escapeChatCommandHtml(source);
+      const index = source.toLowerCase().indexOf(needle.toLowerCase());
+      if (index < 0) return this.escapeChatCommandHtml(source);
+      return this.escapeChatCommandHtml(source.slice(0, index))
+        + '<mark>'
+        + this.escapeChatCommandHtml(source.slice(index, index + needle.length))
+        + '</mark>'
+        + this.escapeChatCommandHtml(source.slice(index + needle.length));
+    },
+
+    escapeChatCommandHtml(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    },
+
+    selectActiveSlashCommand(field) {
+      const options = this.slashCommandOptions(field);
+      const option = options[this.chatCommandActiveIndex] || options[0];
+      if (!option || option.parameterPrompt) return false;
+      this.selectSlashCommand(field, option);
+      return true;
+    },
+
+    scrollActiveSlashCommand() {
+      this.$nextTick(() => {
+        const active = document.querySelector('.chat-command-popover .chat-command-option.is-active');
+        if (active && typeof active.scrollIntoView === 'function') {
+          active.scrollIntoView({ block: 'nearest' });
+        }
+      });
     },
 
     handleSlashCommandKeydown(event, field) {
@@ -2617,6 +3495,35 @@ var chatApp = new Vue({
         this.chatCommandMenuOpen = false;
         event.preventDefault();
         return true;
+      }
+      if (this.chatCommandMenuOpen) {
+        const options = this.slashCommandOptions(field);
+        if (event.key === 'ArrowDown' && options.length) {
+          this.chatCommandActiveIndex = (this.chatCommandActiveIndex + 1) % options.length;
+          this.scrollActiveSlashCommand();
+          event.preventDefault();
+          return true;
+        }
+        if (event.key === 'ArrowUp' && options.length) {
+          this.chatCommandActiveIndex = (this.chatCommandActiveIndex - 1 + options.length) % options.length;
+          this.scrollActiveSlashCommand();
+          event.preventDefault();
+          return true;
+        }
+        if ((event.key === 'Tab' || event.key === 'Enter') && options.length
+          && this.selectActiveSlashCommand(field)) {
+          event.preventDefault();
+          return true;
+        }
+        const shortcut = /^[1-9]$/.test(event.key) ? Number(event.key) - 1 : -1;
+        if (shortcut >= 0 && shortcut < options.length && shortcut < 9
+          && (event.altKey || !options[shortcut].matchQuery)) {
+          this.chatCommandActiveIndex = shortcut;
+          if (this.selectActiveSlashCommand(field)) {
+            event.preventDefault();
+            return true;
+          }
+        }
       }
       if (event.key !== 'Enter' || !text.startsWith('/')) return false;
 
@@ -2678,7 +3585,14 @@ var chatApp = new Vue({
         this.chatCommandMenuOpen = false;
         if (field === 'chatInputText') this.chatInputText = '';
         else this.inputMessage = '';
-        this.$message.info('/mode simple|plan|execute · /maxiterations 1-64 · /harness <能力> on|off · /maxtoken 256-8000');
+        const moduleCommands = this.chatCommandSuggestions
+          .filter(item => item.moduleName)
+          .map(item => `${item.command} [${item.moduleName}]`)
+          .join(' · ');
+        const coreHelp = ncfT(
+          'AdminChat.Command.HelpSummary',
+          '/mode simple|plan|execute · /maxiterations 1-64 · /harness <capability> on|off · /maxtoken 256-8000');
+        this.$message.info(moduleCommands ? `${coreHelp} · ${moduleCommands}` : coreHelp);
         event.preventDefault();
         return true;
       }
@@ -2696,6 +3610,11 @@ var chatApp = new Vue({
         this.$message.success(`后续普通对话的输出上限已设为 ${value} tokens。`);
         event.preventDefault();
         return true;
+      }
+      if (this.chatCommandSuggestions.some(item =>
+        item.moduleName && item.command.toLowerCase() === command)) {
+        this.chatCommandMenuOpen = false;
+        return false;
       }
       this.$message.error(`未知命令：${command}。输入 /help 查看可用命令。`);
       event.preventDefault();
@@ -3558,7 +4477,7 @@ var chatApp = new Vue({
         } else {
           this.finishActiveTask('失败', sessionId);
           console.error('重新连接 AdminChat 任务失败:', error);
-          this.$message.error(error.message || '重新连接任务失败');
+          showAdminChatMessage(this, 'error', error.message || '重新连接任务失败');
         }
       } finally {
         this.releaseSessionRun(sessionId, controller);
@@ -3680,7 +4599,10 @@ var chatApp = new Vue({
         } else {
           this.finishActiveTask('失败', sendingSessionId);
           console.error('发送消息异常:', error);
-          this.$message.error(error.message || ncfT('AdminChat.SendFailedRetry'));
+          showAdminChatMessage(
+            this,
+            'error',
+            error.message || ncfT('AdminChat.SendFailedRetry'));
           if (this.currentSessionId === sendingSessionId) {
             this.runningMessages = kept;
             this.messageList = kept;
@@ -4427,7 +5349,7 @@ var chatApp = new Vue({
     formatMessageContent(content) {
       if (!content) return '';
 
-      const normalizedContent = content.replace(
+      let normalizedContent = content.replace(
         /```([^\r\n`]+)(?:\r?\n|(?=\s*```)|$)/g,
         (fullMatch, header) => {
           const match = header.trim().match(/^([A-Za-z0-9_+#.-]+)(?:\s+([\s\S]*))?$/);
@@ -4440,8 +5362,109 @@ var chatApp = new Vue({
             : `\`\`\`${language}\n`;
         }
       );
+      const richBlocks = [];
+      const richFence = /```(html|htm|xhtml|svg)\s*(?:\r?\n)?([\s\S]*?)```/gi;
+      normalizedContent = normalizedContent.replace(richFence, (fullMatch, language, source) => {
+        const token = `ADMIN_CHAT_RICH_PREVIEW_${richBlocks.length}_${Date.now()}`;
+        richBlocks.push({ token, language: language.toLowerCase(), source });
+        return `\n\n${token}\n\n`;
+      });
+      const trimmed = normalizedContent.trim();
+      if (!richBlocks.length && /^<svg[\s>][\s\S]*<\/svg>\s*$/i.test(trimmed)) {
+        const token = `ADMIN_CHAT_RICH_PREVIEW_0_${Date.now()}`;
+        normalizedContent = token;
+        richBlocks.push({ token, language: 'svg', source: trimmed });
+      }
       const rendered = marked.parse(normalizedContent, { breaks: true });
-      return typeof DOMPurify === 'undefined' ? '' : DOMPurify.sanitize(rendered);
+      if (typeof DOMPurify === 'undefined') return '';
+      let sanitized = DOMPurify.sanitize(rendered);
+      richBlocks.forEach(block => {
+        const preview = this.buildMessageRichPreview(block.language, block.source);
+        const tokenPattern = new RegExp(`<p>\\s*${block.token}\\s*<\\/p>|${block.token}`, 'g');
+        sanitized = sanitized.replace(tokenPattern, preview);
+      });
+      return sanitized;
+    },
+    buildMessageRichPreview(language, source) {
+      const sourceText = String(source || '').trim();
+      const isSvg = language === 'svg' || /^\s*<svg[\s>]/i.test(sourceText);
+      const sanitized = typeof DOMPurify === 'undefined' ? '' : DOMPurify.sanitize(sourceText, isSvg
+        ? {
+            USE_PROFILES: { svg: true, svgFilters: true },
+            FORBID_TAGS: ['script', 'foreignObject', 'iframe', 'object', 'embed']
+          }
+        : {
+            FORBID_TAGS: ['script', 'iframe', 'object', 'embed', 'form', 'base', 'meta', 'link'],
+            FORBID_ATTR: ['action', 'formaction', 'ping', 'srcset']
+          });
+      const safeKind = isSvg ? 'svg' : 'html';
+      const documentHtml = `<!doctype html><html><head><meta charset="utf-8">`
+        + `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: blob:; style-src 'unsafe-inline'; font-src data:; media-src data: blob:; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">`
+        + `<style>html,body{margin:0;width:100%;min-height:100%;box-sizing:border-box;background:#fff;color:#303133;font:14px/1.6 system-ui,sans-serif}body{padding:16px;overflow:auto}svg{max-width:100%;height:auto}img,video,canvas{max-width:100%}</style></head><body>${sanitized}</body></html>`;
+      const encodedSource = encodeURIComponent(sourceText);
+      const encodedSrcdoc = this.escapeHtmlAttribute(documentHtml);
+      const previewLabel = this.escapeHtmlText(ncfT('AdminChat.PromptPreview.Preview'));
+      const sourceLabel = this.escapeHtmlText(ncfT('AdminChat.PromptPreview.Source'));
+      const downloadLabel = this.escapeHtmlText(ncfT('AdminChat.PromptPreview.Download'));
+      const title = this.escapeHtmlAttribute(ncfT('AdminChat.PromptPreview.Title', safeKind.toUpperCase()));
+      return `<section class="chat-rich-preview" data-kind="${safeKind}" data-source="${encodedSource}">`
+        + '<div class="chat-rich-preview-toolbar">'
+        + `<span><i class="fa fa-eye" aria-hidden="true"></i>${previewLabel.toUpperCase()} · ${safeKind.toUpperCase()}</span>`
+        + '<div>'
+        + `<button type="button" data-rich-action="toggle" aria-pressed="false"><i class="el-icon-view" aria-hidden="true"></i>${sourceLabel}</button>`
+        + `<button type="button" data-rich-action="download"><i class="el-icon-download" aria-hidden="true"></i>${downloadLabel}</button>`
+        + '</div></div>'
+        + `<iframe class="chat-rich-preview-frame" title="${title}" sandbox="" referrerpolicy="no-referrer" srcdoc="${encodedSrcdoc}"></iframe>`
+        + `<pre class="chat-rich-preview-source" hidden><code>${this.escapeHtmlText(sourceText)}</code></pre>`
+        + '</section>';
+    },
+    escapeHtmlText(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    },
+    escapeHtmlAttribute(value) {
+      return this.escapeHtmlText(value)
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    },
+    handleRichPreviewClick(event) {
+      const button = event.target && event.target.closest
+        ? event.target.closest('[data-rich-action]')
+        : null;
+      if (!button) return;
+      const preview = button.closest('.chat-rich-preview');
+      if (!preview) return;
+      const action = button.getAttribute('data-rich-action');
+      if (action === 'toggle') {
+        const showingSource = preview.classList.toggle('is-source');
+        const frame = preview.querySelector('.chat-rich-preview-frame');
+        const source = preview.querySelector('.chat-rich-preview-source');
+        if (frame) frame.hidden = showingSource;
+        if (source) source.hidden = !showingSource;
+        button.setAttribute('aria-pressed', String(showingSource));
+        button.innerHTML = showingSource
+          ? `<i class="el-icon-view" aria-hidden="true"></i>${this.escapeHtmlText(ncfT('AdminChat.PromptPreview.Preview'))}`
+          : `<i class="el-icon-document" aria-hidden="true"></i>${this.escapeHtmlText(ncfT('AdminChat.PromptPreview.Source'))}`;
+        return;
+      }
+      if (action === 'download') this.downloadMessageRichPreview(preview);
+    },
+    downloadMessageRichPreview(preview) {
+      const kind = preview.getAttribute('data-kind') === 'svg' ? 'svg' : 'html';
+      const source = decodeURIComponent(preview.getAttribute('data-source') || '');
+      const blob = new Blob([source], {
+        type: kind === 'svg' ? 'image/svg+xml;charset=utf-8' : 'text/html;charset=utf-8'
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `admin-chat-preview.${kind}`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
     }
   }
 });

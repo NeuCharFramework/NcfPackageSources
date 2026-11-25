@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261125
+    Change description: v0.12.29 Improved AdminChat conversation loading and command parameter feedback.
+
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Models;
 using System;
@@ -77,7 +80,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
 
         public void SetAttachments(IReadOnlyList<AdminChatAttachment> attachments)
         {
-            if (attachments?.Count > 4) throw new ArgumentException("每条消息最多关联 4 个附件。");
+            if (attachments?.Count > 100) throw new ArgumentException("每条消息最多关联 100 个附件或操作结果。");
             AttachmentsJson = attachments?.Count > 0 ? JsonSerializer.Serialize(attachments) : null;
         }
 

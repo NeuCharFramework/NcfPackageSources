@@ -310,6 +310,7 @@
                                     </button>
                                     <p class="admin-voice-nav-text">{{ voiceNavMessage }}</p>
                                     <input class="admin-voice-nav-input"
+                                           ref="voiceNavInput"
                                            type="text"
                                            v-model="voiceNavDraft"
                                            :placeholder="voiceNavPlaceholder"
@@ -481,10 +482,14 @@
     <script src="~/js/Admin/dompurify.min.js"></script>
     <script src="~/js/Admin/GlobalNeuCharPivot.js" asp-append-version="true"></script>
     <script>
+        window.NCF_ADMIN_FOOTER_AI_INITIAL_MESSAGE = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+            ViewData["AdminFooterAiInitialMessage"]?.ToString() ?? string.Empty));
         window.NCF_ADMIN_FOOTER_INITIAL_STATE = {
             serverTime: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(DateTimeOffset.Now)),
             account: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(currentAccountName)),
-            embedded: @(isEmbedded ? "true" : "false")
+            embedded: @(isEmbedded ? "true" : "false"),
+            footerAiInitialMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                ViewData["AdminFooterAiInitialMessage"]?.ToString() ?? string.Empty))
         };
     </script>
     <script src="~/js/Admin/Shared/VoiceNavigation.js" asp-append-version="true"></script>

@@ -49,6 +49,10 @@ public static class WeixinClawProtocol
         NumberHandling = JsonNumberHandling.AllowReadingFromString
     };
 
+    /// <summary>
+    /// Creates the protocol's base64-encoded random client identifier header value.
+    /// </summary>
+    /// <returns>A new random WeChat UIN string.</returns>
     public static string BuildWechatUin()
     {
         Span<byte> bytes = stackalloc byte[4];
@@ -63,11 +67,23 @@ public sealed class WeixinClawApi
     public const string DefaultCdnBaseUrl = "https://novac2c.cdn.weixin.qq.com/c2c";
     private readonly HttpClient _httpClient;
 
+    /// <summary>
+    /// Initializes the Weixin Claw HTTP protocol client.
+    /// </summary>
+    /// <param name="httpClient">HTTP client used for API and media requests.</param>
     public WeixinClawApi(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
 
+    /// <summary>
+    /// Requests a QR-code login challenge from the iLink API.
+    /// </summary>
+    /// <param name="baseUrl">Optional iLink API base URL.</param>
+    /// <param name="botType">The protocol bot type.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The QR code and image payload.</returns>
+    /// <exception cref="TimeoutException">Thrown when the unauthenticated QR request exceeds 30 seconds.</exception>
     public async Task<WeixinClawQrCodeResponse> GetQrCodeAsync(
         string baseUrl = null,
         string botType = "3",
@@ -90,6 +106,14 @@ public sealed class WeixinClawApi
         }
     }
 
+    /// <summary>
+    /// Polls the status of a QR-code login challenge.
+    /// </summary>
+    /// <param name="qrcode">The QR code identifier returned by the login request.</param>
+    /// <param name="verifyCode">Optional verification code.</param>
+    /// <param name="baseUrl">Optional iLink API base URL.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The current login status and bot credentials when approved.</returns>
     public async Task<WeixinClawQrCodeStatusResponse> GetQrCodeStatusAsync(
         string qrcode,
         string verifyCode = null,
@@ -108,6 +132,14 @@ public sealed class WeixinClawApi
         return await SendAsync<WeixinClawQrCodeStatusResponse>(request, timeoutSource.Token).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the authenticated long-polling update request.
+    /// </summary>
+    /// <param name="baseUrl">The iLink API base URL.</param>
+    /// <param name="botToken">The authenticated bot token.</param>
+    /// <param name="getUpdatesBuf">The server-provided update cursor.</param>
+    /// <param name="cancellationToken">Token used to cancel the long poll.</param>
+    /// <returns>The update response and next cursor.</returns>
     public Task<WeixinClawGetUpdatesResponse> GetUpdatesAsync(
         string baseUrl,
         string botToken,
@@ -127,6 +159,16 @@ public sealed class WeixinClawApi
             cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a message to a personal or group WeChat conversation.
+    /// </summary>
+    /// <param name="baseUrl">The iLink API base URL.</param>
+    /// <param name="botToken">The authenticated bot token.</param>
+    /// <param name="message">The outbound message payload.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The protocol response containing message status and ID.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="message"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the protocol returns a non-zero result code.</exception>
     public async Task<WeixinClawSendMessageResponse> SendMessageAsync(
         string baseUrl,
         string botToken,
@@ -165,6 +207,14 @@ public sealed class WeixinClawApi
         return response;
     }
 
+    /// <summary>
+    /// Requests a CDN upload URL and encrypted upload parameters for media.
+    /// </summary>
+    /// <param name="baseUrl">The iLink API base URL.</param>
+    /// <param name="botToken">The authenticated bot token.</param>
+    /// <param name="request">The media size, MD5, user, and encryption metadata.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The upload URL and encrypted upload parameters.</returns>
     public Task<WeixinClawGetUploadUrlResponse> GetUploadUrlAsync(
         string baseUrl,
         string botToken,
@@ -181,6 +231,17 @@ public sealed class WeixinClawApi
             cancellationToken);
     }
 
+    /// <summary>
+    /// Uploads encrypted media bytes to the CDN and returns the download parameter.
+    /// </summary>
+    /// <param name="uploadFullUrl">Optional complete upload URL.</param>
+    /// <param name="uploadParam">Encrypted query parameter used by the default CDN URL.</param>
+    /// <param name="fileKey">The media file key.</param>
+    /// <param name="encryptedBytes">The encrypted media payload.</param>
+    /// <param name="cancellationToken">Token used to cancel the upload.</param>
+    /// <returns>The encrypted download parameter returned by the CDN.</returns>
+    /// <exception cref="HttpRequestException">Thrown when the CDN rejects the upload.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the response lacks a usable encrypted parameter.</exception>
     public async Task<string> UploadMediaAsync(
         string uploadFullUrl,
         string uploadParam,
@@ -223,6 +284,14 @@ public sealed class WeixinClawApi
         return downloadParam;
     }
 
+    /// <summary>
+    /// Downloads media from the CDN and decrypts it when the response declares an AES key.
+    /// </summary>
+    /// <param name="media">The media URL, encrypted query parameter, encryption type, and AES key.</param>
+    /// <param name="cancellationToken">Token used to cancel the download.</param>
+    /// <returns>The downloaded plaintext or encrypted bytes.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when media addressing or AES metadata is invalid.</exception>
+    /// <exception cref="HttpRequestException">Thrown when the CDN rejects the download.</exception>
     public async Task<byte[]> DownloadMediaAsync(
         WeixinClawCdnMedia media,
         CancellationToken cancellationToken = default)
@@ -258,6 +327,15 @@ public sealed class WeixinClawApi
         return DecryptAesEcb(encrypted, ParseAesKey(media.AesKey));
     }
 
+    /// <summary>
+    /// Retrieves protocol configuration for an authenticated iLink user.
+    /// </summary>
+    /// <param name="baseUrl">The iLink API base URL.</param>
+    /// <param name="botToken">The authenticated bot token.</param>
+    /// <param name="ilinkUserId">The iLink user identifier.</param>
+    /// <param name="contextToken">Optional conversation context token.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The protocol configuration response.</returns>
     public Task<WeixinClawGetConfigResponse> GetConfigAsync(
         string baseUrl,
         string botToken,
@@ -279,6 +357,15 @@ public sealed class WeixinClawApi
             cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a typing indicator for the current conversation.
+    /// </summary>
+    /// <param name="baseUrl">The iLink API base URL.</param>
+    /// <param name="botToken">The authenticated bot token.</param>
+    /// <param name="ilinkUserId">The target user identifier.</param>
+    /// <param name="typingTicket">The typing ticket returned by configuration.</param>
+    /// <param name="status">The protocol typing state.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public async Task SendTypingAsync(
         string baseUrl,
         string botToken,
@@ -302,6 +389,12 @@ public sealed class WeixinClawApi
             cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Notifies the iLink service that the bot message loop has started.
+    /// </summary>
+    /// <param name="baseUrl">The iLink API base URL.</param>
+    /// <param name="botToken">The authenticated bot token.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public Task<WeixinClawEmptyResponse> NotifyStartAsync(
         string baseUrl,
         string botToken,
@@ -316,6 +409,12 @@ public sealed class WeixinClawApi
             cancellationToken);
     }
 
+    /// <summary>
+    /// Notifies the iLink service that the bot message loop is stopping.
+    /// </summary>
+    /// <param name="baseUrl">The iLink API base URL.</param>
+    /// <param name="botToken">The authenticated bot token.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public Task<WeixinClawEmptyResponse> NotifyStopAsync(
         string baseUrl,
         string botToken,
@@ -406,6 +505,11 @@ public sealed class WeixinClawApi
         return content;
     }
 
+    /// <summary>
+    /// Normalizes an iLink base URL to include exactly one trailing slash.
+    /// </summary>
+    /// <param name="baseUrl">The configured base URL.</param>
+    /// <returns>The normalized base URL, using the protocol default when empty.</returns>
     public static string NormalizeBaseUrl(string baseUrl)
     {
         return string.IsNullOrWhiteSpace(baseUrl)

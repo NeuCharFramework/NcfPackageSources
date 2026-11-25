@@ -18,6 +18,11 @@ namespace Senparc.Xncf.Installer.Domain.Services
     /// </summary>
     public static class InstallCultureHelper
     {
+        /// <summary>
+        /// Temporarily applies a normalized installation UI culture and restores the previous culture on disposal.
+        /// </summary>
+        /// <param name="cultureName">The requested culture name.</param>
+        /// <returns>A disposable culture scope, or a no-op scope when the culture is invalid.</returns>
         public static IDisposable Apply(string cultureName)
         {
             if (!NcfLocalizationOptions.TryNormalizeCulture(cultureName, out var normalizedCulture))

@@ -45,6 +45,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         private const long MaxPluginArchiveExpandedBytes = 200L * 1024 * 1024;
         private const int MaxPluginArchiveEntries = 1000;
 
+        /// <summary>
+        /// Exports one PromptItem version as a Semantic Kernel plugin directory.
+        /// </summary>
+        /// <param name="fullVersion">The full PromptRange version identifier.</param>
+        /// <returns>The export directory path.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the PromptItem cannot be found or archive constraints fail.</exception>
         public async Task<string> ExportPluginsAsync(string fullVersion)
         {
             var item = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
@@ -54,6 +60,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return rangePath;
         }
 
+        /// <summary>
+        /// Exports selected PromptRanges/items and returns their common parent directory.
+        /// </summary>
+        /// <param name="rangeIds">PromptRange identifiers to export.</param>
+        /// <param name="ids">Optional PromptItem identifiers to include.</param>
+        /// <returns>The common export directory.</returns>
         public async Task<string> ExportPluginsAsync(IEnumerable<int> rangeIds, List<int> ids)
         {
             var rangeFilePaths = new List<string>();
@@ -122,11 +134,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Exports selected items from one PromptRange into a sanitized plugin directory.
         /// </summary>
-        /// <param name="rangeId"></param>
-        /// <param name="ids"></param>
-        /// <returns></returns>
+        /// <param name="rangeId">The PromptRange identifier.</param>
+        /// <param name="ids">Optional PromptItem identifiers to include.</param>
+        /// <returns>The range export directory.</returns>
         public async Task<string> ExportPluginsAsync(int rangeId, List<int> ids)
         {
             //Legacy comment translated to English.
@@ -161,11 +173,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Writes one prompt item into a sanitized plugin folder containing config and prompt text.
         /// </summary>
-        /// <param name="promptItem"></param>
-        /// <param name="rangePath"></param>
-        /// <returns></returns>
+        /// <param name="promptItem">The prompt item to export.</param>
+        /// <param name="rangePath">Optional existing range export path.</param>
+        /// <returns>The range export directory.</returns>
         public async Task<string> ExportPluginWithItemAsync(PromptItem promptItem, string rangePath = null)
         {
             var range = await _promptRangeService.GetAsync(promptItem.RangeId);
@@ -327,6 +339,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         #endregion
 
+        /// <summary>
+        /// Validates, extracts, and imports a PromptRange plugin archive under size, entry,
+        /// path-traversal, and expanded-content limits.
+        /// </summary>
+        /// <param name="uploadedFile">The uploaded plugin ZIP archive.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when the archive is empty, unsafe, oversized, or malformed.</exception>
         public async Task UploadPluginsAsync(IFormFile uploadedFile)
         {
             #region Legacy section

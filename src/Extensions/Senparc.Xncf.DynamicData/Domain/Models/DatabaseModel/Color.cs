@@ -48,8 +48,17 @@ namespace Senparc.Xncf.DynamicData
         /// </summary>
         public string AdditionNote { get; private set; }
 
+        /// <summary>
+        /// Initializes an empty color for ORM materialization.
+        /// </summary>
         private Color() { }
 
+        /// <summary>
+        /// Initializes a color from RGB components, generating a random color when any component is negative.
+        /// </summary>
+        /// <param name="red">The red component, normally in the range 0 through 255.</param>
+        /// <param name="green">The green component, normally in the range 0 through 255.</param>
+        /// <param name="blue">The blue component, normally in the range 0 through 255.</param>
         public Color(int red, int green, int blue)
         {
             if (red < 0 || green < 0 || blue < 0)
@@ -64,6 +73,10 @@ namespace Senparc.Xncf.DynamicData
             }
         }
 
+        /// <summary>
+        /// Initializes a color from its DTO representation.
+        /// </summary>
+        /// <param name="colorDto">The DTO containing RGB component values.</param>
         public Color(ColorDto colorDto)
         {
             Red = colorDto.Red;
@@ -71,6 +84,9 @@ namespace Senparc.Xncf.DynamicData
             Blue = colorDto.Blue;
         }
 
+        /// <summary>
+        /// Replaces all RGB components with independently generated values from the supported color range.
+        /// </summary>
         public void Random()
         {
             //generate a random color code
@@ -81,6 +97,9 @@ namespace Senparc.Xncf.DynamicData
             Blue = getRadomColorCode();
         }
 
+        /// <summary>
+        /// Increases each RGB component by ten without exceeding 255.
+        /// </summary>
         public void Brighten()
         {
             Red = Math.Min(255, Red + 10);
@@ -88,6 +107,9 @@ namespace Senparc.Xncf.DynamicData
             Blue = Math.Min(255, Blue + 10);
         }
 
+        /// <summary>
+        /// Decreases each RGB component by ten without going below zero.
+        /// </summary>
         public void Darken()
         {
             Red = Math.Max(0, Red - 10);

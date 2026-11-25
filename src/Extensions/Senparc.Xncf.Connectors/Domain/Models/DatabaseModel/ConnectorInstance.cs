@@ -53,10 +53,19 @@ public class ConnectorInstance : EntityBase<int>
 
     public DateTime? LastTestedAt { get; private set; }
 
+    /// <summary>
+    /// Initializes an empty connector instance for ORM materialization.
+    /// </summary>
     private ConnectorInstance()
     {
     }
 
+    /// <summary>
+    /// Creates a new connector instance with a generated public identifier.
+    /// </summary>
+    /// <param name="name">The display name.</param>
+    /// <param name="connectorKey">The registered provider key.</param>
+    /// <param name="description">The optional display description.</param>
     public ConnectorInstance(string name, string connectorKey, string? description)
     {
         PublicId = Guid.NewGuid().ToString("N");
@@ -65,12 +74,24 @@ public class ConnectorInstance : EntityBase<int>
         Enabled = true;
     }
 
+    /// <summary>
+    /// Updates the display name and optional description.
+    /// </summary>
+    /// <param name="name">The new display name.</param>
+    /// <param name="description">The optional new description.</param>
     public void Rename(string name, string? description)
     {
         Name = name.Trim();
         Description = string.IsNullOrWhiteSpace(description) ? null : description.Trim();
     }
 
+    /// <summary>
+    /// Stores protected configuration, allowed action keys, and enabled state.
+    /// </summary>
+    /// <param name="connectorKey">The registered provider key.</param>
+    /// <param name="configJson">The serialized protected field configuration.</param>
+    /// <param name="enabledActionsJson">The serialized allowed action-key list.</param>
+    /// <param name="enabled">Whether the instance may be invoked.</param>
     public void SetConfiguration(string connectorKey, string? configJson, string? enabledActionsJson, bool enabled)
     {
         ConnectorKey = connectorKey.Trim();
@@ -80,6 +101,11 @@ public class ConnectorInstance : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Records the latest provider test result with a bounded message and current UTC timestamp.
+    /// </summary>
+    /// <param name="succeeded">Whether the provider test succeeded.</param>
+    /// <param name="message">The test result message.</param>
     public void RecordTest(bool succeeded, string message)
     {
         LastTestSucceeded = succeeded;

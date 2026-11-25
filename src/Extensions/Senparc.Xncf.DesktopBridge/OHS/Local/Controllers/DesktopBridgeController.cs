@@ -54,6 +54,14 @@ public sealed class DesktopBridgeController : ControllerBase
     private readonly DesktopAdminAuthHandoffStore _adminAuthHandoffStore;
     private readonly IDesktopAdminAuthTokenIssuer? _adminAuthTokenIssuer;
 
+    /// <summary>
+    /// Initializes the desktop bridge controller and pairing/authentication dependencies.
+    /// </summary>
+    /// <param name="activityHub">Desktop activity event hub.</param>
+    /// <param name="authorizedSyncHub">Owner/policy-filtered synchronization hub.</param>
+    /// <param name="tokenValidator">Desktop session token validator.</param>
+    /// <param name="adminAuthHandoffStore">Optional PKCE admin-auth handoff store.</param>
+    /// <param name="adminAuthTokenIssuers">Optional admin token issuers; exactly one is accepted.</param>
     public DesktopBridgeController(
         DesktopActivityHub activityHub,
         DesktopAuthorizedSyncHub authorizedSyncHub,
@@ -69,6 +77,10 @@ public sealed class DesktopBridgeController : ControllerBase
         _adminAuthTokenIssuer = issuers.Length == 1 ? issuers[0] : null;
     }
 
+    /// <summary>
+    /// Returns desktop protocol capabilities after desktop-session authorization.
+    /// </summary>
+    /// <returns>The bridge protocol/capability document.</returns>
     [HttpGet("capabilities")]
     public ActionResult<DesktopBridgeCapabilities> GetCapabilities()
     {
@@ -97,8 +109,10 @@ public sealed class DesktopBridgeController : ControllerBase
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Creates a PKCE-protected WebView-to-desktop administrator authorization handoff.
     /// </summary>
+    /// <param name="request">The code challenge and safe admin return path.</param>
+    /// <returns>The handoff request metadata or a mapped rate-limit/validation error.</returns>
     [HttpPost("admin-auth-handoff/requests")]
     [AllowAnonymous]
     [RequestSizeLimit(4096)]
@@ -155,8 +169,11 @@ public sealed class DesktopBridgeController : ControllerBase
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Redeems an approved administrator handoff and issues a desktop backend token.
     /// </summary>
+    /// <param name="request">The handoff request ID and PKCE verifier.</param>
+    /// <param name="cancellationToken">Token used to cancel token issuance.</param>
+    /// <returns>Pending, denied, invalid, or approved token response.</returns>
     [HttpPost("admin-auth-handoff/redeem")]
     [AllowAnonymous]
     [RequestSizeLimit(4096)]
@@ -230,6 +247,10 @@ public sealed class DesktopBridgeController : ControllerBase
             token.ExpiresUtc));
     }
 
+    /// <summary>
+    /// Returns the currently active desktop activity snapshot.
+    /// </summary>
+    /// <returns>Active activities or an authorization failure.</returns>
     [HttpGet("activities")]
     public ActionResult<IReadOnlyList<DesktopActivityMessage>> GetActivities()
     {
@@ -242,6 +263,11 @@ public sealed class DesktopBridgeController : ControllerBase
         return Ok(_activityHub.GetActiveSnapshot());
     }
 
+    /// <summary>
+    /// Streams desktop activity events over an authorized Server-Sent Events response.
+    /// </summary>
+    /// <param name="replayBuffered">Whether retained activity events should be replayed first.</param>
+    /// <param name="cancellationToken">Token used to terminate the stream.</param>
     [HttpGet("events")]
     public async Task GetEvents(bool replayBuffered = true, CancellationToken cancellationToken = default)
     {
@@ -288,8 +314,10 @@ public sealed class DesktopBridgeController : ControllerBase
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Streams owner/policy-filtered synchronization events over Server-Sent Events.
     /// </summary>
+    /// <param name="replayBuffered">Whether retained matching events should be replayed first.</param>
+    /// <param name="cancellationToken">Token used to terminate the stream.</param>
     [HttpGet("authorized-sync/events")]
     [Authorize(AuthenticationSchemes = BackendJwtScheme, Policy = AdminOnlyPolicy)]
     public async Task GetAuthorizedSyncEvents(

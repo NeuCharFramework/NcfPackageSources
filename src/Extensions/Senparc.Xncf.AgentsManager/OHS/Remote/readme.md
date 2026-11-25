@@ -1,3 +1,3 @@
-﻿# Remote分支  
-  
-Remote 分支负责处理与外部系统之间的通信。它通过公开的接口（如 RESTful API、gRPC等）来实现与外部系统的集成，从而确保与外部系统的解耦和易于扩展。通常，Remote 分支涉及跨系统或服务的通信，可能需要考虑网络延迟、安全性等因素。  
+﻿# Remote branch
+
+The Remote branch handles integration with external systems through public interfaces such as REST APIs or gRPC. It keeps external dependencies isolated and easier to evolve. Remote communication may cross process or network boundaries, so latency, security, and versioning need explicit consideration.

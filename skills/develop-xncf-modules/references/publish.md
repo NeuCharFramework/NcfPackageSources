@@ -7,7 +7,7 @@
 - `<Version>` 是 NuGet 版本。
 - `<AssemblyName>` 通常就是包名，例如 `Senparc.Xncf.KnowledgeBase`。
 - `<Description>`、`<Title>`、`<Authors>`、`<PackageTags>` 来自模板替换，发布前读一遍，去掉模板残留。
-- `<PackageReleaseNotes>` 按时间顺序列出这个模块的变化。格式遵循 `codex-skills/senparc-version-updater`。
+- `<PackageReleaseNotes>` list this module's changes in chronological order. Format follows `skills/senparc-version-updater`.
 
 `Register.Version` 是 NCF 安装器看到的模块版本，必须与 `<Version>` 相同。只改其中一个会让管理界面和 NuGet 包对不上。
 

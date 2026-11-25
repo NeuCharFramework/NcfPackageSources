@@ -38,6 +38,12 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
     private readonly IDataProtector _tokenProtector;
     private readonly IDataProtector _contextTokenProtector;
 
+    /// <summary>
+    /// Initializes Weixin Claw account persistence and data-protection services.
+    /// </summary>
+    /// <param name="repo">Repository for account records.</param>
+    /// <param name="serviceProvider">Dependency-injection provider.</param>
+    /// <param name="dataProtectionProvider">Provider used to protect bot/context tokens.</param>
     public WeixinClawAccountService(
         IRepositoryBase<WeixinClawAccount> repo,
         IServiceProvider serviceProvider,
@@ -49,12 +55,21 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
             "Senparc.Xncf.WeixinManager.WeixinClaw.ContextToken.v1");
     }
 
+    /// <summary>
+    /// Retrieves all Weixin Claw account records as DTOs.
+    /// </summary>
+    /// <returns>Account DTOs ordered by identifier.</returns>
     public async Task<List<WeixinClawAccountDto>> GetDtosAsync()
     {
         var accounts = await GetFullListAsync(z => true, z => z.Id, OrderingType.Ascending).ConfigureAwait(false);
         return accounts.Select(ToDto).ToList();
     }
 
+    /// <summary>
+    /// Retrieves enabled tenant/account pairs that have protected bot tokens for polling.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>Tenant/account pairs eligible for background polling.</returns>
     public async Task<List<(int TenantId, int AccountId)>> GetPollingAccountsAsync(
         CancellationToken cancellationToken = default)
     {
@@ -67,6 +82,11 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
         return accounts.Select(z => (z.TenantId, z.Id)).ToList();
     }
 
+    /// <summary>
+    /// Maps account persistence data to a DTO without exposing protected token values.
+    /// </summary>
+    /// <param name="account">The account entity.</param>
+    /// <returns>The account DTO.</returns>
     public WeixinClawAccountDto ToDto(WeixinClawAccount account)
     {
         return new WeixinClawAccountDto
@@ -88,6 +108,11 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
         };
     }
 
+    /// <summary>
+    /// Protects a bot token for persistence.
+    /// </summary>
+    /// <param name="token">The plaintext bot token.</param>
+    /// <returns>The protected token, or <see langword="null"/> for empty input.</returns>
     public string ProtectToken(string token)
     {
         return string.IsNullOrWhiteSpace(token)
@@ -95,6 +120,11 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
             : _tokenProtector.Protect(NormalizeToken(token));
     }
 
+    /// <summary>
+    /// Unprotects an account bot token; invalid protection data returns <see langword="null"/>.
+    /// </summary>
+    /// <param name="account">The account containing the protected token.</param>
+    /// <returns>The normalized bot token, or <see langword="null"/>.</returns>
     public string UnprotectToken(WeixinClawAccount account)
     {
         if (account == null || string.IsNullOrWhiteSpace(account.BotTokenProtected))
@@ -112,6 +142,11 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
         }
     }
 
+    /// <summary>
+    /// Protects the conversation context token for persistence.
+    /// </summary>
+    /// <param name="contextToken">The plaintext context token.</param>
+    /// <returns>The protected token, or <see langword="null"/> for empty input.</returns>
     public string ProtectContextToken(string contextToken)
     {
         return string.IsNullOrWhiteSpace(contextToken)
@@ -119,11 +154,21 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
             : _contextTokenProtector.Protect(contextToken);
     }
 
+    /// <summary>
+    /// Unprotects the last stored account context token.
+    /// </summary>
+    /// <param name="account">The account containing the protected context token.</param>
+    /// <returns>The context token, or <see langword="null"/> when unavailable.</returns>
     public string UnprotectContextToken(WeixinClawAccount account)
     {
         return UnprotectContextToken(account?.LastMessageContextTokenProtected);
     }
 
+    /// <summary>
+    /// Unprotects a persisted context token; invalid protection data returns <see langword="null"/>.
+    /// </summary>
+    /// <param name="protectedContextToken">The protected context token.</param>
+    /// <returns>The plaintext context token, or <see langword="null"/>.</returns>
     public string UnprotectContextToken(string protectedContextToken)
     {
         if (string.IsNullOrWhiteSpace(protectedContextToken))
@@ -150,6 +195,12 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
             : value;
     }
 
+    /// <summary>
+    /// Creates or updates account settings, normalizing the base URL and protecting the bot token.
+    /// </summary>
+    /// <param name="dto">The account settings DTO.</param>
+    /// <returns>The persisted account entity.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when updating a missing account or creating without a usable token.</exception>
     public async Task<WeixinClawAccount> SaveSettingsAsync(WeixinClawAccountDto dto)
     {
         WeixinClawAccount account;

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -58,6 +61,11 @@ public sealed class WorkspaceAssetPreviewBuilder
             [".otf"] = "font/otf", [".js"] = "text/javascript", [".mjs"] = "text/javascript",
             [".cjs"] = "text/javascript"
         };
+
+    public static bool IsPreviewAsset(string path) =>
+        AssetTypes.ContainsKey(Path.GetExtension(path))
+        || new[] { ".bin", ".gltf", ".glb", ".obj", ".stl", ".ply", ".mtl", ".json" }
+            .Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase);
 
     public async Task<WorkspaceHtmlPreview> BuildAsync(
         IWorkspaceStorage storage, string workspaceId, string filePath,

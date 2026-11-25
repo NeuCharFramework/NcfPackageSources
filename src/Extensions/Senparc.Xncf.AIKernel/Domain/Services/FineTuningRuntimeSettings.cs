@@ -42,6 +42,13 @@ public sealed class FineTuningRuntimeSettings
     private readonly string _path;
     private readonly object _gate = new();
 
+    /// <summary>
+    /// Initializes persisted runtime settings over the infrastructure options and secret store.
+    /// </summary>
+    /// <param name="options">Fine-tuning infrastructure options.</param>
+    /// <param name="secrets">Worker secret store.</param>
+    /// <param name="environment">Host environment used to locate runtime settings.</param>
+    /// <param name="logger">Settings logger.</param>
     public FineTuningRuntimeSettings(IOptions<FineTuningWorkerOptions> options, FineTuningSecretStore secrets,
         IHostEnvironment environment, ILogger<FineTuningRuntimeSettings> logger)
     {
@@ -54,6 +61,9 @@ public sealed class FineTuningRuntimeSettings
         _path = Path.Combine(_environment.ContentRootPath, "App_Data", "Senparc.Xncf.AIKernel", "fine-tuning", "runtime.json");
     }
 
+    /// <summary>
+    /// Loads persisted enablement and allowlisted hosts into the live options object.
+    /// </summary>
     public void ApplyStartup()
     {
         lock (_gate)
@@ -71,6 +81,11 @@ public sealed class FineTuningRuntimeSettings
         }
     }
 
+    /// <summary>
+    /// Persists and applies local fine-tuning enablement.
+    /// </summary>
+    /// <param name="enabled">Whether local fine-tuning should be enabled.</param>
+    /// <returns>The resulting runtime status.</returns>
     public FineTuningRuntimeStatus SetEnabled(bool enabled)
     {
         lock (_gate)
@@ -85,6 +100,10 @@ public sealed class FineTuningRuntimeSettings
         }
     }
 
+    /// <summary>
+    /// Adds a non-loopback host to the persisted runtime allowlist.
+    /// </summary>
+    /// <param name="host">The host name to allow.</param>
     public void AllowHost(string host)
     {
         if (string.IsNullOrWhiteSpace(host) || FineTuningWorkerOptions.IsLoopbackHost(host))
@@ -103,6 +122,10 @@ public sealed class FineTuningRuntimeSettings
         }
     }
 
+    /// <summary>
+    /// Gets the current effective runtime settings and discovered worker paths.
+    /// </summary>
+    /// <returns>The runtime status.</returns>
     public FineTuningRuntimeStatus GetStatus()
     {
         lock (_gate)

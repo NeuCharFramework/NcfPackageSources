@@ -11,9 +11,9 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@XncfBuilderResource.Get("Frontend.016", "Extension module")</el-breadcrumb-item>
+    <el-breadcrumb-item>@XncfBuilderResource.Get("Frontend.XncfBuilder.ExtensionModule", "Extension module")</el-breadcrumb-item>
     <el-breadcrumb-item>XncfBuilder</el-breadcrumb-item>
-    <el-breadcrumb-item>@XncfBuilderResource.Get("Frontend.006", "XNCF preview monitor")</el-breadcrumb-item>
+    <el-breadcrumb-item>@XncfBuilderResource.Get("Frontend.XncfBuilder.XNCFPreviewMonitor", "XNCF preview monitor")</el-breadcrumb-item>
 }
 
 <div>
@@ -22,7 +22,7 @@
         <el-header class="module-header">
             <span class="start-title">
                 <i class="fa fa-dashboard"></i>&nbsp;
-                <span class="module-header-v">@XncfBuilderResource.Get("Frontend.006", "XNCF preview monitor")</span>
+                <span class="module-header-v">@XncfBuilderResource.Get("Frontend.XncfBuilder.XNCFPreviewMonitor", "XNCF preview monitor")</span>
             </span>
         </el-header>
 
@@ -30,53 +30,53 @@
             <el-alert
                 v-if="persistenceStatus && !persistenceStatus.isAvailable"
                 style="margin-bottom:16px;"
-                :title="ncfST('Frontend.034')"
+                :title="ncfST('Frontend.XncfBuilder.PreviewStatusPersistenceIsNotReady')"
                 type="warning"
                 show-icon
                 :closable="false"
-                :description="persistenceStatus.statusMessage + (persistenceStatus.errorMessage ? ncfST('Frontend.091') + persistenceStatus.errorMessage : '')">
+                :description="persistenceStatus.statusMessage + (persistenceStatus.errorMessage ? ncfST('Frontend.XncfBuilder.Reason') + persistenceStatus.errorMessage : '')">
             </el-alert>
 
             <el-alert
                 v-if="developmentStatus && !developmentStatus.isAvailable"
                 style="margin-top:12px;"
-                :title="ncfST('Frontend.034')"
+                :title="ncfST('Frontend.XncfBuilder.PreviewStatusPersistenceIsNotReady')"
                 type="warning"
                 show-icon
                 :closable="false"
-                :description="developmentStatus.statusMessage + (developmentStatus.errorMessage ? ncfST('Frontend.091') + developmentStatus.errorMessage : '')">
+                :description="developmentStatus.statusMessage + (developmentStatus.errorMessage ? ncfST('Frontend.XncfBuilder.Reason') + developmentStatus.errorMessage : '')">
             </el-alert>
 
             <el-alert
-                :title="ncfST('Frontend.033')"
+                :title="ncfST('Frontend.XncfBuilder.IsolatedPreviewPipeline')"
                 type="info"
                 show-icon
                 :closable="false"
-                :description="ncfST('Frontend.043')">
+                :description="ncfST('Frontend.XncfBuilder.EachTaskValidatesHostReferencesPerformsAnIsolatedBuildStartsANew')">
             </el-alert>
 
             <el-row :gutter="16" style="margin: 18px 0;">
                 <el-col :xs="12" :sm="6">
                     <el-card shadow="never">
-                        <div style="color:#909399;font-size:13px;">{{ ncfST('Frontend.030') }}</div>
+                        <div style="color:#909399;font-size:13px;">{{ ncfST('Frontend.XncfBuilder.Running') }}</div>
                         <div style="font-size:28px;color:#67c23a;">{{ runningCount }}</div>
                     </el-card>
                 </el-col>
                 <el-col :xs="12" :sm="6">
                     <el-card shadow="never">
-                        <div style="color:#909399;font-size:13px;">{{ ncfST('Frontend.011') }}</div>
+                        <div style="color:#909399;font-size:13px;">{{ ncfST('Frontend.XncfBuilder.ProcessingQueued') }}</div>
                         <div style="font-size:28px;color:#e6a23c;">{{ workingCount }}</div>
                     </el-card>
                 </el-col>
                 <el-col :xs="12" :sm="6">
                     <el-card shadow="never">
-                        <div style="color:#909399;font-size:13px;">{{ ncfST('Frontend.012') }}</div>
+                        <div style="color:#909399;font-size:13px;">{{ ncfST('Frontend.XncfBuilder.FailedInterrupted') }}</div>
                         <div style="font-size:28px;color:#f56c6c;">{{ failedCount }}</div>
                     </el-card>
                 </el-col>
                 <el-col :xs="12" :sm="6">
                     <el-card shadow="never">
-                        <div style="color:#909399;font-size:13px;">{{ ncfST('Frontend.010') }}</div>
+                        <div style="color:#909399;font-size:13px;">{{ ncfST('Frontend.XncfBuilder.TotalSessions') }}</div>
                         <div style="font-size:28px;color:#409eff;">{{ sessions.length }}</div>
                     </el-card>
                 </el-col>
@@ -84,15 +84,15 @@
 
             <div class="filter-container">
                 <el-button type="primary" size="small" icon="el-icon-refresh" :loading="loading" @@click="loadState(true)">
-                    {{ ncfST('Frontend.009') }}
+                    {{ ncfST('Frontend.XncfBuilder.SessionID') }}
                 </el-button>
-                <el-tag type="info" size="small">{{ ncfST('Frontend.028') }}</el-tag>
-                <span style="margin-left:10px;color:#909399;font-size:12px;">{{ ncfST('Frontend.042', formatDate(updatedAt)) }}</span>
+                <el-tag type="info" size="small">{{ ncfST('Frontend.XncfBuilder.AutoRefreshTwoSeconds') }}</el-tag>
+                <span style="margin-left:10px;color:#909399;font-size:12px;">{{ ncfST('Frontend.XncfBuilder.LastUpdatedValue', formatDate(updatedAt)) }}</span>
             </div>
 
             <el-card shadow="never">
                 <div slot="header" class="clearfix">
-                    <span><i class="fa fa-tasks"></i>&nbsp;{{ ncfST('Frontend.040') }}</span>
+                    <span><i class="fa fa-tasks"></i>&nbsp;{{ ncfST('Frontend.XncfBuilder.ModulePreviewSessionsAlternate') }}</span>
                 </div>
 
                 <el-table
@@ -100,7 +100,7 @@
                     row-key="sessionId"
                     border
                     stripe
-                    :empty-text="ncfST('Frontend.041')"
+                    :empty-text="ncfST('Frontend.XncfBuilder.NoIsolatedDevelopmentTasks')"
                     @@expand-change="handleExpandChange">
                     <el-table-column type="expand">
                         <template slot-scope="scope">
@@ -119,43 +119,43 @@
                             <el-card shadow="never">
                                 <el-row :gutter="16">
                                     <el-col :xs="24" :sm="12">
-                                        <strong>{{ ncfST('Frontend.009') }}</strong><span style="word-break:break-all;">{{ scope.row.sessionId }}</span>
+                                        <strong>{{ ncfST('Frontend.XncfBuilder.SessionID') }}</strong><span style="word-break:break-all;">{{ scope.row.sessionId }}</span>
                                     </el-col>
                                     <el-col :xs="24" :sm="12">
-                                        <strong>{{ ncfST('Frontend.027') }}</strong>{{ scope.row.environmentName || '—' }}
+                                        <strong>{{ ncfST('Frontend.XncfBuilder.Environment') }}</strong>{{ scope.row.environmentName || '—' }}
                                     </el-col>
                                     <el-col :xs="24" :sm="12" style="margin-top:8px;">
-                                        <strong>{{ ncfST('Frontend.005') }}</strong>{{ formatDate(scope.row.processStartedAt) }} / {{ formatDate(scope.row.healthyAt) }}
+                                        <strong>{{ ncfST('Frontend.XncfBuilder.HostStartedHealthy') }}</strong>{{ formatDate(scope.row.processStartedAt) }} / {{ formatDate(scope.row.healthyAt) }}
                                     </el-col>
                                     <el-col :xs="24" :sm="12" style="margin-top:8px;">
-                                        <strong>{{ ncfST('Frontend.004') }}</strong>{{ formatDate(scope.row.stoppedAt) }} / {{ scope.row.exitCode === null || scope.row.exitCode === undefined ? '—' : scope.row.exitCode }}
+                                        <strong>{{ ncfST('Frontend.XncfBuilder.HostStoppedExitCode') }}</strong>{{ formatDate(scope.row.stoppedAt) }} / {{ scope.row.exitCode === null || scope.row.exitCode === undefined ? '—' : scope.row.exitCode }}
                                     </el-col>
                                     <el-col :xs="24" :sm="12" style="margin-top:8px;">
-                                        <strong>{{ ncfST('Frontend.024') }}</strong><span style="word-break:break-all;">{{ scope.row.sourceFingerprint || 'Not calculated yet' }}</span>
+                                        <strong>{{ ncfST('Frontend.XncfBuilder.SourceSHA256') }}</strong><span style="word-break:break-all;">{{ scope.row.sourceFingerprint || 'Not calculated yet' }}</span>
                                     </el-col>
                                     <el-col :xs="24" :sm="12" style="margin-top:8px;">
-                                        <strong>{{ ncfST('Frontend.021') }}</strong><span style="word-break:break-all;">{{ scope.row.moduleAssemblySha256 || 'Not generated yet' }}</span>
+                                        <strong>{{ ncfST('Frontend.XncfBuilder.ModuleDLLSHA256') }}</strong><span style="word-break:break-all;">{{ scope.row.moduleAssemblySha256 || 'Not generated yet' }}</span>
                                     </el-col>
                                     <el-col :xs="24" style="margin-top:8px;">
-                                        <strong>{{ ncfST('Frontend.019') }}</strong><span style="word-break:break-all;">{{ scope.row.solutionFilePath || '—' }}</span>
+                                        <strong>{{ ncfST('Frontend.XncfBuilder.SourceSolutionForThisBuild') }}</strong><span style="word-break:break-all;">{{ scope.row.solutionFilePath || '—' }}</span>
                                     </el-col>
                                     <el-col :xs="24" style="margin-top:8px;">
-                                        <strong>{{ ncfST('Frontend.036') }}</strong><span style="word-break:break-all;">{{ scope.row.publishDirectory || 'Not created or already reclaimed' }}</span>
+                                        <strong>{{ ncfST('Frontend.XncfBuilder.PreviewDeploymentPublishDirectory') }}</strong><span style="word-break:break-all;">{{ scope.row.publishDirectory || 'Not created or already reclaimed' }}</span>
                                     </el-col>
                                 </el-row>
                             </el-card>
-                            <div style="margin-top:12px;font-weight:600;">{{ ncfST('Frontend.018') }}</div>
+                            <div style="margin-top:12px;font-weight:600;">{{ ncfST('Frontend.XncfBuilder.RecentOutputUpTo300Lines') }}</div>
                             <pre style="max-height:360px;overflow:auto;background:#1f2933;color:#e5e7eb;padding:12px;border-radius:4px;white-space:pre-wrap;word-break:break-word;" v-text="sessionOutput(scope.row)"></pre>
                         </template>
                     </el-table-column>
 
-                            <el-table-column prop="moduleProjectName" :label="ncfST('Frontend.020')" min-width="230"></el-table-column>
-                    <el-table-column :label="ncfST('Frontend.014')" min-width="150">
+                            <el-table-column prop="moduleProjectName" :label="ncfST('Frontend.XncfBuilder.Module')" min-width="230"></el-table-column>
+                    <el-table-column :label="ncfST('Frontend.XncfBuilder.CurrentStage')" min-width="150">
                         <template slot-scope="scope">
                             <el-tag :type="tagType(scope.row)" size="small">{{ stageLabel(scope.row.stage) }}</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.023')" min-width="250">
+                    <el-table-column :label="ncfST('Frontend.XncfBuilder.PipelineProgress')" min-width="250">
                         <template slot-scope="scope">
                             <el-progress
                                 :percentage="scope.row.progressPercent"
@@ -166,7 +166,7 @@
                             <div v-if="scope.row.errorMessage" style="color:#f56c6c;font-size:12px;line-height:18px;">{{ scope.row.errorMessage }}</div>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.031')" width="100">
+                    <el-table-column :label="ncfST('Frontend.XncfBuilder.Process')" width="100">
                         <template slot-scope="scope">{{ scope.row.processId > 0 ? scope.row.processId : '—' }}</template>
                     </el-table-column>
                     <el-table-column label="Host" min-width="135">
@@ -174,13 +174,13 @@
                             <el-tag :type="hostTagType(scope.row.hostStatus)" size="small">{{ hostStatusLabel(scope.row.hostStatus) }}</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.013')" min-width="185">
+                    <el-table-column :label="ncfST('Frontend.XncfBuilder.StartedUpdated')" min-width="185">
                         <template slot-scope="scope">
                             <div>{{ formatDate(scope.row.startedAt) }}</div>
                             <div style="color:#909399;font-size:12px;">{{ formatDate(scope.row.updatedAt) }}</div>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.017')" width="155" fixed="right" class-name="ncf-table-actions-column">
+                    <el-table-column :label="ncfST('Frontend.XncfBuilder.Actions')" width="155" fixed="right" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
                             <el-button
                                 v-if="scope.row.url && scope.row.isRunning"
@@ -188,7 +188,7 @@
                                 size="mini"
                                 icon="el-icon-position"
                                 @@click="openPreview(scope.row.url)">
-                                {{ ncfST('Frontend.044') }}
+                                {{ ncfST('Frontend.XncfBuilder.Open') }}
                             </el-button>
                             <el-button
                                 v-if="scope.row.canStop"
@@ -196,7 +196,7 @@
                                 size="mini"
                                 icon="el-icon-switch-button"
                                 @@click="stopSession(scope.row)">
-                                {{ ncfST('Frontend.045') }}
+                                {{ ncfST('Frontend.XncfBuilder.Stop') }}
                             </el-button>
                         </template>
                     </el-table-column>
@@ -205,36 +205,36 @@
 
             <el-card shadow="never" style="margin-top:16px;">
                 <div slot="header" class="clearfix">
-                    <span><i class="fa fa-code"></i>&nbsp;{{ ncfST('Frontend.046') }}</span>
-                    <span style="margin-left:8px;color:#909399;font-size:12px;">{{ ncfST('Frontend.047') }}</span>
+                    <span><i class="fa fa-code"></i>&nbsp;{{ ncfST('Frontend.XncfBuilder.IsolatedDevelopmentSandboxPreviewJobsAlternate') }}</span>
+                    <span style="margin-left:8px;color:#909399;font-size:12px;">{{ ncfST('Frontend.XncfBuilder.AICanWriteOnlyToTheIsolatedWorkspaceApplyingChangesRequiresAnAlternate') }}</span>
                 </div>
-                <el-table :data="developmentJobs" row-key="jobId" border stripe :empty-text="ncfST('Frontend.048')">
-                    <el-table-column prop="moduleProjectName" :label="ncfST('Frontend.049')" min-width="220"></el-table-column>
-                    <el-table-column :label="ncfST('Frontend.050')" min-width="175">
+                <el-table :data="developmentJobs" row-key="jobId" border stripe :empty-text="ncfST('Frontend.XncfBuilder.NoIsolatedDevelopmentJobs')">
+                    <el-table-column prop="moduleProjectName" :label="ncfST('Frontend.XncfBuilder.Module')" min-width="220"></el-table-column>
+                    <el-table-column :label="ncfST('Frontend.XncfBuilder.ModeStage')" min-width="175">
                         <template slot-scope="scope">
                             <div>{{ developmentModeLabel(scope.row.mode) }}</div>
                             <el-tag :type="developmentTagType(scope.row.stage)" size="small">{{ developmentStageLabel(scope.row.stage) }}</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.051')" min-width="300">
+                    <el-table-column :label="ncfST('Frontend.XncfBuilder.StatusAndDiff')" min-width="300">
                         <template slot-scope="scope">
                             <div>{{ scope.row.statusMessage || '—' }}</div>
-                            <div style="color:#909399;font-size:12px;line-height:18px;">{{ scope.row.diffSummary || ncfST('Frontend.052') }}</div>
+                            <div style="color:#909399;font-size:12px;line-height:18px;">{{ scope.row.diffSummary || ncfST('Frontend.XncfBuilder.DiffSummaryNotGeneratedYet') }}</div>
                             <div v-if="scope.row.errorMessage" style="color:#f56c6c;font-size:12px;line-height:18px;">{{ scope.row.errorMessage }}</div>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.053')" min-width="330">
+                    <el-table-column :label="ncfST('Frontend.XncfBuilder.PathSandbox')" min-width="330">
                         <template slot-scope="scope">
-                            <div style="word-break:break-all;">{{ ncfST('Frontend.054') }}{{ scope.row.targetSolutionFilePath || '—' }}</div>
-                            <div style="word-break:break-all;color:#909399;font-size:12px;">{{ ncfST('Frontend.055') }}{{ scope.row.workspaceSolutionFilePath || '—' }}</div>
-                            <div v-if="scope.row.sandboxSessionId" style="font-size:12px;">{{ ncfST('Frontend.056') }}{{ scope.row.sandboxSessionId }}</div>
-                            <el-link v-if="scope.row.previewUrl" :href="scope.row.previewUrl" target="_blank" type="primary">{{ ncfST('Frontend.057') }}</el-link>
+                            <div style="word-break:break-all;">{{ ncfST('Frontend.XncfBuilder.Target') }}{{ scope.row.targetSolutionFilePath || '—' }}</div>
+                            <div style="word-break:break-all;color:#909399;font-size:12px;">{{ ncfST('Frontend.XncfBuilder.Isolated') }}{{ scope.row.workspaceSolutionFilePath || '—' }}</div>
+                            <div v-if="scope.row.sandboxSessionId" style="font-size:12px;">{{ ncfST('Frontend.XncfBuilder.Sandbox') }}{{ scope.row.sandboxSessionId }}</div>
+                            <el-link v-if="scope.row.previewUrl" :href="scope.row.previewUrl" target="_blank" type="primary">{{ ncfST('Frontend.XncfBuilder.OpenSandboxPreviewAlternate') }}</el-link>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="ncfST('Frontend.058')" width="180" fixed="right" class-name="ncf-table-actions-column">
+                    <el-table-column :label="ncfST('Frontend.XncfBuilder.Actions')" width="180" fixed="right" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
-                            <el-button v-if="isAwaitingApproval(scope.row)" type="success" size="mini" icon="el-icon-check" @@click="applyDevelopment(scope.row)">{{ ncfST('Frontend.059') }}</el-button>
-                            <el-button v-if="!scope.row.isTerminal" type="danger" size="mini" icon="el-icon-delete" @@click="discardDevelopment(scope.row)">{{ ncfST('Frontend.060') }}</el-button>
+                            <el-button v-if="isAwaitingApproval(scope.row)" type="success" size="mini" icon="el-icon-check" @@click="applyDevelopment(scope.row)">{{ ncfST('Frontend.XncfBuilder.MergeManually') }}</el-button>
+                            <el-button v-if="!scope.row.isTerminal" type="danger" size="mini" icon="el-icon-delete" @@click="discardDevelopment(scope.row)">{{ ncfST('Frontend.XncfBuilder.DiscardAlternate') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -242,7 +242,7 @@
 
             <el-alert
                 style="margin-top:16px;"
-                :title="ncfST('Frontend.061')"
+                :title="ncfST('Frontend.XncfBuilder.AfterSourceGenerationOrModificationUseStartIsolatedXNCFPreviewToEnter')"
                 type="warning"
                 show-icon
                 :closable="false">
@@ -391,7 +391,7 @@
                         await Promise.all(this.expandedSessionIds.map(id => this.loadOutput(id)));
                     } catch (error) {
                         if (showLoading && !axios.isCancel(error)) {
-                            this.$message.error(this.errorMessage(error, ncfST('Frontend.062')));
+                            this.$message.error(this.errorMessage(error, ncfST('Frontend.XncfBuilder.FailedToReadStatus')));
                         }
                     } finally {
                         this.stateRequestSource = null;
@@ -410,10 +410,10 @@
                         const response = await axios.get(
                             this.outputUrl + separator + "sessionId=" + encodeURIComponent(sessionId),
                             { timeout: 10000, cancelToken: requestSource.token });
-                        this.$set(this.outputBySession, sessionId, response.data.recentOutput || ncfST('Frontend.063'));
+                        this.$set(this.outputBySession, sessionId, response.data.recentOutput || ncfST('Frontend.XncfBuilder.NoOutput'));
                     } catch (error) {
                         if (!axios.isCancel(error)) {
-                            this.$set(this.outputBySession, sessionId, this.errorMessage(error, ncfST('Frontend.064')));
+                            this.$set(this.outputBySession, sessionId, this.errorMessage(error, ncfST('Frontend.XncfBuilder.FailedToReadLogs')));
                         }
                     } finally {
                         if (this.outputRequestSources[sessionId] === requestSource) {
@@ -429,9 +429,9 @@
                 },
                 stopSession: async function (row) {
                     try {
-                        await this.$confirm(ncfST('Frontend.088', row.moduleProjectName), ncfST('Frontend.065'), {
-                            confirmButtonText: ncfST('Frontend.045'),
-                            cancelButtonText: ncfST('Frontend.066'),
+                        await this.$confirm(ncfST('Frontend.XncfBuilder.StopThePreviewJobForValue', row.moduleProjectName), ncfST('Frontend.XncfBuilder.StopPreview'), {
+                            confirmButtonText: ncfST('Frontend.XncfBuilder.Stop'),
+                            cancelButtonText: ncfST('Frontend.XncfBuilder.Cancel'),
                             type: "warning"
                         });
                         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
@@ -447,7 +447,7 @@
                         await this.loadState(false);
                     } catch (error) {
                         if (error !== "cancel" && error !== "close") {
-                            this.$message.error(this.errorMessage(error, ncfST('Frontend.067')));
+                            this.$message.error(this.errorMessage(error, ncfST('Frontend.XncfBuilder.FailedToStopPreview')));
                         }
                     }
                 },
@@ -455,12 +455,12 @@
                     const expected = "APPLY " + row.moduleProjectName;
                     try {
                         const prompt = await this.$prompt(
-                            ncfST('Frontend.089', expected),
-                            ncfST('Frontend.068'),
+                            ncfST('Frontend.XncfBuilder.ReviewTheIsolatedWorkspaceDiffAndSandboxPreviewFirstEnterValueTo', expected),
+                            ncfST('Frontend.XncfBuilder.MergeXNCFModuleManually'),
                             {
-                                confirmButtonText: ncfST('Frontend.069'),
-                                cancelButtonText: ncfST('Frontend.066'),
-                                inputErrorMessage: ncfST('Frontend.070', expected)
+                                confirmButtonText: ncfST('Frontend.XncfBuilder.Merge'),
+                                cancelButtonText: ncfST('Frontend.XncfBuilder.Cancel'),
+                                inputErrorMessage: ncfST('Frontend.XncfBuilder.ConfirmationPhraseMustExactlyMatchValue', expected)
                             });
                         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
                         const separator = this.applyDevelopmentUrl.indexOf("?") >= 0 ? "&" : "?";
@@ -473,16 +473,16 @@
                         await this.loadState(false);
                     } catch (error) {
                         if (error !== "cancel" && error !== "close") {
-                            this.$message.error(this.errorMessage(error, ncfST('Frontend.071')));
+                            this.$message.error(this.errorMessage(error, ncfST('Frontend.XncfBuilder.MergeFailed')));
                         }
                     }
                 },
                 discardDevelopment: async function (row) {
                     try {
                         await this.$confirm(
-                            ncfST('Frontend.090', row.moduleProjectName),
-                            ncfST('Frontend.072'),
-                            { confirmButtonText: ncfST('Frontend.060'), cancelButtonText: ncfST('Frontend.066'), type: "warning" });
+                            ncfST('Frontend.XncfBuilder.ThisStopsTheRelatedSandboxPreviewAndDeletesTheIsolatedWorkspaceWithout', row.moduleProjectName),
+                            ncfST('Frontend.XncfBuilder.DiscardIsolatedDevelopmentJob'),
+                            { confirmButtonText: ncfST('Frontend.XncfBuilder.DiscardAlternate'), cancelButtonText: ncfST('Frontend.XncfBuilder.Cancel'), type: "warning" });
                         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
                         const separator = this.discardDevelopmentUrl.indexOf("?") >= 0 ? "&" : "?";
                         const response = await axios.post(
@@ -493,25 +493,25 @@
                         await this.loadState(false);
                     } catch (error) {
                         if (error !== "cancel" && error !== "close") {
-                            this.$message.error(this.errorMessage(error, ncfST('Frontend.073')));
+                            this.$message.error(this.errorMessage(error, ncfST('Frontend.XncfBuilder.FailedToDiscard')));
                         }
                     }
                 },
                 developmentModeLabel: function (mode) {
-                    return mode === 0 ? ncfST('Frontend.074') : ncfST('Frontend.075');
+                    return mode === 0 ? ncfST('Frontend.XncfBuilder.NewModule') : ncfST('Frontend.XncfBuilder.ModifyExistingModule');
                 },
                 developmentStageLabel: function (stage) {
                     return [
-                        ncfST('Frontend.076'),
-                        ncfST('Frontend.077'),
-                        ncfST('Frontend.078'),
-                        ncfST('Frontend.079'),
-                        ncfST('Frontend.080'),
-                        ncfST('Frontend.081'),
-                        ncfST('Frontend.082'),
-                        ncfST('Frontend.083'),
-                        ncfST('Frontend.084')
-                    ][stage] || ncfST('Frontend.085');
+                        ncfST('Frontend.XncfBuilder.Snapshotting'),
+                        ncfST('Frontend.XncfBuilder.Writable'),
+                        ncfST('Frontend.XncfBuilder.Validating'),
+                        ncfST('Frontend.XncfBuilder.SandboxPreview'),
+                        ncfST('Frontend.XncfBuilder.AwaitingReview'),
+                        ncfST('Frontend.XncfBuilder.AwaitingManualMerge'),
+                        ncfST('Frontend.XncfBuilder.Merged'),
+                        ncfST('Frontend.XncfBuilder.Discarded'),
+                        ncfST('Frontend.XncfBuilder.Failed')
+                    ][stage] || ncfST('Frontend.XncfBuilder.Unknown');
                 },
                 developmentTagType: function (stage) {
                     if (stage === 6) return "success";
@@ -526,10 +526,10 @@
                     return this.stageMap[stage] ? this.stageMap[stage].name : "Unknown";
                 },
                 stageLabel: function (stage) {
-                    return this.stageMap[stage] ? this.stageMap[stage].label : ncfST('Frontend.085');
+                    return this.stageMap[stage] ? this.stageMap[stage].label : ncfST('Frontend.XncfBuilder.Unknown');
                 },
                 hostStatusLabel: function (status) {
-                    return this.hostStatusMap[status] ? this.hostStatusMap[status].label : ncfST('Frontend.086');
+                    return this.hostStatusMap[status] ? this.hostStatusMap[status].label : ncfST('Frontend.XncfBuilder.NotCreated');
                 },
                 hostTagType: function (status) {
                     const name = this.hostStatusMap[status] ? this.hostStatusMap[status].name : "NotCreated";
@@ -567,7 +567,7 @@
                     return name === "Failed" || name === "Interrupted" ? "error" : "process";
                 },
                 sessionOutput: function (row) {
-                    return this.outputBySession[row.sessionId] || ncfST('Frontend.087');
+                    return this.outputBySession[row.sessionId] || ncfST('Frontend.XncfBuilder.ReadingRecentOutput');
                 },
                 openPreview: function (url) {
                     window.open(url, "_blank", "noopener,noreferrer");

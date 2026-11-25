@@ -31,6 +31,12 @@ public sealed class DesktopActivityEventHandler : IIntegrationEventHandler<IInte
     private readonly DesktopAuthorizedSyncHub _authorizedSyncHub;
     private readonly ILogger<DesktopActivityEventHandler>? _logger;
 
+    /// <summary>
+    /// Initializes the event handler that maps integration events to desktop activity or authorized-sync streams.
+    /// </summary>
+    /// <param name="hub">Unrestricted desktop activity hub.</param>
+    /// <param name="authorizedSyncHub">Owner/policy-filtered synchronization hub.</param>
+    /// <param name="logger">Optional mapping-failure logger.</param>
     public DesktopActivityEventHandler(
         DesktopActivityHub hub,
         DesktopAuthorizedSyncHub authorizedSyncHub,
@@ -41,6 +47,13 @@ public sealed class DesktopActivityEventHandler : IIntegrationEventHandler<IInte
         _logger = logger;
     }
 
+    /// <summary>
+    /// Publishes an integration event to the appropriate desktop stream.
+    /// Mapping failures are logged and do not fail event-bus processing.
+    /// </summary>
+    /// <param name="event">The integration event to map.</param>
+    /// <param name="cancellationToken">The event-handler cancellation token.</param>
+    /// <returns>A completed task after publishing.</returns>
     public Task Handle(IIntegrationEvent @event, CancellationToken cancellationToken)
     {
         try
@@ -63,6 +76,12 @@ public sealed class DesktopActivityEventHandler : IIntegrationEventHandler<IInte
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Maps a generic integration event to a bounded desktop activity message,
+    /// extracting status, progress, correlation, source, and safe detail fields.
+    /// </summary>
+    /// <param name="event">The integration event to map.</param>
+    /// <returns>The activity message with sequence zero; the hub assigns its final sequence.</returns>
     internal static DesktopActivityMessage CreateMessage(IIntegrationEvent @event)
     {
         var eventType = @event.GetType();
@@ -86,6 +105,14 @@ public sealed class DesktopActivityEventHandler : IIntegrationEventHandler<IInte
             ActionUrl: null);
     }
 
+    /// <summary>
+    /// Classifies an integration event into terminal/working activity state using
+    /// success, error, and event-name signals.
+    /// </summary>
+    /// <param name="eventName">The integration event type name.</param>
+    /// <param name="success">An optional success flag.</param>
+    /// <param name="errorMessage">An optional error message.</param>
+    /// <returns>The state label and terminal flag.</returns>
     private static (string State, bool IsTerminal) Classify(
         string eventName,
         bool? success,
@@ -115,6 +142,11 @@ public sealed class DesktopActivityEventHandler : IIntegrationEventHandler<IInte
         return ("Info", true);
     }
 
+    /// <summary>
+    /// Resolves a stable correlation identifier from common event identity properties.
+    /// </summary>
+    /// <param name="event">The integration event.</param>
+    /// <returns>The first usable correlation value or the event/parent ID.</returns>
     private static string GetCorrelationId(IIntegrationEvent @event)
     {
         foreach (var propertyName in new[] { "RequestId", "CorrelationId", "StreamId", "ChatTaskId", "TaskId" })
@@ -129,6 +161,11 @@ public sealed class DesktopActivityEventHandler : IIntegrationEventHandler<IInte
         return (@event.ParentEventId ?? @event.Id).ToString("N");
     }
 
+    /// <summary>
+    /// Derives a concise source name from the event namespace or assembly.
+    /// </summary>
+    /// <param name="eventType">The integration event type.</param>
+    /// <returns>The source label.</returns>
     private static string GetSource(Type eventType)
     {
         const string marker = "Senparc.Xncf.";
@@ -144,6 +181,12 @@ public sealed class DesktopActivityEventHandler : IIntegrationEventHandler<IInte
         return eventType.Assembly.GetName().Name ?? "NCF";
     }
 
+    /// <summary>
+    /// Selects and bounds event detail text for desktop clients.
+    /// </summary>
+    /// <param name="event">The integration event.</param>
+    /// <param name="errorMessage">The explicit error message, when any.</param>
+    /// <returns>A single-line detail string limited to 300 characters.</returns>
     private static string? GetSafeDetail(IIntegrationEvent @event, string? errorMessage)
     {
         var detail = !string.IsNullOrWhiteSpace(errorMessage)
@@ -159,6 +202,11 @@ public sealed class DesktopActivityEventHandler : IIntegrationEventHandler<IInte
         return detail.Length <= 300 ? detail : detail[..300] + "…";
     }
 
+    /// <summary>
+    /// Reads and clamps a progress-like property from the event.
+    /// </summary>
+    /// <param name="event">The integration event.</param>
+    /// <returns>A percentage from 0 to 100, or <see langword="null"/> when unavailable.</returns>
     private static double? TryGetProgress(IIntegrationEvent @event)
     {
         foreach (var propertyName in new[] { "Progress", "Percentage", "Percent" })
@@ -179,6 +227,12 @@ public sealed class DesktopActivityEventHandler : IIntegrationEventHandler<IInte
         return null;
     }
 
+    /// <summary>
+    /// Reads a Boolean event property through case-insensitive reflection.
+    /// </summary>
+    /// <param name="event">The integration event.</param>
+    /// <param name="propertyName">The property name.</param>
+    /// <returns>The parsed value, or <see langword="null"/> when absent/invalid.</returns>
     private static bool? TryGetBoolean(IIntegrationEvent @event, string propertyName)
     {
         var value = TryGetPropertyValue(@event, propertyName);
@@ -190,11 +244,23 @@ public sealed class DesktopActivityEventHandler : IIntegrationEventHandler<IInte
         };
     }
 
+    /// <summary>
+    /// Reads an event property and converts it to invariant-culture text.
+    /// </summary>
+    /// <param name="event">The integration event.</param>
+    /// <param name="propertyName">The property name.</param>
+    /// <returns>The property text, or <see langword="null"/>.</returns>
     private static string? TryGetString(IIntegrationEvent @event, string propertyName)
     {
         return Convert.ToString(TryGetPropertyValue(@event, propertyName), CultureInfo.InvariantCulture);
     }
 
+    /// <summary>
+    /// Reads a public event property through reflection without propagating getter failures.
+    /// </summary>
+    /// <param name="event">The integration event.</param>
+    /// <param name="propertyName">The property name.</param>
+    /// <returns>The property value, or <see langword="null"/> when unavailable.</returns>
     private static object? TryGetPropertyValue(IIntegrationEvent @event, string propertyName)
     {
         try
@@ -209,11 +275,22 @@ public sealed class DesktopActivityEventHandler : IIntegrationEventHandler<IInte
         }
     }
 
+    /// <summary>
+    /// Performs a case-insensitive substring check against candidate markers.
+    /// </summary>
+    /// <param name="value">The source value.</param>
+    /// <param name="candidates">The markers to find.</param>
+    /// <returns><see langword="true"/> when any marker occurs.</returns>
     private static bool ContainsAny(string value, params string[] candidates)
     {
         return candidates.Any(candidate => value.Contains(candidate, StringComparison.OrdinalIgnoreCase));
     }
 
+    /// <summary>
+    /// Converts a PascalCase event name into a readable title and removes an Event suffix.
+    /// </summary>
+    /// <param name="eventName">The event type name.</param>
+    /// <returns>A human-readable event title.</returns>
     private static string Humanize(string eventName)
     {
         var withoutSuffix = eventName.EndsWith("Event", StringComparison.Ordinal)

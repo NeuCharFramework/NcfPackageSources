@@ -22,22 +22,22 @@ using System.Text;
 namespace Senparc.Ncf.Core.WorkContext
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Holds the administrator identity and role information used by the current work context.
     /// </summary>
     public class AdminWorkContext
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the administrator's display or login name.
         /// </summary>
         public string UserName { get; set; }
 
         /// <summary>
-        /// userId
+        /// Gets or sets the administrator account identifier.
         /// </summary>
         public int AdminUserId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the role codes granted to the administrator.
         /// </summary>
         public IEnumerable<string> RoleCodes { get; set; }
     }

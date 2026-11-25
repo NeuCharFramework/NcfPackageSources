@@ -38,6 +38,11 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
     {
         //private TableDataService _tableDataService;
         private Lazy<TableMetadataService> _tableMetadataService;
+        /// <summary>
+        /// Initializes the column metadata service and its lazy table metadata dependency.
+        /// </summary>
+        /// <param name="repo">The column metadata repository.</param>
+        /// <param name="serviceProvider">The dependency provider used to resolve table metadata.</param>
         public ColumnMetadataService(IRepositoryBase<ColumnMetadata> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             //_tableDataService = serviceProvider.GetRequiredService<TableDataService>();
@@ -45,10 +50,10 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates table and column metadata from the public instance properties of an entity type when absent.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">The entity type whose metadata should be discovered.</typeparam>
+        /// <returns>A data template containing the table's column metadata.</returns>
         public async Task<ColumnTemplate> TryCreateTableAndColumnMetaFromEntityAsync<T>()
         {
             //Legacy comment translated to English.
@@ -88,6 +93,11 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
             return columnTemplate;
         }
 
+        /// <summary>
+        /// Loads column metadata for a table and wraps the mapped DTOs in a column template.
+        /// </summary>
+        /// <param name="tableId">The table metadata identifier.</param>
+        /// <returns>The column template for the table.</returns>
         public async Task<ColumnTemplate> GetColumnDtos(int tableId)
         {
             var columns = await base.GetFullListAsync(z => z.TableMetadataId == tableId);

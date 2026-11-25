@@ -19,8 +19,17 @@ using System;
 
 namespace Senparc.Ncf.Core.Utility
 {
+    /// <summary>
+    /// Provides legacy date and week calculations used by NCF application code.
+    /// </summary>
     public static class DateTimeUtility
     {
+        /// <summary>
+        /// Converts a <see cref="DateTime"/> to a JavaScript timestamp measured in milliseconds
+        /// from the Unix epoch.
+        /// </summary>
+        /// <param name="input">The date and time to convert.</param>
+        /// <returns>The Unix timestamp in milliseconds.</returns>
         public static long GetJavascriptTimestamp(System.DateTime input)
         {
             return input.AddTicks((-1) * DateTime.Parse("1970-1-1").Ticks).Ticks / 10000;
@@ -30,14 +39,18 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Clamps the supplied year, month, and day to the supported legacy birthday range
+        /// and returns the nearest constructible date when the combination is invalid.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="year">The requested year, clamped to the current year and 1921.</param>
+        /// <param name="month">The requested month, clamped to 1 through 12.</param>
+        /// <param name="day">The requested day, clamped to 1 through 31 and reduced until valid.</param>
+        /// <returns>A constructible birthday date.</returns>
         public static DateTime GetUsableBirthday(int year, int month, int day)
         {
-            year = Math.Min(DateTime.Now.Year, Math.Max(1921, year));//Legacy comment translated to English.
-            month = Math.Min(12, Math.Max(1, month));//Legacy comment translated to English.
-            day = Math.Min(31, Math.Max(1, day));//Legacy comment translated to English.
+            year = Math.Min(DateTime.Now.Year, Math.Max(1921, year));
+            month = Math.Min(12, Math.Max(1, month));
+            day = Math.Min(31, Math.Max(1, day));
             DateTime birthday;
             while (true)
             {
@@ -47,16 +60,17 @@ namespace Senparc.Ncf.Core.Utility
                 }
                 else
                 {
-                    day--;//Legacy comment translated to English.
+                    day--;
                 }
             }
             return birthday;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the Saturday on or after the date's calendar day.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="date">The date from which the search begins.</param>
+        /// <returns>The Saturday in the same or following week.</returns>
         public static DateTime GetStaturdayInWeek(DateTime date)
         {
             DateTime staturday = date.Date;
@@ -68,9 +82,10 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the Sunday on or before the date's calendar day.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="date">The date from which the search begins.</param>
+        /// <returns>The Sunday in the same or preceding week.</returns>
         public static DateTime GetSundayInWeek(DateTime date)
         {
             DateTime sunday = date.Date;
@@ -82,25 +97,28 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Calculates the legacy week number used by this utility.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="date">The date whose week number is required.</param>
+        /// <returns>The calculated one-based week number.</returns>
         public static int GetWeekOfYear(DateTime date)
         {
             var firstDay = new DateTime(date.Year, 1, 1);
-            int firstWeekendDayOfYear = 7 - (int)firstDay.DayOfWeek;//Legacy comment translated to English.
+            int firstWeekendDayOfYear = 7 - (int)firstDay.DayOfWeek;
             int lastWeek = (date.DayOfYear - firstWeekendDayOfYear + 6) / 7;
             return lastWeek + 1;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the Sunday associated with a legacy week number in a given year.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="year">The calendar year.</param>
+        /// <param name="weeek">The one-based week number used by the legacy calculation.</param>
+        /// <returns>The calculated Sunday date.</returns>
         public static DateTime GetSundayOfWeek(int year, int weeek)
         {
             var firstDay = new DateTime(year, 1, 1);
-            int firstWeekend = 7 - (int)firstDay.DayOfWeek;//Legacy comment translated to English.
+            int firstWeekend = 7 - (int)firstDay.DayOfWeek;
             int dayOfYear = firstWeekend + (weeek - 2) * 7;
             return firstDay.AddDays(dayOfYear);
         }

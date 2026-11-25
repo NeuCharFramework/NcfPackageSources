@@ -56,6 +56,12 @@ public sealed class NeuCharWorkflowCreationProvider : IWorkflowCreationProvider
         _moduleService = moduleService;
     }
 
+    /// <summary>
+    /// Returns the bounded node/function capabilities available to AI-assisted Workflow creation.
+    /// </summary>
+    /// <param name="adminUserId">The administrator identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel capability discovery.</param>
+    /// <returns>A task containing allowed trigger/node types and Function descriptors.</returns>
     public async Task<WorkflowCreationCapabilities> GetCapabilitiesAsync(
         int adminUserId,
         CancellationToken cancellationToken = default)
@@ -110,6 +116,14 @@ public sealed class NeuCharWorkflowCreationProvider : IWorkflowCreationProvider
             """);
     }
 
+    /// <summary>
+    /// Validates an AI-created graph against size, node, trigger, sensitive-property,
+    /// Function-availability, reachability, and reference rules.
+    /// </summary>
+    /// <param name="adminUserId">The administrator identifier.</param>
+    /// <param name="request">The proposed Workflow metadata and graph.</param>
+    /// <param name="cancellationToken">Token used to cancel validation.</param>
+    /// <returns>A normalized validation result with errors.</returns>
     public async Task<WorkflowCreationValidationResult> ValidateAsync(
         int adminUserId,
         WorkflowCreationRequest request,
@@ -229,6 +243,13 @@ public sealed class NeuCharWorkflowCreationProvider : IWorkflowCreationProvider
             Array.Empty<string>());
     }
 
+    /// <summary>
+    /// Validates and persists an AI-created Workflow as a controlled manual-trigger Workflow.
+    /// </summary>
+    /// <param name="adminUserId">The administrator identifier.</param>
+    /// <param name="request">The proposed Workflow metadata and graph.</param>
+    /// <param name="cancellationToken">Token used to cancel validation or persistence.</param>
+    /// <returns>A task containing creation status and persisted ID.</returns>
     public async Task<WorkflowCreationResult> CreateAsync(
         int adminUserId,
         WorkflowCreationRequest request,
@@ -282,6 +303,12 @@ public sealed class NeuCharWorkflowCreationProvider : IWorkflowCreationProvider
         }
     }
 
+    /// <summary>
+    /// Validates a Function node's module/function reference and AI-invocation permission.
+    /// </summary>
+    /// <param name="node">The Function node.</param>
+    /// <param name="cancellationToken">Token used to cancel catalog lookup.</param>
+    /// <returns>An error message, or <see langword="null"/> when valid.</returns>
     private async Task<string?> ValidateFunctionNodeAsync(
         NeuCharWorkflowNode node,
         CancellationToken cancellationToken)
@@ -314,6 +341,8 @@ public sealed class NeuCharWorkflowCreationProvider : IWorkflowCreationProvider
         return null;
     }
 
+    /// <summary>Checks whether the NeuCharWorkflow module is open.</summary>
+    /// <returns>A task whose result indicates module availability.</returns>
     private async Task<bool> IsModuleOpenAsync()
     {
         var module = await _moduleService
@@ -322,6 +351,9 @@ public sealed class NeuCharWorkflowCreationProvider : IWorkflowCreationProvider
         return module?.State == XncfModules_State.开放;
     }
 
+    /// <summary>Detects credential-like property names anywhere in a graph JSON document.</summary>
+    /// <param name="json">The graph JSON.</param>
+    /// <returns><see langword="true"/> when sensitive property names are present.</returns>
     private static bool ContainsSensitiveProperty(string json)
     {
         try
@@ -335,6 +367,9 @@ public sealed class NeuCharWorkflowCreationProvider : IWorkflowCreationProvider
         }
     }
 
+    /// <summary>Recursively detects sensitive property names in a JSON tree.</summary>
+    /// <param name="node">The JSON node.</param>
+    /// <returns><see langword="true"/> when a sensitive property is found.</returns>
     private static bool ContainsSensitiveProperty(JsonNode? node)
     {
         if (node is JsonObject objectNode)
@@ -365,6 +400,9 @@ public sealed class NeuCharWorkflowCreationProvider : IWorkflowCreationProvider
         return false;
     }
 
+    /// <summary>Reads a configuration value as text or serialized JSON.</summary>
+    /// <param name="config">The configuration object.</param><param name="key">The property key.</param>
+    /// <returns>The text value, or <see langword="null"/> when absent.</returns>
     private static string? GetString(JsonObject? config, string key)
     {
         if (config == null || !config.TryGetPropertyValue(key, out var value) || value == null)
@@ -377,12 +415,21 @@ public sealed class NeuCharWorkflowCreationProvider : IWorkflowCreationProvider
             : value.ToJsonString();
     }
 
+    /// <summary>Creates a failed Workflow-creation validation result.</summary>
+    /// <param name="code">The stable error code.</param><param name="message">The user-facing error message.</param>
+    /// <returns>A failed validation result.</returns>
     private static WorkflowCreationValidationResult Failure(string code, string message) =>
         new(false, null, 0, 0, Array.Empty<string>(), code, message);
 
+    /// <summary>Resolves a localized message with a fallback string.</summary>
+    /// <param name="key">The resource key.</param><param name="fallback">The fallback text.</param>
+    /// <returns>The localized or fallback message.</returns>
     private static string Localize(string key, string fallback) =>
         NeuCharWorkflowResource.Get(key, fallback);
 
+    /// <summary>Bounds a capability description to a maximum length.</summary>
+    /// <param name="value">The value to bound.</param><param name="max">The maximum length.</param>
+    /// <returns>The original or truncated value.</returns>
     private static string Limit(string? value, int max) =>
         string.IsNullOrEmpty(value) || value.Length <= max ? value ?? string.Empty : value[..max];
 }

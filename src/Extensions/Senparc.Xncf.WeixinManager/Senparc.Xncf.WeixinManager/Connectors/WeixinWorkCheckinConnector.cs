@@ -37,6 +37,10 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
     public const string Key = "weixin.work.checkin";
     public const string GetRecordsAction = "get-checkin-records";
 
+    /// <summary>
+    /// Describes the WeCom credentials, attendance parameters, and supported action.
+    /// </summary>
+    /// <returns>The connector descriptor shown to configuration and tool callers.</returns>
     public ConnectorDescriptor Describe() => new()
     {
         Key = Key,
@@ -133,6 +137,12 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
         ]
     };
 
+    /// <summary>
+    /// Tests the configured CorpId/Secret by requesting a WeCom access token.
+    /// </summary>
+    /// <param name="configuration">The connector configuration.</param>
+    /// <param name="cancellationToken">Token used to cancel the test.</param>
+    /// <returns>A task containing credential validity and a localized diagnostic message.</returns>
     public async Task<ConnectorTestResult> TestAsync(
         IReadOnlyDictionary<string, string> configuration,
         CancellationToken cancellationToken)
@@ -169,6 +179,12 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
         }
     }
 
+    /// <summary>
+    /// Retrieves bounded WeCom attendance records for validated member/time/type arguments.
+    /// </summary>
+    /// <param name="context">Connector configuration, action, arguments, and instance name.</param>
+    /// <param name="cancellationToken">Token used to cancel invocation.</param>
+    /// <returns>A task containing serialized attendance records or a localized failure.</returns>
     public async Task<ConnectorInvocationResult> InvokeAsync(
         ConnectorInvocationContext context,
         CancellationToken cancellationToken)
@@ -257,11 +273,16 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
         }
     }
 
+    /// <summary>Reads an invariant-culture integer connector option.</summary>
+    /// <param name="values">The option map.</param><param name="key">The option key.</param><param name="fallback">The fallback value.</param>
     private static int ReadInt(IReadOnlyDictionary<string, string> values, string key, int fallback)
         => values.TryGetValue(key, out var raw) && int.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed)
             ? parsed
             : fallback;
 
+    /// <summary>Converts a Unix timestamp to local display time.</summary>
+    /// <param name="unixTime">The Unix seconds value.</param>
+    /// <returns>A formatted local timestamp, or empty text for non-positive input.</returns>
     private static string FormatUnixTime(long unixTime)
     {
         if (unixTime <= 0)
@@ -275,6 +296,14 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
 
 public static class WeixinWorkCheckinArguments
 {
+    /// <summary>
+    /// Parses and validates WeCom member IDs, time range, and attendance type.
+    /// </summary>
+    /// <param name="arguments">The connector arguments.</param>
+    /// <param name="defaultCheckinType">The configured default attendance type.</param>
+    /// <param name="query">Receives the normalized query.</param>
+    /// <param name="error">Receives a localized validation error.</param>
+    /// <returns><see langword="true"/> when the query is valid.</returns>
     public static bool TryCreate(
         IReadOnlyDictionary<string, string> arguments,
         int defaultCheckinType,
@@ -348,6 +377,9 @@ public static class WeixinWorkCheckinArguments
         return true;
     }
 
+    /// <summary>Splits and de-duplicates comma/whitespace-delimited WeCom user IDs.</summary>
+    /// <param name="raw">The raw user ID input.</param>
+    /// <returns>Distinct non-empty user IDs.</returns>
     public static string[] SplitUserIds(string? raw)
         => string.IsNullOrWhiteSpace(raw)
             ? []
@@ -355,9 +387,16 @@ public static class WeixinWorkCheckinArguments
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToArray();
 
+    /// <summary>Reads a connector argument or returns empty text.</summary>
+    /// <param name="arguments">The argument map.</param><param name="key">The argument key.</param>
     private static string Read(IReadOnlyDictionary<string, string> arguments, string key)
         => arguments.TryGetValue(key, out var value) ? value : string.Empty;
 
+    /// <summary>Parses a culture-aware date/time value with a fallback.</summary>
+    /// <param name="raw">The raw date/time text.</param>
+    /// <param name="fallback">The fallback value for blank input.</param>
+    /// <param name="value">Receives the parsed value.</param>
+    /// <returns><see langword="true"/> when parsing succeeds.</returns>
     private static bool TryReadTime(string raw, DateTime fallback, out DateTime value)
     {
         if (string.IsNullOrWhiteSpace(raw))

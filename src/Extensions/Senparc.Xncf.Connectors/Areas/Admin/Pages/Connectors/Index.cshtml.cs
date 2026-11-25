@@ -25,6 +25,9 @@ using Senparc.Xncf.Connectors.Domain.Services;
 namespace Senparc.Xncf.Connectors.Areas.Admin.Pages.Connectors;
 
 [AdminAuthorize("AdminSuperAdmin")]
+/// <summary>
+/// Provides the administrator page and JSON handlers for connector catalog and instance management.
+/// </summary>
 public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
@@ -34,6 +37,11 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
 
     private readonly ConnectorGateway _gateway;
 
+    /// <summary>
+    /// Initializes the connector administration page.
+    /// </summary>
+    /// <param name="xncfModuleService">The lazy XNCF module service used by the base page.</param>
+    /// <param name="gateway">The connector gateway used for catalog and instance operations.</param>
     public Index(Lazy<XncfModuleService> xncfModuleService, ConnectorGateway gateway)
         : base(xncfModuleService)
     {
@@ -42,12 +50,20 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
 
     public string InitialStateJson { get; private set; } = "{}";
 
+    /// <summary>
+    /// Loads the initial serialized connector catalog and configured instances.
+    /// </summary>
+    /// <returns>A task that completes after the initial state has been prepared.</returns>
     public async Task OnGetAsync()
     {
         _ = XncfRegister;
         InitialStateJson = await BuildStateJsonAsync(HttpContext.RequestAborted).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Returns enabled connector instances for selection controls.
+    /// </summary>
+    /// <returns>A JSON result containing non-secret instance metadata.</returns>
     public async Task<IActionResult> OnGetEnabledAsync()
     {
         var configured = await _gateway.ListEnabledAsync(HttpContext.RequestAborted).ConfigureAwait(false);
@@ -61,24 +77,44 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
         }));
     }
 
+    /// <summary>
+    /// Saves a connector instance configuration.
+    /// </summary>
+    /// <param name="input">The instance name, connector key, configuration, and enabled actions.</param>
+    /// <returns>A JSON result containing operation status, message, and instance identifier.</returns>
     public async Task<IActionResult> OnPostSaveAsync([FromBody] ConnectorSaveInput input)
     {
         var result = await _gateway.SaveAsync(input, HttpContext.RequestAborted).ConfigureAwait(false);
         return new JsonResult(new { success = result.Success, message = result.Message, instanceId = result.InstanceId });
     }
 
+    /// <summary>
+    /// Deletes the connector instance identified by the request.
+    /// </summary>
+    /// <param name="input">The connector instance identifier to delete.</param>
+    /// <returns>A JSON result containing operation status and message.</returns>
     public async Task<IActionResult> OnPostDeleteAsync([FromBody] ConnectorIdInput input)
     {
         var result = await _gateway.DeleteAsync(input?.InstanceId ?? string.Empty, HttpContext.RequestAborted).ConfigureAwait(false);
         return new JsonResult(new { success = result.Success, message = result.Message });
     }
 
+    /// <summary>
+    /// Tests the stored configuration for one connector instance.
+    /// </summary>
+    /// <param name="input">The connector instance identifier to test.</param>
+    /// <returns>A JSON result containing the connector test status and message.</returns>
     public async Task<IActionResult> OnPostTestAsync([FromBody] ConnectorIdInput input)
     {
         var result = await _gateway.TestAsync(input?.InstanceId ?? string.Empty, HttpContext.RequestAborted).ConfigureAwait(false);
         return new JsonResult(new { success = result.Success, message = result.Message });
     }
 
+    /// <summary>
+    /// Serializes the connector catalog and configured instances for the initial page state.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel catalog or instance loading.</param>
+    /// <returns>A JSON string safe for embedding in the page model.</returns>
     private async Task<string> BuildStateJsonAsync(CancellationToken cancellationToken)
     {
         var catalog = await _gateway.ListCatalogAsync(cancellationToken).ConfigureAwait(false);

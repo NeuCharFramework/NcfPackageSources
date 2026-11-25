@@ -58,6 +58,16 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
     private readonly IHttpContextAccessor? _httpContextAccessor;
     private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
 
+    /// <summary>
+    /// Initializes tenant-aware workspace storage and creates the configured physical root.
+    /// </summary>
+    /// <param name="options">Workspace storage and quota options.</param>
+    /// <param name="environment">Host environment used to resolve relative roots.</param>
+    /// <param name="logger">Logger for storage and cleanup operations.</param>
+    /// <param name="scopeFactory">Factory used to restore tenant context and resolve metadata services.</param>
+    /// <param name="agentPool">Pool used to execute isolated workspace operations.</param>
+    /// <param name="changeHub">Hub used to publish workspace changes.</param>
+    /// <param name="httpContextAccessor">Optional accessor used to capture the current tenant.</param>
     public WorkspaceStorage(
         IOptions<WorkspaceOptions> options,
         IHostEnvironment environment,
@@ -80,9 +90,9 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
     }
 
     /// <summary>
-    /// Capture the current request tenant snapshot. Outside a request context,
-    /// return an unmatched snapshot to remain fail-closed.
+    /// Captures the current request tenant snapshot, failing closed outside an HTTP request.
     /// </summary>
+    /// <returns>The captured tenant snapshot, or <see cref="RequestTenantSnapshot.Unmatched"/> outside a request.</returns>
     private RequestTenantSnapshot CaptureCurrentTenant()
     {
         var httpContext = _httpContextAccessor?.HttpContext;
@@ -91,6 +101,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             : RequestTenantSnapshot.Capture(httpContext.RequestServices);
     }
 
+    /// <inheritdoc />
     public async Task<WorkspaceDescriptor> CreateAsync(
         WorkspaceCreateRequest request,
         CancellationToken cancellationToken = default)
@@ -125,6 +136,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         return descriptor;
     }
 
+    /// <inheritdoc />
     public async Task<WorkspaceDescriptor?> GetAsync(
         string workspaceId,
         CancellationToken cancellationToken = default)
@@ -153,6 +165,12 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             : null;
     }
 
+    /// <summary>
+    /// Persists a workspace descriptor through the tenant-restored metadata store.
+    /// </summary>
+    /// <param name="descriptor">The descriptor to insert or update.</param>
+    /// <param name="cancellationToken">Token used to cancel metadata persistence.</param>
+    /// <returns>A task that completes after the metadata store has saved the descriptor.</returns>
     private async Task PersistMetadataAsync(WorkspaceDescriptor descriptor, CancellationToken cancellationToken)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -161,6 +179,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         await metadataStore.UpsertAsync(descriptor, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<WorkspaceDescriptor>> ListWorkspacesAsync(
         CancellationToken cancellationToken = default)
     {
@@ -180,6 +199,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             .ToList();
     }
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<WorkspaceEntry>> ListAsync(
         string workspaceId,
         string relativePath = "",
@@ -197,6 +217,14 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Rejects direct physical-path resolution so callers must use policy-bound file operations.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier to validate.</param>
+    /// <param name="relativePath">The workspace-relative path that would have been resolved.</param>
+    /// <param name="cancellationToken">Token used to cancel the validation.</param>
+    /// <returns>This method never returns successfully.</returns>
+    /// <exception cref="NotSupportedException">Always thrown because physical paths are not exposed.</exception>
     public Task<string> ResolveFilePathAsync(
         string workspaceId,
         string relativePath,
@@ -208,6 +236,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             "Workspace physical paths are not exposed. Use IWorkspaceClient file operations.");
     }
 
+    /// <inheritdoc />
     public async Task<string> ReadFileAsync(
         string workspaceId,
         string relativePath,
@@ -222,6 +251,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         return Encoding.UTF8.GetString(file.Content);
     }
 
+    /// <inheritdoc />
     public async Task<WorkspaceFileMetadata> GetFileInfoAsync(
         string workspaceId,
         string relativePath,
@@ -239,6 +269,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async Task<WorkspaceFileContent> ReadFileBytesAsync(
         string workspaceId,
         string relativePath,
@@ -257,6 +288,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async Task<WorkspaceTextWindow> ReadTextWindowAsync(
         string workspaceId,
         WorkspaceTextWindowRequest request,
@@ -275,6 +307,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async Task WriteFileAsync(
         string workspaceId,
         string relativePath,
@@ -289,6 +322,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         _logger.LogInformation("Workspace file written: {WorkspaceId}, RelativePath={RelativePath}", workspaceId, relativePath);
     }
 
+    /// <inheritdoc />
     public async Task<WorkspaceWriteFileResult> WriteFileBytesAsync(
         string workspaceId,
         WorkspaceWriteFileRequest request,
@@ -316,6 +350,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         return result;
     }
 
+    /// <inheritdoc />
     public async Task<WorkspaceWriteFileResult> WriteFileStreamAsync(
         string workspaceId,
         WorkspaceStreamWriteRequest request,
@@ -460,6 +495,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         }
     }
 
+    /// <inheritdoc />
     public async Task CreateDirectoryAsync(
         string workspaceId,
         string relativePath,
@@ -479,6 +515,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         _logger.LogInformation("Workspace directory created: {WorkspaceId}, RelativePath={RelativePath}", workspaceId, relativePath);
     }
 
+    /// <inheritdoc />
     public async Task DeleteEntryAsync(
         string workspaceId,
         WorkspaceDeleteEntryRequest request,
@@ -501,6 +538,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             request.RelativePath);
     }
 
+    /// <inheritdoc />
     public async Task MoveEntryAsync(
         string workspaceId,
         WorkspaceMoveEntryRequest request,
@@ -528,6 +566,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             request.TargetRelativePath);
     }
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<WorkspaceSearchResult>> SearchAsync(
         string workspaceId,
         WorkspaceSearchRequest request,
@@ -545,6 +584,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async Task<WorkspacePatchResult> ApplyPatchAsync(
         string workspaceId,
         WorkspacePatchRequest request,
@@ -568,6 +608,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         return result;
     }
 
+    /// <inheritdoc />
     public async Task<WorkspaceCommandResult> ExecuteCommandAsync(
         string workspaceId,
         WorkspaceCommandRequest request,
@@ -585,6 +626,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async Task<WorkspaceCommandResult> ExecutePythonAsync(
         string workspaceId,
         WorkspacePythonRequest request,
@@ -602,6 +644,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async Task DeleteAsync(
         string workspaceId,
         CancellationToken cancellationToken = default)
@@ -676,6 +719,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         }
     }
 
+    /// <inheritdoc />
     public async Task<WorkspaceUsageStatistics> GetUsageAsync(
         string workspaceId,
         CancellationToken cancellationToken = default)
@@ -693,6 +737,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             cancellationToken).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async Task ClearContentAsync(
         string workspaceId,
         CancellationToken cancellationToken = default)
@@ -730,6 +775,12 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         }
     }
 
+    /// <summary>
+    /// Resolves a validated workspace identifier to a child directory under the configured root.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier in the <c>ws_</c> format.</param>
+    /// <returns>The physical workspace directory path.</returns>
+    /// <exception cref="ArgumentException">Thrown when the identifier is malformed.</exception>
     private string GetWorkspaceRoot(string workspaceId)
     {
         if (string.IsNullOrWhiteSpace(workspaceId)
@@ -743,6 +794,13 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         return Path.Combine(_rootPath, workspaceId);
     }
 
+    /// <summary>
+    /// Resolves a workspace-relative path while rejecting traversal, internal metadata, and root escapes.
+    /// </summary>
+    /// <param name="workspaceRoot">The already validated physical workspace root.</param>
+    /// <param name="relativePath">The caller-supplied workspace-relative path.</param>
+    /// <returns>The normalized physical path under <paramref name="workspaceRoot"/>.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the path is rooted, traverses, escapes, or targets metadata.</exception>
     private static string ResolvePath(string workspaceRoot, string relativePath)
     {
         if (string.IsNullOrWhiteSpace(relativePath))
@@ -785,6 +843,12 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         return path;
     }
 
+    /// <summary>
+    /// Rejects any existing path component that is a symbolic link or reparse point.
+    /// </summary>
+    /// <param name="workspaceRoot">The workspace root from which traversal begins.</param>
+    /// <param name="path">The path whose existing components must be checked.</param>
+    /// <exception cref="InvalidOperationException">Thrown when a path component is a symbolic link.</exception>
     private static void EnsureNoSymlink(string workspaceRoot, string path)
     {
         var relative = Path.GetRelativePath(workspaceRoot, path);
@@ -807,6 +871,14 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         }
     }
 
+    /// <summary>
+    /// Reads file metadata and computes the quoted SHA-256 ETag used for optimistic concurrency.
+    /// </summary>
+    /// <param name="workspaceRoot">The workspace root used to create a relative path.</param>
+    /// <param name="path">The physical file path.</param>
+    /// <param name="cancellationToken">Token used to cancel hashing.</param>
+    /// <returns>The metadata snapshot and content ETag.</returns>
+    /// <exception cref="FileNotFoundException">Thrown when <paramref name="path"/> is not a file.</exception>
     private static async Task<WorkspaceFileMetadata> CreateFileMetadataAsync(
         string workspaceRoot,
         string path,
@@ -837,6 +909,11 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             $"\"{Convert.ToHexString(hash)}\"");
     }
 
+    /// <summary>
+    /// Calculates the total size of non-reparse-point files beneath a workspace root.
+    /// </summary>
+    /// <param name="workspaceRoot">The physical workspace directory to measure.</param>
+    /// <returns>The total file size in bytes.</returns>
     private static long GetWorkspaceBytes(string workspaceRoot)
     {
         var total = 0L;
@@ -867,6 +944,11 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         return total;
     }
 
+    /// <summary>
+    /// Trims a workspace display name and applies the default and maximum length rules.
+    /// </summary>
+    /// <param name="name">The caller-supplied display name.</param>
+    /// <returns>A non-blank name no longer than 100 characters.</returns>
     private static string NormalizeName(string name)
     {
         var normalized = string.IsNullOrWhiteSpace(name) ? "Workspace" : name.Trim();
@@ -878,6 +960,12 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         return normalized;
     }
 
+    /// <summary>
+    /// Verifies that a workspace directory exists and is not a symbolic link.
+    /// </summary>
+    /// <param name="path">The physical workspace directory path.</param>
+    /// <exception cref="DirectoryNotFoundException">Thrown when the directory does not exist.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the workspace root is a symbolic link.</exception>
     private static void EnsureWorkspaceExists(string path)
     {
         if (!Directory.Exists(path))
@@ -891,6 +979,13 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         }
     }
 
+    /// <summary>
+    /// Writes the workspace descriptor manifest using the configured JSON serializer options.
+    /// </summary>
+    /// <param name="path">The physical workspace directory.</param>
+    /// <param name="descriptor">The descriptor to serialize.</param>
+    /// <param name="cancellationToken">Token used to cancel manifest serialization.</param>
+    /// <returns>A task that completes after the manifest has been written.</returns>
     private async Task WriteManifestAsync(
         string path,
         WorkspaceDescriptor descriptor,

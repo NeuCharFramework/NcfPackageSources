@@ -17,6 +17,113 @@ namespace Senparc.Areas.Admin.Tests.Domain.Services;
 public class SenparcTraceHelperTests
 {
     [TestMethod]
+    public async Task QueryLogsAsync_ShouldFilterPageAndPreserveMultilineStackTrace()
+    {
+        var originalPath = SenparcTraceHelper.DefaultLogPath;
+        var tempDir = Path.Combine(Path.GetTempPath(), "ncf-trace-query-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempDir);
+
+        try
+        {
+            SenparcTraceHelper.DefaultLogPath = tempDir;
+            const string date = "20260809";
+            var logPath = Path.Combine(tempDir, $"SenparcTrace-{date}.log");
+            await File.WriteAllTextAsync(logPath, """
+[[[BaseException]]]
+[2026/08/09 00:28:37.0674]
+[线程：1]
+	Message：demo
+	StackTrace：at First()
+	at Second()
+
+[[[Normal]]]
+[2026/08/09 01:00:00.0000]
+[线程：2]
+normal content
+
+[[[Another]]]
+[2026/08/09 02:00:00.0000]
+[线程：2]
+more content
+
+""");
+
+            var result = await SenparcTraceHelper.QueryLogsAsync(
+                serviceProvider: null!,
+                date,
+                pageIndex: 1,
+                pageSize: 1,
+                isException: true);
+            var detail = await SenparcTraceHelper.GetLogDetailAsync(
+                serviceProvider: null!,
+                date,
+                line: 1);
+
+            Assert.AreEqual(1, result.Total);
+            Assert.AreEqual(1, result.Items.Count);
+            Assert.AreEqual(SenparcTraceType.Exception, result.Items[0].SenparcTraceType);
+            StringAssert.Contains(detail.ExceptionStackTrace, "at First()");
+            StringAssert.Contains(detail.ExceptionStackTrace, "at Second()");
+        }
+        finally
+        {
+            SenparcTraceHelper.DefaultLogPath = originalPath;
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void GetLogFiles_ShouldTakeOnlyRequestedPage()
+    {
+        var originalPath = SenparcTraceHelper.DefaultLogPath;
+        var tempDir = Path.Combine(Path.GetTempPath(), "ncf-trace-files-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempDir);
+
+        try
+        {
+            SenparcTraceHelper.DefaultLogPath = tempDir;
+            for (var day = 1; day <= 12; day++)
+            {
+                File.WriteAllText(Path.Combine(tempDir, $"SenparcTrace-202608{day:D2}.log"), "test");
+            }
+            File.WriteAllText(Path.Combine(tempDir, "SenparcTrace-invalid.log"), "ignore");
+
+            var result = SenparcTraceHelper.GetLogFiles(pageIndex: 2, pageSize: 5);
+
+            Assert.AreEqual(12, result.Total);
+            Assert.AreEqual(5, result.Items.Count);
+        }
+        finally
+        {
+            SenparcTraceHelper.DefaultLogPath = originalPath;
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void RedactSensitiveData_ShouldMaskCommonSecrets()
+    {
+        var content = """{"accessToken":"secret-token","password":"123456"} URL：https://example.com?apiKey=abc Authorization=Bearer jwt.token Cookie=session=xyz""";
+
+        var redacted = SenparcTraceHelper.RedactSensitiveData(content);
+
+        StringAssert.Contains(redacted, @"""accessToken"":""***");
+        StringAssert.Contains(redacted, @"""password"":""***");
+        StringAssert.Contains(redacted, "apiKey=***");
+        StringAssert.Contains(redacted, "Authorization=***");
+        StringAssert.Contains(redacted, "Cookie=***");
+        Assert.IsFalse(redacted.Contains("secret-token"));
+        Assert.IsFalse(redacted.Contains("jwt.token"));
+    }
+
+    [TestMethod]
+    public async Task QueryLogsAsync_ShouldRejectInvalidDate()
+    {
+        await Assert.ThrowsExceptionAsync<ArgumentException>(
+            () => SenparcTraceHelper.QueryLogsAsync(null!, "../20260809"));
+    }
+
+    [TestMethod]
     public async Task GetLogScanResultAsync_ShouldCountWithoutLoadingBodies()
     {
         var originalPath = SenparcTraceHelper.DefaultLogPath;

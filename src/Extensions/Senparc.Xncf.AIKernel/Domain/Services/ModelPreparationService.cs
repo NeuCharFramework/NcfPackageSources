@@ -47,6 +47,13 @@ public sealed class ModelPreparationService : IModelPreparationService
     private readonly string _contentRoot;
     private readonly ILogger<ModelPreparationService> _logger;
 
+    /// <summary>
+    /// Initializes the model manifest/search/download service.
+    /// </summary>
+    /// <param name="http">HTTP client used for allowlisted provider downloads.</param>
+    /// <param name="options">Model provider, allowlist, root, and size-limit options.</param>
+    /// <param name="environment">Host environment used to resolve the default model root.</param>
+    /// <param name="logger">Logger for download diagnostics.</param>
     public ModelPreparationService(HttpClient http, IOptions<ModelPreparationOptions> options,
         IHostEnvironment environment, ILogger<ModelPreparationService> logger)
     {
@@ -56,6 +63,13 @@ public sealed class ModelPreparationService : IModelPreparationService
         _logger = logger;
     }
 
+    /// <summary>
+    /// Reads and validates a provider manifest, then reports which allowlisted files are already present.
+    /// </summary>
+    /// <param name="request">The provider, model, revision, and target-directory request.</param>
+    /// <param name="cancellationToken">Token used to cancel manifest retrieval.</param>
+    /// <returns>The current preparation status.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when preparation is disabled, the request is not allowlisted, or the manifest is unsafe.</exception>
     public async Task<ModelPreparationStatus> GetStatusAsync(ModelPreparationRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -65,6 +79,13 @@ public sealed class ModelPreparationService : IModelPreparationService
         return BuildStatus(validated, manifest);
     }
 
+    /// <summary>
+    /// Searches an allowlisted provider catalog using a bounded query and response size.
+    /// </summary>
+    /// <param name="request">The provider, query, and result-limit request.</param>
+    /// <param name="cancellationToken">Token used to cancel the HTTP request.</param>
+    /// <returns>Allowlisted model/revision search results.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when configuration, query limits, provider settings, or response shape is invalid.</exception>
     public async Task<IReadOnlyList<ModelSearchItem>> SearchAsync(ModelSearchRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -118,6 +139,14 @@ public sealed class ModelPreparationService : IModelPreparationService
         return results;
     }
 
+    /// <summary>
+    /// Downloads missing manifest files into a controlled, symlink-free model directory,
+    /// enforcing declared sizes and optional SHA-256 hashes.
+    /// </summary>
+    /// <param name="request">The provider, model, revision, and target-directory request.</param>
+    /// <param name="cancellationToken">Token used to cancel downloads.</param>
+    /// <returns>The final preparation status and whether any files were downloaded.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when configuration, manifest, path, size, hash, or provider validation fails.</exception>
     public async Task<ModelPreparationResult> DownloadAsync(ModelPreparationRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -172,6 +201,12 @@ public sealed class ModelPreparationService : IModelPreparationService
         };
     }
 
+    /// <summary>
+    /// Validates preparation settings, allowlists, controlled roots, symlinks, and size limits.
+    /// </summary>
+    /// <param name="request">The requested preparation operation.</param>
+    /// <returns>A normalized prepared request.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when request, provider, model, path, or limits are invalid.</exception>
     private PreparedRequest Validate(ModelPreparationRequest request)
     {
         if (!_options.Enabled)
@@ -204,6 +239,15 @@ public sealed class ModelPreparationService : IModelPreparationService
         return new PreparedRequest(request.Provider, request.Model, request.Revision, target, provider);
     }
 
+    /// <summary>
+    /// Downloads and validates a provider manifest under the manifest-size and file-count limits.
+    /// </summary>
+    /// <param name="providerName">The provider name.</param>
+    /// <param name="model">The allowlisted model.</param>
+    /// <param name="revision">The allowlisted revision.</param>
+    /// <param name="cancellationToken">Token used to cancel retrieval.</param>
+    /// <returns>A task containing the validated manifest.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the manifest is too large, malformed, unsafe, or exceeds quotas.</exception>
     private async Task<ModelManifest> GetManifestAsync(string providerName, string model, string revision,
         CancellationToken cancellationToken)
     {
@@ -227,6 +271,12 @@ public sealed class ModelPreparationService : IModelPreparationService
         return new ModelManifest(files);
     }
 
+    /// <summary>
+    /// Validates one manifest file path, declared size, and optional SHA-256 digest.
+    /// </summary>
+    /// <param name="file">The manifest file entry.</param>
+    /// <returns>The validated entry.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when path, size, or digest constraints are violated.</exception>
     private ModelManifestFile ValidateManifestFile(ModelManifestFile file)
     {
         if (string.IsNullOrWhiteSpace(file.Path) || file.Path.StartsWith("/", StringComparison.Ordinal) ||
@@ -238,6 +288,12 @@ public sealed class ModelPreparationService : IModelPreparationService
         return file;
     }
 
+    /// <summary>
+    /// Compares manifest entries with local files and builds preparation status.
+    /// </summary>
+    /// <param name="request">The normalized request.</param>
+    /// <param name="manifest">The validated manifest.</param>
+    /// <returns>The current file-completeness status.</returns>
     private ModelPreparationStatus BuildStatus(PreparedRequest request, ModelManifest manifest)
     {
         var files = manifest.Files.Select(file =>
@@ -258,6 +314,14 @@ public sealed class ModelPreparationService : IModelPreparationService
         };
     }
 
+    /// <summary>
+    /// Copies a model file while enforcing its exact manifest byte count.
+    /// </summary>
+    /// <param name="input">The remote input stream.</param>
+    /// <param name="output">The destination stream.</param>
+    /// <param name="expected">The exact expected byte count.</param>
+    /// <param name="cancellationToken">Token used to cancel copying.</param>
+    /// <exception cref="NcfExceptionBase">Thrown when the stream is too large or incomplete.</exception>
     private static async Task CopyWithLimitAsync(Stream input, Stream output, long expected,
         CancellationToken cancellationToken)
     {
@@ -276,6 +340,13 @@ public sealed class ModelPreparationService : IModelPreparationService
             throw new NcfExceptionBase("The downloaded model file is incomplete.");
     }
 
+    /// <summary>
+    /// Computes a file SHA-256 digest and compares it with an optional expected digest.
+    /// </summary>
+    /// <param name="path">The file path.</param>
+    /// <param name="expected">The expected hexadecimal digest.</param>
+    /// <param name="cancellationToken">Token used to cancel hashing.</param>
+    /// <returns>A task whose result indicates whether the digest matches.</returns>
     private static async Task<bool> MatchesHashAsync(string path, string? expected,
         CancellationToken cancellationToken)
     {
@@ -286,6 +357,13 @@ public sealed class ModelPreparationService : IModelPreparationService
         return Convert.ToHexString(actual).Equals(expected, StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Resolves a manifest-relative path below its controlled root.
+    /// </summary>
+    /// <param name="root">The controlled root.</param>
+    /// <param name="relative">The manifest-relative path.</param>
+    /// <returns>The normalized absolute path.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when path traversal escapes the root.</exception>
     private static string ResolveChild(string root, string relative)
     {
         var path = Path.GetFullPath(Path.Combine(root, relative.Replace('/', Path.DirectorySeparatorChar)));
@@ -294,11 +372,23 @@ public sealed class ModelPreparationService : IModelPreparationService
         return path;
     }
 
+    /// <summary>
+    /// Determines whether an absolute path is equal to or below a root.
+    /// </summary>
+    /// <param name="path">The candidate path.</param>
+    /// <param name="root">The root path.</param>
+    /// <returns><see langword="true"/> when the path is contained by the root.</returns>
     private static bool IsUnderRoot(string path, string root) =>
         path.Equals(root, StringComparison.OrdinalIgnoreCase) ||
         path.StartsWith(root.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar,
             StringComparison.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// Checks the existing path chain for reparse points/symbolic links.
+    /// </summary>
+    /// <param name="path">The target path.</param>
+    /// <param name="root">The controlled root.</param>
+    /// <returns><see langword="true"/> when no existing path component is a reparse point.</returns>
     private static bool IsPathFreeOfSymlinks(string path, string root)
     {
         var relative = Path.GetRelativePath(root, path);
@@ -319,6 +409,16 @@ public sealed class ModelPreparationService : IModelPreparationService
         return true;
     }
 
+    /// <summary>
+    /// Expands a provider URL template and verifies the resolved host and scheme remain allowlisted.
+    /// </summary>
+    /// <param name="provider">The provider options.</param>
+    /// <param name="model">The model name.</param>
+    /// <param name="revision">The model revision.</param>
+    /// <param name="path">The file path parameter.</param>
+    /// <param name="template">The provider URL template.</param>
+    /// <returns>The validated provider URI.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the resolved URI escapes the provider endpoint.</exception>
     private Uri BuildProviderUri(ModelProviderOptions provider, string model, string revision,
         string path, string template)
     {
@@ -333,6 +433,11 @@ public sealed class ModelPreparationService : IModelPreparationService
         return uri;
     }
 
+    /// <summary>
+    /// Validates that a provider endpoint is an absolute HTTP(S) URI without credentials or fragments.
+    /// </summary>
+    /// <param name="provider">The provider options.</param>
+    /// <exception cref="NcfExceptionBase">Thrown when the endpoint is unsafe.</exception>
     private static void ValidateProvider(ModelProviderOptions provider)
     {
         if (!Uri.TryCreate(provider.BaseUrl, UriKind.Absolute, out var baseUri) ||

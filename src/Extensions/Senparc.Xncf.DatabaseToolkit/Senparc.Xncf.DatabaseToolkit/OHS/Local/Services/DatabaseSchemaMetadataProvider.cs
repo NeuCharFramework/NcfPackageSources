@@ -27,8 +27,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Discovers entity schemas from loaded XNCF assemblies and exposes metadata
+    /// used by database browsing and query surfaces.
     /// </summary>
     public class DatabaseSchemaMetadataProvider
     {
@@ -41,8 +41,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Scans loaded assemblies and caches entity/table metadata.
+        /// Initialization is idempotent; reflection failures are isolated per assembly.
         /// </summary>
         public async Task InitializeAsync()
         {
@@ -93,8 +93,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         private static readonly string EntityBaseTypeName = "Senparc.Ncf.Core.Models.EntityBase";
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves an assembly's concrete <see cref="EntityBase"/> descendants.
         /// </summary>
+        /// <param name="assembly">The assembly to scan.</param>
+        /// <returns>Concrete entity types found in the assembly.</returns>
         private List<Type> GetEntityTypesFromModule(Assembly assembly)
         {
             var entityTypes = new List<Type>();
@@ -122,8 +124,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a type derives from the NCF entity base, including generic base definitions.
         /// </summary>
+        /// <param name="type">The type to inspect.</param>
+        /// <returns><see langword="true"/> when the type is an entity descendant.</returns>
         private static bool IsEntityBaseSubclass(Type type)
         {
             var current = type.BaseType;
@@ -141,8 +145,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds table and column metadata from an entity type's attributes and public properties.
         /// </summary>
+        /// <param name="entityType">The entity type to describe.</param>
+        /// <param name="moduleName">The containing assembly/module name.</param>
+        /// <returns>Schema metadata, or <see langword="null"/> when reflection metadata cannot be read.</returns>
         private DatabaseSchemaMetadata CreateSchemaFromEntityType(Type entityType, string moduleName)
         {
             try
@@ -201,8 +208,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a property is excluded from database browsing metadata.
         /// </summary>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns><see langword="true"/> when the property should be omitted.</returns>
         private bool ShouldSkipProperty(string propertyName)
         {
             var skipProperties = new[] { "ConcurrencyStamp" };
@@ -210,8 +219,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the simple CLR type name, using the generic type definition name for generics.
         /// </summary>
+        /// <param name="type">The CLR type.</param>
+        /// <returns>The display type name.</returns>
         private string GetSimpleTypeName(Type type)
         {
             if (type.IsGenericType)
@@ -220,8 +231,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a property has a Required data-annotation attribute.
         /// </summary>
+        /// <param name="prop">The property to inspect.</param>
+        /// <returns><see langword="true"/> when the property is required.</returns>
         private bool IsRequiredProperty(PropertyInfo prop)
         {
             var attributes = prop.GetCustomAttributes();
@@ -229,8 +242,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reads a MaxLength data-annotation value when present.
         /// </summary>
+        /// <param name="prop">The property to inspect.</param>
+        /// <returns>The maximum length, or <see langword="null"/> when unspecified.</returns>
         private int? GetMaxLength(PropertyInfo prop)
         {
             var attributes = prop.GetCustomAttributes();
@@ -250,8 +265,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a CLR type can be used as a database filter field.
         /// </summary>
+        /// <param name="type">The property type.</param>
+        /// <returns><see langword="true"/> for supported scalar filter types.</returns>
         private bool IsFilterableType(Type type)
         {
             var filterableTypes = new[] 
@@ -265,11 +282,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Resolves a module input by exact name, case-insensitive name, suffix,
+        /// registered module metadata, or unique substring.
         /// </summary>
+        /// <param name="input">The module name or UID fragment.</param>
+        /// <returns>The resolved assembly name, or <see langword="null"/> when ambiguous/unmatched.</returns>
         public string ResolveModuleName(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
@@ -322,10 +339,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Resolves an entity/table name within a resolved module using scored short/full-name matching.
         /// </summary>
+        /// <param name="resolvedModuleName">The resolved module assembly name.</param>
+        /// <param name="inputEntityName">The entity name or full type name supplied by the caller.</param>
+        /// <returns>The unambiguous table name, or <see langword="null"/>.</returns>
         public string ResolveEntityName(string resolvedModuleName, string inputEntityName)
         {
             EnsureInitialized();

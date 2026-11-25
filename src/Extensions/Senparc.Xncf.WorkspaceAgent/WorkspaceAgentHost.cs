@@ -33,6 +33,16 @@ public static class WorkspaceAgentHost
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
+    /// <summary>
+    /// Runs the NDJSON Workspace Agent host loop, parsing requests from stdin,
+    /// dispatching operations, and writing one response per input line.
+    /// </summary>
+    /// <param name="args">Command-line options such as <c>--root</c> and quota settings.</param>
+    /// <param name="input">The NDJSON request reader.</param>
+    /// <param name="output">The NDJSON response writer.</param>
+    /// <param name="error">The diagnostic error writer.</param>
+    /// <param name="cancellationToken">Token used to stop the host loop.</param>
+    /// <returns>Process exit code: 0 for normal operation, 2 for invalid options, 3 for startup failure.</returns>
     public static async Task<int> RunAsync(
         string[] args,
         TextReader input,
@@ -103,6 +113,15 @@ public static class WorkspaceAgentHost
         return 0;
     }
 
+    /// <summary>
+    /// Dispatches one parsed agent request to the corresponding file-system engine operation.
+    /// </summary>
+    /// <param name="engine">The workspace file-system engine.</param>
+    /// <param name="options">The host execution options.</param>
+    /// <param name="request">The parsed request.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>A task containing the serialized-success response.</returns>
+    /// <exception cref="ArgumentException">Thrown when the operation is unsupported.</exception>
     private static async Task<WorkspaceAgentResponse> ExecuteAsync(
         WorkspaceFileSystemEngine engine,
         WorkspaceAgentOptions options,
@@ -164,6 +183,8 @@ public static class WorkspaceAgentHost
             JsonSerializer.SerializeToElement(result, JsonOptions));
     }
 
+    /// <summary>Executes a bounded file read request.</summary>
+    /// <param name="engine">The workspace engine.</param><param name="request">The agent request.</param><param name="cancellationToken">Cancellation token.</param>
     private static async Task<object?> ReadAsync(
         WorkspaceFileSystemEngine engine,
         WorkspaceAgentRequest request,
@@ -176,6 +197,8 @@ public static class WorkspaceAgentHost
             cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>Creates a workspace-relative directory.</summary>
+    /// <param name="engine">The workspace engine.</param><param name="request">The agent request.</param><param name="cancellationToken">Cancellation token.</param>
     private static async Task<object?> CreateDirectoryAsync(
         WorkspaceFileSystemEngine engine,
         WorkspaceAgentRequest request,
@@ -187,6 +210,8 @@ public static class WorkspaceAgentHost
         return null;
     }
 
+    /// <summary>Deletes a workspace entry using the request's recursive/ETag policy.</summary>
+    /// <param name="engine">The workspace engine.</param><param name="request">The agent request.</param><param name="cancellationToken">Cancellation token.</param>
     private static async Task<object?> DeleteAsync(
         WorkspaceFileSystemEngine engine,
         WorkspaceAgentRequest request,
@@ -198,6 +223,8 @@ public static class WorkspaceAgentHost
         return null;
     }
 
+    /// <summary>Moves a workspace entry using the request's overwrite/ETag policy.</summary>
+    /// <param name="engine">The workspace engine.</param><param name="request">The agent request.</param><param name="cancellationToken">Cancellation token.</param>
     private static async Task<object?> MoveAsync(
         WorkspaceFileSystemEngine engine,
         WorkspaceAgentRequest request,
@@ -215,6 +242,12 @@ public static class WorkspaceAgentHost
                ?? throw new JsonException($"Workspace Agent payload for {request.Operation} is invalid.");
     }
 
+    /// <summary>
+    /// Maps an exception to a stable Workspace Agent error code and response.
+    /// </summary>
+    /// <param name="requestId">The failed request identifier.</param>
+    /// <param name="exception">The operation exception.</param>
+    /// <returns>A failed response.</returns>
     private static WorkspaceAgentResponse CreateErrorResponse(string requestId, Exception exception)
     {
         var (code, message) = exception switch
@@ -234,6 +267,12 @@ public static class WorkspaceAgentHost
             Error: new WorkspaceAgentError(code, message));
     }
 
+    /// <summary>
+    /// Parses and validates Workspace Agent command-line options.
+    /// </summary>
+    /// <param name="args">The command-line arguments.</param>
+    /// <returns>The configured agent options.</returns>
+    /// <exception cref="ArgumentException">Thrown when an argument is malformed or root is missing.</exception>
     private static WorkspaceAgentOptions ParseOptions(string[] args)
     {
         var values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -270,6 +309,8 @@ public static class WorkspaceAgentHost
                 .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
     }
 
+    /// <summary>Reads an integer option with a fallback.</summary>
+    /// <param name="values">The parsed option map.</param><param name="key">The option name.</param><param name="fallback">The fallback value.</param>
     private static int GetInt(IReadOnlyDictionary<string, string> values, string key, int fallback)
     {
         return values.TryGetValue(key, out var value) && int.TryParse(value, out var parsed)
@@ -277,6 +318,8 @@ public static class WorkspaceAgentHost
             : fallback;
     }
 
+    /// <summary>Reads a long option with a fallback.</summary>
+    /// <param name="values">The parsed option map.</param><param name="key">The option name.</param><param name="fallback">The fallback value.</param>
     private static long GetLong(IReadOnlyDictionary<string, string> values, string key, long fallback)
     {
         return values.TryGetValue(key, out var value) && long.TryParse(value, out var parsed)
@@ -284,6 +327,8 @@ public static class WorkspaceAgentHost
             : fallback;
     }
 
+    /// <summary>Reads a Boolean option with a fallback.</summary>
+    /// <param name="values">The parsed option map.</param><param name="key">The option name.</param><param name="fallback">The fallback value.</param>
     private static bool GetBool(IReadOnlyDictionary<string, string> values, string key, bool fallback)
     {
         return values.TryGetValue(key, out var value) && bool.TryParse(value, out var parsed)

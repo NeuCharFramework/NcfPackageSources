@@ -27,8 +27,15 @@ namespace Senparc.Ncf.XncfBase.MCP
 
     public class McpServerInfoCollection : ConcurrentDictionary<string, McpServerInfo>
     {
+        /// <summary>
+        /// Initializes an empty server information collection.
+        /// </summary>
         public McpServerInfoCollection() { }
 
+        /// <summary>
+        /// Initializes the collection with servers keyed by their server names.
+        /// </summary>
+        /// <param name="collection">The server records to add.</param>
         public McpServerInfoCollection(IEnumerable<McpServerInfo> collection)
         {
             foreach (var item in collection)
@@ -37,6 +44,11 @@ namespace Senparc.Ncf.XncfBase.MCP
             }
         }
 
+        /// <summary>
+        /// Finds a server record by its exact dictionary key.
+        /// </summary>
+        /// <param name="serverName">The server name used as the collection key.</param>
+        /// <returns>The matching server record, or <see langword="null"/> when absent.</returns>
         public McpServerInfo GetByServerName(string serverName)
         {
             if (base.ContainsKey(serverName))

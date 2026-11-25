@@ -33,10 +33,15 @@ namespace Senparc.Xncf.FileManager.Domain.Services;
 public sealed record NcfFileTextSection(string Title, string Text);
 
 /// <summary>
-///Legacy comment translated to English.
+/// Represents one bounded section of text extracted from a plain-text or Open XML file.
 /// </summary>
 public sealed class NcfFileTextExtractionResult
 {
+    /// <summary>
+    /// Initializes an extraction result.
+    /// </summary>
+    /// <param name="text">The normalized extracted text.</param>
+    /// <param name="extension">The normalized source extension.</param>
     public NcfFileTextExtractionResult(string text, string extension)
     {
         Text = text;
@@ -49,7 +54,9 @@ public sealed class NcfFileTextExtractionResult
 }
 
 /// <summary>
-///Legacy comment translated to English.
+/// Extracts bounded text from supported plain-text, DOCX, PPTX, and XLSX payloads.
+/// ZIP/XML relationships are restricted to package-local entries and extracted output
+/// is capped by <see cref="MaxExtractedCharacters"/>.
 /// </summary>
 public static class NcfFileTextExtractor
 {
@@ -67,15 +74,33 @@ public static class NcfFileTextExtractor
         ".docx", ".pptx", ".xlsx"
     };
 
+    /// <summary>
+    /// Gets the normalized extensions accepted by the extractor.
+    /// </summary>
     public static IReadOnlyCollection<string> SupportedExtensions =>
         PlainTextExtensions.Concat(OpenXmlExtensions).OrderBy(z => z).ToArray();
 
+    /// <summary>
+    /// Determines whether an extension is supported by the local text extractor.
+    /// </summary>
+    /// <param name="extension">An extension with or without a leading period.</param>
+    /// <returns><see langword="true"/> when the normalized extension is supported.</returns>
     public static bool CanExtractText(string extension)
     {
         var normalized = NormalizeExtension(extension);
         return PlainTextExtensions.Contains(normalized) || OpenXmlExtensions.Contains(normalized);
     }
 
+    /// <summary>
+    /// Extracts logically grouped sections from supported text or Open XML content.
+    /// DOCX sections represent paragraphs, XLSX sections represent worksheets, and
+    /// PPTX sections represent slides rather than physical page numbers.
+    /// </summary>
+    /// <param name="bytes">The complete file payload.</param>
+    /// <param name="extension">The source extension with or without a leading period.</param>
+    /// <returns>The extracted sections in source order.</returns>
+    /// <exception cref="InvalidDataException">Thrown when the package is malformed, references external parts, or exceeds extraction limits.</exception>
+    /// <exception cref="NotSupportedException">Thrown when the extension is not supported.</exception>
     public static IReadOnlyList<NcfFileTextSection> ExtractSections(byte[] bytes, string extension)
     {
         var normalized = NormalizeExtension(extension);
@@ -151,6 +176,13 @@ public static class NcfFileTextExtractor
         return sections;
     }
 
+    /// <summary>
+    /// Splits plain text into bounded sections while avoiding a split between UTF-16 surrogate pairs.
+    /// </summary>
+    /// <param name="text">The text to split.</param>
+    /// <param name="title">The title prefix assigned to each generated section.</param>
+    /// <returns>The ordered text sections.</returns>
+    /// <exception cref="InvalidDataException">Thrown when the input exceeds <see cref="MaxExtractedCharacters"/>.</exception>
     private static IReadOnlyList<NcfFileTextSection> ChunkText(string text, string title)
     {
         if (text.Length > MaxExtractedCharacters) throw new InvalidDataException("文本超过提取限制。");
@@ -165,6 +197,15 @@ public static class NcfFileTextExtractor
         return result;
     }
 
+    /// <summary>
+    /// Reads package-local Open XML relationships and resolves their targets without allowing
+    /// external or host-escaping references.
+    /// </summary>
+    /// <param name="archive">The Open XML ZIP archive.</param>
+    /// <param name="relationshipsPath">The package-relative relationship-part path.</param>
+    /// <param name="sourcePath">The package-relative path of the source part.</param>
+    /// <returns>A map from relationship identifiers to package-relative target paths.</returns>
+    /// <exception cref="InvalidDataException">Thrown when relationship XML is missing, malformed, or external.</exception>
     private static Dictionary<string, string> ReadRelationships(ZipArchive archive, string relationshipsPath, string sourcePath)
     {
         var document = LoadXml(archive.GetEntry(relationshipsPath)
@@ -182,6 +223,16 @@ public static class NcfFileTextExtractor
                 });
     }
 
+    /// <summary>
+    /// Extracts normalized text for knowledge-base ingestion from a supported file payload.
+    /// Empty output and content exceeding the configured character limit are rejected.
+    /// </summary>
+    /// <param name="fileBytes">The complete file payload.</param>
+    /// <param name="extension">The source extension with or without a leading period.</param>
+    /// <param name="displayName">Optional display name included in validation errors.</param>
+    /// <returns>The normalized extracted text and normalized extension.</returns>
+    /// <exception cref="InvalidDataException">Thrown when the file is empty, malformed, binary, empty after extraction, or exceeds the text limit.</exception>
+    /// <exception cref="NotSupportedException">Thrown when the extension is not supported.</exception>
     public static NcfFileTextExtractionResult Extract(byte[] fileBytes, string extension, string displayName = null)
     {
         if (fileBytes == null || fileBytes.Length == 0)
@@ -228,6 +279,11 @@ public static class NcfFileTextExtractor
         return new NcfFileTextExtractionResult(text, normalizedExtension);
     }
 
+    /// <summary>
+    /// Normalizes an extension to lowercase and ensures it begins with a period.
+    /// </summary>
+    /// <param name="extension">The extension to normalize.</param>
+    /// <returns>The normalized extension, or an empty string for null or whitespace input.</returns>
     private static string NormalizeExtension(string extension)
     {
         if (string.IsNullOrWhiteSpace(extension))
@@ -239,6 +295,12 @@ public static class NcfFileTextExtractor
         return normalized.StartsWith('.') ? normalized : "." + normalized;
     }
 
+    /// <summary>
+    /// Decodes UTF-8 or UTF-16 text based on an optional BOM and rejects binary null characters.
+    /// </summary>
+    /// <param name="bytes">The encoded text payload.</param>
+    /// <returns>The decoded text.</returns>
+    /// <exception cref="InvalidDataException">Thrown when the bytes are invalid text or contain binary null characters.</exception>
     private static string DecodePlainText(byte[] bytes)
     {
         Encoding encoding;
@@ -279,6 +341,12 @@ public static class NcfFileTextExtractor
         }
     }
 
+    /// <summary>
+    /// Extracts paragraph text from the main WordprocessingML document part.
+    /// </summary>
+    /// <param name="bytes">The DOCX payload.</param>
+    /// <returns>The non-empty paragraph text joined by platform newlines.</returns>
+    /// <exception cref="InvalidDataException">Thrown when the package is malformed or the main document part is missing.</exception>
     private static string ExtractWordText(byte[] bytes)
     {
         using var archive = OpenArchive(bytes);
@@ -293,6 +361,12 @@ public static class NcfFileTextExtractor
                 .Where(z => !string.IsNullOrWhiteSpace(z)));
     }
 
+    /// <summary>
+    /// Extracts text from PowerPoint slide XML parts ordered by their trailing slide number.
+    /// </summary>
+    /// <param name="bytes">The PPTX payload.</param>
+    /// <returns>The non-empty slide text joined by blank lines.</returns>
+    /// <exception cref="InvalidDataException">Thrown when the package contains no readable slide parts or is malformed.</exception>
     private static string ExtractPowerPointText(byte[] bytes)
     {
         using var archive = OpenArchive(bytes);
@@ -317,6 +391,12 @@ public static class NcfFileTextExtractor
                 .Where(z => !string.IsNullOrWhiteSpace(z)));
     }
 
+    /// <summary>
+    /// Extracts non-empty cell values from Excel worksheet parts, resolving shared strings.
+    /// </summary>
+    /// <param name="bytes">The XLSX payload.</param>
+    /// <returns>The worksheet rows joined by tabs and blank lines.</returns>
+    /// <exception cref="InvalidDataException">Thrown when the package contains no worksheets or is malformed.</exception>
     private static string ExtractExcelText(byte[] bytes)
     {
         using var archive = OpenArchive(bytes);
@@ -356,6 +436,11 @@ public static class NcfFileTextExtractor
         return string.Join(Environment.NewLine + Environment.NewLine, sheetTexts);
     }
 
+    /// <summary>
+    /// Reads the optional shared-string table from an Excel package.
+    /// </summary>
+    /// <param name="archive">The open XLSX archive.</param>
+    /// <returns>The shared strings in their package-defined index order.</returns>
     private static IReadOnlyList<string> ReadSharedStrings(ZipArchive archive)
     {
         var entry = archive.GetEntry("xl/sharedStrings.xml");
@@ -370,6 +455,13 @@ public static class NcfFileTextExtractor
             .ToList();
     }
 
+    /// <summary>
+    /// Resolves the textual value of an Excel cell, including inline strings and shared-string indices.
+    /// </summary>
+    /// <param name="cell">The worksheet cell element.</param>
+    /// <param name="sharedStrings">The package shared-string table.</param>
+    /// <returns>The cell value, or an empty string when no value element is present.</returns>
+    /// <exception cref="InvalidDataException">Thrown when a shared-string index is invalid.</exception>
     private static string ReadCellText(XElement cell, IReadOnlyList<string> sharedStrings)
     {
         var cellType = cell.Attribute("t")?.Value;
@@ -390,6 +482,12 @@ public static class NcfFileTextExtractor
         return value;
     }
 
+    /// <summary>
+    /// Opens an Open XML ZIP archive and enforces entry-count and uncompressed-size limits.
+    /// </summary>
+    /// <param name="bytes">The ZIP payload.</param>
+    /// <returns>An open read-only archive.</returns>
+    /// <exception cref="InvalidDataException">Thrown when the payload is not a valid archive or exceeds limits.</exception>
     private static ZipArchive OpenArchive(byte[] bytes)
     {
         try
@@ -409,6 +507,12 @@ public static class NcfFileTextExtractor
         }
     }
 
+    /// <summary>
+    /// Loads one package XML entry with DTD processing disabled and document-size limits enabled.
+    /// </summary>
+    /// <param name="entry">The ZIP entry containing XML.</param>
+    /// <returns>The parsed XML document.</returns>
+    /// <exception cref="InvalidDataException">Thrown when the entry exceeds limits or is not valid XML.</exception>
     private static XDocument LoadXml(ZipArchiveEntry entry)
     {
         if (entry.Length > MaxXmlEntryBytes)
@@ -426,6 +530,11 @@ public static class NcfFileTextExtractor
         return XDocument.Load(reader, LoadOptions.None);
     }
 
+    /// <summary>
+    /// Parses the trailing decimal number in a file name for stable part ordering.
+    /// </summary>
+    /// <param name="fileName">The file name to inspect.</param>
+    /// <returns>The trailing number, or <see cref="int.MaxValue"/> when none is present.</returns>
     private static int ParseTrailingNumber(string fileName)
     {
         var digits = new string(Path.GetFileNameWithoutExtension(fileName).Reverse()
@@ -435,6 +544,11 @@ public static class NcfFileTextExtractor
         return int.TryParse(digits, out var value) ? value : int.MaxValue;
     }
 
+    /// <summary>
+    /// Normalizes line endings, trims trailing whitespace from each line, and trims the final result.
+    /// </summary>
+    /// <param name="text">The text to normalize.</param>
+    /// <returns>The normalized text, or an empty string for null or empty input.</returns>
     private static string NormalizeText(string text)
     {
         if (string.IsNullOrEmpty(text))

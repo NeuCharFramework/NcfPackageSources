@@ -67,6 +67,12 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
+
+    Modified by: Senparc - 20261125
+    Change description: v0.12.29 Improved AdminChat conversation loading and command parameter feedback.
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
@@ -88,7 +94,10 @@ using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Ncf.Shared.Abstractions.Events;
 using Senparc.Areas.Admin.OHS.Local.Events;
 using Senparc.Xncf.Workspace.Abstractions;
+using Senparc.Xncf.PromptRange.Abstractions.Shotting;
+using Senparc.Xncf.PromptRange.Abstractions.References;
 using Senparc.Xncf.PromptRange.Abstractions.SystemMessages;
+using Senparc.Ncf.XncfBase.ChatTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,6 +149,27 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             _localizer = localizer;
             _eventBus = serviceProvider.GetService<IEventBus>();
             _workspaceStorage = workspaceStorage;
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<ChatToolParameterOptionsResult>> GetChatToolParameterOptionsAsync(
+            string command,
+            string parameter,
+            string query = null,
+            int limit = 50)
+        {
+            return await this.GetResponseAsync<
+                AppResponseBase<ChatToolParameterOptionsResult>,
+                ChatToolParameterOptionsResult>(
+                async (_, _) => await ChatToolRegistry.GetParameterOptionsAsync(
+                    ServiceProvider,
+                    new ChatToolParameterOptionsRequest
+                    {
+                        Command = command,
+                        Parameter = parameter,
+                        Query = query,
+                        Limit = limit
+                    }).ConfigureAwait(false));
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
@@ -226,6 +256,48 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     var prompt = await provider.GetAsync();
                     logger.Append($"确保 AdminChat SystemMessage PromptRange 已初始化: PromptCode={prompt.PromptCode}");
                     return new AdminChatSystemMessagePromptView(prompt.PromptCode, "AdminChat.SystemMessage");
+                });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<IReadOnlyList<PromptShottingRange>>> GetPromptShottingRangesAsync()
+        {
+            return await this.GetResponseAsync<AppResponseBase<IReadOnlyList<PromptShottingRange>>, IReadOnlyList<PromptShottingRange>>(
+                async (response, logger) =>
+                {
+                    var provider = ServiceProvider.GetService<IPromptShottingService>()
+                        ?? throw new NcfExceptionBase(_localizer["AdminChat.PromptShotting.Unavailable"].Value);
+                    return await provider.GetRangesAsync().ConfigureAwait(false);
+                });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<PromptShottingSaveResponse>> SavePromptShotAsync(
+            [FromBody] AdminChatPromptShottingRequest request)
+        {
+            return await this.GetResponseAsync<AppResponseBase<PromptShottingSaveResponse>, PromptShottingSaveResponse>(
+                async (response, logger) =>
+                {
+                    if (request == null) throw new NcfExceptionBase("Prompt shot request is required.");
+                    var provider = ServiceProvider.GetService<IPromptShottingService>()
+                        ?? throw new NcfExceptionBase(_localizer["AdminChat.PromptShotting.Unavailable"].Value);
+                    var result = await provider.SaveAsync(request.Shotting).ConfigureAwait(false);
+                    AdminChatMessageDto message = null;
+                    if (request.MessageId > 0)
+                    {
+                        message = await _messageService.AttachPromptReferenceAsync(
+                            GetCurrentAdminUserInfoId(),
+                            request.MessageId,
+                            new PromptReference
+                            {
+                                PromptItemId = result.PromptItemId,
+                                PromptCode = result.PromptCode,
+                                Start = request.Start,
+                                Length = request.Length
+                            }).ConfigureAwait(false);
+                    }
+                    logger.Append($"AdminChat Prompt shot saved: {result.PromptCode}, Run={request.Shotting?.Run == true}");
+                    return new PromptShottingSaveResponse(result, message);
                 });
         }
 
@@ -395,6 +467,21 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     return await CreateTextWindowPreviewAsync(session.WorkspaceId, relativePath, contentType, 1)
                         .ConfigureAwait(false);
                 }
+                catch (WorkspaceLimitException) when (WorkspaceTextFiles.Is3D(relativePath))
+                {
+                    var metadata = await _workspaceStorage.GetFileInfoAsync(
+                        session.WorkspaceId, relativePath).ConfigureAwait(false);
+                    return new WorkspaceFilePreviewDto
+                    {
+                        Path = relativePath,
+                        ContentType = contentType,
+                        Size = metadata.Length,
+                        IsText = false,
+                        Etag = metadata.ETag ?? string.Empty,
+                        Windowed = false,
+                        StartLine = 1
+                    };
+                }
                 catch (WorkspaceLimitException)
                 {
                     throw new NcfExceptionBase("文件超过 2 MB，请下载后查看。");
@@ -563,7 +650,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 var titleSource = string.IsNullOrEmpty(request.Title) ? request.InitialMessage : request.Title;
                 var title = string.IsNullOrEmpty(titleSource)
-                    ? _localizer["AdminChat.NewConversation"] 
+                    ? _localizer["AdminChat.NewConversation"]
                     : (titleSource.Length > 50 ? titleSource.Substring(0, 50) + "..." : titleSource);
 
                 var workspaceId = request.WorkspaceId?.Trim();
@@ -1083,7 +1170,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     aiResponse,
                     modelIdentifier,
                     harness?.TrajectoryId,
-                    harness?.TrajectorySequence);
+                    harness?.TrajectorySequence,
+                    await _messageService.CollectWorkspaceArtifactsAsync(request.SessionId, harness));
 
                 logger.Append($"发送消息: SessionId={request.SessionId}, MessageId={userMessage.Id}, Mode={mode}");
                 await PublishSyncEventAsync(userId, request.SessionId, "messages-changed");
@@ -1287,7 +1375,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     aiResponse,
                     modelIdentifier,
                     harness.TrajectoryId,
-                    harness.TrajectorySequence);
+                    harness.TrajectorySequence,
+                    await _messageService.CollectWorkspaceArtifactsAsync(trajectory.SessionId, harness));
                 await _sessionService.UpdateLastMessageTimeAsync(trajectory.SessionId);
                 await PublishSyncEventAsync(userId, trajectory.SessionId, "messages-changed");
 
@@ -1358,7 +1447,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     aiResponse,
                     modelIdentifier,
                     harness.TrajectoryId,
-                    harness.TrajectorySequence);
+                    harness.TrajectorySequence,
+                    await _messageService.CollectWorkspaceArtifactsAsync(branchSession.Id, harness));
                 await _sessionService.UpdateLastMessageTimeAsync(branchSession.Id);
                 await PublishSyncEventAsync(userId, branchSession.Id, "messages-changed");
 
@@ -1407,7 +1497,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     aiResponse,
                     modelIdentifier,
                     harness.TrajectoryId,
-                    harness.TrajectorySequence);
+                    harness.TrajectorySequence,
+                    await _messageService.CollectWorkspaceArtifactsAsync(trajectory.SessionId, harness));
                 await _sessionService.UpdateLastMessageTimeAsync(trajectory.SessionId);
                 await PublishSyncEventAsync(userId, trajectory.SessionId, "messages-changed");
 
@@ -2277,6 +2368,18 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public string Description { get; set; }
         public bool IsDefault { get; set; }
     }
+
+    public sealed class AdminChatPromptShottingRequest
+    {
+        public PromptShottingRequest Shotting { get; set; }
+        public int MessageId { get; set; }
+        public int Start { get; set; }
+        public int Length { get; set; }
+    }
+
+    public sealed record PromptShottingSaveResponse(
+        PromptShottingResult Shotting,
+        AdminChatMessageDto Message);
 
     #endregion
 }

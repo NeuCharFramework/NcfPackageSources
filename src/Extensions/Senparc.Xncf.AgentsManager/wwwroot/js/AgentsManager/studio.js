@@ -127,6 +127,7 @@
         this.studioHistories = [];
         this.studioHistoryMore = false;
         this.studioDetailLoading = false;
+        this.studioHistoryRequesting = false;
         if (type === 'group') {
           this.agentGraph3d?.focusGroup(id);
         } else if (type === 'task') {
@@ -314,10 +315,33 @@
         const version = this.studioDetailVersion;
         this.studioDetailLoading = true;
         try {
+          const listedTask = this.studioSelectedTask;
+          if (listedTask && this.isTerminalTaskStatus(listedTask.status)) {
+            const cached = this.getCachedTaskConversation('studio', id);
+            if (cached) {
+              this.studioTaskDetail = Object.assign({}, cached.detail, listedTask);
+              this.studioHistories = cached.histories.map(item => Object.assign({}, item));
+              this.studioHistoryMore = false;
+              return;
+            }
+          }
           const detail = await this.studioRequest('ChatTaskAppService', 'GetItem', { id }, null, true);
           if (version !== this.studioDetailVersion) return;
           this.studioTaskDetail = detail.chatTaskDto;
-          await this.studioLoadHistory(reset, version);
+          const historyLoaded = await this.studioLoadHistory(reset, version);
+          if (historyLoaded && version === this.studioDetailVersion && this.isTerminalTaskStatus(this.studioTaskDetail?.status)) {
+            const key = this.getTaskConversationCacheKey('studio', id);
+            this.$set(this.taskConversationCache, key, {
+              detail: Object.assign({}, this.studioTaskDetail),
+              histories: this.studioHistories.map(item => Object.assign({}, item)),
+              members: []
+            });
+            this.taskConversationCacheOrder = this.taskConversationCacheOrder.filter(item => item !== key);
+            this.taskConversationCacheOrder.push(key);
+            while (this.taskConversationCacheOrder.length > 24) {
+              this.$delete(this.taskConversationCache, this.taskConversationCacheOrder.shift());
+            }
+          }
         } catch (error) {
           if (version === this.studioDetailVersion) this.studioReportError(error);
         } finally {
@@ -325,23 +349,25 @@
         }
       },
       async studioLoadHistory(reset = false, version = this.studioDetailVersion) {
-        if (this.studioHistoryRequesting || this.studioSelection.type !== 'task') return;
+        if (this.studioHistoryRequesting || this.studioSelection.type !== 'task') return false;
         this.studioHistoryRequesting = true;
         try {
           const lastId = reset ? 0 : (this.studioHistories[this.studioHistories.length - 1]?.id || 0);
           const result = await this.studioRequest('ChatGroupHistoryAppService', 'GetList', {
             chatTaskId: this.studioSelection.id, nextHistoryId: lastId, pageIndex: 1, pageSize: 30
           }, null, true);
-          if (version !== this.studioDetailVersion) return;
+          if (version !== this.studioDetailVersion) return false;
           const histories = (result.chatGroupHistories || []).map(item => ({
             ...item, messageHtml: this.renderSafeMarkdown(item.message)
           }));
           this.studioHistories = reset ? histories : this.studioHistories.concat(histories);
           this.studioHistoryMore = histories.length === 30;
+          return true;
         } catch (error) {
           if (version === this.studioDetailVersion) this.studioReportError(error);
+          return false;
         } finally {
-          this.studioHistoryRequesting = false;
+          if (version === this.studioDetailVersion) this.studioHistoryRequesting = false;
         }
       },
       async studioTaskAction(action) {

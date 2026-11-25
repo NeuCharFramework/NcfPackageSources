@@ -36,6 +36,12 @@ public sealed class WorkspaceAgentProcessFactory
     private readonly ILogger<WorkspaceAgentProcessFactory> _logger;
     private readonly IIsolatedRuntimeProvider? _dockerProvider;
 
+    /// <summary>
+    /// Initializes native/Docker Workspace Agent process creation from workspace options.
+    /// </summary>
+    /// <param name="options">Workspace runtime and isolation options.</param>
+    /// <param name="logger">Logger for process lifecycle failures.</param>
+    /// <param name="isolatedRuntimeProviders">Optional isolated runtime providers used for Docker mode.</param>
     public WorkspaceAgentProcessFactory(
         IOptions<WorkspaceOptions> options,
         ILogger<WorkspaceAgentProcessFactory> logger,
@@ -63,6 +69,12 @@ public sealed class WorkspaceAgentProcessFactory
         }
     }
 
+    /// <summary>
+    /// Starts a Workspace Agent using the configured native or Docker provider.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier used for labels and diagnostics.</param>
+    /// <param name="workspaceRoot">The physical workspace root exposed to the agent.</param>
+    /// <returns>An active isolated-runtime connection.</returns>
     public IIsolatedRuntimeConnection Start(string workspaceId, string workspaceRoot)
     {
         var process = Status.IsContainerized
@@ -76,6 +88,12 @@ public sealed class WorkspaceAgentProcessFactory
         return process;
     }
 
+    /// <summary>
+    /// Starts the configured native Workspace Agent process.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier used for diagnostics.</param>
+    /// <param name="workspaceRoot">The physical workspace root.</param>
+    /// <returns>An active process connection.</returns>
     private IIsolatedRuntimeConnection StartNative(string workspaceId, string workspaceRoot)
     {
         var agentPath = ResolveAgentPath();
@@ -96,6 +114,13 @@ public sealed class WorkspaceAgentProcessFactory
         return StartProcess(workspaceId, startInfo);
     }
 
+    /// <summary>
+    /// Starts a Docker Workspace Agent with a read-only root, no network, and a workspace bind mount.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier used for container naming and labels.</param>
+    /// <param name="workspaceRoot">The physical workspace root mounted at <c>/workspace</c>.</param>
+    /// <returns>An active attached container connection.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when Docker configuration or provider registration is missing.</exception>
     private IIsolatedRuntimeConnection StartDocker(string workspaceId, string workspaceRoot)
     {
         if (string.IsNullOrWhiteSpace(_options.DockerImage))
@@ -134,6 +159,11 @@ public sealed class WorkspaceAgentProcessFactory
         });
     }
 
+    /// <summary>
+    /// Creates a non-shell process configuration with redirected standard streams.
+    /// </summary>
+    /// <param name="fileName">The executable or host process name.</param>
+    /// <returns>A process-start configuration for the Workspace Agent.</returns>
     private static ProcessStartInfo CreateBaseStartInfo(string fileName)
     {
         return new ProcessStartInfo
@@ -147,6 +177,13 @@ public sealed class WorkspaceAgentProcessFactory
         };
     }
 
+    /// <summary>
+    /// Appends the configured Workspace Agent limits and execution policy to an argument list.
+    /// </summary>
+    /// <param name="arguments">The mutable argument list.</param>
+    /// <param name="rootPath">The agent-visible workspace root.</param>
+    /// <param name="executionEnabled">Whether command execution is enabled.</param>
+    /// <param name="isolationLevel">The diagnostic isolation-level label.</param>
     private void AddAgentArguments(
         ICollection<string> arguments,
         string rootPath,
@@ -175,6 +212,12 @@ public sealed class WorkspaceAgentProcessFactory
         }
     }
 
+    /// <summary>
+    /// Starts a native process and logs failures with workspace/provider context.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="startInfo">The process-start configuration.</param>
+    /// <returns>An active process connection.</returns>
     private IIsolatedRuntimeConnection StartProcess(string workspaceId, ProcessStartInfo startInfo)
     {
         try
@@ -192,6 +235,11 @@ public sealed class WorkspaceAgentProcessFactory
         }
     }
 
+    /// <summary>
+    /// Resolves the configured agent path or the standard output-directory locations.
+    /// </summary>
+    /// <returns>An existing agent DLL or executable path.</returns>
+    /// <exception cref="FileNotFoundException">Thrown when no agent path can be resolved.</exception>
     private string ResolveAgentPath()
     {
         if (!string.IsNullOrWhiteSpace(_options.AgentPath))

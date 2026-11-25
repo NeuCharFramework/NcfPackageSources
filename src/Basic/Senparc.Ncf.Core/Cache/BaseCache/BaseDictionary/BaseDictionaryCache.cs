@@ -27,33 +27,100 @@ using Newtonsoft.Json.Linq;
 
 namespace Senparc.Ncf.Core.Cache
 {
+    /// <summary>
+    /// Defines cache operations for values addressed by a separate dictionary key.
+    /// </summary>
+    /// <typeparam name="TKey">The type used to identify an individual cached value.</typeparam>
+    /// <typeparam name="TValue">The value type stored in the cache.</typeparam>
     public interface IBaseDictionaryCache<TKey, TValue> : IBaseDictionaryCache<TKey, TValue, TValue>
         where TValue : class, new()
     {
     }
 
+    /// <summary>
+    /// Defines synchronous and asynchronous operations for a cache whose entries are addressed
+    /// by a typed key and may be created from a separate entity type.
+    /// </summary>
+    /// <typeparam name="TKey">The type used to identify an individual cached value.</typeparam>
+    /// <typeparam name="TValue">The value type stored in the cache.</typeparam>
+    /// <typeparam name="TEntity">The source entity type used when constructing a cached value.</typeparam>
     public interface IBaseDictionaryCache<TKey, TValue, TEntity> : IBaseCache<TValue>
            where TValue : class, new()
     {
-        #region Legacy section
-
+        /// <summary>
+        /// Creates and caches a value for <paramref name="key"/> using the implementation-specific source.
+        /// </summary>
+        /// <param name="key">The typed key used to build the final cache key.</param>
+        /// <returns>The created value, or <see langword="null"/> when the implementation cannot create one.</returns>
         TValue InsertObjectToCache(TKey key);
+
+        /// <summary>
+        /// Creates a cache value from <paramref name="obj"/>, stores it under <paramref name="key"/>,
+        /// and returns the stored value.
+        /// </summary>
+        /// <param name="key">The typed key used to build the final cache key.</param>
+        /// <param name="obj">The source entity used to populate the cached value.</param>
+        /// <returns>The value stored in the cache, or <see langword="null"/> when <paramref name="obj"/> is <see langword="null"/>.</returns>
         TValue InsertObjectToCache(TKey key, TEntity obj);
+
+        /// <summary>
+        /// Gets the cached value for <paramref name="key"/>, creating it when no entry exists.
+        /// </summary>
+        /// <param name="key">The typed key used to locate the value.</param>
+        /// <returns>The existing or newly created value, or <see langword="null"/> for a null key.</returns>
         TValue GetObject(TKey key);
+
+        /// <summary>
+        /// Removes the value associated with <paramref name="key"/> when that entry exists.
+        /// </summary>
+        /// <param name="key">The typed key used to locate the value.</param>
         void RemoveObject(TKey key);
+
+        /// <summary>
+        /// Stores <paramref name="obj"/> under a cache key derived from <paramref name="key"/>.
+        /// </summary>
+        /// <param name="key">The typed key used to build the final cache key.</param>
+        /// <param name="obj">The value to cache.</param>
+        /// <returns><see langword="true"/> when the underlying cache write reports success.</returns>
         bool UpdateToCache(TKey key, TValue obj);
 
-        #endregion
-
-        #region Legacy section
-
+        /// <summary>
+        /// Asynchronously creates and caches a value for <paramref name="key"/> using the implementation-specific source.
+        /// </summary>
+        /// <param name="key">The typed key used to build the final cache key.</param>
+        /// <returns>A task whose result is the created value, or <see langword="null"/> when it cannot be created.</returns>
         Task<TValue> InsertObjectToCacheAsync(TKey key);
-        Task<TValue> InsertObjectToCacheAsync(TKey key, TEntity obj);
-        Task<TValue> GetObjectAsync(TKey key);
-        Task RemoveObjectAsync(TKey key);
-        Task<bool> UpdateToCacheAsync(TKey key, TValue obj);
 
-        #endregion
+        /// <summary>
+        /// Asynchronously creates a cache value from <paramref name="obj"/>, stores it under
+        /// <paramref name="key"/>, and returns the stored value.
+        /// </summary>
+        /// <param name="key">The typed key used to build the final cache key.</param>
+        /// <param name="obj">The source entity used to populate the cached value.</param>
+        /// <returns>A task whose result is the stored value, or <see langword="null"/> for a null source entity.</returns>
+        Task<TValue> InsertObjectToCacheAsync(TKey key, TEntity obj);
+
+        /// <summary>
+        /// Asynchronously gets the cached value for <paramref name="key"/>, creating it when no entry exists.
+        /// </summary>
+        /// <param name="key">The typed key used to locate the value.</param>
+        /// <returns>A task whose result is the existing or newly created value, or <see langword="null"/> for a null key.</returns>
+        Task<TValue> GetObjectAsync(TKey key);
+
+        /// <summary>
+        /// Asynchronously removes the value associated with <paramref name="key"/> when that entry exists.
+        /// </summary>
+        /// <param name="key">The typed key used to locate the value.</param>
+        /// <returns>A task that completes after the cache entry has been removed.</returns>
+        Task RemoveObjectAsync(TKey key);
+
+        /// <summary>
+        /// Asynchronously stores <paramref name="obj"/> under a cache key derived from <paramref name="key"/>.
+        /// </summary>
+        /// <param name="key">The typed key used to build the final cache key.</param>
+        /// <param name="obj">The value to cache.</param>
+        /// <returns>A task whose result indicates whether the underlying cache write reports success.</returns>
+        Task<bool> UpdateToCacheAsync(TKey key, TValue obj);
     }
 
 
@@ -63,11 +130,12 @@ namespace Senparc.Ncf.Core.Cache
     {
 
         /// <summary>
-        /// 
+        /// Initializes a dictionary cache using the supplied logical cache key, database dependency,
+        /// and entry lifetime.
         /// </summary>
-        /// <param name="CACHE_KEY"></param>
-        /// <param name="db"></param>
-        ///Legacy comment translated to English.
+        /// <param name="CACHE_KEY">The logical cache key used as the namespace for entries.</param>
+        /// <param name="db">An optional database abstraction used by derived implementations.</param>
+        /// <param name="timeOut">The default cache lifetime in minutes.</param>
         public BaseDictionaryCache(string CACHE_KEY, INcfDbData db, int timeOut)
             : base(CACHE_KEY, db, timeOut)
         {
@@ -81,10 +149,13 @@ namespace Senparc.Ncf.Core.Cache
         where TEntity : class/*, new()*/
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Converts a typed dictionary key into the concrete cache key used by the configured
+        /// cache strategy. Primitive values are represented directly; other values are serialized
+        /// and represented by an MD5 digest.
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="key">The key whose cache representation should be generated.</param>
+        /// <returns>The concrete cache key used for cache operations.</returns>
+        /// <exception cref="Exception">Thrown when <paramref name="key"/> is <see langword="null"/>.</exception>
         protected string GetFinalCacheKey(TKey key)
         {
             //TODO:checkKeytype
@@ -112,7 +183,7 @@ namespace Senparc.Ncf.Core.Cache
                 default:
                     code = TypeCode.Object;
                     string keyStr = System.Text.Json.JsonSerializer.Serialize(key);
-                    keyCode = MD5.GetMD5Code(keyStr, "");//Legacy comment translated to English.
+                    keyCode = MD5.GetMD5Code(keyStr, "");
                     break;
             }
 
@@ -124,7 +195,7 @@ namespace Senparc.Ncf.Core.Cache
             }
             else
             {
-                finalKey = $"{CacheKey}@@@{keyCode}";//Legacy comment translated to English.
+                finalKey = $"{CacheKey}@@@{keyCode}";
             }
 
             return finalKey;
@@ -163,11 +234,12 @@ namespace Senparc.Ncf.Core.Cache
         //}
 
         /// <summary>
-        /// 
+        /// Initializes a dictionary cache using the supplied logical cache key, database dependency,
+        /// and entry lifetime.
         /// </summary>
-        /// <param name="CACHE_KEY"></param>
-        /// <param name="db"></param>
-        ///Legacy comment translated to English.
+        /// <param name="CACHE_KEY">The logical cache key used as the namespace for entries.</param>
+        /// <param name="db">An optional database abstraction used by derived implementations.</param>
+        /// <param name="timeOut">The default cache lifetime in minutes.</param>
         public BaseDictionaryCache(string CACHE_KEY, INcfDbData db, int timeOut)
             : base(CACHE_KEY, db)
         {
@@ -182,15 +254,27 @@ namespace Senparc.Ncf.Core.Cache
             //}
         }
 
-        #region Legacy section
-
+        /// <inheritdoc/>
         public override TValue Update()
         {
             return base.Update();
         }
 
+        /// <summary>
+        /// Creates and caches a value for <paramref name="key"/> through the implementation-specific source.
+        /// </summary>
+        /// <param name="key">The typed key used to locate the value.</param>
+        /// <returns>The created value.</returns>
         public abstract TValue InsertObjectToCache(TKey key);
 
+        /// <summary>
+        /// Creates a cache value from <paramref name="obj"/>, stores it under the derived key,
+        /// and returns the stored value.
+        /// </summary>
+        /// <param name="key">The typed key used to build the final cache key.</param>
+        /// <param name="obj">The source entity used to populate the value.</param>
+        /// <returns>The cached value, or <see langword="null"/> when <paramref name="obj"/> is <see langword="null"/>.</returns>
+        /// <exception cref="Exception">Thrown when entity-to-cache conversion or cache storage fails.</exception>
         public virtual TValue InsertObjectToCache(TKey key, TEntity obj)
         {
             if (obj == null)
@@ -215,10 +299,9 @@ namespace Senparc.Ncf.Core.Cache
                 }
                 catch (Exception ex)
                 {
-                    //Legacy comment translated to English.
                     //    .With(ex.Message, base.Data, key, obj, base.Data == null, key == null, obj == null, base.Data.Count);
 
-                    var msg = $"系统调试记录cache的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//Legacy comment translated to English.
+                    var msg = $"系统调试记录cache的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";
                     LogUtility.SystemLogger.Debug(msg, ex);
                     throw new Exception(msg, ex);
                 }
@@ -233,6 +316,11 @@ namespace Senparc.Ncf.Core.Cache
             return fullObj;
         }
 
+        /// <summary>
+        /// Gets an entry by its typed key, creating and caching it when the entry is absent.
+        /// </summary>
+        /// <param name="key">The typed key used to locate the value.</param>
+        /// <returns>The cached or newly created value, or <see langword="null"/> for a null key.</returns>
         public virtual TValue GetObject(TKey key)
         {
             if (key == null)
@@ -252,6 +340,10 @@ namespace Senparc.Ncf.Core.Cache
             }
         }
 
+        /// <summary>
+        /// Removes the entry associated with the supplied typed key when it exists.
+        /// </summary>
+        /// <param name="key">The typed key used to locate the entry.</param>
         public virtual void RemoveObject(TKey key)
         {
             var finalCacheKey = GetFinalCacheKey(key);
@@ -262,6 +354,12 @@ namespace Senparc.Ncf.Core.Cache
             }
         }
 
+        /// <summary>
+        /// Stores <paramref name="obj"/> under the cache key derived from <paramref name="key"/>.
+        /// </summary>
+        /// <param name="key">The typed key used to build the final cache key.</param>
+        /// <param name="obj">The value to store.</param>
+        /// <returns><see langword="true"/> when the underlying cache write reports success.</returns>
         public virtual bool UpdateToCache(TKey key, TValue obj)
         {
             var finalKey = GetFinalCacheKey(key);
@@ -269,22 +367,37 @@ namespace Senparc.Ncf.Core.Cache
         }
 
 
+        /// <summary>
+        /// Disallows removal through the single-value cache API because dictionary entries
+        /// must be addressed by their individual keys.
+        /// </summary>
+        /// <exception cref="Exception">Always thrown when this method is called.</exception>
         public override void RemoveCache()
         {
             throw new Exception("不可以使用此方法");
         }
 
-        #endregion
-
-        #region Legacy section
-
+        /// <inheritdoc/>
         public override async Task<TValue> UpdateAsync()
         {
             return await base.UpdateAsync().ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Asynchronously creates and caches a value for <paramref name="key"/> through the implementation-specific source.
+        /// </summary>
+        /// <param name="key">The typed key used to locate the value.</param>
+        /// <returns>A task whose result is the created value.</returns>
         public abstract Task<TValue> InsertObjectToCacheAsync(TKey key);
 
+        /// <summary>
+        /// Asynchronously creates a cache value from <paramref name="obj"/>, stores it under the derived key,
+        /// and returns the stored value.
+        /// </summary>
+        /// <param name="key">The typed key used to build the final cache key.</param>
+        /// <param name="obj">The source entity used to populate the value.</param>
+        /// <returns>A task whose result is the cached value, or <see langword="null"/> for a null source entity.</returns>
+        /// <exception cref="Exception">Thrown when entity-to-cache conversion or cache storage fails.</exception>
         public virtual async Task<TValue> InsertObjectToCacheAsync(TKey key, TEntity obj)
         {
             if (obj == null)
@@ -309,10 +422,9 @@ namespace Senparc.Ncf.Core.Cache
                 }
                 catch (Exception ex)
                 {
-                    //Legacy comment translated to English.
                     //    .With(ex.Message, base.Data, key, obj, base.Data == null, key == null, obj == null, base.Data.Count);
 
-                    var msg = $"系统调试记录cache的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//Legacy comment translated to English.
+                    var msg = $"系统调试记录cache的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";
                     LogUtility.SystemLogger.Debug(msg, ex);
                     throw new Exception(msg, ex);
                 }
@@ -327,6 +439,11 @@ namespace Senparc.Ncf.Core.Cache
             return fullObj;
         }
 
+        /// <summary>
+        /// Asynchronously gets an entry by its typed key, creating and caching it when absent.
+        /// </summary>
+        /// <param name="key">The typed key used to locate the value.</param>
+        /// <returns>A task whose result is the cached or newly created value, or <see langword="null"/> for a null key.</returns>
         public virtual async Task<TValue> GetObjectAsync(TKey key)
         {
             if (key == null)
@@ -346,6 +463,11 @@ namespace Senparc.Ncf.Core.Cache
             }
         }
 
+        /// <summary>
+        /// Asynchronously removes the entry associated with the supplied typed key when it exists.
+        /// </summary>
+        /// <param name="key">The typed key used to locate the entry.</param>
+        /// <returns>A task that completes after the entry has been removed.</returns>
         public virtual async Task RemoveObjectAsync(TKey key)
         {
             var finalCacheKey = GetFinalCacheKey(key);
@@ -356,6 +478,12 @@ namespace Senparc.Ncf.Core.Cache
             }
         }
 
+        /// <summary>
+        /// Asynchronously stores <paramref name="obj"/> under the cache key derived from <paramref name="key"/>.
+        /// </summary>
+        /// <param name="key">The typed key used to build the final cache key.</param>
+        /// <param name="obj">The value to store.</param>
+        /// <returns>A task whose result indicates whether the underlying cache write reports success.</returns>
         public virtual async Task<bool> UpdateToCacheAsync(TKey key, TValue obj)
         {
             var finalKey = GetFinalCacheKey(key);
@@ -363,11 +491,15 @@ namespace Senparc.Ncf.Core.Cache
         }
 
 
+        /// <summary>
+        /// Disallows removal through the single-value cache API because dictionary entries
+        /// must be addressed by their individual keys.
+        /// </summary>
+        /// <exception cref="Exception">Always thrown when this method is called.</exception>
         public override Task RemoveCacheAsync()
         {
             throw new Exception("不可以使用此方法");
         }
 
-        #endregion
     }
 }

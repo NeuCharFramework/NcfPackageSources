@@ -53,10 +53,17 @@ public class WorkspaceRecord : EntityBase<int>
 
     public DateTime LastAccessedAt { get; private set; }
 
+    /// <summary>
+    /// Initializes an empty record for ORM materialization.
+    /// </summary>
     protected WorkspaceRecord()
     {
     }
 
+    /// <summary>
+    /// Creates a persisted metadata record from a workspace descriptor.
+    /// </summary>
+    /// <param name="descriptor">The descriptor containing identity, ownership, and storage metadata.</param>
     public WorkspaceRecord(WorkspaceDescriptor descriptor)
     {
         WorkspaceId = descriptor.Id;
@@ -69,5 +76,9 @@ public class WorkspaceRecord : EntityBase<int>
         LastAccessedAt = descriptor.LastAccessedUtc;
     }
 
+    /// <summary>
+    /// Updates the last-access timestamp.
+    /// </summary>
+    /// <param name="lastAccessedAt">The timestamp to store.</param>
     public void Touch(DateTime lastAccessedAt) => LastAccessedAt = lastAccessedAt;
 }

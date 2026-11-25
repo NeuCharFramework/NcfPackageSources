@@ -42,6 +42,10 @@ using Senparc.Xncf.AIKernel.Domain.Services;
 
 namespace Senparc.Xncf.XncfBuilder.Domain.Services
 {
+    /// <summary>
+    /// Coordinates prompt-range services and the AI handler used by the XNCF Builder's
+    /// prompt-generation workflow.
+    /// </summary>
     public class PromptBuilderService
     {
         private readonly AgentAiHandler _aiHandler;
@@ -50,6 +54,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         private readonly PromptItemService _promptItemService;
         private readonly PromptResultService _promptResultService;
 
+        /// <summary>
+        /// Initializes the prompt builder with the prompt, prompt-range, item, and result services
+        /// required by the builder workflow.
+        /// </summary>
+        /// <param name="promptService">The service that executes configured prompts and exposes the AI handler.</param>
+        /// <param name="promptRangeService">The service used to create and query prompt ranges.</param>
+        /// <param name="promptItemService">The service used to persist prompt items.</param>
+        /// <param name="promptResultService">The service used to persist and remove prompt results.</param>
         public PromptBuilderService(/*IAiHandler aiHandler,*/ PromptService promptService, PromptRangeService promptRangeService, PromptItemService promptItemService, PromptResultService promptResultService)
         {
             //this._aiHandler = (AgentAiHandler)aiHandler;

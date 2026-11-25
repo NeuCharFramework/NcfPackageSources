@@ -37,6 +37,13 @@ namespace Senparc.Xncf.Dapr
         private readonly ILogger<DaprClient> _logger;
         private readonly ISerializer _serializer;
         private readonly DaprClientOptions _options;
+        /// <summary>
+        /// Initializes a client that communicates with the local Dapr sidecar.
+        /// </summary>
+        /// <param name="httpClient">HTTP client used to send requests to the sidecar.</param>
+        /// <param name="logger">Logger used to record sidecar response and retry information.</param>
+        /// <param name="serializer">Serializer used for request and response payloads.</param>
+        /// <param name="options">Dapr endpoint and component configuration.</param>
         public DaprClient(HttpClient httpClient, ILogger<DaprClient> logger, ISerializer serializer, IOptions<DaprClientOptions> options)
         {
             _httpClient = httpClient;
@@ -46,15 +53,19 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Invokes a method exposed by another Dapr application through the local Dapr sidecar.
+        /// The HTTP verb is selected from <paramref name="invokeType"/>, the target service is
+        /// addressed by <paramref name="serviceId"/>, and <paramref name="data"/> is serialized
+        /// as the request body when it is not <see langword="null"/>.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <param name="invokeType">requesttype</param>
-        ///Legacy comment translated to English.
-        /// <param name="methodName">methodpath</param>
-        /// <param name="data">requestdata</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <typeparam name="TResult">The type used to deserialize the response body.</typeparam>
+        /// <param name="invokeType">The invocation operation to perform.</param>
+        /// <param name="serviceId">The Dapr application identifier that owns the target method.</param>
+        /// <param name="methodName">The method route exposed by the target Dapr application.</param>
+        /// <param name="data">The optional request payload serialized by the configured <see cref="ISerializer"/>.</param>
+        /// <returns>A task that completes with the deserialized response value.</returns>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="invokeType"/> is not supported.</exception>
+        /// <exception cref="Exception">Thrown when the response body cannot be deserialized as <typeparamref name="TResult"/>.</exception>
         public async Task<TResult> InvokeMethodAsync<TResult>(InvokeType invokeType, string serviceId, string methodName, object? data = null)
         {
             MessageType messageType;
@@ -97,28 +108,67 @@ namespace Senparc.Xncf.Dapr
             return result;
         }
 
+        /// <summary>
+        /// Invokes a Dapr method using the HTTP PATCH operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type used to deserialize the response body.</typeparam>
+        /// <param name="serviceId">The Dapr application identifier that owns the target method.</param>
+        /// <param name="methodName">The method route exposed by the target application.</param>
+        /// <param name="data">The optional request payload.</param>
+        /// <returns>A task that completes with the deserialized response value.</returns>
         public async Task<TResult> PatchAsync<TResult>(string serviceId, string methodName, object? data = null) =>
             await InvokeMethodAsync<TResult>(InvokeType.Patch, serviceId, methodName, data);
 
+        /// <summary>
+        /// Invokes a Dapr method using the HTTP GET operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type used to deserialize the response body.</typeparam>
+        /// <param name="serviceId">The Dapr application identifier that owns the target method.</param>
+        /// <param name="methodName">The method route exposed by the target application.</param>
+        /// <param name="data">The optional request payload.</param>
+        /// <returns>A task that completes with the deserialized response value.</returns>
         public async Task<TResult> GetAsync<TResult>(string serviceId, string methodName, object? data = null) =>
             await InvokeMethodAsync<TResult>(InvokeType.Get, serviceId, methodName, data);
 
+        /// <summary>
+        /// Invokes a Dapr method using the HTTP POST operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type used to deserialize the response body.</typeparam>
+        /// <param name="serviceId">The Dapr application identifier that owns the target method.</param>
+        /// <param name="methodName">The method route exposed by the target application.</param>
+        /// <param name="data">The optional request payload.</param>
+        /// <returns>A task that completes with the deserialized response value.</returns>
         public async Task<TResult> PostAsync<TResult>(string serviceId, string methodName, object? data = null) =>
             await InvokeMethodAsync<TResult>(InvokeType.Post, serviceId, methodName, data);
 
+        /// <summary>
+        /// Invokes a Dapr method using the HTTP PUT operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type used to deserialize the response body.</typeparam>
+        /// <param name="serviceId">The Dapr application identifier that owns the target method.</param>
+        /// <param name="methodName">The method route exposed by the target application.</param>
+        /// <param name="data">The optional request payload.</param>
+        /// <returns>A task that completes with the deserialized response value.</returns>
         public async Task<TResult> PutAsync<TResult>(string serviceId, string methodName, object? data = null) =>
             await InvokeMethodAsync<TResult>(InvokeType.Put, serviceId, methodName, data);
 
+        /// <summary>
+        /// Invokes a Dapr method using the HTTP DELETE operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type used to deserialize the response body.</typeparam>
+        /// <param name="serviceId">The Dapr application identifier that owns the target method.</param>
+        /// <param name="methodName">The method route exposed by the target application.</param>
+        /// <param name="data">The optional request payload.</param>
+        /// <returns>A task that completes with the deserialized response value.</returns>
         public async Task<TResult> DeleteAsync<TResult>(string serviceId, string methodName, object? data = null) =>
             await InvokeMethodAsync<TResult>(InvokeType.Delete, serviceId, methodName, data);
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Publishes an event through the globally configured Dapr pub/sub component.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="topicName">The pub/sub topic to which the event is published.</param>
+        /// <param name="data">The event payload to serialize and publish.</param>
+        /// <exception cref="Exception">Thrown when no global pub/sub component name has been configured.</exception>
         public async Task PublishEventAsync(string topicName, object data)
         {
             if(_options.PubSubName == null)
@@ -127,12 +177,12 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Publishes an event through a named Dapr pub/sub component.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="pubSubName">The configured Dapr pub/sub component name.</param>
+        /// <param name="topicName">The topic to which the event is published.</param>
+        /// <param name="data">The event payload to serialize and publish.</param>
+        /// <exception cref="HttpRequestException">Thrown when the Dapr sidecar cannot be reached.</exception>
         public async Task PublishEventAsync(string pubSubName, string topicName, object data)
         {
             var request = BuildMessage(MessageType.Publish, pubSubName, topicName, data);
@@ -140,12 +190,12 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// getstatus
+        /// Retrieves a state value from the globally configured Dapr state store.
         /// </summary>
-        /// <typeparam name="TResult">returnstatustype</typeparam>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <typeparam name="TResult">The type used to deserialize the stored state value.</typeparam>
+        /// <param name="key">The state key to retrieve.</param>
+        /// <returns>A task that completes with the deserialized state value.</returns>
+        /// <exception cref="Exception">Thrown when no global state store name has been configured or the response cannot be deserialized.</exception>
         public async Task<TResult> GetStateAsync<TResult>(string key)
         {
             if (_options.StateStoreName == null)
@@ -154,12 +204,13 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// getstatus
+        /// Retrieves a state value from a named Dapr state store.
         /// </summary>
-        /// <typeparam name="TResult">returnstatustype</typeparam>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <typeparam name="TResult">The type used to deserialize the stored state value.</typeparam>
+        /// <param name="stateStore">The configured Dapr state store component name.</param>
+        /// <param name="key">The state key to retrieve.</param>
+        /// <returns>A task that completes with the deserialized state value.</returns>
+        /// <exception cref="Exception">Thrown when the response body cannot be deserialized as <typeparamref name="TResult"/>.</exception>
         public async Task<TResult> GetStateAsync<TResult>(string stateStore, string key)
         {
             var request = BuildMessage(MessageType.GetState, stateStore, key);
@@ -188,13 +239,12 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// savestatus
+        /// Stores one state value in the globally configured Dapr state store.
         /// </summary>
-        /// <typeparam name="TValue">statustype</typeparam>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <typeparam name="TValue">The type of the value to store.</typeparam>
+        /// <param name="key">The state key under which the value is stored.</param>
+        /// <param name="value">The value to serialize and store.</param>
+        /// <exception cref="Exception">Thrown when no global state store name has been configured.</exception>
         public async Task SetStateAsync<TValue>(string key, TValue value)
         {
             if (_options.StateStoreName == null)
@@ -203,13 +253,12 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// savestatus
+        /// Stores one state value in a named Dapr state store.
         /// </summary>
-        /// <typeparam name="TValue">statustype</typeparam>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <typeparam name="TValue">The type of the value to store.</typeparam>
+        /// <param name="stateStore">The configured Dapr state store component name.</param>
+        /// <param name="key">The state key under which the value is stored.</param>
+        /// <param name="value">The value to serialize and store.</param>
         public async Task SetStateAsync<TValue>(string stateStore, string key, TValue value)
         {
             var state = new StateStore(key, value);
@@ -217,13 +266,10 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// savemultiplestatus
+        /// Stores multiple state values in the globally configured Dapr state store.
         /// </summary>
-        /// <typeparam name="TValue">statustype</typeparam>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="values">The state entries to serialize and store as one Dapr state operation.</param>
+        /// <exception cref="Exception">Thrown when no global state store name has been configured.</exception>
         public async Task SetStatesAsync(IEnumerable<StateStore> values)
         {
             if (_options.StateStoreName == null)
@@ -232,13 +278,10 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// savemultiplestatus
+        /// Stores multiple state values in a named Dapr state store.
         /// </summary>
-        /// <typeparam name="TValue">statustype</typeparam>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="stateStore">The configured Dapr state store component name.</param>
+        /// <param name="values">The state entries to serialize and store as one Dapr state operation.</param>
         public async Task SetStatesAsync(string stateStore, IEnumerable<StateStore> values)
         {
             var request = BuildMessage(MessageType.SetState, stateStore, "", values);
@@ -253,11 +296,10 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// deletestatus
+        /// Deletes one state value from the globally configured Dapr state store.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="key">The state key to delete.</param>
+        /// <exception cref="Exception">Thrown when no global state store name has been configured.</exception>
         public async Task DelStateAsync(string key)
         {
             if (_options.StateStoreName == null)
@@ -266,11 +308,11 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// deletestatus
+        /// Deletes one state value from a named Dapr state store.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="stateStore">The configured Dapr state store component name.</param>
+        /// <param name="key">The state key to delete.</param>
+        /// <exception cref="HttpRequestException">Thrown when the Dapr sidecar cannot be reached.</exception>
         public async Task DelStateAsync(string stateStore, string key)
         {
             var request = BuildMessage(MessageType.DeleteState, stateStore, key);
@@ -285,9 +327,14 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Checks whether the local Dapr sidecar is ready to serve requests.
+        /// The check retries until the configured connection retry count is reached and
+        /// treats an HTTP 204 response from the sidecar health endpoint as healthy.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that completes with <see langword="true"/> when the sidecar responds
+        /// successfully within the retry window; otherwise, <see langword="false"/>.
+        /// </returns>
         public async Task<bool> HealthCheckAsync()
         {
             int retryCount = 0;
@@ -320,24 +367,27 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Sends an already constructed request to the local Dapr sidecar.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="message">The request containing the Dapr route, HTTP method, and optional body.</param>
+        /// <returns>A task that completes with the sidecar's HTTP response.</returns>
+        /// <exception cref="HttpRequestException">Thrown when the sidecar cannot be reached.</exception>
         private async Task<HttpResponseMessage> SendMessageAsync(HttpRequestMessage message)
         {
             return await _httpClient.SendAsync(message);
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds a Dapr sidecar request for invocation, pub/sub, or state management.
+        /// When a payload is supplied, it is serialized as UTF-8 JSON and assigned to the
+        /// resulting request.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="requestType">The Dapr operation that determines the route and HTTP method.</param>
+        /// <param name="host">The service, pub/sub component, or state store name used in the route.</param>
+        /// <param name="path">The method name, topic name, or state key used in the route.</param>
+        /// <param name="data">The optional payload to serialize as JSON.</param>
+        /// <returns>A configured <see cref="HttpRequestMessage"/> targeting the local Dapr sidecar.</returns>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="requestType"/> is not supported.</exception>
         private HttpRequestMessage BuildMessage(MessageType requestType, string host, string path, object? data = null)
         {
             string bathUrl = $"http://localhost:{_options.ApiPort}";
@@ -345,7 +395,7 @@ namespace Senparc.Xncf.Dapr
             string url;
 
             HttpRequestMessage request;
-            //Legacy comment translated to English.
+            // Map the logical operation to the corresponding Dapr sidecar route and HTTP verb.
             switch (requestType)
             {
                 case MessageType.InvokePatch:
@@ -388,7 +438,7 @@ namespace Senparc.Xncf.Dapr
                 default:
                     throw new ArgumentException();
             }
-            //Legacy comment translated to English.
+            // Serialize payloads only for operations that provide a request body.
             if (data != null)
             {
                 //request.Content.Headers.ContentType = new MediaTypeHeaderValue($"application/json");

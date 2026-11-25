@@ -32,6 +32,11 @@ public sealed class DesktopAuthorizedSyncHub
     private readonly Dictionary<Guid, AuthorizedSyncSubscriber> _subscribers = new();
     private long _sequence;
 
+    /// <summary>
+    /// Publishes an authorized synchronization event and delivers it only to subscribers
+    /// with matching owner and policy values.
+    /// </summary>
+    /// <param name="event">The authorized synchronization event.</param>
     public void Publish(IAuthorizedIntegrationSyncEvent @event)
     {
         if (string.IsNullOrWhiteSpace(@event.OwnerId) ||
@@ -75,6 +80,14 @@ public sealed class DesktopAuthorizedSyncHub
         }
     }
 
+    /// <summary>
+    /// Subscribes to authorized synchronization events filtered by owner and required policy.
+    /// </summary>
+    /// <param name="ownerId">The owner identity allowed to receive events.</param>
+    /// <param name="requiredPolicy">The policy identity required for delivery.</param>
+    /// <param name="replayBuffered">Whether retained matching events should be replayed first.</param>
+    /// <param name="cancellationToken">Token used to terminate the subscription.</param>
+    /// <returns>An asynchronous filtered event sequence.</returns>
     public async IAsyncEnumerable<DesktopAuthorizedSyncMessage> Subscribe(
         string ownerId,
         string requiredPolicy,

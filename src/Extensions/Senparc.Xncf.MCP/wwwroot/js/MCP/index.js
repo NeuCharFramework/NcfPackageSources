@@ -11,10 +11,10 @@
         }).then(function (response) {
             var body = response.data;
             if (!body || typeof body !== 'object' || typeof body.success !== 'boolean') {
-                throw new Error(ncfST('Frontend.055'));
+                throw new Error(ncfST('Frontend.Mcp.TheServerResponseFormatIsInvalidConfirmThatYouAreSignedIn'));
             }
             if (!body.success) {
-                throw new Error(body.errorMessage || (typeof body.data === 'string' && body.data) || ncfST('Frontend.056'));
+                throw new Error(body.errorMessage || (typeof body.data === 'string' && body.data) || ncfST('Frontend.Mcp.RequestFailed'));
             }
             return response;
         });
@@ -26,10 +26,10 @@
         var detail = body && (body.errorMessage || body.message || body.title);
         if (detail) return fallback + ': ' + detail;
         if (response && response.status === 404) {
-                return fallback + ncfST('Frontend.057');
+                return fallback + ncfST('Frontend.Mcp.TheInterfaceWasNotFoundHTTP404ConfirmThatTheSiteHas');
         }
         if (response && (response.status === 401 || response.status === 403)) {
-                return fallback + ncfST('Frontend.058');
+                return fallback + ncfST('Frontend.Mcp.YourSignInHasExpiredOrYouDoNotHavePermissionSign');
         }
         if (response) return fallback + '（HTTP ' + response.status + '）';
         return fallback + (error && error.message ? ': ' + error.message : '');
@@ -52,7 +52,7 @@
     function connectionResult(body) {
         var result = body.data;
         if (!result || typeof result.success !== 'boolean' || !Array.isArray(result.tools)) {
-                throw new Error(ncfST('Frontend.059'));
+                throw new Error(ncfST('Frontend.Mcp.TheServerReturnedAnInvalidConnectionTestResultFormat'));
         }
         return result;
     }
@@ -90,7 +90,7 @@
 
                 //Legacy comment translated to English.
                 dialogVisible: false,
-                    dialogTitle: ncfST('Frontend.060'),
+                    dialogTitle: ncfST('Frontend.Mcp.AddMCPEndpoint'),
                 saving: false,
                 form: {
                     id: 0,
@@ -103,8 +103,8 @@
                     bearerToken: ''
                 },
                 rules: {
-                    name: [{ required: true, message: ncfST('Frontend.061'), trigger: 'blur' }],
-                    endpoint: [{ required: true, message: ncfST('Frontend.062'), trigger: 'blur' }]
+                    name: [{ required: true, message: ncfST('Frontend.Mcp.EndpointNameCannotBeEmpty'), trigger: 'blur' }],
+                    endpoint: [{ required: true, message: ncfST('Frontend.Mcp.EndpointAddressCannotBeEmpty'), trigger: 'blur' }]
                 },
                 endpointTypeOptions: ['sse', 'http', 'stdio', 'websocket'],
 
@@ -170,27 +170,27 @@
                         || typeof server.xncfName !== 'string' || typeof server.route !== 'string'
                         || !Array.isArray(server.endpoints) || server.endpoints.some(endpoint =>
                             !endpoint || typeof endpoint.endpointType !== 'string' || typeof endpoint.endpoint !== 'string'))) {
-                        throw new Error(ncfST('Frontend.063'));
+                        throw new Error(ncfST('Frontend.Mcp.TheServerReturnedAnInvalidListOfMCPServicesPublishedByThis'));
                     }
                     this.publishedServers = servers;
                 } catch (error) {
                     console.error(error);
-                    this.$message.error(errorMessage(error, ncfST('Frontend.064')));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.Mcp.FailedToReadMCPServicesPublishedByThisSite')));
                 } finally {
                     this.publishedLoading = false;
                 }
             },
             async copyPublishedEndpoint(endpoint) {
                 if (!navigator.clipboard || !navigator.clipboard.writeText) {
-                    this.$message.error(ncfST('Frontend.065'));
+                    this.$message.error(ncfST('Frontend.Mcp.ThisBrowserCannotCopyToTheClipboardSelectAndCopyTheEndpoint'));
                     return;
                 }
                 try {
                     await navigator.clipboard.writeText(endpoint);
-                    this.$message.success(ncfST('Frontend.066'));
+                    this.$message.success(ncfST('Frontend.Mcp.EndpointAddressCopied'));
                 } catch (error) {
                     console.error(error);
-                    this.$message.error(errorMessage(error, ncfST('Frontend.067')));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.Mcp.CopyFailedSelectAndCopyTheEndpointAddressManually')));
                 }
             },
             async getList() {
@@ -199,14 +199,14 @@
                     var res = await request(apiBase + '.GetAllEndpoints');
                     var body = res.data || {};
                     if (!Array.isArray(body.data)) {
-                        throw new Error(ncfST('Frontend.068'));
+                        throw new Error(ncfST('Frontend.Mcp.TheServerReturnedAnInvalidEndpointListFormat'));
                     }
                     this.tableData = body.data.map(z => Object.assign({}, z, {
                         bearerToken: this.extractBearerToken(z.authConfig)
                     }));
                 } catch (error) {
                     console.error(error);
-                    this.$message.error(errorMessage(error, ncfST('Frontend.069')));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.Mcp.FailedToReadTheMCPEndpointList')));
                 } finally {
                     this.loading = false;
                 }
@@ -221,7 +221,7 @@
                 }
             },
             handleAdd() {
-                this.dialogTitle = ncfST('Frontend.060');
+                this.dialogTitle = ncfST('Frontend.Mcp.AddMCPEndpoint');
                 this.form = {
                     id: 0, name: '', endpoint: '', endpointType: 'sse',
                     protocolVersion: '', description: '', enabled: true, bearerToken: ''
@@ -233,7 +233,7 @@
                 });
             },
             handleEdit(row) {
-                this.dialogTitle = ncfST('Frontend.070');
+                this.dialogTitle = ncfST('Frontend.Mcp.EditMCPEndpoint');
                 this.form = Object.assign({}, row);
                 if (!this.form.id) this.form.id = 0;
                 this.form.bearerToken = this.extractBearerToken(row.authConfig);
@@ -264,13 +264,13 @@
                     var body = res.data || {};
                     this.preTestResult = connectionResult(body);
                     if (this.preTestResult.success) {
-                        this.$message.success(this.preTestResult.statusMessage || ncfST('Frontend.071'));
+                        this.$message.success(this.preTestResult.statusMessage || ncfST('Frontend.Mcp.EndpointConnectionTestSucceeded'));
                     } else {
-                        this.$message.error(this.preTestResult.statusMessage || ncfST('Frontend.072'));
+                        this.$message.error(this.preTestResult.statusMessage || ncfST('Frontend.Mcp.EndpointConnectionTestFailed'));
                     }
                 } catch (error) {
                     console.error(error);
-                    this.$message.error(errorMessage(error, ncfST('Frontend.072')));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.Mcp.EndpointConnectionTestFailed')));
                 } finally {
                     this.preTestLoading = false;
                 }
@@ -284,12 +284,12 @@
                         var payload = endpointPayload(this.form, this.buildAuthConfig());
                         var res = await request(apiBase + '.SaveEndpoint', payload);
                         var body = res.data || {};
-                        this.$message.success(body.data || ncfST('Frontend.073'));
+                        this.$message.success(body.data || ncfST('Frontend.Mcp.SavedSuccessfully'));
                         this.dialogVisible = false;
                         await this.getList();
                     } catch (error) {
                         console.error(error);
-                    this.$message.error(errorMessage(error, ncfST('Frontend.074')));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.Mcp.SaveFailed')));
                     } finally {
                         this.saving = false;
                     }
@@ -304,24 +304,24 @@
                 } catch (error) {
                     row.enabled = !row.enabled;
                     console.error(error);
-                    this.$message.error(errorMessage(error, ncfST('Frontend.075')));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.Mcp.UpdateFailed')));
                 } finally {
                     this.$set(row, 'saving', false);
                 }
             },
             async handleDelete(row) {
                 try {
-                    await this.$confirm(ncfST('Frontend.076', row.name), ncfST('Frontend.077'), { type: 'warning' });
+                    await this.$confirm(ncfST('Frontend.Mcp.DeleteMCPEndpointValue', row.name), ncfST('Frontend.Mcp.Notice'), { type: 'warning' });
                 } catch (e) {
                     return;
                 }
                 try {
                     await request(apiBase + '.DeleteEndpoint', { id: row.id });
-                    this.$message.success(ncfST('Frontend.078'));
+                    this.$message.success(ncfST('Frontend.Mcp.DeletedSuccessfully'));
                     await this.getList();
                 } catch (error) {
                     console.error(error);
-                    this.$message.error(errorMessage(error, ncfST('Frontend.079')));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.Mcp.DeleteFailed')));
                 }
             },
             async handleTest(row) {
@@ -334,15 +334,15 @@
                     this.testResultEndpointName = row.name;
                     this.expandedTools = [];
                     if (result.success) {
-                        this.$message.success(result.statusMessage || ncfST('Frontend.071'));
+                        this.$message.success(result.statusMessage || ncfST('Frontend.Mcp.EndpointConnectionTestSucceeded'));
                     } else {
-                        this.$message.error(result.statusMessage || ncfST('Frontend.072'));
+                        this.$message.error(result.statusMessage || ncfST('Frontend.Mcp.EndpointConnectionTestFailed'));
                     }
                     this.testDialogVisible = true;
                     await this.getList();
                 } catch (error) {
                     console.error(error);
-                    this.$message.error(errorMessage(error, ncfST('Frontend.072')));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.Mcp.EndpointConnectionTestFailed')));
                 } finally {
                     this.testLoadingId = 0;
                 }
@@ -358,8 +358,8 @@
                 }
             },
             showSchema(tool) {
-                this.schemaTitle = tool.name || ncfST('Frontend.080');
-                this.schemaText = formatSchemaJson(tool.inputSchemaJson) || ncfST('Frontend.081');
+                this.schemaTitle = tool.name || ncfST('Frontend.Mcp.InputSchema');
+                this.schemaText = formatSchemaJson(tool.inputSchemaJson) || ncfST('Frontend.Mcp.NoJSONSchemaInformation');
                 this.schemaDialogVisible = true;
             }
         }

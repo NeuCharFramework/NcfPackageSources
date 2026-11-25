@@ -88,7 +88,7 @@
     <value>Profondeur||Saisissez la profondeur maximale d’exploration</value>
   </data>
   <data name="Parameter.SenMapic.PageCount" xml:space="preserve">
-    <value>Nombre de pages||Saisissez le nombre maximal de pages à explorer</value>
+    <value>Nombre de pages||20 pages par défaut, avec une limite stricte de 100 pages</value>
   </data>
   <data name="Area.Extensions" xml:space="preserve">
     <value>Extensions</value>
@@ -252,31 +252,31 @@
   <data name="Message.DeleteFailed" xml:space="preserve">
     <value>Échec de la suppression</value>
   </data>
-  <data name="Frontend.001" xml:space="preserve">
+  <data name="Frontend.SenMapic.ExceptionThrowTestParametersPassedValueValue" xml:space="preserve">
     <value>Test de levée d'exception, paramètres transmis : {0} {1}</value>
   </data>
-  <data name="Frontend.002" xml:space="preserve">
+  <data name="Frontend.SenMapic.DivisorCannotBeZero" xml:space="preserve">
     <value>Le diviseur ne peut pas être 0 !</value>
   </data>
-  <data name="Frontend.003" xml:space="preserve">
+  <data name="Frontend.SenMapic.UnknownOperatorValue" xml:space="preserve">
     <value>Opérateur inconnu : {0}</value>
   </data>
-  <data name="Frontend.004" xml:space="preserve">
+  <data name="Frontend.SenMapic.UnknownOperator" xml:space="preserve">
     <value>Opérateur inconnu</value>
   </data>
-  <data name="Frontend.005" xml:space="preserve">
+  <data name="Frontend.SenMapic.EnterAValidURL" xml:space="preserve">
     <value>Saisissez une URL valide !</value>
   </data>
-  <data name="Frontend.006" xml:space="preserve">
+  <data name="Frontend.SenMapic.TheTargetHostResolvedToANonPublicAddressTheConnectionWas" xml:space="preserve">
     <value>L'hôte cible a été résolu en une adresse non publique. La connexion a été refusée.</value>
   </data>
-  <data name="Frontend.007" xml:space="preserve">
+  <data name="Frontend.SenMapic.UnableToConnectToTheTargetHostThatPassedThePublicAddress" xml:space="preserve">
     <value>Impossible de se connecter à l'hôte cible ayant réussi la vérification d'adresse publique.</value>
   </data>
-  <data name="Frontend.008" xml:space="preserve">
+  <data name="Frontend.SenMapic.TheTargetURLIsNotAllowed" xml:space="preserve">
     <value>L'accès à l'URL cible n'est pas autorisé.</value>
   </data>
-  <data name="Frontend.009" xml:space="preserve">
+  <data name="Frontend.SenMapic.TheRedirectTargetURLIsNotAllowed" xml:space="preserve">
     <value>L'accès à l'URL cible de redirection n'est pas autorisé.</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
@@ -289,7 +289,7 @@
     <value>Explorateur Web</value>
   </data>
   <data name="Function.SenMapic.Crawl.Description" xml:space="preserve">
-    <value>Extrait des informations de pages Web</value>
+    <value>Extrait des informations Web ; 20 pages par défaut, limité à 100 pages par appel</value>
   </data>
 
 </root>

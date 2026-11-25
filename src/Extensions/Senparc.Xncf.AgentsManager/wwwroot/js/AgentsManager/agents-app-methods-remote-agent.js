@@ -6,15 +6,15 @@
 
 var AgentsAppMethodsRemoteAgent = {
     remoteConnectionStatusText(status) {
-      const statusMap = { 0: ncfST('Frontend.529'), 1: ncfST('Frontend.530'), 2: ncfST('Frontend.531') }
-      return statusMap[Number(status)] || ncfST('Frontend.529')
+      const statusMap = { 0: ncfST('Frontend.AgentsManager.NotTestedAlternate'), 1: ncfST('Frontend.AgentsManager.Available'), 2: ncfST('Frontend.AgentsManager.Unavailable') }
+      return statusMap[Number(status)] || ncfST('Frontend.AgentsManager.NotTestedAlternate')
     },
     remoteConnectionStatusType(status) {
       const statusTypeMap = { 0: 'info', 1: 'success', 2: 'danger' }
       return statusTypeMap[Number(status)] || 'info'
     },
     remoteParticipantAvailabilityText(participant) {
-      if (!participant?.enable) return ncfST('Frontend.532')
+      if (!participant?.enable) return ncfST('Frontend.AgentsManager.DisabledAlternate')
       return this.remoteConnectionStatusText(participant.connectionStatus)
     },
     remoteParticipantAvailabilityType(participant) {
@@ -78,7 +78,7 @@ var AgentsAppMethodsRemoteAgent = {
           '/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.TestConnections',
           { remoteAgentIds: testAll ? [] : requestedIds })
         const data = response?.data ?? {}
-        if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.533'))
+        if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.AgentsManager.ConnectionTestFailedAlternate'))
 
         const results = data?.data?.results ?? []
         this.applyRemoteConnectionResults(results)
@@ -88,7 +88,7 @@ var AgentsAppMethodsRemoteAgent = {
         }
         return results
       } catch (err) {
-        if (!options.silent) this.$message.error(err?.message || ncfST('Frontend.533'))
+        if (!options.silent) this.$message.error(err?.message || ncfST('Frontend.AgentsManager.ConnectionTestFailedAlternate'))
         throw err
       } finally {
         this.setRemoteAgentTesting(loadingIds, false)
@@ -98,16 +98,16 @@ var AgentsAppMethodsRemoteAgent = {
     showRemoteAgentTestSummary(results) {
       const failedResults = (results || []).filter(result => !result.success)
       if (!results?.length) {
-        this.$message.warning(ncfST('Frontend.534'))
+        this.$message.warning(ncfST('Frontend.AgentsManager.NoRemoteATwoAAgentsCanBeTested'))
         return
       }
       if (!failedResults.length) {
-        this.$message.success(ncfST('Frontend.535', results.length))
+        this.$message.success(ncfST('Frontend.AgentsManager.AllPassedValueRemoteATwoAAgentsAreAvailable', results.length))
         return
       }
-      const failedLines = failedResults.map(result => `${result.name || `#${result.remoteAgentId}`}: ${result.message || ncfST('Frontend.531')}`)
-      this.$alert(ncfST('Frontend.632', results.length - failedResults.length, failedResults.length, failedLines.join('\n')),
-        ncfST('Frontend.536'), { type: 'warning', confirmButtonText: ncfST('Frontend.537') })
+      const failedLines = failedResults.map(result => `${result.name || `#${result.remoteAgentId}`}: ${result.message || ncfST('Frontend.AgentsManager.Unavailable')}`)
+      this.$alert(ncfST('Frontend.AgentsManager.PassedValueFailedValueNNValue', results.length - failedResults.length, failedResults.length, failedLines.join('\n')),
+        ncfST('Frontend.AgentsManager.RemoteATwoABatchTestResults'), { type: 'warning', confirmButtonText: ncfST('Frontend.AgentsManager.GotItAlternate') })
     },
     async getRemoteAgentListData(listType = 'remoteAgent') {
       const query = listType === 'groupRemoteAgent'
@@ -117,7 +117,7 @@ var AgentsAppMethodsRemoteAgent = {
         const response = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.GetList?${getInterfaceQueryStr(query)}`)
         const data = response?.data ?? {}
         if (!data.success) {
-          throw new Error(data.errorMessage || data.data || ncfST('Frontend.538'))
+          throw new Error(data.errorMessage || data.data || ncfST('Frontend.AgentsManager.FailedToLoadRemoteATwoAAgents'))
         }
 
         const list = data?.data?.list ?? []
@@ -134,7 +134,7 @@ var AgentsAppMethodsRemoteAgent = {
         }
       } catch (err) {
         console.log('getRemoteAgentListData', err)
-        this.$message.error(err?.message || ncfST('Frontend.538'))
+        this.$message.error(err?.message || ncfST('Frontend.AgentsManager.FailedToLoadRemoteATwoAAgents'))
       }
     },
     openRemoteAgentManager() {
@@ -145,7 +145,7 @@ var AgentsAppMethodsRemoteAgent = {
       const agent = item?.agentTemplateDto || item || this.agentForm
       const agentTemplateId = Number(agent?.id || agent?.agentTemplateId || 0)
       if (!agentTemplateId) {
-        this.$message.warning(ncfST('Frontend.539'))
+        this.$message.warning(ncfST('Frontend.AgentsManager.SaveTheLocalAgentBeforeConfiguringATwoAPublishing'))
         return
       }
 
@@ -154,7 +154,7 @@ var AgentsAppMethodsRemoteAgent = {
         const response = await serviceAM.get(
           `/api/Senparc.Xncf.AgentsManager/PublishedA2AAgentAppService/Xncf.AgentsManager_PublishedA2AAgentAppService.GetByAgentTemplateId?agentTemplateId=${agentTemplateId}`)
         const data = response?.data ?? {}
-        if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.540'))
+        if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.AgentsManager.FailedToLoadATwoAPublishingConfiguration'))
         const existed = data.data || {}
         this.$set(this, 'publishedA2AForm', {
           ...defaults,
@@ -167,7 +167,7 @@ var AgentsAppMethodsRemoteAgent = {
         this.visible.dialogPublishedA2A = true
         this.$nextTick(() => this.$refs.publishedA2AELForm?.clearValidate())
       } catch (err) {
-        this.$message.error(err?.message || ncfST('Frontend.540'))
+        this.$message.error(err?.message || ncfST('Frontend.AgentsManager.FailedToLoadATwoAPublishingConfiguration'))
       }
     },
     closePublishedA2AEditor() {
@@ -179,23 +179,23 @@ var AgentsAppMethodsRemoteAgent = {
         if (!valid) return
 
         if (this.publishedA2AForm.enable) {
-          const riskItems = [ncfST('Frontend.591'), ncfST('Frontend.592')]
+          const riskItems = [ncfST('Frontend.AgentsManager.AfterAnExternalSystemCallsThisServiceTheInputAndTheAgent'), ncfST('Frontend.AgentsManager.EachCallMayIncurModelAndToolCostsConfigureAccessControlRate')]
           if (this.publishedA2AForm.authenticationMode === 0) {
-            riskItems.push(ncfST('Frontend.593'))
+            riskItems.push(ncfST('Frontend.AgentsManager.InboundAuthenticationIsDisabledUseThisOnlyOnAnIsolatedControlledNetworkAlternate'))
           }
           if (this.publishedA2AForm.allowFunctionCalls) {
-            riskItems.push(ncfST('Frontend.594'))
+            riskItems.push(ncfST('Frontend.AgentsManager.LocalFunctionMCPToolCallsAreAllowedExternalInputMayIndirectlyTrigger'))
           }
 
           try {
             await this.$confirm(
-              `<div>${ncfST('Frontend.595')}</div><ul style="padding-left:20px;margin:10px 0 0;"><li>${riskItems.join('</li><li>')}</li></ul>`,
-              ncfST('Frontend.596'),
+              `<div>${ncfST('Frontend.AgentsManager.WhenEnabledThisLocalAgentAcceptsExternalCallsAsAStandardA')}</div><ul style="padding-left:20px;margin:10px 0 0;"><li>${riskItems.join('</li><li>')}</li></ul>`,
+              ncfST('Frontend.AgentsManager.ConfirmEnablingTheATwoAPublicService'),
               {
                 type: 'warning',
                 dangerouslyUseHTMLString: true,
-                confirmButtonText: ncfST('Frontend.597'),
-                cancelButtonText: ncfST('Frontend.598')
+                confirmButtonText: ncfST('Frontend.AgentsManager.IUnderstandAndSave'),
+                cancelButtonText: ncfST('Frontend.AgentsManager.Cancel')
               })
           } catch (_) {
             return
@@ -207,12 +207,12 @@ var AgentsAppMethodsRemoteAgent = {
             '/api/Senparc.Xncf.AgentsManager/PublishedA2AAgentAppService/Xncf.AgentsManager_PublishedA2AAgentAppService.SetPublishedAgent',
             this.publishedA2AForm)
           const data = response?.data ?? {}
-          if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.541'))
+          if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.AgentsManager.SaveFailed'))
           this.$set(this, 'publishedA2AForm', { ...this.publishedA2AForm, ...(data.data || {}) })
           await this.getAgentListData('agent')
-          this.$message.success(this.publishedA2AForm.enable ? ncfST('Frontend.542') : ncfST('Frontend.575'))
+          this.$message.success(this.publishedA2AForm.enable ? ncfST('Frontend.AgentsManager.RemoteATwoAAgentSaved') : ncfST('Frontend.AgentsManager.ATwoAPublishingConfigurationSavedCurrentlyDisabled'))
         } catch (err) {
-          this.$message.error(err?.message || ncfST('Frontend.543'))
+          this.$message.error(err?.message || ncfST('Frontend.AgentsManager.FailedToSaveRemoteATwoAAgent'))
         }
       })
     },
@@ -221,9 +221,9 @@ var AgentsAppMethodsRemoteAgent = {
       if (!url) return
       try {
         await navigator.clipboard.writeText(url)
-        this.$message.success(ncfST('Frontend.544'))
+        this.$message.success(ncfST('Frontend.AgentsManager.ATwoAAgentCardConnectionSucceeded'))
       } catch (err) {
-        this.$message.warning(ncfST('Frontend.576'))
+        this.$message.warning(ncfST('Frontend.AgentsManager.CopyFailedCopyTheAddressManually'))
       }
     },
     openRemoteAgentEditor(item = null) {
@@ -244,13 +244,13 @@ var AgentsAppMethodsRemoteAgent = {
             '/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.SetRemoteAgent',
             this.remoteAgentForm)
           const data = response?.data ?? {}
-          if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.541'))
-          this.$message.success(ncfST('Frontend.542'))
+          if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.AgentsManager.SaveFailed'))
+          this.$message.success(ncfST('Frontend.AgentsManager.RemoteATwoAAgentSaved'))
           this.closeRemoteAgentEditor()
           await this.getRemoteAgentListData()
           if (this.visible.drawerGroup) await this.getRemoteAgentListData('groupRemoteAgent')
         } catch (err) {
-          this.$message.error(err?.message || ncfST('Frontend.543'))
+          this.$message.error(err?.message || ncfST('Frontend.AgentsManager.FailedToSaveRemoteATwoAAgent'))
         }
       })
     },
@@ -259,12 +259,12 @@ var AgentsAppMethodsRemoteAgent = {
         const results = await this.testRemoteAgentConnections([item?.id], { silent: true, refreshLists: true })
         const result = results[0]
         if (!result?.success) {
-          this.$message.error(result?.message || ncfST('Frontend.533'))
+          this.$message.error(result?.message || ncfST('Frontend.AgentsManager.ConnectionTestFailedAlternate'))
           return
         }
-        this.$message.success(result.message || ncfST('Frontend.544'))
+        this.$message.success(result.message || ncfST('Frontend.AgentsManager.ATwoAAgentCardConnectionSucceeded'))
       } catch (err) {
-        this.$message.error(err?.message || ncfST('Frontend.533'))
+        this.$message.error(err?.message || ncfST('Frontend.AgentsManager.ConnectionTestFailedAlternate'))
       }
     },
     async testAllRemoteAgents() {
@@ -272,7 +272,7 @@ var AgentsAppMethodsRemoteAgent = {
         const results = await this.testRemoteAgentConnections([], { testAll: true, silent: true, refreshLists: true })
         this.showRemoteAgentTestSummary(results)
       } catch (err) {
-        this.$message.error(err?.message || ncfST('Frontend.545'))
+        this.$message.error(err?.message || ncfST('Frontend.AgentsManager.BatchConnectionTestFailed'))
       }
     },
     async autoTestRemoteParticipants(participants) {
@@ -285,7 +285,7 @@ var AgentsAppMethodsRemoteAgent = {
         const results = await this.testRemoteAgentConnections(remoteAgentIds, { silent: true })
         const failedCount = results.filter(result => !result.success).length
         if (failedCount) {
-          this.$message.warning(ncfST('Frontend.577', failedCount))
+          this.$message.warning(ncfST('Frontend.AgentsManager.ValueRemoteATwoAAgentsAreUnavailableRetryThemManuallyFrom', failedCount))
         }
         return results
       } catch (err) {
@@ -298,12 +298,12 @@ var AgentsAppMethodsRemoteAgent = {
         const results = await this.testRemoteAgentConnections([participant?.id], { silent: true })
         const result = results[0]
         if (result?.success) {
-          this.$message.success(result.message || ncfST('Frontend.544'))
+          this.$message.success(result.message || ncfST('Frontend.AgentsManager.ATwoAAgentCardConnectionSucceeded'))
         } else {
-          this.$message.error(result?.message || ncfST('Frontend.533'))
+          this.$message.error(result?.message || ncfST('Frontend.AgentsManager.ConnectionTestFailedAlternate'))
         }
       } catch (err) {
-        this.$message.error(err?.message || ncfST('Frontend.533'))
+        this.$message.error(err?.message || ncfST('Frontend.AgentsManager.ConnectionTestFailedAlternate'))
       }
     },
     async testTaskRemoteAgent(participant) {
@@ -311,12 +311,12 @@ var AgentsAppMethodsRemoteAgent = {
         const results = await this.testRemoteAgentConnections([participant?.id], { silent: true })
         const result = results[0]
         if (result?.success) {
-          this.$message.success(result.message || ncfST('Frontend.544'))
+          this.$message.success(result.message || ncfST('Frontend.AgentsManager.ATwoAAgentCardConnectionSucceeded'))
         } else {
-          this.$message.error(result?.message || ncfST('Frontend.533'))
+          this.$message.error(result?.message || ncfST('Frontend.AgentsManager.ConnectionTestFailedAlternate'))
         }
       } catch (err) {
-        this.$message.error(err?.message || ncfST('Frontend.533'))
+        this.$message.error(err?.message || ncfST('Frontend.AgentsManager.ConnectionTestFailedAlternate'))
       }
     },
     async setRemoteAgentEnable(item, enable) {
@@ -325,28 +325,28 @@ var AgentsAppMethodsRemoteAgent = {
           `/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.Enable?id=${item.id}&enable=${enable}`,
           {})
         const data = response?.data ?? {}
-        if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.546'))
-        this.$message.success(data.data || ncfST('Frontend.547'))
+        if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.AgentsManager.StatusUpdateFailed'))
+        this.$message.success(data.data || ncfST('Frontend.AgentsManager.StatusUpdated'))
         await this.getRemoteAgentListData()
         if (this.visible.drawerGroup) await this.getRemoteAgentListData('groupRemoteAgent')
       } catch (err) {
-        this.$message.error(err?.message || ncfST('Frontend.546'))
+        this.$message.error(err?.message || ncfST('Frontend.AgentsManager.StatusUpdateFailed'))
       }
     },
     deleteRemoteAgent(item) {
-      this.$confirm(ncfST('Frontend.549', item.name), ncfST('Frontend.548'), { type: 'warning' })
+      this.$confirm(ncfST('Frontend.AgentsManager.DeleteRemoteATwoAAgentValueAgentsAlreadyInAGroup', item.name), ncfST('Frontend.AgentsManager.ConfirmDeletion'), { type: 'warning' })
         .then(async () => {
           try {
             const response = await serviceAM.post(
               `/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.Delete?id=${item.id}`,
               {})
             const data = response?.data ?? {}
-            if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.550'))
-            this.$message.success(data.data || ncfST('Frontend.551'))
+            if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.AgentsManager.DeleteFailed'))
+            this.$message.success(data.data || ncfST('Frontend.AgentsManager.Deleted'))
             await this.getRemoteAgentListData()
             if (this.visible.drawerGroup) await this.getRemoteAgentListData('groupRemoteAgent')
           } catch (err) {
-            this.$message.error(err?.message || ncfST('Frontend.550'))
+            this.$message.error(err?.message || ncfST('Frontend.AgentsManager.DeleteFailed'))
           }
         })
         .catch(() => { })

@@ -28,6 +28,9 @@ using Senparc.Ncf.Core.Localization;
 
 namespace Senparc.Ncf.Core.Validator
 {
+    /// <summary>
+    /// Carries a value through fluent validation rules while collecting errors in MVC ModelState.
+    /// </summary>
     public class ValidatorContainer<T>
     {
         //private List<string> _errorList;
@@ -50,6 +53,13 @@ namespace Senparc.Ncf.Core.Validator
         //    }
         //}
 
+        /// <summary>
+        /// Initializes a validation container for one value and ModelState field.
+        /// </summary>
+        /// <param name="validatorEnvironment">The validation environment and ModelState owner.</param>
+        /// <param name="validatorEnvironmentObject">The value being validated.</param>
+        /// <param name="valueName">The display name used in messages.</param>
+        /// <param name="htmlName">The ModelState key.</param>
         public ValidatorContainer(IValidatorEnvironment validatorEnvironment, T validatorEnvironmentObject, string valueName, string htmlName)
         {
             ValidatorObject = validatorEnvironmentObject;
@@ -62,9 +72,9 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Adds a ModelState error and marks this validation container invalid.
         /// </summary>
-        /// <param name="errorMessage"></param>
+        /// <param name="errorMessage">The message recorded for the field.</param>
         public void AddError(string errorMessage)
         {
             this.ModelState.AddModelError(this.HtmlName, errorMessage);
@@ -74,20 +84,30 @@ namespace Senparc.Ncf.Core.Validator
 
     public static class ValidatorExtension
     {
+        /// <summary>
+        /// Creates a validation container without optional null/empty short-circuit behavior.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="validatorEnvironment">The validation environment.</param>
+        /// <param name="validatorEnvironmentObject">The value to validate.</param>
+        /// <param name="valueName">The display name used in errors.</param>
+        /// <param name="htmlName">The ModelState key.</param>
+        /// <returns>A validation container.</returns>
         public static ValidatorContainer<T> Validator<T>(this IValidatorEnvironment validatorEnvironment, T validatorEnvironmentObject, string valueName, string htmlName)
         {
             return Validator<T>(validatorEnvironment, validatorEnvironmentObject, valueName, htmlName, null);
         }
 
         /// <summary>
-        /// 
+        /// Creates a validation container and optionally treats null/empty values as an immediate condition.
         /// </summary>
-        /// <param name="validatorEnvironment"></param>
-        /// <param name="validatorEnvironmentObject"></param>
-        /// <param name="valueName"></param>
-        /// <param name="htmlName"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="validatorEnvironment">The validation environment.</param>
+        /// <param name="validatorEnvironmentObject">The value to validate.</param>
+        /// <param name="valueName">The display name used in errors.</param>
+        /// <param name="htmlName">The ModelState key.</param>
+        /// <param name="nullOrEmptyable">When true, returns null for empty values; when false, adds a required error.</param>
+        /// <returns>A validation container, or null when the configured short-circuit applies.</returns>
         public static ValidatorContainer<T> Validator<T>(this IValidatorEnvironment validatorEnvironment, T validatorEnvironmentObject, string valueName, string htmlName, bool? nullOrEmptyable = null)
         {
             if (validatorEnvironment.ModelState[htmlName] != null
@@ -116,11 +136,24 @@ namespace Senparc.Ncf.Core.Validator
         }
 
 
+        /// <summary>
+        /// Requires the container value to be non-null and non-whitespace.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <returns>The container, or null when validation fails with stop enabled.</returns>
         public static ValidatorContainer<T> NotNullOrEmpty<T>(this ValidatorContainer<T> container)
         {
             return NotNullOrEmpty(container, true);
         }
 
+        /// <summary>
+        /// Requires the container value to be non-null and non-whitespace.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after adding an error.</param>
+        /// <returns>The container, or null when <paramref name="stopWhileFail"/> is true and validation fails.</returns>
         public static ValidatorContainer<T> NotNullOrEmpty<T>(this ValidatorContainer<T> container, bool stopWhileFail)
         {
             if (container == null)
@@ -143,6 +176,15 @@ namespace Senparc.Ncf.Core.Validator
         }
 
 
+        /// <summary>
+        /// Adds an error when the supplied predicate returns false.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="func">The predicate evaluated against the container value.</param>
+        /// <param name="failMessageFormat">The format string used for the error.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> IsTrue<T>(this ValidatorContainer<T> container, Func<T, bool> func, string failMessageFormat, bool stopWhileFail)
         {
             if (container == null)
@@ -163,6 +205,15 @@ namespace Senparc.Ncf.Core.Validator
             return container;
         }
 
+        /// <summary>
+        /// Adds an error when the supplied predicate returns true.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="func">The predicate evaluated against the container value.</param>
+        /// <param name="failMessageFormat">The format string used for the error.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> IsFalse<T>(this ValidatorContainer<T> container, Func<T, bool> func, string failMessageFormat, bool stopWhileFail)
         {
             if (container == null)
@@ -184,13 +235,13 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Unconditionally adds a formatted validation error.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="container"></param>
-        /// <param name="failMessageFormat"></param>
-        /// <param name="stopWhileFail"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="failMessageFormat">The format string used for the error.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> Fail<T>(this ValidatorContainer<T> container, string failMessageFormat, bool stopWhileFail)
         {
             if (container == null)
@@ -208,6 +259,15 @@ namespace Senparc.Ncf.Core.Validator
             return container;
         }
 
+        /// <summary>
+        /// Validates the value against a case-insensitive single-line regular expression.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="expression">The regular expression.</param>
+        /// <param name="failMessageFormat">The format string used for the error.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> Regex<T>(this ValidatorContainer<T> container, string expression, string failMessageFormat, bool stopWhileFail)
         {
             if (container == null)
@@ -229,12 +289,12 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Rejects characters commonly treated as unsafe in SQL-like input.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="container"></param>
-        /// <param name="stopWhileFail"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> IsSafeSqlString<T>(this ValidatorContainer<T> container, bool stopWhileFail)
         {
             if (container == null)
@@ -256,12 +316,12 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Rejects unsafe account/user-name characters and reserved identity words.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="container"></param>
-        /// <param name="stopWhileFail"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> IsSafeUserInfoString<T>(this ValidatorContainer<T> container, bool stopWhileFail)
         {
             if (container == null)
@@ -282,6 +342,14 @@ namespace Senparc.Ncf.Core.Validator
             return container;
         }
 
+        /// <summary>
+        /// Applies the legacy user-name rules for full-width spaces, spaces, colons,
+        /// and disallowed punctuation.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> IsValidateUserInfoName<T>(this ValidatorContainer<T> container, bool stopWhileFail)
         {
             if (container == null)
@@ -330,10 +398,23 @@ namespace Senparc.Ncf.Core.Validator
             return container;
         }
 
+        /// <summary>
+        /// Validates the value using the built-in email format rule.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <returns>The container, or null when the default rule stops the chain.</returns>
         public static ValidatorContainer<T> IsEmail<T>(this ValidatorContainer<T> container)
         {
             return IsEmail(container, true);
         }
+        /// <summary>
+        /// Validates the value using the built-in email format rule.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> IsEmail<T>(this ValidatorContainer<T> container, bool stopWhileFail)
         {
             return Regex(container,
@@ -341,6 +422,13 @@ namespace Senparc.Ncf.Core.Validator
                 NcfCoreResource.Get("Validator.Email", "请在{0}中填写正确的Email地址！"), stopWhileFail);
         }
 
+        /// <summary>
+        /// Validates the value as a mobile phone number using the built-in format rule.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> IsMobile<T>(this ValidatorContainer<T> container, bool stopWhileFail)
         {
             //Legacy comment translated to English.
@@ -351,11 +439,24 @@ namespace Senparc.Ncf.Core.Validator
             return Regex(container, @"^(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$", NcfCoreResource.Get("Validator.Phone", "请填写正确的电话号码！"), stopWhileFail);
         }
 
+        /// <summary>
+        /// Validates the value as an IP address.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <returns>The container, or null when the default rule stops the chain.</returns>
         public static ValidatorContainer<T> IsIPAddress<T>(this ValidatorContainer<T> container)
         {
             return IsIPAddress(container, true);
         }
 
+        /// <summary>
+        /// Validates the value as an IP address.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> IsIPAddress<T>(this ValidatorContainer<T> container, bool stopWhileFail)
         {
             return Regex<T>(container,
@@ -363,16 +464,38 @@ namespace Senparc.Ncf.Core.Validator
                 NcfCoreResource.Get("Validator.Ip", "请在{0}中填写正确的IP地址！"), stopWhileFail);
         }
 
+        /// <summary>
+        /// Validates that the value is an available URL under the configured URL rule.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> IsAvailableUrl<T>(this ValidatorContainer<T> container, bool stopWhileFail)
         {
             return Regex(container, @"HTTP(S)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?", NcfCoreResource.Get("Validator.Url", "请在{0}中填写正确的Url地址！"), stopWhileFail);
         }
 
 
+        /// <summary>
+        /// Requires the UTF-8 byte length of the value to be at most <paramref name="maxByte"/>.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="maxByte">The maximum UTF-8 byte count.</param>
+        /// <returns>The container, or null when the default rule stops the chain.</returns>
         public static ValidatorContainer<T> MaxByte<T>(this ValidatorContainer<T> container, int maxByte)
         {
             return MaxByte(container, maxByte, true);
         }
+        /// <summary>
+        /// Requires the UTF-8 byte length of the value to be at most <paramref name="maxByte"/>.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="maxByte">The maximum UTF-8 byte count.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> MaxByte<T>(this ValidatorContainer<T> container, int maxByte, bool stopWhileFail)
         {
             if (container == null)
@@ -392,10 +515,25 @@ namespace Senparc.Ncf.Core.Validator
             return container;
         }
 
+        /// <summary>
+        /// Requires the string representation length to be at most <paramref name="maxLength"/>.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="maxLength">The maximum character length.</param>
+        /// <returns>The container, or null when the default rule stops the chain.</returns>
         public static ValidatorContainer<T> MaxLength<T>(this ValidatorContainer<T> container, int maxLength)
         {
             return MaxLength(container, maxLength, true);
         }
+        /// <summary>
+        /// Requires the string representation length to be at most <paramref name="maxLength"/>.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="maxLength">The maximum character length.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> MaxLength<T>(this ValidatorContainer<T> container, int maxLength, bool stopWhileFail)
         {
             if (container == null)
@@ -416,10 +554,25 @@ namespace Senparc.Ncf.Core.Validator
         }
 
 
+        /// <summary>
+        /// Requires the UTF-8 byte length of the value to be at least <paramref name="minByte"/>.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="minByte">The minimum UTF-8 byte count.</param>
+        /// <returns>The container, or null when the default rule stops the chain.</returns>
         public static ValidatorContainer<T> MinByte<T>(this ValidatorContainer<T> container, int minByte)
         {
             return MinByte(container, minByte, true);
         }
+        /// <summary>
+        /// Requires the UTF-8 byte length of the value to be at least <paramref name="minByte"/>.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="minByte">The minimum UTF-8 byte count.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> MinByte<T>(this ValidatorContainer<T> container, int minByte, bool stopWhileFail)
         {
             if (container == null)
@@ -440,10 +593,25 @@ namespace Senparc.Ncf.Core.Validator
         }
 
 
+        /// <summary>
+        /// Requires the string representation length to be at least <paramref name="minLength"/>.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="minLength">The minimum character length.</param>
+        /// <returns>The container, or null when the default rule stops the chain.</returns>
         public static ValidatorContainer<T> MinLength<T>(this ValidatorContainer<T> container, int minLength)
         {
             return MinLength(container, minLength, true);
         }
+        /// <summary>
+        /// Requires the string representation length to be at least <paramref name="minLength"/>.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="minLength">The minimum character length.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> MinLength<T>(this ValidatorContainer<T> container, int minLength, bool stopWhileFail)
         {
             if (container == null)
@@ -464,6 +632,15 @@ namespace Senparc.Ncf.Core.Validator
         }
 
 
+        /// <summary>
+        /// Requires the validated value to equal the supplied comparison value.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="obj">The comparison value.</param>
+        /// <param name="failMessageFormat">The format string used for the error.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> IsEqual<T>(this ValidatorContainer<T> container, T obj, string failMessageFormat, bool stopWhileFail)
         {
             if (container == null)
@@ -483,6 +660,15 @@ namespace Senparc.Ncf.Core.Validator
             return container;
         }
 
+        /// <summary>
+        /// Requires the validated value not to equal the supplied comparison value.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="obj">The comparison value.</param>
+        /// <param name="failMessageFormat">The format string used for the error.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> IsNotEqual<T>(this ValidatorContainer<T> container, T obj, string failMessageFormat, bool stopWhileFail)
         {
             if (container == null)
@@ -502,10 +688,25 @@ namespace Senparc.Ncf.Core.Validator
             return container;
         }
 
+        /// <summary>
+        /// Rejects values containing any of the supplied excluded substrings.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="excludeStrings">Substrings that must not occur in the value.</param>
+        /// <returns>The container, or null when the default rule stops the chain.</returns>
         public static ValidatorContainer<T> Exclude<T>(this ValidatorContainer<T> container, string[] excludeStrings)
         {
             return Exclude(container, excludeStrings, true);
         }
+        /// <summary>
+        /// Rejects values containing any of the supplied excluded substrings.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="excludeStrings">Substrings that must not occur in the value.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> Exclude<T>(this ValidatorContainer<T> container, string[] excludeStrings, bool stopWhileFail)
         {
             if (container == null)
@@ -530,6 +731,15 @@ namespace Senparc.Ncf.Core.Validator
             return container;
         }
 
+        /// <summary>
+        /// Validates that the value parses as a number inside optional inclusive bounds.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="min">Optional minimum numeric value.</param>
+        /// <param name="max">Optional maximum numeric value.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> IsNumber<T>(this ValidatorContainer<T> container, float? min, float? max, bool stopWhileFail)
         {
             if (container == null)
@@ -558,6 +768,14 @@ namespace Senparc.Ncf.Core.Validator
         /// <param name="checkCodeKind"></param>
         /// <param name="stopWhileFail"></param>
         /// <returns></returns>
+        /// <summary>
+        /// Validates a check-code value using the configured check-code kind.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="checkCodeKind">The expected check-code kind.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> ValidateCheckCode<T>(this ValidatorContainer<T> container, CheckCodeKind checkCodeKind, bool stopWhileFail)
         {
             if (container == null)
@@ -588,6 +806,15 @@ namespace Senparc.Ncf.Core.Validator
         }
 
 
+        /// <summary>
+        /// Requires the supplied object to be null.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="obj">The object whose null state is checked.</param>
+        /// <param name="failMessageFormat">The format string used for the error.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> IsNull<T>(this ValidatorContainer<T> container, object obj, string failMessageFormat, bool stopWhileFail)
         {
             if (container == null)
@@ -607,6 +834,15 @@ namespace Senparc.Ncf.Core.Validator
             return container;
         }
 
+        /// <summary>
+        /// Requires the supplied object not to be null.
+        /// </summary>
+        /// <typeparam name="T">The validated value type.</typeparam>
+        /// <param name="container">The validation container.</param>
+        /// <param name="obj">The object whose null state is checked.</param>
+        /// <param name="failMessageFormat">The format string used for the error.</param>
+        /// <param name="stopWhileFail">Whether to stop the fluent chain after failure.</param>
+        /// <returns>The container, or null when stopping after failure.</returns>
         public static ValidatorContainer<T> IsNotNull<T>(this ValidatorContainer<T> container, object obj, string failMessageFormat, bool stopWhileFail)
         {
             if (container == null)

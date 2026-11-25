@@ -51,6 +51,17 @@ using WorkflowExecutionLog = Senparc.Xncf.NeuCharWorkflow.Domain.Models.Database
 
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
+/// <summary>
+/// Describes one progress event emitted by a workflow run.
+/// </summary>
+/// <param name="Sequence">A monotonically increasing sequence number within the run.</param>
+/// <param name="NodeId">The identifier of the workflow node that emitted the event.</param>
+/// <param name="NodeName">The display name of the workflow node.</param>
+/// <param name="Status">The node or execution status associated with the event.</param>
+/// <param name="Message">The bounded human-readable progress message.</param>
+/// <param name="Output">The bounded output associated with the progress event.</param>
+/// <param name="Timestamp">The UTC timestamp at which the event was recorded.</param>
+/// <param name="OutputSchema">The optional bounded output schema produced by the node.</param>
 public sealed record NeuCharWorkflowRunEvent(
     long Sequence,
     string NodeId,
@@ -61,6 +72,18 @@ public sealed record NeuCharWorkflowRunEvent(
     DateTimeOffset Timestamp,
     string? OutputSchema = null);
 
+/// <summary>
+/// Represents the owner-scoped state and incremental progress of a workflow run.
+/// </summary>
+/// <param name="RunId">The unique identifier of the run.</param>
+/// <param name="WorkflowId">The identifier of the workflow being executed.</param>
+/// <param name="Running">Indicates whether execution is still in progress.</param>
+/// <param name="Succeeded">The completed result, or <see langword="null"/> while unfinished.</param>
+/// <param name="ErrorMessage">The bounded failure or cancellation message, when available.</param>
+/// <param name="FinalOutput">The bounded final workflow output.</param>
+/// <param name="Events">Progress events after the requested sequence boundary.</param>
+/// <param name="HumanInteractions">Pending human-interaction requests associated with the run.</param>
+/// <param name="RunningCount">The number of active runs for the same owner and workflow.</param>
 public sealed record NeuCharWorkflowRunSnapshot(
     Guid RunId,
     int WorkflowId,
@@ -73,8 +96,16 @@ public sealed record NeuCharWorkflowRunSnapshot(
     int RunningCount = 0);
 
 /// <summary>
-///Legacy comment translated to English.
+/// Represents one active workflow execution and its bounded progress history.
 /// </summary>
+/// <param name="RunId">The unique identifier of the run.</param>
+/// <param name="WorkflowId">The identifier of the workflow being executed.</param>
+/// <param name="Source">The normalized trigger source used to start the run.</param>
+/// <param name="StartedAt">The UTC timestamp at which the run was registered.</param>
+/// <param name="LastNodeName">The most recent node name, when progress has been reported.</param>
+/// <param name="LastStatus">The most recent node status, when progress has been reported.</param>
+/// <param name="LastMessage">The most recent bounded progress message, when available.</param>
+/// <param name="LastUpdatedAt">The timestamp of the most recent progress event, when available.</param>
 public sealed record NeuCharWorkflowActiveRun(
     Guid RunId,
     int WorkflowId,
@@ -96,6 +127,14 @@ public sealed class NeuCharWorkflowRunCoordinator
         private readonly CancellationTokenSource _manualAbort = new();
         private long _sequence;
 
+        /// <summary>
+        /// Initializes mutable state for one workflow execution.
+        /// </summary>
+        /// <param name="runId">The unique identifier assigned to the execution.</param>
+        /// <param name="workflowId">The workflow identifier.</param>
+        /// <param name="adminUserId">The owner identifier used for access scoping.</param>
+        /// <param name="input">The input supplied to the workflow.</param>
+        /// <param name="source">The normalized execution source.</param>
         public RunState(Guid runId, int workflowId, int adminUserId, string input, string source)
         {
             RunId = runId;
@@ -106,6 +145,16 @@ public sealed class NeuCharWorkflowRunCoordinator
             StartedAt = DateTimeOffset.UtcNow;
         }
 
+        /// <summary>
+        /// Creates a run state and associates the optional tenant snapshot with it.
+        /// </summary>
+        /// <param name="runId">The unique identifier assigned to the execution.</param>
+        /// <param name="workflowId">The workflow identifier.</param>
+        /// <param name="adminUserId">The owner identifier used for access scoping.</param>
+        /// <param name="input">The input supplied to the workflow.</param>
+        /// <param name="source">The normalized execution source.</param>
+        /// <param name="tenant">The tenant context to restore before execution, if any.</param>
+        /// <returns>A new mutable run state.</returns>
         public static RunState Create(
             Guid runId,
             int workflowId,
@@ -135,6 +184,14 @@ public sealed class NeuCharWorkflowRunCoordinator
         public bool IsManuallyAborted { get; private set; }
         public CancellationToken ManualAbortToken => _manualAbort.Token;
 
+        /// <summary>
+        /// Requests cooperative cancellation and records the abort request exactly once.
+        /// </summary>
+        /// <param name="error">Receives a reason when the run cannot be aborted.</param>
+        /// <returns>
+        /// <see langword="true"/> when cancellation was accepted or had already been requested;
+        /// otherwise, <see langword="false"/> when the run had already completed.
+        /// </returns>
         public bool TryAbort(out string? error)
         {
             lock (_gate)
@@ -165,6 +222,10 @@ public sealed class NeuCharWorkflowRunCoordinator
             return true;
         }
 
+        /// <summary>
+        /// Gets the localized marker used by workflow execution and persistence to detect manual aborts.
+        /// </summary>
+        /// <returns>The marker text when an abort was requested; otherwise, <see langword="null"/>.</returns>
         public string? GetManualAbortResult()
         {
             lock (_gate)
@@ -173,6 +234,10 @@ public sealed class NeuCharWorkflowRunCoordinator
             }
         }
 
+        /// <summary>
+        /// Appends one progress event and removes the oldest events beyond the live history limit.
+        /// </summary>
+        /// <param name="progress">The progress payload to convert into a bounded run event.</param>
         public void Add(NeuCharWorkflowProgress progress)
         {
             lock (_gate)
@@ -193,6 +258,12 @@ public sealed class NeuCharWorkflowRunCoordinator
             }
         }
 
+        /// <summary>
+        /// Marks the run as finished and stores bounded completion data.
+        /// </summary>
+        /// <param name="succeeded">Whether the workflow completed successfully.</param>
+        /// <param name="output">The final workflow output, if available.</param>
+        /// <param name="error">The failure or cancellation message, if any.</param>
         public void Complete(bool succeeded, string? output, string? error)
         {
             lock (_gate)
@@ -204,6 +275,11 @@ public sealed class NeuCharWorkflowRunCoordinator
             }
         }
 
+        /// <summary>
+        /// Creates an incremental snapshot containing events newer than a sequence boundary.
+        /// </summary>
+        /// <param name="afterSequence">The last sequence already consumed by the caller.</param>
+        /// <returns>A consistent snapshot of the current run state.</returns>
         public NeuCharWorkflowRunSnapshot Snapshot(long afterSequence)
         {
             lock (_gate)
@@ -219,6 +295,10 @@ public sealed class NeuCharWorkflowRunCoordinator
             }
         }
 
+        /// <summary>
+        /// Projects the state into the compact representation used by active-run listings.
+        /// </summary>
+        /// <returns>The current active-run summary.</returns>
         public NeuCharWorkflowActiveRun ToActiveRun()
         {
             lock (_gate)
@@ -236,6 +316,12 @@ public sealed class NeuCharWorkflowRunCoordinator
             }
         }
 
+        /// <summary>
+        /// Bounds a nullable text value so live run state cannot grow without limit.
+        /// </summary>
+        /// <param name="value">The text to bound.</param>
+        /// <param name="maxLength">The maximum number of characters to retain.</param>
+        /// <returns>The original value when within the limit, or a truncated value.</returns>
         private static string? Limit(string? value, int maxLength) =>
             string.IsNullOrEmpty(value) || value.Length <= maxLength
                 ? value
@@ -248,6 +334,12 @@ public sealed class NeuCharWorkflowRunCoordinator
     private readonly IHostApplicationLifetime _applicationLifetime;
     private readonly ILogger<NeuCharWorkflowRunCoordinator> _logger;
 
+    /// <summary>
+    /// Initializes the in-process workflow run coordinator.
+    /// </summary>
+    /// <param name="scopeFactory">Factory used to execute runs in isolated scopes.</param>
+    /// <param name="applicationLifetime">Host lifetime used for shutdown cancellation.</param>
+    /// <param name="logger">Coordinator logger.</param>
     public NeuCharWorkflowRunCoordinator(
         IServiceScopeFactory scopeFactory,
         IHostApplicationLifetime applicationLifetime,
@@ -258,6 +350,17 @@ public sealed class NeuCharWorkflowRunCoordinator
         _logger = logger;
     }
 
+    /// <summary>
+    /// Registers and begins a background workflow run.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="adminUserId">The workflow owner identifier.</param>
+    /// <param name="input">The workflow input.</param>
+    /// <param name="runId">Receives the assigned run identifier.</param>
+    /// <param name="error">Receives a scheduling error when startup fails.</param>
+    /// <param name="source">The trigger source label.</param>
+    /// <param name="tenant">Optional tenant snapshot restored for execution.</param>
+    /// <returns><see langword="true"/> when the run is registered.</returns>
     public bool TryStart(
         int workflowId,
         int adminUserId,
@@ -285,6 +388,13 @@ public sealed class NeuCharWorkflowRunCoordinator
         }
     }
 
+    /// <summary>
+    /// Gets an owner-scoped run snapshot containing events after the supplied sequence.
+    /// </summary>
+    /// <param name="runId">The run identifier.</param>
+    /// <param name="adminUserId">The workflow owner identifier.</param>
+    /// <param name="afterSequence">The last sequence already consumed.</param>
+    /// <returns>The snapshot, or <see langword="null"/> when missing/not owned.</returns>
     public NeuCharWorkflowRunSnapshot? GetSnapshot(Guid runId, int adminUserId, long afterSequence)
     {
         if (!_runs.TryGetValue(runId, out var state) || state.AdminUserId != adminUserId)
@@ -298,6 +408,13 @@ public sealed class NeuCharWorkflowRunCoordinator
         };
     }
 
+    /// <summary>
+    /// Requests cooperative cancellation for an owner-scoped active run.
+    /// </summary>
+    /// <param name="runId">The run identifier.</param>
+    /// <param name="adminUserId">The workflow owner identifier.</param>
+    /// <param name="error">Receives an error when the run cannot be aborted.</param>
+    /// <returns><see langword="true"/> when the run exists and abort was requested.</returns>
     public bool TryAbort(Guid runId, int adminUserId, out string? error)
     {
         if (!_runs.TryGetValue(runId, out var state) || state.AdminUserId != adminUserId)
@@ -308,6 +425,11 @@ public sealed class NeuCharWorkflowRunCoordinator
         return state.TryAbort(out error);
     }
 
+    /// <summary>
+    /// Returns active runs owned by an administrator.
+    /// </summary>
+    /// <param name="adminUserId">The workflow owner identifier.</param>
+    /// <returns>Active run summaries ordered newest first.</returns>
     public IReadOnlyList<NeuCharWorkflowActiveRun> GetActiveRuns(int adminUserId)
     {
         Cleanup();
@@ -318,6 +440,12 @@ public sealed class NeuCharWorkflowRunCoordinator
             .ToList();
     }
 
+    /// <summary>
+    /// Counts active runs owned by an administrator for one workflow.
+    /// </summary>
+    /// <param name="adminUserId">The workflow owner identifier.</param>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <returns>The active run count.</returns>
     public int GetActiveRunCount(int adminUserId, int workflowId)
     {
         if (workflowId <= 0)
@@ -332,6 +460,14 @@ public sealed class NeuCharWorkflowRunCoordinator
             z.Running);
     }
 
+    /// <summary>
+    /// Restores the captured execution scope, validates the workflow, runs it, and persists its outcome.
+    /// </summary>
+    /// <param name="state">The mutable state describing the scheduled run.</param>
+    /// <remarks>
+    /// Execution is bounded by application shutdown, manual abort, and a ten-minute timeout.
+    /// Exceptions are converted into a failed run state so background execution does not escape to the caller.
+    /// </remarks>
     private async Task ExecuteAsync(RunState state)
     {
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(
@@ -341,8 +477,7 @@ public sealed class NeuCharWorkflowRunCoordinator
         try
         {
             using var scope = _scopeFactory.CreateScope();
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
+            // Restore the captured tenant before resolving tenant-aware workflow services.
             state.Tenant?.Restore(scope.ServiceProvider);
             var workflowService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowService>();
             var executionLogService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowExecutionLogService>();
@@ -414,6 +549,14 @@ public sealed class NeuCharWorkflowRunCoordinator
         }
     }
 
+    /// <summary>
+    /// Persists a consistent failed completion when a run is aborted before engine execution begins.
+    /// </summary>
+    /// <param name="workflow">The workflow entity whose runtime state must be completed.</param>
+    /// <param name="workflowService">The service used to persist workflow runtime state.</param>
+    /// <param name="executionLogService">The service used to persist the execution log.</param>
+    /// <param name="state">The run state receiving the same completion result.</param>
+    /// <returns>A task representing the persistence operations.</returns>
     private static async Task CompleteManualAbortBeforeExecutionAsync(
         WorkflowEntity workflow,
         NeuCharWorkflowService workflowService,
@@ -433,6 +576,9 @@ public sealed class NeuCharWorkflowRunCoordinator
         state.Complete(false, message, message);
     }
 
+    /// <summary>
+    /// Removes completed runs outside the retention window and caps the in-memory run registry.
+    /// </summary>
     private void Cleanup()
     {
         var cutoff = DateTimeOffset.UtcNow.AddHours(-2);
@@ -453,6 +599,11 @@ public sealed class NeuCharWorkflowRunCoordinator
         }
     }
 
+    /// <summary>
+    /// Maps an external trigger label to one of the coordinator's supported source values.
+    /// </summary>
+    /// <param name="source">The caller-provided trigger label.</param>
+    /// <returns>A normalized source value; unknown or empty labels become <c>manual</c>.</returns>
     private static string NormalizeSource(string source) => source?.Trim().ToLowerInvariant() switch
     {
         "webhook" => "webhook",

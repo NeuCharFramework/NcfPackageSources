@@ -46,6 +46,12 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.19.4 Integrated localization, tooling, and runtime improvements across the module.
+
+    Modified by: Senparc - 20261125
+    Change description: v0.19.4 Improved Agent group command parameter selection and conversation loading.
+
 ----------------------------------------------------------------*/
 
 using A2A.AspNetCore;
@@ -73,9 +79,11 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.AgentsManager.Abstractions;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
+using Senparc.Ncf.Core.Localization;
 using Senparc.Ncf.Shared.Abstractions.ChatAgent;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -177,6 +185,7 @@ namespace Senparc.Xncf.AgentsManager
             services.AddSingleton<INeuBellProvider>(serviceProvider =>
                 serviceProvider.GetRequiredService<AgentsManagerNeuBellProvider>());
             services.AddScoped<ChatGroupService>();
+            AddChatToolServices(services);
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();
             services.AddScoped<ChatGroupMemberService>();

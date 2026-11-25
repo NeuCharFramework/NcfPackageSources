@@ -45,6 +45,11 @@ namespace Senparc.Ncf.Database.Sqlite
         //}
 
 
+        /// <summary>
+        /// Resolves a relative SQLite filename against the NCF root directory.
+        /// </summary>
+        /// <param name="connectionString">The SQLite connection string to normalize.</param>
+        /// <returns>The connection string with a rooted filename when a relative filename is used.</returns>
         internal static string GetLocalConnectionString(string connectionString)
         {
             //Legacy comment translated to English.

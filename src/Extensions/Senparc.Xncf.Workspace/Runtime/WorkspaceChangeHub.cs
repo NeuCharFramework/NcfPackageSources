@@ -30,6 +30,15 @@ public sealed class WorkspaceChangeHub
     private readonly Dictionary<Guid, Subscriber> _subscribers = new();
     private long _sequence;
 
+    /// <summary>
+    /// Records and broadcasts one workspace change event, retaining a bounded replay buffer.
+    /// </summary>
+    /// <param name="workspaceId">The workspace affected by the change.</param>
+    /// <param name="relativePath">The changed relative path.</param>
+    /// <param name="changeType">The change classification.</param>
+    /// <param name="previousRelativePath">The previous path for rename operations.</param>
+    /// <param name="etag">The resulting file ETag, when available.</param>
+    /// <returns>The published event with its assigned sequence and timestamp.</returns>
     public WorkspaceChangeEvent Publish(
         string workspaceId,
         string relativePath,
@@ -68,6 +77,13 @@ public sealed class WorkspaceChangeHub
         return message;
     }
 
+    /// <summary>
+    /// Subscribes to one workspace's change stream and optionally yields buffered events first.
+    /// </summary>
+    /// <param name="workspaceId">The workspace whose events should be observed.</param>
+    /// <param name="replayBuffered">Whether retained matching events should be replayed before live events.</param>
+    /// <param name="cancellationToken">Token used to end the subscription.</param>
+    /// <returns>An asynchronous sequence of workspace change events.</returns>
     public async IAsyncEnumerable<WorkspaceChangeEvent> Subscribe(
         string workspaceId,
         bool replayBuffered,

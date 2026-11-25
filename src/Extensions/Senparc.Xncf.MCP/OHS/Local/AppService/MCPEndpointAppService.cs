@@ -49,14 +49,18 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.MCP.OHS.Local.AppService
 {
     /// <summary>
-    /// MCP Endpoint management AppService
-    ///Legacy comment translated to English.
+    /// Administrative application service for configured MCP endpoints and published MCP servers.
     /// </summary>
     [ApiAuthorize]
     public class MCPEndpointAppService : AppServiceBase
     {
         private readonly MCPEndpointService _mcpEndpointService;
 
+        /// <summary>
+        /// Initializes the MCP endpoint management service.
+        /// </summary>
+        /// <param name="serviceProvider">Dependency-injection provider used by the base app service.</param>
+        /// <param name="mcpEndpointService">Service used to persist and test MCP endpoints.</param>
         public MCPEndpointAppService(IServiceProvider serviceProvider, MCPEndpointService mcpEndpointService)
             : base(serviceProvider)
         {
@@ -64,7 +68,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns MCP servers published by the current application instance.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<PublishedMcpServerDto>>> GetPublishedServers()
@@ -80,7 +84,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// getall MCP Endpoints
+        /// Returns all configured MCP endpoints, including disabled endpoints.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<MCPEndpointDto>>> GetAllEndpoints()
@@ -96,7 +100,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns only enabled MCP endpoints.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<MCPEndpointDto>>> GetEnabledEndpoints()
@@ -112,8 +116,10 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// create/edit MCP Endpoint
+        /// Creates or updates an MCP endpoint after validating identity, address, and configuration fields.
         /// </summary>
+        /// <param name="request">The endpoint create/update request.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when required fields, IDs, validation attributes, or duplicate names are invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> SaveEndpoint(MCPEndpointCreateOrEditRequest request)
         {
@@ -196,8 +202,10 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// delete MCP Endpoint
+        /// Soft-deletes an MCP endpoint and publishes an endpoint-update event.
         /// </summary>
+        /// <param name="request">The endpoint deletion request.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when the endpoint ID is invalid or not found.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> DeleteEndpoint(MCPEndpointDeleteRequest request)
         {
@@ -224,8 +232,10 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Tests a persisted MCP endpoint and returns its connection/tool discovery result.
         /// </summary>
+        /// <param name="request">The persisted endpoint test request.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when the endpoint ID is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<McpConnectionTestResult>> TestEndpoint(MCPEndpointTestRequest request)
         {
@@ -247,8 +257,9 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Publishes a change event containing the current MCP endpoint count.
         /// </summary>
+        /// <param name="updateReason">The reason included in the event payload.</param>
         private async Task PublishEndpointsUpdatedAsync(string updateReason)
         {
             var eventBus = GetService<IEventBus>();
@@ -262,8 +273,10 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Tests an MCP endpoint configuration without requiring a persisted endpoint.
         /// </summary>
+        /// <param name="request">The endpoint address, type, and authentication test request.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when required fields or validation attributes are invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<McpConnectionTestResult>> TestConnection(MCPEndpointTestConnectionRequest request)
         {

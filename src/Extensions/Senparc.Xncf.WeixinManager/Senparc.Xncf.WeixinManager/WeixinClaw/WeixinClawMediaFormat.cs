@@ -22,10 +22,22 @@ namespace Senparc.Xncf.WeixinManager.WeixinClaw;
 
 public static class WeixinClawMediaFormat
 {
+    /// <summary>
+    /// Detects the supported SILK V3 header forms used by inbound Weixin voice media.
+    /// </summary>
+    /// <param name="bytes">The beginning of the media payload.</param>
+    /// <returns><see langword="true"/> when the payload has a SILK V3 signature.</returns>
     public static bool IsSilk(ReadOnlySpan<byte> bytes) =>
         bytes.StartsWith("#!SILK_V3"u8)
         || (bytes.Length > 1 && bytes[0] == 2 && bytes[1..].StartsWith("#!SILK_V3"u8));
 
+    /// <summary>
+    /// Detects a media content type from magic bytes and falls back to the file extension.
+    /// </summary>
+    /// <param name="kind">The Weixin media kind, used to distinguish MP4 voice/audio from video.</param>
+    /// <param name="fileName">The source file name used for extension fallback.</param>
+    /// <param name="bytes">The available media header bytes.</param>
+    /// <returns>A detected MIME type, or <c>application/octet-stream</c> when unknown.</returns>
     public static string GetContentType(string kind, string fileName, ReadOnlySpan<byte> bytes)
     {
         if (IsSilk(bytes)) return "audio/silk";

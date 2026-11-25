@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.17.4 Integrated localization, tooling, and runtime improvements across the module.
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -59,6 +62,10 @@ using Senparc.Xncf.AreaBase.Admin.Filters;
 namespace Senparc.Xncf.AIKernel.OHS.Local.AppService;
 
 [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
+/// <summary>
+/// Administrative and function-rendered application-service boundary for fine-tuning workers,
+/// datasets, jobs, validation, runtime settings, secrets, and managed worker processes.
+/// </summary>
 public class AIFineTuningAppService : AppServiceBase
 {
     private readonly FineTuningWorkerClient _worker;
@@ -74,6 +81,22 @@ public class AIFineTuningAppService : AppServiceBase
     private readonly FineTuningRuntimeSettings _runtime;
     private readonly FineTuningWorkerSupervisor _supervisor;
 
+    /// <summary>
+    /// Initializes the fine-tuning application service and its worker/control-plane dependencies.
+    /// </summary>
+    /// <param name="serviceProvider">Dependency-injection provider used by the base service.</param>
+    /// <param name="worker">Remote fine-tuning worker client.</param>
+    /// <param name="configuration">Worker configuration provider.</param>
+    /// <param name="workerService">Persisted worker metadata service.</param>
+    /// <param name="workerOptions">Fine-tuning feature options.</param>
+    /// <param name="context">Current HTTP context accessor.</param>
+    /// <param name="logger">Application-service logger.</param>
+    /// <param name="controlPlane">Local fine-tuning control-plane service.</param>
+    /// <param name="migrationService">Legacy metadata migration service.</param>
+    /// <param name="fileStore">FileManager-backed dataset store.</param>
+    /// <param name="secrets">Worker secret store.</param>
+    /// <param name="runtime">Runtime enablement settings.</param>
+    /// <param name="supervisor">Managed worker process supervisor.</param>
     public AIFineTuningAppService(IServiceProvider serviceProvider, FineTuningWorkerClient worker,
         IFineTuningWorkerConfigurationProvider configuration, AIFineTuningWorkerService workerService,
         IOptions<FineTuningWorkerOptions> workerOptions, IHttpContextAccessor context,
@@ -95,16 +118,28 @@ public class AIFineTuningAppService : AppServiceBase
         _supervisor = supervisor;
     }
 
+    /// <summary>
+    /// Lists database-backed fine-tuning workers visible to the current tenant.
+    /// </summary>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<List<AIFineTuningWorkerDto>>> GetWorkersAsync() =>
         this.GetResponseAsync<List<AIFineTuningWorkerDto>>((response, logger) => _configuration.GetWorkersAsync(CancellationToken));
 
+    /// <summary>
+    /// Retrieves health information from a selected fine-tuning worker.
+    /// </summary>
+    /// <param name="workerAlias">The configured worker alias.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<FineTuningHealth>> HealthAsync(string workerAlias) =>
         this.GetResponseAsync<FineTuningHealth>((response, logger) => _worker.HealthAsync(workerAlias, CancellationToken));
 
     [FunctionRender(typeof(AIKernelResource), "Function.FineTuning.CheckWorker.Name", "Function.FineTuning.CheckWorker.Description",
         typeof(Register), "Check fine-tuning Worker", "Check the selected fine-tuning Worker health, capabilities, and queue.", AllowAiInvocation = true)]
+    /// <summary>
+    /// Function entry point that checks one worker's health and reports configuration failures.
+    /// </summary>
+    /// <param name="request">The function request containing the worker alias.</param>
+    /// <exception cref="ArgumentNullException">Returned through the app-service response when <paramref name="request"/> is <see langword="null"/>.</exception>
     public Task<AppResponseBase<FineTuningHealth>> CheckFineTuningWorkerAsync(FineTuningWorkerFunctionRequest request)
     {
         if (request == null)
@@ -117,6 +152,11 @@ public class AIFineTuningAppService : AppServiceBase
         return HealthAsync(request.WorkerAlias);
     }
 
+    /// <summary>
+    /// Checks feature enablement, secret configuration, worker reachability, model availability,
+    /// and FileManager readiness for a selected worker.
+    /// </summary>
+    /// <param name="workerAlias">The configured worker alias.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<FineTuningDiagnostics>> DiagnosticsAsync(string workerAlias) =>
         this.GetResponseAsync<FineTuningDiagnostics>(async (response, logger) =>
@@ -155,6 +195,10 @@ public class AIFineTuningAppService : AppServiceBase
 
     [FunctionRender(typeof(AIKernelResource), "Function.FineTuning.CheckEnvironment.Name", "Function.FineTuning.CheckEnvironment.Description",
         typeof(Register), "Check fine-tuning environment", "Check the fine-tuning switch, secret, Worker, model directory, and FileManager state.", AllowAiInvocation = true)]
+    /// <summary>
+    /// Function entry point that returns consolidated fine-tuning environment diagnostics.
+    /// </summary>
+    /// <param name="request">The function request containing the worker alias.</param>
     public Task<AppResponseBase<FineTuningDiagnostics>> CheckFineTuningEnvironmentAsync(FineTuningWorkerFunctionRequest request)
     {
         if (request == null)
@@ -167,29 +211,57 @@ public class AIFineTuningAppService : AppServiceBase
         return DiagnosticsAsync(request.WorkerAlias);
     }
 
+    /// <summary>
+    /// Lists models exposed by the selected worker.
+    /// </summary>
+    /// <param name="workerAlias">The configured worker alias.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<List<FineTuningModel>>> GetModelsAsync(string workerAlias) =>
         this.GetResponseAsync<List<FineTuningModel>>((response, logger) => _worker.GetModelsAsync(workerAlias, CancellationToken));
 
+    /// <summary>
+    /// Lists datasets exposed by the selected worker.
+    /// </summary>
+    /// <param name="workerAlias">The configured worker alias.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<List<FineTuningDataset>>> GetDatasetsAsync(string workerAlias) =>
         this.GetResponseAsync<List<FineTuningDataset>>((response, logger) => _worker.GetDatasetsAsync(workerAlias, CancellationToken));
 
+    /// <summary>
+    /// Migrates legacy fine-tuning metadata into the current control-plane records.
+    /// </summary>
+    /// <param name="workerAlias">The worker alias whose legacy metadata should be migrated.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<FineTuningMigrationResult>> MigrateLegacyMetadataAsync(string workerAlias) =>
         this.GetResponseAsync<FineTuningMigrationResult>((response, logger) =>
             _migrationService.MigrateAsync(workerAlias, CancellationToken));
 
+    /// <summary>
+    /// Retrieves a bounded page of worker datasets.
+    /// </summary>
+    /// <param name="workerAlias">The configured worker alias.</param>
+    /// <param name="offset">The zero-based catalog offset.</param>
+    /// <param name="limit">The requested page size.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<FineTuningCatalogPage<FineTuningDataset>>> GetDatasetsPageAsync(string workerAlias,
         int offset = 0, int limit = 100) =>
         this.GetResponseAsync<FineTuningCatalogPage<FineTuningDataset>>((response, logger) =>
             _worker.GetDatasetsPageAsync(workerAlias, offset, limit, CancellationToken));
 
+    /// <summary>
+    /// Retrieves one dataset by worker-local identifier.
+    /// </summary>
+    /// <param name="workerAlias">The configured worker alias.</param>
+    /// <param name="id">The dataset identifier.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<FineTuningDataset>> GetDatasetAsync(string workerAlias, string id) =>
         this.GetResponseAsync<FineTuningDataset>((response, logger) => _worker.GetDatasetAsync(workerAlias, id, CancellationToken));
 
+    /// <summary>
+    /// Validates and uploads inline JSONL dataset content through FileManager and the worker.
+    /// </summary>
+    /// <param name="request">The dataset name and JSONL content.</param>
+    /// <param name="workerAlias">The configured worker alias.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     // The dynamic API binds subsequent parameters from query; keep the body DTO first.
     public Task<AppResponseBase<FineTuningDataset>> UploadDatasetAsync([FromBody] FineTuningDatasetRequest request, string workerAlias) =>
@@ -206,6 +278,13 @@ public class AIFineTuningAppService : AppServiceBase
     [RequestFormLimits(MultipartBodyLengthLimit = FineTuningWorkerClient.MaxDatasetBytes + 64 * 1024)]
     [FunctionRender(typeof(AIKernelResource), "Function.FineTuning.UploadDatasetFile.Name", "Function.FineTuning.UploadDatasetFile.Description",
         typeof(Register), "Upload fine-tuning dataset file", "Save and upload a JSONL fine-tuning dataset as a stream for large files.", AllowAiInvocation = true)]
+    /// <summary>
+    /// Streams a multipart JSONL dataset file through FileManager and the selected worker.
+    /// </summary>
+    /// <param name="file">The non-empty JSONL upload.</param>
+    /// <param name="name">Optional dataset name override.</param>
+    /// <param name="workerAlias">The configured worker alias.</param>
+    /// <exception cref="ArgumentException">Returned through the response when the file is empty, too large, or not JSONL.</exception>
     public Task<AppResponseBase<FineTuningDataset>> UploadDatasetFileAsync(
         [FromForm] IFormFile file, [FromForm] string name, string workerAlias) =>
         this.GetResponseAsync<FineTuningDataset>(async (response, logger) =>
@@ -297,6 +376,10 @@ public class AIFineTuningAppService : AppServiceBase
 
     [FunctionRender(typeof(AIKernelResource), "Function.FineTuning.CreateDataset.Name", "Function.FineTuning.CreateDataset.Description",
         typeof(Register), "Create fine-tuning dataset", "Save a Worker-validated JSONL fine-tuning dataset.", AllowAiInvocation = true)]
+    /// <summary>
+    /// Function entry point that stores and uploads JSONL dataset text.
+    /// </summary>
+    /// <param name="request">The worker, dataset name, and JSONL content.</param>
     public Task<AppResponseBase<FineTuningDataset>> CreateDatasetFromTextAsync(FineTuningDatasetFunctionRequest request) =>
         this.GetResponseAsync<FineTuningDataset>(async (response, logger) =>
         {
@@ -319,16 +402,32 @@ public class AIFineTuningAppService : AppServiceBase
                 stream, stream.Length, "application/x-ndjson");
         });
 
+    /// <summary>
+    /// Lists jobs exposed by the selected worker.
+    /// </summary>
+    /// <param name="workerAlias">The configured worker alias.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<List<FineTuningJob>>> GetJobsAsync(string workerAlias) =>
         this.GetResponseAsync<List<FineTuningJob>>((response, logger) => _worker.GetJobsAsync(workerAlias, CancellationToken));
 
+    /// <summary>
+    /// Retrieves a bounded page of jobs from the selected worker.
+    /// </summary>
+    /// <param name="workerAlias">The configured worker alias.</param>
+    /// <param name="offset">The zero-based catalog offset.</param>
+    /// <param name="limit">The requested page size.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<FineTuningCatalogPage<FineTuningJob>>> GetJobsPageAsync(string workerAlias,
         int offset = 0, int limit = 100) =>
         this.GetResponseAsync<FineTuningCatalogPage<FineTuningJob>>((response, logger) =>
             _worker.GetJobsPageAsync(workerAlias, offset, limit, CancellationToken));
 
+    /// <summary>
+    /// Validates, creates, mirrors, and returns a fine-tuning job.
+    /// </summary>
+    /// <param name="request">The model, dataset, backend, and training parameters.</param>
+    /// <param name="workerAlias">The configured worker alias.</param>
+    /// <exception cref="NcfExceptionBase">Returned through the response when validation or worker creation fails.</exception>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<FineTuningJob>> CreateJobAsync([FromBody] FineTuningJobRequest request, string workerAlias) =>
         this.GetResponseAsync<FineTuningJob>(async (response, logger) =>
@@ -341,12 +440,16 @@ public class AIFineTuningAppService : AppServiceBase
 
     [FunctionRender(
         typeof(AIKernelResource),
-        "Frontend.100",
-        "Frontend.101",
+        "Frontend.AIKernel.CreateFineTuningTask",
+        "Frontend.AIKernel.CreateAFineTuningTaskWithAnApprovedLocalModelDatasetAnd",
         typeof(Register),
         "Create fine-tuning task",
         "Create a fine-tuning task with an approved local model, dataset, and training parameters.",
         AllowAiInvocation = true)]
+    /// <summary>
+    /// Function entry point that creates a fine-tuning job from approved model/dataset selections.
+    /// </summary>
+    /// <param name="request">The function-level fine-tuning request.</param>
     public Task<AppResponseBase<FineTuningJob>> StartFineTuningJobAsync(FineTuningStartJobFunctionRequest request) =>
         this.GetResponseAsync<FineTuningJob>(async (response, logger) =>
         {
@@ -377,6 +480,11 @@ public class AIFineTuningAppService : AppServiceBase
             return job;
         });
 
+    /// <summary>
+    /// Retrieves and mirrors one fine-tuning job.
+    /// </summary>
+    /// <param name="workerAlias">The configured worker alias.</param>
+    /// <param name="id">The job identifier.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<FineTuningJob>> GetJobAsync(string workerAlias, string id) =>
         this.GetResponseAsync<FineTuningJob>(async (response, logger) =>
@@ -386,6 +494,13 @@ public class AIFineTuningAppService : AppServiceBase
             return job;
         });
 
+    /// <summary>
+    /// Retrieves a bounded event page and mirrors returned events to the local control plane.
+    /// </summary>
+    /// <param name="workerAlias">The configured worker alias.</param>
+    /// <param name="id">The job identifier.</param>
+    /// <param name="after">The event sequence cursor.</param>
+    /// <param name="limit">The requested event count, bounded by the worker contract.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<FineTuningEventPage>> GetEventsAsync(string workerAlias, string id, long after = 0, int limit = 200) =>
         this.GetResponseAsync<FineTuningEventPage>(async (response, logger) =>
@@ -401,10 +516,21 @@ public class AIFineTuningAppService : AppServiceBase
             return page;
         });
 
+    /// <summary>
+    /// Retrieves the latest validation status for a fine-tuning job.
+    /// </summary>
+    /// <param name="workerAlias">The configured worker alias.</param>
+    /// <param name="id">The job identifier.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<FineTuningValidation>> GetValidationAsync(string workerAlias, string id) =>
         this.GetResponseAsync<FineTuningValidation>((response, logger) => _worker.GetValidationAsync(workerAlias, id, CancellationToken));
 
+    /// <summary>
+    /// Starts bounded validation for a successful fine-tuning job.
+    /// </summary>
+    /// <param name="request">Validation prompt and execution options.</param>
+    /// <param name="workerAlias">The configured worker alias.</param>
+    /// <param name="id">The job identifier.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     [FunctionRender(typeof(AIKernelResource), "Function.FineTuning.ValidateAdapter.Name", "Function.FineTuning.ValidateAdapter.Description",
         typeof(Register), "Validate fine-tuning adapter", "Run a bounded offline test prompt for a successful fine-tuning job on the selected backend.", AllowAiInvocation = true)]
@@ -417,6 +543,11 @@ public class AIFineTuningAppService : AppServiceBase
             return validation;
         });
 
+    /// <summary>
+    /// Requests cancellation of a fine-tuning job and mirrors the resulting state.
+    /// </summary>
+    /// <param name="request">The request containing the job identifier.</param>
+    /// <param name="workerAlias">The configured worker alias.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<FineTuningJob>> CancelJobAsync([FromBody] FineTuningCancelRequest request, string workerAlias) =>
         this.GetResponseAsync<FineTuningJob>(async (response, logger) =>
@@ -427,6 +558,11 @@ public class AIFineTuningAppService : AppServiceBase
             return job;
         });
 
+    /// <summary>
+    /// Requests pausing of a fine-tuning job and mirrors the resulting state.
+    /// </summary>
+    /// <param name="request">The request containing the job identifier.</param>
+    /// <param name="workerAlias">The configured worker alias.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<FineTuningJob>> PauseJobAsync([FromBody] FineTuningCancelRequest request, string workerAlias) =>
         this.GetResponseAsync<FineTuningJob>(async (response, logger) =>
@@ -437,6 +573,11 @@ public class AIFineTuningAppService : AppServiceBase
             return job;
         });
 
+    /// <summary>
+    /// Requests resumption of a paused fine-tuning job and mirrors the resulting state.
+    /// </summary>
+    /// <param name="request">The request containing the job identifier.</param>
+    /// <param name="workerAlias">The configured worker alias.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<FineTuningJob>> ResumeJobAsync([FromBody] FineTuningCancelRequest request, string workerAlias) =>
         this.GetResponseAsync<FineTuningJob>(async (response, logger) =>
@@ -447,6 +588,12 @@ public class AIFineTuningAppService : AppServiceBase
             return job;
         });
 
+    /// <summary>
+    /// Updates runtime parameters for an existing fine-tuning job.
+    /// </summary>
+    /// <param name="request">The runtime parameters to apply.</param>
+    /// <param name="workerAlias">The configured worker alias.</param>
+    /// <param name="id">The job identifier.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<FineTuningJob>> UpdateRuntimeAsync(
         [FromBody] FineTuningRuntimeRequest request, string workerAlias, string id) =>
@@ -458,6 +605,11 @@ public class AIFineTuningAppService : AppServiceBase
             return job;
         });
 
+    /// <summary>
+    /// Deletes a fine-tuning job and removes mirrored local metadata/files.
+    /// </summary>
+    /// <param name="request">The request containing the job identifier.</param>
+    /// <param name="workerAlias">The configured worker alias.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<FineTuningDeleteResult>> DeleteJobAsync(
         [FromBody] FineTuningCancelRequest request, string workerAlias) =>
@@ -474,10 +626,17 @@ public class AIFineTuningAppService : AppServiceBase
             return deleted;
         });
 
+    /// <summary>
+    /// Returns current local fine-tuning runtime settings and enablement state.
+    /// </summary>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<FineTuningRuntimeStatus>> GetFineTuningRuntimeAsync() =>
         this.GetResponseAsync<FineTuningRuntimeStatus>((response, logger) => Task.FromResult(_runtime.GetStatus()));
 
+    /// <summary>
+    /// Updates local fine-tuning enablement after applying runtime settings.
+    /// </summary>
+    /// <param name="request">The enablement request.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<FineTuningRuntimeStatus>> SetFineTuningEnabledAsync([FromBody] FineTuningEnabledRequest request) =>
         this.GetResponseAsync<FineTuningRuntimeStatus>((response, logger) =>
@@ -487,6 +646,10 @@ public class AIFineTuningAppService : AppServiceBase
             return Task.FromResult(status);
         });
 
+    /// <summary>
+    /// Generates or rotates the local secret used by a fine-tuning worker.
+    /// </summary>
+    /// <param name="workerAlias">The worker alias whose secret should be generated.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<FineTuningSecretStatus>> GenerateWorkerSecretAsync(string workerAlias) =>
         this.GetResponseAsync<FineTuningSecretStatus>(async (response, logger) =>
@@ -505,6 +668,10 @@ public class AIFineTuningAppService : AppServiceBase
             };
         });
 
+    /// <summary>
+    /// Starts a configured managed fine-tuning worker process.
+    /// </summary>
+    /// <param name="workerAlias">The worker alias.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<FineTuningManagedWorkerStatus>> StartManagedWorkerAsync(string workerAlias) =>
         this.GetResponseAsync<FineTuningManagedWorkerStatus>(async (response, logger) =>
@@ -517,6 +684,10 @@ public class AIFineTuningAppService : AppServiceBase
             return status;
         });
 
+    /// <summary>
+    /// Stops a managed fine-tuning worker process.
+    /// </summary>
+    /// <param name="workerAlias">The worker alias.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<FineTuningManagedWorkerStatus>> StopManagedWorkerAsync(string workerAlias) =>
         this.GetResponseAsync<FineTuningManagedWorkerStatus>(async (response, logger) =>
@@ -527,6 +698,10 @@ public class AIFineTuningAppService : AppServiceBase
             return _supervisor.GetStatus(worker);
         });
 
+    /// <summary>
+    /// Returns the current status of a managed fine-tuning worker.
+    /// </summary>
+    /// <param name="workerAlias">The worker alias.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<FineTuningManagedWorkerStatus>> GetManagedWorkerStatusAsync(string workerAlias) =>
         this.GetResponseAsync<FineTuningManagedWorkerStatus>(async (response, logger) =>
@@ -535,6 +710,10 @@ public class AIFineTuningAppService : AppServiceBase
             return _supervisor.GetStatus(worker);
         });
 
+    /// <summary>
+    /// Creates or updates persisted worker configuration and returns the saved DTO.
+    /// </summary>
+    /// <param name="request">The worker identity, endpoint, secret, and managed-launch settings.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<AIFineTuningWorkerDto>> SaveWorkerAsync([FromBody] AIFineTuningWorker_CreateOrEditRequest request) =>
         this.GetResponseAsync<AIFineTuningWorkerDto>(async (response, logger) =>

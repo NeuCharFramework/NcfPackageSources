@@ -1,3 +1,3 @@
-## Unpublished 文件夹说明
+## Base libraries
 
-当前文件夹下的所有项目暂不发布，也不需要生成 Nuget 包。
+Core shared libraries for NCF that are not XNCF modules. Projects in this folder ship as foundational NuGet packages referenced by hosts and extensions.

@@ -36,6 +36,15 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders;
 /// </summary>
 public static class FunctionRenderAiSchemaBuilder
 {
+    /// <summary>
+    /// Clones an AI function schema and enriches its parameter schemas with selection or file metadata.
+    /// </summary>
+    /// <param name="functionSchema">The JSON schema to enrich.</param>
+    /// <param name="parameters">The runtime parameter descriptions that drive the enrichment.</param>
+    /// <returns>
+    /// A cloned schema with matching properties updated; invalid or empty input is returned as a clone
+    /// without modification.
+    /// </returns>
     public static JsonElement ApplySelectionMetadata(
         JsonElement functionSchema,
         IReadOnlyList<FunctionParameterInfo> parameters)
@@ -84,6 +93,12 @@ public static class FunctionRenderAiSchemaBuilder
         return document.RootElement.Clone();
     }
 
+    /// <summary>
+    /// Recursively locates a named property schema in nested JSON schema objects.
+    /// </summary>
+    /// <param name="schema">The schema object to inspect.</param>
+    /// <param name="parameterName">The property name to find, compared case-insensitively.</param>
+    /// <returns>The matching property schema, or <see langword="null"/> when absent.</returns>
     private static JsonObject FindPropertySchema(JsonObject schema, string parameterName)
     {
         if (TryGetProperties(schema, out var properties))
@@ -110,6 +125,12 @@ public static class FunctionRenderAiSchemaBuilder
         return null;
     }
 
+    /// <summary>
+    /// Reads the first object-valued <c>properties</c> member from a schema.
+    /// </summary>
+    /// <param name="schema">The schema object to inspect.</param>
+    /// <param name="properties">Receives the property collection when present.</param>
+    /// <returns><see langword="true"/> when a usable property collection was found.</returns>
     private static bool TryGetProperties(JsonObject schema, out JsonObject properties)
     {
         foreach (var property in schema)
@@ -126,6 +147,11 @@ public static class FunctionRenderAiSchemaBuilder
         return false;
     }
 
+    /// <summary>
+    /// Adds available selection descriptions and, where appropriate, JSON enum constraints.
+    /// </summary>
+    /// <param name="parameterSchema">The mutable parameter schema to enrich.</param>
+    /// <param name="parameter">The runtime parameter metadata and selection items.</param>
     private static void ApplySelectionMetadata(
         JsonObject parameterSchema,
         FunctionParameterInfo parameter)
@@ -179,6 +205,11 @@ public static class FunctionRenderAiSchemaBuilder
         }
     }
 
+    /// <summary>
+    /// Adds file-upload type metadata, cardinality, accepted-type details, and file-count limits.
+    /// </summary>
+    /// <param name="parameterSchema">The mutable parameter schema to enrich.</param>
+    /// <param name="parameter">The runtime file-parameter metadata.</param>
     private static void ApplyFileMetadata(
         JsonObject parameterSchema,
         FunctionParameterInfo parameter)
@@ -218,12 +249,23 @@ public static class FunctionRenderAiSchemaBuilder
             : $"{existingDescription.Trim()} {details}";
     }
 
+    /// <summary>
+    /// Determines whether a schema declares the JSON array type.
+    /// </summary>
+    /// <param name="schema">The schema to inspect.</param>
+    /// <returns><see langword="true"/> when its type is <c>array</c>.</returns>
     private static bool IsArraySchema(JsonObject schema)
     {
         var type = GetStringProperty(schema, "type");
         return string.Equals(type, "array", StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Converts a textual selection value to the scalar JSON type declared by a schema.
+    /// </summary>
+    /// <param name="value">The textual selection value.</param>
+    /// <param name="schema">The scalar schema that determines conversion.</param>
+    /// <returns>A JSON scalar matching the declared type where conversion succeeds, otherwise a string value.</returns>
     private static JsonNode CreateSchemaValue(string value, JsonObject schema)
     {
         var type = GetStringProperty(schema, "type");
@@ -248,6 +290,12 @@ public static class FunctionRenderAiSchemaBuilder
         return JsonValue.Create(value);
     }
 
+    /// <summary>
+    /// Reads a string-valued property from a JSON schema using a case-insensitive key comparison.
+    /// </summary>
+    /// <param name="schema">The schema object to inspect.</param>
+    /// <param name="propertyName">The property name to locate.</param>
+    /// <returns>The string property value, or <see langword="null"/> when absent or non-string.</returns>
     private static string GetStringProperty(JsonObject schema, string propertyName)
     {
         foreach (var property in schema)
@@ -263,6 +311,11 @@ public static class FunctionRenderAiSchemaBuilder
         return null;
     }
 
+    /// <summary>
+    /// Serializes text as a JSON string literal for inclusion in schema descriptions.
+    /// </summary>
+    /// <param name="value">The text to quote.</param>
+    /// <returns>A JSON-escaped string literal.</returns>
     private static string Quote(string value) =>
         JsonSerializer.Serialize(value ?? string.Empty);
 }

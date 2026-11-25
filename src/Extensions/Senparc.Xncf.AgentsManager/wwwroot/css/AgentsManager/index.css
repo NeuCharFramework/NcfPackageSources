@@ -2165,6 +2165,24 @@ height:100%;
     gap: 20px;
 }
 
+.taskrecord-state {
+    min-height: 180px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #909399;
+    font-size: 14px;
+    text-align: center;
+}
+
+.taskrecord-state i {
+    color: #409eff;
+    font-size: 24px;
+}
+
 .taskrecord-listWrap-item {
     flex-shrink: 0;
     padding: 8px 10px;

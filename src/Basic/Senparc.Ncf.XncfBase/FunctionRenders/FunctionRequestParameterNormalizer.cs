@@ -41,6 +41,14 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
     /// </summary>
     public static class FunctionRequestParameterNormalizer
     {
+        /// <summary>
+        /// Normalizes legacy FunctionRender payload shapes into JSON compatible with a request type,
+        /// including selection lists, booleans, scalar conversions, arrays, and file references.
+        /// Invalid JSON or non-object input is returned unchanged.
+        /// </summary>
+        /// <param name="rawJson">The raw request JSON.</param>
+        /// <param name="requestType">The request type whose writable properties define normalization rules.</param>
+        /// <returns>Normalized compact JSON, or the original input when normalization is not applicable.</returns>
         public static string NormalizeJson(string rawJson, Type requestType)
         {
             if (string.IsNullOrWhiteSpace(rawJson) || requestType == null)
@@ -90,6 +98,11 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             });
         }
 
+        /// <summary>
+        /// Converts legacy selection payloads into a SelectionList-compatible SelectedValues object.
+        /// </summary>
+        /// <param name="currentNode">The raw selection node.</param>
+        /// <returns>The normalized selection node.</returns>
         private static JsonNode NormalizeSelectionListNode(JsonNode currentNode)
         {
             if (currentNode is JsonObject currentObject && TryGetJsonProperty(currentObject, "SelectedValues", out _, out _))
@@ -106,6 +119,13 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             };
         }
 
+        /// <summary>
+        /// Normalizes one request property according to its target type and UI metadata.
+        /// </summary>
+        /// <param name="targetType">The writable property type.</param>
+        /// <param name="currentNode">The raw JSON value.</param>
+        /// <param name="uiAttr">Optional FunctionRender UI metadata.</param>
+        /// <returns>The normalized JSON value.</returns>
         private static JsonNode NormalizeSimpleNode(Type targetType, JsonNode currentNode, FunctionParameterUiAttribute uiAttr)
         {
             if (IsFileReferenceType(targetType))
@@ -192,6 +212,11 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             return JsonValue.Create(firstValue);
         }
 
+        /// <summary>
+        /// Determines whether a target type is a single or collection of FunctionFileReference values.
+        /// </summary>
+        /// <param name="targetType">The target property type.</param>
+        /// <returns><see langword="true"/> when file-reference normalization applies.</returns>
         private static bool IsFileReferenceType(Type targetType)
         {
             if (targetType == typeof(FunctionFileReference))
@@ -211,6 +236,12 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
                    targetType.GetGenericArguments()[0] == typeof(FunctionFileReference);
         }
 
+        /// <summary>
+        /// Normalizes single and collection file-reference JSON shapes.
+        /// </summary>
+        /// <param name="currentNode">The raw file-reference node.</param>
+        /// <param name="targetType">The target property type.</param>
+        /// <returns>The normalized file-reference node.</returns>
         private static JsonNode NormalizeFileReferenceNode(JsonNode currentNode, Type targetType)
         {
             if (targetType == typeof(FunctionFileReference))
@@ -231,6 +262,11 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             return new JsonArray(array.Select(NormalizeSingleFileReferenceNode).ToArray());
         }
 
+        /// <summary>
+        /// Converts a scalar file ID into a FunctionFileReference object.
+        /// </summary>
+        /// <param name="currentNode">The raw file-reference value.</param>
+        /// <returns>The normalized object or original node.</returns>
         private static JsonNode NormalizeSingleFileReferenceNode(JsonNode currentNode)
         {
             if (currentNode is JsonValue valueNode && TryGetString(valueNode, out var fileId))
@@ -244,6 +280,11 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             return currentNode;
         }
 
+        /// <summary>
+        /// Creates the JSON default for a non-nullable value type.
+        /// </summary>
+        /// <param name="targetType">The target property type.</param>
+        /// <returns>The serialized default value, or <see langword="null"/> for reference/nullable types.</returns>
         private static JsonNode CreateDefaultValueNode(Type targetType)
         {
             if (!targetType.IsValueType || Nullable.GetUnderlyingType(targetType) != null)
@@ -254,6 +295,12 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             return JsonSerializer.SerializeToNode(Activator.CreateInstance(targetType), targetType);
         }
 
+        /// <summary>
+        /// Extracts scalar strings from selection objects, arrays, and delimited values.
+        /// </summary>
+        /// <param name="currentNode">The raw JSON value.</param>
+        /// <param name="forMultiple">Whether delimiters represent multiple values.</param>
+        /// <returns>Distinct non-empty values.</returns>
         private static List<string> ExtractValues(JsonNode currentNode, bool forMultiple)
         {
             if (currentNode == null)
@@ -287,6 +334,12 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             return new List<string>();
         }
 
+        /// <summary>
+        /// Splits a scalar input using the legacy multi-value delimiters.
+        /// </summary>
+        /// <param name="input">The input text.</param>
+        /// <param name="forMultiple">Whether splitting is enabled.</param>
+        /// <returns>Trimmed distinct values.</returns>
         private static List<string> SplitInput(string input, bool forMultiple)
         {
             if (string.IsNullOrWhiteSpace(input))
@@ -306,6 +359,14 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
                         .ToList();
         }
 
+        /// <summary>
+        /// Finds a JSON object property using case-insensitive matching.
+        /// </summary>
+        /// <param name="jsonObject">The JSON object.</param>
+        /// <param name="propertyName">The requested property name.</param>
+        /// <param name="actualKey">Receives the actual JSON key.</param>
+        /// <param name="currentNode">Receives the property value.</param>
+        /// <returns><see langword="true"/> when the property exists.</returns>
         private static bool TryGetJsonProperty(JsonObject jsonObject, string propertyName, out string actualKey, out JsonNode currentNode)
         {
             actualKey = null;
@@ -324,6 +385,12 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             return false;
         }
 
+        /// <summary>
+        /// Reads a JSON scalar as a string, falling back to its textual representation.
+        /// </summary>
+        /// <param name="jsonValue">The JSON scalar.</param>
+        /// <param name="result">Receives the string value.</param>
+        /// <returns><see langword="true"/> when a textual value is available.</returns>
         private static bool TryGetString(JsonValue jsonValue, out string result)
         {
             result = null;
@@ -347,17 +414,34 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             }
         }
 
+        /// <summary>
+        /// Determines whether a type is the requested scalar type or its nullable form.
+        /// </summary>
+        /// <param name="actualType">The property type.</param>
+        /// <param name="targetType">The scalar type.</param>
+        /// <returns><see langword="true"/> when the underlying type matches.</returns>
         private static bool IsNullableType(Type actualType, Type targetType)
         {
             var underlyingType = Nullable.GetUnderlyingType(actualType) ?? actualType;
             return underlyingType == targetType;
         }
 
+        /// <summary>
+        /// Determines whether a target type is Boolean or nullable Boolean.
+        /// </summary>
+        /// <param name="targetType">The target property type.</param>
+        /// <returns><see langword="true"/> for Boolean targets.</returns>
         private static bool IsBooleanTargetType(Type targetType)
         {
             return targetType == typeof(bool) || Nullable.GetUnderlyingType(targetType) == typeof(bool);
         }
 
+        /// <summary>
+        /// Converts a legacy Boolean JSON shape into a JSON Boolean node.
+        /// </summary>
+        /// <param name="currentNode">The raw Boolean value.</param>
+        /// <param name="boolJson">Receives the normalized Boolean node.</param>
+        /// <returns><see langword="true"/> when conversion succeeds.</returns>
         private static bool TryNormalizeBooleanJsonNode(JsonNode currentNode, out JsonNode boolJson)
         {
             boolJson = null;
@@ -370,6 +454,12 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             return true;
         }
 
+        /// <summary>
+        /// Reads Boolean values from scalar, selection-list, array, and object JSON shapes.
+        /// </summary>
+        /// <param name="currentNode">The raw Boolean value.</param>
+        /// <param name="result">Receives the parsed result.</param>
+        /// <returns><see langword="true"/> when a Boolean interpretation is available.</returns>
         private static bool TryGetBooleanValue(JsonNode currentNode, out bool result)
         {
             result = false;
@@ -438,6 +528,12 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             return false;
         }
 
+        /// <summary>
+        /// Parses standard and legacy Boolean tokens such as true/false, yes/no, and 1/0.
+        /// </summary>
+        /// <param name="token">The token to parse.</param>
+        /// <param name="result">Receives the parsed Boolean value.</param>
+        /// <returns><see langword="true"/> when the token is recognized.</returns>
         private static bool TryParseBooleanToken(string token, out bool result)
         {
             result = false;

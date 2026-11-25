@@ -26,16 +26,16 @@ namespace Senparc.Ncf.SMS
         SenparcSmsSetting Setting { get; set; }
 
         /// <summary>
-        /// send
+        /// Sends one SMS message to the supplied destination number.
         /// </summary>
-        /// <param name="content"></param>
-        /// <param name="number"></param>
-        /// <returns></returns>
+        /// <param name="content">The message text to send.</param>
+        /// <param name="number">The destination phone number.</param>
+        /// <returns>The provider-specific send result.</returns>
         SmsResult Send(string content, string number);
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Queries the provider for its current remaining or usage count.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A provider-formatted usage string.</returns>
         string GetLastCount();
     }
 
@@ -43,9 +43,29 @@ namespace Senparc.Ncf.SMS
     {
         public virtual string SmsServiceAddress { get; set; }
         public SenparcSmsSetting Setting { get; set; }
+        /// <summary>
+        /// Sends an SMS message through the concrete provider implementation.
+        /// </summary>
+        /// <param name="content">The message text to send.</param>
+        /// <param name="number">The destination phone number.</param>
+        /// <returns>The provider-specific send result.</returns>
         public abstract SmsResult Send(string content, string number);
+
+        /// <summary>
+        /// Gets the provider-specific remaining or usage count.
+        /// </summary>
+        /// <returns>A provider-formatted usage string.</returns>
         public abstract string GetLastCount();
 
+        /// <summary>
+        /// Initializes provider settings used by the concrete SMS implementation.
+        /// </summary>
+        /// <param name="smsPlatformType">The provider type represented by the instance.</param>
+        /// <param name="smsServiceAddress">The provider endpoint, when configured.</param>
+        /// <param name="smsAccountCORPID">The provider account or corporation identifier.</param>
+        /// <param name="smsAccountName">The provider account name.</param>
+        /// <param name="smsAccountPassword">The provider account password.</param>
+        /// <param name="smsAccountSubNumber">The provider sub-number.</param>
         public SmsPlatform(SmsPlatformType smsPlatformType, string smsServiceAddress, string smsAccountCORPID, string smsAccountName, string smsAccountPassword, string smsAccountSubNumber)
         {
             Setting = new SenparcSmsSetting()
@@ -59,7 +79,12 @@ namespace Senparc.Ncf.SMS
             SmsServiceAddress = smsServiceAddress;
         }
 
-
+        /// <summary>
+        /// Percent-encodes text using the bytes produced by the selected encoding.
+        /// </summary>
+        /// <param name="url">The text to encode.</param>
+        /// <param name="encoding">The encoding used to convert text to bytes.</param>
+        /// <returns>A percent-encoded representation of the input bytes.</returns>
         protected string UrlEncode(string url, Encoding encoding)
         {
             StringBuilder sb = new StringBuilder();

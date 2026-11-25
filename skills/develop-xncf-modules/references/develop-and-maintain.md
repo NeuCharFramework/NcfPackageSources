@@ -70,6 +70,15 @@ dotnet ef migrations add <变更名> \
 
 ## 本地化
 
+所有最终展示给用户的文案都必须通过模块资源管理，包括：
+
+- 页面文本、标题、按钮、标签、占位符、提示、确认框、通知和错误消息；
+- 菜单、模块名称、模块说明、首页入口和权限展示名；
+- Function、WebApi、DTO 元数据中供用户阅读的名称与说明；
+- JavaScript 动态生成的界面文案和客户端提示。
+
+不要把用户文案直接写入 Razor、C#、JavaScript、HTML 属性、特性参数或日志。开发日志、机器协议值、枚举/模型/路由名称、数据库持久化值、URL、品牌标识和用户输入不属于翻译对象。
+
 模块资源类是 `Resources/<模块名>Resource.cs`，通过 `ResourceStringLocalizer` 读取。新增用户可见文案时，同步修改：
 
 - `<模块名>Resource.resx`
@@ -80,7 +89,23 @@ dotnet ef migrations add <变更名> \
 - `<模块名>Resource.ja.resx`
 - `<模块名>Resource.ru.resx`
 
-中文资源是基准。协议值、枚举代码、模型名和用户数据保持原文，只翻译显示文案。
+中文资源是基准：无文化后缀的资源和 `zh-CN` 资源使用中文；`en`、`es`、`fr`、`ja`、`ru` 文件必须提供对应语言翻译。七个资源文件必须包含相同的 `data name` 集合，禁止只在某一种语言中新增键、用另一种语言临时占位或删除键。
+
+使用约定：
+
+- Razor 通过 `IStringLocalizer<<模块名>Resource>` 或现有模块局部符号读取资源。
+- C# 首选 DI 注入的强类型 localizer；没有注入入口的代码按模块现有方式使用 `ResourceStringLocalizer`。
+- Function 名称和说明使用 `FunctionRender` 的资源类型与键名，而不是中文字面量。
+- 前端脚本通过模块自己的 `_xxxLocalizationScripts.cshtml` 和 `Frontend.*` 资源键输出字典；共用 partial 名称可能造成 Razor 编译冲突，模块 partial 必须保持唯一。
+- 保留资源值中的复合格式占位符（如 `{0}`、`{1:F2}`）、转义内容和参数分隔符 `||`。翻译时只能调整周边自然语言，不能改变占位符顺序、格式说明或参数协议。
+- 需要新增一种系统支持语言时，才同时调整 `NcfLocalizationOptions.SupportedCultures`。普通模块文案变更只同步已有七个资源文件。
+
+实现后至少检查：
+
+1. 代码中不再有新增的用户可见硬编码文案。
+2. 七个资源文件的键集合完全一致，新增和删除操作同时覆盖全部语言。
+3. 中文和至少一种非中文文化的读取结果正确，带参数的资源格式化结果包含相同参数。
+4. 页面或模块安装行为变化时，在宿主中验证 Razor 编译、菜单/Function 元数据和运行时切换语言。
 
 ## 测试与审查
 

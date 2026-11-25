@@ -64,7 +64,7 @@
 
     <!-- Run and monitor -->
     <el-card class="box-card" style="margin-bottom: 10px">
-        <div slot="header"><span><i class="fa fa-play-circle"></i> @XR["TokenMonitor.RunMonitor"]</span></div>
+        <div slot="header"><span><i class="fa fa-play-circle"></i> @XR["TokenMonitor.RunMonitor"] <ncf-doc-help topic="ai.tokens"></ncf-doc-help></span></div>
         <el-form :inline="true" :model="runForm" ref="runForm" label-width="90px">
             <el-form-item label="@XR["TokenMonitor.Model"]" prop="modelId">
                 <el-select v-model="runForm.modelId" placeholder="@XR["Vector.SelectPlaceholder"]" style="width: 260px">

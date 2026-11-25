@@ -13,14 +13,14 @@ var AgentsAppMethodsGroupStartEditor = {
       const chatGroupDto = groupDetail?.chatGroupDto || groupDetail || {}
       const fallbackRoleAgents = [
         {
-          roleName: ncfST('Frontend.132'),
+          roleName: ncfST('Frontend.AgentsManager.OwnerAlternate'),
           agentTemplateDto: {
             id: chatGroupDto.adminAgentTemplateId,
             name: chatGroupDto.adminAgentTemplateName
           }
         },
         {
-          roleName: ncfST('Frontend.133'),
+          roleName: ncfST('Frontend.AgentsManager.ContactAlternate'),
           agentTemplateDto: {
             id: chatGroupDto.enterAgentTemplateId,
             name: chatGroupDto.enterAgentTemplateName
@@ -62,7 +62,7 @@ var AgentsAppMethodsGroupStartEditor = {
           `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${requestedGroupId}`)
         const data = response?.data ?? {}
         if (!data.success) {
-          throw new Error(data.errorMessage || data.data || ncfST('Frontend.525'))
+          throw new Error(data.errorMessage || data.data || ncfST('Frontend.AgentsManager.FailedToLoadGroupMembers'))
         }
         if (Number(this.groupStartForm.chatGroupId) === requestedGroupId) {
           this.groupStartParticipants = this.buildGroupStartParticipants(data.data || {})
@@ -75,7 +75,7 @@ var AgentsAppMethodsGroupStartEditor = {
       } catch (error) {
         console.warn('loadGroupStartParticipants failed', error)
         if (Number(this.groupStartForm.chatGroupId) === requestedGroupId) {
-          this.$message.warning(ncfST('Frontend.526'))
+          this.$message.warning(ncfST('Frontend.AgentsManager.CouldNotRefreshTheCompleteMemberListShowingOnlyTheMembersAlready'))
         }
       } finally {
         if (Number(this.groupStartForm.chatGroupId) === requestedGroupId) {
@@ -318,7 +318,7 @@ var AgentsAppMethodsGroupStartEditor = {
         return
       }
 
-      this.$confirm(ncfST('Frontend.527'), ncfST('Frontend.528'))
+      this.$confirm(ncfST('Frontend.AgentsManager.UnsavedChangesExistCloseAnyway'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'))
         .then(_ => this.closeEditorForm(btnType))
         .catch(_ => { });
     },
@@ -408,11 +408,11 @@ var AgentsAppMethodsGroupStartEditor = {
       const binding = Number(this.agentForm?.modelBinding ?? 0)
       const aiModelId = Number(this.agentForm?.aiModelId || 0)
       if (isManualPrompt && binding !== 2) {
-        this.$message.error(ncfST('Frontend.410'))
+        this.$message.error(ncfST('Frontend.AgentsManager.NoPromptRangeModelIsAvailableToInheritForThisManualPromptSelect'))
         return false
       }
       if (binding === 2 && !aiModelId) {
-        this.$message.error(ncfST('Frontend.609'))
+        this.$message.error(ncfST('Frontend.AgentsManager.WhenSelectingAnAIModelManuallyYouMustSelectAChatModel'))
         return false
       }
       return true
@@ -424,35 +424,35 @@ var AgentsAppMethodsGroupStartEditor = {
       const aiModelId = Number(agent.aiModelId || 0)
       const promptContent = String(agent.systemMessage || '').trim()
       if (!agentTemplateId || agent.isHuman || String(agent.systemMessageType) !== '2' || !promptContent) {
-        this.$message.error(ncfST('Frontend.610'))
+        this.$message.error(ncfST('Frontend.AgentsManager.SaveAnAgentTemplateContainingAPlainTextPromptFirst'))
         return
       }
       if (!this.validateAgentModelBindingForm()) {
         return
       }
 
-      const defaultTestInput = `${ncfST('Frontend.361')} ${agent.name || ncfST('Frontend.005')}.`
+      const defaultTestInput = `${ncfST('Frontend.AgentsManager.TaskDescriptionAndExecutionStrategy')} ${agent.name || ncfST('Frontend.AgentsManager.Agent')}.`
       let testInput
       try {
-        const inputResult = await this.$prompt(ncfST('Frontend.620'), ncfST('Frontend.621'), {
+        const inputResult = await this.$prompt(ncfST('Frontend.AgentsManager.EnterTheTaskContentUsedToValidateThisPrompt'), ncfST('Frontend.AgentsManager.PromptTestInput'), {
           inputType: 'textarea',
           inputValue: defaultTestInput,
           inputValidator: value => !!String(value || '').trim(),
-          inputErrorMessage: ncfST('Frontend.622')
+          inputErrorMessage: ncfST('Frontend.AgentsManager.TestInputCannotBeEmpty')
         })
         testInput = String(inputResult.value || '').trim()
       } catch (_) {
         return
       }
 
-      const defaultExpectedResult = `${ncfST('Frontend.623', agent.name || ncfST('Frontend.005'))} ${agent.description || ncfST('Frontend.624')}`
+      const defaultExpectedResult = `${ncfST('Frontend.AgentsManager.TheResultShouldMatchTheResponsibilitiesOfAgentValueAndProvideAn', agent.name || ncfST('Frontend.AgentsManager.Agent'))} ${agent.description || ncfST('Frontend.AgentsManager.UseTheTestTaskAsTheBasis')}`
       let expectedResult
       try {
-        const expectedResultInput = await this.$prompt(ncfST('Frontend.625'), ncfST('Frontend.626'), {
+        const expectedResultInput = await this.$prompt(ncfST('Frontend.AgentsManager.DescribeTheExpectedResultOrScoringCriteriaPromptRangeWillUseItFor'), ncfST('Frontend.AgentsManager.AutomaticPromptScoringCriteria'), {
           inputType: 'textarea',
           inputValue: defaultExpectedResult,
           inputValidator: value => !!String(value || '').trim(),
-          inputErrorMessage: ncfST('Frontend.627')
+          inputErrorMessage: ncfST('Frontend.AgentsManager.ScoringCriteriaCannotBeEmpty')
         })
         expectedResult = String(expectedResultInput.value || '').trim()
       } catch (_) {
@@ -472,7 +472,7 @@ var AgentsAppMethodsGroupStartEditor = {
           })
         const apiResponse = response?.data || {}
         if (!apiResponse.success) {
-          throw new Error(apiResponse.message || apiResponse.errorMessage || apiResponse.error || ncfST('Frontend.628'))
+          throw new Error(apiResponse.message || apiResponse.errorMessage || apiResponse.error || ncfST('Frontend.AgentsManager.PromptRangeConversionFailed'))
         }
 
         const result = apiResponse.data || {}
@@ -484,11 +484,11 @@ var AgentsAppMethodsGroupStartEditor = {
 
         const resultPreview = String(result.resultString || '').slice(0, 600)
         this.$alert(
-          ncfST('Frontend.631', result.promptCode, result.promptItemVersion, result.score, resultPreview),
-          ncfST('Frontend.629'),
-          { confirmButtonText: ncfST('Frontend.192'), customClass: 'agent-prompt-conversion-result' })
+          ncfST('Frontend.AgentsManager.PromptCreatedAndScoredOnceNRangeReferenceValueNScoredVersionValueNScore', result.promptCode, result.promptItemVersion, result.score, resultPreview),
+          ncfST('Frontend.AgentsManager.PromptRangeConversionCompleted'),
+          { confirmButtonText: ncfST('Frontend.AgentsManager.OK'), customClass: 'agent-prompt-conversion-result' })
       } catch (error) {
-        const message = error?.response?.data?.message || error?.message || ncfST('Frontend.628')
+        const message = error?.response?.data?.message || error?.message || ncfST('Frontend.AgentsManager.PromptRangeConversionFailed')
         this.$message.error(message)
       } finally {
         this.agentPromptConversionLoading = false

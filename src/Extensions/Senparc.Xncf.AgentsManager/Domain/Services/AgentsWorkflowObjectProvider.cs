@@ -93,6 +93,12 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
 
     public string ProviderId => ProviderName;
 
+    /// <summary>
+    /// Lists enabled/disabled AgentsManager Agents, groups, and remote A2A objects
+    /// with metadata used by Workflow designer and runtime binding.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel catalog queries.</param>
+    /// <returns>A value task containing workflow object descriptors.</returns>
     public async ValueTask<IReadOnlyList<WorkflowObjectDescriptor>> GetObjectsAsync(
         CancellationToken cancellationToken = default)
     {
@@ -175,6 +181,12 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
             .ToList();
     }
 
+    /// <summary>
+    /// Dispatches a Workflow object request to a local Agent, Agent group, or remote A2A Agent.
+    /// </summary>
+    /// <param name="request">The object ID, prompt, model, permissions, and correlation context.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <returns>A value task containing output, error, and execution-reference metadata.</returns>
     public async ValueTask<WorkflowObjectExecutionResult> ExecuteAsync(
         WorkflowObjectExecutionRequest request,
         CancellationToken cancellationToken = default)
@@ -269,6 +281,13 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
         return new WorkflowObjectExecutionResult(false, null, "无法识别的 AgentsManager 工作流对象。");
     }
 
+    /// <summary>
+    /// Executes one local AgentTemplate with model/tool policy and optional human approval.
+    /// </summary>
+    /// <param name="agentId">The local AgentTemplate identifier.</param>
+    /// <param name="request">The Workflow object execution request.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <returns>The local Agent execution result.</returns>
     private async ValueTask<WorkflowObjectExecutionResult> ExecuteSingleAgentAsync(
         int agentId,
         WorkflowObjectExecutionRequest request,
@@ -357,6 +376,14 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
         }
     }
 
+    /// <summary>
+    /// Executes a local Agent while suspending on tool approval requests.
+    /// </summary>
+    /// <param name="agent">The AgentTemplate.</param>
+    /// <param name="request">The Workflow execution request.</param>
+    /// <param name="runRequest">The prepared Agent runner request.</param>
+    /// <param name="cancellationToken">Token used to cancel approval waiting.</param>
+    /// <returns>The approved Agent execution result.</returns>
     private async ValueTask<WorkflowObjectExecutionResult> ExecuteSingleAgentWithHumanApprovalAsync(
         AgentTemplate agent,
         WorkflowObjectExecutionRequest request,
@@ -471,6 +498,13 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
             : new WorkflowObjectExecutionResult(true, result) { Reference = reference };
     }
 
+    /// <summary>
+    /// Creates and invokes a remote A2A Agent through its streaming response path.
+    /// </summary>
+    /// <param name="remoteAgentId">The remote Agent identifier.</param>
+    /// <param name="request">The Workflow execution request.</param>
+    /// <param name="cancellationToken">Token used to cancel the remote call.</param>
+    /// <returns>The remote A2A execution result.</returns>
     private async ValueTask<WorkflowObjectExecutionResult> ExecuteRemoteA2AAsync(
         int remoteAgentId,
         WorkflowObjectExecutionRequest request,
@@ -523,12 +557,16 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
         }
     }
 
+    /// <summary>Checks whether the AgentsManager XNCF module is enabled.</summary>
+    /// <returns>A task whose result indicates module availability.</returns>
     private async Task<bool> IsModuleAvailableAsync()
     {
         var module = await _moduleService.GetObjectAsync(z => z.Uid == Register.ModuleUid).ConfigureAwait(false);
         return module?.State == XncfModules_State.开放;
     }
 
+    /// <summary>Reads a Boolean execution parameter with a fallback.</summary>
+    /// <param name="request">The Workflow execution request.</param><param name="name">The parameter name.</param><param name="fallback">The fallback value.</param>
     private static bool GetBooleanParameter(
         WorkflowObjectExecutionRequest request,
         string name,
@@ -558,6 +596,8 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
         return (TEnum)Enum.ToObject(typeof(TEnum), numeric);
     }
 
+    /// <summary>Reads an integer execution parameter with a fallback.</summary>
+    /// <param name="request">The Workflow execution request.</param><param name="name">The parameter name.</param><param name="fallback">The fallback value.</param>
     private static int GetIntegerParameter(
         WorkflowObjectExecutionRequest request,
         string name,
@@ -570,6 +610,7 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 : fallback;
     }
 
+    /// <summary>Notifies NeuBell subscribers after an interaction state change.</summary>
     private static async Task NotifyNeuBellChangedAsync()
     {
         var publisher = SenparcDI.GetServiceProvider(true).GetService<INeuBellPublisher>();
@@ -579,6 +620,11 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
         }
     }
 
+    /// <summary>
+    /// Cancels pending approval requests and consumes their NeuBell notifications.
+    /// </summary>
+    /// <param name="requests">The pending requests to cancel.</param>
+    /// <param name="recipientUserId">The notification recipient identifier.</param>
     private async Task CancelPendingRequestsAsync(
         IEnumerable<PendingHumanRequest> requests,
         string recipientUserId)

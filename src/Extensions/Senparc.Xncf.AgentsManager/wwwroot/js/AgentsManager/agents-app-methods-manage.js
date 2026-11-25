@@ -48,6 +48,8 @@ var AgentsAppMethodsManage = {
     },
     //Legacy comment translated to English.
     resetAgentDetailsQuery() {
+      this.invalidateTaskDetailRequest('agentGroupTask')
+      this.invalidateTaskDetailRequest('agentTask')
       this.agentDetailsTabsActiveName = 'first'
       this.agentDetailsGroupList = []
       this.agentDetailsGroupShowType = '1'
@@ -94,26 +96,26 @@ var AgentsAppMethodsManage = {
         serviceURL = `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.Enable?id=${itemData.id}&enable=${!itemData.enable}`
 
         if (itemData.enable) {
-          messageText = `<div>${ncfST('Frontend.212', itemData.name)}</div><div>${ncfST('Frontend.213')}</div>`
+          messageText = `<div>${ncfST('Frontend.AgentsManager.DisableAgentValue', itemData.name)}</div><div>${ncfST('Frontend.AgentsManager.ThisAgentWillNotTakePartInLaterNewTasks')}</div>`
         } else {
-          messageText = `<div>${ncfST('Frontend.214', itemData.name)}</div>`
+          messageText = `<div>${ncfST('Frontend.AgentsManager.EnableAgentValue', itemData.name)}</div>`
         }
       }
       if (stateType === 'delete') {
-        messageText = `<div>${ncfST('Frontend.215', item.name)}</div><div>${ncfST('Frontend.216')}</div>`
+        messageText = `<div>${ncfST('Frontend.AgentsManager.LeaveGroupValue', item.name)}</div><div>${ncfST('Frontend.AgentsManager.AfterRemovalTaskRecordsYouPreviouslyTookPartInWillNoLonger')}</div>`
       }
       if (!serviceURL) return
-      this.$confirm(messageText, ncfST('Frontend.528'), {
+      this.$confirm(messageText, ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
-        confirmButtonText: ncfST('Frontend.172'),
-        cancelButtonText: ncfST('Studio.Cancel'),
+        confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: ncfST('Frontend.218')
+              message: ncfST('Frontend.AgentsManager.OperationSucceeded')
             });
             if (stateType === 'stop') {
               // const agentMapStr = {
@@ -134,7 +136,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: ncfST('Frontend.219')
+          message: ncfST('Frontend.AgentsManager.OperationCanceled')
         });
       });
     },
@@ -145,26 +147,26 @@ var AgentsAppMethodsManage = {
 
       const willEnable = !group.enable
       const messageText = willEnable
-        ? `<div>${ncfST('Frontend.602', group.name)}</div><div>${ncfST('Frontend.603')}</div>`
-        : `<div>${ncfST('Frontend.604', group.name)}</div><div>${ncfST('Frontend.605')}</div>`
+        ? `<div>${ncfST('Frontend.AgentsManager.ConfirmEnablingGroupValue', group.name)}</div><div>${ncfST('Frontend.AgentsManager.AfterEnablingNewTasksCanBeCreatedAndTheGroupCanBe')}</div>`
+        : `<div>${ncfST('Frontend.AgentsManager.ConfirmDisablingGroupValue', group.name)}</div><div>${ncfST('Frontend.AgentsManager.AfterDisablingNoNewTasksWillBeCreatedAndTheGroupCannot')}</div>`
 
       try {
-        await this.$confirm(messageText, ncfST('Frontend.528'), {
+        await this.$confirm(messageText, ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
           dangerouslyUseHTMLString: true,
-          confirmButtonText: ncfST('Frontend.172'),
-          cancelButtonText: ncfST('Studio.Cancel'),
+          confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
+          cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
           type: 'warning'
         })
 
         const serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.Enable?id=${group.id}&enable=${willEnable}`
         const res = await serviceAM.post(serviceURL)
         if (!res?.data?.success) {
-          throw new Error(res?.data?.errorMessage || res?.data?.data || ncfST('Frontend.168'))
+          throw new Error(res?.data?.errorMessage || res?.data?.data || ncfST('Frontend.AgentsManager.OperationFailed'))
         }
 
         this.$message({
           type: 'success',
-          message: ncfST('Frontend.606', group.name, ncfST(willEnable ? 'Frontend.607' : 'Frontend.608'))
+          message: ncfST('Frontend.AgentsManager.GroupValueHasBeenValue', group.name, ncfST(willEnable ? 'Frontend.AgentsManager.EnabledSupplemental' : 'Frontend.AgentsManager.DisabledSupplemental'))
         })
         if (this.tabsActiveName === 'second') {
           await this.getGroupListData('group')
@@ -174,11 +176,11 @@ var AgentsAppMethodsManage = {
         await this.refreshAgentGraphSnapshot(this.agentListViewMode === 'three')
       } catch (error) {
         if (error === 'cancel' || error === 'close') {
-          this.$message({ type: 'info', message: ncfST('Frontend.219') })
+          this.$message({ type: 'info', message: ncfST('Frontend.AgentsManager.OperationCanceled') })
           return
         }
         this.$message({
-          message: error?.message || ncfST('Frontend.168'),
+          message: error?.message || ncfST('Frontend.AgentsManager.OperationFailed'),
           type: 'error',
           duration: 5 * 1000
         })
@@ -216,39 +218,39 @@ var AgentsAppMethodsManage = {
 
         if (adminGroups.length || enterGroups.length) {
           const blockedMessage = [
-            `<div>${ncfST('Frontend.220', itemData.name)}</div>`,
-            adminGroups.length ? `<div style="margin-top:6px;">${ncfST('Frontend.221', adminGroups.join(', '))}</div>` : '',
-            enterGroups.length ? `<div style="margin-top:6px;">${ncfST('Frontend.222', enterGroups.join(', '))}</div>` : '',
-            `<div style="margin-top:8px;color:#E6A23C;">${ncfST('Frontend.223')}</div>`
+            `<div>${ncfST('Frontend.AgentsManager.AgentValueCannotBeDeletedRightNow', itemData.name)}</div>`,
+            adminGroups.length ? `<div style="margin-top:6px;">${ncfST('Frontend.AgentsManager.GroupsAsOwnerValue', adminGroups.join(', '))}</div>` : '',
+            enterGroups.length ? `<div style="margin-top:6px;">${ncfST('Frontend.AgentsManager.GroupsAsContactValue', enterGroups.join(', '))}</div>` : '',
+            `<div style="margin-top:8px;color:#E6A23C;">${ncfST('Frontend.AgentsManager.ReplaceTheOwnerContactInTheCorrespondingGroupBeforeDeleting')}</div>`
           ].join('')
 
-          this.$alert(blockedMessage, ncfST('Frontend.224'), {
+          this.$alert(blockedMessage, ncfST('Frontend.AgentsManager.DeletionBlocked'), {
             dangerouslyUseHTMLString: true,
-            confirmButtonText: ncfST('Frontend.225')
+            confirmButtonText: ncfST('Frontend.AgentsManager.GotIt')
           })
           return
         }
 
         const memberGroups = memberGroupList.map(group => group.name)
         const previewMessage = [
-          `<div>${ncfST('Frontend.226', itemData.name)}</div>`,
+          `<div>${ncfST('Frontend.AgentsManager.DeleteAgentValue', itemData.name)}</div>`,
           memberGroups.length
-            ? `<div style="margin-top:6px;">${ncfST('Frontend.227', memberGroups.join(', '))}</div>`
-            : `<div style="margin-top:6px;">${ncfST('Frontend.161')}</div>`,
-          `<div style="margin-top:8px;">${ncfST('Frontend.228')}</div>`
+            ? `<div style="margin-top:6px;">${ncfST('Frontend.AgentsManager.GroupsTheMemberWillLeaveValue', memberGroups.join(', '))}</div>`
+            : `<div style="margin-top:6px;">${ncfST('Frontend.AgentsManager.ThisAgentIsNotCurrentlyAMemberOfAnyGroup')}</div>`,
+          `<div style="margin-top:8px;">${ncfST('Frontend.AgentsManager.MessageHistoryRelatedToThisAgentWillAlsoBeDeletedAndCannot')}</div>`
         ].join('')
 
-        this.$confirm(previewMessage, ncfST('Frontend.217'), {
+        this.$confirm(previewMessage, ncfST('Frontend.AgentsManager.ConfirmAction'), {
           dangerouslyUseHTMLString: true,
-          confirmButtonText: ncfST('Frontend.379'),
-          cancelButtonText: ncfST('Studio.Cancel'),
+          confirmButtonText: ncfST('Frontend.AgentsManager.DeleteAgent'),
+          cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
           type: 'warning'
         }).then(() => {
           serviceAM.post(serviceURL).then(res => {
             if (res.data.success) {
               this.$message({
                 type: 'success',
-                message: ncfST('Frontend.229')
+                message: ncfST('Frontend.AgentsManager.DeletedSuccessfullyEmphasis')
               })
               if (closeEditor) {
                 this.visible.drawerAgent = false
@@ -265,12 +267,12 @@ var AgentsAppMethodsManage = {
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: ncfST('Frontend.219')
+            message: ncfST('Frontend.AgentsManager.OperationCanceled')
           })
         })
       }).catch(() => {
         app.$message({
-          message: ncfST('Frontend.230'),
+          message: ncfST('Frontend.AgentsManager.DeletionPreCheckFailedPleaseTryAgainLater'),
           type: 'error',
           duration: 5 * 1000
         })
@@ -451,17 +453,17 @@ var AgentsAppMethodsManage = {
       let serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.Delete?id=${row.id}`
       if (!serviceURL) return
       // operation confirmation prompt
-      this.$confirm(ncfST('Frontend.231'), ncfST('Frontend.528'), {
+      this.$confirm(ncfST('Frontend.AgentsManager.DeleteThisData'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
-        confirmButtonText: ncfST('Frontend.172'),
-        cancelButtonText: ncfST('Studio.Cancel'),
+        confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: ncfST('Frontend.218')
+              message: ncfST('Frontend.AgentsManager.OperationSucceeded')
             });
             if (optype === 'groupTable') {
               // reload data
@@ -481,7 +483,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: ncfST('Frontend.219')
+          message: ncfST('Frontend.AgentsManager.OperationCanceled')
         });
       });
     },
@@ -490,23 +492,23 @@ var AgentsAppMethodsManage = {
       console.log('handleGroupDeleteBatch:', this.groupSelection);
       const selectedIds = (this.groupSelection || []).map(item => item.id).filter(Boolean)
       if (!selectedIds.length) {
-        this.$message.warning(ncfST('Frontend.232'))
+        this.$message.warning(ncfST('Frontend.AgentsManager.SelectGroupsToDeleteFirst'))
         return
       }
       let serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.DeleteBatch'
       if (!serviceURL) return
       // operation confirmation prompt
-      this.$confirm(ncfST('Frontend.233'), ncfST('Frontend.528'), {
+      this.$confirm(ncfST('Frontend.AgentsManager.DeleteTheSelectedDataInBatch'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
-        confirmButtonText: ncfST('Frontend.172'),
-        cancelButtonText: ncfST('Studio.Cancel'),
+        confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: ncfST('Frontend.218')
+              message: ncfST('Frontend.AgentsManager.OperationSucceeded')
             });
             // reload data
             this.getGroupListData('group')
@@ -521,7 +523,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: ncfST('Frontend.219')
+          message: ncfST('Frontend.AgentsManager.OperationCanceled')
         });
       });
     },
@@ -534,6 +536,7 @@ var AgentsAppMethodsManage = {
         return
       }
       this.clearHistoryTimer()
+      this.invalidateTaskDetailRequest('task')
       this.scrollbarTaskIndex = ''
       // clear detail data
       this.taskDetails = ''
@@ -557,6 +560,7 @@ var AgentsAppMethodsManage = {
       }
       this.clearHistoryTimer()
       if (clickType === 'agentTask') {
+        this.invalidateTaskDetailRequest(clickType)
         this.agentDetailsTaskIndex = index ?? ''
         // clear detail data
         this.agentDetailsTaskDetails = ''
@@ -567,6 +571,7 @@ var AgentsAppMethodsManage = {
         this.getTaskDetailData(clickType, item.id, item)
       }
       if (clickType === 'agentGroupTask') {
+        this.invalidateTaskDetailRequest(clickType)
         this.agentDetailsGroupShowType = '2'
         // clear detail data
         this.agentDetailsGroupDetailsTaskDetails = ''
@@ -577,6 +582,7 @@ var AgentsAppMethodsManage = {
         this.getTaskDetailData(clickType, item.id, item)
       }
       if (clickType === 'groupTask') {
+        this.invalidateTaskDetailRequest(clickType)
         this.groupShowType = '3'
         // clear detail data
         this.groupTaskDetails = ''
@@ -588,6 +594,7 @@ var AgentsAppMethodsManage = {
         this.syncHashRoute({ tab: 'second', groupId: item.chatGroupId || this.scrollbarGroupIndex || null, taskId: item.id })
       }
       if (clickType === 'task') {
+        this.invalidateTaskDetailRequest(clickType)
         this.scrollbarTaskIndex = index ?? ''
         // clear detail data
         this.taskDetails = ''
@@ -648,12 +655,14 @@ var AgentsAppMethodsManage = {
       }
       this.clearHistoryTimer()
       if (clickType === 'agentGroupTask') {
+        this.invalidateTaskDetailRequest(clickType)
         this.agentDetailsGroupShowType = '1'
         // const item = this.agentDetailsGroupList[this.agentDetailsGroupIndex]
         // this.getGroupDetailData('agentGroup', item.id,this.agentDetailsGroupDetails)
 
       }
       if (clickType === 'groupTask') {
+        this.invalidateTaskDetailRequest(clickType)
         this.groupShowType = '2' //Legacy comment translated to English.
         this.syncHashRoute({ tab: 'second', taskId: null })
         // const item = this.groupList[this.scrollbarGroupIndex]
@@ -861,17 +870,17 @@ var AgentsAppMethodsManage = {
       let serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.Delete?id=${row.id}`
       if (!serviceURL) return
       // operation confirmation prompt
-      this.$confirm(ncfST('Frontend.231'), ncfST('Frontend.528'), {
+      this.$confirm(ncfST('Frontend.AgentsManager.DeleteThisData'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
-        confirmButtonText: ncfST('Frontend.172'),
-        cancelButtonText: ncfST('Studio.Cancel'),
+        confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: ncfST('Frontend.218')
+              message: ncfST('Frontend.AgentsManager.OperationSucceeded')
             });
             let groupDetail = {}
             if (optype === 'agentGroupTask') {
@@ -896,7 +905,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: ncfST('Frontend.219')
+          message: ncfST('Frontend.AgentsManager.OperationCanceled')
         });
       });
     },
@@ -920,23 +929,23 @@ var AgentsAppMethodsManage = {
 
       const selectedIds = (selectedRows || []).map(task => task.id).filter(Boolean)
       if (!selectedIds.length) {
-        this.$message.warning(ncfST('Frontend.234'))
+        this.$message.warning(ncfST('Frontend.AgentsManager.SelectTasksToStartFirst'))
         return
       }
 
       const serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.StartBatch'
       // operation confirmation prompt
-      this.$confirm(ncfST('Frontend.235'), ncfST('Frontend.528'), {
+      this.$confirm(ncfST('Frontend.AgentsManager.StartTheSelectedDataInBatch'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
-        confirmButtonText: ncfST('Frontend.172'),
-        cancelButtonText: ncfST('Studio.Cancel'),
+        confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: res?.data?.data || ncfST('Frontend.218')
+              message: res?.data?.data || ncfST('Frontend.AgentsManager.OperationSucceeded')
             });
             if (refreshListType === 'task') {
               const refreshOptions = this.buildTaskRefreshOptions('task', {
@@ -961,7 +970,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: ncfST('Frontend.219')
+          message: ncfST('Frontend.AgentsManager.OperationCanceled')
         });
       });
     },
@@ -982,23 +991,23 @@ var AgentsAppMethodsManage = {
       }
       const selectedIds = (selectedRows || []).map(task => task.id).filter(Boolean)
       if (!selectedIds.length) {
-        this.$message.warning(ncfST('Frontend.236'))
+        this.$message.warning(ncfST('Frontend.AgentsManager.SelectTasksToDeleteFirst'))
         return
       }
       let serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.DeleteBatch'
       if (!serviceURL) return
       // operation confirmation prompt
-      this.$confirm(ncfST('Frontend.233'), ncfST('Frontend.528'), {
+      this.$confirm(ncfST('Frontend.AgentsManager.DeleteTheSelectedDataInBatch'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
-        confirmButtonText: ncfST('Frontend.172'),
-        cancelButtonText: ncfST('Studio.Cancel'),
+        confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: ncfST('Frontend.218')
+              message: ncfST('Frontend.AgentsManager.OperationSucceeded')
             });
             let groupDetail = {}, groupType = ''
             if (opType === 'agentGroupTaskBatch') {
@@ -1026,7 +1035,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: ncfST('Frontend.219')
+          message: ncfST('Frontend.AgentsManager.OperationCanceled')
         });
       });
     },
@@ -1034,16 +1043,16 @@ var AgentsAppMethodsManage = {
     handleTaskForceStop(optype, row) {
       if (!row || !row.id) return
       const serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ForceStop?id=${row.id}`
-      this.$confirm(ncfST('Frontend.237'), ncfST('Frontend.528'), {
+      this.$confirm(ncfST('Frontend.AgentsManager.ForceStopThisTask'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true,
-        confirmButtonText: ncfST('Frontend.172'),
-        cancelButtonText: ncfST('Studio.Cancel')
+        confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel')
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: ncfST('Frontend.218')
+              message: ncfST('Frontend.AgentsManager.OperationSucceeded')
             })
             let groupDetail = {}
             if (optype === 'agentGroupTask') {
@@ -1067,7 +1076,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: ncfST('Frontend.219')
+          message: ncfST('Frontend.AgentsManager.OperationCanceled')
         })
       })
     },
@@ -1083,20 +1092,20 @@ var AgentsAppMethodsManage = {
       }
       const selectedIds = (selectedRows || []).map(task => task.id).filter(Boolean)
       if (!selectedIds.length) {
-        this.$message.warning(ncfST('Frontend.238'))
+        this.$message.warning(ncfST('Frontend.AgentsManager.SelectTasksToStopFirst'))
         return
       }
       const serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ForceStopBatch'
-      this.$confirm(ncfST('Frontend.239'), ncfST('Frontend.528'), {
+      this.$confirm(ncfST('Frontend.AgentsManager.ForceStopTheSelectedTasks'), ncfST('Frontend.AgentsManager.ConfirmActionAlternate'), {
         dangerouslyUseHTMLString: true,
-        confirmButtonText: ncfST('Frontend.172'),
-        cancelButtonText: ncfST('Studio.Cancel')
+        confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
+        cancelButtonText: ncfST('Frontend.AgentsManager.Cancel')
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: ncfST('Frontend.218')
+              message: ncfST('Frontend.AgentsManager.OperationSucceeded')
             })
             let groupDetail = {}, groupType = ''
             if (opType === 'agentGroupTaskBatch') {
@@ -1122,7 +1131,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: ncfST('Frontend.219')
+          message: ncfST('Frontend.AgentsManager.OperationCanceled')
         })
       })
     },
@@ -1134,25 +1143,25 @@ var AgentsAppMethodsManage = {
     },
     taskHumanInTheLoopLevelText(value) {
       return {
-        0: ncfST('Frontend.345'),
-        1: ncfST('Frontend.346'),
-        2: ncfST('Frontend.347'),
-        3: ncfST('Frontend.348')
-      }[Number(value)] || ncfST('Frontend.555')
+        0: ncfST('Frontend.AgentsManager.LZeroFullyAutomaticPluginsMCPExecuteAutomatically'),
+        1: ncfST('Frontend.AgentsManager.LOneRiskBasedApprovalMCPDefaultApproval'),
+        2: ncfST('Frontend.AgentsManager.LTwoToolApprovalConfirmEveryToolFirst'),
+        3: ncfST('Frontend.AgentsManager.LThreeHumanParticipantToolApproval')
+      }[Number(value)] || ncfST('Frontend.AgentsManager.NoneAlternate')
     },
     taskToolPermissionText(value) {
       return {
-        0: ncfST('Frontend.468'),
-        1: ncfST('Frontend.470'),
-        2: ncfST('Frontend.412'),
-        3: ncfST('Frontend.455')
-      }[Number(value)] || ncfST('Frontend.555')
+        0: ncfST('Frontend.AgentsManager.InheritHILLevel'),
+        1: ncfST('Frontend.AgentsManager.AutomaticExecution'),
+        2: ncfST('Frontend.AgentsManager.ApproveBeforeExecution'),
+        3: ncfST('Frontend.AgentsManager.Prohibited')
+      }[Number(value)] || ncfST('Frontend.AgentsManager.NoneAlternate')
     },
     taskHumanParticipantStatusText(task) {
       if (!task?.executionPolicyCaptured) {
-        return ncfST('Frontend.444')
+        return ncfST('Frontend.AgentsManager.ThisTaskWasCreatedBeforePolicyRecordingWasEnabledItsHistoricalHIL')
       }
-      return task.includeHumanParticipant ? ncfST('Frontend.578') : ncfST('Frontend.579')
+      return task.includeHumanParticipant ? ncfST('Frontend.AgentsManager.IncludedInThisTask') : ncfST('Frontend.AgentsManager.NotEnabledForThisTask')
     },
     taskDescriptionCopyText() {
       const detail = this.taskDescriptionDetails || {}
@@ -1163,14 +1172,14 @@ var AgentsAppMethodsManage = {
       return [
         this.describeContent,
         '',
-        `--- ${ncfST('Frontend.440')} ---`,
-        `${ncfST('Frontend.341')}：${this.taskHumanInTheLoopLevelText(detail.humanInTheLoopLevel)}`,
-        `${ncfST('Frontend.419')}：${this.taskToolPermissionText(detail.pluginToolPermission)}`,
-        `${ncfST('Frontend.349')}：${this.taskToolPermissionText(detail.mcpToolPermission)}`,
-        `${ncfST('Frontend.343')}：${detail.includeHumanParticipant ? ncfST('Frontend.140') : ncfST('Frontend.501')}`,
-        `${ncfST('Frontend.432')}：${Number(detail.chatMaxRound || 0)}`,
-        `${ncfST('Frontend.354')}：${detail.isPersonality ? ncfST('Frontend.502') : ncfST('Frontend.501')}`,
-        `${ncfST('Frontend.376')}：${detail.requireHumanApproval ? ncfST('Frontend.502') : ncfST('Frontend.501')}`
+        `--- ${ncfST('Frontend.AgentsManager.RunPolicy')} ---`,
+        `${ncfST('Frontend.AgentsManager.HILLevel')}：${this.taskHumanInTheLoopLevelText(detail.humanInTheLoopLevel)}`,
+        `${ncfST('Frontend.AgentsManager.PluginToolPermissions')}：${this.taskToolPermissionText(detail.pluginToolPermission)}`,
+        `${ncfST('Frontend.AgentsManager.MCPToolPermissions')}：${this.taskToolPermissionText(detail.mcpToolPermission)}`,
+        `${ncfST('Frontend.AgentsManager.HumanParticipant')}：${detail.includeHumanParticipant ? ncfST('Frontend.AgentsManager.RunAgentWithPersonalizedParameters') : ncfST('Frontend.AgentsManager.Disable')}`,
+        `${ncfST('Frontend.AgentsManager.MaximumChatRounds')}：${Number(detail.chatMaxRound || 0)}`,
+        `${ncfST('Frontend.AgentsManager.PersonalizedParameters')}：${detail.isPersonality ? ncfST('Frontend.AgentsManager.Enable') : ncfST('Frontend.AgentsManager.Disable')}`,
+        `${ncfST('Frontend.AgentsManager.CompatibleForcedApproval')}：${detail.requireHumanApproval ? ncfST('Frontend.AgentsManager.Enable') : ncfST('Frontend.AgentsManager.Disable')}`
       ].join('\n')
     },
     //Legacy comment translated to English.
@@ -1251,38 +1260,38 @@ var AgentsAppMethodsManage = {
       const enabled = participant?.enable !== false
       const statusText = isRemote
         ? this.remoteParticipantAvailabilityText(participant)
-        : (enabled ? ncfST('Frontend.044') : ncfST('Frontend.043'))
+        : (enabled ? ncfST('Frontend.AgentsManager.Enabled') : ncfST('Frontend.AgentsManager.Disabled'))
       const statusType = isRemote
         ? this.remoteParticipantAvailabilityType(participant)
         : (enabled ? 'success' : 'info')
       const currentUsageText = isHuman
         ? (usage.messageCount === 0
-          ? ncfST('Frontend.174')
-          : `${ncfST('Frontend.071')}: ${this.formatUsageCount(usage.messageCount)}`)
+          ? ncfST('Frontend.AgentsManager.NoContent')
+          : `${ncfST('Frontend.AgentsManager.TotalMessages')}: ${this.formatUsageCount(usage.messageCount)}`)
         : (usage.messageCount === 0
-          ? ncfST('Frontend.174')
+          ? ncfST('Frontend.AgentsManager.NoContent')
           : (hasReportedTokenUsage
-            ? `${ncfST('Frontend.089')}: ${this.formatUsageCount(usage.messageCount)} · ${ncfST('Frontend.084')}: ${this.formatUsageCount(usage.totalTokens)}`
-            : `${ncfST('Frontend.089')}: ${this.formatUsageCount(usage.messageCount)} · ${ncfST('Frontend.084')}`))
+            ? `${ncfST('Frontend.AgentsManager.Messages')}: ${this.formatUsageCount(usage.messageCount)} · ${ncfST('Frontend.AgentsManager.TotalToken')}: ${this.formatUsageCount(usage.totalTokens)}`
+            : `${ncfST('Frontend.AgentsManager.Messages')}: ${this.formatUsageCount(usage.messageCount)} · ${ncfST('Frontend.AgentsManager.TotalToken')}`))
       const totalTokens = Number(participant?.totalTokens || 0)
 
       return {
-        kindText: isHuman ? ncfST('Frontend.343') : (isRemote ? ncfST('Frontend.334') : ncfST('Frontend.436')),
+        kindText: isHuman ? ncfST('Frontend.AgentsManager.HumanParticipant') : (isRemote ? ncfST('Frontend.AgentsManager.RemoteATwoA') : ncfST('Frontend.AgentsManager.Local')),
         kindType: isHuman ? 'info' : (isRemote ? 'warning' : 'primary'),
         statusText,
         statusType,
-        description: participant?.description || ncfST('Frontend.159'),
+        description: participant?.description || ncfST('Frontend.AgentsManager.NoDescription'),
         currentUsageText,
         responseTimeText: isHuman
-          ? ncfST('Frontend.555')
-          : this.formatResponseMilliseconds(usage.averageResponseMilliseconds, ncfST('Frontend.174')),
+          ? ncfST('Frontend.AgentsManager.NoneAlternate')
+          : this.formatResponseMilliseconds(usage.averageResponseMilliseconds, ncfST('Frontend.AgentsManager.NoContent')),
         totalUsageText: isHuman
-          ? ncfST('Frontend.590')
+          ? ncfST('Frontend.AgentsManager.HumanDoesNotCallAModelThisBindingPreservesTheSystemAgentAlternate')
           : (totalTokens > 0
             ? `${this.formatUsageCount(totalTokens)} Token`
-            : ncfST('Frontend.174')),
+            : ncfST('Frontend.AgentsManager.NoContent')),
         activityText: this.formatActivityTime(participant?.lastActiveTime || participant?.lastHealthCheckAt),
-        healthMessage: isRemote ? (participant?.lastHealthCheckMessage || ncfST('Frontend.570')) : '',
+        healthMessage: isRemote ? (participant?.lastHealthCheckMessage || ncfST('Frontend.AgentsManager.ConnectionCheck')) : '',
         isRemote,
         canOpenEditor: !isHuman && Number.isInteger(Number(participant?.id)) && Number(participant.id) > 0,
       }
@@ -1508,10 +1517,10 @@ var AgentsAppMethodsManage = {
                         <span>StopSequences:</span>
                         <span>${item.stopSequences}</span>
                     </div>
-    </div>`, ncfST('Frontend.040'), {
+    </div>`, ncfST('Frontend.AgentsManager.ModelParameters'), {
             dangerouslyUseHTMLString: true, //Legacy comment translated to English.
-            confirmButtonText: ncfST('Frontend.172'),
-            cancelButtonText: ncfST('Studio.Cancel'),
+            confirmButtonText: ncfST('Frontend.AgentsManager.ConfirmAlternate'),
+            cancelButtonText: ncfST('Frontend.AgentsManager.Cancel'),
             showCancelButton: false,
             // type: 'warning'
           }).then(() => { }).catch(() => { });
@@ -1536,7 +1545,7 @@ var AgentsAppMethodsManage = {
         if (itemData) {
           const avg = scoreFormatter(itemData.evalAvgScore)
           const max = scoreFormatter(itemData.evalMaxScore)
-          resultText = `${itemData.nickName || ncfST('Frontend.240')} | ${itemData.fullVersion} | ${ncfST('Frontend.194')} ${avg} | ${ncfST('Frontend.195')} ${max} ${itemData.isDraft ? ncfST('Frontend.241') : ''}`
+          resultText = `${itemData.nickName || ncfST('Frontend.AgentsManager.NotSet')} | ${itemData.fullVersion} | ${ncfST('Frontend.AgentsManager.AverageScore')} ${avg} | ${ncfST('Frontend.AgentsManager.HighestScore')} ${max} ${itemData.isDraft ? ncfST('Frontend.AgentsManager.Draft') : ''}`
         }
       }
       return resultText ?? ''
@@ -1555,7 +1564,7 @@ var AgentsAppMethodsManage = {
       }
 
       const copied = await copyTextForEmbeddedBrowser(text)
-      this.$message[copied ? 'success' : 'error'](copied ? ncfST('Frontend.179') : ncfST('Frontend.180'))
+      this.$message[copied ? 'success' : 'error'](copied ? ncfST('Frontend.AgentsManager.CopiedSuccessfully') : ncfST('Frontend.AgentsManager.CopyFailed'))
       return copied
     },
 };

@@ -83,7 +83,12 @@
         [2026-11-19] v0.4.4 Localized sandbox setup and runtime surfaces
         1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
         2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
-    </PackageReleaseNotes>
+        [2026-11-24] v0.4.4 Updated sandbox request handling and localized runtime surfaces.
+        1. Updated functional behavior and package metadata for the current module changes.
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-25] v0.4.4 Improved Sandbox setup, orchestration, and localized user feedback.
+        1. Updated sandbox setup and runtime interactions while adding localized messages for the affected user flows.
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <Nullable>enable</Nullable>

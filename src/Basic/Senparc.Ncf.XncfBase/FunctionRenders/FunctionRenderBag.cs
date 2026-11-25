@@ -24,8 +24,17 @@ using System.Text;
 
 namespace Senparc.Ncf.XncfBase.FunctionRenders
 {
+    /// <summary>
+    /// Stores the reflection metadata required to invoke and render one registered function.
+    /// </summary>
     public struct FunctionRenderBag
     {
+        /// <summary>
+        /// Initializes a function-render metadata bag and derives its request parameter type.
+        /// </summary>
+        /// <param name="key">The registration key used to identify the function.</param>
+        /// <param name="methodInfo">The reflected method to invoke.</param>
+        /// <param name="functionRenderAttribute">The function-render configuration attribute.</param>
         public FunctionRenderBag(string key, MethodInfo methodInfo, FunctionRenderAttribute functionRenderAttribute)
         {
             MethodInfo = methodInfo;

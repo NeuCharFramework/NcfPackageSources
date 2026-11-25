@@ -24,6 +24,12 @@ namespace System.Web.Mvc
 {
     public static class ShowMessageBoxExtension
     {
+        /// <summary>
+        /// Starts a message-box writer for the current MVC view context.
+        /// </summary>
+        /// <param name="helper">The HTML helper whose view context receives markup.</param>
+        /// <param name="messageType">The message category used to select the CSS class.</param>
+        /// <returns>A disposable message-box writer.</returns>
         public static ShowMessageBox ShowMessageBox(this HtmlHelper helper, MessageType messageType)
         {
             return new ShowMessageBox(helper.ViewContext, messageType);
@@ -40,6 +46,12 @@ namespace System.Web.Mvc
         public MessageType MessageType { get; set; }
         public string Message { get; set; }
 
+        /// <summary>
+        /// Starts writing a message box with the supplied message category.
+        /// </summary>
+        /// <param name="viewContext">The view context whose writer receives markup.</param>
+        /// <param name="messageType">The message category rendered in the opening markup.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="viewContext"/> is null.</exception>
         public ShowMessageBox(ViewContext viewContext, MessageType messageType)
         {
             if (viewContext == null)
@@ -58,17 +70,27 @@ namespace System.Web.Mvc
         }
 
 
+        /// <summary>
+        /// Closes the message-box section.
+        /// </summary>
         public void EndSection()
         {
             this.Dispose();
         }
 
+        /// <summary>
+        /// Closes the message-box section and suppresses finalization.
+        /// </summary>
         public void Dispose()
         {
             this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Writes the closing message-box markup once.
+        /// </summary>
+        /// <param name="disposing">Whether managed resources are being released.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!this._disposed)

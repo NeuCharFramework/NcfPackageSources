@@ -3,7 +3,7 @@
 
 
 @{
-    ViewData["Title"] = XR["Frontend.249"];
+    ViewData["Title"] = XR["Frontend.DynamicData.CreateDynamicDataLayout"];
     Layout = "_Layout_Vue";
 }
 
@@ -15,25 +15,26 @@
 @section breadcrumbs {
     <el-breadcrumb-item>@XR["Area.Extensions"]</el-breadcrumb-item>
     <el-breadcrumb-item>@XR["Module.DynamicData.MenuName"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@XR["Frontend.107"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.DynamicData.DataTableSettings"]</el-breadcrumb-item>
 }
 
 <el-container style="height: 100%;flex-direction:column;flex-wrap: nowrap;">
     <div class="layoutSet-nav df-wn flex-ac">
         <div class="nav-titlebox df-wn flex-ac flex-jc">
             <template v-if="isEditLayoutName">
-                <el-input ref="inputLayoutName" v-model.trim="layoutName" :size="elSize" :placeholder="ncfST('Frontend.197')"
+                <el-input ref="inputLayoutName" v-model.trim="layoutName" :size="elSize" :placeholder="ncfST('Frontend.DynamicData.EnterLayoutName')"
                     style="width:310px" @@blur="handleBlurLayoutName"></el-input>
             </template>
             <template v-else>
-                <span class="title-text" :class="{'title-text_value':!!layoutName}">{{ layoutName || ncfST('Frontend.197') }}</span>
+                <span class="title-text" :class="{'title-text_value':!!layoutName}">{{ layoutName || ncfST('Frontend.DynamicData.EnterLayoutName') }}</span>
+                <ncf-doc-help topic="dynamic.layouts"></ncf-doc-help>
                 <i class="el-icon-edit editLayoutName-btn" @@click="handleEditLayoutName"></i>
             </template>
         </div>
         <div class="nav-btnbox df-wn flex-ac flex-je">
-            <el-button type="primary" :size="elSize" @@click="handleCodeView">{{ ncfST('Frontend.006') }}</el-button>
+            <el-button type="primary" :size="elSize" @@click="handleCodeView">{{ ncfST('Frontend.DynamicData.ViewCode') }}</el-button>
             <el-button type="primary" :size="elSize" icon="el-icon-caret-right" @@click="handlePreview"></el-button>
-            <el-button type="primary" :size="elSize" icon="el-icon-s-promotion" @@click="handleRelease">{{ ncfST('Frontend.033') }}</el-button>
+            <el-button type="primary" :size="elSize" icon="el-icon-s-promotion" @@click="handleRelease">{{ ncfST('Frontend.DynamicData.Publish') }}</el-button>
         </div>
     </div>
     @* Detail content *@
@@ -47,7 +48,7 @@
                             @@click.self="handleSwitchMenu(index)">
                             <template v-if="item.isEditName">
                                 <el-input ref="inputMenuName" v-model.trim="item.name" :size="elSize"
-                                    :placeholder="ncfST('Frontend.205')" style="width:100px"
+                                    :placeholder="ncfST('Frontend.DynamicData.EnterMenuName')" style="width:100px"
                                     @@blur="handleBlurMenuName(item)"></el-input>
                             </template>
                             <template v-else>
@@ -59,7 +60,7 @@
                     </div>
                 </div>
                 <div class="menu-newbtn" @@click="handleAddMenu">
-                    <i class="el-icon-plus"></i>{{ ncfST('Frontend.117') }}
+                    <i class="el-icon-plus"></i>{{ ncfST('Frontend.DynamicData.AddMenu') }}
                 </div>
             </div>
             @* Main action area *@
@@ -148,7 +149,7 @@
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item>
-                            <el-button type="primary" @@click.stop="handleSubmitBtnEdit(item)">{{ ncfST('Frontend.087') }}</el-button>
+                            <el-button type="primary" @@click.stop="handleSubmitBtnEdit(item)">{{ ncfST('Frontend.DynamicData.Submit') }}</el-button>
                             @* <el-button @@click="resetForm('ruleForm')">Reset</el-button> *@
                             </el-form-item>
                         </el-form>
@@ -156,7 +157,7 @@
                     @* Component placeholder *@
                     <div v-if="componentOccupantShow(item)" class="occupant-area df-wn flex-ac flex-jc">
                         <img src="/image/DynamicData/icon-select_active.png" alt="" class="icon-select" />
-                        <span style="user-select:none;">{{ ncfST('Frontend.149') }}</span>
+                        <span style="user-select:none;">{{ ncfST('Frontend.DynamicData.ClickTheRightSideToAddAProperty') }}</span>
                     </div>
                     @* Move up or down *@
                     @* <i class="el-icon-circle-plus upper_add-Component" @@click="handleAddComponent(index)"></i>
@@ -166,7 +167,7 @@
                 @* Add-component hint *@
                 <div class="add-Component_Tips df-wn flex-ac flex-jc" @@click="handleAddComponent()">
                     <img src="/image/DynamicData/icon-select.png" alt="" class="icon-select" />
-                    <span style="user-select:none;">{{ ncfST('Frontend.150') }}</span>
+                    <span style="user-select:none;">{{ ncfST('Frontend.DynamicData.ClickTheRightSideToAddAComponent') }}</span>
                 </div>
             </div>
         </div>
@@ -174,39 +175,39 @@
         <div class="layoutSet-aside">
             <el-tabs v-model="tabsOverallActiveName" :before-leave="handleTabsLeave"
                 @@tab-click="handleTabsClickOverall">
-                <el-tab-pane :label="ncfST('Frontend.141')" name="first">
+                <el-tab-pane :label="ncfST('Frontend.DynamicData.AddAlternate')" name="first">
                     <div class="tabpane">
-                        <div class="operation-title">{{ ncfST('Frontend.163') }}</div>
+                        <div class="operation-title">{{ ncfST('Frontend.DynamicData.Component') }}</div>
                         <div class="operation-area df flex-ac">
                             <div class="assembBtn df-wn flex-ac flex-jc"
                                 :class="{'btnDisabled':addAssembBtnDisabled('table')}"
                                 @@click="handleAddComponent('table')">
                                 <img src="/image/DynamicData/icon-table.png" alt="" class="btn-iconImg" />
-                                <span>{{ ncfST('Frontend.106') }}</span>
+                                <span>{{ ncfST('Frontend.DynamicData.DataGrid') }}</span>
                             </div>
                             <div class="assembBtn df-wn flex-ac flex-jc"
                                 :class="{'btnDisabled':addAssembBtnDisabled('form')}"
                                 @@click="handleAddComponent('form')">
                                 <img src="/image/DynamicData/icon-form.png" alt="" class="btn-iconImg" />
-                                <span>{{ ncfST('Frontend.110') }}</span>
+                                <span>{{ ncfST('Frontend.DynamicData.DataDetails') }}</span>
                             </div>
                             <div class="assembBtn df-wn flex-ac flex-jc"
                                 :class="{'btnDisabled':addAssembBtnDisabled('btn')}"
                                 @@click="handleAddComponent('btn')">
-                                <span>{{ ncfST('Frontend.175') }}</span>
+                                <span>{{ ncfST('Frontend.DynamicData.CustomButton') }}</span>
                             </div>
                         </div>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane :label="ncfST('Frontend.183')" name="second">
+                <el-tab-pane :label="ncfST('Frontend.DynamicData.Settings')" name="second">
                     @* Table settings management *@
                     <div class="tabpane">
                         <div class="subsection-container df-wn flex-ac flex-jc">
                             <div class="subsection-item" :class="{'subsection-item_avtive':setUpActiveName === 'first'}"
-                                @@click="handleSubsectionUpdate('setUpActiveName','first')">{{ ncfST('Frontend.061') }}</div>
+                                @@click="handleSubsectionUpdate('setUpActiveName','first')">{{ ncfST('Frontend.DynamicData.Properties') }}</div>
                             <div class="subsection-item"
                                 :class="{'subsection-item_avtive':setUpActiveName === 'second'}"
-                                @@click="handleSubsectionUpdate('setUpActiveName','second')">{{ ncfST('Frontend.135') }}</div>
+                                @@click="handleSubsectionUpdate('setUpActiveName','second')">{{ ncfST('Frontend.DynamicData.Style') }}</div>
                         </div>
                         @* Property settings *@
                         <template v-if="setUpActiveName === 'first'">
@@ -216,30 +217,30 @@
                                 <div v-if="!columnForm.dataSheet" class="tips-container df-wn flex-ac">
                                     <i class="el-icon-warning-outline"></i>
                                     <span class="tipsText">
-                                        {{ ncfST('Frontend.186') }}
+                                        {{ ncfST('Frontend.DynamicData.SelectADataTableBeforeYouCanConfigureItsFields') }}
                                     </span>
                                 </div>
                                 @* Column management *@
-                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.022') }}</div>
+                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.DynamicData.ColumnManagement') }}</div>
                                 <el-form :model="columnForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                    <el-form-item :label="ncfST('Frontend.108')" prop="dataSheet">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.SelectDataTable')" prop="dataSheet">
                                         <el-select v-model="columnForm.dataSheet" style="width:100%"
-                                            :placeholder="ncfST('Frontend.217')">
-                                            <el-option :label="ncfST('Frontend.104')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.105')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectADataTable')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.DataTableText')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.DataTableTextOne')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.023')" prop="columnData">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ColumnSelection')" prop="columnData">
                                         <table class="table-container">
                                             <thead class="table-head">
                                                 <tr>
                                                     <th style="width:150px">
                                                         <el-checkbox v-model="columnForm.allChecked"
                                                             :disabled="!columnForm.columnData.length"
-                                                            @@change="handleColumnAllCheckedChange">{{ ncfST('Frontend.049') }}</el-checkbox>
+                                                            @@change="handleColumnAllCheckedChange">{{ ncfST('Frontend.DynamicData.Field') }}</el-checkbox>
                                                     </th>
                                                     <th>
-                                                        {{ ncfST('Frontend.102') }}
+                                                        {{ ncfST('Frontend.DynamicData.DataType') }}
                                                     </th>
                                                     <th style="width:30px"></th>
                                                 </tr>
@@ -278,153 +279,153 @@
                                                         <el-popover placement="left" width="400" trigger="click"
                                                             v-model="addColumnVisible">
                                                             <div class="popover-bodyBox">
-                                                                <div class="popover-title">{{ ncfST('Frontend.142') }}</div>
+                                                                <div class="popover-title">{{ ncfST('Frontend.DynamicData.AddColumn') }}</div>
                                                                 <el-form :model="addColumnForm" :size="elSize"
                                                                     label-position="top" label-width="80px"
                                                                     class="form-container">
                                                                     <template
                                                                         v-if="layoutComponentActiveType === 'table'">
-                                                                        <el-form-item :label="ncfST('Frontend.019')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.ColumnProperties')">
                                                                             <el-select v-model="addColumnForm.property"
-                                                                                style="width:100%" :placeholder="ncfST('Frontend.206')">
-                                                                            <el-option :label="ncfST('Frontend.127')"
+                                                                                style="width:100%" :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                                                            <el-option :label="ncfST('Frontend.DynamicData.StandardColumn')"
                                                                                     value="normalColumn"></el-option>
-                                                                            <el-option :label="ncfST('Frontend.096')"
+                                                                            <el-option :label="ncfST('Frontend.DynamicData.ActionColumn')"
                                                                                     value="customColumn"></el-option>
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item :label="ncfST('Frontend.021')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.ColumnTitle')">
                                                                             <el-input v-model.trim="addColumnForm.name"
                                                                                 :size="elSize"
-                                                                                :placeholder="ncfST('Frontend.193')"></el-input>
+                                                                                :placeholder="ncfST('Frontend.DynamicData.EnterAColumnTitle')"></el-input>
                                                                         </el-form-item>
-                                                                        <el-form-item :label="ncfST('Frontend.166')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.BoundField')">
                                                                             <el-select v-model="addColumnForm.field"
                                                                                 style="width:100%"
-                                                                                :placeholder="ncfST('Frontend.223')">
+                                                                                :placeholder="ncfST('Frontend.DynamicData.SelectBoundField')">
                                                                                 <el-option label="name"
                                                                                     value="name"></el-option>
                                                                                 <el-option label="age"
                                                                                     value="age"></el-option>
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item :label="ncfST('Frontend.057')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.DisplayContent')">
                                                                             <el-select
                                                                                 v-model="addColumnForm.displayContent"
                                                                                 style="width:100%"
-                                                                                :placeholder="ncfST('Frontend.211')">
-                                                                                <el-option :label="ncfST('Frontend.046')"
+                                                                                :placeholder="ncfST('Frontend.DynamicData.SelectDisplayContent')">
+                                                                                <el-option :label="ncfST('Frontend.DynamicData.Name')"
                                                                                     value="姓名"></el-option>
-                                                                                <el-option :label="ncfST('Frontend.065')"
+                                                                                <el-option :label="ncfST('Frontend.DynamicData.Age')"
                                                                                     value="年龄"></el-option>
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item :label="ncfST('Frontend.097')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.DataFormat')">
                                                                             <el-select v-model="addColumnForm.dataType"
                                                                                 style="width:100%"
-                                                                                :placeholder="ncfST('Frontend.215')">
+                                                                                :placeholder="ncfST('Frontend.DynamicData.SelectDataFormat')">
                                                                                 <el-option label="number"
                                                                                     value="number"></el-option>
                                                                                 <el-option label="string"
                                                                                     value="string"></el-option>
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item :label="ncfST('Frontend.018')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.ColumnWidth')">
                                                                             <el-input
                                                                                 v-model.trim="addColumnForm.columnWidth"
                                                                                 :size="elSize"
-                                                                                :placeholder="ncfST('Frontend.192')"></el-input>
+                                                                                :placeholder="ncfST('Frontend.DynamicData.EnterColumnWidth')"></el-input>
                                                                             @* <el-select
                                                                             v-model="addColumnForm.columnWidth"
-                                                                            style="width:100%" :placeholder="ncfST('Frontend.206')">
+                                                                            style="width:100%" :placeholder="ncfST('Frontend.DynamicData.Select')">
                                                                             <el-option label="数据表文本"
                                                                             value="shanghai"></el-option>
                                                                             <el-option label="数据表文本1"
                                                                             value="beijing"></el-option>
                                                                             </el-select> *@
                                                                         </el-form-item>
-                                                                        <el-form-item :label="ncfST('Frontend.053')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.Alignment')">
                                                                             <el-select v-model="addColumnForm.alignment"
                                                                                 style="width:100%"
-                                                                                :placeholder="ncfST('Frontend.210')">
-                                                                                <el-option :label="ncfST('Frontend.063')"
+                                                                                :placeholder="ncfST('Frontend.DynamicData.SelectAlignment')">
+                                                                                <el-option :label="ncfST('Frontend.DynamicData.AlignLeft')"
                                                                                     value="left"></el-option>
-                                                                                <el-option :label="ncfST('Frontend.039')"
+                                                                                <el-option :label="ncfST('Frontend.DynamicData.AlignRight')"
                                                                                     value="right"></el-option>
-                                                                                <el-option :label="ncfST('Frontend.003')"
+                                                                                <el-option :label="ncfST('Frontend.DynamicData.CenterAlignOne')"
                                                                                     value="center"></el-option>
                                                                             </el-select>
                                                                         </el-form-item>
                                                                         <el-form-item>
                                                                             <el-checkbox
-                                                                                v-model="addColumnForm.isSort">{{ ncfST('Frontend.010') }}</el-checkbox>
+                                                                                v-model="addColumnForm.isSort">{{ ncfST('Frontend.DynamicData.AllowSorting') }}</el-checkbox>
                                                                             <el-checkbox
-                                                                                v-model="addColumnForm.isExport">{{ ncfST('Frontend.009') }}</el-checkbox>
+                                                                                v-model="addColumnForm.isExport">{{ ncfST('Frontend.DynamicData.AllowExport') }}</el-checkbox>
                                                                             <el-checkbox
-                                                                                v-model="addColumnForm.isEdit">{{ ncfST('Frontend.011') }}</el-checkbox>
+                                                                                v-model="addColumnForm.isEdit">{{ ncfST('Frontend.DynamicData.AllowEdit') }}</el-checkbox>
                                                                             <el-checkbox
-                                                                                v-model="addColumnForm.isDelete">{{ ncfST('Frontend.008') }}</el-checkbox>
+                                                                                v-model="addColumnForm.isDelete">{{ ncfST('Frontend.DynamicData.AllowDelete') }}</el-checkbox>
                                                                         </el-form-item>
                                                                     </template>
                                                                     <template v-if="layoutComponentActiveType === 'form'">
-                                                                        <el-form-item :label="ncfST('Frontend.166')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.BoundField')">
                                                                             <el-select v-model="addColumnForm.field"
                                                                                 style="width:100%"
-                                                                                :placeholder="ncfST('Frontend.223')">
+                                                                                :placeholder="ncfST('Frontend.DynamicData.SelectBoundField')">
                                                                                 <el-option label="name"
                                                                                     value="name"></el-option>
                                                                                 <el-option label="age"
                                                                                     value="age"></el-option>
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item :label="ncfST('Frontend.228')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.SelectComponent')">
                                                                             <el-select v-model="addColumnForm.formItemType"
                                                                                 style="width:100%"
-                                                                                :placeholder="ncfST('Frontend.220')" @@change="handleFormItemTypeChange">
+                                                                                :placeholder="ncfST('Frontend.DynamicData.SelectAComponent')" @@change="handleFormItemTypeChange">
                                                                                 <el-option v-for="(fitItem,fitIndex) in formItemOpt" :key="fitIndex" :label="fitItem.label" :value="fitItem.value" />
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item v-if="formItemTypeOptChildren.length" :label="ncfST('Frontend.165')">
+                                                                        <el-form-item v-if="formItemTypeOptChildren.length" :label="ncfST('Frontend.DynamicData.ComponentType')">
                                                                             <el-select v-model="addColumnForm.type"
                                                                                 style="width:100%"
-                                                                                :placeholder="ncfST('Frontend.222')">
+                                                                                :placeholder="ncfST('Frontend.DynamicData.SelectComponentType')">
                                                                                 <el-option v-for="(fitItem,fitIndex) in formItemTypeOptChildren" :key="fitIndex" :label="fitItem.label" :value="fitItem.value" />
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item :label="ncfST('Frontend.050')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.FieldName')">
                                                                             <el-input v-model.trim="addColumnForm.name"
                                                                                 :size="elSize"
-                                                                                :placeholder="ncfST('Frontend.196')"></el-input>
+                                                                                :placeholder="ncfST('Frontend.DynamicData.EnterFieldName')"></el-input>
                                                                         </el-form-item>
                                                                         @* Selection options *@
-                                                                        <el-form-item v-if="['checkbox', 'radio', 'select'].includes(addColumnForm.formItemType)" :label="ncfST('Frontend.230')">
+                                                                        <el-form-item v-if="['checkbox', 'radio', 'select'].includes(addColumnForm.formItemType)" :label="ncfST('Frontend.DynamicData.Options')">
                                         <el-select v-model="addColumnForm.optionDataType"
-                                            style="width:100%;margin-bottom:10px" :placeholder="ncfST('Frontend.206')">
-                                            <el-option :label="ncfST('Frontend.111')" value="dataSheet"></el-option>
-                                            <el-option :label="ncfST('Frontend.172')" value="customData"></el-option>
+                                            style="width:100%;margin-bottom:10px" :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.Datasets')" value="dataSheet"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Custom')" value="customData"></el-option>
                                         </el-select>
-                                        <el-form-item v-if="addColumnForm.optionDataType === 'dataSheet'" :label="ncfST('Frontend.108')">
+                                        <el-form-item v-if="addColumnForm.optionDataType === 'dataSheet'" :label="ncfST('Frontend.DynamicData.SelectDataTable')">
                                             <el-select v-model="addColumnForm.dataSheet" style="width:100%"
-                                                :placeholder="ncfST('Frontend.217')">
-                                                <el-option :label="ncfST('Frontend.104')" value="shujubiao"></el-option>
-                                                <el-option :label="ncfST('Frontend.105')" value="shujubiao1"></el-option>
+                                                :placeholder="ncfST('Frontend.DynamicData.SelectADataTable')">
+                                                <el-option :label="ncfST('Frontend.DynamicData.DataTableText')" value="shujubiao"></el-option>
+                                                <el-option :label="ncfST('Frontend.DynamicData.DataTableTextOne')" value="shujubiao1"></el-option>
                                             </el-select>
                                         </el-form-item>
                                         <template v-if="addColumnForm.optionDataType === 'customData'">
                                             <el-popover v-for="(item,index) in addColumnForm.optionData" :key="index"
                                             placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">{{ ncfST('Frontend.233') }}</div>
+                                                <div class="popover-title">{{ ncfST('Frontend.DynamicData.OptionSettings') }}</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">{{ ncfST('Frontend.231') }}</div>
+                                                        <div class="line-label">{{ ncfST('Frontend.DynamicData.OptionLabel') }}</div>
                                                         <el-input v-model="item.label"
-                                                            :placeholder="ncfST('Frontend.191')"></el-input>
+                                                            :placeholder="ncfST('Frontend.DynamicData.EnterText')"></el-input>
                                                     </div>
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">{{ ncfST('Frontend.232') }}</div>
+                                                        <div class="line-label">{{ ncfST('Frontend.DynamicData.OptionValue') }}</div>
                                                         <el-input v-model="item.value"
-                                                            :placeholder="ncfST('Frontend.191')"></el-input>
+                                                            :placeholder="ncfST('Frontend.DynamicData.EnterText')"></el-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -432,7 +433,7 @@
                                                 <div class="sortitem-box df-wn flex-ac">
                                                     <img src="/image/DynamicData/icon-move.png" alt=""
                                                         class="moveIcon" />
-                                                    <div class="sortitemtext">{{ item.label&&item.value ? `${item.label}` : ncfST('Frontend.250') }}</div>
+                                                    <div class="sortitemtext">{{ item.label&&item.value ? `${item.label}` : ncfST('Frontend.DynamicData.AddAnOption') }}</div>
                                                     <i class="el-icon-remove-outline"
                                                         style="cursor:pointer;color:#a6a6a6;"
                                                         @@click.stop="handleDeleteOptionData(index)"></i>
@@ -442,33 +443,33 @@
                                         <div class="addsort-box df-wn flex-ac" @@click="handleAddOptionData">
                                             <i class="el-icon-circle-plus-outline"></i>
                                             <span class="tipsText">
-                                                {{ ncfST('Frontend.146') }}
+                                                {{ ncfST('Frontend.DynamicData.AddOption') }}
                                             </span>
                                         </div>
                                         </template>
                                     </el-form-item>
-                                                                        <el-form-item :label="ncfST('Frontend.201')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.EnterHintText')">
                                                                             <el-input v-model.trim="addColumnForm.displayContent"
                                                                                 :size="elSize"
-                                                                                :placeholder="ncfST('Frontend.201')"></el-input>
+                                                                                :placeholder="ncfST('Frontend.DynamicData.EnterHintText')"></el-input>
                                                                         </el-form-item>
-                                                                        <el-form-item :label="ncfST('Frontend.018')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.ColumnWidth')">
                                                                             <el-slider :size="elSize" :min="20" v-model="addColumnForm.columnWidth" :step="10" show-stops></el-slider>
                                                                             @* <el-input
                                                                                 v-model.trim="addColumnForm.columnWidth"
                                                                                 :size="elSize"
-                                                                                :placeholder="ncfST('Frontend.192')"></el-input> *@
+                                                                                :placeholder="ncfST('Frontend.DynamicData.EnterColumnWidth')"></el-input> *@
                                                                         </el-form-item>
                                                                     </template>
                                                                     <el-form-item>
                                                                             <el-button :size="elSize" type="primary"
-                                                                            @@click="onConfirmAddColumn">{{ ncfST('Frontend.152') }}</el-button>
+                                                                            @@click="onConfirmAddColumn">{{ ncfST('Frontend.DynamicData.Confirm') }}</el-button>
                                                                     </el-form-item>
                                                                 </el-form>
                                                             </div>
                                                             <span slot="reference">
                                                                 <i class="el-icon-circle-plus-outline"></i>
-                                                                {{ ncfST('Frontend.142') }}
+                                                                {{ ncfST('Frontend.DynamicData.AddColumn') }}
                                                             </span>
                                                         </el-popover>
                                                     </td>
@@ -482,31 +483,31 @@
                             @* Table data settings *@
                             <template v-if="layoutComponentActiveType === 'table'">
                                 <div class="operation-title" style="margin-top:20px;">
-                                    {{ ncfST('Frontend.109') }}
+                                    {{ ncfST('Frontend.DynamicData.DataSettings') }}
                                 </div>
                                 <el-form :model="dataSetForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                    <el-form-item :label="ncfST('Frontend.101')" prop="filterCriteriaLen">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.DataFiltering')" prop="filterCriteriaLen">
                                         <el-popover placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">{{ ncfST('Frontend.160') }}</div>
+                                                <div class="popover-title">{{ ncfST('Frontend.DynamicData.FilterConditionSettings') }}</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div v-for="(item,index) in dataSetForm.filterCriteria" :key="index"
                                                         class="popover-list-item df-wn flex-ac">
-                                                        <el-select v-model="item.field" :placeholder="ncfST('Frontend.206')">
+                                                        <el-select v-model="item.field" :placeholder="ncfST('Frontend.DynamicData.Select')">
                                                             <el-option v-for="citem in columnForm.columnData"
                                                                 :key="citem.field" :label="citem.name"
                                                                 :value="citem.field">
                                                             </el-option>
                                                         </el-select>
-                                                        <el-select v-model="item.symbol" :placeholder="ncfST('Frontend.206')">
-                                                            <el-option :label="ncfST('Frontend.157')" value="等于">
+                                                        <el-select v-model="item.symbol" :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                                            <el-option :label="ncfST('Frontend.DynamicData.Equals')" value="等于">
                                                             </el-option>
-                                                            <el-option :label="ncfST('Frontend.045')" value="大于">
+                                                            <el-option :label="ncfST('Frontend.DynamicData.GreaterThan')" value="大于">
                                                             </el-option>
-                                                            <el-option :label="ncfST('Frontend.056')" value="小于">
+                                                            <el-option :label="ncfST('Frontend.DynamicData.LessThan')" value="小于">
                                                             </el-option>
                                                         </el-select>
-                                                        <el-input v-model="item.condition" :placeholder="ncfST('Frontend.189')"></el-input>
+                                                        <el-input v-model="item.condition" :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></el-input>
                                                         <i class="el-icon-close cursorPointer"
                                                             @@click="handleDeleteFilterCondition(index)"></i>
                                                     </div>
@@ -514,25 +515,25 @@
                                                 <div class="popover-addbox" @@click="handleAddFilterCondition">
                                                     <i class="el-icon-circle-plus-outline"></i>
                                                     <span class="tipsText">
-                                                        {{ ncfST('Frontend.145') }}
+                                                        {{ ncfST('Frontend.DynamicData.AddFilterCondition') }}
                                                     </span>
                                                 </div>
                                             </div>
                                             <div slot="reference" class="filterCriteria-box df-wn flex-ac">
-                                                <div class="showText">{{ dataSetForm.filterCriteriaLen }}{{ ncfST('Frontend.002') }}</div>
+                                                <div class="showText">{{ dataSetForm.filterCriteriaLen }}{{ ncfST('Frontend.DynamicData.Conditions') }}</div>
                                                 <i class="el-icon-more cursorPointer"></i>
                                             </div>
                                         </el-popover>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.081')" prop="columnData">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.Sort')" prop="columnData">
                                         <el-popover v-for="(item,index) in dataSetForm.sortingRules" :key="index"
                                             placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">{{ ncfST('Frontend.084') }}</div>
+                                                <div class="popover-title">{{ ncfST('Frontend.DynamicData.SortSettings') }}</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">{{ ncfST('Frontend.082') }}</div>
-                                                        <el-select v-model="item.field" :placeholder="ncfST('Frontend.206')">
+                                                        <div class="line-label">{{ ncfST('Frontend.DynamicData.SortField') }}</div>
+                                                        <el-select v-model="item.field" :placeholder="ncfST('Frontend.DynamicData.Select')">
                                                             <el-option v-for="citem in columnForm.columnData"
                                                                 :key="citem.field" :label="citem.name"
                                                                 :value="citem.field">
@@ -540,11 +541,11 @@
                                                         </el-select>
                                                     </div>
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">{{ ncfST('Frontend.083') }}</div>
-                                                        <el-select v-model="item.sort" :placeholder="ncfST('Frontend.206')">
-                                                            <el-option :label="ncfST('Frontend.031')" value="升序">
+                                                        <div class="line-label">{{ ncfST('Frontend.DynamicData.SortOrder') }}</div>
+                                                        <el-select v-model="item.sort" :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                                            <el-option :label="ncfST('Frontend.DynamicData.Ascending')" value="升序">
                                                             </el-option>
-                                                            <el-option :label="ncfST('Frontend.236')" value="降序">
+                                                            <el-option :label="ncfST('Frontend.DynamicData.Descending')" value="降序">
                                                             </el-option>
                                                         </el-select>
                                                     </div>
@@ -560,7 +561,7 @@
                                                         class="moveIcon" />
                                                     <div class="sortitemtext">{{ item.field ?
                                                         `${item.field}-${item.sort}` :
-                                                        ncfST('Frontend.251') }}</div>
+                                                        ncfST('Frontend.DynamicData.SelectSortField') }}</div>
                                                     <i class="el-icon-remove-outline"
                                                         style="cursor:pointer;color:#a6a6a6;"
                                                         @@click.stop="handleDeleteSortingRules(index)"></i>
@@ -570,24 +571,24 @@
                                         <div class="addsort-box df-wn flex-ac" @@click="handleAddSortingRules">
                                             <i class="el-icon-circle-plus-outline"></i>
                                             <span class="tipsText">
-                                                {{ ncfST('Frontend.144') }}
+                                                {{ ncfST('Frontend.DynamicData.AddSortRule') }}
                                             </span>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.158')" prop="columnData">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.Filter')" prop="columnData">
                                         <el-popover placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">{{ ncfST('Frontend.159') }}</div>
+                                                <div class="popover-title">{{ ncfST('Frontend.DynamicData.FilterSettings') }}</div>
                                                 <table class="table-container" style="margin-top:20px;">
                                                     <thead class="table-head">
                                                         <tr>
                                                             <th style="width:150px">
                                                                 <el-checkbox v-model="columnForm.allChecked"
                                                                     :disabled="!dataSetForm.filterFieldList.length"
-                                                                    @@change="handleFilterAllCheckedChange">{{ ncfST('Frontend.049') }}</el-checkbox>
+                                                                    @@change="handleFilterAllCheckedChange">{{ ncfST('Frontend.DynamicData.Field') }}</el-checkbox>
                                                             </th>
                                                             <th>
-                                                                {{ ncfST('Frontend.102') }}
+                                                                {{ ncfST('Frontend.DynamicData.DataType') }}
                                                             </th>
                                                             <th style="width:30px"></th>
                                                         </tr>
@@ -622,16 +623,16 @@
                                                 </table>
                                             </div>
                                             <div slot="reference" class="filterCriteria-box df-wn flex-ac">
-                                                <div class="showText">0{{ ncfST('Frontend.001') }}</div>
+                                                <div class="showText">0{{ ncfST('Frontend.DynamicData.ZeroFields') }}</div>
                                                 <i class="el-icon-more cursorPointer"></i>
                                             </div>
                                         </el-popover>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.052')" prop="columnData">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.FieldQueryScope')" prop="columnData">
                                         <el-select v-model="dataSetForm.queryScope" style="width:100%"
-                                            :placeholder="ncfST('Frontend.216')">
-                                            <el-option :label="ncfST('Frontend.013')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.180')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectDataType')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.AllFields')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.TableColumns')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
                                 </el-form>
@@ -639,94 +640,94 @@
                             @* Table standard-column property settings *@
                             <template v-if="layoutComponentActiveType === 'normalColumn'">
                                 <div class="operation-title" style="margin-top:20px;">
-                                    {{ ncfST('Frontend.020') }}
+                                    {{ ncfST('Frontend.DynamicData.ColumnPropertySettings') }}
                                 </div>
                                 <el-form :model="addColumnForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                    <el-form-item :label="ncfST('Frontend.021')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ColumnTitle')">
                                         <el-input v-model.trim="addColumnForm.name" :size="elSize"
-                                            :placeholder="ncfST('Frontend.193')"></el-input>
+                                            :placeholder="ncfST('Frontend.DynamicData.EnterAColumnTitle')"></el-input>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.166')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.BoundField')">
                                         <el-select v-model="addColumnForm.field" style="width:100%"
-                                            :placeholder="ncfST('Frontend.223')">
-                                            <el-option :label="ncfST('Frontend.167')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.168')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectBoundField')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.BoundFieldText')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.BoundFieldTextOne')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.057')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.DisplayContent')">
                                         <el-select v-model="addColumnForm.displayContent" style="width:100%"
-                                            :placeholder="ncfST('Frontend.211')">
-                                            <el-option :label="ncfST('Frontend.058')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.059')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectDisplayContent')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.DisplayContentText')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.DisplayContentTextOne')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.097')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.DataFormat')">
                                         <el-select v-model="addColumnForm.dataType" style="width:100%"
-                                            :placeholder="ncfST('Frontend.215')">
-                                            <el-option :label="ncfST('Frontend.098')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.099')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectDataFormat')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.DataFormatText')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.DataFormatTextOne')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.018')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ColumnWidth')">
                                         <el-input v-model.trim="addColumnForm.columnWidth" :size="elSize"
-                                            :placeholder="ncfST('Frontend.192')"></el-input>
+                                            :placeholder="ncfST('Frontend.DynamicData.EnterColumnWidth')"></el-input>
                                         @* <el-select v-model="addColumnForm.columnWidth"
-                                        style="width:100%" :placeholder="ncfST('Frontend.206')">
+                                        style="width:100%" :placeholder="ncfST('Frontend.DynamicData.Select')">
                                         <el-option label="数据表文本"
                                         value="shanghai"></el-option>
                                         <el-option label="数据表文本1"
                                         value="beijing"></el-option>
                                         </el-select> *@
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.053')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.Alignment')">
                                         <el-select v-model="addColumnForm.alignment" style="width:100%"
-                                            :placeholder="ncfST('Frontend.210')">
-                                            <el-option :label="ncfST('Frontend.063')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.039')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.003')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectAlignment')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.AlignLeft')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.AlignRight')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.CenterAlignOne')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="addColumnForm.isSort">{{ ncfST('Frontend.010') }}</el-checkbox>
-                                        <el-checkbox v-model="addColumnForm.isExport">{{ ncfST('Frontend.009') }}</el-checkbox>
-                                        <el-checkbox v-model="addColumnForm.isEdit">{{ ncfST('Frontend.011') }}</el-checkbox>
-                                        <el-checkbox v-model="addColumnForm.isDelete">{{ ncfST('Frontend.008') }}</el-checkbox>
+                                        <el-checkbox v-model="addColumnForm.isSort">{{ ncfST('Frontend.DynamicData.AllowSorting') }}</el-checkbox>
+                                        <el-checkbox v-model="addColumnForm.isExport">{{ ncfST('Frontend.DynamicData.AllowExport') }}</el-checkbox>
+                                        <el-checkbox v-model="addColumnForm.isEdit">{{ ncfST('Frontend.DynamicData.AllowEdit') }}</el-checkbox>
+                                        <el-checkbox v-model="addColumnForm.isDelete">{{ ncfST('Frontend.DynamicData.AllowDelete') }}</el-checkbox>
                                     </el-form-item>
                                 </el-form>
                             </template>
                             @* Table custom-column property settings *@
                             <template v-if="layoutComponentActiveType === 'customColumn'">
-                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.174') }}</div>
+                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.DynamicData.CustomColumnSettings') }}</div>
                                 <el-form :model="addColumnForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
                                     @* <el-form-item label="Column properties">
-                                    <el-select v-model="addColumnForm.property" style="width:100%" :placeholder="ncfST('Frontend.206')">
+                                    <el-select v-model="addColumnForm.property" style="width:100%" :placeholder="ncfST('Frontend.DynamicData.Select')">
                                     <el-option label="普通列" value="normalColumn"></el-option>
                                     <el-option label="操作列" value="customColumn"></el-option>
                                     </el-select>
                                     </el-form-item> *@
-                                    <el-form-item :label="ncfST('Frontend.021')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ColumnTitle')">
                                         <el-input v-model.trim="addColumnForm.name" :size="elSize"
-                                            :placeholder="ncfST('Frontend.193')"></el-input>
+                                            :placeholder="ncfST('Frontend.DynamicData.EnterAColumnTitle')"></el-input>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.075')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.Button')">
                                         <el-popover v-for="(bitem,bindex) in addColumnForm.btnList" :key="bindex"
                                             placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">{{ ncfST('Frontend.080') }}</div>
+                                                <div class="popover-title">{{ ncfST('Frontend.DynamicData.ButtonSettings') }}</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">{{ ncfST('Frontend.077') }}</div>
+                                                        <div class="line-label">{{ ncfST('Frontend.DynamicData.ButtonName') }}</div>
                                                         <el-input v-model.trim="bitem.name" :size="elSize"
-                                                            :placeholder="ncfST('Frontend.198')"></el-input>
+                                                            :placeholder="ncfST('Frontend.DynamicData.EnterButtonName')"></el-input>
                                                     </div>
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">{{ ncfST('Frontend.078') }}</div>
+                                                        <div class="line-label">{{ ncfST('Frontend.DynamicData.ButtonProperties') }}</div>
                                                         <el-select v-model="bitem.property" :size="elSize"
-                                                            :placeholder="ncfST('Frontend.213')">
-                                                            <el-option :label="ncfST('Frontend.169')" value="edit"></el-option>
-                                                            <el-option :label="ncfST('Frontend.026')" value="delete"></el-option>
-                                                            <el-option :label="ncfST('Frontend.185')" value="details"></el-option>
-                                                            <el-option :label="ncfST('Frontend.113')" value="new"></el-option>
+                                                            :placeholder="ncfST('Frontend.DynamicData.SelectButtonProperty')">
+                                                            <el-option :label="ncfST('Frontend.DynamicData.Edit')" value="edit"></el-option>
+                                                            <el-option :label="ncfST('Frontend.DynamicData.Delete')" value="delete"></el-option>
+                                                            <el-option :label="ncfST('Frontend.DynamicData.Details')" value="details"></el-option>
+                                                            <el-option :label="ncfST('Frontend.DynamicData.Add')" value="new"></el-option>
                                                         </el-select>
                                                     </div>
                                                 </div>
@@ -740,7 +741,7 @@
                                                     <img src="/image/DynamicData/icon-move.png" alt=""
                                                         class="moveIcon" />
                                                     <div class="sortitemtext">
-                                                        {{ bitem.name || ncfST('Frontend.252') }}</div>
+                                                        {{ bitem.name || ncfST('Frontend.DynamicData.EnterANameSupplemental') }}</div>
                                                     <i class="el-icon-remove-outline"
                                                         style="cursor:pointer;color:#a6a6a6;"
                                                         @@click.stop="handleDeleteCustomColumnBtn(bindex)"></i>
@@ -750,20 +751,20 @@
                                         <div class="addsort-box df-wn flex-ac" @@click="handleAddCustomColumnBtn">
                                             <i class="el-icon-circle-plus-outline"></i>
                                             <span class="tipsText">
-                                                {{ ncfST('Frontend.143') }}
+                                                {{ ncfST('Frontend.DynamicData.AddButton') }}
                                             </span>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.018')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ColumnWidth')">
                                         <el-input v-model.trim="addColumnForm.columnWidth" :size="elSize"
-                                            :placeholder="ncfST('Frontend.192')"></el-input>
+                                            :placeholder="ncfST('Frontend.DynamicData.EnterColumnWidth')"></el-input>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.053')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.Alignment')">
                                         <el-select v-model="addColumnForm.alignment" style="width:100%"
-                                            :placeholder="ncfST('Frontend.210')">
-                                            <el-option :label="ncfST('Frontend.063')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.039')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.003')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectAlignment')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.AlignLeft')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.AlignRight')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.CenterAlignOne')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     @* <el-form-item>
@@ -776,180 +777,180 @@
                             </template>
                             @* Table custom-column button property settings *@
                             <template v-if="layoutComponentActiveType === 'columnEditBtn'">
-                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.080') }}</div>
+                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.DynamicData.ButtonSettings') }}</div>
                                 <el-form :model="customColumnBtnForm" :size="elSize" label-position="top"
                                     label-width="80px" class="form-container">
-                                    <el-form-item :label="ncfST('Frontend.077')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ButtonName')">
                                         <el-input v-model.trim="customColumnBtnForm.name" :size="elSize"
-                                            :placeholder="ncfST('Frontend.198')"></el-input>
+                                            :placeholder="ncfST('Frontend.DynamicData.EnterButtonName')"></el-input>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.078')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ButtonProperties')">
                                         <el-select v-model="customColumnBtnForm.property" style="width:100%"
-                                            :placeholder="ncfST('Frontend.213')">
-                                            <el-option :label="ncfST('Frontend.169')" value="edit"></el-option>
-                                            <el-option :label="ncfST('Frontend.026')" value="delete"></el-option>
-                                            <el-option :label="ncfST('Frontend.185')" value="details"></el-option>
-                                            <el-option :label="ncfST('Frontend.113')" value="new"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectButtonProperty')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.Edit')" value="edit"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Delete')" value="delete"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Details')" value="details"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Add')" value="new"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.079')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ButtonType')">
                                         <el-select v-model="customColumnBtnForm.type" style="width:100%"
-                                            :placeholder="ncfST('Frontend.214')">
-                                            <el-option :label="ncfST('Frontend.043')" value="fill"></el-option>
-                                            <el-option :label="ncfST('Frontend.085')" value="stroke"></el-option>
-                                            <el-option :label="ncfST('Frontend.112')" value="text"></el-option>
-                                            <el-option :label="ncfST('Frontend.234')" value="link"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectButtonType')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.Filled')" value="fill"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Outlined')" value="stroke"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Text')" value="text"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Link')" value="link"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="customColumnBtnForm.disable">{{ ncfST('Frontend.156') }}</el-checkbox>
+                                        <el-checkbox v-model="customColumnBtnForm.disable">{{ ncfST('Frontend.DynamicData.Disabled') }}</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="customColumnBtnForm.enterID">{{ ncfST('Frontend.064') }}</el-checkbox>
+                                        <el-checkbox v-model="customColumnBtnForm.enterID">{{ ncfST('Frontend.DynamicData.IncludeId') }}</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="customColumnBtnForm.customIDName">{{ ncfST('Frontend.173') }}</el-checkbox>
+                                        <el-checkbox v-model="customColumnBtnForm.customIDName">{{ ncfST('Frontend.DynamicData.CustomIDName') }}</el-checkbox>
                                     </el-form-item>
                                 </el-form>
                                 @* Custom-column button events *@
-                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.076') }}</div>
+                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.DynamicData.ButtonEvent') }}</div>
                                 <el-form :model="customColumnBtnForm" :size="elSize" label-position="top"
                                     label-width="80px" class="form-container">
-                                    <el-form-item :label="ncfST('Frontend.076')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ButtonEvent')">
                                         <el-select v-model="customColumnBtnForm.btnEvent" style="width:100%"
-                                            :placeholder="ncfST('Frontend.212')">
-                                            <el-option :label="ncfST('Frontend.148')" value="edit"></el-option>
-                                            <el-option :label="ncfST('Frontend.032')" value="delete"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectButtonEvent')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.Click')" value="edit"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.DoubleClick')" value="delete"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.227')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.SelectInteraction')">
                                         <el-select v-model="customColumnBtnForm.interactive" style="width:100%"
-                                            :placeholder="ncfST('Frontend.208')">
-                                            <el-option :label="ncfST('Frontend.072')" value="openPage"></el-option>
-                                            <el-option :label="ncfST('Frontend.226')" value="jumpLink"></el-option>
-                                            <el-option :label="ncfST('Frontend.070')" value="openPopUpBox"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectAnInteraction')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.OpenPage')" value="openPage"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.OpenLink')" value="jumpLink"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.OpenDialog')" value="openPopUpBox"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.164')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ComponentName')">
                                         <el-select v-model="customColumnBtnForm.componentType" style="width:100%"
-                                            :placeholder="ncfST('Frontend.221')">
-                                            <el-option :label="ncfST('Frontend.179')" value="table"></el-option>
-                                            <el-option :label="ncfST('Frontend.176')" value="form"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectComponentName')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.Table')" value="table"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Form')" value="form"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.073')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ExecutableMethods')">
                                         <el-select v-model="customColumnBtnForm.executionMethod" style="width:100%"
-                                            :placeholder="ncfST('Frontend.220')">
-                                            <el-option :label="ncfST('Frontend.027')" value="deleteSingleBar"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectAComponent')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.DeleteOne')" value="deleteSingleBar"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.224')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.SelectAPage')">
                                         <el-select v-model="customColumnBtnForm.page" style="width:100%"
-                                            :placeholder="ncfST('Frontend.224')">
-                                            <el-option :label="ncfST('Frontend.184')" value="visitorEditPage"></el-option>
-                                            <el-option :label="ncfST('Frontend.116')" value="userEdit"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectAPage')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.VisitorEditPage')" value="visitorEditPage"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.AddInterface')" value="userEdit"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.067')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.Dialog')">
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">{{ ncfST('Frontend.133') }}</span>
+                                            <span class="formitem-labelText">{{ ncfST('Frontend.DynamicData.TitleContent') }}</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupTitleText" :size="elSize"
-                                                :placeholder="ncfST('Frontend.203')"></el-input>
+                                                :placeholder="ncfST('Frontend.DynamicData.EnterTitleText')"></el-input>
                                         </div>
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">{{ ncfST('Frontend.255') }}</span>
+                                            <span class="formitem-labelText">{{ ncfST('Frontend.DynamicData.CancelButtonText') }}</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupCancelText" :size="elSize"
-                                                :placeholder="ncfST('Frontend.194')"></el-input>
+                                                :placeholder="ncfST('Frontend.DynamicData.EnterCancelButtonText')"></el-input>
                                         </div>
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">{{ ncfST('Frontend.256') }}</span>
+                                            <span class="formitem-labelText">{{ ncfST('Frontend.DynamicData.ConfirmButtonText') }}</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupConfirmText" :size="elSize"
-                                                :placeholder="ncfST('Frontend.204')"></el-input>
+                                                :placeholder="ncfST('Frontend.DynamicData.EnterConfirmButtonText')"></el-input>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.155')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ConfirmActionSettings')">
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">{{ ncfST('Frontend.090') }}</span>
+                                            <span class="formitem-labelText">{{ ncfST('Frontend.DynamicData.MessageContent') }}</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupPromptContent"
-                                                :size="elSize" :placeholder="ncfST('Frontend.200')"></el-input>
+                                                :size="elSize" :placeholder="ncfST('Frontend.DynamicData.EnterPromptContent')"></el-input>
                                         </div>
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">{{ ncfST('Frontend.093') }}</span>
+                                            <span class="formitem-labelText">{{ ncfST('Frontend.DynamicData.MessageDurationAlternate') }}</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupPromptOften" :size="elSize"
-                                                :placeholder="ncfST('Frontend.202')"></el-input>
+                                                :placeholder="ncfST('Frontend.DynamicData.EnterPromptDuration')"></el-input>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.036')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.CancelActionSettings')">
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">{{ ncfST('Frontend.014') }}</span>
+                                            <span class="formitem-labelText">{{ ncfST('Frontend.DynamicData.ClosePage') }}</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupClosePage" :size="elSize"
-                                                :placeholder="ncfST('Frontend.190')"></el-input>
+                                                :placeholder="ncfST('Frontend.DynamicData.EnterClosePage')"></el-input>
                                         </div>
                                     </el-form-item>
                                 </el-form>
                             </template>
                             @* Form component property settings *@
                             <template v-if="layoutComponentActiveType === 'formItem'">
-                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.177') }}</div>
+                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.DynamicData.FormPropertySettings') }}</div>
                                 <el-form :model="addColumnForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                                                        <el-form-item :label="ncfST('Frontend.166')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.BoundField')">
                                                                             <el-select v-model="addColumnForm.field"
                                                                                 style="width:100%"
-                                                                                :placeholder="ncfST('Frontend.223')">
+                                                                                :placeholder="ncfST('Frontend.DynamicData.SelectBoundField')">
                                                                                 <el-option label="name"
                                                                                     value="name"></el-option>
                                                                                 <el-option label="age"
                                                                                     value="age"></el-option>
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item :label="ncfST('Frontend.228')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.SelectComponent')">
                                                                             <el-select v-model="addColumnForm.formItemType"
                                                                                 style="width:100%"
-                                                                                :placeholder="ncfST('Frontend.220')" @@change="handleFormItemTypeChange">
+                                                                                :placeholder="ncfST('Frontend.DynamicData.SelectAComponent')" @@change="handleFormItemTypeChange">
                                                                                 <el-option v-for="(fitItem,fitIndex) in formItemOpt" :key="fitIndex" :label="fitItem.label" :value="fitItem.value" />
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item v-if="formItemTypeOptChildren.length" :label="ncfST('Frontend.165')">
+                                                                        <el-form-item v-if="formItemTypeOptChildren.length" :label="ncfST('Frontend.DynamicData.ComponentType')">
                                                                             <el-select v-model="addColumnForm.type"
                                                                                 style="width:100%"
-                                                                                :placeholder="ncfST('Frontend.222')">
+                                                                                :placeholder="ncfST('Frontend.DynamicData.SelectComponentType')">
                                                                                 <el-option v-for="(fitItem,fitIndex) in formItemTypeOptChildren" :key="fitIndex" :label="fitItem.label" :value="fitItem.value" />
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item :label="ncfST('Frontend.050')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.FieldName')">
                                                                             <el-input v-model.trim="addColumnForm.name"
                                                                                 :size="elSize"
-                                                                                :placeholder="ncfST('Frontend.196')"></el-input>
+                                                                                :placeholder="ncfST('Frontend.DynamicData.EnterFieldName')"></el-input>
                                                                         </el-form-item>
                                                                         @* Selection options *@
-                                                                        <el-form-item v-if="['checkbox', 'radio', 'select'].includes(addColumnForm.formItemType)" :label="ncfST('Frontend.230')">
+                                                                        <el-form-item v-if="['checkbox', 'radio', 'select'].includes(addColumnForm.formItemType)" :label="ncfST('Frontend.DynamicData.Options')">
                                         <el-select v-model="addColumnForm.optionDataType"
-                                            style="width:100%;margin-bottom:10px" :placeholder="ncfST('Frontend.206')">
-                                            <el-option :label="ncfST('Frontend.111')" value="dataSheet"></el-option>
-                                            <el-option :label="ncfST('Frontend.172')" value="customData"></el-option>
+                                            style="width:100%;margin-bottom:10px" :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.Datasets')" value="dataSheet"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Custom')" value="customData"></el-option>
                                         </el-select>
-                                        <el-form-item v-if="addColumnForm.optionDataType === 'dataSheet'" :label="ncfST('Frontend.108')">
+                                        <el-form-item v-if="addColumnForm.optionDataType === 'dataSheet'" :label="ncfST('Frontend.DynamicData.SelectDataTable')">
                                             <el-select v-model="addColumnForm.dataSheet" style="width:100%"
-                                                :placeholder="ncfST('Frontend.217')">
-                                                <el-option :label="ncfST('Frontend.104')" value="shujubiao"></el-option>
-                                                <el-option :label="ncfST('Frontend.105')" value="shujubiao1"></el-option>
+                                                :placeholder="ncfST('Frontend.DynamicData.SelectADataTable')">
+                                                <el-option :label="ncfST('Frontend.DynamicData.DataTableText')" value="shujubiao"></el-option>
+                                                <el-option :label="ncfST('Frontend.DynamicData.DataTableTextOne')" value="shujubiao1"></el-option>
                                             </el-select>
                                         </el-form-item>
                                         <template v-if="addColumnForm.optionDataType === 'customData'">
                                             <el-popover v-for="(item,index) in addColumnForm.optionData" :key="index"
                                             placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">{{ ncfST('Frontend.233') }}</div>
+                                                <div class="popover-title">{{ ncfST('Frontend.DynamicData.OptionSettings') }}</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">{{ ncfST('Frontend.231') }}</div>
+                                                        <div class="line-label">{{ ncfST('Frontend.DynamicData.OptionLabel') }}</div>
                                                         <el-input v-model="item.label"
-                                                            :placeholder="ncfST('Frontend.191')"></el-input>
+                                                            :placeholder="ncfST('Frontend.DynamicData.EnterText')"></el-input>
                                                     </div>
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">{{ ncfST('Frontend.232') }}</div>
+                                                        <div class="line-label">{{ ncfST('Frontend.DynamicData.OptionValue') }}</div>
                                                         <el-input v-model="item.value"
-                                                            :placeholder="ncfST('Frontend.191')"></el-input>
+                                                            :placeholder="ncfST('Frontend.DynamicData.EnterText')"></el-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -957,7 +958,7 @@
                                                 <div class="sortitem-box df-wn flex-ac">
                                                     <img src="/image/DynamicData/icon-move.png" alt=""
                                                         class="moveIcon" />
-                                                    <div class="sortitemtext">{{ item.label&&item.value ? `${item.label}` : ncfST('Frontend.250') }}</div>
+                                                    <div class="sortitemtext">{{ item.label&&item.value ? `${item.label}` : ncfST('Frontend.DynamicData.AddAnOption') }}</div>
                                                     <i class="el-icon-remove-outline"
                                                         style="cursor:pointer;color:#a6a6a6;"
                                                         @@click.stop="handleDeleteOptionData(index)"></i>
@@ -967,76 +968,76 @@
                                         <div class="addsort-box df-wn flex-ac" @@click="handleAddOptionData">
                                             <i class="el-icon-circle-plus-outline"></i>
                                             <span class="tipsText">
-                                                {{ ncfST('Frontend.146') }}
+                                                {{ ncfST('Frontend.DynamicData.AddOption') }}
                                             </span>
                                         </div>
                                         </template>
                                     </el-form-item>
-                                                                        <el-form-item :label="ncfST('Frontend.091')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.HintText')">
                                                                             <el-input v-model.trim="addColumnForm.displayContent"
                                                                                 :size="elSize"
-                                                                                :placeholder="ncfST('Frontend.201')"></el-input>
+                                                                                :placeholder="ncfST('Frontend.DynamicData.EnterHintText')"></el-input>
                                                                         </el-form-item>
-                                                                        <el-form-item :label="ncfST('Frontend.018')">
+                                                                        <el-form-item :label="ncfST('Frontend.DynamicData.ColumnWidth')">
                                                                             <el-slider :size="elSize" :min="20" v-model="addColumnForm.columnWidth" :step="10" show-stops></el-slider>
                                                                             @* <el-input
                                                                                 v-model.trim="addColumnForm.columnWidth"
                                                                                 :size="elSize"
-                                                                                :placeholder="ncfST('Frontend.192')"></el-input> *@
+                                                                                :placeholder="ncfST('Frontend.DynamicData.EnterColumnWidth')"></el-input> *@
                                                                         </el-form-item>
                                         </el-form>
                                 @* <el-form v-model="sheetSettingForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                    <el-form-item :label="ncfST('Frontend.166')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.BoundField')">
                                         <el-select v-model="sheetSettingForm.boundField" style="width:100%"
-                                            :placeholder="ncfST('Frontend.206')">
-                                            <el-option :label="ncfST('Frontend.281')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.288')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.298')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.234')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.Input')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.DatePicker')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.RadioButton')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Link')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.228')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.SelectComponent')">
                                         <el-select v-model="sheetSettingForm.selectComponent" style="width:100%"
-                                            :placeholder="ncfST('Frontend.220')">
-                                            <el-option :label="ncfST('Frontend.281')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.288')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.298')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.297')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.286')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectAComponent')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.Input')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.DatePicker')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.RadioButton')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Checkbox')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Selector')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.050')">
-                                        <el-input v-model="sheetSettingForm.fieldName" :placeholder="ncfST('Frontend.191')"></el-input>
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.FieldName')">
+                                        <el-input v-model="sheetSettingForm.fieldName" :placeholder="ncfST('Frontend.DynamicData.EnterText')"></el-input>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.091')">
-                                        <el-input v-model="sheetSettingForm.tipText" :placeholder="ncfST('Frontend.191')"></el-input>
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.HintText')">
+                                        <el-input v-model="sheetSettingForm.tipText" :placeholder="ncfST('Frontend.DynamicData.EnterText')"></el-input>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.057')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.DisplayContent')">
                                         <el-select v-model="sheetSettingForm.displayUsage" style="width:100%"
-                                            :placeholder="ncfST('Frontend.206')">
-                                            <el-option :label="ncfST('Frontend.309')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.026')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.185')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.113')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.DropdownTiled')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Delete')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Details')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Add')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.230')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.Options')">
                                         <el-select v-model="sheetSettingForm.customData"
-                                            style="width:100%;margin-bottom:10px" :placeholder="ncfST('Frontend.206')">
-                                            <el-option :label="ncfST('Frontend.310')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.026')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.185')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.113')" value="beijing"></el-option>
+                                            style="width:100%;margin-bottom:10px" :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.CustomDataset')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Delete')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Details')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Add')" value="beijing"></el-option>
                                         </el-select>
                                         <el-popover v-for="(item,index) in sheetSettingForm.optionData" :key="index"
                                             placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">{{ ncfST('Frontend.233') }}</div>
+                                                <div class="popover-title">{{ ncfST('Frontend.DynamicData.OptionSettings') }}</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">{{ ncfST('Frontend.050') }}</div>
+                                                        <div class="line-label">{{ ncfST('Frontend.DynamicData.FieldName') }}</div>
                                                         <el-input v-model="item.optionName"
-                                                            :placeholder="ncfST('Frontend.191')"></el-input>
+                                                            :placeholder="ncfST('Frontend.DynamicData.EnterText')"></el-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1046,7 +1047,7 @@
                                                         class="moveIcon" />
                                                     <div class="sortitemtext">{{ item.optionName ? `${item.optionName}`
                                                         :
-                                                        ncfST('Frontend.250') }}</div>
+                                                        ncfST('Frontend.DynamicData.AddAnOption') }}</div>
                                                     <i class="el-icon-remove-outline"
                                                         style="cursor:pointer;color:#a6a6a6;"
                                                         @@click.stop="handleDeleteOptionData(index)"></i>
@@ -1056,39 +1057,39 @@
                                         <div class="addsort-box df-wn flex-ac" @@click="handleAddOptionData">
                                             <i class="el-icon-circle-plus-outline"></i>
                                             <span class="tipsText">
-                                                {{ ncfST('Frontend.146') }}
+                                                {{ ncfST('Frontend.DynamicData.AddOption') }}
                                             </span>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.311')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.DefaultValue')">
                                         <el-select v-model="sheetSettingForm.defaultValue" style="width:100%"
-                                            :placeholder="ncfST('Frontend.206')">
-                                            <el-option :label="ncfST('Frontend.311') + ' 1'" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.026')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.185')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.113')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.DefaultValue') + ' 1'" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Delete')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Details')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Add')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.312')">
-                                        <el-radio v-model="sheetSettingForm.formType" label="1">{{ ncfST('Frontend.313') }}</el-radio>
-                                        <el-radio v-model="sheetSettingForm.formType" label="2">{{ ncfST('Frontend.314') }}</el-radio>
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.Type')">
+                                        <el-radio v-model="sheetSettingForm.formType" label="1">{{ ncfST('Frontend.DynamicData.SingleLine') }}</el-radio>
+                                        <el-radio v-model="sheetSettingForm.formType" label="2">{{ ncfST('Frontend.DynamicData.Multiline') }}</el-radio>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.315')">
-                                        <el-checkbox v-model="sheetSettingForm.mustFillin">{{ ncfST('Frontend.316') }}</el-checkbox>
-                                        <el-checkbox v-model="sheetSettingForm.notReuse">{{ ncfST('Frontend.317') }}</el-checkbox>
-                                        <el-checkbox v-model="sheetSettingForm.finiteWord">{{ ncfST('Frontend.318') }}</el-checkbox>
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.Validation')">
+                                        <el-checkbox v-model="sheetSettingForm.mustFillin">{{ ncfST('Frontend.DynamicData.RequiredAlternate') }}</el-checkbox>
+                                        <el-checkbox v-model="sheetSettingForm.notReuse">{{ ncfST('Frontend.DynamicData.DoNotAllowDuplicateInput') }}</el-checkbox>
+                                        <el-checkbox v-model="sheetSettingForm.finiteWord">{{ ncfST('Frontend.DynamicData.LimitCharacterCount') }}</el-checkbox>
                                         <div style="display:flex;flex-direction:row;">
                                             <div>
                                                 <el-input style="width:125px" v-model="sheetSettingForm.miniWord"
-                                                    type="number" :placeholder="ncfST('Frontend.319')">
+                                                    type="number" :placeholder="ncfST('Frontend.DynamicData.Minimum')">
                                             </div>-<div>
                                                 <el-input style="width:125px" v-model="sheetSettingForm.maxWord"
-                                                    :placeholder="ncfST('Frontend.320')">
+                                                    :placeholder="ncfST('Frontend.DynamicData.Maximum')">
                                             </div>
                                         </div>
-                                        <el-checkbox v-model="sheetSettingForm.finiteFormat">{{ ncfST('Frontend.321') }}</el-checkbox>
+                                        <el-checkbox v-model="sheetSettingForm.finiteFormat">{{ ncfST('Frontend.DynamicData.LimitInputFormat') }}</el-checkbox>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.322')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.WidthRatio')">
                                         <div class="subsection-container df-wn flex-ac flex-jc">
                                             <div class="subsection-item"
                                                 :class="{'subsection-item_avtive':sheetSettingForm.size === '1/4'}"
@@ -1107,35 +1108,35 @@
                                                 @@click="handleSwitchSubformstyle('size','1')">1</div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.323')">
-                                        <el-radio v-model="sheetSettingForm.dateType" label="1">{{ ncfST('Frontend.324') }}</el-radio>
-                                        <el-radio v-model="sheetSettingForm.dateType" label="2">{{ ncfST('Frontend.325') }}</el-radio>
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.DateType')">
+                                        <el-radio v-model="sheetSettingForm.dateType" label="1">{{ ncfST('Frontend.DynamicData.Date') }}</el-radio>
+                                        <el-radio v-model="sheetSettingForm.dateType" label="2">{{ ncfST('Frontend.DynamicData.DateAndTime') }}</el-radio>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.326')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.TimeType')">
                                         <el-select v-model="sheetSettingForm.timeType" style="width:100%"
-                                            :placeholder="ncfST('Frontend.206')">
-                                            <el-option :label="ncfST('Frontend.327')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.026')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.185')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.113')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.DateFormat')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Delete')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Details')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Add')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.327')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.DateFormat')">
                                         <el-select v-model="sheetSettingForm.dateFormat" style="width:100%"
-                                            :placeholder="ncfST('Frontend.206')">
+                                            :placeholder="ncfST('Frontend.DynamicData.Select')">
                                             <el-option label="2024-9-20" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.026')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.185')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.113')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Delete')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Details')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Add')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.328')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.FieldProperties')">
                                         <div>
-                                            <el-checkbox v-model="sheetSettingForm.readOnly">{{ ncfST('Frontend.329') }}</el-checkbox><i
+                                            <el-checkbox v-model="sheetSettingForm.readOnly">{{ ncfST('Frontend.DynamicData.ReadOnly') }}</el-checkbox><i
                                                 class="el-icon-question"></i>
                                         </div>
                                         <div>
-                                            <el-checkbox v-model="sheetSettingForm.conCeal">{{ ncfST('Frontend.330') }}</el-checkbox><i
+                                            <el-checkbox v-model="sheetSettingForm.conCeal">{{ ncfST('Frontend.DynamicData.Hidden') }}</el-checkbox><i
                                                 class="el-icon-question"></i>
                                         </div>
                                     </el-form-item>
@@ -1143,149 +1144,149 @@
                             </template>
                             @* Form submit-button property settings *@
                             <template v-if="layoutComponentActiveType === 'formSubmitBtn'">
-                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.080') }}</div>
+                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.DynamicData.ButtonSettings') }}</div>
                                 <el-form v-model="formSubmitBtnForm" :size="elSize" label-position="top"
                                     label-width="80px" class="form-container">
-                                    <el-form-item :label="ncfST('Frontend.077')">
-                                        <el-input v-model="formSubmitBtnForm.buttonName" :placeholder="ncfST('Frontend.191')"></el-input>
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ButtonName')">
+                                        <el-input v-model="formSubmitBtnForm.buttonName" :placeholder="ncfST('Frontend.DynamicData.EnterText')"></el-input>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.078')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ButtonProperties')">
                                         <el-select v-model="formSubmitBtnForm.buttonAttribute" style="width:100%"
-                                            :placeholder="ncfST('Frontend.206')">
-                                            <el-option :label="ncfST('Frontend.169')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.026')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.185')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.113')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.Edit')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Delete')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Details')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Add')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.079')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ButtonType')">
                                         <el-select v-model="formSubmitBtnForm.buttonType" style="width:100%"
-                                            :placeholder="ncfST('Frontend.214')">
-                                            <el-option :label="ncfST('Frontend.043')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.085')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.112')" value="beijing"></el-option>
-                                            <el-option :label="ncfST('Frontend.234')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.SelectButtonType')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.Filled')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Outlined')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Text')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Link')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="formSubmitBtnForm.disableId">{{ ncfST('Frontend.156') }}</el-checkbox>
-                                        <el-checkbox v-model="formSubmitBtnForm.bringinId">{{ ncfST('Frontend.064') }}</el-checkbox>
-                                        <el-checkbox v-model="formSubmitBtnForm.customIdname">{{ ncfST('Frontend.173') }}</el-checkbox>
+                                        <el-checkbox v-model="formSubmitBtnForm.disableId">{{ ncfST('Frontend.DynamicData.Disabled') }}</el-checkbox>
+                                        <el-checkbox v-model="formSubmitBtnForm.bringinId">{{ ncfST('Frontend.DynamicData.IncludeId') }}</el-checkbox>
+                                        <el-checkbox v-model="formSubmitBtnForm.customIdname">{{ ncfST('Frontend.DynamicData.CustomIDName') }}</el-checkbox>
                                     </el-form-item>
                                 </el-form>
                                 @* Event settings *@
-                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.076') }}</div>
+                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.DynamicData.ButtonEvent') }}</div>
                                 <el-form v-model="eventSettingForm" :size="elSize" label-position="top"
                                     label-width="80px" class="form-container">
-                                    <el-form-item :label="ncfST('Frontend.076')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ButtonEvent')">
                                         <el-select v-model="eventSettingForm.buttonEvent" style="width:100%"
-                                            :placeholder="ncfST('Frontend.206')">
-                                            <el-option :label="ncfST('Frontend.148')" value="shanghai"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.Click')" value="shanghai"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.164')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ComponentName')">
                                         <el-select v-model="eventSettingForm.moduleName" style="width:100%"
-                                            :placeholder="ncfST('Frontend.206')">
-                                            <el-option :label="ncfST('Frontend.179')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.176')" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.Table')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.Form')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.073')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ExecutableMethods')">
                                         <el-select v-model="eventSettingForm.mannerExecution" style="width:100%"
-                                            :placeholder="ncfST('Frontend.206')">
-                                            <el-option :label="ncfST('Frontend.027')" value="shanghai"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.DeleteOne')" value="shanghai"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.227')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.SelectInteraction')">
                                         <el-select v-model="eventSettingForm.selectInteraction" style="width:100%"
-                                            :placeholder="ncfST('Frontend.206')">
-                                            <el-option :label="ncfST('Frontend.072')" value="shanghai"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.OpenPage')" value="shanghai"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.224')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.SelectAPage')">
                                         <el-select v-model="eventSettingForm.selectPage" style="width:100%"
-                                            :placeholder="ncfST('Frontend.206')">
-                                            <el-option :label="ncfST('Frontend.067')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.184')" value="shanghai"></el-option>
-                                            <el-option :label="ncfST('Frontend.116')" value="shanghai"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.Dialog')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.VisitorEditPage')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.DynamicData.AddInterface')" value="shanghai"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.225')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.CallDataSourceMethod')">
                                         <el-select v-model="eventSettingForm.calldataMethod" style="width:100%"
-                                            :placeholder="ncfST('Frontend.206')">
-                                            <el-option :label="ncfST('Frontend.024')" value="shanghai"></el-option>
+                                            :placeholder="ncfST('Frontend.DynamicData.Select')">
+                                            <el-option :label="ncfST('Frontend.DynamicData.CreateOne')" value="shanghai"></el-option>
                                         </el-select>
                                         <div class="Popupset" style="margin-top:10px;">
-                                            <div class="popuptxet">{{ ncfST('Frontend.253') }}<el-input style="width:160px;margin-left:25px"
-                                                    :placeholder="ncfST('Frontend.189')"></div>
-                                            <div class="popuptxet">{{ ncfST('Frontend.254') }}<el-input style="width:160px;margin-left:25px"
-                                                    :placeholder="ncfST('Frontend.189')"></div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.DynamicData.InputParameters') }}<el-input style="width:160px;margin-left:25px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.DynamicData.OutputParameters') }}<el-input style="width:160px;margin-left:25px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.067')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.Dialog')">
                                         <div class="Popupset">
 
-                                            <div>{{ ncfST('Frontend.070') }}</div>
+                                            <div>{{ ncfST('Frontend.DynamicData.OpenDialog') }}</div>
                                             <div class="popuptxet">
-                                                {{ ncfST('Frontend.133') }}<el-input style="width: 160px;margin-left:53px"
-                                                    :placeholder="ncfST('Frontend.189')"></el-input>
+                                                {{ ncfST('Frontend.DynamicData.TitleContent') }}<el-input style="width: 160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></el-input>
                                             </div>
-                                            <div class="popuptxet">{{ ncfST('Frontend.255') }}<el-input style="width:160px;margin-left:25px"
-                                                    :placeholder="ncfST('Frontend.189')"></div>
-                                            <div class="popuptxet">{{ ncfST('Frontend.256') }}<el-input style="width:160px;margin-left:25px"
-                                                    :placeholder="ncfST('Frontend.189')"></div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.DynamicData.CancelButtonText') }}<el-input style="width:160px;margin-left:25px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.DynamicData.ConfirmButtonText') }}<el-input style="width:160px;margin-left:25px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.155')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ConfirmActionSettings')">
                                         <div class="Popupset">
 
-                                            <div>{{ ncfST('Frontend.124') }}</div>
+                                            <div>{{ ncfST('Frontend.DynamicData.ShowMessage') }}</div>
                                             <div class="popuptxet">
-                                                {{ ncfST('Frontend.090') }}<el-input style="width: 160px;margin-left:53px"
-                                                    :placeholder="ncfST('Frontend.189')"></el-input>
+                                                {{ ncfST('Frontend.DynamicData.MessageContent') }}<el-input style="width: 160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></el-input>
                                             </div>
-                                            <div class="popuptxet">{{ ncfST('Frontend.093') }}<el-input style="width:160px;margin-left:53px"
-                                                    :placeholder="ncfST('Frontend.189')"></div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.DynamicData.MessageDurationAlternate') }}<el-input style="width:160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.036')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.CancelActionSettings')">
                                         <div class="Popupset">
                                             <div class="popuptxet">
-                                                {{ ncfST('Frontend.014') }}<el-input style="width: 160px;margin-left:53px"
-                                                    :placeholder="ncfST('Frontend.189')"></el-input>
+                                                {{ ncfST('Frontend.DynamicData.ClosePage') }}<el-input style="width: 160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></el-input>
                                             </div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.089')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.SubmitSuccessStateSettings')">
                                         <div class="Popupset">
-                                            <div class="popuptxet">{{ ncfST('Frontend.178') }}<el-input style="width:160px;margin-left:25px"
-                                                    :placeholder="ncfST('Frontend.189')"></div>
-                                            <div>{{ ncfST('Frontend.124') }}</div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.DynamicData.FormExecutionMethod') }}<el-input style="width:160px;margin-left:25px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></div>
+                                            <div>{{ ncfST('Frontend.DynamicData.ShowMessage') }}</div>
                                             <div class="popuptxet">
-                                                {{ ncfST('Frontend.090') }}<el-input style="width: 160px;margin-left:53px"
-                                                    :placeholder="ncfST('Frontend.189')"></el-input>
+                                                {{ ncfST('Frontend.DynamicData.MessageContent') }}<el-input style="width: 160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></el-input>
                                             </div>
-                                            <div class="popuptxet">{{ ncfST('Frontend.093') }}<el-input style="width:160px;margin-left:53px"
-                                                    :placeholder="ncfST('Frontend.189')"></div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.DynamicData.MessageDurationAlternate') }}<el-input style="width:160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.088')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.SubmitFailureStateSettings')">
                                         <div class="Popupset">
-                                            <div class="popuptxet">{{ ncfST('Frontend.178') }}<el-input style="width:160px;margin-left:25px"
-                                                    :placeholder="ncfST('Frontend.189')"></div>
-                                            <div>{{ ncfST('Frontend.070') }}</div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.DynamicData.FormExecutionMethod') }}<el-input style="width:160px;margin-left:25px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></div>
+                                            <div>{{ ncfST('Frontend.DynamicData.OpenDialog') }}</div>
                                             <div class="popuptxet">
-                                                {{ ncfST('Frontend.133') }}<el-input style="width: 160px;margin-left:53px"
-                                                    :placeholder="ncfST('Frontend.189')"></el-input>
+                                                {{ ncfST('Frontend.DynamicData.TitleContent') }}<el-input style="width: 160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></el-input>
                                             </div>
                                             <div class="popuptxet">
-                                                {{ ncfST('Frontend.090') }}<el-input style="width: 160px;margin-left:53px"
-                                                    :placeholder="ncfST('Frontend.189')"></el-input>
+                                                {{ ncfST('Frontend.DynamicData.MessageContent') }}<el-input style="width: 160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></el-input>
                                             </div>
-                                            <div class="popuptxet">{{ ncfST('Frontend.255') }}<el-input style="width:160px;margin-left:25px"
-                                                    :placeholder="ncfST('Frontend.189')"></div>
-                                            <div class="popuptxet">{{ ncfST('Frontend.256') }}<el-input style="width:160px;margin-left:25px"
-                                                    :placeholder="ncfST('Frontend.189')"></div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.DynamicData.CancelButtonText') }}<el-input style="width:160px;margin-left:25px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.DynamicData.ConfirmButtonText') }}<el-input style="width:160px;margin-left:25px"
+                                                    :placeholder="ncfST('Frontend.DynamicData.PleaseEnter')"></div>
                                         </div>
                                     </el-form-item>
                                 </el-form>
@@ -1297,9 +1298,9 @@
                         <template v-if="setUpActiveName === 'second'">
                             @* Table overall style settings *@
                             <template v-if="layoutComponentActiveType === 'table'">
-                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.182') }}</div>
+                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.DynamicData.TableStyleSettings') }}</div>
                                 <el-form :model="tableStyleForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                    <el-form-item :label="ncfST('Frontend.181')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.TableSize')">
                                         <div class="subsection-container df-wn flex-ac flex-jc">
                                             <div class="subsection-item"
                                                 :class="{'subsection-item_avtive':tableStyleForm.size === 'medium'}"
@@ -1316,23 +1317,23 @@
                                         </div>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="tableStyleForm.showHeader">{{ ncfST('Frontend.125') }}</el-checkbox>
+                                        <el-checkbox v-model="tableStyleForm.showHeader">{{ ncfST('Frontend.DynamicData.ShowHeader') }}</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="tableStyleForm.stripe">{{ ncfST('Frontend.123') }}</el-checkbox>
+                                        <el-checkbox v-model="tableStyleForm.stripe">{{ ncfST('Frontend.DynamicData.ShowZebraStripes') }}</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="tableStyleForm.border">{{ ncfST('Frontend.126') }}</el-checkbox>
+                                        <el-checkbox v-model="tableStyleForm.border">{{ ncfST('Frontend.DynamicData.ShowBorder') }}</el-checkbox>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.041')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.FixedColumn')">
                                         <table class="table-container">
                                             <thead class="table-head">
                                                 <tr>
                                                     <th style="width:150px">
-                                                        {{ ncfST('Frontend.017') }}
+                                                        {{ ncfST('Frontend.DynamicData.ColumnName') }}
                                                     </th>
                                                     <th>
-                                                        {{ ncfST('Frontend.042') }}
+                                                        {{ ncfST('Frontend.DynamicData.FixedDirection') }}
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -1345,8 +1346,8 @@
                                                     </td>
                                                     <td>
                                                         <el-radio-group v-model="tbody_td.fixed">
-                                                            <el-radio label="left">{{ ncfST('Frontend.062') }}</el-radio>
-                                                            <el-radio label="right">{{ ncfST('Frontend.038') }}</el-radio>
+                                                            <el-radio label="left">{{ ncfST('Frontend.DynamicData.Left') }}</el-radio>
+                                                            <el-radio label="right">{{ ncfST('Frontend.DynamicData.Right') }}</el-radio>
                                                         </el-radio-group>
                                                     </td>
                                                 </tr>
@@ -1355,27 +1356,27 @@
                                     </el-form-item>
                                 </el-form>
                                 @* Pagination settings *@
-                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.016') }}</div>
+                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.DynamicData.PaginationSettings') }}</div>
                                 <el-form :model="paginationForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
                                     <el-form-item>
-                                        <el-checkbox v-model="paginationForm.enable">{{ ncfST('Frontend.040') }}</el-checkbox>
+                                        <el-checkbox v-model="paginationForm.enable">{{ ncfST('Frontend.DynamicData.EnablePagination') }}</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="paginationForm.small">{{ ncfST('Frontend.120') }}</el-checkbox>
+                                        <el-checkbox v-model="paginationForm.small">{{ ncfST('Frontend.DynamicData.UseCompactPagination') }}</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="paginationForm.background">{{ ncfST('Frontend.119') }}</el-checkbox>
+                                        <el-checkbox v-model="paginationForm.background">{{ ncfST('Frontend.DynamicData.AddABackgroundColorToPaginationButtons') }}</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="paginationForm.hideOnSinglePage">{{ ncfST('Frontend.037') }}</el-checkbox>
+                                        <el-checkbox v-model="paginationForm.hideOnSinglePage">{{ ncfST('Frontend.DynamicData.HideWhenOnlyOnePage') }}</el-checkbox>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.048')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ChildComponentEnableLayout')">
                                         <table class="table-container">
                                             <thead class="table-head">
                                                 <tr>
                                                     <th>
                                                         <el-checkbox v-model="paginationForm.allChecked"
-                                                            @@change="handlePaginationAllCheckedChange">{{ ncfST('Frontend.047') }}</el-checkbox>
+                                                            @@change="handlePaginationAllCheckedChange">{{ ncfST('Frontend.DynamicData.ChildComponent') }}</el-checkbox>
                                                     </th>
                                                     <th style="width:30px"></th>
                                                 </tr>
@@ -1396,19 +1397,19 @@
                                             </tbody>
                                         </table>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.129')">
-                                        <el-input v-model="paginationForm.pagerCount" :placeholder="ncfST('Frontend.129')"></el-input>
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.MaximumPageButtons')">
+                                        <el-input v-model="paginationForm.pagerCount" :placeholder="ncfST('Frontend.DynamicData.MaximumPageButtons')"></el-input>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.140')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.ItemsPerPage')">
                                         <el-select v-model="paginationForm.pageSizes" multiple filterable allow-create
-                                            default-first-option :placeholder="ncfST('Frontend.219')">
+                                            default-first-option :placeholder="ncfST('Frontend.DynamicData.SelectItemsPerPage')">
                                             <el-option v-for="item in pageSizesOpt" :key="item" :label="item"
                                                 :value="item">
                                             </el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.007')">
-                                        <el-select v-model="paginationForm.position" filterable :placeholder="ncfST('Frontend.209')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.Position')">
+                                        <el-select v-model="paginationForm.position" filterable :placeholder="ncfST('Frontend.DynamicData.SelectAPosition')">
                                             <el-option v-for="item in pageSizesPositionOpt" :key="item" :label="item"
                                                 :value="item">
                                             </el-option>
@@ -1418,7 +1419,7 @@
                             </template>
                             @* Form overall style settings *@
                             <template v-if="layoutComponentActiveType === 'form'">
-                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.135') }}</div>
+                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.DynamicData.Style') }}</div>
                                 <el-form :model="formStyleForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
                                     @* <el-form-item label="Label font size">
                                         <el-input v-model="formStyleForm.lableFontSize" placeholder="请输入字体大小"></el-input>
@@ -1426,14 +1427,14 @@
                                     <el-form-item label="lable宽度">
                                         <el-input v-model="formStyleForm.labelWidth" placeholder="请输入lable宽度"></el-input>
                                     </el-form-item> *@
-                                    <el-form-item :label="ncfST('Frontend.240')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.LableFontColor')">
                                         <el-color-picker v-model="formStyleForm.lableColor"></el-color-picker>
                                     </el-form-item>
-                                    <el-form-item :label="ncfST('Frontend.053')">
+                                    <el-form-item :label="ncfST('Frontend.DynamicData.Alignment')">
                                         <el-radio-group v-model="formStyleForm.labelPosition">
-                                            <el-radio-button label="left">{{ ncfST('Frontend.063') }}</el-radio-button>
-                                            <el-radio-button label="right">{{ ncfST('Frontend.039') }}</el-radio-button>
-                                            <el-radio-button label="top">{{ ncfST('Frontend.237') }}</el-radio-button>
+                                            <el-radio-button label="left">{{ ncfST('Frontend.DynamicData.AlignLeft') }}</el-radio-button>
+                                            <el-radio-button label="right">{{ ncfST('Frontend.DynamicData.AlignRight') }}</el-radio-button>
+                                            <el-radio-button label="top">{{ ncfST('Frontend.DynamicData.AlignTop') }}</el-radio-button>
                                         </el-radio-group>
                                     </el-form-item>
                                 </el-form>

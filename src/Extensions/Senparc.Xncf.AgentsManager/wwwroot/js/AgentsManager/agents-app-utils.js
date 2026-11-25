@@ -289,11 +289,11 @@ function calculateDuration(startTime, endTime) {
 
   //Legacy comment translated to English.
   let durationParts = [];
-  if (years > 0) durationParts.push(ncfST('Frontend.256', years));
-  if (days > 0) durationParts.push(ncfST('Frontend.257', days));
-  if (hours > 0) durationParts.push(ncfST('Frontend.258', hours));
-  if (minutes > 0) durationParts.push(ncfST('Frontend.259', minutes));
-  if (seconds > 0 || durationParts.length === 0) durationParts.push(ncfST('Frontend.260', seconds));
+  if (years > 0) durationParts.push(ncfST('Frontend.AgentsManager.ValueYears', years));
+  if (days > 0) durationParts.push(ncfST('Frontend.AgentsManager.ValueDays', days));
+  if (hours > 0) durationParts.push(ncfST('Frontend.AgentsManager.ValueHours', hours));
+  if (minutes > 0) durationParts.push(ncfST('Frontend.AgentsManager.ValueMinutes', minutes));
+  if (seconds > 0 || durationParts.length === 0) durationParts.push(ncfST('Frontend.AgentsManager.ValueSeconds', seconds));
 
   return durationParts.join(' ');
 }

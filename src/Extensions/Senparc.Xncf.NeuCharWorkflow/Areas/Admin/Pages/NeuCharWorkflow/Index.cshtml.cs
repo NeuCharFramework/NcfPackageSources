@@ -40,18 +40,32 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.NeuCharWorkflow.Areas.NeuCharWorkflow.Pages;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Provides the administration page handlers for workflow design, interchange,
+/// validation, execution control, replay status, and human interaction.
 /// </summary>
 public class IndexModel(
     Lazy<XncfModuleService> xncfModuleService,
     NeuCharWorkflowAppService workflowAppService,
     IAdminWorkContextProvider adminWorkContextProvider) : AdminXncfModulePageModelBase(xncfModuleService)
 {
+    /// <summary>
+    /// Completes the initial page request; all initial data is loaded by asynchronous handlers.
+    /// </summary>
+    /// <returns>A completed task.</returns>
     public Task OnGetAsync() => Task.CompletedTask;
 
+    /// <summary>
+    /// Returns workflows owned by the current administrator.
+    /// </summary>
+    /// <returns>An HTTP 200 result containing the workflow list.</returns>
     public async Task<IActionResult> OnGetListAsync() =>
         Ok(await workflowAppService.GetListAsync(CurrentAdminUserId, HttpContext.RequestAborted).ConfigureAwait(false));
 
+    /// <summary>
+    /// Returns one owner-scoped workflow detail record.
+    /// </summary>
+    /// <param name="id">The workflow identifier.</param>
+    /// <returns>An HTTP 200 detail result or HTTP 404 when no owned workflow exists.</returns>
     public async Task<IActionResult> OnGetDetailAsync(int id)
     {
         var workflow = await workflowAppService.GetDetailAsync(id, CurrentAdminUserId, HttpContext.RequestAborted)
@@ -59,15 +73,30 @@ public class IndexModel(
         return workflow == null ? NotFound() : Ok(workflow);
     }
 
+    /// <summary>
+    /// Returns observed output schemas collected for one owner-scoped workflow.
+    /// </summary>
+    /// <param name="id">The workflow identifier.</param>
+    /// <returns>An HTTP 200 result containing observed schemas.</returns>
     public async Task<IActionResult> OnGetObservedOutputSchemasAsync(int id) =>
         Ok(await workflowAppService.GetObservedOutputSchemasAsync(
             id,
             CurrentAdminUserId,
             HttpContext.RequestAborted).ConfigureAwait(false));
 
+    /// <summary>
+    /// Returns the module and function metadata required by the workflow designer.
+    /// </summary>
+    /// <returns>An HTTP 200 designer-data result.</returns>
     public async Task<IActionResult> OnGetDesignerDataAsync() =>
         Ok(await workflowAppService.GetDesignerDataAsync(HttpContext.RequestAborted).ConfigureAwait(false));
 
+    /// <summary>
+    /// Exports an owner-scoped workflow as JSON or YAML.
+    /// </summary>
+    /// <param name="id">The workflow identifier.</param>
+    /// <param name="format">The requested interchange format, defaulting to JSON.</param>
+    /// <returns>A downloadable file result or an HTTP error for invalid format/missing workflow.</returns>
     public async Task<IActionResult> OnGetExportAsync(int id, string format = "json")
     {
         if (!TryParseInterchangeFormat(format, out var interchangeFormat))
@@ -90,6 +119,11 @@ public class IndexModel(
         }
     }
 
+    /// <summary>
+    /// Validates an import document without persisting it.
+    /// </summary>
+    /// <param name="request">The document content and optional format.</param>
+    /// <returns>An HTTP 200 preview result or HTTP 400 for invalid interchange content.</returns>
     public async Task<IActionResult> OnPostValidateImportAsync([FromBody] ImportWorkflowRequest request)
     {
         try
@@ -106,6 +140,11 @@ public class IndexModel(
         }
     }
 
+    /// <summary>
+    /// Imports and persists a workflow definition for the current administrator.
+    /// </summary>
+    /// <param name="request">The document content and optional format.</param>
+    /// <returns>An HTTP 200 import result or a mapped HTTP error.</returns>
     public async Task<IActionResult> OnPostImportAsync([FromBody] ImportWorkflowRequest request)
     {
         try
@@ -131,6 +170,11 @@ public class IndexModel(
         }
     }
 
+    /// <summary>
+    /// Creates or updates a workflow while enforcing revision and module-availability checks.
+    /// </summary>
+    /// <param name="request">The workflow definition and optional expected revision.</param>
+    /// <returns>An HTTP 200 workflow result or a mapped validation/conflict response.</returns>
     public async Task<IActionResult> OnPostSaveAsync([FromBody] SaveWorkflowRequest request)
     {
         try
@@ -169,6 +213,11 @@ public class IndexModel(
         }
     }
 
+    /// <summary>
+    /// Executes a workflow immediately using the supplied input.
+    /// </summary>
+    /// <param name="request">The workflow identifier and runtime input.</param>
+    /// <returns>An HTTP 200 run result or a mapped workflow error.</returns>
     public async Task<IActionResult> OnPostRunAsync([FromBody] RunWorkflowRequest request)
     {
         try
@@ -192,6 +241,11 @@ public class IndexModel(
         }
     }
 
+    /// <summary>
+    /// Validates a workflow run without starting execution.
+    /// </summary>
+    /// <param name="request">The workflow identifier and candidate input.</param>
+    /// <returns>An HTTP 200 success result or a mapped workflow error.</returns>
     public async Task<IActionResult> OnPostValidateRunAsync([FromBody] RunWorkflowRequest request)
     {
         try
@@ -215,6 +269,11 @@ public class IndexModel(
         }
     }
 
+    /// <summary>
+    /// Starts a background run and returns its run identifier.
+    /// </summary>
+    /// <param name="request">The workflow identifier and runtime input.</param>
+    /// <returns>An HTTP 200 result containing the run identifier or a mapped error.</returns>
     public async Task<IActionResult> OnPostStartRunAsync([FromBody] RunWorkflowRequest request)
     {
         try
@@ -242,6 +301,12 @@ public class IndexModel(
         }
     }
 
+    /// <summary>
+    /// Returns incremental status events for an owner-scoped workflow run.
+    /// </summary>
+    /// <param name="runId">The runtime run identifier.</param>
+    /// <param name="afterSequence">The last event sequence already consumed by the client.</param>
+    /// <returns>An HTTP 200 snapshot or HTTP 404 when the run is unavailable.</returns>
     public async Task<IActionResult> OnGetRunStatusAsync(Guid runId, long afterSequence = 0)
     {
         var snapshot = await workflowAppService.GetRunStatusAsync(
@@ -252,6 +317,11 @@ public class IndexModel(
         return snapshot == null ? NotFound() : Ok(snapshot);
     }
 
+    /// <summary>
+    /// Resolves a pending human interaction for the current administrator.
+    /// </summary>
+    /// <param name="request">The run, request, decision, input, and reason values.</param>
+    /// <returns>An HTTP 200 result when handled, otherwise HTTP 409.</returns>
     public async Task<IActionResult> OnPostResolveHumanAsync([FromBody] ResolveHumanWorkflowRequest request)
     {
         var result = await workflowAppService.ResolveHumanInteractionAsync(
@@ -265,6 +335,11 @@ public class IndexModel(
         return result.Success ? Ok(result) : StatusCode(409, result.Message);
     }
 
+    /// <summary>
+    /// Requests cancellation of a live run or persisted execution log.
+    /// </summary>
+    /// <param name="request">The optional live run and execution-log identifiers.</param>
+    /// <returns>An HTTP 200 result or a mapped conflict/input error.</returns>
     public async Task<IActionResult> OnPostAbortRunAsync([FromBody] AbortWorkflowRunRequest request)
     {
         try
@@ -286,6 +361,11 @@ public class IndexModel(
         }
     }
 
+    /// <summary>
+    /// Deletes an owner-scoped workflow.
+    /// </summary>
+    /// <param name="request">The workflow identifier to delete.</param>
+    /// <returns>An HTTP 200 result or HTTP 404 when the workflow is absent.</returns>
     public async Task<IActionResult> OnPostDeleteAsync([FromBody] DeleteWorkflowRequest request)
     {
         try
@@ -302,6 +382,12 @@ public class IndexModel(
 
     private int CurrentAdminUserId => adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
 
+    /// <summary>
+    /// Parses a required JSON/YAML format label without throwing for invalid input.
+    /// </summary>
+    /// <param name="value">The format label supplied by the caller.</param>
+    /// <param name="format">Receives the parsed format when valid.</param>
+    /// <returns><see langword="true"/> when the label is JSON or YAML.</returns>
     private static bool TryParseInterchangeFormat(string? value, out WorkflowInterchangeFormat format)
     {
         if (string.Equals(value, "yaml", StringComparison.OrdinalIgnoreCase))
@@ -320,6 +406,12 @@ public class IndexModel(
         return false;
     }
 
+    /// <summary>
+    /// Parses an optional interchange format and converts invalid non-empty values to a workflow error.
+    /// </summary>
+    /// <param name="value">The optional format label.</param>
+    /// <returns>The parsed format, or <see langword="null"/> when omitted.</returns>
+    /// <exception cref="WorkflowInterchangeException">Thrown when a non-empty value is not JSON or YAML.</exception>
     private static WorkflowInterchangeFormat? ParseOptionalInterchangeFormat(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))

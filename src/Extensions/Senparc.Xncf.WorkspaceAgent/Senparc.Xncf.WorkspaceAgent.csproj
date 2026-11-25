@@ -33,7 +33,9 @@
         2. copy runtime files to consumer output and publish directories through the buildTransitive target.
         3. Kept runtime behavior and module integration aligned with the affected service and registration changes.
         4. Standardized related English source comments and package metadata for the current release.
-    </PackageReleaseNotes>
+        [2026-11-24] v0.2.4 Integrated localization, tooling, and runtime improvements across the module.
+        1. Updated functional behavior and package metadata for the current module changes.
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

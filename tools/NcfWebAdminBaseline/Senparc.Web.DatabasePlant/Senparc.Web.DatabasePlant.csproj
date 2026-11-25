@@ -49,7 +49,9 @@
         [2026-11-19] v0.0.21 Updated module behavior, localization metadata, and English source comments
         1. Updated affected project files while preserving existing public integration behavior.
         2. Standardized related English source comments and package metadata for the current release.
-    </PackageReleaseNotes>
+        [2026-11-24] v0.0.21 Dependency compatibility update for affected Senparc modules.
+        1. Aligned dependent package metadata with the current Senparc module versions.
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
     <Configurations>Debug;Release;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
   </PropertyGroup>
   <ItemGroup>

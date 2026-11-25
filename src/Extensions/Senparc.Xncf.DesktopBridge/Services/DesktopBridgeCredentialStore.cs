@@ -29,6 +29,10 @@ using Senparc.Xncf.DesktopBridge.Models;
 
 namespace Senparc.Xncf.DesktopBridge.Services;
 
+/// <summary>
+/// Maintains bounded desktop pairing requests and short-lived authorized sessions.
+/// Tokens are stored only as SHA-256 hashes and authorization comparisons use constant-time equality.
+/// </summary>
 public sealed class DesktopBridgeCredentialStore
 {
     public static readonly TimeSpan PairingLifetime = TimeSpan.FromMinutes(5);
@@ -46,6 +50,10 @@ public sealed class DesktopBridgeCredentialStore
     private readonly Dictionary<Guid, PendingPairing> _pendingPairings = new();
     private readonly Dictionary<Guid, SessionCredential> _sessions = new();
 
+    /// <summary>
+    /// Initializes the store using the optional legacy environment token and NeuBell publisher.
+    /// </summary>
+    /// <param name="neuBellPublisher">Optional publisher used to notify administrators of pairing changes.</param>
     public DesktopBridgeCredentialStore(INeuBellPublisher? neuBellPublisher = null)
         : this(Environment.GetEnvironmentVariable(DesktopBridgeTokenValidator.TokenEnvironmentVariable), neuBellPublisher)
     {
@@ -72,6 +80,13 @@ public sealed class DesktopBridgeCredentialStore
         }
     }
 
+    /// <summary>
+    /// Creates a bounded desktop pairing request with a device code and one-time polling secret.
+    /// </summary>
+    /// <param name="clientName">The display name of the desktop client.</param>
+    /// <param name="remoteAddress">The client network address used for rate limiting and display.</param>
+    /// <returns>The request ID, device code, polling secret, expiration, and poll interval.</returns>
+    /// <exception cref="DesktopBridgePairingRateLimitException">Thrown when pending request limits are exceeded.</exception>
     public DesktopBridgePairingCreateResponse CreatePairingRequest(
         string? clientName,
         string? remoteAddress)
@@ -115,6 +130,12 @@ public sealed class DesktopBridgeCredentialStore
         }
     }
 
+    /// <summary>
+    /// Polls the status of a pairing request using its request ID and secret.
+    /// </summary>
+    /// <param name="requestId">The pairing request identifier.</param>
+    /// <param name="pollSecret">The polling secret returned when the request was created.</param>
+    /// <returns>The pending, approved, denied, expired, or invalid pairing state.</returns>
     public DesktopBridgePairingPollResult Poll(Guid requestId, string? pollSecret)
     {
         if (requestId == Guid.Empty || string.IsNullOrWhiteSpace(pollSecret))
@@ -159,6 +180,12 @@ public sealed class DesktopBridgeCredentialStore
         }
     }
 
+    /// <summary>
+    /// Approves a pending pairing and creates a bounded session credential.
+    /// </summary>
+    /// <param name="requestId">The pairing request identifier.</param>
+    /// <param name="approvedBy">The administrator display name.</param>
+    /// <returns><see langword="true"/> when approval creates a session.</returns>
     public bool Approve(Guid requestId, string? approvedBy)
     {
         var now = DateTimeOffset.UtcNow;
@@ -194,6 +221,11 @@ public sealed class DesktopBridgeCredentialStore
         }
     }
 
+    /// <summary>
+    /// Denies a pending pairing request.
+    /// </summary>
+    /// <param name="requestId">The pairing request identifier.</param>
+    /// <returns><see langword="true"/> when a pending request was denied.</returns>
     public bool Deny(Guid requestId)
     {
         var now = DateTimeOffset.UtcNow;
@@ -212,6 +244,11 @@ public sealed class DesktopBridgeCredentialStore
         }
     }
 
+    /// <summary>
+    /// Revokes an active desktop session and cancels its authorization token.
+    /// </summary>
+    /// <param name="sessionId">The session identifier.</param>
+    /// <returns><see langword="true"/> when a session was revoked.</returns>
     public bool Revoke(Guid sessionId)
     {
         lock (_gate)
@@ -249,6 +286,10 @@ public sealed class DesktopBridgeCredentialStore
         }
     }
 
+    /// <summary>
+    /// Returns non-expired pending pairing requests for administrator display.
+    /// </summary>
+    /// <returns>A snapshot ordered by creation time.</returns>
     public IReadOnlyList<DesktopBridgePendingPairingView> GetPendingPairings()
     {
         lock (_gate)
@@ -268,6 +309,10 @@ public sealed class DesktopBridgeCredentialStore
         }
     }
 
+    /// <summary>
+    /// Returns non-expired active sessions for administrator display.
+    /// </summary>
+    /// <returns>A snapshot ordered by approval time.</returns>
     public IReadOnlyList<DesktopBridgeSessionView> GetSessions()
     {
         lock (_gate)
@@ -287,11 +332,22 @@ public sealed class DesktopBridgeCredentialStore
         }
     }
 
+    /// <summary>
+    /// Checks whether a legacy or paired session token authorizes the caller.
+    /// </summary>
+    /// <param name="suppliedToken">The token supplied by the desktop client.</param>
+    /// <returns><see langword="true"/> when the token is valid and unexpired.</returns>
     public bool IsAuthorized(string? suppliedToken)
     {
         return TryAuthorize(suppliedToken, out _);
     }
 
+    /// <summary>
+    /// Authorizes a token and returns the revocation token associated with a paired session.
+    /// </summary>
+    /// <param name="suppliedToken">The token supplied by the desktop client.</param>
+    /// <param name="sessionRevoked">Receives a token canceled when the paired session is revoked or expires.</param>
+    /// <returns><see langword="true"/> when authorization succeeds.</returns>
     public bool TryAuthorize(string? suppliedToken, out CancellationToken sessionRevoked)
     {
         sessionRevoked = CancellationToken.None;

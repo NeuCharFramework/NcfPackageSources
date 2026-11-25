@@ -39,6 +39,11 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
 
     public string ProviderName => "Docker";
 
+    /// <summary>
+    /// Probes the Docker daemon and executable within the configured timeout.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel probing.</param>
+    /// <returns>A task whose result indicates whether Docker is available.</returns>
     public async Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default)
     {
         try
@@ -58,6 +63,12 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
         }
     }
 
+    /// <summary>
+    /// Runs a container from the supplied isolation specification with bounded output and timeout.
+    /// </summary>
+    /// <param name="specification">The image, arguments, limits, environment, and input specification.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <returns>A task containing exit code and captured output.</returns>
     public Task<IsolatedRuntimeCommandResult> RunAsync(
         IsolatedRuntimeSpec specification,
         CancellationToken cancellationToken = default)
@@ -71,6 +82,12 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
             specification.StandardInput);
     }
 
+    /// <summary>
+    /// Starts an attached container process with redirected standard input/output.
+    /// </summary>
+    /// <param name="specification">The non-detached isolation specification.</param>
+    /// <returns>An interactive runtime connection.</returns>
+    /// <exception cref="ArgumentException">Thrown when the specification requests detached execution.</exception>
     public IIsolatedRuntimeConnection StartAttached(IsolatedRuntimeSpec specification)
     {
         if (specification.Detached)
@@ -83,6 +100,12 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
         return ProcessIsolatedRuntimeConnection.Start(startInfo);
     }
 
+    /// <summary>
+    /// Executes a command inside an existing isolated runtime handle.
+    /// </summary>
+    /// <param name="request">The runtime handle, command, input, limits, and timeout.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <returns>A task containing exit code and captured output.</returns>
     public Task<IsolatedRuntimeCommandResult> ExecAsync(
         IsolatedRuntimeExecRequest request,
         CancellationToken cancellationToken = default)
@@ -95,6 +118,13 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
             request.StandardInput);
     }
 
+    /// <summary>
+    /// Retrieves bounded tail logs for an isolated runtime handle.
+    /// </summary>
+    /// <param name="runtimeHandle">The validated container handle.</param>
+    /// <param name="tailLines">The requested tail line count.</param>
+    /// <param name="cancellationToken">Token used to cancel log retrieval.</param>
+    /// <returns>A task containing combined stderr/stdout logs.</returns>
     public async Task<string> GetLogsAsync(
         string runtimeHandle,
         int tailLines,
@@ -108,6 +138,13 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
         return string.Join(Environment.NewLine, result.StandardError, result.StandardOutput).Trim();
     }
 
+    /// <summary>
+    /// Removes a container by handle, optionally forcing termination.
+    /// </summary>
+    /// <param name="runtimeHandle">The validated container handle.</param>
+    /// <param name="force">Whether stopped/running containers should be force-removed.</param>
+    /// <param name="cancellationToken">Token used to cancel removal.</param>
+    /// <exception cref="InvalidOperationException">Thrown when Docker removal fails.</exception>
     public async Task RemoveAsync(
         string runtimeHandle,
         bool force = true,
@@ -127,6 +164,12 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
         }
     }
 
+    /// <summary>
+    /// Lists container handles matching the requested labels and stopped-state policy.
+    /// </summary>
+    /// <param name="request">The labels and stopped-container option.</param>
+    /// <param name="cancellationToken">Token used to cancel enumeration.</param>
+    /// <returns>A task containing container handles.</returns>
     public async Task<IReadOnlyList<string>> ListHandlesAsync(
         IsolatedRuntimeListRequest request,
         CancellationToken cancellationToken = default)
@@ -158,6 +201,17 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
             .Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
     }
 
+    /// <summary>
+    /// Runs the Docker executable, streams bounded output, writes optional stdin,
+    /// and converts timeout/cancellation into controlled process termination.
+    /// </summary>
+    /// <param name="arguments">The Docker command arguments.</param>
+    /// <param name="timeout">The operation timeout.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <param name="maxOutputCharacters">The output cap; zero means uncapped.</param>
+    /// <param name="standardInput">Optional standard input.</param>
+    /// <returns>A task containing exit code and captured output.</returns>
+    /// <exception cref="TimeoutException">Thrown when the operation exceeds <paramref name="timeout"/>.</exception>
     private async Task<IsolatedRuntimeCommandResult> RunDockerAsync(
         IReadOnlyList<string> arguments,
         TimeSpan timeout,
@@ -245,6 +299,8 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
             standardError.ToString());
     }
 
+    /// <summary>Best-effort terminates an isolated process tree.</summary>
+    /// <param name="process">The process to terminate.</param>
     private static void Terminate(Process process)
     {
         try
@@ -256,6 +312,9 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
         }
     }
 
+    /// <summary>Creates a non-shell Docker process configuration with argument-list escaping.</summary>
+    /// <param name="arguments">The Docker arguments.</param>
+    /// <returns>The process-start configuration.</returns>
     private ProcessStartInfo CreateStartInfo(IReadOnlyList<string> arguments)
     {
         var startInfo = new ProcessStartInfo
@@ -274,6 +333,9 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
         return startInfo;
     }
 
+    /// <summary>Validates a container handle before using it in a Docker command.</summary>
+    /// <param name="runtimeHandle">The runtime handle.</param>
+    /// <exception cref="ArgumentException">Thrown when the handle contains unsafe characters.</exception>
     private static void EnsureHandle(string runtimeHandle)
     {
         if (string.IsNullOrWhiteSpace(runtimeHandle) ||
@@ -284,9 +346,16 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
         }
     }
 
+    /// <summary>Applies the default timeout when a non-positive timeout is supplied.</summary>
+    /// <param name="timeout">The requested timeout.</param>
+    /// <returns>The effective timeout.</returns>
     private static TimeSpan NormalizeTimeout(TimeSpan timeout) =>
         timeout <= TimeSpan.Zero ? TimeSpan.FromSeconds(30) : timeout;
 
+    /// <summary>Appends one output line without exceeding the configured character cap.</summary>
+    /// <param name="builder">The output builder.</param>
+    /// <param name="line">The line to append.</param>
+    /// <param name="maximumCharacters">The maximum output length, or zero for unlimited.</param>
     private static void AppendLimited(StringBuilder builder, string line, int maximumCharacters)
     {
         if (maximumCharacters <= 0)

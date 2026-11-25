@@ -59,11 +59,21 @@ namespace Senparc.Ncf.AreaBase.Admin
 
         protected readonly Lazy<XncfModuleService> _xncfModuleService;
 
+        /// <summary>
+        /// Initializes an XNCF administration page with lazy module-service access.
+        /// </summary>
+        /// <param name="xncfModuleService">The lazy service used to load the module by UID.</param>
         protected AdminXncfModulePageModelBase(Lazy<XncfModuleService> xncfModuleService)
         {
             _xncfModuleService = xncfModuleService;
         }
 
+        /// <summary>
+        /// Loads and maps the module identified by the bound <see cref="AdminPageModelBase.Uid"/>.
+        /// </summary>
+        /// <exception cref="XncfPageException">
+        /// Thrown when no UID is supplied or no registered module matches the UID.
+        /// </exception>
         public virtual void SetXncfModuleDto()
         {
             if (Uid.IsNullOrEmpty())

@@ -118,7 +118,9 @@ using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
-///Legacy comment translated to English.
+/// <summary>
+/// Captures the terminal state and identity of a chat-group execution task.
+/// </summary>
 public sealed record ChatGroupRunResult(
     int ChatTaskId,
     int ChatGroupId,
@@ -171,17 +173,17 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Maximum number of rounds used when a request does not provide an explicit limit.
     /// </summary>
     public const int DefaultChatMaxRound = 20;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Minimum effective round count accepted by chat-group execution.
     /// </summary>
     public const int MinEffectiveChatRounds = 2;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Maximum effective round count accepted by chat-group execution.
     /// </summary>
     public const int MaxEffectiveChatRounds = 50;
 
@@ -190,7 +192,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     private const float DefaultTopP = 0.3f;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Tracks background chat-group execution tasks so completion and failure can be observed.
     /// </summary>
     public static List<Task> TaskList = new List<Task>();
 
@@ -201,6 +203,17 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ChatTaskCancellationRegistry _cancellationRegistry;
 
+    /// <summary>
+    /// Initializes the chat-group service and its task, approval, notification, and scope dependencies.
+    /// </summary>
+    /// <param name="repo">Repository for chat-group persistence.</param>
+    /// <param name="serviceProvider">Dependency-injection provider used by the base service.</param>
+    /// <param name="cache">Cache strategy used for shared agent and group data.</param>
+    /// <param name="chatTaskStreamHub">Hub used to publish task stream events.</param>
+    /// <param name="humanInTheLoopRequestStore">Store used to coordinate approval requests.</param>
+    /// <param name="agentsManagerNeuBellProvider">Notification provider for agent-management changes.</param>
+    /// <param name="scopeFactory">Factory used to isolate background task scopes.</param>
+    /// <param name="cancellationRegistry">Registry used to cancel active chat tasks.</param>
     public ChatGroupService(
         IRepositoryBase<ChatGroup> repo,
         IServiceProvider serviceProvider,
@@ -221,8 +234,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Starts chat-group execution in the background and returns after the task has been registered.
+    /// Completion, failure, and cancellation are tracked through <see cref="TaskList"/>.
     /// </summary>
+    /// <param name="request">The chat-group, prompt, round-limit, and execution options.</param>
+    /// <returns>A completed task indicating that background execution was scheduled.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the request fails validation.</exception>
     public Task RunChatGroupInThread(ChatGroupRunCommand request)
     {
         ValidateRunRequest(request);
@@ -232,8 +249,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Starts chat-group execution in the background and waits until the execution result is available.
     /// </summary>
+    /// <param name="request">The chat-group, prompt, round-limit, and execution options.</param>
+    /// <returns>A task that completes with the terminal chat-group run result.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the request fails validation.</exception>
     public async Task<ChatGroupRunResult> StartChatGroupInThreadAsync(ChatGroupRunCommand request)
     {
         ValidateRunRequest(request);
@@ -243,6 +263,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return await started.Task;
     }
 
+    /// <summary>
+    /// Registers a background task and forwards completion, cancellation, and failure
+    /// to the optional result source.
+    /// </summary>
+    /// <param name="task">The background execution task.</param>
+    /// <param name="started">Optional completion source receiving the terminal result.</param>
     private static void TrackBackgroundTask(
         Task<ChatGroupRunResult> task, TaskCompletionSource<ChatGroupRunResult> started = null)
     {
@@ -275,6 +301,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }, TaskScheduler.Default);
     }
 
+    /// <summary>
+    /// Validates the required chat-group execution request fields.
+    /// </summary>
+    /// <param name="request">The request to validate.</param>
+    /// <exception cref="NcfExceptionBase">Thrown when the group, task name, or prompt is missing.</exception>
     private static void ValidateRunRequest(ChatGroupRunCommand request)
     {
         if (request == null)
@@ -303,21 +334,35 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// <summary>
+    /// Runs a chat group using the awaitable execution path without exposing its result.
     /// </summary>
+    /// <param name="request">The chat-group, prompt, round-limit, and execution options.</param>
+    /// <returns>A task that completes after the execution finishes.</returns>
     public Task RunChatGroupAwaitAsync(ChatGroupRunCommand request)
     {
         return RunChatGroupExecutionCoreAsync(request);
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// <summary>
+    /// Runs a chat group using the awaitable execution path and returns its terminal result.
     /// </summary>
+    /// <param name="request">The chat-group, prompt, round-limit, and execution options.</param>
+    /// <returns>A task that completes with the terminal chat-group run result.</returns>
     public Task<ChatGroupRunResult> RunChatGroupAwaitWithResultAsync(ChatGroupRunCommand request)
     {
         return RunChatGroupExecutionCoreAsync(request);
     }
 
+    /// <summary>
+    /// Executes a chat-group task inside an isolated dependency-injection and tenant scope,
+    /// coordinating members, rounds, approvals, history, cancellation, and persistence.
+    /// </summary>
+    /// <param name="request">The chat-group execution request.</param>
+    /// <param name="started">Optional completion source for background callers.</param>
+    /// <returns>A task containing the terminal chat-group result.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the group, model, participants, or execution configuration is invalid.</exception>
     private async Task<ChatGroupRunResult> RunChatGroupExecutionCoreAsync(
         ChatGroupRunCommand request, TaskCompletionSource<ChatGroupRunResult> started = null)
     {
@@ -1658,9 +1703,22 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }
     }
 
+    /// <summary>
+    /// Creates the public terminal result from persisted task and group entities.
+    /// </summary>
+    /// <param name="chatTask">The persisted task.</param>
+    /// <param name="chatGroup">The chat group.</param>
+    /// <returns>The terminal run result.</returns>
     private static ChatGroupRunResult CreateRunResult(ChatTask chatTask, ChatGroup chatGroup) =>
         new(chatTask.Id, chatGroup.Id, chatGroup.Name, chatTask.Status);
 
+    /// <summary>
+    /// Resolves the strongest configured context-sharing mode, applying remote-participant defaults.
+    /// </summary>
+    /// <param name="groupMode">The group-level mode.</param>
+    /// <param name="remoteMemberModes">Modes declared by remote members.</param>
+    /// <param name="hasRemoteParticipants">Whether remote participants are present.</param>
+    /// <returns>The effective context-sharing mode.</returns>
     private static ChatGroupContextSharingMode ResolveContextSharingMode(
         ChatGroupContextSharingMode? groupMode,
         IEnumerable<ChatGroupContextSharingMode?> remoteMemberModes,
@@ -1687,6 +1745,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             : ChatGroupContextSharingMode.LegacyFullHistory;
     }
 
+    /// <summary>
+    /// Builds the system prompt that coordinates participant order, shared conclusions,
+    /// privacy boundaries, and task completion behavior.
+    /// </summary>
+    /// <param name="enterAgentName">The entry agent name.</param>
+    /// <param name="participantNames">The participating agent names.</param>
+    /// <param name="userCommand">The user task.</param>
+    /// <param name="contextSharingMode">The effective context-sharing policy.</param>
+    /// <returns>The coordination prompt.</returns>
     private static string BuildWorkflowPrompt(
         string enterAgentName,
         IEnumerable<string> participantNames,
@@ -1711,6 +1778,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 {userCommand}";
     }
 
+    /// <summary>
+    /// Indexes runtime participant contexts by agent identity, participant key, executor ID,
+    /// and available template names.
+    /// </summary>
+    /// <param name="runtimeContexts">The runtime participant contexts.</param>
+    /// <returns>A case-insensitive lookup index.</returns>
     private static Dictionary<string, AgentRuntimeContext> BuildRuntimeContextIndex(
         IEnumerable<AgentRuntimeContext> runtimeContexts)
     {
@@ -1754,6 +1827,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return index;
     }
 
+    /// <summary>
+    /// Builds the sanitized workflow executor identifier used by GroupChat events.
+    /// </summary>
+    /// <param name="agentName">The agent display name.</param>
+    /// <param name="agentId">The underlying agent identifier.</param>
+    /// <returns>A stable executor identifier.</returns>
     private static string BuildWorkflowExecutorId(string agentName, string agentId)
     {
         var source = string.IsNullOrEmpty(agentName)
@@ -1762,6 +1841,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return WorkflowExecutorIdInvalidNameChars.Replace(source ?? string.Empty, "_");
     }
 
+    /// <summary>
+    /// Determines whether another chat round may be persisted under the configured limit.
+    /// </summary>
+    /// <param name="completedRoundCount">The number of completed rounds.</param>
+    /// <param name="maximumRoundCount">The maximum allowed rounds.</param>
+    /// <returns><see langword="true"/> when another round is allowed.</returns>
     private static bool CanPersistNextChatRound(int completedRoundCount, int maximumRoundCount)
     {
         return completedRoundCount >= 0
@@ -1769,6 +1854,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             && completedRoundCount < maximumRoundCount;
     }
 
+    /// <summary>
+    /// Resolves a participant context by exact executor ID or a compatible suffix match.
+    /// </summary>
+    /// <param name="contextIndex">The participant context index.</param>
+    /// <param name="executorId">The event executor identifier.</param>
+    /// <param name="context">Receives the resolved context.</param>
+    /// <returns><see langword="true"/> when a context is found.</returns>
     private static bool TryResolveRuntimeContext(
         IReadOnlyDictionary<string, AgentRuntimeContext> contextIndex,
         string executorId,
@@ -1804,6 +1896,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return false;
     }
 
+    /// <summary>
+    /// Converts an executor failure into a concise user-facing reason, including
+    /// remote timeout guidance when applicable.
+    /// </summary>
+    /// <param name="executorId">The failed executor identifier.</param>
+    /// <param name="failureDetails">The raw failure details.</param>
+    /// <param name="contextIndex">The participant context index.</param>
+    /// <returns>A concise failure message.</returns>
     private static string FormatExecutorFailureReason(
         string executorId,
         string failureDetails,
@@ -1838,6 +1938,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                (normalizedDetails.Length > firstLine.Length ? "（详细堆栈已写入 SenparcTrace）" : string.Empty);
     }
 
+    /// <summary>
+    /// Determines whether failure text indicates a timeout.
+    /// </summary>
+    /// <param name="failureDetails">The failure details.</param>
+    /// <returns><see langword="true"/> when timeout markers are present.</returns>
     private static bool IsTimeoutFailure(string failureDetails)
     {
         if (string.IsNullOrWhiteSpace(failureDetails))
@@ -1851,6 +1956,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                || failureDetails.Contains("timed out", StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Checks whether the global AI setting exposes a chat model name.
+    /// </summary>
+    /// <param name="setting">The AI setting.</param>
+    /// <returns><see langword="true"/> when a chat model is configured.</returns>
     private static bool HasConfiguredChatModel(ISenparcAiSetting setting)
     {
         try
@@ -1863,6 +1973,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }
     }
 
+    /// <summary>
+    /// Loads or creates the reserved Human participant template and enables it when disabled.
+    /// </summary>
+    /// <param name="agentTemplateService">The agent-template service.</param>
+    /// <returns>A task containing the enabled Human participant template.</returns>
     private static async Task<AgentTemplate> EnsureHumanParticipantAsync(
         AgentsTemplateService agentTemplateService)
     {
@@ -1892,6 +2007,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return human;
     }
 
+    /// <summary>
+    /// Builds a participant sequence for the deterministic round-robin fallback path.
+    /// </summary>
+    /// <param name="participantContexts">The participant contexts.</param>
+    /// <param name="enterContext">The entry participant.</param>
+    /// <returns>A de-duplicated participant sequence.</returns>
     private static List<AgentRuntimeContext> BuildFallbackRoundRobinSequence(
         IReadOnlyCollection<AgentRuntimeContext> participantContexts,
         AgentRuntimeContext enterContext)
@@ -1916,6 +2037,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return sequence;
     }
 
+    /// <summary>
+    /// Builds the prompt used for one participant in the round-robin fallback conversation.
+    /// </summary>
+    /// <param name="userCommand">The original user task.</param>
+    /// <param name="history">Previous fallback turns.</param>
+    /// <param name="currentSpeaker">The participant receiving the prompt.</param>
+    /// <returns>The fallback participant prompt.</returns>
     private static string BuildRoundRobinFallbackPrompt(
         string userCommand,
         IReadOnlyCollection<FallbackConversationTurn> history,
@@ -1948,6 +2076,28 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return sb.ToString();
     }
 
+    /// <summary>
+    /// Executes the deterministic round-robin fallback when the GroupChat workflow cannot
+    /// complete, persisting each participant response and stopping on an exit signal.
+    /// </summary>
+    /// <param name="participantContexts">The participant runtime contexts.</param>
+    /// <param name="enterContext">The entry participant.</param>
+    /// <param name="userCommand">The original user command.</param>
+    /// <param name="aiModelService">The AI model service.</param>
+    /// <param name="logger">The task log builder.</param>
+    /// <param name="chatGroup">The chat group.</param>
+    /// <param name="chatGroupDto">The group DTO.</param>
+    /// <param name="chatTaskDto">The task DTO.</param>
+    /// <param name="chatGroupHistoryService">The history service.</param>
+    /// <param name="runningKey">The active-task cache key.</param>
+    /// <param name="chatTask">The task entity.</param>
+    /// <param name="chatTaskService">The task service.</param>
+    /// <param name="startRoundIndex">The first fallback round index.</param>
+    /// <param name="maxRoundCount">The maximum fallback rounds.</param>
+    /// <param name="cancellationToken">Token used to cancel fallback execution.</param>
+    /// <param name="correlationId">The execution correlation ID.</param>
+    /// <param name="recipientUserId">The notification recipient.</param>
+    /// <returns><see langword="true"/> when at least one participant produced output.</returns>
     private async Task<bool> RunMultiAgentFallbackAsync(
         IReadOnlyCollection<AgentRuntimeContext> participantContexts,
         AgentRuntimeContext enterContext,
@@ -2023,6 +2173,26 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return hasOutput;
     }
 
+    /// <summary>
+    /// Runs one local participant, streams or synthesizes its output, persists history,
+    /// and applies the single-agent forbidden-status fallback when needed.
+    /// </summary>
+    /// <param name="agentContext">The participant runtime context.</param>
+    /// <param name="userCommand">The prompt for this round.</param>
+    /// <param name="aiModelService">The AI model service.</param>
+    /// <param name="logger">The task log builder.</param>
+    /// <param name="chatGroup">The chat group.</param>
+    /// <param name="chatGroupDto">The group DTO.</param>
+    /// <param name="chatTaskDto">The task DTO.</param>
+    /// <param name="chatGroupHistoryService">The history service.</param>
+    /// <param name="runningKey">The active-task cache key.</param>
+    /// <param name="chatTask">The task entity.</param>
+    /// <param name="chatTaskService">The task service.</param>
+    /// <param name="roundIndex">The round index.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <param name="correlationId">The execution correlation ID.</param>
+    /// <param name="recipientUserId">The notification recipient.</param>
+    /// <returns>The participant output and exit-signal state.</returns>
     private async Task<AgentRunResult> RunSingleAgentAsync(
         AgentRuntimeContext agentContext,
         string userCommand,
@@ -2311,6 +2481,20 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }
     }
 
+    /// <summary>
+    /// Runs an agent while pausing for tool-approval decisions and resumes with approval responses.
+    /// </summary>
+    /// <param name="agentContext">The participant runtime context.</param>
+    /// <param name="userCommand">The user command.</param>
+    /// <param name="aiModelService">The AI model service.</param>
+    /// <param name="chatTask">The task entity.</param>
+    /// <param name="chatTaskService">The task service.</param>
+    /// <param name="roundIndex">The current round index.</param>
+    /// <param name="cancellationToken">Token used to cancel approval waiting.</param>
+    /// <param name="onUpdate">The streaming update callback.</param>
+    /// <param name="correlationId">The execution correlation ID.</param>
+    /// <param name="recipientUserId">The notification recipient.</param>
+    /// <returns>The accumulated agent output and usage details.</returns>
     private async Task<HumanApprovalExecutionResult> ExecuteAgentWithHumanApprovalAsync(
         AgentRuntimeContext agentContext,
         string userCommand,
@@ -2426,6 +2610,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         public string Error { get; init; } = string.Empty;
     }
 
+    /// <summary>
+    /// Attempts same-model direct, alternate-deployment, and system-default fallbacks
+    /// after a single-agent forbidden response.
+    /// </summary>
+    /// <param name="agentContext">The participant runtime context.</param>
+    /// <param name="userCommand">The user command.</param>
+    /// <param name="aiModelService">The AI model service.</param>
+    /// <param name="scene">The diagnostic scene.</param>
+    /// <returns>A task containing the first successful fallback output or accumulated errors.</returns>
     private async Task<SingleAgentForbiddenFallbackResult> TryRunSingleAgentForbiddenFallbackAsync(
         AgentRuntimeContext agentContext,
         string userCommand,
@@ -2563,6 +2756,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         };
     }
 
+    /// <summary>
+    /// Runs one participant with an explicitly supplied AI setting and cloned agent options.
+    /// </summary>
+    /// <param name="agentContext">The participant runtime context.</param>
+    /// <param name="setting">The AI setting to use.</param>
+    /// <param name="userCommand">The prompt to execute.</param>
+    /// <param name="runnerName">The runner name.</param>
+    /// <param name="aiModelService">The AI model service.</param>
+    /// <returns>A task containing output and usage details.</returns>
     private static async Task<(string Output, UsageDetails Usage)> RunSingleAgentWithSettingAsync(
         AgentRuntimeContext agentContext,
         SenparcAiSetting setting,
@@ -2597,6 +2799,16 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return (output ?? string.Empty, runResult?.Result?.Usage);
     }
 
+    /// <summary>
+    /// Runs an agent request with its session and retries without that session when session-bound execution fails.
+    /// </summary>
+    /// <param name="runner">The configured runner.</param>
+    /// <param name="userCommand">The prompt to execute.</param>
+    /// <param name="onUpdate">Optional streaming callback.</param>
+    /// <param name="aiModelService">The AI model service.</param>
+    /// <param name="model">The model DTO used for diagnostics.</param>
+    /// <param name="source">The usage source label.</param>
+    /// <returns>A task containing the AI result.</returns>
     private static async Task<SenparcKernelAiResult<string>> ExecuteRunnerWithSessionRetryAsync(
         IWantToRun runner,
         string userCommand,
@@ -2650,6 +2862,20 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }
     }
 
+    /// <summary>
+    /// Persists one participant message, updates usage totals, and optionally sends an external message.
+    /// </summary>
+    /// <param name="speakerContext">The speaking participant.</param>
+    /// <param name="messageText">The message text.</param>
+    /// <param name="chatGroup">The chat group entity.</param>
+    /// <param name="chatGroupDto">The group DTO.</param>
+    /// <param name="chatTaskDto">The task DTO.</param>
+    /// <param name="chatGroupHistoryService">The history service.</param>
+    /// <param name="chatTask">The task entity.</param>
+    /// <param name="chatTaskService">The task service.</param>
+    /// <param name="logger">The task log builder.</param>
+    /// <param name="usageSnapshot">The usage snapshot to persist.</param>
+    /// <returns>A task containing the created history record.</returns>
     private static async Task<ChatGroupHistory> SaveAgentMessageAsync(
         AgentRuntimeContext speakerContext,
         string messageText,
@@ -2707,6 +2933,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return history;
     }
 
+    /// <summary>
+    /// Converts provider usage details and response timing into the persisted usage snapshot.
+    /// </summary>
+    /// <param name="usage">Provider usage details.</param>
+    /// <param name="responseMilliseconds">Elapsed response time.</param>
+    /// <param name="roundIndex">The round index.</param>
+    /// <param name="responseId">The response identifier.</param>
+    /// <returns>A normalized usage snapshot.</returns>
     private static ChatUsageSnapshot BuildUsageSnapshot(
         UsageDetails usage,
         int responseMilliseconds,
@@ -2732,6 +2966,18 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         };
     }
 
+    /// <summary>
+    /// Splits non-streamed output into synthetic chunks so clients receive the same
+    /// stream event shape as a streamed response.
+    /// </summary>
+    /// <param name="chatTaskId">The task identifier.</param>
+    /// <param name="fromAgentTemplateId">The local agent template identifier.</param>
+    /// <param name="fromAgentName">The agent display name.</param>
+    /// <param name="responseId">The response identifier.</param>
+    /// <param name="text">The complete output text.</param>
+    /// <param name="roundIndex">The chat round index.</param>
+    /// <param name="participantKey">The participant key.</param>
+    /// <param name="participantKind">The participant kind.</param>
     private async Task PublishSyntheticChunkEventsAsync(
         int chatTaskId,
         int? fromAgentTemplateId,
@@ -2773,6 +3019,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }
     }
 
+    /// <summary>
+    /// Creates an independent copy of chat-client agent options.
+    /// </summary>
+    /// <param name="options">The options to clone.</param>
+    /// <returns>A mutable options copy.</returns>
     private static ChatClientAgentOptions CloneAgentOptions(ChatClientAgentOptions options)
     {
         if (options == null)
@@ -2791,6 +3042,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         };
     }
 
+    /// <summary>
+    /// Creates an independent copy of chat-generation options and tool configuration.
+    /// </summary>
+    /// <param name="chatOptions">The options to clone.</param>
+    /// <returns>A mutable options copy.</returns>
     private static ChatOptions CloneChatOptions(ChatOptions chatOptions)
     {
         if (chatOptions == null)
@@ -2812,6 +3068,17 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         };
     }
 
+    /// <summary>
+    /// Publishes one non-final response chunk to the task stream hub.
+    /// </summary>
+    /// <param name="chatTaskId">The task identifier.</param>
+    /// <param name="fromAgentTemplateId">The local agent template identifier.</param>
+    /// <param name="fromAgentName">The agent display name.</param>
+    /// <param name="responseId">The response identifier.</param>
+    /// <param name="text">The chunk text.</param>
+    /// <param name="roundIndex">The chat round index.</param>
+    /// <param name="participantKey">The participant key.</param>
+    /// <param name="participantKind">The participant kind.</param>
     private void PublishChunkEvent(
         int chatTaskId,
         int? fromAgentTemplateId,
@@ -2838,6 +3105,18 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         });
     }
 
+    /// <summary>
+    /// Publishes a final message event with persisted history and usage metadata.
+    /// </summary>
+    /// <param name="chatTaskId">The task identifier.</param>
+    /// <param name="historyId">The persisted history identifier.</param>
+    /// <param name="fromAgentTemplateId">The local agent template identifier.</param>
+    /// <param name="fromAgentName">The agent display name.</param>
+    /// <param name="responseId">The response identifier.</param>
+    /// <param name="message">The complete message.</param>
+    /// <param name="usageSnapshot">The usage metadata.</param>
+    /// <param name="participantKey">The participant key.</param>
+    /// <param name="participantKind">The participant kind.</param>
     private void PublishMessageEvent(
         int chatTaskId,
         int? historyId,
@@ -2870,6 +3149,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         });
     }
 
+    /// <summary>
+    /// Publishes a task status event and marks terminal statuses as final.
+    /// </summary>
+    /// <param name="chatTaskId">The task identifier.</param>
+    /// <param name="status">The new task status.</param>
     private void PublishStatusEvent(int chatTaskId, ChatTask_Status status)
     {
         _chatTaskStreamHub.Publish(new ChatTaskStreamEvent
@@ -2884,6 +3168,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         });
     }
 
+    /// <summary>
+    /// Publishes notifications and pauses the task when a human-interaction request is created.
+    /// </summary>
+    /// <param name="pending">The pending human request.</param>
+    /// <param name="chatTask">The task entity.</param>
+    /// <param name="chatTaskService">The task service.</param>
+    /// <param name="recipientUserId">The notification recipient.</param>
+    /// <param name="roundIndex">The chat round index.</param>
+    /// <param name="tenantSnapshot">The tenant context to restore for persistence.</param>
     private async Task HandleHumanRequestCreatedAsync(
         PendingHumanRequest pending,
         ChatTask chatTask,
@@ -2916,6 +3209,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         PublishHumanRequestEvent(chatTask.Id, pending.ToDto(), roundIndex);
     }
 
+    /// <summary>
+    /// Attaches a NeuBell notification to a pending tool-approval request when one is not already attached.
+    /// </summary>
+    /// <param name="pending">The pending approval request.</param>
+    /// <param name="chatTaskId">The task identifier.</param>
+    /// <param name="recipientUserId">The notification recipient.</param>
     private async Task AttachToolApprovalNotificationAsync(
         PendingHumanRequest pending,
         int chatTaskId,
@@ -2935,6 +3234,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         await NotifyNeuBellChangedAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Publishes a human decision and resumes the task status after the request is resolved.
+    /// </summary>
+    /// <param name="pending">The resolved request.</param>
+    /// <param name="decision">The human decision.</param>
+    /// <param name="chatTask">The task entity.</param>
+    /// <param name="chatTaskService">The task service.</param>
+    /// <param name="tenantSnapshot">The tenant context to restore for persistence.</param>
     private async Task HandleHumanRequestResolvedAsync(
         PendingHumanRequest pending,
         HumanInTheLoopDecision decision,
@@ -2959,6 +3266,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         PublishStatusEvent(chatTask.Id, ChatTask_Status.Chatting);
     }
 
+    /// <summary>
+    /// Persists a task status through a fresh dependency-injection scope and restored tenant context.
+    /// </summary>
+    /// <param name="chatTask">The in-memory task entity.</param>
+    /// <param name="status">The status to persist.</param>
+    /// <param name="tenantSnapshot">The tenant context to restore.</param>
+    /// <exception cref="InvalidOperationException">Thrown when the persisted task no longer exists.</exception>
     private async Task SetChatTaskStatusInIsolatedScopeAsync(
         ChatTask chatTask,
         ChatTask_Status status,
@@ -2981,6 +3295,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         await isolatedTaskService.SetStatus(status, persistedTask).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Notifies the NeuBell publisher that AgentsManager notifications changed.
+    /// </summary>
     private async Task NotifyNeuBellChangedAsync()
     {
         var publisher = SenparcDI.GetServiceProvider(true).GetService<INeuBellPublisher>();
@@ -2990,6 +3307,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }
     }
 
+    /// <summary>
+    /// Publishes a synthetic task-stream event describing a newly created human-approval request.
+    /// </summary>
+    /// <param name="chatTaskId">The chat task receiving the approval request.</param>
+    /// <param name="request">The approval request details to publish.</param>
+    /// <param name="roundIndex">The chat round in which the request was created.</param>
     public void PublishHumanRequestEvent(int chatTaskId, HumanInTheLoopRequestDto request, int roundIndex)
     {
         if (request == null)
@@ -3015,6 +3338,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         });
     }
 
+    /// <summary>
+    /// Publishes a synthetic task-stream event describing the resolution of a human-approval request.
+    /// </summary>
+    /// <param name="chatTaskId">The chat task receiving the resolution event.</param>
+    /// <param name="requestId">The approval request identifier.</param>
+    /// <param name="decision">The decision recorded by the human participant.</param>
     public void PublishHumanResolvedEvent(int chatTaskId, string requestId, HumanInTheLoopDecision decision)
     {
         if (string.IsNullOrWhiteSpace(requestId) || decision == null)

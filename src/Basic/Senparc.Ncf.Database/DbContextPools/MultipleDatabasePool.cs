@@ -37,10 +37,10 @@ namespace Senparc.Ncf.Database
     public class XncfDatabaseDbContextWapper
     {
         /// <summary>
-        /// 
+        /// Creates a metadata wrapper containing the migration and runtime DbContext types.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="migrationDbContextType">The DbContext type used for migrations.</param>
+        /// <param name="runtimeDbContextType">The DbContext type used at runtime.</param>
         public XncfDatabaseDbContextWapper(Type migrationDbContextType, Type runtimeDbContextType)
         {
             MigrationDbContextType = migrationDbContextType;
@@ -52,7 +52,8 @@ namespace Senparc.Ncf.Database
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Maintains the mapping between database providers, XNCF database registrations,
+    /// and provider-specific runtime DbContext implementations.
     /// <para>Value for Dictionary<Type/* IXncfDatabase Register type*/, Type/* database XncfDatabaseDbContext type */></para>
     /// </summary>
     public class MultipleDatabasePool
@@ -63,7 +64,7 @@ namespace Senparc.Ncf.Database
         MultipleDatabasePool() { }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the process-wide multiple-database mapping pool.
         /// </summary>
         public static MultipleDatabasePool Instance
         {
@@ -83,15 +84,16 @@ namespace Senparc.Ncf.Database
         #endregion
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the DbContext used for the in-memory/unit-test database path.
         /// </summary>
         public static Type UnitTestPillarDbContext { get; set; } = null;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Registers an XNCF DbContext type for the provider declared by an attribute
+        /// and forwards the same registration to the lower-level DbContext pool.
         /// </summary>
-        /// <param name="multiDbContextAttr"></param>
-        ///Legacy comment translated to English.
+        /// <param name="multiDbContextAttr">The provider and XNCF registration metadata.</param>
+        /// <param name="xncfDatabaseDbContextType">The runtime DbContext type to associate with the metadata.</param>
         public void TryAdd(MultipleMigrationDbContextAttribute multiDbContextAttr, Type xncfDatabaseDbContextType)
         {
             //Legacy comment translated to English.
@@ -109,18 +111,21 @@ namespace Senparc.Ncf.Database
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds a human-readable provider support matrix from the registered DbContext pool.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="currentDatabaseType">The currently selected provider, when known.</param>
+        /// <returns>A formatted support matrix.</returns>
         public string BuildSupportMatrixLog(MultipleDatabaseType? currentDatabaseType = null)
         {
             return BuildSupportMatrixLog(XncfDatabaseDbContextPool.Instance, currentDatabaseType);
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds a support matrix from a register-to-provider mapping.
         /// </summary>
+        /// <param name="registerDbMap">The mapping from registration types to provider-specific DbContext types.</param>
+        /// <param name="currentDatabaseType">The currently selected provider, when known.</param>
+        /// <returns>A formatted support matrix, including current bindings when available.</returns>
         public static string BuildSupportMatrixLog(
             IDictionary<Type, Dictionary<MultipleDatabaseType, Type>> registerDbMap,
             MultipleDatabaseType? currentDatabaseType = null)
@@ -242,20 +247,23 @@ namespace Senparc.Ncf.Database
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves the runtime DbContext type registered for an XNCF database instance.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="xncfDatabaseRegister">The database registration instance.</param>
+        /// <returns>The provider-specific runtime DbContext type.</returns>
         public Type GetXncfDbContextType(IXncfDatabase xncfDatabaseRegister)
         {
             return GetXncfDbContextType(xncfDatabaseRegister.GetType());
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves the runtime DbContext type for an XNCF database registration type
+        /// under the currently configured provider.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="xncfDatabaseRegisterType">The registration type implementing <see cref="IXncfDatabase"/>.</param>
+        /// <returns>The provider-specific runtime DbContext type.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the in-memory provider has no test DbContext configured.</exception>
+        /// <exception cref="NcfDatabaseException">Thrown when the provider or registration has no mapping.</exception>
         public Type GetXncfDbContextType(Type xncfDatabaseRegisterType)
         {
             //Legacy comment translated to English.
@@ -286,13 +294,16 @@ namespace Senparc.Ncf.Database
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a configured DbContext of type <typeparamref name="T"/> using the current
+        /// database configuration and optional service provider.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <param name="serviceProvider">ServiceProvider</param>
-        /// <returns></returns>
+        /// <typeparam name="T">The DbContext type to instantiate.</typeparam>
+        /// <param name="connectionString">An optional connection string override.</param>
+        /// <param name="xncfDatabaseData">Optional XNCF database metadata.</param>
+        /// <param name="dbContextOptionsAction">An optional provider-options callback.</param>
+        /// <param name="serviceProvider">An optional provider passed to a two-argument DbContext constructor.</param>
+        /// <returns>The created and configured DbContext.</returns>
+        /// <exception cref="NcfDatabaseException">Thrown when the DbContext cannot be created.</exception>
         public T GetDbContext<T>(string connectionString = null, XncfDatabaseData xncfDatabaseData = null,
             Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null, IServiceProvider serviceProvider = null) where T : DbContext
         {
@@ -354,14 +365,15 @@ namespace Senparc.Ncf.Database
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves and creates the runtime DbContext associated with an XNCF registration type.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <param name="serviceProvider">ServiceProvider</param>
-        /// <returns></returns>
+        /// <param name="xncfDatabaseRegisterType">The type implementing <see cref="IXncfDatabase"/>.</param>
+        /// <param name="connectionString">An optional connection string override.</param>
+        /// <param name="xncfDatabaseData">Optional XNCF database metadata.</param>
+        /// <param name="dbContextOptionsAction">An optional provider-options callback.</param>
+        /// <param name="serviceProvider">An optional provider passed to the DbContext constructor.</param>
+        /// <returns>The created runtime DbContext.</returns>
+        /// <exception cref="NcfDatabaseException">Thrown when the registration type is invalid or no mapping exists.</exception>
         public DbContext GetXncfDbContext(Type xncfDatabaseRegisterType, string connectionString = null, XncfDatabaseData xncfDatabaseData = null,
             Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null, IServiceProvider serviceProvider = null)
         {

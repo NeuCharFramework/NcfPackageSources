@@ -51,6 +51,13 @@ public sealed class AgentsManagerNeuBellProvider : INeuBellProvider, INeuBellCon
     public string ProviderId => ProviderIdValue;
     public string ModuleUid => new Register().Uid;
 
+    /// <summary>
+    /// Creates a Human participant notification for a ChatTask.
+    /// </summary>
+    /// <param name="chatTaskId">The ChatTask identifier.</param>
+    /// <param name="recipientUserId">The notification recipient.</param>
+    /// <param name="agentName">The Agent awaiting input.</param>
+    /// <returns>The consumable notification identifier.</returns>
     public string Send(int chatTaskId, string recipientUserId, string agentName)
     {
         return Add(
@@ -62,6 +69,14 @@ public sealed class AgentsManagerNeuBellProvider : INeuBellProvider, INeuBellCon
             $"/Admin/AgentsManager/Index#tab=third&taskId={chatTaskId}");
     }
 
+    /// <summary>
+    /// Creates a tool-approval notification for a ChatTask.
+    /// </summary>
+    /// <param name="chatTaskId">The ChatTask identifier.</param>
+    /// <param name="recipientUserId">The notification recipient.</param>
+    /// <param name="agentName">The requesting Agent.</param>
+    /// <param name="toolName">The requested tool name.</param>
+    /// <returns>The consumable notification identifier.</returns>
     public string SendToolApproval(
         int chatTaskId,
         string recipientUserId,
@@ -77,6 +92,14 @@ public sealed class AgentsManagerNeuBellProvider : INeuBellProvider, INeuBellCon
             $"/Admin/AgentsManager/Index#tab=third&taskId={chatTaskId}");
     }
 
+    /// <summary>
+    /// Creates a tool-approval notification linked to a Workflow run correlation ID.
+    /// </summary>
+    /// <param name="correlationId">The Workflow run correlation ID.</param>
+    /// <param name="recipientUserId">The notification recipient.</param>
+    /// <param name="agentName">The requesting Agent.</param>
+    /// <param name="toolName">The requested tool name.</param>
+    /// <returns>The consumable notification identifier.</returns>
     public string SendWorkflowToolApproval(
         string correlationId,
         string recipientUserId,
@@ -92,6 +115,16 @@ public sealed class AgentsManagerNeuBellProvider : INeuBellProvider, INeuBellCon
             BuildWorkflowRunUrl(correlationId));
     }
 
+    /// <summary>
+    /// Adds a bounded notification to the in-memory provider queue.
+    /// </summary>
+    /// <param name="chatTaskId">The ChatTask identifier, or zero for Workflow notifications.</param>
+    /// <param name="recipientUserId">The notification recipient.</param>
+    /// <param name="agentName">The Agent name.</param>
+    /// <param name="title">The notification title.</param>
+    /// <param name="summary">The notification summary.</param>
+    /// <param name="detailUrl">The client detail URL.</param>
+    /// <returns>The notification identifier.</returns>
     private string Add(
         int chatTaskId,
         string recipientUserId,
@@ -122,6 +155,13 @@ public sealed class AgentsManagerNeuBellProvider : INeuBellProvider, INeuBellCon
         return notification.Id;
     }
 
+    /// <summary>
+    /// Consumes one notification only when its recipient matches the request context.
+    /// </summary>
+    /// <param name="context">The consuming user context.</param>
+    /// <param name="itemId">The notification identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel consumption.</param>
+    /// <returns>A value task containing the number of consumed items.</returns>
     public ValueTask<int> ConsumeItemAsync(
         NeuBellRequestContext context,
         string itemId,
@@ -148,6 +188,12 @@ public sealed class AgentsManagerNeuBellProvider : INeuBellProvider, INeuBellCon
         }
     }
 
+    /// <summary>
+    /// Consumes all notifications belonging to the request-context user.
+    /// </summary>
+    /// <param name="context">The consuming user context.</param>
+    /// <param name="cancellationToken">Token used to cancel consumption.</param>
+    /// <returns>A value task containing the consumed count.</returns>
     public ValueTask<int> ConsumeAllAsync(
         NeuBellRequestContext context,
         CancellationToken cancellationToken = default)
@@ -166,6 +212,12 @@ public sealed class AgentsManagerNeuBellProvider : INeuBellProvider, INeuBellCon
         }
     }
 
+    /// <summary>
+    /// Returns the current recipient-filtered NeuBell snapshot in newest-first order.
+    /// </summary>
+    /// <param name="context">The requesting user context.</param>
+    /// <param name="cancellationToken">Token used to cancel snapshot creation.</param>
+    /// <returns>A value task containing the provider snapshot.</returns>
     public ValueTask<NeuBellSnapshot> GetSnapshotAsync(
         NeuBellRequestContext context,
         CancellationToken cancellationToken = default)
@@ -198,11 +250,19 @@ public sealed class AgentsManagerNeuBellProvider : INeuBellProvider, INeuBellCon
             items));
     }
 
+    /// <summary>Returns the detail URL stored on a notification.</summary>
+    /// <param name="item">The notification.</param>
+    /// <returns>The detail URL.</returns>
     private static string BuildTaskDetailUrl(Notification item)
     {
         return item.DetailUrl;
     }
 
+    /// <summary>
+    /// Converts a Workflow correlation ID to its task detail URL, or returns the generic task page.
+    /// </summary>
+    /// <param name="correlationId">The Workflow correlation ID.</param>
+    /// <returns>The safe detail URL.</returns>
     private static string BuildWorkflowRunUrl(string correlationId)
     {
         const string prefix = "workflow-";
@@ -221,9 +281,17 @@ public sealed class AgentsManagerNeuBellProvider : INeuBellProvider, INeuBellCon
         return $"/Admin/NeuCharWorkflow/Index?workflowId={workflowId}&runId={runId:N}";
     }
 
+    /// <summary>Normalizes an empty recipient to the anonymous bucket.</summary>
+    /// <param name="recipient">The recipient identifier.</param>
+    /// <returns>The normalized recipient.</returns>
     private static string NormalizeRecipient(string recipient)
         => string.IsNullOrWhiteSpace(recipient) ? "anonymous" : recipient.Trim();
 
+    /// <summary>Trims and bounds notification text, applying a fallback for blank input.</summary>
+    /// <param name="value">The source text.</param>
+    /// <param name="maxLength">The maximum length.</param>
+    /// <param name="fallback">The fallback text.</param>
+    /// <returns>The bounded text.</returns>
     private static string Limit(string value, int maxLength, string fallback)
     {
         var normalized = value?.Trim();

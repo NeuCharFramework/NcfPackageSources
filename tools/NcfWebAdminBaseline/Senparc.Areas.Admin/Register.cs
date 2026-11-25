@@ -64,9 +64,15 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
+
+    Modified by: Senparc - 20261125
+    Change description: v0.12.29 Improved AdminChat conversation loading and command parameter feedback.
+
 ----------------------------------------------------------------*/
 
-/* 
+/*
 
  * Legacy comment translated to English.
 
@@ -103,6 +109,7 @@ using Senparc.Areas.Admin.Domain.Dto;
 using Senparc.Areas.Admin.Domain.Models;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Services;
+using Senparc.Areas.Admin.OHS.Local.AppService;
 using Senparc.Areas.Admin.WeixinClawIntegration;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
@@ -136,7 +143,7 @@ namespace Senparc.Areas.Admin
 {
     [XncfRegister]
     [XncfOrder(5996)]
-    public class Register : XncfRegisterBase,
+    public partial class Register : XncfRegisterBase,
         IXncfRegister, //Legacy comment translated to English.
         IAreaRegister, //register the XNCF page interface (optional)
         IXncfDatabase  //register the XNCF module database (optional)
@@ -163,7 +170,6 @@ namespace Senparc.Areas.Admin
         public override string Icon => "fa fa-university";
 
         public override string Description => RegisterText.Description;
-
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
@@ -277,6 +283,9 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatTrajectoryService>();
             services.AddScoped<AdminChatTrajectoryEventService>();
             services.AddScoped<AdminChatAiService>();
+            services.AddSingleton<OllamaModelCapabilityService>();
+            services.AddHttpClient(OllamaModelCapabilityService.HttpClientName, client =>
+                client.Timeout = TimeSpan.FromSeconds(5));
             services.AddSingleton<AdminChatRunRegistry>();
             services.AddSingleton<AdminChatMemoryStore>();
             services.AddScoped<IAdminChatMemoryStore>(provider => new AdminChatMemoryDatabaseStore(
@@ -287,6 +296,7 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatWorkspaceAssetService>();
             services.AddSingleton<WorkspaceAssetPreviewBuilder>();
             services.AddSingleton<WorkspaceAssetShareStore>();
+            services.AddSingleton<WorkspaceAssetCapabilityStore>();
             services.AddSingleton<WorkspaceDocumentReader>();
             services.AddScoped<AdminChatAttachmentService>();
             services.AddScoped<IWeixinClawAdminBindingRepository, WeixinClawAdminBindingRepository>();
@@ -383,7 +393,7 @@ namespace Senparc.Areas.Admin
                         ValidateIssuer = true, //whether or not valid Issuer
                         ValidateAudience = true, //whether or not valid Audience
                         ValidateLifetime = true, //whether or not valid out-of-service time
-                        ValidateIssuerSigningKey = true, //whether or not valid SecurityKey　　　　　　　　　　　
+                        ValidateIssuerSigningKey = true, //whether or not valid SecurityKey
                         ClockSkew = System.TimeSpan.Zero//Allowed server time offset
                     };
                 }).AddJwtBearer("Bearer", options =>
@@ -396,7 +406,7 @@ namespace Senparc.Areas.Admin
                         ValidateIssuer = true, //whether or not valid Issuer
                         ValidateAudience = true, //whether or not valid Audience
                         ValidateLifetime = true, //whether or not valid out-of-service time
-                        ValidateIssuerSigningKey = true, //whether or not valid SecurityKey　　　　　　　　　　　
+                        ValidateIssuerSigningKey = true, //whether or not valid SecurityKey
                         ClockSkew = System.TimeSpan.Zero//Allowed server time offset
                     };
                 })
@@ -410,7 +420,7 @@ namespace Senparc.Areas.Admin
             //        ValidateIssuer = true, //whether or not valid Issuer
             //        ValidateAudience = true, //whether or not valid Audience
             //        ValidateLifetime = true, //whether or not valid out-of-service time
-            //        ValidateIssuerSigningKey = true, //whether or not valid SecurityKey　　　　　　　　　　　
+            //        ValidateIssuerSigningKey = true, //whether or not valid SecurityKey
             //        ClockSkew = System.TimeSpan.Zero//Allowed server time offset
             //    };
             //})

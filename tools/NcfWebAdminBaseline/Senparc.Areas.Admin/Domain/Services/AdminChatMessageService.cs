@@ -31,6 +31,12 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
+
+    Modified by: Senparc - 20261125
+    Change description: v0.12.29 Improved AdminChat conversation loading and command parameter feedback.
+
 ----------------------------------------------------------------*/
 using Microsoft.EntityFrameworkCore;
 using Senparc.Areas.Admin.ACL;
@@ -40,11 +46,15 @@ using Senparc.Ncf.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Xncf.PromptRange.Abstractions.References;
+using Senparc.Xncf.Workspace.Abstractions;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.CO2NET.Trace;
 
 namespace Senparc.Areas.Admin.Domain.Services
 {
@@ -53,7 +63,7 @@ namespace Senparc.Areas.Admin.Domain.Services
     /// </summary>
     public class AdminChatMessageService : BaseClientService<AdminChatMessage>
     {
-        public AdminChatMessageService(IAdminChatMessageRepository repository, IServiceProvider serviceProvider) 
+        public AdminChatMessageService(IAdminChatMessageRepository repository, IServiceProvider serviceProvider)
             : base(repository, serviceProvider)
         {
         }
@@ -69,17 +79,17 @@ namespace Senparc.Areas.Admin.Domain.Services
             if (pageIndex == 0)
             {
                 var allMessages = await base.GetFullListAsync(
-                    m => m.SessionId == sessionId, 
+                    m => m.SessionId == sessionId,
                     "Sequence ASC");
                 return (allMessages.ToList(), allMessages.Count());
             }
             else
             {
                 var result = await base.GetObjectListAsync(
-                    pageIndex, 
-                    pageSize, 
-                    m => m.SessionId == sessionId, 
-                    m => m.Sequence, 
+                    pageIndex,
+                    pageSize,
+                    m => m.SessionId == sessionId,
+                    m => m.Sequence,
                     Ncf.Core.Enums.OrderingType.Ascending);
                 return (result.ToList(), result.TotalCount);
             }
@@ -167,6 +177,237 @@ namespace Senparc.Areas.Admin.Domain.Services
             var provider = _serviceProvider.GetService<IPromptReferenceService>()
                 ?? throw new NcfExceptionBase("PromptRange is unavailable.");
             return await provider.ScoreWithAIAsync(promptItemId, message.Content, result.Content);
+        }
+
+        public async Task<AdminChatMessageDto> AttachPromptReferenceAsync(
+            int userId, int messageId, PromptReference reference)
+        {
+            if (userId <= 0) throw new NcfExceptionBase("Sign in to attach a prompt.");
+            var message = await GetObjectAsync(item => item.Id == messageId)
+                ?? throw new NcfExceptionBase("Message not found.");
+            var session = await _serviceProvider.GetRequiredService<AdminChatSessionService>()
+                .GetSessionByIdAsync(message.SessionId, userId);
+            if (session == null) throw new NcfExceptionBase("Message is not accessible.");
+            var provider = _serviceProvider.GetService<IPromptReferenceService>()
+                ?? throw new NcfExceptionBase("PromptRange is unavailable.");
+
+            var references = message.GetPromptReferences().ToList();
+            references.RemoveAll(item =>
+                item.Start < reference.Start + reference.Length &&
+                reference.Start < item.Start + item.Length);
+            references.Add(reference);
+            references = references.OrderBy(item => item.Start).ToList();
+            await provider.ValidateAsync(message.Content, references);
+            message.SetPromptReferences(references);
+            await base.SaveObjectAsync(message);
+            return AdminChatMessageDto.CreateFromEntity(message);
+        }
+
+        public async Task<IReadOnlyList<AdminChatAttachment>> CollectWorkspaceArtifactsAsync(
+            int sessionId, AdminChatHarnessResult harness)
+        {
+            if (harness?.TrajectoryEvents == null || harness.TrajectoryEvents.Count == 0)
+                return Array.Empty<AdminChatAttachment>();
+            var session = await _serviceProvider.GetRequiredService<AdminChatSessionService>()
+                .GetObjectAsync(item => item.Id == sessionId);
+            var storage = _serviceProvider.GetService<IWorkspaceStorage>();
+            if (session == null || storage == null || string.IsNullOrWhiteSpace(session.WorkspaceId))
+                return Array.Empty<AdminChatAttachment>();
+            var changes = new Dictionary<string, string>(StringComparer.Ordinal);
+            var actions = new List<AdminChatAttachment>();
+            foreach (var trajectoryEvent in harness.TrajectoryEvents)
+            {
+                if (string.IsNullOrWhiteSpace(trajectoryEvent.PayloadJson))
+                    continue;
+                if (string.Equals(trajectoryEvent.EventType, "tool.result", StringComparison.OrdinalIgnoreCase))
+                {
+                    try
+                    {
+                        using var actionDocument = JsonDocument.Parse(trajectoryEvent.PayloadJson);
+                        CollectChatTaskActions(actionDocument.RootElement, actions);
+                    }
+                    catch (JsonException error)
+                    {
+                        SenparcTrace.SendCustomLog("AdminChat.ActionArtifact",
+                            $"Ignored invalid action payload: {error.Message}");
+                    }
+                    continue;
+                }
+                if (!string.Equals(trajectoryEvent.EventType, "workspace.change", StringComparison.OrdinalIgnoreCase))
+                    continue;
+                try
+                {
+                    using var document = JsonDocument.Parse(trajectoryEvent.PayloadJson);
+                    var change = document.RootElement.GetProperty("change");
+                    var changeType = change.GetProperty("changeType").GetString();
+                    var path = change.GetProperty("path").GetString();
+                    if (string.IsNullOrWhiteSpace(path))
+                        continue;
+                    changes[path] = string.IsNullOrWhiteSpace(changeType) ? "changed" : changeType;
+                    if (change.TryGetProperty("previousRelativePath", out var previousPathElement))
+                    {
+                        var previousPath = previousPathElement.GetString();
+                        if (!string.IsNullOrWhiteSpace(previousPath)
+                            && !string.Equals(previousPath, path, StringComparison.Ordinal))
+                        {
+                            changes[previousPath] = "deleted";
+                        }
+                    }
+                }
+                catch (Exception error) when (error is JsonException or InvalidOperationException)
+                {
+                    SenparcTrace.SendCustomLog("AdminChat.WorkspaceArtifact",
+                        $"Ignored invalid trajectory payload: {error.Message}");
+                }
+            }
+            var result = actions
+                .GroupBy(action => action.ActionTargetId)
+                .Select(group => group.First())
+                .Take(20)
+                .ToList();
+            foreach (var (path, changeType) in changes.Take(80))
+            {
+                try
+                {
+                    var normalized = WorkspaceAssetPreviewBuilder.NormalizePath(path);
+                    if (string.Equals(changeType, "deleted", StringComparison.OrdinalIgnoreCase))
+                    {
+                        result.Add(new AdminChatAttachment
+                        {
+                            RelativePath = normalized,
+                            Name = Path.GetFileName(normalized),
+                            ContentType = "",
+                            IsWorkspaceArtifact = true,
+                            ChangeType = changeType,
+                            PreviewKind = "file",
+                            CreatedAt = DateTimeOffset.UtcNow
+                        });
+                        continue;
+                    }
+                    var metadata = await storage.GetFileInfoAsync(session.WorkspaceId, normalized);
+                    if (metadata.IsDirectory) continue;
+                    result.Add(new AdminChatAttachment
+                    {
+                        RelativePath = normalized,
+                        Name = Path.GetFileName(normalized),
+                        ContentType = WorkspaceTextFiles.ResolveContentType(normalized),
+                        Size = metadata.Length,
+                        ETag = metadata.ETag,
+                        IsWorkspaceArtifact = true,
+                        ChangeType = changeType,
+                        PreviewKind = WorkspaceTextFiles.Is3D(normalized) ? "3d"
+                            : metadata.Length > 0 && WorkspaceTextFiles.ResolveContentType(normalized).StartsWith("image/")
+                                ? "image"
+                                : "file",
+                        CreatedAt = DateTimeOffset.UtcNow
+                    });
+                }
+                catch (Exception error) when (error is ArgumentException or IOException
+                    or FileNotFoundException or DirectoryNotFoundException)
+                {
+                    SenparcTrace.SendCustomLog("AdminChat.WorkspaceArtifact",
+                        $"Artifact unavailable: {path}; {error.Message}");
+                }
+            }
+            return result;
+        }
+
+        private static void CollectChatTaskActions(
+            JsonElement element,
+            List<AdminChatAttachment> actions)
+        {
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.Array:
+                    foreach (var item in element.EnumerateArray())
+                    {
+                        CollectChatTaskActions(item, actions);
+                    }
+                    break;
+                case JsonValueKind.String:
+                    var text = element.GetString();
+                    if (string.IsNullOrWhiteSpace(text)
+                        || (!text.Contains("admin-chat-action", StringComparison.Ordinal)
+                            && !text.Contains("agents-task", StringComparison.Ordinal)))
+                    {
+                        break;
+                    }
+                    try
+                    {
+                        using var nested = JsonDocument.Parse(text);
+                        CollectChatTaskActions(nested.RootElement, actions);
+                    }
+                    catch (JsonException)
+                    {
+                        var start = text.IndexOf('{', StringComparison.Ordinal);
+                        var end = text.LastIndexOf('}');
+                        if (start >= 0 && end > start)
+                        {
+                            try
+                            {
+                                using var embedded = JsonDocument.Parse(text[start..(end + 1)]);
+                                CollectChatTaskActions(embedded.RootElement, actions);
+                            }
+                            catch (JsonException)
+                            {
+                            }
+                        }
+                    }
+                    break;
+                case JsonValueKind.Object:
+                    if (element.TryGetProperty("task", out var task)
+                        && task.ValueKind == JsonValueKind.Object
+                        && TryGetInt32(task, "ChatTaskId", out var taskId)
+                        && taskId > 0)
+                    {
+                        var groupName = TryGetString(task, "ChatGroupName");
+                        actions.Add(new AdminChatAttachment
+                        {
+                            Name = string.IsNullOrWhiteSpace(groupName)
+                                ? $"ChatTask #{taskId}"
+                                : groupName,
+                            ActionType = "agents-task",
+                            ActionTargetId = taskId,
+                            PreviewKind = "action",
+                            Notice = "Open the Agent task session",
+                            CreatedAt = DateTimeOffset.UtcNow
+                        });
+                    }
+                    foreach (var property in element.EnumerateObject())
+                    {
+                        if (!string.Equals(property.Name, "task", StringComparison.OrdinalIgnoreCase))
+                        {
+                            CollectChatTaskActions(property.Value, actions);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private static bool TryGetInt32(JsonElement element, string name, out int value)
+        {
+            value = 0;
+            foreach (var property in element.EnumerateObject())
+            {
+                if (!string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase))
+                    continue;
+                return property.Value.TryGetInt32(out value);
+            }
+            return false;
+        }
+
+        private static string TryGetString(JsonElement element, string name)
+        {
+            foreach (var property in element.EnumerateObject())
+            {
+                if (string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return property.Value.ValueKind == JsonValueKind.String
+                        ? property.Value.GetString()
+                        : property.Value.ToString();
+                }
+            }
+            return null;
         }
 
         /// <summary>

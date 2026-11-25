@@ -27,30 +27,30 @@ var app = new Vue({
             total: 0,
             addRules: {
                 red: [
-                    { required: true, message: ncfST('Frontend.031'), trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.032'), trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheRedValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.RedValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ],
                 green: [
-                    { required: true, message: ncfST('Frontend.033'), trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.034'), trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheGreenValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.GreenValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ],
                 blue: [
-                    { required: true, message: ncfST('Frontend.035'), trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.036'), trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheBlueValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.BlueValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ]
             },
             editRules: {
                 red: [
-                    { required: true, message: ncfST('Frontend.031'), trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.032'), trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheRedValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.RedValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ],
                 green: [
-                    { required: true, message: ncfST('Frontend.033'), trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.034'), trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheGreenValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.GreenValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ],
                 blue: [
-                    { required: true, message: ncfST('Frontend.035'), trigger: 'change' },
-                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.036'), trigger: 'change' }
+                    { required: true, message: ncfST('Frontend.Template_XncfName.SetTheBlueValue'), trigger: 'change' },
+                    { type: 'number', min: 0, max: 255, message: ncfST('Frontend.Template_XncfName.BlueValueMustBeBetweenZeroAnd255'), trigger: 'change' }
                 ]
             }
         }
@@ -167,7 +167,7 @@ var app = new Vue({
                 .catch(error => {
                     console.error('Failed to load data:', error);
                     this.tableLoading = false;
-                    this.$message.error(ncfST('Frontend.037', error.message || error));
+                    this.$message.error(ncfST('Frontend.Template_XncfName.FailedToLoadDataValue', error.message || error));
                 });
         },
         addColor() {
@@ -202,7 +202,7 @@ var app = new Vue({
                             const responseData = res.data.data || res.data;
                             this.$message({
                                 type: responseData.success ? 'success' : 'error',
-                                message: responseData.message || ncfST('Frontend.038')
+                                message: responseData.message || ncfST('Frontend.Template_XncfName.OperationCompleted')
                             });
                             if (responseData.success) {
                                 this.getDataList()
@@ -212,7 +212,7 @@ var app = new Vue({
                         })
                         .catch(error => {
                             console.error('Create failed:', error);
-                            this.$message.error(ncfST('Frontend.039'));
+                            this.$message.error(ncfST('Frontend.Template_XncfName.CreationFailed'));
                         });
                 } else {
                     return false;
@@ -270,7 +270,7 @@ var app = new Vue({
                             const responseData = res.data.data || res.data;
                             this.$message({
                                 type: responseData.success ? 'success' : 'error',
-                                message: responseData.message || ncfST('Frontend.038')
+                                message: responseData.message || ncfST('Frontend.Template_XncfName.OperationCompleted')
                             });
                             if (responseData.success) {
                                 this.getDataList()
@@ -280,7 +280,7 @@ var app = new Vue({
                         })
                         .catch(error => {
                             console.error('Update failed:', error);
-                            this.$message.error(ncfST('Frontend.040'));
+                            this.$message.error(ncfST('Frontend.Template_XncfName.UpdateFailed'));
                         });
                 } else {
                     return false;
@@ -324,9 +324,9 @@ var app = new Vue({
             this.editFormDialogVisible = true;
         },
         deleteColor(row) {
-            this.$confirm(ncfST('Frontend.041'), ncfST('Frontend.042'), {
-                confirmButtonText: ncfST('Frontend.043'),
-                cancelButtonText: ncfST('Frontend.044'),
+            this.$confirm(ncfST('Frontend.Template_XncfName.ThisWillPermanentlyDeleteThisColorContinue'), ncfST('Frontend.Template_XncfName.Notice'), {
+                confirmButtonText: ncfST('Frontend.Template_XncfName.Confirm'),
+                cancelButtonText: ncfST('Frontend.Template_XncfName.CancelAlternate'),
                 type: 'warning'
             }).then(async () => {
                 console.log('📤 Sending delete request:', { id: row.id });
@@ -344,7 +344,7 @@ var app = new Vue({
                         const responseData = res.data.data || res.data;
                         this.$message({
                             type: responseData.success ? 'success' : 'error',
-                            message: responseData.message || ncfST('Frontend.038')
+                            message: responseData.message || ncfST('Frontend.Template_XncfName.OperationCompleted')
                         });
                         if (responseData.success) {
                             this.getDataList();
@@ -352,12 +352,12 @@ var app = new Vue({
                     })
                     .catch(error => {
                         console.error('Delete failed:', error);
-                        this.$message.error(ncfST('Frontend.045'));
+                        this.$message.error(ncfST('Frontend.Template_XncfName.DeleteFailed'));
                     });
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: ncfST('Frontend.046')
+                    message: ncfST('Frontend.Template_XncfName.DeletionCancelled')
                 });
             });
         },
@@ -377,7 +377,7 @@ var app = new Vue({
                     const responseData = res.data.data || res.data;
                     this.$message({
                         type: responseData.success ? 'success' : 'error',
-                        message: responseData.message || ncfST('Frontend.038')
+                        message: responseData.message || ncfST('Frontend.Template_XncfName.OperationCompleted')
                     });
                     if (responseData.success) {
                         this.getDataList();
@@ -385,7 +385,7 @@ var app = new Vue({
                 })
                 .catch(error => {
                     console.error('Randomization failed:', error);
-                    this.$message.error(ncfST('Frontend.047'));
+                    this.$message.error(ncfST('Frontend.Template_XncfName.RandomizationFailed'));
                 });
         },
         randomizeForm() {

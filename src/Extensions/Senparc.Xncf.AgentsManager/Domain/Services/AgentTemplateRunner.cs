@@ -81,9 +81,9 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Builds and executes an <see cref="AgentTemplate"/> using its prompt, model binding,
+/// workflow tools, connector bindings, and optional knowledge-base integrations.
+/// The runner also owns the compatibility fallbacks required by supported model transports.
 /// </summary>
 public sealed class AgentTemplateRunner
 {
@@ -96,6 +96,13 @@ public sealed class AgentTemplateRunner
     private readonly AIModelService _aiModelService;
     private readonly IWorkflowFunctionCallingProvider _workflowFunctionCallingProvider;
 
+    /// <summary>
+    /// Initializes a runner with the services required to resolve prompts, models, and workflow functions.
+    /// </summary>
+    /// <param name="serviceProvider">The dependency-injection provider used to resolve optional runner services.</param>
+    /// <param name="promptItemService">Service used to resolve PromptRange references.</param>
+    /// <param name="aiModelService">Service used to resolve model settings and execute model calls.</param>
+    /// <param name="workflowFunctionCallingProviders">Available providers for workflow function calls; the first provider is used.</param>
     public AgentTemplateRunner(
         IServiceProvider serviceProvider,
         PromptItemService promptItemService,
@@ -109,12 +116,24 @@ public sealed class AgentTemplateRunner
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Determines whether a string is a PromptRange version reference rather than inline prompt text.
     /// </summary>
+    /// <param name="promptCode">The prompt code or prompt text to inspect.</param>
+    /// <returns><see langword="true"/> when the trimmed value matches the PromptRange version format.</returns>
     public static bool IsPromptRangeReference(string promptCode)
         => !string.IsNullOrWhiteSpace(promptCode) && PromptItem.IsPromptVersion(promptCode.Trim());
 
+    /// <summary>
+    /// Builds and executes an agent template through the standard AgentKernel runner.
+    /// Empty output may trigger the implementation's higher-token-budget retry policy.
+    /// </summary>
+    /// <param name="template">The agent template containing prompt and model-binding information.</param>
+    /// <param name="userText">The user input supplied to the agent.</param>
+    /// <param name="request">Execution options, diagnostics settings, and cancellation behavior.</param>
+    /// <param name="onPrepared">Optional callback invoked after the effective prompt/model setup is prepared.</param>
+    /// <param name="cancellationToken">Token used to cancel building or execution.</param>
+    /// <returns>A task that completes with the execution result and diagnostics.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="template"/> or <paramref name="request"/> is <see langword="null"/>.</exception>
     public async Task<AgentTemplateRunResult> RunAsync(
         AgentTemplate template,
         string userText,
@@ -154,11 +173,18 @@ public sealed class AgentTemplateRunner
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Builds and executes an agent template through the ChatClientAgent path.
+    /// When a provider rejects the initial request, the method may retry using only
+    /// the explicitly supported transport, deployment-name, or API-version compatibility fallbacks.
     /// </summary>
+    /// <param name="template">The agent template containing prompt and model-binding information.</param>
+    /// <param name="userText">The user input supplied to the agent.</param>
+    /// <param name="request">Execution options, diagnostics settings, and fallback policy.</param>
+    /// <param name="onPrepared">Optional callback invoked after the effective prompt/model setup is prepared.</param>
+    /// <param name="cancellationToken">Token used to cancel building or execution.</param>
+    /// <returns>A task that completes with the execution result and diagnostics.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="template"/> or <paramref name="request"/> is <see langword="null"/>.</exception>
+    /// <exception cref="OperationCanceledException">Propagated when <paramref name="cancellationToken"/> is canceled.</exception>
     public async Task<AgentTemplateRunResult> RunWithChatClientAgentAsync(
         AgentTemplate template,
         string userText,
@@ -336,6 +362,15 @@ public sealed class AgentTemplateRunner
         }
     }
 
+    /// <summary>
+    /// Executes a prepared ChatClientAgent, retries statelessly when appropriate,
+    /// and falls back to streamed text when the non-streaming response is empty.
+    /// </summary>
+    /// <param name="build">The prepared runner and diagnostics.</param>
+    /// <param name="userText">The user input.</param>
+    /// <param name="request">The execution request.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <returns>A task containing the execution result.</returns>
     private async Task<AgentTemplateRunResult> ExecuteBuiltResponseRunnerAsync(
         AgentTemplateRunnerBuildResult build,
         string userText,
@@ -428,6 +463,17 @@ public sealed class AgentTemplateRunner
         return AgentTemplateRunResult.Failed(EmptyAgentOutputMessage, build.Diagnostics);
     }
 
+    /// <summary>
+    /// Retries one empty non-tool response with the minimum compatible output-token budget.
+    /// </summary>
+    /// <param name="template">The agent template.</param>
+    /// <param name="userText">The user input.</param>
+    /// <param name="request">The original execution request.</param>
+    /// <param name="onPrepared">Optional preparation callback.</param>
+    /// <param name="build">The original build result.</param>
+    /// <param name="execution">The original execution result.</param>
+    /// <param name="cancellationToken">Token used to cancel retry.</param>
+    /// <returns>The original or retried execution result.</returns>
     private async Task<AgentTemplateRunResult> RetryEmptyOutputWithHigherTokenBudgetAsync(
         AgentTemplate template,
         string userText,
@@ -476,9 +522,22 @@ public sealed class AgentTemplateRunner
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Determines whether an empty output may use the stateless streaming fallback.
+    /// </summary>
+    /// <param name="output">The non-streaming output.</param>
+    /// <param name="request">The execution request.</param>
+    /// <returns><see langword="true"/> when output is empty and function calls are disabled.</returns>
     private static bool ShouldUseStreamingFallback(string output, AgentTemplateRunRequest request)
         => string.IsNullOrWhiteSpace(output) && request?.AllowFunctionCalls != true;
 
+    /// <summary>
+    /// Runs a stateless streaming request to recover visible text from an empty response.
+    /// </summary>
+    /// <param name="build">The prepared runner and model configuration.</param>
+    /// <param name="input">The user input.</param>
+    /// <param name="cancellationToken">Token used to cancel streaming.</param>
+    /// <returns>A task containing accumulated streamed text.</returns>
     private async Task<string> ExecuteEmptyResponseStreamingFallbackAsync(
         AgentTemplateRunnerBuildResult build,
         string input,
@@ -509,9 +568,19 @@ public sealed class AgentTemplateRunner
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Resolves an agent template into a runnable AgentKernel runner.
+    /// This method applies the requested model/prompt binding, tool permissions,
+    /// output limits, stop sequences, and transport diagnostics before constructing
+    /// the runner. It does not execute the model.
     /// </summary>
+    /// <param name="template">The agent template to resolve.</param>
+    /// <param name="userText">The user input used when resolving dynamic configuration.</param>
+    /// <param name="request">Execution profile, model, tool, and cancellation settings.</param>
+    /// <param name="onPrepared">Optional callback invoked with the prepared diagnostics.</param>
+    /// <param name="onExecutionInfo">Optional callback for configuration-resolution messages.</param>
+    /// <param name="cancellationToken">Token used to cancel tool construction and model setup.</param>
+    /// <returns>A task containing the constructed runner or a failure result with diagnostics.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="template"/> or <paramref name="request"/> is <see langword="null"/>.</exception>
     public async Task<AgentTemplateRunnerBuildResult> BuildAsync(
         AgentTemplate template,
         string userText,
@@ -607,6 +676,15 @@ public sealed class AgentTemplateRunner
             diagnostics);
     }
 
+    /// <summary>
+    /// Resolves prompt content, PromptRange model settings, manual/task model bindings,
+    /// and optional knowledge-base context before runner construction.
+    /// </summary>
+    /// <param name="template">The agent template.</param>
+    /// <param name="userText">The user input used for retrieval context.</param>
+    /// <param name="request">The execution request.</param>
+    /// <param name="onExecutionInfo">Optional configuration diagnostic callback.</param>
+    /// <returns>A task containing effective setting, model, instructions, and diagnostics.</returns>
     private async Task<AgentTemplateExecutionConfiguration> ResolveConfigurationAsync(
         AgentTemplate template,
         string userText,
@@ -723,6 +801,11 @@ public sealed class AgentTemplateRunner
                 ToolCount: 0));
     }
 
+    /// <summary>
+    /// Parses a JSON stop-sequence array and ignores malformed input.
+    /// </summary>
+    /// <param name="stopSequences">Serialized stop-sequence JSON.</param>
+    /// <returns>The non-empty stop sequences, or <see langword="null"/>.</returns>
     private static IList<string> ParseStopSequences(string stopSequences)
     {
         if (string.IsNullOrWhiteSpace(stopSequences))
@@ -741,6 +824,12 @@ public sealed class AgentTemplateRunner
         }
     }
 
+    /// <summary>
+    /// Builds a diagnostic description of effective chat execution parameters without secrets.
+    /// </summary>
+    /// <param name="source">The parameter source label.</param>
+    /// <param name="options">The effective chat options.</param>
+    /// <returns>A bounded parameter description.</returns>
     private static string DescribeExecutionParameters(string source, ChatOptions options)
     {
         var thinking = options?.AdditionalProperties != null
@@ -755,6 +844,13 @@ public sealed class AgentTemplateRunner
                $"stopSequences={options?.StopSequences?.Count ?? 0}; think={thinking}";
     }
 
+    /// <summary>
+    /// Disables Ollama thinking when a low output budget would otherwise consume the visible response budget.
+    /// </summary>
+    /// <param name="chatOptions">The mutable options.</param>
+    /// <param name="platform">The AI platform.</param>
+    /// <param name="agentTemplateId">The agent template identifier for diagnostics.</param>
+    /// <param name="modelId">The model identifier.</param>
     private static void ApplyOllamaLowTokenCompatibility(
         ChatOptions chatOptions,
         AiPlatform platform,
@@ -779,6 +875,15 @@ public sealed class AgentTemplateRunner
             "低预算下关闭 Ollama 思考模式，避免思考过程耗尽预算而未生成可显示正文。");
     }
 
+    /// <summary>
+    /// Appends bounded, untrusted knowledge-base retrieval context to agent instructions.
+    /// Retrieval failures are logged and do not prevent model execution.
+    /// </summary>
+    /// <param name="template">The agent template.</param>
+    /// <param name="instructions">The base instructions.</param>
+    /// <param name="query">The user query.</param>
+    /// <param name="onExecutionInfo">Optional status callback.</param>
+    /// <returns>A task containing instructions with optional context.</returns>
     private async Task<string> AppendKnowledgeBaseContextAsync(
         AgentTemplate template,
         string instructions,
@@ -825,6 +930,20 @@ public sealed class AgentTemplateRunner
         }
     }
 
+    /// <summary>
+    /// Builds the allowed connector, Skill, plugin, FunctionRender, workflow, and MCP tools
+    /// according to the template bindings and human-approval policies.
+    /// </summary>
+    /// <param name="agentHandler">The AgentKernel handler used to create tools.</param>
+    /// <param name="template">The agent template containing bindings.</param>
+    /// <param name="pluginToolPermission">Plugin/FunctionRender permission mode.</param>
+    /// <param name="mcpToolPermission">MCP permission mode.</param>
+    /// <param name="correlationId">The diagnostic correlation ID.</param>
+    /// <param name="adminUserId">The administrator context for workflow tools.</param>
+    /// <param name="limitConnectors">Whether connector bindings are restricted.</param>
+    /// <param name="connectorInstanceIds">Allowed connector instance IDs.</param>
+    /// <param name="cancellationToken">Token used to cancel tool discovery.</param>
+    /// <returns>A task containing de-duplicated allowed tools.</returns>
     private async Task<List<AITool>> BuildAgentToolsAsync(
         AgentAiHandler agentHandler,
         AgentTemplate template,
@@ -1078,6 +1197,16 @@ public sealed class AgentTemplateRunner
             .ToList();
     }
 
+    /// <summary>
+    /// Adds connector actions authorized by the template's connector bindings and policy.
+    /// </summary>
+    /// <param name="tools">The tool list receiving connector functions.</param>
+    /// <param name="template">The agent template.</param>
+    /// <param name="pluginToolPermission">The connector tool permission mode.</param>
+    /// <param name="correlationId">The diagnostic correlation ID.</param>
+    /// <param name="limitConnectors">Whether connector selection is restricted.</param>
+    /// <param name="connectorInstanceIds">Allowed connector instance IDs.</param>
+    /// <param name="cancellationToken">Token used to cancel connector discovery.</param>
     private async Task AddConnectorToolsAsync(
         List<AITool> tools,
         AgentTemplate template,
@@ -1141,6 +1270,13 @@ public sealed class AgentTemplateRunner
         }
     }
 
+    /// <summary>
+    /// Parses a Function binding from explicit module/function fields or a <c>module::function</c> key.
+    /// </summary>
+    /// <param name="binding">The binding DTO.</param>
+    /// <param name="moduleUid">Receives the module UID.</param>
+    /// <param name="functionKey">Receives the Function key.</param>
+    /// <returns><see langword="true"/> when both identifiers are resolved.</returns>
     private static bool TryParseFunctionBinding(
         AgentFunctionBindingDto binding,
         out string moduleUid,
@@ -1164,6 +1300,13 @@ public sealed class AgentTemplateRunner
         return true;
     }
 
+    /// <summary>
+    /// Builds a deterministic, provider-safe tool name from module and Function identity.
+    /// </summary>
+    /// <param name="moduleUid">The module UID.</param>
+    /// <param name="functionKey">The Function key.</param>
+    /// <param name="displayName">The human-readable display name.</param>
+    /// <returns>A bounded tool name with a stable identity suffix.</returns>
     private static string BuildFunctionToolName(
         string moduleUid,
         string functionKey,
@@ -1192,6 +1335,14 @@ public sealed class AgentTemplateRunner
         return $"{prefix[..Math.Min(prefix.Length, maxPrefixLength)]}_{suffix}";
     }
 
+    /// <summary>
+    /// Builds a redacted model diagnostic description including platform, model, endpoint host,
+    /// and configured API version without exposing credentials.
+    /// </summary>
+    /// <param name="modelSource">The source label for model selection.</param>
+    /// <param name="model">The resolved model DTO.</param>
+    /// <param name="setting">The effective AI setting.</param>
+    /// <returns>A diagnostic model description.</returns>
     private static string DescribeModel(string modelSource, AIModelDto model, ISenparcAiSetting setting)
     {
         if (model == null)
@@ -1215,7 +1366,8 @@ public sealed class AgentTemplateRunner
 }
 
 /// <summary>
-///Legacy comment translated to English.
+/// Captures the execution profile, model-selection policy, tool permissions, output limits,
+/// and diagnostics settings used when running an <see cref="AgentTemplate"/>.
 /// </summary>
 public sealed class AgentTemplateRunRequest
 {
@@ -1289,6 +1441,19 @@ public sealed class AgentTemplateRunRequest
     ///Legacy comment translated to English.
     public IReadOnlyList<string> ConnectorInstanceIds { get; init; }
 
+    /// <summary>
+    /// Creates request settings for a local workflow invocation.
+    /// </summary>
+    /// <param name="agentTemplateId">The agent template identifier used to create a stable runner name.</param>
+    /// <param name="correlationId">The correlation identifier used for runner and diagnostics identity.</param>
+    /// <param name="aiModelId">The optional model identifier selected by the caller.</param>
+    /// <param name="allowFunctionCalls">Whether function and tool calls are enabled.</param>
+    /// <param name="humanInTheLoopLevel">The human-approval policy.</param>
+    /// <param name="pluginToolPermission">Permission policy for plugin tools.</param>
+    /// <param name="mcpToolPermission">Permission policy for MCP tools.</param>
+    /// <param name="useTemplateModelSettings">Whether template-bound model settings should be used.</param>
+    /// <param name="adminUserId">The administrator identity used for tool authorization.</param>
+    /// <returns>A request configured for local workflow execution.</returns>
     public static AgentTemplateRunRequest ForLocalWorkflow(
         int agentTemplateId,
         string correlationId,
@@ -1315,6 +1480,16 @@ public sealed class AgentTemplateRunRequest
         };
     }
 
+    /// <summary>
+    /// Creates request settings for a published A2A invocation.
+    /// Published execution keeps template model and prompt settings enabled and
+    /// disables local compatibility fallbacks unless explicitly configured elsewhere.
+    /// </summary>
+    /// <param name="agentTemplateId">The agent template identifier used to create a stable runner name.</param>
+    /// <param name="publicAgentKey">The public agent key included in the runner identity.</param>
+    /// <param name="allowFunctionCalls">Whether function and tool calls are enabled.</param>
+    /// <param name="diagnosticId">Optional transport-diagnostics correlation identifier.</param>
+    /// <returns>A request configured for published A2A execution.</returns>
     public static AgentTemplateRunRequest ForPublishedA2A(
         int agentTemplateId,
         string publicAgentKey,
@@ -1336,6 +1511,13 @@ public sealed class AgentTemplateRunRequest
         };
     }
 
+    /// <summary>
+    /// Creates a copy that uses an alternate deployment name for the same model settings.
+    /// The copy disables recursive deployment fallback to prevent repeated retries.
+    /// </summary>
+    /// <param name="setting">The alternate model setting to use for the retry.</param>
+    /// <returns>A copied request configured for the deployment-name compatibility retry.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="setting"/> is <see langword="null"/>.</exception>
     public AgentTemplateRunRequest WithDeploymentNameModelIdFallback(ISenparcAiSetting setting)
     {
         ArgumentNullException.ThrowIfNull(setting);
@@ -1368,6 +1550,10 @@ public sealed class AgentTemplateRunRequest
         };
     }
 
+    /// <summary>
+    /// Creates a copy that disables published transport diagnostics and uses the standard AgentKernel transport.
+    /// </summary>
+    /// <returns>A copied request configured for the standard transport retry.</returns>
     public AgentTemplateRunRequest WithStandardModelTransportFallback()
     {
         return new AgentTemplateRunRequest
@@ -1401,6 +1587,10 @@ public sealed class AgentTemplateRunRequest
         };
     }
 
+    /// <summary>
+    /// Creates a copy for the configured API-version compatibility retry.
+    /// </summary>
+    /// <returns>A copied request configured for the API-version retry.</returns>
     public AgentTemplateRunRequest WithApiVersionCompatibilityFallback()
     {
         return new AgentTemplateRunRequest
@@ -1431,6 +1621,12 @@ public sealed class AgentTemplateRunRequest
         };
     }
 
+    /// <summary>
+    /// Creates a copy that raises the output-token budget for an empty-output retry.
+    /// </summary>
+    /// <param name="minimumOutputTokens">The minimum output-token budget required for the retry.</param>
+    /// <returns>A copied request with the retry budget and retry marker enabled.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="minimumOutputTokens"/> is not positive.</exception>
     public AgentTemplateRunRequest WithMinimumOutputTokenBudgetRetry(int minimumOutputTokens)
     {
         if (minimumOutputTokens <= 0)
@@ -1478,7 +1674,8 @@ public sealed record AgentTemplateExecutionDiagnostics(
     int ToolCount);
 
 /// <summary>
-///Legacy comment translated to English.
+/// Describes the effective model, credential state, session strategy, tool usage,
+/// and execution parameters captured while preparing an agent run.
 /// </summary>
 public sealed record AgentTemplateRunnerBuildResult(
     bool Success,
@@ -1489,6 +1686,15 @@ public sealed record AgentTemplateRunnerBuildResult(
     AgentTemplateExecutionDiagnostics Diagnostics,
     string ErrorMessage)
 {
+    /// <summary>
+    /// Creates a successful build result containing the constructed runner and diagnostics.
+    /// </summary>
+    /// <param name="runner">The runnable AgentKernel runner.</param>
+    /// <param name="agentOptions">The options used to configure the agent.</param>
+    /// <param name="effectiveSetting">The effective model setting.</param>
+    /// <param name="effectiveModel">The resolved database model, when available.</param>
+    /// <param name="diagnostics">Preparation diagnostics.</param>
+    /// <returns>A successful build result.</returns>
     public static AgentTemplateRunnerBuildResult Succeeded(
         IWantToRun runner,
         ChatClientAgentOptions agentOptions,
@@ -1497,6 +1703,12 @@ public sealed record AgentTemplateRunnerBuildResult(
         AgentTemplateExecutionDiagnostics diagnostics)
         => new(true, runner, agentOptions, effectiveSetting, effectiveModel, diagnostics, null);
 
+    /// <summary>
+    /// Creates a failed build result with diagnostics and a user-facing error message.
+    /// </summary>
+    /// <param name="errorMessage">The reason the runner could not be constructed.</param>
+    /// <param name="diagnostics">Preparation diagnostics collected before failure.</param>
+    /// <returns>A failed build result.</returns>
     public static AgentTemplateRunnerBuildResult Failed(
         string errorMessage,
         AgentTemplateExecutionDiagnostics diagnostics)
@@ -1509,9 +1721,21 @@ public sealed record AgentTemplateRunResult(
     string ErrorMessage,
     AgentTemplateExecutionDiagnostics Diagnostics)
 {
+    /// <summary>
+    /// Creates a successful execution result.
+    /// </summary>
+    /// <param name="output">The agent output text.</param>
+    /// <param name="diagnostics">Execution diagnostics.</param>
+    /// <returns>A successful run result.</returns>
     public static AgentTemplateRunResult Succeeded(string output, AgentTemplateExecutionDiagnostics diagnostics)
         => new(true, output, null, diagnostics);
 
+    /// <summary>
+    /// Creates a failed execution result.
+    /// </summary>
+    /// <param name="errorMessage">The user-facing execution error.</param>
+    /// <param name="diagnostics">Execution diagnostics collected before failure.</param>
+    /// <returns>A failed run result.</returns>
     public static AgentTemplateRunResult Failed(string errorMessage, AgentTemplateExecutionDiagnostics diagnostics)
         => new(false, null, errorMessage, diagnostics);
 }

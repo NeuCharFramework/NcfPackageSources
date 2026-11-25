@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -20,6 +23,8 @@ using System.IO;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -32,6 +37,7 @@ using Microsoft.Extensions.Logging;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto;
 using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.Core.Authorization;
+using Senparc.Xncf.Workspace.Abstractions;
 
 namespace Senparc.Areas.Admin.OHS.Local.Controllers;
 
@@ -46,6 +52,7 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
     private const long LargeAttachmentTransportLimit = 320L * 1024 * 1024;
     private readonly AdminChatWorkspaceAssetService _assets;
     private readonly WorkspaceAssetShareStore _shares;
+    private readonly WorkspaceAssetCapabilityStore _capabilities;
     private readonly ILogger<AdminChatWorkspaceAssetsController> _logger;
     private readonly IWebHostEnvironment _environment;
 
@@ -55,9 +62,13 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
     {
         _assets = assets;
         _shares = shares;
+        _capabilities = new WorkspaceAssetCapabilityStore();
         _logger = logger;
         _environment = environment;
     }
+
+    private WorkspaceAssetCapabilityStore Capabilities =>
+        HttpContext?.RequestServices?.GetService<WorkspaceAssetCapabilityStore>() ?? _capabilities;
 
     [HttpGet("{sessionId:int}/preview")]
     public Task<IActionResult> Preview(int sessionId, [FromQuery] string path, CancellationToken cancellationToken) =>
@@ -140,6 +151,111 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
             }
             finally { DownloadSlots.Release(); }
         });
+
+    [HttpPost("{sessionId:int}/capabilities")]
+    [RequestSizeLimit(4096)]
+    public Task<IActionResult> CreateCapability(
+        int sessionId, [FromBody] WorkspaceCapabilityRequest request,
+        CancellationToken cancellationToken) =>
+        ExecuteAsync(async () =>
+        {
+            var session = await _assets.GetSessionAsync(sessionId, User, cancellationToken);
+            var path = WorkspaceAssetPreviewBuilder.NormalizePath(request?.Path);
+            var metadata = await _assets.Storage.GetFileInfoAsync(session.WorkspaceId, path, cancellationToken);
+            if (metadata.IsDirectory)
+                throw new ArgumentException("能力令牌只能访问文件。");
+            var capability = Capabilities.Create(sessionId, session.WorkspaceId, path, metadata.ETag);
+            return Ok(new
+            {
+                url = $"{Request.PathBase}/api/Senparc.Areas.Admin/WorkspaceAssets/asset/{capability.Id}/{capability.Token}",
+                expiresAt = capability.ExpiresAt,
+                etag = metadata.ETag,
+                size = metadata.Length,
+                contentType = WorkspaceTextFiles.ResolveContentType(path)
+            });
+        });
+
+    [HttpPost("{sessionId:int}/manifest")]
+    [RequestSizeLimit(4096)]
+    public Task<IActionResult> CreateManifest(
+        int sessionId, [FromBody] WorkspaceCapabilityRequest request,
+        CancellationToken cancellationToken) =>
+        ExecuteAsync(async () =>
+        {
+            var session = await _assets.GetSessionAsync(sessionId, User, cancellationToken);
+            var sourcePath = WorkspaceAssetPreviewBuilder.NormalizePath(request?.Path);
+            var scope = sourcePath.Contains('/')
+                ? sourcePath[..sourcePath.LastIndexOf('/')]
+                : string.Empty;
+            var queue = new Queue<(string Path, int Depth)>();
+            queue.Enqueue((scope, 0));
+            var assets = new Dictionary<string, object>(StringComparer.Ordinal);
+            var visited = 0;
+            while (queue.TryDequeue(out var directory))
+            {
+                if (directory.Depth > 4)
+                    throw new ArgumentException("Workspace 预览依赖最多支持 4 层目录。");
+                var entries = await _assets.Storage.ListAsync(
+                    session.WorkspaceId, directory.Path, cancellationToken);
+                foreach (var entry in entries)
+                {
+                    var path = WorkspaceAssetPreviewBuilder.NormalizePath(entry.RelativePath);
+                    if (!path.StartsWith(scope.Length == 0 ? string.Empty : scope + "/", StringComparison.Ordinal))
+                        throw new IOException("Workspace returned a path outside the preview scope.");
+                    if (++visited > 100)
+                        throw new ArgumentException("Workspace 预览依赖不能超过 100 个文件。");
+                    if (entry.IsDirectory)
+                    {
+                        queue.Enqueue((path, directory.Depth + 1));
+                        continue;
+                    }
+                    if (entry.Length > 32 * 1024 * 1024
+                        || !WorkspaceAssetPreviewBuilder.IsPreviewAsset(path))
+                        continue;
+                    var metadata = await _assets.Storage.GetFileInfoAsync(
+                        session.WorkspaceId, path, cancellationToken);
+                    var capability = Capabilities.Create(
+                        sessionId, session.WorkspaceId, path, metadata.ETag);
+                    assets[path] = new
+                    {
+                        url = $"{Request.PathBase}/api/Senparc.Areas.Admin/WorkspaceAssets/asset/{capability.Id}/{capability.Token}",
+                        etag = metadata.ETag,
+                        size = entry.Length,
+                        contentType = WorkspaceTextFiles.ResolveContentType(path)
+                    };
+                }
+            }
+            return Ok(new { scope, assets });
+        });
+
+    [AllowAnonymous]
+    [HttpGet("asset/{id}/{token}")]
+    public async Task<IActionResult> Asset(string id, string token, CancellationToken cancellationToken)
+    {
+        if (!Capabilities.TryGet(id, token, out var capability))
+            return NotFound();
+        try
+        {
+            var metadata = await _assets.Storage.GetFileInfoAsync(
+                capability.WorkspaceId, capability.Path, cancellationToken);
+            if (metadata.IsDirectory
+                || !string.Equals(metadata.ETag, capability.ETag, StringComparison.Ordinal))
+                return NotFound();
+            var file = await _assets.Storage.ReadFileBytesAsync(
+                capability.WorkspaceId, capability.Path, 32 * 1024 * 1024, cancellationToken);
+            Response.Headers["Access-Control-Allow-Origin"] = "*";
+            Response.Headers["X-Content-Type-Options"] = "nosniff";
+            Response.Headers["Referrer-Policy"] = "no-referrer";
+            Response.Headers["Cross-Origin-Resource-Policy"] = "cross-origin";
+            Response.Headers.CacheControl = "no-store";
+            return File(file.Content, WorkspaceTextFiles.ResolveContentType(capability.Path));
+        }
+        catch (Exception error) when (error is FileNotFoundException or DirectoryNotFoundException
+            or WorkspaceLimitException)
+        {
+            return NotFound();
+        }
+    }
 
     [HttpGet("{sessionId:int}/shares")]
     public Task<IActionResult> ListShares(int sessionId, CancellationToken cancellationToken) =>
@@ -256,5 +372,10 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
     {
         public string Path { get; set; } = "";
         public int ExpiresInHours { get; set; } = 24;
+    }
+
+    public sealed class WorkspaceCapabilityRequest
+    {
+        public string Path { get; set; } = "";
     }
 }

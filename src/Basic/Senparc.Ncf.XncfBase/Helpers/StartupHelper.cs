@@ -25,10 +25,12 @@ namespace Senparc.Ncf.XncfBase.Helpers
     public class StartupHelper
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a database register and formats its XNCF name/version for startup output.
+        /// Failures are converted to a development fallback string because startup banners
+        /// must not prevent application initialization.
         /// </summary>
-        /// <typeparam name="TXncfDatabaseRegister"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="TXncfDatabaseRegister">The database register type to instantiate.</typeparam>
+        /// <returns>The formatted XNCF identity or a development fallback description.</returns>
         internal static string GetXncfVersion<TXncfDatabaseRegister>()
           where TXncfDatabaseRegister : class, IXncfDatabase, new()
         {

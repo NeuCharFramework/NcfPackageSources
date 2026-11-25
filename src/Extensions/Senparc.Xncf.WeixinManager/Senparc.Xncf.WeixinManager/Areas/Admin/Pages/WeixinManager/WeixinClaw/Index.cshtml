@@ -1,7 +1,7 @@
 @page
 @model Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager.WeixinClaw.IndexModel
 @{
-    ViewData["Title"] = XR["Frontend.084"];
+    ViewData["Title"] = XR["Frontend.WeixinManager.PersonalWeChatBotAlternate"];
     Layout = "_Layout_Vue";
 }
 @section HeaderContent {
@@ -56,31 +56,31 @@
     </style>
 }
 @section breadcrumbs {
-    <el-breadcrumb-item>@XR["Frontend.001"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@XR["Frontend.003"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@XR["Frontend.084"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.WeixinManager.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.WeixinManager.WeixinManagement"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.WeixinManager.PersonalWeChatBotAlternate"]</el-breadcrumb-item>
 }
 <div>
     <el-container>
         <el-header class="module-header">
-            <span class="start-title"><i class="fa fa-wechat"></i>&nbsp;{{ ncfST('Frontend.084') }}</span>
+            <span class="start-title"><i class="fa fa-wechat"></i>&nbsp;{{ ncfST('Frontend.WeixinManager.PersonalWeChatBotAlternate') }} <ncf-doc-help topic="weixin.claw"></ncf-doc-help></span>
         </el-header>
         <el-main>
             <div class="claw-toolbar">
-                <el-button type="primary" icon="el-icon-camera" @@click="startLogin">{{ ncfST('Frontend.108') }}</el-button>
-                <el-button icon="el-icon-refresh" @@click="loadAccounts">{{ ncfST('Frontend.093') }}</el-button>
+                <el-button type="primary" icon="el-icon-camera" @@click="startLogin">{{ ncfST('Frontend.WeixinManager.ConnectByScanning') }}</el-button>
+                <el-button icon="el-icon-refresh" @@click="loadAccounts">{{ ncfST('Frontend.WeixinManager.Refresh') }}</el-button>
             </div>
             <div class="claw-message-error" v-if="accountLoadError">{{accountLoadError}}</div>
 
             <table class="claw-table">
                 <thead>
                     <tr>
-                        <th>{{ ncfST('Frontend.023') }}</th>
-                        <th>{{ ncfST('Frontend.113') }}</th>
-                        <th>{{ ncfST('Frontend.079') }}</th>
-                        <th>{{ ncfST('Frontend.112') }}</th>
-                        <th>{{ ncfST('Frontend.111') }}</th>
-                        <th>{{ ncfST('Frontend.029') }}</th>
+                        <th>{{ ncfST('Frontend.WeixinManager.Name') }}</th>
+                        <th>{{ ncfST('Frontend.WeixinManager.Status') }}</th>
+                        <th>{{ ncfST('Frontend.WeixinManager.ILinkAccount') }}</th>
+                        <th>{{ ncfST('Frontend.WeixinManager.RecentConnections') }}</th>
+                        <th>{{ ncfST('Frontend.WeixinManager.RecentMessages') }}</th>
+                        <th>{{ ncfST('Frontend.WeixinManager.Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -94,36 +94,36 @@
                             <div>{{item.ilinkBotId || '-'}}</div>
                             <div class="claw-muted">{{item.ilinkUserId || '-'}}</div>
                             <div class="claw-muted" v-if="item.lastMessageFromUserId">
-                                {{ncfST('Frontend.157', item.lastMessageFromUserId)}}
+                                {{ncfST('Frontend.WeixinManager.LastSenderValue', item.lastMessageFromUserId)}}
                             </div>
                         </td>
                         <td>{{item.lastConnectedAt || '-'}}</td>
                         <td>{{item.lastMessageAt || '-'}}</td>
                         <td>
-                            <el-button size="mini" icon="el-icon-edit" @@click="edit(item)">{{ ncfST('Frontend.017') }}</el-button>
-                            <el-button size="mini" icon="el-icon-chat-dot-round" @@click="openChat(item)">{{ ncfST('Frontend.016') }}</el-button>
-                            <el-button size="mini" icon="el-icon-key" @@click="openBindings(item)">{{ ncfST('Frontend.118') }}</el-button>
-                            <el-button size="mini" type="danger" icon="el-icon-delete" @@click="remove(item)">{{ ncfST('Frontend.022') }}</el-button>
+                            <el-button size="mini" icon="el-icon-edit" @@click="edit(item)">{{ ncfST('Frontend.WeixinManager.Edit') }}</el-button>
+                            <el-button size="mini" icon="el-icon-chat-dot-round" @@click="openChat(item)">{{ ncfST('Frontend.WeixinManager.Conversation') }}</el-button>
+                            <el-button size="mini" icon="el-icon-key" @@click="openBindings(item)">{{ ncfST('Frontend.WeixinManager.BindingConfiguration') }}</el-button>
+                            <el-button size="mini" type="danger" icon="el-icon-delete" @@click="remove(item)">{{ ncfST('Frontend.WeixinManager.Delete') }}</el-button>
                         </td>
                     </tr>
-                    <tr v-if="accounts.length===0"><td colspan="6" class="claw-muted">{{ ncfST('Frontend.102') }}</td></tr>
+                    <tr v-if="accounts.length===0"><td colspan="6" class="claw-muted">{{ ncfST('Frontend.WeixinManager.PersonalWeChatIsNotConnectedYet') }}</td></tr>
                 </tbody>
             </table>
 
             <div class="claw-panel" v-if="bindings.visible">
-                <h4>{{ ncfST('Frontend.118') }}：{{bindings.accountName}}</h4>
+                <h4>{{ ncfST('Frontend.WeixinManager.BindingConfiguration') }}：{{bindings.accountName}}</h4>
                 <p class="claw-muted">
-                    {{ ncfST('Frontend.076') }} {{ ncfST('Frontend.080') }}
+                    {{ ncfST('Frontend.WeixinManager.BindPairingCode') }} {{ ncfST('Frontend.WeixinManager.TheTokenIsProtectedWithDataProtectionOnTheServerAndIs') }}
                 </p>
                 <table class="claw-table">
                     <thead>
                         <tr>
-                            <th>{{ ncfST('Frontend.023') }}</th>
+                            <th>{{ ncfST('Frontend.WeixinManager.Name') }}</th>
                             <th>AdminUserId</th>
                             <th>WorkflowId</th>
-                            <th>{{ ncfST('Frontend.095') }}</th>
-                            <th>{{ ncfST('Frontend.113') }}</th>
-                            <th>{{ ncfST('Frontend.029') }}</th>
+                            <th>{{ ncfST('Frontend.WeixinManager.Features') }}</th>
+                            <th>{{ ncfST('Frontend.WeixinManager.Status') }}</th>
+                            <th>{{ ncfST('Frontend.WeixinManager.Actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -137,60 +137,60 @@
                             </td>
                             <td>{{enabledText(item.enabled)}}</td>
                             <td>
-                                <el-button size="mini" icon="el-icon-edit" @@click="editBinding(item)">{{ ncfST('Frontend.017') }}</el-button>
-                                <el-button size="mini" type="danger" icon="el-icon-delete" @@click="removeBinding(item)">{{ ncfST('Frontend.022') }}</el-button>
+                                <el-button size="mini" icon="el-icon-edit" @@click="editBinding(item)">{{ ncfST('Frontend.WeixinManager.Edit') }}</el-button>
+                                <el-button size="mini" type="danger" icon="el-icon-delete" @@click="removeBinding(item)">{{ ncfST('Frontend.WeixinManager.Delete') }}</el-button>
                             </td>
                         </tr>
                         <tr v-if="bindings.items.length===0">
-                            <td colspan="6" class="claw-muted">{{ ncfST('Frontend.104') }}</td>
+                            <td colspan="6" class="claw-muted">{{ ncfST('Frontend.WeixinManager.NoBindingCodeHasBeenConfiguredForThisAccount') }}</td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="claw-grid" style="margin-top:12px">
                     <div class="claw-field">
-                        <label>{{ ncfST('Frontend.123') }}</label>
-                        <el-input v-model="bindings.form.name" :placeholder="ncfST('Frontend.085')"></el-input>
+                        <label>{{ ncfST('Frontend.WeixinManager.ConfigurationName') }}</label>
+                        <el-input v-model="bindings.form.name" :placeholder="ncfST('Frontend.WeixinManager.ForExampleSuperAdministrator')"></el-input>
                     </div>
                     <div class="claw-field">
-                        <label>{{ ncfST('Frontend.117') }}</label>
+                        <label>{{ ncfST('Frontend.WeixinManager.BindingCode') }}</label>
                         <el-input v-model="bindings.form.bindingCode" class="claw-binding-code"
                                   type="password" show-password
-                                  :placeholder="bindings.form.id ? ncfST('Frontend.116') : ncfST('Frontend.076')"></el-input>
+                                  :placeholder="bindings.form.id ? ncfST('Frontend.WeixinManager.LeaveEmptyToKeepTheExistingToken') : ncfST('Frontend.WeixinManager.BindPairingCode')"></el-input>
                     </div>
                     <div class="claw-field">
                         <label>AdminUserId</label>
                         <el-input-number v-model="bindings.form.adminUserId" :min="1" controls-position="right"></el-input-number>
                     </div>
                     <div class="claw-field">
-                        <label>{{ ncfST('Frontend.078') }}</label>
+                        <label>{{ ncfST('Frontend.WeixinManager.WorkflowIdOptional') }}</label>
                         <el-input-number v-model="bindings.form.workflowId" :min="0" controls-position="right"></el-input-number>
                     </div>
                     <div class="claw-field">
-                        <label>{{ ncfST('Frontend.077') }}</label>
+                        <label>{{ ncfST('Frontend.WeixinManager.AIModelIdOptional') }}</label>
                         <el-input-number v-model="bindings.form.aiModelId" :min="0" controls-position="right"></el-input-number>
                     </div>
                 </div>
                 <div class="claw-toolbar" style="margin-top:12px">
-                    <el-checkbox v-model="bindings.form.enableNeuBell">{{ ncfST('Frontend.089') }}</el-checkbox>
-                    <el-checkbox v-model="bindings.form.enableWorkflow">{{ ncfST('Frontend.090') }}</el-checkbox>
-                    <el-checkbox v-model="bindings.form.enabled">{{ ncfST('Frontend.098') }}</el-checkbox>
+                    <el-checkbox v-model="bindings.form.enableNeuBell">{{ ncfST('Frontend.WeixinManager.AllowNeuBell') }}</el-checkbox>
+                    <el-checkbox v-model="bindings.form.enableWorkflow">{{ ncfST('Frontend.WeixinManager.AllowWorkflow') }}</el-checkbox>
+                    <el-checkbox v-model="bindings.form.enabled">{{ ncfST('Frontend.WeixinManager.EnableBinding') }}</el-checkbox>
                 </div>
                 <div class="claw-toolbar">
-                    <el-button type="primary" icon="el-icon-check" @@click="saveBinding">{{ ncfST('Frontend.088') }}</el-button>
-                    <el-button icon="el-icon-plus" @@click="newBinding">{{ ncfST('Frontend.110') }}</el-button>
-                    <el-button icon="el-icon-close" @@click="bindings.visible=false">{{ ncfST('Frontend.092') }}</el-button>
+                    <el-button type="primary" icon="el-icon-check" @@click="saveBinding">{{ ncfST('Frontend.WeixinManager.SaveBindingSettings') }}</el-button>
+                    <el-button icon="el-icon-plus" @@click="newBinding">{{ ncfST('Frontend.WeixinManager.NewBindingConfiguration') }}</el-button>
+                    <el-button icon="el-icon-close" @@click="bindings.visible=false">{{ ncfST('Frontend.WeixinManager.Close') }}</el-button>
                 </div>
             </div>
 
             <div class="claw-panel" v-if="chat.visible">
-                <h4>{{ ncfST('Frontend.084') }}：{{chat.accountName}}</h4>
+                <h4>{{ ncfST('Frontend.WeixinManager.PersonalWeChatBotAlternate') }}：{{chat.accountName}}</h4>
                 <div class="claw-workbench">
                     <aside class="claw-sessions">
                         <div class="claw-session"
                              :class="{active: !chat.peerUserId}"
                              @@click="selectConversation(null)">
-                            <div class="claw-session-peer">{{ ncfST('Frontend.091') }}</div>
-                            <div class="claw-session-preview">{{ ncfST('Frontend.103') }}</div>
+                            <div class="claw-session-peer">{{ ncfST('Frontend.WeixinManager.AllMessages') }}</div>
+                            <div class="claw-session-preview">{{ ncfST('Frontend.WeixinManager.AllSentAndReceivedRecordsForThisAccount') }}</div>
                         </div>
                         <div v-for="session in chat.sessions"
                              :key="session.peerUserId"
@@ -199,27 +199,27 @@
                              @@click="selectConversation(session.peerUserId)">
                             <div class="claw-session-peer">{{session.peerUserId}}</div>
                             <div class="claw-session-preview">{{session.lastText}}</div>
-                            <div class="claw-session-time">{{formatMessageTime(session.lastCreatedAt)}} · {{ncfST('Frontend.159', session.messageCount)}}</div>
+                            <div class="claw-session-time">{{formatMessageTime(session.lastCreatedAt)}} · {{ncfST('Frontend.WeixinManager.ValueMessages', session.messageCount)}}</div>
                         </div>
                     </aside>
                     <section class="claw-chat-column">
                         <div class="claw-toolbar">
-                            <span class="claw-muted">{{ncfST('Frontend.158')}}：{{chat.peerUserId || ncfST('Frontend.091')}}</span>
-                            <el-button size="mini" icon="el-icon-refresh" @@click="loadMessages">{{ ncfST('Frontend.093') }}</el-button>
-                            <el-button size="mini" icon="el-icon-setting" @@click="openBindings(currentAccount)">{{ ncfST('Frontend.118') }}</el-button>
+                            <span class="claw-muted">{{ncfST('Frontend.WeixinManager.CurrentConversation')}}：{{chat.peerUserId || ncfST('Frontend.WeixinManager.AllMessages')}}</span>
+                            <el-button size="mini" icon="el-icon-refresh" @@click="loadMessages">{{ ncfST('Frontend.WeixinManager.Refresh') }}</el-button>
+                            <el-button size="mini" icon="el-icon-setting" @@click="openBindings(currentAccount)">{{ ncfST('Frontend.WeixinManager.BindingConfiguration') }}</el-button>
                         </div>
                         <div ref="chatScroll" class="claw-chat" @@scroll="handleChatScroll">
                             <div v-if="chat.messages.length===0" class="claw-muted">
-                                {{ ncfST('Frontend.131') }}
+                                {{ ncfST('Frontend.WeixinManager.NoConversationRecordsYetSendATextToWeChatClawBotFromYour') }}
                             </div>
                             <div v-for="message in chat.messages"
                                  :key="message.id"
                                  :class="['claw-message', message.direction, message.status==='failed'?'failed':'']">
                                 <div class="claw-message-meta">
                                     {{messageDirection(message.direction)}} · {{formatMessageTime(message.createdAt)}}
-                                    <span v-if="message.status==='sending'">{{ ncfST('Frontend.081') }}</span>
-                                    <span v-if="message.status==='sent'">{{ ncfST('Frontend.083') }}</span>
-                                    <span v-if="message.status==='failed'">{{ ncfST('Frontend.082') }}</span>
+                                    <span v-if="message.status==='sending'">{{ ncfST('Frontend.WeixinManager.Sending') }}</span>
+                                    <span v-if="message.status==='sent'">{{ ncfST('Frontend.WeixinManager.Submitted') }}</span>
+                                    <span v-if="message.status==='failed'">{{ ncfST('Frontend.WeixinManager.Failed') }}</span>
                                 </div>
                                 <div class="claw-message-body" v-if="message.text">{{message.text}}</div>
                                 <div class="claw-media-list" v-if="message.mediaItems && message.mediaItems.length">
@@ -228,7 +228,7 @@
                                         <img v-if="media.kind === 'image' && media.url"
                                              class="claw-media-image"
                                              :src="media.url"
-                                             :alt="media.name || ncfST('Frontend.100')"
+                                             :alt="media.name || ncfST('Frontend.WeixinManager.Image')"
                                              @@click="openMedia(media.url)">
                                         <audio v-else-if="media.kind === 'voice' && media.playbackUrl"
                                                class="claw-media-audio"
@@ -251,12 +251,12 @@
                                            rel="noopener noreferrer"
                                            :download="media.name">
                                             <i class="el-icon-document"></i>
-                                            {{media.name || media.kind || ncfST('Frontend.109')}}
+                                            {{media.name || media.kind || ncfST('Frontend.WeixinManager.File')}}
                                             <span v-if="media.size">（{{formatFileSize(media.size)}}）</span>
                                         </a>
                                         <div class="claw-muted" v-if="media.error">{{media.error}}</div>
                                         <div class="claw-message-error" v-if="mediaPlaybackErrors[media.playbackUrl]">{{mediaPlaybackErrors[media.playbackUrl]}}</div>
-                                        <div class="claw-muted" v-if="!media.url && !media.error">{{ ncfST('Frontend.101') }}</div>
+                                        <div class="claw-muted" v-if="!media.url && !media.error">{{ ncfST('Frontend.WeixinManager.TheMediaFileIsNotReadyYet') }}</div>
                                     </div>
                                 </div>
                                 <div class="claw-message-error" v-if="message.error">{{message.error}}</div>
@@ -265,30 +265,30 @@
                         <el-button v-if="chat.newCount > 0 && !chat.nearBottom"
                                    class="claw-new-messages"
                                    size="mini" type="primary" round
-                                   @@click="jumpToLatest">{{ncfST('Frontend.151', chat.newCount)}}</el-button>
+                                   @@click="jumpToLatest">{{ncfST('Frontend.WeixinManager.ValueNewMessages', chat.newCount)}}</el-button>
                         <div class="claw-media-actions">
                             <input ref="mediaFile" type="file" style="display:none" @@change="onMediaSelected">
-                            <el-button size="mini" icon="el-icon-picture" @@click="chooseMedia('image')">{{ ncfST('Frontend.100') }}</el-button>
-                            <el-button size="mini" icon="el-icon-document" @@click="chooseMedia('file')">{{ ncfST('Frontend.109') }}</el-button>
-                            <el-button size="mini" icon="el-icon-microphone" @@click="chooseMedia('voice')">{{ ncfST('Frontend.119') }}</el-button>
+                            <el-button size="mini" icon="el-icon-picture" @@click="chooseMedia('image')">{{ ncfST('Frontend.WeixinManager.Image') }}</el-button>
+                            <el-button size="mini" icon="el-icon-document" @@click="chooseMedia('file')">{{ ncfST('Frontend.WeixinManager.File') }}</el-button>
+                            <el-button size="mini" icon="el-icon-microphone" @@click="chooseMedia('voice')">{{ ncfST('Frontend.WeixinManager.AudioFileSILKMPThree') }}</el-button>
                             <span class="claw-muted" v-if="chat.mediaFile">{{chat.mediaFile.name}}</span>
                         </div>
                         <div class="claw-toolbar" style="margin-top:10px">
                             <el-input v-model="composer.text" type="textarea" :rows="3"
-                                      :placeholder="ncfST('Frontend.122')"></el-input>
+                                      :placeholder="ncfST('Frontend.WeixinManager.EnterAMessageToSendToTheCurrentWeChatConversation')"></el-input>
                             <el-button type="primary" icon="el-icon-s-promotion" :loading="chat.sending"
-                                       @@click="send">{{ ncfST('Frontend.096') }}</el-button>
+                                       @@click="send">{{ ncfST('Frontend.WeixinManager.Send') }}</el-button>
                         </div>
                     </section>
                 </div>
             </div>
 
             <div class="claw-panel" v-if="editor.visible">
-                <h4>{{editor.form.id ? ncfST('Frontend.133') : ncfST('Frontend.132')}}</h4>
+                <h4>{{editor.form.id ? ncfST('Frontend.WeixinManager.EditPersonalWeChatAccount') : ncfST('Frontend.WeixinManager.AddPersonalWeChatAccount')}}</h4>
                 <div class="claw-grid">
                     <div class="claw-field">
-                        <label>{{ ncfST('Frontend.023') }}</label>
-                        <el-input v-model="editor.form.name" :placeholder="ncfST('Frontend.086')"></el-input>
+                        <label>{{ ncfST('Frontend.WeixinManager.Name') }}</label>
+                        <el-input v-model="editor.form.name" :placeholder="ncfST('Frontend.WeixinManager.ForExampleMyPersonalWeChat')"></el-input>
                     </div>
                     <div class="claw-field">
                         <label>iLink Base URL</label>
@@ -296,41 +296,41 @@
                     </div>
                     <div class="claw-field">
                         <label>bot token</label>
-                        <el-input v-model="editor.form.botToken" type="password" show-password :placeholder="ncfST('Frontend.116')"></el-input>
+                        <el-input v-model="editor.form.botToken" type="password" show-password :placeholder="ncfST('Frontend.WeixinManager.LeaveEmptyToKeepTheExistingToken')"></el-input>
                     </div>
                     <div class="claw-field">
                         <label>PromptRangeCode</label>
-                        <el-input v-model="editor.form.promptRangeCode" :placeholder="ncfST('Frontend.115')"></el-input>
+                        <el-input v-model="editor.form.promptRangeCode" :placeholder="ncfST('Frontend.WeixinManager.UsedByTheUpstreamHandlerMayBeEmpty')"></el-input>
                     </div>
                 </div>
-                <p class="claw-muted">{{ ncfST('Frontend.080') }}</p>
-                <el-checkbox v-model="editor.form.enabled">{{ ncfST('Frontend.099') }}</el-checkbox>
+                <p class="claw-muted">{{ ncfST('Frontend.WeixinManager.TheTokenIsProtectedWithDataProtectionOnTheServerAndIs') }}</p>
+                <el-checkbox v-model="editor.form.enabled">{{ ncfST('Frontend.WeixinManager.EnableLongPolling') }}</el-checkbox>
                 <div class="claw-toolbar" style="margin-top:12px">
-                    <el-button type="primary" icon="el-icon-check" @@click="save">{{ ncfST('Frontend.087') }}</el-button>
-                    <el-button icon="el-icon-close" @@click="editor.visible=false">{{ ncfST('Frontend.097') }}</el-button>
+                    <el-button type="primary" icon="el-icon-check" @@click="save">{{ ncfST('Frontend.WeixinManager.Save') }}</el-button>
+                    <el-button icon="el-icon-close" @@click="editor.visible=false">{{ ncfST('Frontend.WeixinManager.CancelAlternate') }}</el-button>
                 </div>
             </div>
 
             <div class="claw-panel" v-if="login.visible">
-                <h4>{{ ncfST('Frontend.107') }}</h4>
+                <h4>{{ ncfST('Frontend.WeixinManager.ScanTheQRCodeToConnectPersonalWeChat') }}</h4>
                 <div class="claw-grid">
                     <div>
-                        <img class="claw-qr" :src="login.qrcodeImageContent" :alt="ncfST('Frontend.105')">
+                        <img class="claw-qr" :src="login.qrcodeImageContent" :alt="ncfST('Frontend.WeixinManager.WeChatLoginQRCode')">
                     </div>
                     <div>
-                        <p>{{ ncfST('Frontend.120') }}</p>
+                        <p>{{ ncfST('Frontend.WeixinManager.ScanTheQRCodeWithWeChatAndConfirmTheLoginOnYour') }}</p>
                         <p class="claw-muted" v-if="login.qrcodeUrl">
-                            {{ ncfST('Frontend.106') }}：<a :href="login.qrcodeUrl" target="_blank" rel="noopener noreferrer">{{ ncfST('Frontend.106') }}</a>
+                            {{ ncfST('Frontend.WeixinManager.OpenLink') }}：<a :href="login.qrcodeUrl" target="_blank" rel="noopener noreferrer">{{ ncfST('Frontend.WeixinManager.OpenLink') }}</a>
                         </p>
-                        <p>{{ ncfST('Frontend.114') }}<strong>{{login.status}}</strong></p>
+                        <p>{{ ncfST('Frontend.WeixinManager.StatusLabel') }}<strong>{{login.status}}</strong></p>
                         <div class="claw-field" v-if="login.status==='verify_code_blocked'">
-                            <label>{{ ncfST('Frontend.124') }}</label>
-                            <el-input v-model="login.verifyCode" :placeholder="ncfST('Frontend.121')"
+                            <label>{{ ncfST('Frontend.WeixinManager.VerificationCode') }}</label>
+                            <el-input v-model="login.verifyCode" :placeholder="ncfST('Frontend.WeixinManager.EnterTheVerificationCodeRequestedByWeChatThenRefreshTheStatus')"
                                 @@keyup.enter.native="pollLogin"></el-input>
                         </div>
                         <p class="claw-muted" v-if="login.error">{{login.error}}</p>
-                        <el-button icon="el-icon-refresh" @@click="pollLogin" v-if="login.status!=='confirmed'">{{ ncfST('Frontend.094') }}</el-button>
-                        <el-button icon="el-icon-close" @@click="closeLogin">{{ ncfST('Frontend.092') }}</el-button>
+                        <el-button icon="el-icon-refresh" @@click="pollLogin" v-if="login.status!=='confirmed'">{{ ncfST('Frontend.WeixinManager.RefreshStatus') }}</el-button>
+                        <el-button icon="el-icon-close" @@click="closeLogin">{{ ncfST('Frontend.WeixinManager.Close') }}</el-button>
                     </div>
                 </div>
             </div>
@@ -375,17 +375,17 @@
                 statusText(status) {
                     const key = String(status || '');
                     const map = {
-                        '错误': 'Frontend.152',
-                        '已停用': 'Frontend.153',
-                        '未连接': 'Frontend.154'
+                        '错误': 'Frontend.WeixinManager.Error',
+                        '已停用': 'Frontend.WeixinManager.Disabled',
+                        '未连接': 'Frontend.WeixinManager.NotConnected'
                     };
-                    return map[key] ? ncfST(map[key]) : (status || ncfST('Frontend.154'));
+                    return map[key] ? ncfST(map[key]) : (status || ncfST('Frontend.WeixinManager.NotConnected'));
                 },
                 enabledText(enabled) {
-                    return enabled ? ncfST('Frontend.155') : ncfST('Frontend.156');
+                    return enabled ? ncfST('Frontend.WeixinManager.Enabled') : ncfST('Frontend.WeixinManager.DisabledAlternate');
                 },
                 messageDirection(direction) {
-                    return direction === 'inbound' ? ncfST('Frontend.149') : ncfST('Frontend.150');
+                    return direction === 'inbound' ? ncfST('Frontend.WeixinManager.Phone') : ncfST('Frontend.WeixinManager.System');
                 },
                 clearLoginPoll() {
                     if (this.loginPollHandle) {
@@ -405,8 +405,8 @@
                                 if (previous && previous.lastMessageAt && next.lastMessageAt
                                     && previous.lastMessageAt !== next.lastMessageAt) {
                                     this.$notify({
-                                        title: ncfST('Frontend.134'),
-                                        message: ncfST('Frontend.135', next.name),
+                                        title: ncfST('Frontend.WeixinManager.WeChatMessageReceived'),
+                                        message: ncfST('Frontend.WeixinManager.ValueReceivedANewPhoneMessage', next.name),
                                         type: 'success',
                                         duration: 3500
                                     });
@@ -420,7 +420,7 @@
                             await this.loadMessages();
                         }
                     } catch (error) {
-                        const message = error.response?.data?.msg || error.message || ncfST('Frontend.136');
+                        const message = error.response?.data?.msg || error.message || ncfST('Frontend.WeixinManager.FailedToRefreshTheWeChatConnectionStatus');
                         if (this.accountLoadError !== message) this.$message.error(message);
                         this.accountLoadError = message;
                     } finally {
@@ -449,7 +449,7 @@
                     this.clearLoginPoll();
                     try {
                         const res = await service.post('/Admin/WeixinManager/WeixinClaw?handler=StartLogin', {
-                            name: ncfST('Frontend.084'),
+                            name: ncfST('Frontend.WeixinManager.PersonalWeChatBotAlternate'),
                             promptRangeCode: ''
                         });
                         this.login = Object.assign({ visible: true }, res.data.data);
@@ -458,7 +458,7 @@
                     } catch (error) {
                         const message = error && error.response && error.response.data && error.response.data.msg
                             ? error.response.data.msg
-                            : (error && error.message) || ncfST('Frontend.137');
+                            : (error && error.message) || ncfST('Frontend.WeixinManager.FailedToStartPersonalWeChatLogin');
                         this.$message.error(message);
                     }
                 },
@@ -490,7 +490,7 @@
                     } catch (error) {
                         const message = error && error.response && error.response.data && error.response.data.msg
                             ? error.response.data.msg
-                            : ncfST('Frontend.138');
+                            : ncfST('Frontend.WeixinManager.FailedToQueryLoginStatusClickRefreshStatusToRetry');
                         this.login.error = message;
                     } finally {
                         this.loginPollInFlight = false;
@@ -508,7 +508,7 @@
                         text: ''
                     };
                     if (!item.hasMessageContext) {
-                        this.$message.info(ncfST('Frontend.139'));
+                        this.$message.info(ncfST('Frontend.WeixinManager.SendATextToWeChatClawBotFromYourPhoneFirstSoThe'));
                     }
                 },
                 openChat(item) {
@@ -578,13 +578,13 @@
                         await service.post(
                             '/Admin/WeixinManager/WeixinClaw?handler=SaveBindingProfile',
                             this.bindings.form);
-                        this.$message.success(ncfST('Frontend.140'));
+                        this.$message.success(ncfST('Frontend.WeixinManager.BindingConfigurationSaved'));
                         await this.loadBindingProfiles();
                         this.newBinding();
                     } catch (error) {
                         const message = error && error.response && error.response.data && error.response.data.msg
                             ? error.response.data.msg
-                            : (error && error.message) || ncfST('Frontend.141');
+                            : (error && error.message) || ncfST('Frontend.WeixinManager.FailedToSaveTheBindingConfiguration');
                         this.$message.error(message);
                     }
                 },
@@ -596,7 +596,7 @@
                         await this.loadBindingProfiles();
                         this.newBinding();
                     } catch (error) {
-                        this.$message.error(ncfST('Frontend.142'));
+                        this.$message.error(ncfST('Frontend.WeixinManager.FailedToDeleteTheBindingConfiguration'));
                     }
                 },
                 async loadMessages(forceBottom) {
@@ -644,7 +644,7 @@
                     if (url) window.open(url, '_blank', 'noopener,noreferrer');
                 },
                 mediaPlaybackFailed(media) {
-                    this.$set(this.mediaPlaybackErrors, media.playbackUrl, ncfST('Frontend.143'));
+                    this.$set(this.mediaPlaybackErrors, media.playbackUrl, ncfST('Frontend.WeixinManager.MediaCannotBePlayedDownloadTheOriginalFileCheckTheServiceLogs'));
                 },
                 mediaPlaybackReady(media) {
                     this.$delete(this.mediaPlaybackErrors, media.playbackUrl);
@@ -690,9 +690,9 @@
                     if (this.chat.mediaFile) {
                         try {
                             await this.sendMedia();
-                            this.$message.success(ncfST('Frontend.144'));
+                            this.$message.success(ncfST('Frontend.WeixinManager.MediaMessageSubmitted'));
                         } catch (error) {
-                            this.$message.error(error.response?.data?.msg || error.message || ncfST('Frontend.145'));
+                            this.$message.error(error.response?.data?.msg || error.message || ncfST('Frontend.WeixinManager.FailedToSendMedia'));
                         }
                         return;
                     }
@@ -702,14 +702,14 @@
                         const result = res.data.data || {};
                         this.$message.success(
                             result.contextTokenUsed
-                                ? ncfST('Frontend.146')
-                                : ncfST('Frontend.147'));
+                                ? ncfST('Frontend.WeixinManager.MessageSubmittedUsingTheLatestWeChatConversationContext')
+                                : ncfST('Frontend.WeixinManager.MessageSubmittedToWeChatClaw'));
                         await this.loadMessages();
                         await this.loadAccounts();
                     } catch (error) {
                         const message = error && error.response && error.response.data && error.response.data.msg
                             ? error.response.data.msg
-                            : (error && error.message) || ncfST('Frontend.148');
+                            : (error && error.message) || ncfST('Frontend.WeixinManager.FailedToSendThePersonalWeChatMessage');
                         this.$message.error(message);
                     } finally {
                         this.chat.sending = false;

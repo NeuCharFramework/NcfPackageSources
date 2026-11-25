@@ -36,6 +36,9 @@ namespace Senparc.Ncf.Database.MySql.Backup
     /// </summary>
     public class MySqlWithBackupDatabaseConfiguration : MySqlDatabaseConfiguration
     {
+        /// <summary>
+        /// Initializes the MySQL configuration that retains the backup extension point.
+        /// </summary>
         public MySqlWithBackupDatabaseConfiguration() { }
 
 

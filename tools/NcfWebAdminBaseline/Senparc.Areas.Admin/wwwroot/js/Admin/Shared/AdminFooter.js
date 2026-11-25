@@ -428,8 +428,32 @@
         },
         methods: {
             openFooterAi() {
-                this.footerAiUrl = '/Admin/AdminChat/Chat?embedded=1&footer=' + Date.now();
+                const initialMessage = this.footerAiInitialMessage();
+                this.footerAiUrl = '/Admin/AdminChat/Chat?embedded=1&footer=' + Date.now()
+                    + (initialMessage ? '&typeInitialMessage=1&initialMessage=' + encodeURIComponent(initialMessage) : '');
                 this.footerAiDialogVisible = true;
+            },
+            footerAiInitialMessage() {
+                const directMessage = String(initialState.footerAiInitialMessage
+                    || window.NCF_ADMIN_FOOTER_AI_INITIAL_MESSAGE
+                    || '');
+                if (directMessage) return directMessage;
+
+                const frames = Array.from(document.querySelectorAll('.admin-tab-frame'));
+                const activeFrame = frames.find(frame => {
+                    try {
+                        return window.getComputedStyle(frame).display !== 'none';
+                    } catch (error) {
+                        return false;
+                    }
+                });
+                try {
+                    return activeFrame && activeFrame.contentWindow
+                        ? String(activeFrame.contentWindow.NCF_ADMIN_FOOTER_AI_INITIAL_MESSAGE || '')
+                        : '';
+                } catch (error) {
+                    return '';
+                }
             },
             embeddedAdminChatValue(search, name) {
                 const source = String(search || '').replace(/^\?/, '');
@@ -789,6 +813,16 @@
                     return;
                 }
                 window.NcfVoiceNavigation.toggle(this);
+                this.$nextTick(this.focusVoiceNavInput);
+            },
+            focusVoiceNavInput() {
+                if (!this.voiceNavPanelVisible) {
+                    return;
+                }
+                const input = this.$refs.voiceNavInput;
+                if (input && typeof input.focus === 'function') {
+                    input.focus();
+                }
             },
             submitVoiceNav() {
                 if (this.voiceNavEmbedded || !window.NcfVoiceNavigation) {

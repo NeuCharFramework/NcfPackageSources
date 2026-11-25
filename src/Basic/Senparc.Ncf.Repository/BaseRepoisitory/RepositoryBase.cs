@@ -47,10 +47,14 @@ namespace Senparc.Ncf.Repository
         //{
         //}
 
+        /// <summary>
+        /// Initializes a repository for the entity type <typeparamref name="T"/> and resolves its mapped entity-set name.
+        /// </summary>
+        /// <param name="db">The database abstraction that owns the Entity Framework context.</param>
         public RepositoryBase(INcfDbData db) : base(db)
         {
             //System.Web.HttpContext.Current.Response.Write("-"+this.GetType().Name + "<br />");
-            //Legacy comment translated to English.
+            // The database abstraction is retained as the repository's active persistence boundary.
 
             base.BaseDB = db;
             // ObjectFactory.GetInstance<INcfDbData>();
@@ -65,15 +69,28 @@ namespace Senparc.Ncf.Repository
         #region Legacy section
 
 
+        /// <summary>
+        /// Determines whether an entity is new according to its tracked Entity Framework state.
+        /// </summary>
+        /// <param name="obj">The entity to inspect.</param>
+        /// <returns><see langword="true"/> for added or detached entities; otherwise, <see langword="false"/>.</returns>
         public virtual bool IsInsert(T obj)
         {
             Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T> entry = BaseDB.BaseDataContext.Entry(obj);
-            return entry.State == EntityState.Added || entry.State == EntityState.Detached; //Legacy comment translated to English.
+            return entry.State == EntityState.Added || entry.State == EntityState.Detached;
             //return obj.EntityKey == null || obj.EntityKey.EntityKeyValues == null;
 
             //entry.IsKeySet
         }
 
+        /// <summary>
+        /// Creates an ordered query for all entities, including optional string-based navigation paths.
+        /// </summary>
+        /// <typeparam name="TOrderProperty">The ordering key type.</typeparam>
+        /// <param name="orderBy">The expression used to order the query.</param>
+        /// <param name="orderingType">The requested ordering direction.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>An executable query for the matching entity set.</returns>
         public virtual IQueryable<T> GeAll<TOrderProperty>(Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, params string[] includes)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -84,6 +101,15 @@ namespace Senparc.Ncf.Repository
                         .OrderBy(orderBy, orderingType).AsQueryable();
         }
 
+        /// <summary>
+        /// Creates an ordered query for all entities using a strongly typed navigation include expression.
+        /// </summary>
+        /// <typeparam name="TOrderProperty">The ordering key type.</typeparam>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="orderBy">The expression used to order the query.</param>
+        /// <param name="orderingType">The requested ordering direction.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed navigation include expression.</param>
+        /// <returns>An executable query for the matching entity set.</returns>
         public virtual IQueryable<T> GeAll<TOrderProperty, TIncludesProperty>(Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType,
             /*[JetBrains.Annotations.NotNull]*/Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
@@ -95,6 +121,18 @@ namespace Senparc.Ncf.Repository
         }
 
 
+        /// <summary>
+        /// Retrieves a filtered, ordered page of entities using string-based navigation includes.
+        /// A non-positive page size returns the unbounded query result.
+        /// </summary>
+        /// <typeparam name="TOrderProperty">The ordering key type.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderBy">The expression used to order entities.</param>
+        /// <param name="orderingType">The requested ordering direction.</param>
+        /// <param name="pageIndex">The one-based page index used when paging is enabled.</param>
+        /// <param name="pageCount">The number of items per page; a non-positive value disables paging.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>A page containing the selected entities and paging metadata.</returns>
         public virtual PagedList<T> GetObjectList<TOrderProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, int pageIndex, int pageCount, params string[] includes)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -150,6 +188,18 @@ namespace Senparc.Ncf.Repository
             PagedList<T> list = new PagedList<T>(result, pageIndex, pageCount, totalCount, skipCount);
             return list;
         }
+        /// <summary>
+        /// Retrieves a filtered, ordered page using a strongly typed include expression.
+        /// </summary>
+        /// <typeparam name="TOrderProperty">The ordering key type.</typeparam>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderBy">The expression used to order entities.</param>
+        /// <param name="orderingType">The requested ordering direction.</param>
+        /// <param name="pageIndex">The one-based page index used when paging is enabled.</param>
+        /// <param name="pageCount">The number of items per page; a non-positive value disables paging.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed include expression.</param>
+        /// <returns>A page containing the selected entities and paging metadata.</returns>
         public virtual PagedList<T> GetObjectList<TOrderProperty, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, int pageIndex, int pageCount, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -204,6 +254,17 @@ namespace Senparc.Ncf.Repository
             return list;
         }
 
+        /// <summary>
+        /// Asynchronously retrieves a filtered, ordered page using string-based navigation includes.
+        /// </summary>
+        /// <typeparam name="TOrderProperty">The ordering key type.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderBy">The expression used to order entities.</param>
+        /// <param name="orderingType">The requested ordering direction.</param>
+        /// <param name="pageIndex">The one-based page index used when paging is enabled.</param>
+        /// <param name="pageCount">The number of items per page; a non-positive value disables paging.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>A task that completes with the selected page and metadata.</returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync<TOrderProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, int pageIndex, int pageCount, params string[] includes)
         {
             int skipCount = Senparc.Ncf.Core.Utility.Extensions.GetSkipRecord(pageIndex, pageCount);
@@ -226,6 +287,18 @@ namespace Senparc.Ncf.Repository
             return list;
         }
 
+        /// <summary>
+        /// Asynchronously retrieves a filtered, ordered page using a strongly typed include expression.
+        /// </summary>
+        /// <typeparam name="TOrderProperty">The ordering key type.</typeparam>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderBy">The expression used to order entities.</param>
+        /// <param name="orderingType">The requested ordering direction.</param>
+        /// <param name="pageIndex">The one-based page index used when paging is enabled.</param>
+        /// <param name="pageCount">The number of items per page; a non-positive value disables paging.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed include expression.</param>
+        /// <returns>A task that completes with the selected page and metadata.</returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync<TOrderProperty, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, int pageIndex, int pageCount, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             int skipCount = Senparc.Ncf.Core.Utility.Extensions.GetSkipRecord(pageIndex, pageCount);
@@ -248,6 +321,12 @@ namespace Senparc.Ncf.Repository
         }
 
 
+        /// <summary>
+        /// Returns the first entity matching a predicate with optional string-based includes.
+        /// </summary>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>The first matching entity, or the default value when none exists.</returns>
         public virtual T GetFirstOrDefaultObject(Expression<Func<T, bool>> where, params string[] includes)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -257,6 +336,13 @@ namespace Senparc.Ncf.Repository
                  .Includes(includes).FirstOrDefault(where);
         }
 
+        /// <summary>
+        /// Returns the first matching entity using a strongly typed include expression.
+        /// </summary>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed include expression.</param>
+        /// <returns>The first matching entity, or the default value when none exists.</returns>
         public virtual T GetFirstOrDefaultObject<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -264,6 +350,15 @@ namespace Senparc.Ncf.Repository
                        .FirstOrDefault(where);
         }
 
+        /// <summary>
+        /// Returns the first matching entity after applying expression-based ordering.
+        /// </summary>
+        /// <typeparam name="TOrderProperty">The ordering key type.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderBy">The expression used to order entities.</param>
+        /// <param name="orderingType">The requested ordering direction.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>The first ordered match, or the default value when none exists.</returns>
         public virtual T GetFirstOrDefaultObject<TOrderProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, params string[] includes)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -273,6 +368,16 @@ namespace Senparc.Ncf.Repository
                  .Includes(includes).Where(where).OrderBy(orderBy, orderingType).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Returns the first ordered match using a strongly typed include expression.
+        /// </summary>
+        /// <typeparam name="TOrderProperty">The ordering key type.</typeparam>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderBy">The expression used to order entities.</param>
+        /// <param name="orderingType">The requested ordering direction.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed include expression.</param>
+        /// <returns>The first ordered match, or the default value when none exists.</returns>
         public virtual T GetFirstOrDefaultObject<TOrderProperty, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             Console.WriteLine("RepositoryBase GetFirstOrDefaultObject");
@@ -284,6 +389,11 @@ namespace Senparc.Ncf.Repository
                                         .Where(where).OrderBy(orderBy, orderingType).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Finds an entity by an integer primary-key value.
+        /// </summary>
+        /// <param name="id">The integer primary-key value.</param>
+        /// <returns>The matching entity, or the default value when it is not tracked or stored.</returns>
         public virtual T GetObjectById(int id)
         {
             T obj = BaseDB.BaseDataContext
@@ -293,6 +403,11 @@ namespace Senparc.Ncf.Repository
             return obj;
         }
 
+        /// <summary>
+        /// Finds an entity by a 64-bit integer primary-key value.
+        /// </summary>
+        /// <param name="id">The 64-bit integer primary-key value.</param>
+        /// <returns>The matching entity, or the default value when it is not tracked or stored.</returns>
         public virtual T GetObjectById(long id)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -314,6 +429,12 @@ namespace Senparc.Ncf.Repository
         //    return obj;
         //}
 
+        /// <summary>
+        /// Counts entities matching a predicate.
+        /// </summary>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="includes">Navigation property paths applied before counting.</param>
+        /// <returns>The number of matching entities.</returns>
         public virtual int ObjectCount(Expression<Func<T, bool>> where, params string[] includes)
         {
             string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -338,6 +459,13 @@ namespace Senparc.Ncf.Repository
             return count;
         }
 
+        /// <summary>
+        /// Counts matching entities after applying a strongly typed include expression.
+        /// </summary>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed include expression.</param>
+        /// <returns>The number of matching entities.</returns>
         public virtual int ObjectCount<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -359,6 +487,13 @@ namespace Senparc.Ncf.Repository
             return count;
         }
 
+        /// <summary>
+        /// Calculates a decimal aggregate over matching entities.
+        /// </summary>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="sum">The decimal property expression to aggregate.</param>
+        /// <param name="includes">Navigation property paths applied to the query.</param>
+        /// <returns>The aggregate decimal value.</returns>
         public virtual decimal GetSum(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, params string[] includes)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -369,6 +504,14 @@ namespace Senparc.Ncf.Repository
             return result;
         }
 
+        /// <summary>
+        /// Calculates a decimal aggregate using a strongly typed include expression.
+        /// </summary>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="sum">The decimal property expression to aggregate.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed include expression.</param>
+        /// <returns>The aggregate decimal value.</returns>
         public virtual decimal GetSum<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -384,18 +527,30 @@ namespace Senparc.Ncf.Repository
         //}
 
 
+        /// <summary>
+        /// Adds an entity to the current data context and immediately commits the change.
+        /// </summary>
+        /// <param name="obj">The entity to add.</param>
         public virtual void Add(T obj)
         {
             BaseDB.BaseDataContext.Set<T>().Add(obj);
             this.SaveChanges();
         }
 
+        /// <summary>
+        /// Commits changes for an existing entity already tracked by the current data context.
+        /// </summary>
+        /// <param name="obj">The entity whose pending changes should be committed.</param>
         public virtual void Update(T obj)
         {
             //_db.DataContext.ApplyPropertyChanges(_entitySetName, obj);
             this.SaveChanges();
         }
 
+        /// <summary>
+        /// Inserts or updates an entity based on <see cref="IsInsert(T)"/> and updates its timestamps.
+        /// </summary>
+        /// <param name="obj">The entity to persist.</param>
         public virtual void Save(T obj)
         {
             if (this.IsInsert(obj))
@@ -410,25 +565,28 @@ namespace Senparc.Ncf.Repository
             }
         }
 
+        /// <summary>
+        /// Commits pending changes in the underlying Entity Framework context.
+        /// </summary>
         public virtual void SaveChanges()
         {
             BaseDB.BaseDataContext.SaveChanges();//TODO: SaveOptions.
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deletes an entity permanently or marks its soft-delete flag according to <paramref name="softDelete"/>.
         /// </summary>
-        /// <param name="obj"></param>
-        ///Legacy comment translated to English.
+        /// <param name="obj">The entity to delete.</param>
+        /// <param name="softDelete">When <see langword="true"/>, sets the entity flag instead of removing the row.</param>
         public virtual void Delete(T obj, bool softDelete = false)
         {
             if (softDelete)
             {
-                obj.Flag = true;//Legacy comment translated to English.
+                obj.Flag = true;
             }
             else
             {
-                BaseDB.BaseDataContext.Set<T>().Remove(obj);//Legacy comment translated to English.
+                BaseDB.BaseDataContext.Set<T>().Remove(obj);
             }
             this.SaveChanges();
         }
@@ -449,11 +607,20 @@ namespace Senparc.Ncf.Repository
 
         #endregion
 
+        /// <summary>
+        /// Asynchronously commits pending changes in the underlying Entity Framework context.
+        /// </summary>
+        /// <returns>A task that completes after the database commit.</returns>
         public virtual async Task SaveChangesAsync()
         {
             await BaseDB.BaseDataContext.SaveChangesAsync().ConfigureAwait(false);//TODO: SaveOptions.
         }
 
+        /// <summary>
+        /// Asynchronously inserts or updates an entity based on <see cref="IsInsert(T)"/>.
+        /// </summary>
+        /// <param name="obj">The entity to persist.</param>
+        /// <returns>A task that completes after the database commit.</returns>
         public virtual async Task SaveAsync(T obj)
         {
             if (this.IsInsert(obj))
@@ -469,11 +636,11 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 
+        /// Asynchronously returns the first entity matching a predicate with optional includes.
         /// </summary>
-        /// <param name="where"></param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>A task that completes with the first match or the default value.</returns>
         public async Task<T> GetFirstOrDefaultObjectAsync(Expression<Func<T, bool>> where, params string[] includes)
         {
             return await BaseDB.BaseDataContext
@@ -482,12 +649,28 @@ namespace Senparc.Ncf.Repository
                  .Includes(includes).FirstOrDefaultAsync(where);
         }
 
+        /// <summary>
+        /// Asynchronously returns the first match using a strongly typed include expression.
+        /// </summary>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed include expression.</param>
+        /// <returns>A task that completes with the first match or the default value.</returns>
         public async Task<T> GetFirstOrDefaultObjectAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return await includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>())
                                         .FirstOrDefaultAsync(where);
         }
 
+        /// <summary>
+        /// Asynchronously returns the first ordered match with optional string-based includes.
+        /// </summary>
+        /// <typeparam name="TOrderProperty">The ordering key type.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderBy">The expression used to order entities.</param>
+        /// <param name="orderingType">The requested ordering direction.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>A task that completes with the first ordered match or the default value.</returns>
         public virtual async Task<T> GetFirstOrDefaultObjectAsync<TOrderProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, params string[] includes)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -497,6 +680,16 @@ namespace Senparc.Ncf.Repository
                  .Includes(includes).Where(where).OrderBy(orderBy, orderingType).FirstOrDefaultAsync();
         }
 
+        /// <summary>
+        /// Asynchronously returns the first ordered match using a strongly typed include expression.
+        /// </summary>
+        /// <typeparam name="TOrderProperty">The ordering key type.</typeparam>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderBy">The expression used to order entities.</param>
+        /// <param name="orderingType">The requested ordering direction.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed include expression.</param>
+        /// <returns>A task that completes with the first ordered match or the default value.</returns>
         public virtual async Task<T> GetFirstOrDefaultObjectAsync<TOrderProperty, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -514,6 +707,12 @@ namespace Senparc.Ncf.Repository
 
 
 
+        /// <summary>
+        /// Asynchronously counts entities matching a predicate with optional includes.
+        /// </summary>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="includes">Navigation property paths applied before counting.</param>
+        /// <returns>A task that completes with the number of matching entities.</returns>
         public virtual async Task<int> ObjectCountAsync(Expression<Func<T, bool>> where, params string[] includes)
         {
             string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -538,6 +737,13 @@ namespace Senparc.Ncf.Repository
             return count;
         }
 
+        /// <summary>
+        /// Asynchronously counts matching entities using a strongly typed include expression.
+        /// </summary>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed include expression.</param>
+        /// <returns>A task that completes with the number of matching entities.</returns>
         public virtual async Task<int> ObjectCountAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -559,6 +765,13 @@ namespace Senparc.Ncf.Repository
             return count;
         }
 
+        /// <summary>
+        /// Asynchronously calculates a decimal aggregate with optional includes.
+        /// </summary>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="sum">The decimal property expression to aggregate.</param>
+        /// <param name="includes">Navigation property paths applied to the query.</param>
+        /// <returns>A task that completes with the aggregate decimal value.</returns>
         public virtual async Task<decimal> GetSumAsync(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, params string[] includes)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -571,6 +784,14 @@ namespace Senparc.Ncf.Repository
             return result;
         }
 
+        /// <summary>
+        /// Asynchronously calculates a decimal aggregate using a strongly typed include expression.
+        /// </summary>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="sum">The decimal property expression to aggregate.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed include expression.</param>
+        /// <returns>A task that completes with the aggregate decimal value.</returns>
         public virtual async Task<decimal> GetSumAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -581,70 +802,74 @@ namespace Senparc.Ncf.Repository
         }
 
 
+        /// <summary>
+        /// Asynchronously adds an entity and commits the change.
+        /// </summary>
+        /// <param name="obj">The entity to add.</param>
+        /// <returns>A task that completes after the database commit.</returns>
         public virtual async Task AddAsync(T obj)
         {
             BaseDB.BaseDataContext.Set<T>().Add(obj);
             await this.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously commits changes for an existing tracked entity.
+        /// </summary>
+        /// <param name="obj">The entity whose pending changes should be committed.</param>
+        /// <returns>A task that completes after the database commit.</returns>
         public virtual async Task UpdateAsync(T obj)
         {
             //_db.DataContext.ApplyPropertyChanges(_entitySetName, obj);
             await this.SaveChangesAsync();
         }
-
-
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Asynchronously deletes an entity permanently or marks its soft-delete flag.
         /// </summary>
-        /// <param name="obj"></param>
-        ///Legacy comment translated to English.
+        /// <param name="obj">The entity to delete.</param>
+        /// <param name="softDelete">When <see langword="true"/>, sets the entity flag instead of removing the row.</param>
+        /// <returns>A task that completes after the deletion is committed.</returns>
         public virtual async Task DeleteAsync(T obj, bool softDelete = false)
         {
             if (softDelete)
             {
-                obj.Flag = true;//Legacy comment translated to English.
+                obj.Flag = true;
             }
             else
             {
-                BaseDB.BaseDataContext.Set<T>().Remove(obj);//Legacy comment translated to English.
+                BaseDB.BaseDataContext.Set<T>().Remove(obj);
             }
             await this.SaveChangesAsync();
         }
-
-
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Asynchronously deletes a sequence of entities and commits the batch once.
         /// </summary>
-        /// <param name="objs"></param>
-        ///Legacy comment translated to English.
-        /// <param name="softDelete"></param>
-        /// <returns></returns>
+        /// <param name="objs">The entities to delete.</param>
+        /// <param name="deleteItemAction">An optional callback invoked after each entity is prepared for deletion.</param>
+        /// <param name="softDelete">When <see langword="true"/>, marks each entity instead of removing rows.</param>
+        /// <returns>A task that completes after the batch is committed.</returns>
         public virtual async Task DeleteAllAsync(IEnumerable<T> objs, Action<T> deleteItemAction = null, bool softDelete = false)
         {
             foreach (var obj in objs)
             {
                 if (softDelete)
                 {
-                    obj.Flag = true;//Legacy comment translated to English.
+                    obj.Flag = true;
                 }
                 else
                 {
-                    BaseDB.BaseDataContext.Set<T>().Remove(obj);//Legacy comment translated to English.
+                    BaseDB.BaseDataContext.Set<T>().Remove(obj);
                 }
 
                 deleteItemAction?.Invoke(obj);
             }
             await this.SaveChangesAsync();
         }
-
-
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Adds a sequence of entities and commits the batch once.
         /// </summary>
-        /// <param name="objs"></param>
-        /// <param name="softDelete"></param>
-        /// <returns></returns>
+        /// <param name="objs">The entities to add.</param>
+        /// <returns>A task that completes after the batch is committed.</returns>
         public virtual async Task AddAllAsync(IEnumerable<T> objs)
         {
             //foreach (var obj in objs)
@@ -657,14 +882,14 @@ namespace Senparc.Ncf.Repository
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Asynchronously retrieves a page using a textual order expression and string includes.
         /// </summary>
-        /// <param name="where"></param>
-        /// <param name="OrderbyField">xxx DESC, bbb ASC</param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageCount"></param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="OrderbyField">The textual order expression, such as <c>Id DESC, Name ASC</c>.</param>
+        /// <param name="pageIndex">The one-based page index used when paging is enabled.</param>
+        /// <param name="pageCount">The number of items per page; a non-positive value disables paging.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>A task that completes with the selected page and metadata.</returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync(Expression<Func<T, bool>> where, string OrderbyField, int pageIndex, int pageCount, params string[] includes)
         {
             int skipCount = Senparc.Ncf.Core.Utility.Extensions.GetSkipRecord(pageIndex, pageCount);
@@ -687,6 +912,16 @@ namespace Senparc.Ncf.Repository
             return list;
         }
 
+        /// <summary>
+        /// Asynchronously retrieves a page using a textual order expression and typed includes.
+        /// </summary>
+        /// <typeparam name="TIncludesProperty">The navigation shape returned by the include expression.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="OrderbyField">The textual order expression.</param>
+        /// <param name="pageIndex">The one-based page index used when paging is enabled.</param>
+        /// <param name="pageCount">The number of items per page; a non-positive value disables paging.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The strongly typed include expression.</param>
+        /// <returns>A task that completes with the selected page and metadata.</returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync<TIncludesProperty>(Expression<Func<T, bool>> where, string OrderbyField, int pageIndex, int pageCount, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             int skipCount = Senparc.Ncf.Core.Utility.Extensions.GetSkipRecord(pageIndex, pageCount);
@@ -707,6 +942,11 @@ namespace Senparc.Ncf.Repository
             return list;
         }
 
+        /// <summary>
+        /// Saves a mixed sequence of new and existing entities, marking existing entries as modified.
+        /// </summary>
+        /// <param name="objs">The entities to insert or update.</param>
+        /// <returns>A task that completes after the batch is committed.</returns>
         public async Task SaveObjectListAsync(IEnumerable<T> objs)
         {
             if (!objs.Any())
@@ -730,6 +970,16 @@ namespace Senparc.Ncf.Repository
             await this.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Persists only selected mapped properties of a tracked, already persisted entity.
+        /// Primary-key properties and unmapped names are rejected to avoid changing identity metadata.
+        /// </summary>
+        /// <param name="obj">The tracked entity whose selected properties should be persisted.</param>
+        /// <param name="propertyNames">The mapped, non-key property names to update.</param>
+        /// <returns>A task that completes after the selected properties are committed.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="obj"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Thrown when no property names are supplied or a name is not an updatable mapped property.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when the entity is detached, new, or marked for deletion.</exception>
         public virtual async Task SavePropertiesAsync(T obj, params string[] propertyNames)
         {
             if (obj == null)
@@ -768,52 +1018,51 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Begins a database transaction using the provider's default isolation level.
         /// </summary>
-        /// <returns></returns>
         public void BeginTransaction()
         {
             BaseDB.BaseDataContext.Database.BeginTransaction();
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Begins a database transaction; the supplied isolation level is accepted for API compatibility.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="isolationLevel">The requested transaction isolation level.</param>
         public void BeginTransaction(System.Data.IsolationLevel isolationLevel)
         {
             BaseDB.BaseDataContext.Database.BeginTransaction();
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Asynchronously begins a database transaction using the provider's default isolation level.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A task that completes after the transaction has begun.</returns>
         public async Task BeginTransactionAsync()
         {
             await BaseDB.BaseDataContext.Database.BeginTransactionAsync();
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Asynchronously begins a transaction at the requested isolation level.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="isolationLevel">The requested transaction isolation level.</param>
+        /// <returns>A task that completes after the transaction has begun.</returns>
         public async Task BeginTransactionAsync(System.Data.IsolationLevel isolationLevel)
         {
             await BaseDB.BaseDataContext.Database.BeginTransactionAsync(isolationLevel);
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Rolls back the active database transaction.
         /// </summary>
-        /// <returns></returns>
         public void RollbackTransaction()
         {
             BaseDB.BaseDataContext.Database.RollbackTransaction();
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Commits the active database transaction.
         /// </summary>
         public void CommitTransaction()
         {

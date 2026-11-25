@@ -34,19 +34,25 @@ namespace Senparc.Ncf.Utility
     ///   
     ///Legacy comment translated to English.
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TEntity">The entity type represented by the composed predicates.</typeparam>
     public class SenparcExpressionHelper<TEntity> where TEntity : class
     {
         public ValueCompare<TEntity> ValueCompare { get; set; }
+        /// <summary>
+        /// Initializes a helper with an empty conditional predicate.
+        /// </summary>
         public SenparcExpressionHelper()
         {
             ValueCompare = new ValueCompare<TEntity>();
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the current composed predicate, or an always-true predicate when no filters were added.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// The composed predicate, or a predicate that always returns <see langword="true"/>
+        /// when no conditional expression has been added.
+        /// </returns>
         public Expression<Func<TEntity, bool>> BuildWhereExpression()
         {
             if (ValueCompare.ExpressionBody == null)
@@ -59,36 +65,56 @@ namespace Senparc.Ncf.Utility
             return where;
         }
     }
+    /// <summary>
+    /// Builds a conditional predicate by composing entity expressions with logical operators.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type accepted by each predicate.</typeparam>
     public class ValueCompare<TEntity>
     {
         public Expression<Func<TEntity, bool>> ExpressionBody { get; set; }
+        /// <summary>
+        /// Initializes an empty predicate composition.
+        /// </summary>
         public ValueCompare()
         {
         }
         /// <summary>
-        /// Combines the first predicate with the second using the logical "and".
+        /// Adds <paramref name="filter"/> with logical conjunction when the condition is enabled.
         /// </summary>
+        /// <param name="combineWhenTrue">Whether the filter should be included.</param>
+        /// <param name="filter">The entity predicate to add.</param>
+        /// <returns>This comparer for fluent composition.</returns>
         public ValueCompare<TEntity> AndAlso(bool combineWhenTrue, Expression<Func<TEntity, bool>> filter)
         {
             return Combine(combineWhenTrue, filter, Expression.AndAlso);
         }
         /// <summary>
-        /// Combines the first predicate with the second using the logical "or".
+        /// Adds <paramref name="filter"/> with logical disjunction when the condition is enabled.
         /// </summary>
+        /// <param name="combineWhenTrue">Whether the filter should be included.</param>
+        /// <param name="filter">The entity predicate to add.</param>
+        /// <returns>This comparer for fluent composition.</returns>
         public ValueCompare<TEntity> OrElse(bool combineWhenTrue, Expression<Func<TEntity, bool>> filter)
         {
             return Combine(combineWhenTrue, filter, Expression.OrElse);
         }
 
         /// <summary>
-        /// Negates the predicate.
+        /// Replaces the current predicate with its logical negation.
         /// </summary>
+        /// <returns>This comparer for fluent composition.</returns>
         public ValueCompare<TEntity> Not()
         {
             var negated = Expression.Not(ExpressionBody.Body);
             ExpressionBody = Expression.Lambda<Func<TEntity, bool>>(negated, ExpressionBody.Parameters);
             return this;
         }
+        /// <summary>
+        /// Adds a predicate, using the supplied expression merger when a prior predicate exists.
+        /// </summary>
+        /// <param name="filter">The predicate to add.</param>
+        /// <param name="merge">The expression operation used to combine predicate bodies.</param>
+        /// <returns>This comparer for fluent composition.</returns>
         public ValueCompare<TEntity> Combine(Expression<Func<TEntity, bool>> filter, Func<Expression, Expression, Expression> merge)
         {
             if (ExpressionBody == null)
@@ -100,6 +126,13 @@ namespace Senparc.Ncf.Utility
 
             return this;
         }
+        /// <summary>
+        /// Conditionally adds a predicate when the controlling flag is <see langword="true"/>.
+        /// </summary>
+        /// <param name="combineWhenTrue">Whether the predicate should be added.</param>
+        /// <param name="filter">The predicate to add when enabled.</param>
+        /// <param name="merge">The expression operation used to combine predicate bodies.</param>
+        /// <returns>This comparer for fluent composition.</returns>
         public ValueCompare<TEntity> Combine(bool combineWhenTrue, Expression<Func<TEntity, bool>> filter, Func<Expression, Expression, Expression> merge)
         {
             if (!combineWhenTrue)
@@ -112,13 +145,19 @@ namespace Senparc.Ncf.Utility
     public static class PredicateBuilder
     {
         /// <summary>
-        /// Creates a predicate expression from the specified lambda expression.
+        /// Returns the supplied predicate so it can participate in the composition pipeline.
         /// </summary>
+        /// <param name="predicate">The predicate expression to preserve.</param>
+        /// <returns>The same predicate expression.</returns>
         public static Expression<Func<T, bool>> Create<T>(Expression<Func<T, bool>> predicate) { return predicate; }
 
         /// <summary>
-        /// Combines the first expression with the second using the specified merge function.
+        /// Rebinds the second expression's parameters and combines both bodies with the supplied merger.
         /// </summary>
+        /// <param name="first">The expression whose parameters are retained.</param>
+        /// <param name="second">The expression whose parameters are replaced.</param>
+        /// <param name="merge">The operation used to combine the two expression bodies.</param>
+        /// <returns>A composed expression using the parameter list from <paramref name="first"/>.</returns>
         public static Expression<T> Compose<T>(this Expression<T> first, Expression<T> second, Func<Expression, Expression, Expression> merge)
         {
             // zip parameters (map from parameters of second to parameters of first)

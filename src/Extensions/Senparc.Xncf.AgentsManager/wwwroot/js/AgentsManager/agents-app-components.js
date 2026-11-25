@@ -46,22 +46,22 @@ Vue.component('participant-quick-action', {
         </div>
         <div class="participant-quick-info__description">{{ quickInfo.description }}</div>
         <div class="participant-quick-info__metrics">
-          <div><span>{{ncfST('Frontend.566')}}</span><strong>{{ quickInfo.currentUsageText }}</strong></div>
-          <div><span>{{ncfST('Frontend.567')}}</span><strong>{{ quickInfo.responseTimeText }}</strong></div>
-          <div><span>{{ncfST('Frontend.568')}}</span><strong>{{ quickInfo.totalUsageText }}</strong></div>
-          <div><span>{{ncfST('Frontend.569')}}</span><strong>{{ quickInfo.activityText }}</strong></div>
+          <div><span>{{ncfST('Frontend.AgentsManager.CurrentTaskUsage')}}</span><strong>{{ quickInfo.currentUsageText }}</strong></div>
+          <div><span>{{ncfST('Frontend.AgentsManager.AverageResponseAlternate')}}</span><strong>{{ quickInfo.responseTimeText }}</strong></div>
+          <div><span>{{ncfST('Frontend.AgentsManager.TotalTokensAlternate')}}</span><strong>{{ quickInfo.totalUsageText }}</strong></div>
+          <div><span>{{ncfST('Frontend.AgentsManager.RecentActivity')}}</span><strong>{{ quickInfo.activityText }}</strong></div>
         </div>
         <div v-if="quickInfo.isRemote" class="participant-quick-info__health" :title="quickInfo.healthMessage">
-          <span>{{ncfST('Frontend.570')}}</span>
+          <span>{{ncfST('Frontend.AgentsManager.ConnectionCheck')}}</span>
           <span>{{ quickInfo.healthMessage }}</span>
         </div>
         <div class="participant-quick-info__footer">
-          <span>{{ncfST('Frontend.571')}}</span>
-          <el-button v-if="quickInfo.canOpenEditor" type="text" size="mini" icon="el-icon-top-right" :title="ncfST('Frontend.572')" @click.stop="editAgent">{{ncfST('Studio.Edit')}}</el-button>
-          <el-button v-if="quickInfo.isRemote" type="text" size="mini" :loading="testing" @click.stop="testRemote">{{ncfST('Frontend.117')}}</el-button>
+          <span>{{ncfST('Frontend.AgentsManager.UsageCountsOnlyRecordsLoadedForTheCurrentTask')}}</span>
+          <el-button v-if="quickInfo.canOpenEditor" type="text" size="mini" icon="el-icon-top-right" :title="ncfST('Frontend.AgentsManager.EditAgentInANewWindow')" @click.stop="editAgent">{{ncfST('Frontend.AgentsManager.Edit')}}</el-button>
+          <el-button v-if="quickInfo.isRemote" type="text" size="mini" :loading="testing" @click.stop="testRemote">{{ncfST('Frontend.AgentsManager.TestConnection')}}</el-button>
         </div>
       </section>
-      <button slot="reference" type="button" class="taskmain-member-action" :title="ncfST('Frontend.630', participant.name)">
+      <button slot="reference" type="button" class="taskmain-member-action" :title="ncfST('Frontend.AgentsManager.ViewInformationForValue', participant.name)">
         <span class="taskmain-member-action__avatar">
           <img :src="avatarUrl()" alt="">
         </span>
@@ -135,12 +135,12 @@ Vue.component('load-more-select', {
       <template v-else>{{item.label}}</template>
     </el-option></el-select>
     <template v-if="direction==='horizontal'">
-        <i class="cursorPointer fas fa-redo" :title="ncfST('Studio.Refresh')" @click="refreshManagementList" />
+        <i class="cursorPointer fas fa-redo" :title="ncfST('Frontend.AgentsManager.Refresh')" @click="refreshManagementList" />
     </template>
     <template v-else>
-        <el-button size="mini" @click="refreshManagementList" :loading="interesLoading">{{ncfST('Studio.Refresh')}}</el-button>
-        <el-button v-if="serviceType === 'systemMessage'" type="primary" size="mini" @click="jumpPromptRange('promptRange')">{{ncfST('Frontend.158')}}</el-button>
-        <el-button v-if="serviceType === 'model'" type="primary" size="mini" @click="jumpPromptRange('model')">{{ncfST('Frontend.261')}}</el-button>
+        <el-button size="mini" @click="refreshManagementList" :loading="interesLoading">{{ncfST('Frontend.AgentsManager.Refresh')}}</el-button>
+        <el-button v-if="serviceType === 'systemMessage'" type="primary" size="mini" @click="jumpPromptRange('promptRange')">{{ncfST('Frontend.AgentsManager.ManagePromptRange')}}</el-button>
+        <el-button v-if="serviceType === 'model'" type="primary" size="mini" @click="jumpPromptRange('model')">{{ncfST('Frontend.AgentsManager.ManageModels')}}</el-button>
     </template>
     
     </div>`,
@@ -230,11 +230,11 @@ Vue.component('load-more-select', {
   },
   methods: {
     modelTypeLabel(type) {
-      return Number(type) === 2 ? 'Chat' : ncfST('Frontend.573', type ?? ncfST('Frontend.555'))
+      return Number(type) === 2 ? 'Chat' : ncfST('Frontend.AgentsManager.TypeValue', type ?? ncfST('Frontend.AgentsManager.NoneAlternate'))
     },
     modelPlatformLabel(platform) {
       const labels = { 1: 'OpenAI', 2: 'Azure OpenAI', 3: 'Hugging Face', 4: 'NeuCharAI' }
-      return labels[Number(platform)] || ncfST('Frontend.574', platform ?? ncfST('Frontend.555'))
+      return labels[Number(platform)] || ncfST('Frontend.AgentsManager.PlatformValue', platform ?? ncfST('Frontend.AgentsManager.NoneAlternate'))
     },
     jumpPromptRange(urlType) {
       let url = ''

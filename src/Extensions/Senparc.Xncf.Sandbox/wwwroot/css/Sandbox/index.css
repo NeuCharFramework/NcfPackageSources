@@ -3,19 +3,24 @@
 }
 
 .sandboxPage {
-    min-height: calc(100vh - 136px);
+    height: calc(100vh - 64px);
+    max-height: calc(100vh - 64px);
+    min-height: 0;
     display: flex;
     flex-direction: column;
     gap: 12px;
     padding: 14px;
+    box-sizing: border-box;
     background: #f5f8fb;
     border: 1px solid #e4ebf1;
     border-radius: 8px;
     color: #23354d;
+    overflow: hidden;
 }
 
 .sandboxHero {
-    min-height: 178px;
+    min-height: 160px;
+    flex: 0 0 160px;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(350px, 0.72fr);
     overflow: hidden;
@@ -28,7 +33,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 28px 36px;
+    padding: 18px 26px;
 }
 
 .sandboxEyebrow {
@@ -46,7 +51,7 @@
 .sandboxHero h1 {
     margin: 8px 0 0;
     color: #173c55;
-    font-size: 32px;
+    font-size: 26px;
     font-weight: 600;
     line-height: 1.15;
     letter-spacing: 0;
@@ -54,7 +59,7 @@
 
 .sandboxHero p {
     max-width: 630px;
-    margin: 10px 0 0;
+    margin: 7px 0 0;
     color: #4d6880;
     font-size: 14px;
     line-height: 1.65;
@@ -64,7 +69,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-top: 18px;
+    margin-top: 12px;
 }
 
 .sandboxRuntimeSummary {
@@ -72,14 +77,14 @@
     grid-template-columns: 96px minmax(0, 1fr);
     align-items: center;
     gap: 18px;
-    padding: 24px 32px;
+    padding: 18px 24px;
     background: #f4fafb;
     border-left: 1px solid #c8e0e6;
 }
 
 .runtimeSummaryIcon {
-    width: 82px;
-    height: 82px;
+    width: 64px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -110,7 +115,7 @@
     display: block;
     margin-top: 7px;
     color: #193e55;
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 600;
     line-height: 1;
 }
@@ -136,17 +141,18 @@
 }
 
 .sandboxOverviewGrid {
+    flex: 0 0 78px;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 10px;
 }
 
 .sandboxOverviewCard {
-    min-height: 100px;
+    min-height: 0;
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 15px;
+    padding: 10px 13px;
     background: #ffffff;
     border: 1px solid #e1eaf0;
     border-radius: 8px;
@@ -192,7 +198,7 @@
 .overviewValue {
     margin-top: 6px;
     color: #243850;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 600;
     line-height: 1;
 }
@@ -205,10 +211,13 @@
 }
 
 .sandboxBoardGrid {
+    flex: 1 1 auto;
+    min-height: 0;
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: 160px minmax(0, 1fr);
     gap: 10px;
-    align-items: start;
+    align-items: stretch;
 }
 
 .sandboxBoardCard {
@@ -220,16 +229,22 @@
 
 .sandboxQuickActions {
     grid-column: span 8;
+    min-height: 0;
 }
 
 .sandboxEnvironment {
     grid-column: span 4;
     padding: 16px;
+    min-height: 0;
 }
 
 .sandboxSessions {
+    flex: 1 1 auto;
     grid-column: span 12;
     padding: 16px;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .sandboxBoardTitleRow {
@@ -239,6 +254,31 @@
 .sandboxEnvironment .sandboxBoardTitleRow,
 .sandboxSessions .sandboxBoardTitleRow {
     padding: 0 0 12px;
+}
+
+.sandboxSessions .sandboxBoardTitleRow {
+    align-items: flex-start;
+}
+
+.sandboxSessionHeaderTools {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-width: 0;
+}
+
+.sandboxSessionSearch {
+    width: 190px;
+}
+
+.sandboxSessionFilter {
+    width: 118px;
+}
+
+.sandboxSessionHeaderTools > .el-tag {
+    flex: 0 0 auto;
 }
 
 .sandboxBoardTitleRow h2 {
@@ -257,26 +297,30 @@
 }
 
 .sandboxShortcutList {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     border-top: 1px solid #e9eff3;
 }
 
 .sandboxShortcut {
-    min-height: 78px;
+    min-height: 0;
     display: grid;
-    grid-template-columns: 42px minmax(0, 1fr) auto;
+    grid-template-columns: 34px minmax(0, 1fr);
     align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
+    gap: 8px;
+    padding: 8px 12px;
     border-bottom: 1px solid #e9eff3;
+    border-right: 1px solid #e9eff3;
 }
 
 .sandboxShortcut:last-child {
     border-bottom: 0;
+    border-right: 0;
 }
 
 .shortcutIcon {
-    width: 38px;
-    height: 38px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -312,10 +356,16 @@
 }
 
 .shortcutContent p {
-    margin: 4px 0 0;
+    margin: 3px 0 0;
     color: #718297;
     font-size: 12px;
     line-height: 1.4;
+}
+
+.sandboxShortcut > .el-button {
+    grid-column: 2;
+    justify-self: start;
+    padding: 4px 8px;
 }
 
 .sandboxEnvironmentRows {
@@ -330,7 +380,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 13px 0;
+    padding: 8px 0;
     border-bottom: 1px solid #e9eff3;
 }
 
@@ -353,13 +403,26 @@
 
 .sandboxEnvironmentButton {
     width: 100%;
-    margin-top: 14px;
+    margin-top: 8px;
 }
 
 .sandboxSessionTable {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100% !important;
     width: 100%;
     border: 1px solid #e5edf2;
     border-radius: 8px;
+}
+
+.sandboxSessionTable .el-table__body-wrapper {
+    overflow-y: auto;
+}
+
+.sandboxSessionCards {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
 }
 
 .sandboxSessionTable .el-table__header-wrapper th {
@@ -372,6 +435,141 @@
 .sandboxSessionTable .el-table__body td {
     color: #30465e;
     font-size: 13px;
+}
+
+.sandboxSessionTable .el-table__fixed-right {
+    box-shadow: -8px 0 16px rgba(35, 53, 77, 0.08);
+}
+
+.sessionPrimary {
+    min-width: 0;
+}
+
+.sessionIdRow {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    min-width: 0;
+}
+
+.sessionIdRowDialog {
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.sessionIdCopyBtn {
+    flex: 0 0 auto;
+    padding: 0 4px !important;
+    color: #5f87a8;
+}
+
+.sessionIdCopyBtn:hover {
+    color: #2c6078;
+}
+
+.sessionIdText {
+    display: block;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    color: #536b82;
+    font-family: monospace;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sessionIdFull {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: #66798f;
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.45;
+    word-break: break-all;
+}
+
+.sessionAliasText {
+    display: block;
+    overflow: hidden;
+    margin-top: 3px;
+    color: #2c6078;
+    font-size: 12px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sandboxSessionCards {
+    display: none;
+}
+
+.sessionCardHeader,
+.sessionCardFooter {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.sessionCardIdentity {
+    min-width: 0;
+}
+
+.sessionCardSelector {
+    margin-right: 4px;
+}
+
+.sessionCardIdentity strong {
+    display: block;
+    overflow: hidden;
+    color: #2a3f57;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sessionCardGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 16px;
+    margin-top: 14px;
+}
+
+.sessionCardGrid span {
+    display: block;
+    color: #8797a7;
+    font-size: 11px;
+}
+
+.sessionCardGrid strong {
+    display: block;
+    margin-top: 3px;
+    color: #30465e;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.sessionCardFooter {
+    align-items: center;
+    margin-top: 14px;
+    padding-top: 11px;
+    border-top: 1px solid #edf2f5;
+}
+
+.sessionCardActions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 2px;
+}
+
+.actionWarning {
+    color: #c47b1a;
+}
+
+.actionDanger {
+    color: #c25246;
 }
 
 .templateName {
@@ -394,14 +592,6 @@
     gap: 14px;
 }
 
-.ttlSessionId {
-    overflow: hidden;
-    color: #66798f;
-    font-family: monospace;
-    font-size: 12px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
 
 .ttlMinutesInput {
     width: 180px;
@@ -430,14 +620,6 @@
     gap: 14px;
 }
 
-.aliasSessionId {
-    overflow: hidden;
-    color: #66798f;
-    font-family: monospace;
-    font-size: 12px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
 
 .aliasDialogHint {
     color: #718297;
@@ -455,23 +637,22 @@
     }
 
     .sandboxOverviewGrid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .sandboxQuickActions,
-    .sandboxEnvironment {
-        grid-column: span 12;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 900px) {
     .sandboxPage {
-        min-height: auto;
+        height: calc(100vh - 48px);
+        max-height: calc(100vh - 48px);
+        min-height: 0;
         padding: 10px;
     }
 
     .sandboxHero {
         grid-template-columns: 1fr;
+        min-height: 180px;
+        flex-basis: 180px;
     }
 
     .sandboxRuntimeSummary {
@@ -479,8 +660,39 @@
         border-left: 0;
     }
 
-    .sandboxSessions {
-        overflow-x: auto;
+    .sandboxQuickActions,
+    .sandboxEnvironment {
+        grid-column: span 12;
+    }
+
+    .sandboxBoardGrid {
+        grid-template-rows: 110px 110px minmax(0, 1fr);
+    }
+
+    .sandboxOverviewGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        flex-basis: 156px;
+    }
+
+    .shortcutContent p {
+        display: none;
+    }
+
+    .sandboxSessionTable {
+        display: none;
+    }
+
+    .sandboxSessionCards {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .sandboxSessionCard {
+        padding: 14px;
+        background: #fbfdfe;
+        border: 1px solid #e1eaf0;
+        border-radius: 8px;
     }
 }
 
@@ -526,6 +738,7 @@
 
     .sandboxOverviewGrid {
         grid-template-columns: 1fr;
+        flex-basis: 312px;
     }
 
     .sandboxShortcut {
@@ -539,5 +752,18 @@
 
     .sandboxSessions {
         padding: 12px;
+    }
+
+    .sandboxSessionHeaderTools {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .sandboxSessionSearch {
+        width: 100%;
+    }
+
+    .sandboxSessionFilter {
+        flex: 1 1 120px;
     }
 }

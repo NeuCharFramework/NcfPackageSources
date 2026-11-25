@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261124
+    Change description: v0.4.13 Integrated localization, tooling, and runtime improvements across the module.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -38,8 +41,9 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
     public partial class SenMapicEngine
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Initializes the per-depth URL-path collection used while resolving relative links.
         /// </summary>
+        /// <param name="rootDomain">The normalized root URL assigned to depth zero.</param>
         private void ResetUrlPath(string rootDomain)
         {
             _urlPath.Clear();
@@ -51,10 +55,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Extracts the scheme and authority portion of an absolute HTTP(S) URL.
         /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
+        /// <param name="url">The URL to inspect.</param>
+        /// <returns>The full scheme/authority prefix, or <see langword="null"/> when no match exists.</returns>
         private string GetFullDomain(string url)
         {
             var reg = Regex.Match(url, "(^http(s)?://[^/]+)", RegexOptions.IgnoreCase);
@@ -66,10 +70,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Extracts the authority portion of an absolute HTTP(S) URL without its scheme.
         /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
+        /// <param name="url">The URL to inspect.</param>
+        /// <returns>The host portion, or <see langword="null"/> when no match exists.</returns>
         private string GetDomain(string url)
         {
             var reg = Regex.Match(url, "(?<=http(s)?://)([^/]+)", RegexOptions.IgnoreCase);
@@ -81,10 +85,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Extracts the lowercase HTTP or HTTPS scheme from a URL.
         /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
+        /// <param name="url">The URL to inspect.</param>
+        /// <returns>The scheme text, or <see langword="null"/> when no HTTP(S) scheme is found.</returns>
         private string GetProtocol(string url)
         {
             var reg = Regex.Match(url.ToLower(), "(http(s)?)(?=://)");
@@ -96,10 +100,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Removes trailing slashes from a URL while preserving null, root, and parent-relative forms.
         /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
+        /// <param name="url">The URL or path to normalize.</param>
+        /// <returns>The URL without redundant trailing slashes.</returns>
         private string RemoveUrlEndingSlash(string url)
         {
             if (url == null || url.EndsWith("../") || url == "/" || !url.EndsWith("/"))
@@ -117,10 +121,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Removes leading slashes from a URL path while preserving null and root forms.
         /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
+        /// <param name="url">The URL or path to normalize.</param>
+        /// <returns>The URL path without leading slashes.</returns>
         private string RemoveUrlBeginingSlash(string url)
         {
             if (url == null || url == "/" || !url.StartsWith("/"))
@@ -138,11 +142,13 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves a candidate link against its parent URL, rejects unsupported schemes and
+        /// non-local domains, and normalizes parent-directory traversal.
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="parentUrl"></param>
-        /// <returns></returns>
+        /// <param name="url">The candidate absolute or relative link.</param>
+        /// <param name="parentUrl">The page URL from which a relative link is resolved.</param>
+        /// <returns>A normalized crawlable URL, or <see langword="null"/> when the link is not crawlable.</returns>
+        /// <exception cref="Exception">Propagates unexpected URL-resolution failures after logging them.</exception>
         public string GetFullUrl(string url, string parentUrl)
         {
             string newUrl = null;
@@ -294,10 +300,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Crawls one URL through the engine's request and extraction pipeline.
         /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
+        /// <param name="url">The initial URL to crawl.</param>
+        /// <returns>A task whose result contains the extracted URL data, or <see langword="null"/> when the URL is rejected.</returns>
         public async Task<UrlData> CrawSingleUrl(string url)
         {
             if (string.IsNullOrEmpty(_currentDomain))
@@ -308,10 +314,15 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Requests one URL, records its status/content metadata, and returns extracted text
+        /// for successful text responses. The method also enforces crawl limits and timeout handling.
         /// </summary>
-        /// <param name="url"></param>
-        ///Legacy comment translated to English.
+        /// <param name="url">The URL being crawled.</param>
+        /// <param name="parentUrl">The parent page that linked to the URL.</param>
+        /// <param name="deep">The current crawl depth.</param>
+        /// <param name="singleUrl">Whether this is an isolated single-URL request.</param>
+        /// <param name="linkText">The anchor text that led to the URL.</param>
+        /// <returns>A task whose result contains URL status and extracted content metadata.</returns>
         private async Task<UrlData> CrawlUrl(string url, string parentUrl, int deep, bool singleUrl, string linkText)
         {
             //Legacy comment translated to English.
@@ -345,6 +356,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 else if (this._currentAvaliableUrlTemp[url].Status != AvailableUrlStatus.UnStart)
                 {
                     return null;//Legacy comment translated to English.
+                }
+
+                if (!TryReservePageRequest())
+                {
+                    return null;
                 }
 
                 //Legacy comment translated to English.
@@ -481,10 +497,27 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Atomically reserves one page-request slot until the configured maximum is reached.
         /// </summary>
-        /// <param name="charterSet"></param>
-        /// <returns></returns>
+        /// <returns><see langword="true"/> when a slot is reserved; otherwise marks the build as page-limited and returns <see langword="false"/>.</returns>
+        private bool TryReservePageRequest()
+        {
+            var reservedCount = Interlocked.Increment(ref _currentRequestReservationCount);
+            if (reservedCount <= _maxPageCount)
+            {
+                return true;
+            }
+
+            Interlocked.Decrement(ref _currentRequestReservationCount);
+            ReachMaxPages = true;
+            return false;
+        }
+
+        /// <summary>
+        /// Extracts the charset value from a content-type parameter string.
+        /// </summary>
+        /// <param name="charterSet">The raw content-type charset parameter text.</param>
+        /// <returns>The charset name, or <see langword="null"/> when it cannot be parsed.</returns>
         private static string GetCharterSetFromContentType(string charterSet)
         {
             if (charterSet != null)
@@ -508,11 +541,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        /// getEncoding
+        /// Resolves a .NET encoding from a charset name, optionally falling back to GB2312.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="charterSet">The charset name.</param>
+        /// <param name="returnDefaultEncodingIfFailed">Whether to return GB2312 when the charset is unavailable.</param>
+        /// <returns>The resolved encoding, or <see langword="null"/> when resolution fails without fallback.</returns>
         private static Encoding GetEncodingTypeFormCharterSet(string charterSet, bool returnDefaultEncodingIfFailed)
         {
             Encoding encode = null;
@@ -547,11 +580,12 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reads an HTML response stream and updates the encoding when the document declares
+        /// a different charset after the initial sample.
         /// </summary>
-        /// <param name="receiveStream"></param>
-        /// <param name="encode"></param>
-        /// <returns></returns>
+        /// <param name="receiveStream">The response stream to read.</param>
+        /// <param name="encode">The initial encoding; receives a detected replacement when available.</param>
+        /// <returns>The decoded HTML text.</returns>
         private static string GetTrueEncodingHtml(Stream receiveStream, ref Encoding encode)
         {
             //encode = Encoding.GetEncoding("gb2312");
@@ -665,7 +699,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Marks the current site build as stopped so the crawl loop will stop scheduling work.
         /// </summary>
         private void StopBuild()
         {
@@ -674,11 +708,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a string ends with any suffix in a supplied sequence.
         /// </summary>
-        /// <param name="str"></param>
-        /// <param name="endStr"></param>
-        /// <returns></returns>
+        /// <param name="str">The string to inspect.</param>
+        /// <param name="endStr">The candidate suffixes.</param>
+        /// <returns><see langword="true"/> when any suffix matches.</returns>
         private bool EndWithAny(string str, IEnumerable<string> endStr)
         {
             foreach (var item in endStr)
@@ -693,10 +727,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Validates that a URL is an HTTP(S) crawl target with no user information and
+        /// that its host resolves only to public addresses.
         /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
+        /// <param name="url">The candidate URL.</param>
+        /// <returns><see langword="true"/> when the URL is an allowed public crawl target.</returns>
         private bool IsAvailableUrl(string url)
         {
             if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)
@@ -731,11 +766,22 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             }
         }
 
+        /// <summary>
+        /// Determines whether an address is outside the local/private address ranges rejected by the crawler.
+        /// </summary>
+        /// <param name="address">The address to inspect.</param>
+        /// <returns><see langword="true"/> when the address is considered public.</returns>
         private static bool IsPublicAddress(IPAddress address)
         {
             return !IsPrivateOrLocalAddress(address);
         }
 
+        /// <summary>
+        /// Determines whether an address is loopback, local, private, link-local, multicast,
+        /// documentation-only, or otherwise unsuitable as a public crawl target.
+        /// </summary>
+        /// <param name="address">The address to inspect.</param>
+        /// <returns><see langword="true"/> when the address must be rejected.</returns>
         private static bool IsPrivateOrLocalAddress(IPAddress address)
         {
             if (address == null)
@@ -790,10 +836,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
         #region Legacy section
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Parses the configured omit-keyword expressions and removes duplicate rules.
         /// </summary>
-        /// <param name="keywords"></param>
-        /// <returns></returns>
+        /// <param name="keywords">The raw omit-keyword expressions.</param>
+        /// <returns>The parsed filter rules.</returns>
         private List<FilterOmitWord> GetFilterOmitWords(List<string> keywords)
         {
             List<FilterOmitWord> result = new List<FilterOmitWord>();
@@ -809,6 +855,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             return result;
         }
 
+        /// <summary>
+        /// Parses the optional leading filter operator from one omit-keyword expression.
+        /// </summary>
+        /// <param name="keywordWithOperator">A keyword optionally prefixed with <c>?</c>, <c>^</c>, <c>$</c>, or <c>=</c>.</param>
+        /// <returns>The parsed keyword and operator kind, or a no-op rule for invalid input.</returns>
         private FilterOmitWord GetOperatorKind(string keywordWithOperator)
         {
             keywordWithOperator = keywordWithOperator.ToUpper().Trim();//Legacy comment translated to English.
@@ -860,10 +911,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a URL matches any configured omit rule.
         /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
+        /// <param name="url">The URL to test.</param>
+        /// <returns><see langword="true"/> when at least one omit rule matches.</returns>
         private bool ContainsFilterOmitWord(string url)
         {
             if (url.IsNullOrEmpty())
@@ -906,6 +957,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
         #endregion
 
+        /// <summary>
+        /// Initializes the minimum domain fields required by isolated tests that exercise
+        /// URL normalization without running a full site build.
+        /// </summary>
         public void InitializeForTest()
         {
             #region Legacy section

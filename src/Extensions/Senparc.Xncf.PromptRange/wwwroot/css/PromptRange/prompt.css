@@ -967,18 +967,21 @@
         }
 
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow {
+            position: relative;
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
             align-items: flex-end;
             gap: 10px;
             flex-shrink: 0;
+            min-width: 0;
         }
 
             .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox {
                 display: flex;
                 flex-direction: column;
                 flex-wrap: nowrap;
+                flex-shrink: 0;
                 /*align-items:flex-end;*/
                 gap: 5px;
             }
@@ -1001,6 +1004,8 @@
 
             .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox {
                 position: relative;
+                flex: 1 1 auto;
+                min-width: 0;
             }
 
                 .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox .el-textarea__inner {
@@ -1017,7 +1022,7 @@
                     display: none;
                 }
 
-                .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkLabel {
+                .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkLabel {
                     position: absolute;
                     left: 15px;
                     top: 5px;
@@ -1025,6 +1030,9 @@
                     font-size: 14px;
                     font-style: normal;
                     font-weight: 400;
+                    z-index: 1;
+                    white-space: nowrap;
+                    pointer-events: none;
                 }
 
 

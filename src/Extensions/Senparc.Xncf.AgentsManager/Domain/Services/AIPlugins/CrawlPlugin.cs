@@ -28,6 +28,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.19.4 Integrated localization, tooling, and runtime improvements across the module.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -100,7 +103,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             var senMapicEngine = new SenMapicEngine(
                                 serviceProvider: _serviceProvider,
                                 urls: new[] { targetUri.ToString() },
-                                maxThread: 20,
+                                maxThread: 4,
                                 maxBuildMinutesForSingleSite: 5,
                                 maxDeep: maxDepth,
                                 maxPageCount: maxPageCount);

@@ -6,20 +6,21 @@
     Layout = "_Layout_Vue";
 }
 @section breadcrumbs {
-    <el-breadcrumb-item>{{ ncfST('Frontend.001') }}</el-breadcrumb-item>
-    <el-breadcrumb-item>{{ ncfST('Frontend.002') }}</el-breadcrumb-item>
-    <el-breadcrumb-item>{{ ncfST('Frontend.003') }}</el-breadcrumb-item>
+    <el-breadcrumb-item>{{ ncfST('Frontend.WeixinManager.ExtensionModules') }}</el-breadcrumb-item>
+    <el-breadcrumb-item>{{ ncfST('Frontend.WeixinManager.ModuleManagement') }}</el-breadcrumb-item>
+    <el-breadcrumb-item>{{ ncfST('Frontend.WeixinManager.WeixinManagement') }}</el-breadcrumb-item>
     <el-breadcrumb-item>{{docTitle}}</el-breadcrumb-item>
 }
 
 <div id="app" v-cloak>
     <div class="admin-role">
         <div class="filter-container">
+            <ncf-doc-help topic="weixin.users"></ncf-doc-help>
             <template v-if="mpAccountDto">
-                <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" :loading="addLoading" @@click="addUser('add')">{{ ncfST('Frontend.053') }}</el-button>
-                <el-button size="small" class="filter-item" type="primary" @@click="asyncUser" :loading="isLoading"><i class="fa fa-exchange"></i> {{ ncfST('Frontend.054') }}</el-button>
-                <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">{{ ncfST('Frontend.022') }}</el-button>
-                <span><small>{{ ncfST('Frontend.055') }}</small></span>
+                <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" :loading="addLoading" @@click="addUser('add')">{{ ncfST('Frontend.WeixinManager.AddNewFollowers') }}</el-button>
+                <el-button size="small" class="filter-item" type="primary" @@click="asyncUser" :loading="isLoading"><i class="fa fa-exchange"></i> {{ ncfST('Frontend.WeixinManager.SyncAllFollowers') }}</el-button>
+                <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">{{ ncfST('Frontend.WeixinManager.Delete') }}</el-button>
+                <span><small>{{ ncfST('Frontend.WeixinManager.NoteIfThereAreManyUsersThisMayTakeAVeryLong') }}</small></span>
             </template>
         </div>
         <el-table :data="tableData"
@@ -38,14 +39,14 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             :label="ncfST('Frontend.056')">
+                             :label="ncfST('Frontend.WeixinManager.Nickname')">
                 <template slot-scope="scope">
                     {{ scope.row.nickName}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              width="65"
-                             :label="ncfST('Frontend.057')">
+                             :label="ncfST('Frontend.WeixinManager.Avatar')">
                 <template slot-scope="scope">
                     <el-image style="width: 50px; height: 50px"
                               :src="scope.row.headImgUrl"></el-image>
@@ -53,16 +54,16 @@
             </el-table-column>
 
             <el-table-column align="center"
-                             :label="ncfST('Frontend.058')">
+                             :label="ncfST('Frontend.WeixinManager.Gender')">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.sex == 1">{{ ncfST('Frontend.059') }}</span>
-                    <span v-if="scope.row.sex == 2">{{ ncfST('Frontend.060') }}</span>
-                    <span v-if="scope.row.sex != 2 && scope.row.sex != 1">{{ ncfST('Frontend.061') }}</span>
+                    <span v-if="scope.row.sex == 1">{{ ncfST('Frontend.WeixinManager.Male') }}</span>
+                    <span v-if="scope.row.sex == 2">{{ ncfST('Frontend.WeixinManager.Female') }}</span>
+                    <span v-if="scope.row.sex != 2 && scope.row.sex != 1">{{ ncfST('Frontend.WeixinManager.Unknown') }}</span>
                 </template>
             </el-table-column>
 
             <el-table-column align="center"
-                             :label="ncfST('Frontend.062')">
+                             :label="ncfST('Frontend.WeixinManager.Region')">
                 <template slot-scope="scope">
                     {{scope.row.country}}&nbsp;
                     {{scope.row.province}}&nbsp;
@@ -71,36 +72,36 @@
             </el-table-column>
 
             <el-table-column align="center"
-                             :label="ncfST('Frontend.063')">
+                             :label="ncfST('Frontend.WeixinManager.Group')">
                 <template slot-scope="scope">
                     {{ scope.row.groupid}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             :label="ncfST('Frontend.064')">
+                             :label="ncfST('Frontend.WeixinManager.FollowedAt')">
                 <template slot-scope="scope">
                     {{ formaTableTime(scope.row.subscribe_Time)}}
                 </template>
             </el-table-column>
 
             <el-table-column align="center"
-                             :label="ncfST('Frontend.065')">
+                             :label="ncfST('Frontend.WeixinManager.FollowStatus')">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.subscribe == 1">{{ ncfST('Frontend.066') }}</span>
-                    <span v-if="scope.row.subscribe != 1">{{ ncfST('Frontend.067') }}</span>
+                    <span v-if="scope.row.subscribe == 1">{{ ncfST('Frontend.WeixinManager.Following') }}</span>
+                    <span v-if="scope.row.subscribe != 1">{{ ncfST('Frontend.WeixinManager.NotFollowing') }}</span>
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             :label="ncfST('Frontend.068')">
+                             :label="ncfST('Frontend.WeixinManager.FollowSource')">
                 <template slot-scope="scope">
                     {{scope.row.subscribe_Scene}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             :label="ncfST('Frontend.069')">
+                             :label="ncfST('Frontend.WeixinManager.Tags')">
                 <template slot-scope="scope">
                     <template v-if="scope.row.userTags_WeixinUsers.length == 0">
-                        {{ ncfST('Frontend.070') }}
+                        {{ ncfST('Frontend.WeixinManager.None') }}
                     </template>
                     <template v-if="scope.row.userTags_WeixinUsers.length > 0">
                         <ul>
@@ -112,20 +113,20 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             :label="ncfST('Frontend.024')">
+                             :label="ncfST('Frontend.WeixinManager.Notes')">
                 <template slot-scope="scope">
                     {{scope.row.adminRemark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             :label="ncfST('Frontend.025')">
+                             :label="ncfST('Frontend.WeixinManager.Description')">
                 <template slot-scope="scope">
                     {{scope.row.adminRemark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              width="145"
-                             :label="ncfST('Frontend.026')">
+                             :label="ncfST('Frontend.WeixinManager.AddedTime')">
                 <template slot-scope="scope">
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
@@ -219,8 +220,8 @@
                     var delIds = this.multipleSelection;
                     if (delIds.length === 0) {
                         this.$notify({
-                            title: ncfST('Frontend.049'),
-                            message: ncfST('Frontend.050'),
+                            title: ncfST('Frontend.WeixinManager.Warning'),
+                            message: ncfST('Frontend.WeixinManager.SelectAtLeastOneOfficialAccount'),
                             type: 'warning',
                             duration: 2000
                         });
@@ -232,12 +233,12 @@
                         ids.push(ele.id);
                     })
 
-                    app.$confirm(ncfST('Frontend.051'), { type: 'warning' }).then(res => {
+                    app.$confirm(ncfST('Frontend.WeixinManager.DeleteAllSelectedItems'), { type: 'warning' }).then(res => {
                         return service.post('@Url.Page("Index")?handler=Delete', ids);
                     }).then(res => {
                         this.$notify({
-                            title: ncfST('Frontend.048'),
-                            message: ncfST('Frontend.052', ids.length),
+                            title: ncfST('Frontend.WeixinManager.Success'),
+                            message: ncfST('Frontend.WeixinManager.SuccessfullyDeletedValueItems', ids.length),
                             type: 'success',
                             duration: 2000
                         });

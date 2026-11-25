@@ -34,6 +34,12 @@ public sealed class DesktopActivityHub
         new(StringComparer.OrdinalIgnoreCase);
     private long _sequence;
 
+    /// <summary>
+    /// Publishes an activity with a sequence number, updates active-state tracking,
+    /// and fan-outs the bounded replay event to current subscribers.
+    /// </summary>
+    /// <param name="message">The activity message to publish.</param>
+    /// <returns>The message with its assigned sequence number.</returns>
     public DesktopActivityMessage Publish(DesktopActivityMessage message)
     {
         var sequenced = message with { Sequence = Interlocked.Increment(ref _sequence) };
@@ -67,6 +73,10 @@ public sealed class DesktopActivityHub
         return sequenced;
     }
 
+    /// <summary>
+    /// Returns a snapshot of currently non-terminal desktop activities.
+    /// </summary>
+    /// <returns>Active activities ordered newest first.</returns>
     public IReadOnlyList<DesktopActivityMessage> GetActiveSnapshot()
     {
         return _activeActivities.Values
@@ -74,6 +84,13 @@ public sealed class DesktopActivityHub
             .ToArray();
     }
 
+    /// <summary>
+    /// Subscribes to desktop activity events, optionally replaying the bounded event buffer.
+    /// The subscription is removed automatically when enumeration ends or cancellation occurs.
+    /// </summary>
+    /// <param name="replayBuffered">Whether retained events should be yielded first.</param>
+    /// <param name="cancellationToken">Token used to terminate the subscription.</param>
+    /// <returns>An asynchronous event sequence.</returns>
     public async IAsyncEnumerable<DesktopActivityMessage> Subscribe(
         bool replayBuffered = true,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)

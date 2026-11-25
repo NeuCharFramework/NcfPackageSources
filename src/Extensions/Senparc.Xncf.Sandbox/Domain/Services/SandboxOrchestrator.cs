@@ -37,6 +37,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261125
+    Change description: v0.4.4 Improved Sandbox setup, orchestration, and localized user feedback.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -102,6 +105,12 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         return scope;
     }
 
+    /// <summary>
+    /// Creates the sandbox workspace root, starts periodic TTL cleanup, and launches
+    /// non-blocking orphan reconciliation.
+    /// </summary>
+    /// <param name="cancellationToken">Token supplied by the host lifecycle.</param>
+    /// <returns>A completed task after housekeeping has been scheduled.</returns>
     public Task StartAsync(CancellationToken cancellationToken)
     {
         Directory.CreateDirectory(_workspaceRoot);
@@ -130,6 +139,12 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Stops cleanup timers, signals active sandbox work to stop, and waits for startup
+    /// reconciliation when cancellation permits.
+    /// </summary>
+    /// <param name="cancellationToken">Token bounding shutdown wait time.</param>
+    /// <returns>A task that completes after shutdown cleanup.</returns>
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         _shutdown.Cancel();
@@ -149,6 +164,9 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Releases timers, shutdown cancellation, and the orchestration gate.
+    /// </summary>
     public void Dispose()
     {
         _ttlTimer?.Dispose();
@@ -156,8 +174,28 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         _gate.Dispose();
     }
 
+    /// <summary>
+    /// Gets all registered sandbox template definitions.
+    /// </summary>
+    /// <returns>The immutable template catalog view.</returns>
     public IReadOnlyCollection<SandboxTemplateDefinition> ListTemplates() => SandboxTemplateCatalog.All;
 
+    /// <summary>
+    /// Creates a quota-checked sandbox session, initializes its workspace, and starts
+    /// the selected interactive runtime or tracks an Exec-only placeholder.
+    /// </summary>
+    /// <param name="ownerUserId">The owning administrator/user identifier.</param>
+    /// <param name="templateKey">The sandbox template key.</param>
+    /// <param name="preferredRuntime">An optional runtime override.</param>
+    /// <param name="initializeWorkspace">Optional workspace initialization callback.</param>
+    /// <param name="ncfPreview">Optional controlled NCF preview configuration.</param>
+    /// <param name="ttlMinutes">Optional requested TTL.</param>
+    /// <param name="keepAlive">Whether the session should have no expiry.</param>
+    /// <param name="alias">Optional user-facing alias.</param>
+    /// <param name="extraPortMappings">Optional extra Jupyter port mappings.</param>
+    /// <param name="cancellationToken">Token used to cancel creation.</param>
+    /// <returns>A task containing the created session information.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the template, quota, runtime, ports, or controlled preview options are invalid.</exception>
     public async Task<SandboxSessionInfo> CreateAsync(
         int ownerUserId,
         string templateKey,
@@ -309,6 +347,15 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Updates the expiration policy of an existing creating or running session.
+    /// </summary>
+    /// <param name="sessionId">The sandbox session identifier.</param>
+    /// <param name="ttlMinutes">The requested TTL in minutes.</param>
+    /// <param name="keepAlive">Whether to remove the expiry.</param>
+    /// <param name="cancellationToken">Token used to cancel the update.</param>
+    /// <returns>A task containing the updated session information.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the session is missing, terminal, or its template is unavailable.</exception>
     public async Task<SandboxSessionInfo> UpdateTtlAsync(
         string sessionId,
         int? ttlMinutes,
@@ -360,6 +407,14 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Updates the optional display alias of an existing sandbox session.
+    /// </summary>
+    /// <param name="sessionId">The sandbox session identifier.</param>
+    /// <param name="alias">The new alias; blank clears the alias.</param>
+    /// <param name="cancellationToken">Token used to cancel the update.</param>
+    /// <returns>A task containing the updated session information.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the session is missing or the alias exceeds its limit.</exception>
     public async Task<SandboxSessionInfo> UpdateAliasAsync(
         string sessionId,
         string? alias,
@@ -395,6 +450,15 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Executes code through an Exec-only sandbox template after validating ownership
+    /// of the tracked session and applying template-specific code defaults.
+    /// </summary>
+    /// <param name="sessionId">The sandbox session identifier.</param>
+    /// <param name="code">The code to execute.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <returns>A task containing stdout/stderr and execution status.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the session or template does not support Exec.</exception>
     public async Task<SandboxExecResult> ExecAsync(
         string sessionId,
         string code,
@@ -436,6 +500,14 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         return result;
     }
 
+    /// <summary>
+    /// Executes an interactive command against a running sandbox session.
+    /// </summary>
+    /// <param name="sessionId">The sandbox session identifier.</param>
+    /// <param name="command">The interactive command or input.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <returns>A task containing interactive execution output and status.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the session is missing, not interactive, or not running.</exception>
     public async Task<SandboxExecResult> ExecInteractiveAsync(
         string sessionId,
         string command,
@@ -501,6 +573,15 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         return result;
     }
 
+    /// <summary>
+    /// Uploads a byte-array workspace file through the stream-based upload path.
+    /// </summary>
+    /// <param name="sessionId">The sandbox session identifier.</param>
+    /// <param name="relativePath">The relative workspace path.</param>
+    /// <param name="content">The file bytes.</param>
+    /// <param name="overwrite">Whether an existing file may be replaced.</param>
+    /// <param name="cancellationToken">Token used to cancel upload.</param>
+    /// <returns>A task containing file metadata.</returns>
     public async Task<SandboxWorkspaceFileInfo> UploadWorkspaceFileAsync(
         string sessionId,
         string relativePath,
@@ -520,6 +601,18 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Streams a workspace file to a temporary path, enforces size/path boundaries,
+    /// and atomically moves it into the session workspace.
+    /// </summary>
+    /// <param name="sessionId">The sandbox session identifier.</param>
+    /// <param name="relativePath">The relative workspace path.</param>
+    /// <param name="content">The source stream.</param>
+    /// <param name="contentLength">Optional declared content length.</param>
+    /// <param name="overwrite">Whether an existing file may be replaced.</param>
+    /// <param name="cancellationToken">Token used to cancel upload.</param>
+    /// <returns>A task containing file metadata.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when size, declared length, overwrite, or path limits are violated.</exception>
     public async Task<SandboxWorkspaceFileInfo> UploadWorkspaceFileAsync(
         string sessionId,
         string relativePath,
@@ -600,6 +693,16 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         return file;
     }
 
+    /// <summary>
+    /// Reads a bounded file from a session workspace after validating its path and size.
+    /// </summary>
+    /// <param name="sessionId">The sandbox session identifier.</param>
+    /// <param name="relativePath">The relative workspace path.</param>
+    /// <param name="maxBytes">Optional maximum read size.</param>
+    /// <param name="cancellationToken">Token used to cancel the read.</param>
+    /// <returns>A task containing file metadata and bytes.</returns>
+    /// <exception cref="FileNotFoundException">Thrown when the file does not exist.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when path or size limits are violated.</exception>
     public async Task<SandboxWorkspaceFileContent> ReadWorkspaceFileAsync(
         string sessionId,
         string relativePath,
@@ -646,6 +749,16 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         };
     }
 
+    /// <summary>
+    /// Lists bounded workspace files under a session directory, optionally recursively,
+    /// while skipping reparse points and inaccessible entries.
+    /// </summary>
+    /// <param name="sessionId">The sandbox session identifier.</param>
+    /// <param name="relativeDirectory">The relative directory to enumerate.</param>
+    /// <param name="recursive">Whether subdirectories are included.</param>
+    /// <param name="maxItems">Optional maximum result count.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>A task containing workspace file metadata.</returns>
     public async Task<IReadOnlyList<SandboxWorkspaceFileInfo>> ListWorkspaceFilesAsync(
         string sessionId,
         string? relativeDirectory = null,
@@ -691,8 +804,14 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         return files;
     }
 
+    /// <summary>
+    /// Reconciles the current tenant and lists recent sandbox sessions.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel reconciliation and listing.</param>
+    /// <returns>A task containing sessions ordered by creation time.</returns>
     public async Task<IReadOnlyList<SandboxSessionInfo>> ListAsync(CancellationToken cancellationToken = default)
     {
+        await SynchronizeCurrentTenantAsync(cancellationToken).ConfigureAwait(false);
         using var scope = CreateTenantScope();
         var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
         var list = await sessionService.GetObjectListAsync(
@@ -705,6 +824,67 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         return list.Select(ToInfo).ToArray();
     }
 
+    /// <summary>
+    /// Deletes up to 200 requested session records, returning identifiers skipped by ownership,
+    /// state, or deletion constraints.
+    /// </summary>
+    /// <param name="sessionIds">The session identifiers to process.</param>
+    /// <param name="cancellationToken">Token used to cancel deletion.</param>
+    /// <returns>Deleted count and skipped identifiers.</returns>
+    public async Task<(int Deleted, IReadOnlyList<string> Skipped)> DeleteRecordsAsync(
+        IEnumerable<string> sessionIds,
+        CancellationToken cancellationToken = default)
+    {
+        var ids = sessionIds
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Select(id => id.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Take(200)
+            .ToArray();
+        if (ids.Length == 0)
+        {
+            return (0, Array.Empty<string>());
+        }
+
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            using var scope = CreateTenantScope();
+            var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
+            var skipped = new List<string>();
+            var deleted = 0;
+            foreach (var sessionId in ids)
+            {
+                var entity = await sessionService.GetBySessionIdAsync(sessionId).ConfigureAwait(false);
+                if (entity == null || !entity.CanDeleteRecord())
+                {
+                    skipped.Add(sessionId);
+                    continue;
+                }
+
+                TryDeleteWorkspace(sessionId);
+                await sessionService.DeletePermanentlyAsync(entity).ConfigureAwait(false);
+                deleted++;
+            }
+
+            _logger.LogInformation(
+                "Bulk deleted {DeletedCount} sandbox session records; skipped {SkippedCount}.",
+                deleted,
+                skipped.Count);
+            return (deleted, skipped);
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
+    /// <summary>
+    /// Gets one sandbox session after tenant synchronization.
+    /// </summary>
+    /// <param name="sessionId">The session identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel synchronization.</param>
+    /// <returns>A task containing session information, or <see langword="null"/> when absent.</returns>
     public async Task<SandboxSessionInfo?> GetAsync(string sessionId, CancellationToken cancellationToken = default)
     {
         using var scope = CreateTenantScope();
@@ -713,6 +893,11 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         return entity == null ? null : ToInfo(entity);
     }
 
+    /// <summary>
+    /// Maps a sandbox session entity to its public session-information DTO.
+    /// </summary>
+    /// <param name="entity">The session entity.</param>
+    /// <returns>The public session information.</returns>
     private static SandboxSessionInfo ToInfo(SandboxSession entity)
     {
         var info = entity.ToInfo();
@@ -747,7 +932,13 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
     }
 
     /// <summary>
-    /// Used by the reverse proxy to resolve the upstream; never send it to the browser.
+    /// <summary>
+    /// Resolves a running Jupyter session's loopback proxy target without updating activity timestamps.
+    /// The returned access token is for server-side proxy use only.
+    /// </summary>
+    /// <param name="sessionId">The sandbox session identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the lookup.</param>
+    /// <returns>A task containing the proxy target, or <see langword="null"/> when unavailable.</returns>
     /// </summary>
     public async Task<SandboxJupyterProxyTarget?> TryGetJupyterProxyTargetAsync(
         string sessionId,
@@ -789,6 +980,12 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
     /// Resolves the loopback target for an NCF preview. Unlike Jupyter, no bearer token is needed
     /// upstream; the proxy strips all caller credentials and requires the host Admin cookie.
     /// </summary>
+    /// <summary>
+    /// Resolves the loopback target for a running NCF preview session for server-side proxying.
+    /// </summary>
+    /// <param name="sessionId">The sandbox session identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the lookup.</param>
+    /// <returns>A task containing the proxy target, or <see langword="null"/> when unavailable.</returns>
     public async Task<SandboxNcfPreviewProxyTarget?> TryGetNcfPreviewProxyTargetAsync(
         string sessionId,
         CancellationToken cancellationToken = default)
@@ -817,6 +1014,12 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         };
     }
 
+    /// <summary>
+    /// Stops the runtime, removes the workspace, and marks a sandbox session stopped.
+    /// </summary>
+    /// <param name="sessionId">The sandbox session identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel runtime destruction.</param>
+    /// <returns>A task that completes after cleanup.</returns>
     public async Task DestroyAsync(string sessionId, CancellationToken cancellationToken = default)
     {
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -853,6 +1056,13 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Permanently deletes a stopped/expired session record and its workspace.
+    /// </summary>
+    /// <param name="sessionId">The sandbox session identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel deletion.</param>
+    /// <returns>A task that completes after deletion.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the session is not eligible for permanent deletion.</exception>
     public async Task DeleteRecordAsync(string sessionId, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(sessionId))
@@ -887,6 +1097,13 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Resolves an available sandbox runtime and rejects unavailable unsafe fallbacks.
+    /// </summary>
+    /// <param name="kind">The requested runtime kind.</param>
+    /// <param name="cancellationToken">Token used for availability probing.</param>
+    /// <returns>A task containing the available runtime.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the runtime is not registered or available.</exception>
     private async Task<ISandboxRuntime> ResolveRuntimeAsync(SandboxRuntimeKind kind, CancellationToken cancellationToken)
     {
         var runtime = _runtimes.FirstOrDefault(z => z.Kind == kind)
@@ -906,6 +1123,14 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         return runtime;
     }
 
+    /// <summary>
+    /// Loads and validates a running interactive session and resolves its runtime controller.
+    /// </summary>
+    /// <param name="sessionService">The scoped session service.</param>
+    /// <param name="sessionId">The sandbox session identifier.</param>
+    /// <param name="cancellationToken">Token used for runtime availability probing.</param>
+    /// <returns>A task containing the entity, template, and runtime context.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the session is missing, stopped, or not interactive.</exception>
     private async Task<InteractiveControlContext> GetInteractiveControlContextAsync(
         SandboxSessionService sessionService,
         string sessionId,
@@ -937,6 +1162,12 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         return new InteractiveControlContext(entity, template, runtime);
     }
 
+    /// <summary>
+    /// Enforces workspace containment and rejects symbolic links/reparse points along the path.
+    /// </summary>
+    /// <param name="workspace">The allowed workspace root.</param>
+    /// <param name="target">The target path to validate.</param>
+    /// <exception cref="InvalidOperationException">Thrown when the target escapes the workspace boundary.</exception>
     private static void EnsureWorkspacePathSafe(string workspace, string target)
     {
         var normalizedWorkspace = Path.GetFullPath(workspace)
@@ -969,6 +1200,12 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Maps a file-system path to workspace-relative file metadata.
+    /// </summary>
+    /// <param name="workspace">The workspace root.</param>
+    /// <param name="path">The file path.</param>
+    /// <returns>Workspace-relative file information.</returns>
     private static SandboxWorkspaceFileInfo ToWorkspaceFileInfo(string workspace, string path)
     {
         var info = new FileInfo(path);
@@ -985,6 +1222,10 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         SandboxTemplateDefinition Template,
         ISandboxRuntime Runtime);
 
+    /// <summary>
+    /// Acquires the orchestration gate and sweeps expired sessions across enabled tenants.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel the sweep.</param>
     private async Task SweepExpiredAsync(CancellationToken cancellationToken)
     {
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -1013,6 +1254,11 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Finds expired sessions for one tenant and destroys their runtime/workspace state.
+    /// </summary>
+    /// <param name="sessionService">The tenant-scoped session service.</param>
+    /// <param name="cancellationToken">Token used to cancel cleanup.</param>
     private async Task SweepForTenantCoreAsync(SandboxSessionService sessionService, CancellationToken cancellationToken)
     {
         List<SandboxSession> expired;
@@ -1039,6 +1285,12 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Destroys one expired runtime, removes its workspace, and persists the expired state.
+    /// </summary>
+    /// <param name="sessionService">The tenant-scoped session service.</param>
+    /// <param name="entity">The expired session entity.</param>
+    /// <param name="cancellationToken">Token used to cancel runtime destruction.</param>
     private async Task DestroyExpiredCoreAsync(
         SandboxSessionService sessionService,
         SandboxSession entity,
@@ -1060,6 +1312,10 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         _logger.LogInformation("Expired sandbox session {SessionId}", entity.SessionId);
     }
 
+    /// <summary>
+    /// Reconciles runtime handles against persisted sessions across available runtimes and tenants.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel reconciliation.</param>
     private async Task ReconcileOrphansAsync(CancellationToken cancellationToken)
     {
         foreach (var runtime in _runtimes)
@@ -1097,12 +1353,17 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Runs startup orphan reconciliation without allowing failures to prevent host startup.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel background reconciliation.</param>
     private async Task ReconcileOrphansInBackgroundAsync(CancellationToken cancellationToken)
     {
         try
         {
             await ReconcileOrphansAsync(cancellationToken).ConfigureAwait(false);
         }
+
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
         }
@@ -1115,6 +1376,38 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Reconciles available runtimes for the current tenant under the orchestration gate.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel synchronization.</param>
+    private async Task SynchronizeCurrentTenantAsync(CancellationToken cancellationToken)
+    {
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            using var scope = CreateTenantScope();
+            var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
+            foreach (var runtime in _runtimes)
+            {
+                if (await runtime.IsAvailableAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    await ReconcileRuntimeCoreAsync(runtime, sessionService, cancellationToken)
+                        .ConfigureAwait(false);
+                }
+            }
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
+    /// <summary>
+    /// Aligns persisted active sessions with runtime handles and destroys orphaned handles.
+    /// </summary>
+    /// <param name="runtime">The runtime being reconciled.</param>
+    /// <param name="sessionService">The tenant-scoped session service.</param>
+    /// <param name="cancellationToken">Token used to cancel runtime queries.</param>
     private async Task ReconcileRuntimeCoreAsync(
         ISandboxRuntime runtime,
         SandboxSessionService sessionService,
@@ -1177,6 +1470,12 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Matches a runtime handle against returned handles using exact or prefix-compatible comparison.
+    /// </summary>
+    /// <param name="handles">The runtime handles returned by the provider.</param>
+    /// <param name="handle">The persisted handle to find.</param>
+    /// <returns><see langword="true"/> when a compatible handle exists.</returns>
     private static bool ContainsRuntimeHandle(IEnumerable<string> handles, string handle)
     {
         var normalizedHandle = handle.Trim();
@@ -1194,6 +1493,11 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         });
     }
 
+    /// <summary>
+    /// Formats the session TTL state for user-facing status messages.
+    /// </summary>
+    /// <param name="expiresAtUtc">The session expiration timestamp.</param>
+    /// <returns>A keep-alive or UTC expiration message.</returns>
     private static string FormatTtlMessage(DateTime expiresAtUtc)
     {
         return SandboxTtlPolicy.IsUnlimited(expiresAtUtc)
@@ -1201,6 +1505,10 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             : $"TTL expiration time (UTC): {expiresAtUtc:u}.";
     }
 
+    /// <summary>
+    /// Best-effort deletes the workspace directory for a session.
+    /// </summary>
+    /// <param name="sessionId">The session identifier used to locate the workspace.</param>
     private void TryDeleteWorkspace(string sessionId)
     {
         try

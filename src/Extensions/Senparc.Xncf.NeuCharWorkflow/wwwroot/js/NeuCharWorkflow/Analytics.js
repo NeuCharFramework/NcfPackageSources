@@ -90,7 +90,7 @@ new Vue({
                     if (selected) this.filters.resourceKey = this.resourceKey(selected);
                 }
             } catch (error) {
-                this.$message.error(this.errorMessage(error, ncfST('Frontend.103')));
+                this.$message.error(this.errorMessage(error, ncfST('Frontend.NeuCharWorkflow.FailedToLoadWorkflowAnalytics')));
             } finally {
                 this.loading = false;
             }
@@ -155,23 +155,31 @@ new Vue({
         openRun(run) {
             if (!run || !run.workflowId) return;
             if (run.status === 'running' && run.runId) {
-                window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${encodeURIComponent(run.workflowId)}&runId=${encodeURIComponent(run.runId)}`);
+                NeuCharWorkflowUi.openPage(
+                    `/Admin/NeuCharWorkflow/Index?workflowId=${encodeURIComponent(run.workflowId)}&runId=${encodeURIComponent(run.runId)}`,
+                    ncfST('Frontend.NeuCharWorkflow.Workflow'));
                 return;
             }
             if (run.executionLogId && run.replayAvailable) {
-                window.location.assign(`/Admin/NeuCharWorkflow/Replay?executionLogId=${encodeURIComponent(run.executionLogId)}`);
+                NeuCharWorkflowUi.openPage(
+                    `/Admin/NeuCharWorkflow/Replay?executionLogId=${encodeURIComponent(run.executionLogId)}`,
+                    ncfST('Frontend.NeuCharWorkflow.RunReplay'));
                 return;
             }
             this.openTasks();
         },
         openTasks() {
             const params = this.taskQuery();
-            window.location.assign(`/Admin/NeuCharWorkflow/Tasks${params.toString() ? `?${params.toString()}` : ''}`);
+            NeuCharWorkflowUi.openPage(
+                `/Admin/NeuCharWorkflow/Tasks${params.toString() ? `?${params.toString()}` : ''}`,
+                ncfST('Frontend.NeuCharWorkflow.WorkflowTaskList'));
         },
         openWorkflow(workflowId) {
             const id = Number(workflowId || 0);
             if (!Number.isInteger(id) || id <= 0) return;
-            window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${encodeURIComponent(id)}`);
+            NeuCharWorkflowUi.openPage(
+                `/Admin/NeuCharWorkflow/Index?workflowId=${encodeURIComponent(id)}`,
+                ncfST('Frontend.NeuCharWorkflow.Workflow'));
         },
         taskQuery() {
             const params = new URLSearchParams();
@@ -241,10 +249,10 @@ new Vue({
         formatDuration(value) {
             if (value === null || value === undefined || Number.isNaN(Number(value))) return '—';
             const seconds = Math.max(0, Number(value));
-            if (seconds < 60) return ncfST('Frontend.101', seconds.toFixed(1));
+            if (seconds < 60) return ncfST('Frontend.NeuCharWorkflow.ValueSec', seconds.toFixed(1));
             const minutes = Math.floor(seconds / 60);
             const rest = Math.round(seconds % 60);
-            return ncfST('Frontend.102', minutes, rest);
+            return ncfST('Frontend.NeuCharWorkflow.ValueMinValueSec', minutes, rest);
         },
         formatDate(value) {
             if (!value) return '—';
@@ -255,18 +263,18 @@ new Vue({
         },
         sourceText(source) {
             return {
-                manual: ncfST('Frontend.467'),
+                manual: ncfST('Frontend.NeuCharWorkflow.ManualRun'),
                 webhook: 'Webhook',
-                interval: ncfST('Frontend.471'),
-                history: ncfST('Frontend.468')
-            }[source] || ncfST('Frontend.469');
+                interval: ncfST('Frontend.NeuCharWorkflow.ScheduledTrigger'),
+                history: ncfST('Frontend.NeuCharWorkflow.History')
+            }[source] || ncfST('Frontend.NeuCharWorkflow.RunRecords');
         },
         statusText(status) {
             return {
-                running: ncfST('Frontend.077'),
-                success: ncfST('Frontend.127'),
-                failed: ncfST('Frontend.128')
-            }[status] || ncfST('Frontend.652');
+                running: ncfST('Frontend.NeuCharWorkflow.RunningAlternate'),
+                success: ncfST('Frontend.NeuCharWorkflow.Success'),
+                failed: ncfST('Frontend.NeuCharWorkflow.Failed')
+            }[status] || ncfST('Frontend.NeuCharWorkflow.Unknown');
         },
         statusType(status) {
             return { running: 'warning', success: 'success', failed: 'danger' }[status] || 'info';

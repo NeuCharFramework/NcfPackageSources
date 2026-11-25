@@ -21,6 +21,11 @@ namespace Senparc.Ncf.Utility
 {
     public static class FileSaveUtility
     {
+        /// <summary>
+        /// Finds an unused path by appending an incrementing numeric suffix before the extension.
+        /// </summary>
+        /// <param name="filePath">The preferred file path.</param>
+        /// <returns>The original path when unused, otherwise the first available suffixed path.</returns>
         public static string GetAvailableFileName(string filePath)
         {
             string fileExtension = Path.GetExtension(filePath);

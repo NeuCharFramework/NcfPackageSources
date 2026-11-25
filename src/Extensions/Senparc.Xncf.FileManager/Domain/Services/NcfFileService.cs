@@ -48,8 +48,16 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.FileManager.Domain.Services;
 
+/// <summary>
+/// Holds file metadata together with an owned readable stream.
+/// </summary>
 public sealed class NcfFileReadResult
 {
+    /// <summary>
+    /// Initializes a file read result.
+    /// </summary>
+    /// <param name="file">The persisted file metadata.</param>
+    /// <param name="stream">The readable stream owned by the caller.</param>
     public NcfFileReadResult(NcfFile file, Stream stream)
     {
         File = file;
@@ -75,6 +83,11 @@ public class NcfFileService : ServiceBase<NcfFile>
 
     private readonly string _baseFilePath;
 
+    /// <summary>
+    /// Initializes the file service and creates the configured physical storage root.
+    /// </summary>
+    /// <param name="repo">Repository for file metadata.</param>
+    /// <param name="serviceProvider">Provider used to resolve caches, reference providers, and guards.</param>
     public NcfFileService(IRepositoryBase<NcfFile> repo, IServiceProvider serviceProvider)
         : base(repo, serviceProvider)
     {
@@ -110,6 +123,14 @@ public class NcfFileService : ServiceBase<NcfFile>
         return result;
     }
 
+    /// <summary>
+    /// Scans file references for the admin report using bounded paging and provider lookups.
+    /// </summary>
+    /// <param name="page">One-based report page number.</param>
+    /// <param name="pageSize">Requested report page size, capped at 100.</param>
+    /// <param name="resourceScope">Optional resource scope filter.</param>
+    /// <param name="onlyUnreferenced">When <see langword="true"/>, excludes files with references.</param>
+    /// <returns>A task containing the report page, inspected count, and continuation flag.</returns>
     public async Task<FileManagerReferenceScanResult> ScanReferenceReportAsync(
         int page = 1,
         int pageSize = 50,
@@ -347,6 +368,15 @@ public class NcfFileService : ServiceBase<NcfFile>
         return UploadFileAsync(file, NcfFileResourceScope.KnowledgeBase, folderId);
     }
 
+    /// <summary>
+    /// Validates, stores, hashes, and persists one uploaded form file.
+    /// </summary>
+    /// <param name="file">The uploaded form file.</param>
+    /// <param name="resourceScope">The resource boundary controlling allowed extensions and storage root.</param>
+    /// <param name="folderId">Optional destination folder identifier.</param>
+    /// <returns>A task containing the persisted file metadata.</returns>
+    /// <exception cref="ArgumentException">Thrown when the upload is empty.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when size, scope, folder, or extension rules fail.</exception>
     public async Task<NcfFile> UploadFileAsync(
         IFormFile file,
         NcfFileResourceScope resourceScope,
@@ -422,6 +452,21 @@ public class NcfFileService : ServiceBase<NcfFile>
         }
     }
 
+    /// <summary>
+    /// Validates, streams, hashes, and persists file content without requiring an <see cref="IFormFile"/>.
+    /// </summary>
+    /// <param name="content">The readable source stream.</param>
+    /// <param name="fileName">The original file name used to determine extension and display name.</param>
+    /// <param name="contentType">The optional content type stored with the file.</param>
+    /// <param name="length">The declared content length.</param>
+    /// <param name="resourceScope">The resource boundary controlling allowed extensions and storage root.</param>
+    /// <param name="folderId">Optional destination folder identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel copying and hashing.</param>
+    /// <param name="maxFileSizeBytes">Optional per-call size limit overriding the default.</param>
+    /// <returns>A task containing the persisted file metadata.</returns>
+    /// <exception cref="ArgumentException">Thrown when the stream or declared length is invalid.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="maxFileSizeBytes"/> is not positive.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when size, scope, folder, or extension rules fail.</exception>
     public async Task<NcfFile> UploadStreamAsync(
         Stream content,
         string fileName,
@@ -520,6 +565,14 @@ public class NcfFileService : ServiceBase<NcfFile>
         }
     }
 
+    /// <summary>
+    /// Updates the administrator note for a persisted file.
+    /// </summary>
+    /// <param name="id">The file identifier.</param>
+    /// <param name="note">The new note, or <see langword="null"/> to clear it.</param>
+    /// <returns>A task that completes after the metadata is saved.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the file does not exist.</exception>
+    /// <exception cref="ArgumentException">Thrown when the note exceeds 300 characters.</exception>
     public async Task UpdateFileNoteAsync(int id, string note)
     {
         var file = await GetObjectAsync(z => z.Id == id);
@@ -538,6 +591,13 @@ public class NcfFileService : ServiceBase<NcfFile>
         await SaveObjectAsync(file);
     }
 
+    /// <summary>
+    /// Changes the public/private access state of a site asset.
+    /// </summary>
+    /// <param name="id">The file identifier.</param>
+    /// <param name="publish">Whether the site asset should be publicly accessible.</param>
+    /// <returns>A task that completes after the access state is saved.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the file is missing or cannot be published as a site asset.</exception>
     public async Task SetSiteAssetPublicationAsync(int id, bool publish)
     {
         var file = await GetObjectAsync(z => z.Id == id)
@@ -556,6 +616,13 @@ public class NcfFileService : ServiceBase<NcfFile>
         await SaveObjectAsync(file);
     }
 
+    /// <summary>
+    /// Deletes a file after reference-provider and deletion-guard checks, staging the physical file
+    /// so failed metadata deletion can restore it.
+    /// </summary>
+    /// <param name="id">The file identifier.</param>
+    /// <returns>A task that completes after metadata and physical content are deleted.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when active references or deletion guards reject deletion.</exception>
     public async Task DeleteFileAsync(int id)
     {
         var file = await GetObjectAsync(z => z.Id == id);
@@ -614,6 +681,11 @@ public class NcfFileService : ServiceBase<NcfFile>
         }
     }
 
+    /// <summary>
+    /// Reports whether a file's validated physical path exists.
+    /// </summary>
+    /// <param name="file">The file metadata.</param>
+    /// <returns><c>Present</c>, <c>Missing</c>, or <c>InvalidMetadata</c>.</returns>
     private string GetPhysicalState(NcfFile file)
     {
         try
@@ -626,6 +698,11 @@ public class NcfFileService : ServiceBase<NcfFile>
         }
     }
 
+    /// <summary>
+    /// Reads a file's physical bytes and display name.
+    /// </summary>
+    /// <param name="id">The file identifier.</param>
+    /// <returns>A task containing the bytes and name, or an empty byte array when metadata/content is missing.</returns>
     public async Task<(byte[] FileBytes, string FileName)> GetFileBytes(int id)
     {
         var file = await GetObjectAsync(z => z.Id == id);
@@ -738,6 +815,11 @@ public class NcfFileService : ServiceBase<NcfFile>
         return NcfFileTextExtractor.Extract(fileInfo.FileBytes, file.FileExtension, file.FileName);
     }
 
+    /// <summary>
+    /// Builds a cache-busting public URL for a published site asset.
+    /// </summary>
+    /// <param name="file">The file metadata to inspect.</param>
+    /// <returns>The public asset URL, or <see langword="null"/> when the file is not a published site asset.</returns>
     public static string GetPublicAssetUrl(NcfFile file)
     {
         return file == null
@@ -745,6 +827,11 @@ public class NcfFileService : ServiceBase<NcfFile>
             : GetPublicAssetUrl(file.Id, file.ResourceScope, file.AccessLevel, file.ContentHash);
     }
 
+    /// <summary>
+    /// Builds a cache-busting public URL for a published site asset DTO.
+    /// </summary>
+    /// <param name="file">The file DTO to inspect.</param>
+    /// <returns>The public asset URL, or <see langword="null"/> when the DTO is not a published site asset.</returns>
     public static string GetPublicAssetUrl(NcfFileDto file)
     {
         return file == null
@@ -752,6 +839,14 @@ public class NcfFileService : ServiceBase<NcfFile>
             : GetPublicAssetUrl(file.Id, file.ResourceScope, file.AccessLevel, file.ContentHash);
     }
 
+    /// <summary>
+    /// Builds a public asset URL only for public SiteAsset files with a usable content hash.
+    /// </summary>
+    /// <param name="id">The file identifier.</param>
+    /// <param name="resourceScope">The resource scope.</param>
+    /// <param name="accessLevel">The access level.</param>
+    /// <param name="contentHash">The content hash used for cache busting.</param>
+    /// <returns>The public URL, or <see langword="null"/> when the file is not publishable.</returns>
     private static string GetPublicAssetUrl(
         int id,
         NcfFileResourceScope resourceScope,
@@ -768,6 +863,12 @@ public class NcfFileService : ServiceBase<NcfFile>
         return $"/assets/{id}/{contentHash[..16].ToLowerInvariant()}";
     }
 
+    /// <summary>
+    /// Validates that an optional folder exists and belongs to the requested resource scope.
+    /// </summary>
+    /// <param name="folderId">The optional folder identifier.</param>
+    /// <param name="resourceScope">The upload resource scope.</param>
+    /// <exception cref="InvalidOperationException">Thrown when the folder is missing or scope-mismatched.</exception>
     private async Task ValidateFolderAsync(int? folderId, NcfFileResourceScope resourceScope)
     {
         if (!folderId.HasValue)
@@ -788,12 +889,25 @@ public class NcfFileService : ServiceBase<NcfFile>
         }
     }
 
+    /// <summary>
+    /// Copies an uploaded form file to disk while calculating SHA-256.
+    /// </summary>
+    /// <param name="file">The uploaded file.</param>
+    /// <param name="physicalPath">The destination path.</param>
+    /// <returns>A task containing the uppercase hexadecimal SHA-256 hash.</returns>
     private static async Task<string> CopyAndHashAsync(IFormFile file, string physicalPath)
     {
         await using var input = file.OpenReadStream();
         return await CopyAndHashAsync(input, physicalPath, CancellationToken.None);
     }
 
+    /// <summary>
+    /// Copies a stream to a new file while calculating SHA-256.
+    /// </summary>
+    /// <param name="input">The source stream.</param>
+    /// <param name="physicalPath">The destination path.</param>
+    /// <param name="cancellationToken">Token used to cancel copying.</param>
+    /// <returns>A task containing the uppercase hexadecimal SHA-256 hash.</returns>
     private static async Task<string> CopyAndHashAsync(
         Stream input,
         string physicalPath,
@@ -807,6 +921,12 @@ public class NcfFileService : ServiceBase<NcfFile>
         return Convert.ToHexString(sha256.Hash!);
     }
 
+    /// <summary>
+    /// Validates stored file metadata and resolves a physical path below the configured root.
+    /// </summary>
+    /// <param name="file">The persisted file metadata.</param>
+    /// <returns>The validated absolute physical path.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when metadata is invalid or path traversal is detected.</exception>
     private string ResolvePhysicalPath(NcfFile file)
     {
         if (file == null || string.IsNullOrWhiteSpace(file.FilePath) ||
@@ -853,6 +973,11 @@ public class NcfFileService : ServiceBase<NcfFile>
         return fullPath;
     }
 
+    /// <summary>
+    /// Validates that a resource scope is one of the supported policy values.
+    /// </summary>
+    /// <param name="resourceScope">The resource scope.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the scope is invalid.</exception>
     private static void EnsureValidScope(NcfFileResourceScope resourceScope)
     {
         if (!NcfFileResourcePolicy.IsValidScope(resourceScope))
@@ -861,6 +986,11 @@ public class NcfFileService : ServiceBase<NcfFile>
         }
     }
 
+    /// <summary>
+    /// Gets the user-facing explanation for an extension rejected by a resource scope.
+    /// </summary>
+    /// <param name="resourceScope">The resource scope.</param>
+    /// <returns>The localized safety message.</returns>
     private static string GetUnsupportedExtensionMessage(NcfFileResourceScope resourceScope)
     {
         return resourceScope switch
@@ -872,6 +1002,11 @@ public class NcfFileService : ServiceBase<NcfFile>
         };
     }
 
+    /// <summary>
+    /// Maps a file extension to the legacy FileType classification.
+    /// </summary>
+    /// <param name="extension">The normalized file extension.</param>
+    /// <returns>The corresponding file type.</returns>
     private static FileType GetFileType(string extension)
     {
         return extension.ToLowerInvariant() switch

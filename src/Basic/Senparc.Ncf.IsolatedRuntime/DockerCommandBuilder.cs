@@ -22,6 +22,15 @@ namespace Senparc.Ncf.IsolatedRuntime;
 
 internal static class DockerCommandBuilder
 {
+    /// <summary>
+    /// Builds an argument list for starting a Docker-backed isolated runtime.
+    /// </summary>
+    /// <param name="specification">The image, resource, mount, network, and process settings.</param>
+    /// <returns>A tokenized Docker CLI argument list that does not require shell parsing.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="specification"/> is null.</exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the image, command, mount, port, network, or other isolation values are invalid.
+    /// </exception>
     public static IReadOnlyList<string> BuildRunArguments(IsolatedRuntimeSpec specification)
     {
         Validate(specification);
@@ -108,6 +117,14 @@ internal static class DockerCommandBuilder
         return arguments;
     }
 
+    /// <summary>
+    /// Builds a tokenized Docker CLI argument list for executing a command in an existing runtime.
+    /// </summary>
+    /// <param name="request">The runtime handle, working directory, environment, and command.</param>
+    /// <returns>The Docker <c>exec</c> argument list.</returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the runtime handle or command contains no usable value.
+    /// </exception>
     public static IReadOnlyList<string> BuildExecArguments(IsolatedRuntimeExecRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.RuntimeHandle))
@@ -141,6 +158,12 @@ internal static class DockerCommandBuilder
         return arguments;
     }
 
+    /// <summary>
+    /// Validates values that can affect Docker isolation or command-line construction.
+    /// </summary>
+    /// <param name="specification">The runtime specification to validate.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="specification"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when an image, mount, port, network, or command value is unsafe.</exception>
     private static void Validate(IsolatedRuntimeSpec specification)
     {
         ArgumentNullException.ThrowIfNull(specification);
@@ -182,9 +205,20 @@ internal static class DockerCommandBuilder
         }
     }
 
+    /// <summary>
+    /// Accepts only loopback or wildcard host addresses for published isolated-runtime ports.
+    /// </summary>
+    /// <param name="value">The host address to evaluate.</param>
+    /// <returns><see langword="true"/> for an explicitly allowed address.</returns>
     private static bool IsSafeHostAddress(string value) =>
         value is "127.0.0.1" or "0.0.0.0" or "::1";
 
+    /// <summary>
+    /// Appends an option/value pair when the value is non-empty.
+    /// </summary>
+    /// <param name="arguments">The mutable argument list.</param>
+    /// <param name="name">The option name.</param>
+    /// <param name="value">The option value.</param>
     private static void AddPair(ICollection<string> arguments, string name, string value)
     {
         if (string.IsNullOrWhiteSpace(value))

@@ -27,25 +27,26 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.FunctionRenders
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Indexes function-render metadata by registering module type and method group key.
     /// </summary>
     public class FunctionRenderCollection : ConcurrentDictionary<Type, ConcurrentDictionary<string, FunctionRenderBag>>
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds the stable group key used for a declaring type and method.
         /// </summary>
-        /// <param name="methodInfo"></param>
-        /// <returns></returns>
+        /// <param name="methodInfo">The reflected method to identify.</param>
+        /// <returns>A key composed of the declaring type full name and method name.</returns>
         public static string GeGrouptKey(MethodInfo methodInfo)
         {
             return $"{methodInfo.DeclaringType.FullName}-{methodInfo.Name}";
         }
 
         /// <summary>
-        /// settings FunctionRenderBag
+        /// Adds or replaces a function-render bag under the register type and method group.
         /// </summary>
-        /// <param name="methodInfo"></param>
-        /// <returns></returns>
+        /// <param name="methodInfo">The reflected function method.</param>
+        /// <param name="functionRenderAttribute">The metadata describing the function render.</param>
+        /// <returns>The created function-render bag.</returns>
         public FunctionRenderBag Add(MethodInfo methodInfo, FunctionRenderAttribute functionRenderAttribute)
         {
             Type registerType = functionRenderAttribute.RegisterType;
@@ -63,8 +64,10 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns all function-render bags registered for a module register type.
         /// </summary>
+        /// <param name="registerType">The module register type to query.</param>
+        /// <returns>A snapshot of the registered function-render bags.</returns>
         public IReadOnlyList<FunctionRenderBag> GetByRegisterType(Type registerType)
         {
             if (registerType == null)
@@ -81,8 +84,10 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves a module UID to its function-render bags.
         /// </summary>
+        /// <param name="moduleUid">The module UID to query.</param>
+        /// <returns>A snapshot of the module's function-render bags.</returns>
         public IReadOnlyList<FunctionRenderBag> GetByModuleUid(string moduleUid)
         {
             if (string.IsNullOrWhiteSpace(moduleUid))
@@ -100,8 +105,13 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates plugin instances for function-render symbols belonging to selected modules.
+        /// Existing service registrations are preferred before reflection-based construction.
         /// </summary>
+        /// <param name="serviceProvider">Provider used to resolve registered plugin instances.</param>
+        /// <param name="symbolExpression">The expression that must contain a function-render symbol.</param>
+        /// <param name="moduleUids">Module UIDs whose function-render plugins may be resolved.</param>
+        /// <returns>A case-insensitive map keyed by declaring plugin type full name.</returns>
         public IReadOnlyDictionary<string, object> ResolveSymbolPlugins(IServiceProvider serviceProvider, string symbolExpression, IEnumerable<string> moduleUids)
         {
             if (!FunctionRenderSymbolHelper.HasFunctionRenderSymbol(symbolExpression) || serviceProvider == null || moduleUids == null)

@@ -40,6 +40,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.20.17 Improved PromptRange localization consistency and prompt tooling behavior.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -114,6 +117,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         private readonly Lazy<AIModelService> _aiModelService;
         private readonly Lazy<AIVectorService> _aiVectorService;
 
+        /// <summary>
+        /// Initializes prompt-result persistence and AI execution dependencies.
+        /// </summary>
+        /// <param name="repo">Repository for prompt-result records.</param>
+        /// <param name="serviceProvider">Dependency-injection provider used by the base service.</param>
+        /// <param name="promptItemService">Service used to resolve prompt definitions.</param>
+        /// <param name="promptRangeService">Service used to resolve PromptRange metadata.</param>
+        /// <param name="llModelService">Service used for legacy model operations.</param>
+        /// <param name="promptResultChatService">Service used for chat history operations.</param>
+        /// <param name="aiModelService">Lazy AI model service.</param>
+        /// <param name="aiVectorService">Lazy vector service.</param>
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
@@ -134,6 +148,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
+        /// <summary>
+        /// Retrieves all generated results for one prompt item in ascending identifier order.
+        /// </summary>
+        /// <param name="promptItemId">The prompt-item identifier.</param>
+        /// <returns>A task containing mapped prompt-result DTOs.</returns>
         public async Task<List<PromptResultDto>> GetByItemId(int promptItemId)
         {
             // var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId)
@@ -152,13 +171,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// get AI generateresult
+        /// Executes a prompt item using its model configuration and persists the generated result
+        /// when requested. The method dispatches by model type for chat, image, speech, transcription,
+        /// and embedding operations and can stream chat updates to the caller.
         /// </summary>
-        /// <param name="promptItem"></param>
-        /// <param name="userMessage"></param>
-        /// <param name="chatHistory"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
+        /// <param name="promptItem">The prompt definition, model binding, parameters, and expected-result metadata.</param>
+        /// <param name="userMessage">Optional user input appended to the prompt execution.</param>
+        /// <param name="chatHistory">Optional prior chat messages.</param>
+        /// <param name="onStreamEvent">Optional callback receiving streamed output events.</param>
+        /// <param name="executionOptions">Optional persistence and execution behavior.</param>
+        /// <returns>A task containing the generated prompt-result DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the prompt/model configuration is missing, invalid, or the selected AI operation fails.</exception>
         public async Task<PromptResultDto> SenparcGenerateResultAsync(
             PromptItemDto promptItem,
             string userMessage = null,
@@ -210,6 +233,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             //Legacy comment translated to English.
             var model = promptItem.AIModelDto
+                ?? (promptItem.ModelId <= 0
+                    ? BuildModelDtoFromDefaultSetting(Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting)
+                    : null)
                 ?? throw new NcfExceptionBase($"找不到 PromptItem（{promptItem.FullVersion}）对应的 AI 模型配置");
 
             #region Legacy section
@@ -377,6 +403,16 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return response;
         }
 
+        /// <summary>
+        /// Generates an image from a prompt, persists the structured result, optionally scores it,
+        /// and emits a final stream event.
+        /// </summary>
+        /// <param name="promptItem">The prompt definition and persistence metadata.</param>
+        /// <param name="model">The image-capable AI model configuration.</param>
+        /// <param name="runPrompt">The text sent to the image model.</param>
+        /// <param name="onStreamEvent">An optional callback for the final result event.</param>
+        /// <returns>A task containing the persisted image-generation result DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when image generation returns no usable image or the AI call fails.</exception>
         private async Task<PromptResultDto> ExecuteTextToImageAsync(
             PromptItemDto promptItem,
             AIModelDto model,
@@ -460,6 +496,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return this.Mapper.Map<PromptResultDto>(promptResult);
         }
 
+        /// <summary>
+        /// Generates an image payload through the AgentKernel path and retries once with
+        /// a compatibility HTTP client when the model and exception indicate a transport issue.
+        /// </summary>
+        /// <param name="promptItem">The prompt definition used to identify the runner.</param>
+        /// <param name="model">The image-capable AI model configuration.</param>
+        /// <param name="prompt">The image-generation prompt.</param>
+        /// <param name="scene">The diagnostic scene identifier.</param>
+        /// <returns>A task containing the generated image payload.</returns>
         private async Task<PromptTextToImageResultPayload> GenerateTextToImagePayloadViaAgentKernelAsync(
             PromptItemDto promptItem,
             AIModelDto model,
@@ -491,6 +536,16 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Executes one image-generation attempt, optionally using a caller-supplied HTTP client,
+        /// and converts the provider response into the persisted payload shape.
+        /// </summary>
+        /// <param name="promptItem">The prompt definition used to identify the runner.</param>
+        /// <param name="model">The image-capable AI model configuration.</param>
+        /// <param name="prompt">The image-generation prompt.</param>
+        /// <param name="scene">The diagnostic scene identifier.</param>
+        /// <param name="httpClient">An optional compatibility HTTP client.</param>
+        /// <returns>A task containing the generated image payload.</returns>
         private async Task<PromptTextToImageResultPayload> GenerateTextToImagePayloadViaAgentKernelCoreAsync(
             PromptItemDto promptItem,
             AIModelDto model,
@@ -535,6 +590,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 generatedImage.ImageUri);
         }
 
+        /// <summary>
+        /// Determines whether an image-generation exception qualifies for the compatibility-client retry path.
+        /// </summary>
+        /// <param name="model">The model configuration associated with the failed request.</param>
+        /// <param name="ex">The exception raised by the failed request.</param>
+        /// <returns><see langword="true"/> when the platform and transport failure are retryable.</returns>
         private static bool ShouldRetryTextToImageWithCompatClient(AIModelDto model, Exception ex)
         {
             if (model == null || ex == null)
@@ -550,6 +611,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return ContainsSslTransportError(ex);
         }
 
+        /// <summary>
+        /// Creates an HTTP/1.1-compatible client configured for TLS 1.2/1.3 and bounded connection timeouts.
+        /// </summary>
+        /// <returns>A configured compatibility HTTP client.</returns>
         private static HttpClient CreateTextToImageCompatibilityHttpClient()
         {
             var socketsHandler = new SocketsHttpHandler
@@ -571,6 +636,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             };
         }
 
+        /// <summary>
+        /// Converts prompt text to speech, stores the generated audio under application data,
+        /// persists the structured result, and emits a final stream event.
+        /// </summary>
+        /// <param name="promptItem">The prompt definition and persistence metadata.</param>
+        /// <param name="model">The text-to-speech model configuration.</param>
+        /// <param name="runPrompt">The text to synthesize.</param>
+        /// <param name="executionOptions">Optional voice, format, and speed settings.</param>
+        /// <param name="onStreamEvent">An optional callback for the final result event.</param>
+        /// <returns>A task containing the persisted speech result DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when audio generation returns no usable bytes or the AI call fails.</exception>
         private async Task<PromptResultDto> ExecuteTextToSpeechAsync(
             PromptItemDto promptItem,
             AIModelDto model,
@@ -682,6 +758,16 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return this.Mapper.Map<PromptResultDto>(promptResult);
         }
 
+        /// <summary>
+        /// Resolves an uploaded or encoded audio source, transcribes it through the configured
+        /// speech model, persists the transcript payload, and emits a final stream event.
+        /// </summary>
+        /// <param name="promptItem">The prompt definition and persistence metadata.</param>
+        /// <param name="model">The speech-to-text model configuration.</param>
+        /// <param name="executionOptions">Optional audio source and language settings.</param>
+        /// <param name="onStreamEvent">An optional callback for the final result event.</param>
+        /// <returns>A task containing the persisted transcription result DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the audio source or transcription result is invalid.</exception>
         private async Task<PromptResultDto> ExecuteSpeechToTextAsync(
             PromptItemDto promptItem,
             AIModelDto model,
@@ -790,6 +876,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return this.Mapper.Map<PromptResultDto>(promptResult);
         }
 
+        /// <summary>
+        /// Upserts prompt text into the configured vector store, optionally performs a similarity
+        /// search, persists the embedding payload, and emits a final stream event.
+        /// </summary>
+        /// <param name="promptItem">The prompt definition and persistence metadata.</param>
+        /// <param name="model">The text-embedding model configuration.</param>
+        /// <param name="runPrompt">The source text to embed.</param>
+        /// <param name="executionOptions">Optional vector database, collection, and search settings.</param>
+        /// <param name="onStreamEvent">An optional callback for the final result event.</param>
+        /// <returns>A task containing the persisted embedding result DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the source text, vector database, or embedding operation is invalid.</exception>
         private async Task<PromptResultDto> ExecuteTextEmbeddingAsync(
             PromptItemDto promptItem,
             AIModelDto model,
@@ -931,6 +1028,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return this.Mapper.Map<PromptResultDto>(promptResult);
         }
 
+        /// <summary>
+        /// Searches the vector representation associated with a prompt item and maps the nearest hits.
+        /// </summary>
+        /// <param name="promptResultId">The prompt-result identifier whose embedding payload identifies the source.</param>
+        /// <param name="query">The text query to embed and search.</param>
+        /// <param name="topK">The requested number of hits, bounded by the service maximum.</param>
+        /// <returns>A task containing the embedding search response.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the prompt item, model, vector store, or query is invalid.</exception>
         public async Task<PromptResult_TextEmbeddingSearchResponse> TextEmbeddingSearchAsync(
             int promptResultId,
             string query,
@@ -1007,11 +1112,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Continues a stored prompt-result chat using the supplied message and chat options.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="promptResultId">The prompt-result identifier whose stored chat history is continued.</param>
+        /// <param name="userMessage">The new user message.</param>
+        /// <param name="onStreamEvent">Optional callback receiving streamed output events.</param>
+        /// <returns>A task containing the updated chat result DTOs.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the prompt item or model configuration is invalid.</exception>
         public async Task<List<PromptResultChatDto>> ContinueChatAsync(
             int promptResultId,
             string userMessage,
@@ -1167,6 +1274,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return newChatDtos;
         }
 
+        /// <summary>
+        /// Stores a manually supplied score for a prompt result.
+        /// </summary>
+        /// <param name="id">The prompt-result identifier.</param>
+        /// <param name="score">The score assigned by the evaluator.</param>
+        /// <returns>A task containing the updated prompt result.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the result does not exist or the score is outside the accepted range.</exception>
         public async Task<PromptResult> ManualScoreAsync(int id, decimal score)
         {
             #region validate
@@ -1194,6 +1308,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return promptResult;
         }
 
+        /// <summary>
+        /// Evaluates a prompt result against serialized expected-result criteria.
+        /// </summary>
+        /// <param name="promptResultId">The prompt-result identifier.</param>
+        /// <param name="isRefresh">Whether an existing score should be recalculated.</param>
+        /// <param name="expectedResultsJson">Serialized expected-result criteria.</param>
+        /// <returns>A task containing the scored prompt result.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the result, prompt item, or expected-result definition is invalid.</exception>
         public async Task<PromptResult> RobotScoringAsync(int promptResultId, bool isRefresh, string expectedResultsJson)
         {
             List<string> list = expectedResultsJson.GetObject<List<string>>() ?? new List<string>();
@@ -1201,13 +1323,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// AI scoring
+        /// Evaluates a prompt result against a supplied expected-result list.
         /// </summary>
-        /// <param name="promptResultId"></param>
-        /// <param name="isRefresh"></param>
-        /// <param name="expectedResultList"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
+        /// <param name="promptResultId">The prompt-result identifier.</param>
+        /// <param name="isRefresh">Whether an existing score should be recalculated.</param>
+        /// <param name="expectedResultList">Expected result values used by the scoring prompt.</param>
+        /// <returns>A task containing the scored prompt result.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the result or scoring inputs are invalid.</exception>
         public async Task<PromptResult> RobotScoringAsync(int promptResultId, bool isRefresh, List<string> expectedResultList)
         {
             expectedResultList ??= new List<string>();
@@ -1224,7 +1346,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             await _promptItemService.UpdateExpectedResultsAsync(promptItem.Id, expectedResultList.ToJson());
 
 
-            // if user dont want force refreshing, and this promptResult is scored 
+            // if user dont want force refreshing, and this promptResult is scored
             if (!isRefresh && promptResult.RobotScore >= 0)
             {
                 throw new NcfExceptionBase("该结果已经评分过了, 请选择强制刷新");
@@ -1241,6 +1363,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return promptResult;
         }
 
+        /// <summary>
+        /// Evaluates a generated result against the prompt item's reference/scoring definition.
+        /// </summary>
+        /// <param name="promptItemId">The prompt-item identifier.</param>
+        /// <param name="context">Additional context supplied to the evaluator.</param>
+        /// <param name="result">The generated result text to score.</param>
+        /// <returns>A task containing the calculated score.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the prompt item or evaluator configuration is invalid.</exception>
         public async Task<decimal> EvaluateReferenceAsync(int promptItemId, string context, string result)
         {
             var promptItem = await _promptItemService.GetAsync(promptItemId);
@@ -1250,6 +1380,16 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return await EvaluateScoreAsync(promptItem, result, benchmark, context);
         }
 
+        /// <summary>
+        /// Scores generated text against expected-result rules, short-circuiting exact matches
+        /// and otherwise asking a configured chat model for a bounded numeric score.
+        /// </summary>
+        /// <param name="promptItem">The prompt item whose model configuration is used for scoring.</param>
+        /// <param name="scoringActualResult">The generated text being evaluated.</param>
+        /// <param name="expectedResultList">The expected-result rules.</param>
+        /// <param name="context">Optional context supplied only for evaluator understanding.</param>
+        /// <returns>A task containing a score rounded to one decimal place in the range 0 to 10.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when no scoring model is available or the model does not return a valid numeric score.</exception>
         private async Task<decimal> EvaluateScoreAsync(PromptItemDto promptItem, string scoringActualResult,
             List<string> expectedResultList, string context = null)
         {
@@ -1391,6 +1531,19 @@ Apple
             return decimal.Round(score, 1, MidpointRounding.AwayFromZero);
         }
 
+        /// <summary>
+        /// Executes a chat request and, for forbidden-status failures, attempts deployment-name
+        /// and system-default configuration fallbacks with diagnostic details.
+        /// </summary>
+        /// <param name="model">The primary chat model configuration.</param>
+        /// <param name="chatOptions">The options sent to the chat model.</param>
+        /// <param name="runnerName">The runner name used by AgentKernel.</param>
+        /// <param name="prompt">The current prompt text.</param>
+        /// <param name="history">Prior chat messages.</param>
+        /// <param name="scene">The diagnostic operation identifier.</param>
+        /// <param name="inStreamItemProceessing">Optional callback for streamed response updates.</param>
+        /// <returns>A task containing model output and usage details.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the primary and all eligible fallback configurations fail.</exception>
         private async Task<(string Output, UsageDetails Usage)> ExecuteChatWithDefaultFallbackAsync(
             AIModelDto model,
             ChatOptions chatOptions,
@@ -1531,6 +1684,11 @@ Apple
             }
         }
 
+        /// <summary>
+        /// Builds a compact diagnostic list of alternative chat models, excluding one model identifier.
+        /// </summary>
+        /// <param name="excludeModelId">The model identifier to omit from the candidate list.</param>
+        /// <returns>A diagnostic string, including a failure marker when model lookup fails.</returns>
         private async Task<string> BuildChatModelCandidatesDiagnosticAsync(int excludeModelId)
         {
             try
@@ -1559,6 +1717,20 @@ Apple
             }
         }
 
+        /// <summary>
+        /// Creates an AgentKernel chat session, installs history, runs the request, resolves usage,
+        /// and rejects empty model output.
+        /// </summary>
+        /// <param name="model">The chat-compatible model configuration.</param>
+        /// <param name="chatOptions">The chat-generation options.</param>
+        /// <param name="runnerName">The AgentKernel runner name.</param>
+        /// <param name="prompt">The prompt text to send.</param>
+        /// <param name="history">Prior chat messages.</param>
+        /// <param name="scene">The diagnostic operation identifier.</param>
+        /// <param name="inStreamItemProceessing">Optional streamed update callback.</param>
+        /// <param name="overrideSetting">Optional global AI setting used for fallback execution.</param>
+        /// <returns>A task containing model output and usage details.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the model is incompatible, the session cannot be created, or output is empty.</exception>
         private async Task<(string Output, UsageDetails Usage)> ExecuteChatCoreAsync(
             AIModelDto model,
             ChatOptions chatOptions,
@@ -1600,6 +1772,12 @@ Apple
             return result;
         }
 
+        /// <summary>
+        /// Creates an independent copy of chat options, including stop sequences, tools,
+        /// and additional provider properties.
+        /// </summary>
+        /// <param name="chatOptions">The options to copy.</param>
+        /// <returns>A mutable copy, or empty options when the input is null.</returns>
         private static ChatOptions CloneChatOptions(ChatOptions chatOptions)
         {
             if (chatOptions == null)
@@ -1632,6 +1810,13 @@ Apple
             return cloned;
         }
 
+        /// <summary>
+        /// Disables Ollama thinking when the configured output budget is too small to reliably
+        /// produce visible response text.
+        /// </summary>
+        /// <param name="chatOptions">The mutable options to adjust.</param>
+        /// <param name="model">The model configuration used for diagnostics.</param>
+        /// <param name="scene">The diagnostic operation identifier.</param>
         private static void ApplyOllamaLowTokenCompatibility(
             ChatOptions chatOptions,
             AIModelDto model,
@@ -1653,6 +1838,16 @@ Apple
                 $"{scene} 检测到 Ollama 低输出 Token 预算（MaxToken={chatOptions.MaxOutputTokens}），已设置 think=false，避免思考过程耗尽预算而未生成可显示正文。Model={BuildModelDiagnosticInfo(model)}");
         }
 
+        /// <summary>
+        /// Verifies that a chat response contains visible text and reports token-budget exhaustion
+        /// with a more actionable exception message.
+        /// </summary>
+        /// <param name="output">The returned model text.</param>
+        /// <param name="usage">The resolved usage details.</param>
+        /// <param name="maxOutputTokens">The configured output-token limit.</param>
+        /// <param name="model">The model configuration used for diagnostics.</param>
+        /// <param name="scene">The diagnostic operation identifier.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when no visible output was returned.</exception>
         private static void EnsureChatOutputPresent(
             string output,
             PromptUsageInfo usage,
@@ -1679,6 +1874,12 @@ Apple
                 $"AI 调用未返回可显示正文（{scene}）。模型：{BuildModelDiagnosticInfo(model)}");
         }
 
+        /// <summary>
+        /// Determines whether the configured global AI setting contains enough endpoint,
+        /// credential, and model information for a chat fallback.
+        /// </summary>
+        /// <param name="defaultSetting">The global AI setting to validate.</param>
+        /// <returns><see langword="true"/> when the setting can execute a chat request.</returns>
         private static bool CanUseDefaultChatFallback(SenparcAiSetting defaultSetting)
         {
             if (defaultSetting == null || defaultSetting.AiPlatform == AiPlatform.UnSet)
@@ -1704,6 +1905,11 @@ Apple
             };
         }
 
+        /// <summary>
+        /// Converts the global AI setting into a chat-model DTO used by the fallback path.
+        /// </summary>
+        /// <param name="defaultSetting">The global AI setting.</param>
+        /// <returns>A chat-model DTO, or <see langword="null"/> when no setting is supplied.</returns>
         private static AIModelDto BuildModelDtoFromDefaultSetting(SenparcAiSetting defaultSetting)
         {
             if (defaultSetting == null)
@@ -1732,6 +1938,13 @@ Apple
             };
         }
 
+        /// <summary>
+        /// Compares two chat configurations by platform, normalized endpoint, model,
+        /// deployment, and API key.
+        /// </summary>
+        /// <param name="left">The first model configuration.</param>
+        /// <param name="right">The second model configuration.</param>
+        /// <returns><see langword="true"/> when both configurations represent the same chat target.</returns>
         private static bool IsSameChatConfig(AIModelDto left, AIModelDto right)
         {
             if (left == null || right == null)
@@ -1749,6 +1962,13 @@ Apple
                    && string.Equals(left.ApiKey, right.ApiKey, StringComparison.Ordinal);
         }
 
+        /// <summary>
+        /// Returns the supplied chat model or creates a chat-compatible copy for a model
+        /// whose persisted type is another AI operation.
+        /// </summary>
+        /// <param name="model">The model configuration to normalize.</param>
+        /// <param name="scene">The diagnostic operation identifier.</param>
+        /// <returns>A chat-compatible model DTO, or <see langword="null"/> for null input.</returns>
         private static AIModelDto EnsureChatCompatibleModel(AIModelDto model, string scene)
         {
             if (model == null)
@@ -1793,6 +2013,13 @@ Apple
             return chatModel;
         }
 
+        /// <summary>
+        /// Builds an alternate Azure OpenAI or NeuCharAI model configuration that uses
+        /// <see cref="AIModelDto.ModelId"/> as the deployment name.
+        /// </summary>
+        /// <param name="model">The primary model configuration.</param>
+        /// <param name="fallbackModel">Receives the alternate configuration when one is possible.</param>
+        /// <returns><see langword="true"/> when an alternate deployment configuration was created.</returns>
         private static bool TryBuildAlternateDeploymentModel(AIModelDto model, out AIModelDto fallbackModel)
         {
             fallbackModel = null;
@@ -1836,6 +2063,18 @@ Apple
             return true;
         }
 
+        /// <summary>
+        /// Runs a chat request in streaming or non-streaming mode, handling provider-specific
+        /// stream fallbacks and extracting visible output plus usage details.
+        /// </summary>
+        /// <param name="iWantToRun">The configured AgentKernel runner.</param>
+        /// <param name="prompt">The prompt text to execute.</param>
+        /// <param name="agentSession">The optional chat session containing history.</param>
+        /// <param name="model">The model configuration used for diagnostics and retries.</param>
+        /// <param name="scene">The diagnostic operation identifier.</param>
+        /// <param name="inStreamItemProceessing">Optional callback receiving response updates.</param>
+        /// <returns>A task containing response text and usage details.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when all stream and fallback attempts fail.</exception>
         private async Task<(string Output, UsageDetails Usage)> RunChatAndExtractAsync(
             IWantToRun iWantToRun,
             string prompt,
@@ -1938,6 +2177,11 @@ Apple
             return (output, aiResult.Result?.Usage);
         }
 
+        /// <summary>
+        /// Extracts text from an agent update's direct text field or text-content entries.
+        /// </summary>
+        /// <param name="update">The response update to inspect.</param>
+        /// <returns>The available text, or an empty string when the update has no text.</returns>
         private static string GetAgentResponseUpdateText(AgentResponseUpdate update)
         {
             if (!string.IsNullOrEmpty(update?.Text))
@@ -1952,6 +2196,13 @@ Apple
                 ?? Enumerable.Empty<string>());
         }
 
+        /// <summary>
+        /// Chooses the normal response text, falling back to accumulated streamed text
+        /// when the normal response is empty.
+        /// </summary>
+        /// <param name="output">The response text returned by the provider.</param>
+        /// <param name="streamedText">Text accumulated from stream updates.</param>
+        /// <returns>The text that should be persisted and displayed.</returns>
         private static string ResolveChatOutput(string output, string streamedText)
         {
             return string.IsNullOrWhiteSpace(output) && !string.IsNullOrWhiteSpace(streamedText)
@@ -1959,6 +2210,17 @@ Apple
                 : output ?? string.Empty;
         }
 
+        /// <summary>
+        /// Executes a non-streaming chat request and retries once without the existing session
+        /// when session-bound execution fails.
+        /// </summary>
+        /// <param name="iWantToRun">The configured AgentKernel runner.</param>
+        /// <param name="prompt">The prompt text to execute.</param>
+        /// <param name="agentSession">The optional chat session containing history.</param>
+        /// <param name="model">The model configuration used for diagnostics.</param>
+        /// <param name="scene">The diagnostic operation identifier.</param>
+        /// <returns>A task containing response text and usage details.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the request and retry both fail.</exception>
         private async Task<(string Output, UsageDetails Usage)> RunChatDirectAsync(
             IWantToRun iWantToRun,
             string prompt,
@@ -2007,6 +2269,14 @@ Apple
             }
         }
 
+        /// <summary>
+        /// Converts a provider exception into an NCF exception containing model, fallback,
+        /// forbidden-status, TLS, and nested-error diagnostics.
+        /// </summary>
+        /// <param name="ex">The original provider exception.</param>
+        /// <param name="model">The model configuration associated with the request.</param>
+        /// <param name="scene">The diagnostic operation identifier.</param>
+        /// <returns>An NCF exception preserving <paramref name="ex"/> as its inner exception.</returns>
         private static NcfExceptionBase BuildAiCallException(Exception ex, AIModelDto model, string scene)
         {
             var detail = BuildModelDiagnosticInfo(model);
@@ -2046,6 +2316,10 @@ Apple
             return new NcfExceptionBase(messageBuilder.ToString(), ex);
         }
 
+        /// <summary>
+        /// Builds a redacted diagnostic description of the configured default chat setting.
+        /// </summary>
+        /// <returns>A diagnostic string without exposing secret values.</returns>
         private static string BuildDefaultChatSettingDiagnosticInfo()
         {
             try
@@ -2073,6 +2347,13 @@ Apple
             }
         }
 
+        /// <summary>
+        /// Validates that an AgentKernel chat result exists and contains a successful provider result.
+        /// </summary>
+        /// <param name="aiResult">The result returned by the AI service.</param>
+        /// <param name="model">The model configuration used for diagnostics.</param>
+        /// <param name="scene">The diagnostic operation identifier.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when the result is null or indicates a failed request.</exception>
         private static void EnsureRunChatSucceeded(SenparcKernelAiResult<string> aiResult, AIModelDto model, string scene)
         {
             if (aiResult?.Result != null)
@@ -2089,6 +2370,11 @@ Apple
             throw BuildAiCallException(new Exception(fallback), model, scene);
         }
 
+        /// <summary>
+        /// Builds a redacted diagnostic description of a model configuration without exposing its API key.
+        /// </summary>
+        /// <param name="model">The model configuration to describe.</param>
+        /// <returns>A diagnostic string, or a null marker when the model is null.</returns>
         private static string BuildModelDiagnosticInfo(AIModelDto model)
         {
             if (model == null)
@@ -2104,11 +2390,22 @@ Apple
             return $"AIModelDbId={model.Id}, ConfigType={model.ConfigModelType}, ModelId={model.ModelId ?? "(null)"}, Alias={model.Alias ?? "(null)"}, Platform={model.AiPlatform}, Deployment={model.DeploymentName ?? "(null)"}, Endpoint={endpoint ?? "(null)"}, ApiVersion={model.ApiVersion ?? "(null)"}, ApiKey={apiKeyStatus}";
         }
 
+        /// <summary>
+        /// Creates a short, time-based token used to correlate AI attempt diagnostics.
+        /// </summary>
+        /// <returns>A compact trace token.</returns>
         private static string CreateTraceToken()
         {
             return Guid.NewGuid().ToString("N").Substring(0, 8);
         }
 
+        /// <summary>
+        /// Normalizes an endpoint for diagnostic comparison and removes trailing slashes
+        /// without changing the endpoint's functional scheme or host.
+        /// </summary>
+        /// <param name="platform">The platform associated with the endpoint.</param>
+        /// <param name="endpoint">The endpoint to normalize.</param>
+        /// <returns>The normalized endpoint, or <see langword="null"/> for empty input.</returns>
         private static string NormalizeEndpointForDiagnostics(AiPlatform platform, string endpoint)
         {
             if (string.IsNullOrWhiteSpace(endpoint))
@@ -2125,6 +2422,11 @@ Apple
             return normalized;
         }
 
+        /// <summary>
+        /// Flattens an exception and its inner exceptions into a single diagnostic message chain.
+        /// </summary>
+        /// <param name="ex">The exception chain to flatten.</param>
+        /// <returns>The joined exception messages, or an empty string for null input.</returns>
         private static string FlattenExceptionMessages(Exception ex)
         {
             if (ex == null)
@@ -2154,6 +2456,11 @@ Apple
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Determines whether an exception chain contains a provider HTTP 403/Forbidden marker.
+        /// </summary>
+        /// <param name="ex">The exception chain to inspect.</param>
+        /// <returns><see langword="true"/> when a forbidden-status marker is found.</returns>
         private static bool ContainsForbiddenStatus(Exception ex)
         {
             if (ex == null)
@@ -2176,6 +2483,12 @@ Apple
             return has403 && hasForbidden;
         }
 
+        /// <summary>
+        /// Determines whether a vector database type represents an in-memory store,
+        /// including the legacy <c>VolatileInMemory</c> name.
+        /// </summary>
+        /// <param name="vectorDbType">The vector database type.</param>
+        /// <returns><see langword="true"/> for an in-memory vector store.</returns>
         private static bool IsInMemoryVectorDbType(VectorDBType vectorDbType)
         {
             if (vectorDbType == VectorDBType.Memory)
@@ -2188,6 +2501,16 @@ Apple
             return string.Equals(typeName, "VolatileInMemory", StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Rehydrates the source document into an in-memory vector store before searching,
+        /// because such stores do not retain data across independent runner instances.
+        /// </summary>
+        /// <param name="model">The embedding model configuration.</param>
+        /// <param name="vectorDto">The target vector database metadata.</param>
+        /// <param name="embeddingPayload">The persisted embedding payload containing source text.</param>
+        /// <param name="promptResultId">The prompt-result identifier used as a source fallback.</param>
+        /// <param name="scene">The diagnostic operation identifier.</param>
+        /// <returns>A task that completes after the source is upserted when required.</returns>
         private async Task EnsureTextEmbeddingSourceForInMemorySearchAsync(
             AIModelDto model,
             AIVectorDto vectorDto,
@@ -2240,6 +2563,12 @@ Apple
             });
         }
 
+        /// <summary>
+        /// Resolves a persisted embedding source identifier, falling back to the prompt-result identifier.
+        /// </summary>
+        /// <param name="rawSourceId">The persisted source identifier.</param>
+        /// <param name="promptResultId">The prompt-result identifier used as fallback.</param>
+        /// <returns>A positive source identifier.</returns>
         private static ulong ResolveEmbeddingSourceId(string rawSourceId, int promptResultId)
         {
             if (ulong.TryParse(rawSourceId, out var parsed) && parsed > 0)
@@ -2250,6 +2579,11 @@ Apple
             return (ulong)Math.Max(promptResultId, 1);
         }
 
+        /// <summary>
+        /// Determines whether an exception chain contains common TLS or connection-reset markers.
+        /// </summary>
+        /// <param name="ex">The exception chain to inspect.</param>
+        /// <returns><see langword="true"/> when the chain indicates a transport-layer SSL failure.</returns>
         private static bool ContainsSslTransportError(Exception ex)
         {
             if (ex == null)
@@ -2269,6 +2603,17 @@ Apple
                    || chain.Contains("transport connection", StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Creates an embedding search runner, applies provider compatibility settings,
+        /// executes the vector search, and maps the returned documents.
+        /// </summary>
+        /// <param name="model">The embedding model configuration.</param>
+        /// <param name="vectorDto">The vector database metadata.</param>
+        /// <param name="collectionName">The normalized collection name.</param>
+        /// <param name="query">The text query.</param>
+        /// <param name="topK">The maximum number of hits.</param>
+        /// <param name="scene">The diagnostic operation identifier.</param>
+        /// <returns>A task containing mapped search hits.</returns>
         private async Task<List<PromptTextEmbeddingSearchHitPayload>> SearchTextEmbeddingStoreAsync(
             AIModelDto model,
             AIVectorDto vectorDto,
@@ -2295,6 +2640,13 @@ Apple
             return MapTextEmbeddingSearchHits(searchResults);
         }
 
+        /// <summary>
+        /// Replaces the embedding generator when the selected model does not support
+        /// the dimensions request parameter expected by the default client path.
+        /// </summary>
+        /// <param name="iWantToRun">The configured AI runner.</param>
+        /// <param name="model">The embedding model configuration.</param>
+        /// <param name="scene">The diagnostic operation identifier.</param>
         private static void ApplyEmbeddingRequestCompatibility(IWantToRun iWantToRun, AIModelDto model, string scene)
         {
             if (iWantToRun?.Kernel?.EmbeddingClient is not EmbeddingClient embeddingClient)
@@ -2315,6 +2667,12 @@ Apple
                 $"{scene} 检测到模型不支持 dimensions 请求参数，已切换为无 dimensions 请求。Model={BuildModelDiagnosticInfo(model)}");
         }
 
+        /// <summary>
+        /// Determines whether the model identifier matches an embedding family known to accept
+        /// the dimensions request parameter.
+        /// </summary>
+        /// <param name="model">The embedding model configuration.</param>
+        /// <returns><see langword="true"/> when a supported model-family hint is present.</returns>
         private static bool SupportsEmbeddingDimensionsParameter(AIModelDto model)
         {
             if (model == null)
@@ -2347,6 +2705,11 @@ Apple
             return false;
         }
 
+        /// <summary>
+        /// Maps vector-store documents into the PromptRange search-hit payload shape.
+        /// </summary>
+        /// <param name="hits">The documents returned by the vector store.</param>
+        /// <returns>A materialized list of mapped hits.</returns>
         private static List<PromptTextEmbeddingSearchHitPayload> MapTextEmbeddingSearchHits(IEnumerable<TextSearchDocument> hits)
         {
             if (hits == null)
@@ -2364,6 +2727,13 @@ Apple
             }).ToList();
         }
 
+        /// <summary>
+        /// Builds a safe, bounded vector collection name from an explicit name or prompt/model metadata.
+        /// </summary>
+        /// <param name="rawCollectionName">The caller-supplied collection name.</param>
+        /// <param name="promptItem">The prompt item used for a derived name.</param>
+        /// <param name="model">The model used for a derived name.</param>
+        /// <returns>A normalized collection name no longer than 128 characters.</returns>
         private static string BuildEmbeddingCollectionName(string rawCollectionName, PromptItemDto promptItem, AIModelDto model)
         {
             var source = rawCollectionName;
@@ -2381,6 +2751,11 @@ Apple
             return normalized.Length > 128 ? normalized.Substring(0, 128) : normalized;
         }
 
+        /// <summary>
+        /// Builds a normalized, bounded model suffix for a derived embedding collection name.
+        /// </summary>
+        /// <param name="model">The model configuration to inspect.</param>
+        /// <returns>A normalized suffix, or <c>default</c> when no model identity is available.</returns>
         private static string BuildEmbeddingModelCollectionSuffix(AIModelDto model)
         {
             var raw = model?.ModelId;
@@ -2406,6 +2781,10 @@ Apple
             return normalized.Length > 32 ? normalized.Substring(0, 32) : normalized;
         }
 
+        /// <summary>
+        /// Creates a positive process-wide embedding source identifier.
+        /// </summary>
+        /// <returns>A monotonically increasing source identifier.</returns>
         private static ulong CreateEmbeddingSourceId()
         {
             var next = Interlocked.Increment(ref _embeddingSourceCounter);
@@ -2418,6 +2797,11 @@ Apple
             return (ulong)next;
         }
 
+        /// <summary>
+        /// Clamps a requested embedding search size to the supported range.
+        /// </summary>
+        /// <param name="rawTopK">The requested hit count.</param>
+        /// <returns>A value between 1 and <see cref="MaxEmbeddingSearchTopK"/>.</returns>
         private static int NormalizeEmbeddingSearchTopK(int? rawTopK)
         {
             var topK = rawTopK ?? DefaultEmbeddingSearchTopK;
@@ -2434,11 +2818,21 @@ Apple
             return topK;
         }
 
+        /// <summary>
+        /// Normalizes a text-to-speech voice name and applies the default voice.
+        /// </summary>
+        /// <param name="rawVoice">The requested voice name.</param>
+        /// <returns>A trimmed lowercase voice name.</returns>
         private static string NormalizeTextToSpeechVoice(string rawVoice)
         {
             return string.IsNullOrWhiteSpace(rawVoice) ? "alloy" : rawVoice.Trim().ToLowerInvariant();
         }
 
+        /// <summary>
+        /// Restricts a text-to-speech format to the supported output formats.
+        /// </summary>
+        /// <param name="rawFormat">The requested audio format.</param>
+        /// <returns>A supported lowercase format, defaulting to <c>mp3</c>.</returns>
         private static string NormalizeTextToSpeechFormat(string rawFormat)
         {
             return rawFormat?.Trim().ToLowerInvariant() switch
@@ -2453,6 +2847,11 @@ Apple
             };
         }
 
+        /// <summary>
+        /// Normalizes a text-to-speech speed ratio to the supported range.
+        /// </summary>
+        /// <param name="rawSpeed">The requested speed ratio.</param>
+        /// <returns>A finite speed ratio between 0.5 and 2.0.</returns>
         private static float NormalizeTextToSpeechSpeed(float? rawSpeed)
         {
             var speed = rawSpeed ?? 1.0f;
@@ -2464,6 +2863,13 @@ Apple
             return Math.Clamp(speed, 0.5f, 2.0f);
         }
 
+        /// <summary>
+        /// Resolves an existing application audio asset or decodes and saves a Base64 upload
+        /// for speech-to-text processing.
+        /// </summary>
+        /// <param name="options">The speech-to-text audio source options.</param>
+        /// <returns>A task containing the absolute path, relative path, file name, content type, and byte length.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the source is missing, invalid, outside the allowed directory, or unavailable.</exception>
         private async Task<(string AudioPath, string AudioRelativePath, string AudioFileName, string AudioContentType, long AudioBytesLength)> ResolveSpeechToTextAudioAsync(
             PromptSpeechToTextExecutionOptions options)
         {
@@ -2532,6 +2938,13 @@ Apple
                 audioBytes.LongLength);
         }
 
+        /// <summary>
+        /// Decodes a raw or data-URI Base64 audio payload and extracts its declared content type.
+        /// </summary>
+        /// <param name="rawAudioBase64">The Base64 payload or data URI.</param>
+        /// <param name="contentType">Receives the data-URI content type when declared.</param>
+        /// <returns>The decoded bytes, or <see langword="null"/> for empty input.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the payload is not valid Base64.</exception>
         private static byte[] DecodeAudioBase64(string rawAudioBase64, out string contentType)
         {
             contentType = null;
@@ -2563,6 +2976,12 @@ Apple
             }
         }
 
+        /// <summary>
+        /// Resolves an audio file extension from the file name or MIME content type.
+        /// </summary>
+        /// <param name="fileName">The optional original file name.</param>
+        /// <param name="contentType">The optional MIME content type.</param>
+        /// <returns>A normalized extension, defaulting to <c>.mp3</c>.</returns>
         private static string ResolveAudioExtension(string fileName, string contentType)
         {
             var extension = Path.GetExtension(fileName);
@@ -2588,6 +3007,11 @@ Apple
             };
         }
 
+        /// <summary>
+        /// Converts a supported text-to-speech format into a file extension.
+        /// </summary>
+        /// <param name="format">The requested audio format.</param>
+        /// <returns>The corresponding normalized extension.</returns>
         private static string NormalizeAudioExtensionByFormat(string format)
         {
             var normalizedFormat = NormalizeTextToSpeechFormat(format);
@@ -2603,6 +3027,11 @@ Apple
             };
         }
 
+        /// <summary>
+        /// Maps an audio extension to its MIME content type.
+        /// </summary>
+        /// <param name="extension">The audio extension.</param>
+        /// <returns>The matching MIME type, or <c>application/octet-stream</c> when unknown.</returns>
         private static string DetectAudioContentType(string extension)
         {
             return extension?.Trim().ToLowerInvariant() switch
@@ -2622,6 +3051,15 @@ Apple
             };
         }
 
+        /// <summary>
+        /// Saves audio bytes under the dated PromptRange App_Data directory and returns
+        /// the application-relative asset path.
+        /// </summary>
+        /// <param name="audioBytes">The audio bytes to save.</param>
+        /// <param name="subDirectory">The PromptRange subdirectory below the dated root.</param>
+        /// <param name="extension">The desired audio extension.</param>
+        /// <param name="filePrefix">The generated file-name prefix.</param>
+        /// <returns>A task containing the normalized relative asset path.</returns>
         private static async Task<string> SavePromptAudioToAppDataAsync(
             byte[] audioBytes,
             string subDirectory,
@@ -2648,6 +3086,11 @@ Apple
             return relativePath.Replace('\\', '/');
         }
 
+        /// <summary>
+        /// Builds the API URL used to retrieve a locally stored PromptRange audio asset.
+        /// </summary>
+        /// <param name="localRelativePath">The application-relative asset path.</param>
+        /// <returns>An escaped PromptRange audio retrieval URL.</returns>
         private static string BuildPromptAudioApiUrl(string localRelativePath)
         {
             var normalizedPath = (localRelativePath ?? string.Empty)
@@ -2657,6 +3100,11 @@ Apple
             return $"/api/Senparc.Xncf.PromptRange/PromptAudio/Get?path={escapedPath}";
         }
 
+        /// <summary>
+        /// Normalizes an audio extension and applies the MP3 default.
+        /// </summary>
+        /// <param name="extension">The extension to normalize.</param>
+        /// <returns>A lowercase extension beginning with a period.</returns>
         private static string NormalizeAudioExtension(string extension)
         {
             if (string.IsNullOrWhiteSpace(extension))
@@ -2669,6 +3117,11 @@ Apple
                 : $".{extension.Trim().ToLowerInvariant()}";
         }
 
+        /// <summary>
+        /// Normalizes an application-relative asset path and rejects parent-directory traversal.
+        /// </summary>
+        /// <param name="path">The path to normalize.</param>
+        /// <returns>The normalized relative path, or <see langword="null"/> when traversal is detected.</returns>
         private static string NormalizePromptAssetRelativePath(string path)
         {
             var normalized = (path ?? string.Empty).Trim().Replace('\\', '/');
@@ -2686,6 +3139,12 @@ Apple
             return normalized;
         }
 
+        /// <summary>
+        /// Resolves an allowed PromptRange asset path below the application App_Data directory.
+        /// </summary>
+        /// <param name="relativePath">The application-relative asset path.</param>
+        /// <returns>The normalized absolute file-system path.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the path is invalid or escapes App_Data.</exception>
         private static string BuildAppDataAbsolutePath(string relativePath)
         {
             var appDataRoot = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "App_Data"));
@@ -2705,6 +3164,15 @@ Apple
             return fullPath;
         }
 
+        /// <summary>
+        /// Builds the persisted image payload, preferring locally saved image bytes and
+        /// retaining a provider URL when only a remote URI is available.
+        /// </summary>
+        /// <param name="prompt">The original image prompt.</param>
+        /// <param name="revisedPrompt">The provider-revised prompt, when supplied.</param>
+        /// <param name="imageBytes">The provider image bytes, when supplied.</param>
+        /// <param name="imageUri">The provider image URI, when supplied.</param>
+        /// <returns>A task containing the normalized image result payload.</returns>
         private async Task<PromptTextToImageResultPayload> BuildTextToImagePayloadAsync(
             string prompt,
             string revisedPrompt,
@@ -2743,6 +3211,12 @@ Apple
             return payload;
         }
 
+        /// <summary>
+        /// Saves image bytes under the dated PromptRange App_Data directory.
+        /// </summary>
+        /// <param name="imageBytes">The image bytes to save.</param>
+        /// <param name="extension">The image extension.</param>
+        /// <returns>A task containing the normalized relative asset path.</returns>
         private static async Task<string> SaveImageToAppDataAsync(byte[] imageBytes, string extension)
         {
             var normalizedExtension = NormalizeImageExtension(extension);
@@ -2765,6 +3239,11 @@ Apple
             return relativePath.Replace('\\', '/');
         }
 
+        /// <summary>
+        /// Builds the API URL used to retrieve a locally stored PromptRange image asset.
+        /// </summary>
+        /// <param name="localRelativePath">The application-relative asset path.</param>
+        /// <returns>An escaped PromptRange image retrieval URL.</returns>
         private static string BuildPromptImageApiUrl(string localRelativePath)
         {
             var normalizedPath = (localRelativePath ?? string.Empty)
@@ -2774,6 +3253,11 @@ Apple
             return $"/api/Senparc.Xncf.PromptRange/PromptImage/Get?path={escapedPath}";
         }
 
+        /// <summary>
+        /// Normalizes an image extension and applies the PNG default.
+        /// </summary>
+        /// <param name="extension">The extension to normalize.</param>
+        /// <returns>A lowercase extension beginning with a period.</returns>
         private static string NormalizeImageExtension(string extension)
         {
             if (string.IsNullOrWhiteSpace(extension))
@@ -2786,6 +3270,12 @@ Apple
                 : $".{extension.ToLowerInvariant()}";
         }
 
+        /// <summary>
+        /// Detects a common image format from magic bytes, then falls back to the remote URL extension.
+        /// </summary>
+        /// <param name="imageBytes">The image bytes to inspect.</param>
+        /// <param name="remoteImageUrl">An optional remote URL used as a secondary hint.</param>
+        /// <returns>The selected file extension and MIME content type.</returns>
         private static (string Extension, string ContentType) DetectImageFormat(byte[] imageBytes, string remoteImageUrl)
         {
             if (imageBytes != null && imageBytes.Length >= 8)
@@ -2827,6 +3317,11 @@ Apple
             return (".png", "image/png");
         }
 
+        /// <summary>
+        /// Detects an image MIME type from the absolute URL path extension.
+        /// </summary>
+        /// <param name="remoteImageUrl">The remote image URL.</param>
+        /// <returns>The detected MIME type, or <see langword="null"/> when it cannot be determined.</returns>
         private static string DetectImageContentTypeFromUrl(string remoteImageUrl)
         {
             if (string.IsNullOrWhiteSpace(remoteImageUrl))
@@ -2850,6 +3345,11 @@ Apple
             };
         }
 
+        /// <summary>
+        /// Estimates token usage from text length using the service's conservative four-character approximation.
+        /// </summary>
+        /// <param name="text">The text whose estimated token count is required.</param>
+        /// <returns>Zero for empty input; otherwise, at least one estimated token.</returns>
         private static int EstimateTokenCount(string text)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -2861,6 +3361,12 @@ Apple
             return Math.Max(1, (int)Math.Ceiling(effectiveLength / 4d));
         }
 
+        /// <summary>
+        /// Extracts scoreable text from a stored result, translating structured image,
+        /// speech, and embedding payloads into diagnostic text when possible.
+        /// </summary>
+        /// <param name="promptResult">The stored result to convert.</param>
+        /// <returns>The text submitted to the scoring evaluator.</returns>
         private string GetResultTextForScoring(PromptResult promptResult)
         {
             var fallbackResult = promptResult?.ResultString ?? string.Empty;
@@ -2923,6 +3429,12 @@ Apple
             return fallbackResult;
         }
 
+        /// <summary>
+        /// Attempts to deserialize and validate a structured text-to-image result payload.
+        /// </summary>
+        /// <param name="rawResult">The serialized result text.</param>
+        /// <param name="payload">Receives the payload when parsing and type validation succeed.</param>
+        /// <returns><see langword="true"/> when a valid text-to-image payload is found.</returns>
         private static bool TryParseTextToImagePayload(string rawResult, out PromptTextToImageResultPayload payload)
         {
             payload = null;
@@ -2946,6 +3458,12 @@ Apple
             }
         }
 
+        /// <summary>
+        /// Attempts to deserialize and validate a structured text-to-speech result payload.
+        /// </summary>
+        /// <param name="rawResult">The serialized result text.</param>
+        /// <param name="payload">Receives the payload when parsing and type validation succeed.</param>
+        /// <returns><see langword="true"/> when a valid text-to-speech payload is found.</returns>
         private static bool TryParseTextToSpeechPayload(string rawResult, out PromptTextToSpeechResultPayload payload)
         {
             payload = null;
@@ -2969,6 +3487,12 @@ Apple
             }
         }
 
+        /// <summary>
+        /// Attempts to deserialize and validate a structured speech-to-text result payload.
+        /// </summary>
+        /// <param name="rawResult">The serialized result text.</param>
+        /// <param name="payload">Receives the payload when parsing and type validation succeed.</param>
+        /// <returns><see langword="true"/> when a valid speech-to-text payload is found.</returns>
         private static bool TryParseSpeechToTextPayload(string rawResult, out PromptSpeechToTextResultPayload payload)
         {
             payload = null;
@@ -2992,6 +3516,12 @@ Apple
             }
         }
 
+        /// <summary>
+        /// Attempts to deserialize and validate a structured text-embedding result payload.
+        /// </summary>
+        /// <param name="rawResult">The serialized result text.</param>
+        /// <param name="payload">Receives the payload when parsing and type validation succeed.</param>
+        /// <returns><see langword="true"/> when a valid text-embedding payload is found.</returns>
         private static bool TryParseTextEmbeddingPayload(string rawResult, out PromptTextEmbeddingResultPayload payload)
         {
             payload = null;
@@ -3015,6 +3545,11 @@ Apple
             }
         }
 
+        /// <summary>
+        /// Deletes all prompt results belonging to the supplied prompt-item identifiers.
+        /// </summary>
+        /// <param name="ids">The prompt-item identifiers whose results should be removed.</param>
+        /// <returns>A task that completes after deletion.</returns>
         public async Task<Boolean> BatchDeleteWithItemId(List<int> ids)
         {
             foreach (var id in ids)
@@ -3032,6 +3567,11 @@ Apple
             return true;
         }
 
+        /// <summary>
+        /// Builds AgentKernel chat-client options with an in-memory chat-history provider.
+        /// </summary>
+        /// <param name="chatOptions">The chat-generation options to attach.</param>
+        /// <returns>AgentKernel chat-client options for the request.</returns>
         private static ChatClientAgentOptions BuildChatClientAgentOptions(ChatOptions chatOptions)
         {
             return new ChatClientAgentOptions
@@ -3041,6 +3581,11 @@ Apple
             };
         }
 
+        /// <summary>
+        /// Converts stored chat-message DTOs into Microsoft.Extensions.AI chat messages.
+        /// </summary>
+        /// <param name="chatHistory">The stored conversation history.</param>
+        /// <returns>A materialized chat-message list, empty for null or empty history.</returns>
         private static List<ChatMessage> BuildChatMessagesFromDto(List<ChatMessageDto> chatHistory)
         {
             if (chatHistory == null || chatHistory.Count == 0)
@@ -3053,6 +3598,12 @@ Apple
                 z.Content ?? string.Empty)).ToList();
         }
 
+        /// <summary>
+        /// Maps a persisted role name to a supported <see cref="ChatRole"/>, defaulting unknown
+        /// or empty values to the user role.
+        /// </summary>
+        /// <param name="role">The persisted role name.</param>
+        /// <returns>The normalized chat role.</returns>
         private static ChatRole NormalizeChatRole(string role)
         {
             if (string.IsNullOrWhiteSpace(role))
@@ -3069,11 +3620,10 @@ Apple
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Recalculates evaluation scores for results belonging to one prompt item.
         /// </summary>
-        /// <param name="promptItemId"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
+        /// <param name="promptItemId">The prompt-item identifier to rescore.</param>
+        /// <returns><see langword="true"/> when score updates complete successfully.</returns>
         public async Task<bool> UpdateEvalScoreAsync(int promptItemId)
         {
             var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId) ??

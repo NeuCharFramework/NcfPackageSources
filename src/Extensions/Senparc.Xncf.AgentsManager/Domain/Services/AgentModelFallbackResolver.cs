@@ -30,7 +30,8 @@ using System.Text;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Detects provider authorization/configuration failures and builds narrowly scoped
+/// compatibility model settings without silently changing the configured endpoint or credentials.
 /// </summary>
 public static class AgentModelFallbackResolver
 {
@@ -41,8 +42,10 @@ public static class AgentModelFallbackResolver
     private const string NeuCharLegacyHost = "www.neuchar.com";
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Determines whether an exception chain contains a provider-forbidden response.
     /// </summary>
+    /// <param name="exception">The exception chain to inspect.</param>
+    /// <returns><see langword="true"/> when a supported 403/forbidden signature is present.</returns>
     public static bool ContainsForbiddenStatus(Exception exception)
     {
         if (exception == null)
@@ -55,8 +58,10 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Determines whether text contains the supported 401/403 service-failure signatures.
     /// </summary>
+    /// <param name="text">The provider or client error text to inspect.</param>
+    /// <returns><see langword="true"/> when the text represents a recognized authorization/service failure.</returns>
     public static bool ContainsServiceFailureSignature(string? text)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -82,8 +87,10 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Flattens an exception and its inner exceptions into a bounded diagnostic string.
     /// </summary>
+    /// <param name="exception">The exception chain to flatten.</param>
+    /// <returns>A type-annotated message chain, or an empty string for <see langword="null"/>.</returns>
     public static string FlattenExceptionMessages(Exception exception)
     {
         if (exception == null)
@@ -114,9 +121,12 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Creates a copy of an Azure OpenAI or NeuCharAI model whose deployment name equals
+    /// the configured model identifier, when those values differ.
     /// </summary>
+    /// <param name="model">The model configuration to inspect.</param>
+    /// <param name="fallbackModel">Receives the copied fallback model when one can be built.</param>
+    /// <returns><see langword="true"/> when a distinct fallback model was created.</returns>
     public static bool TryBuildAlternateDeploymentModel(AIModelDto? model, out AIModelDto? fallbackModel)
     {
         fallbackModel = null;
@@ -149,8 +159,11 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Determines whether a default Chat model setting contains enough endpoint, platform,
+    /// model, and credential information to be used as a fallback.
     /// </summary>
+    /// <param name="defaultSetting">The default setting to validate.</param>
+    /// <returns><see langword="true"/> when the setting is usable for Chat execution.</returns>
     public static bool CanUseDefaultChatFallback(SenparcAiSetting? defaultSetting)
     {
         if (defaultSetting == null || defaultSetting.AiPlatform == AiPlatform.UnSet)
@@ -177,8 +190,11 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Converts a runtime AI setting into a Chat <see cref="AIModelDto"/> for diagnostics or fallback execution.
     /// </summary>
+    /// <param name="setting">The setting to convert.</param>
+    /// <param name="alias">The alias assigned to the generated DTO.</param>
+    /// <returns>A model DTO, or <see langword="null"/> when <paramref name="setting"/> is <see langword="null"/>.</returns>
     public static AIModelDto? BuildModelDtoFromSetting(SenparcAiSetting? setting, string alias)
     {
         if (setting == null)
@@ -208,8 +224,12 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Compares two Chat model configurations including platform, normalized endpoint,
+    /// model/deployment names, and API key.
     /// </summary>
+    /// <param name="left">The first model configuration.</param>
+    /// <param name="right">The second model configuration.</param>
+    /// <returns><see langword="true"/> when both configurations are equivalent.</returns>
     public static bool IsSameChatConfig(AIModelDto? left, AIModelDto? right)
     {
         if (left == null || right == null)
@@ -228,8 +248,10 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Builds a diagnostic description of a model while exposing only API-key presence and length.
     /// </summary>
+    /// <param name="model">The model to describe.</param>
+    /// <returns>A diagnostic string safe for logs compared with raw credential output.</returns>
     public static string BuildModelDiagnosticInfo(AIModelDto? model)
     {
         if (model == null)
@@ -246,8 +268,11 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Normalizes an endpoint for comparison and diagnostics without changing non-NeuCharAI values.
     /// </summary>
+    /// <param name="platform">The provider platform associated with the endpoint.</param>
+    /// <param name="endpoint">The endpoint text to normalize.</param>
+    /// <returns>The trimmed endpoint, with a trailing slash added for NeuCharAI when needed.</returns>
     public static string NormalizeEndpointForDiagnostics(AiPlatform platform, string endpoint)
     {
         if (string.IsNullOrWhiteSpace(endpoint))
@@ -265,8 +290,12 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Builds ordered API-version compatibility candidates for Azure OpenAI and NeuCharAI.
+    /// Duplicate, empty, and overlong values are excluded by the candidate validation rules.
     /// </summary>
+    /// <param name="model">The resolved database model.</param>
+    /// <param name="setting">The effective runtime setting.</param>
+    /// <returns>The ordered compatibility candidates.</returns>
     public static IReadOnlyList<ApiVersionCompatibilityFallback> GetApiVersionCompatibilityFallbacks(
         AIModelDto model,
         ISenparcAiSetting setting)
@@ -294,8 +323,11 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Returns the model API version when configured, otherwise the platform-specific setting version.
     /// </summary>
+    /// <param name="model">The database model, when available.</param>
+    /// <param name="setting">The effective runtime setting, when available.</param>
+    /// <returns>The configured API version or <c>unset</c>.</returns>
     public static string GetConfiguredApiVersion(AIModelDto? model, ISenparcAiSetting? setting)
     {
         if (!string.IsNullOrWhiteSpace(model?.ApiVersion))
@@ -307,8 +339,11 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Reads the platform-specific API version from an effective AI setting.
     /// </summary>
+    /// <param name="platform">The platform whose setting should be read.</param>
+    /// <param name="setting">The effective AI setting.</param>
+    /// <returns>The configured API version, or <see langword="null"/> when unavailable.</returns>
     public static string? GetSettingApiVersion(AiPlatform? platform, ISenparcAiSetting? setting)
     {
         return platform switch
@@ -320,8 +355,10 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Extracts the host from an absolute endpoint for diagnostics.
     /// </summary>
+    /// <param name="endpoint">The endpoint text to inspect.</param>
+    /// <returns>The URI host, <c>custom</c> for non-absolute endpoints, or <c>unset</c> for empty input.</returns>
     public static string GetEndpointHost(string endpoint)
     {
         if (string.IsNullOrWhiteSpace(endpoint))

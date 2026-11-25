@@ -156,997 +156,977 @@
   <data name="Agents.Plugin.Translate.Instructions" xml:space="preserve">
     <value>Vous êtes un traducteur professionnel maîtrisant {0}. Traduisez fidèlement le texte et renvoyez uniquement la traduction.</value>
   </data>
-  <data name="Frontend.001" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AgentsManagerHome" xml:space="preserve">
     <value>Accueil AgentsManager</value>
   </data>
-  <data name="Frontend.002" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ExtensionModules" xml:space="preserve">
     <value>Modules d’extension</value>
   </data>
-  <data name="Frontend.003" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AgentsManager" xml:space="preserve">
     <value>Gestion des agents</value>
   </data>
-  <data name="Frontend.004" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Home" xml:space="preserve">
     <value>Accueil</value>
   </data>
-  <data name="Frontend.005" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Agent" xml:space="preserve">
     <value>Agent</value>
   </data>
-  <data name="Frontend.006" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AgentList" xml:space="preserve">
     <value>Liste des agents</value>
   </data>
-  <data name="Frontend.007" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SearchByName" xml:space="preserve">
     <value>Rechercher par nom</value>
   </data>
-  <data name="Frontend.008" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SortByTime" xml:space="preserve">
     <value>Trier par heure</value>
   </data>
-  <data name="Frontend.009" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SelectStatus" xml:space="preserve">
     <value>Sélectionner l'état</value>
   </data>
-  <data name="Frontend.010" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AllAgents" xml:space="preserve">
     <value>Tous les agents</value>
   </data>
-  <data name="Frontend.011" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NoData" xml:space="preserve">
     <value>Aucune donnée</value>
   </data>
-  <data name="Frontend.012" xml:space="preserve">
+  <data name="Frontend.AgentsManager.PanelView" xml:space="preserve">
     <value>Vue du panneau</value>
   </data>
-  <data name="Frontend.013" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ThreeDView" xml:space="preserve">
     <value>Vue 3D</value>
   </data>
-  <data name="Frontend.014" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Participating" xml:space="preserve">
     <value>Participation</value>
   </data>
-  <data name="Frontend.015" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Score" xml:space="preserve">
     <value>Score</value>
   </data>
-  <data name="Frontend.016" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Edit" xml:space="preserve">
     <value>Modifier</value>
   </data>
-  <data name="Frontend.017" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Details" xml:space="preserve">
     <value>Détails</value>
   </data>
-  <data name="Frontend.018" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Delete" xml:space="preserve">
     <value>Supprimer</value>
   </data>
-  <data name="Frontend.019" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AllGroups" xml:space="preserve">
     <value>Tous les groupes</value>
   </data>
-  <data name="Frontend.020" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TaskStatus" xml:space="preserve">
     <value>Statut de la tâche</value>
   </data>
-  <data name="Frontend.021" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Waiting" xml:space="preserve">
     <value>En attente</value>
   </data>
-  <data name="Frontend.022" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Chatting" xml:space="preserve">
     <value>En discussion</value>
   </data>
-  <data name="Frontend.023" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Paused" xml:space="preserve">
     <value>En pause</value>
   </data>
-  <data name="Frontend.024" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Done" xml:space="preserve">
     <value>Terminé</value>
   </data>
-  <data name="Frontend.025" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Cancel" xml:space="preserve">
     <value>Annuler</value>
   </data>
-  <data name="Frontend.026" xml:space="preserve">
+  <data name="Frontend.AgentsManager.RunningGroupsOnly" xml:space="preserve">
     <value>Groupes en cours uniquement</value>
   </data>
-  <data name="Frontend.027" xml:space="preserve">
+  <data name="Frontend.AgentsManager.QuickOpenGroup" xml:space="preserve">
     <value>Ouverture rapide du groupe</value>
   </data>
-  <data name="Frontend.028" xml:space="preserve">
+  <data name="Frontend.AgentsManager.OpenGroup" xml:space="preserve">
     <value>Ouvrir le groupe</value>
   </data>
-  <data name="Frontend.029" xml:space="preserve">
+  <data name="Frontend.AgentsManager.QuickOpenTask" xml:space="preserve">
     <value>Ouverture rapide de la tâche</value>
   </data>
-  <data name="Frontend.030" xml:space="preserve">
+  <data name="Frontend.AgentsManager.OpenTask" xml:space="preserve">
     <value>Ouvrir la tâche</value>
   </data>
-  <data name="Frontend.031" xml:space="preserve">
+  <data name="Frontend.AgentsManager.HoverAGroupColumnToHighlightItsMembersClickAGroupTo" xml:space="preserve">
     <value>Survolez une colonne Group pour mettre ses membres en évidence ; cliquez sur un Group pour le verrouiller ou le déverrouiller ; les chiffres en haut indiquent le décompte des états des tâches en cours de ce groupe.</value>
   </data>
-  <data name="Frontend.032" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Groups" xml:space="preserve">
     <value>Groupes</value>
   </data>
-  <data name="Frontend.033" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Tasks" xml:space="preserve">
     <value>Tâches</value>
   </data>
-  <data name="Frontend.034" xml:space="preserve">
+  <data name="Frontend.AgentsManager.RunningTasks" xml:space="preserve">
     <value>Tâches en cours</value>
   </data>
-  <data name="Frontend.035" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Range" xml:space="preserve">
     <value>Champ :</value>
   </data>
-  <data name="Frontend.036" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Tactic" xml:space="preserve">
     <value>Tactique :</value>
   </data>
-  <data name="Frontend.037" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Run" xml:space="preserve">
     <value>Exécution</value>
   </data>
-  <data name="Frontend.038" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Model" xml:space="preserve">
     <value>Modèle :</value>
   </data>
-  <data name="Frontend.039" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ManageAIModels" xml:space="preserve">
     <value>Gérer les modèles AI</value>
   </data>
-  <data name="Frontend.040" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ModelParameters" xml:space="preserve">
     <value>Paramètres du modèle</value>
   </data>
-  <data name="Frontend.041" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ModelScore" xml:space="preserve">
     <value>Score du modèle :</value>
   </data>
-  <data name="Frontend.042" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Status" xml:space="preserve">
     <value>Statut :</value>
   </data>
-  <data name="Frontend.043" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Disabled" xml:space="preserve">
     <value>Désactivés</value>
   </data>
-  <data name="Frontend.044" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Enabled" xml:space="preserve">
     <value>Activé</value>
   </data>
-  <data name="Frontend.045" xml:space="preserve">
+  <data name="Frontend.AgentsManager.GroupsAlternate" xml:space="preserve">
     <value>Groupes</value>
   </data>
-  <data name="Frontend.046" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Jobs" xml:space="preserve">
     <value>Tâches</value>
   </data>
-  <data name="Frontend.047" xml:space="preserve">
+  <data name="Frontend.AgentsManager.LeaveGroup" xml:space="preserve">
     <value>Quitter le groupe</value>
   </data>
-  <data name="Frontend.048" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Start" xml:space="preserve">
     <value>Démarrer</value>
   </data>
-  <data name="Frontend.049" xml:space="preserve">
+  <data name="Frontend.AgentsManager.StartSelected" xml:space="preserve">
     <value>Démarrer la sélection</value>
   </data>
-  <data name="Frontend.050" xml:space="preserve">
+  <data name="Frontend.AgentsManager.StopSelected" xml:space="preserve">
     <value>Arrêter la sélection</value>
   </data>
-  <data name="Frontend.051" xml:space="preserve">
+  <data name="Frontend.AgentsManager.DeleteSelected" xml:space="preserve">
     <value>Supprimer la sélection</value>
   </data>
-  <data name="Frontend.052" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TasksLabel" xml:space="preserve">
     <value>Tâches :</value>
   </data>
-  <data name="Frontend.053" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Owner" xml:space="preserve">
     <value>Propriétaire :</value>
   </data>
-  <data name="Frontend.054" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Contact" xml:space="preserve">
     <value>Contact :</value>
   </data>
-  <data name="Frontend.055" xml:space="preserve">
+  <data name="Frontend.AgentsManager.GroupMembers" xml:space="preserve">
     <value>Membres du groupe :</value>
   </data>
-  <data name="Frontend.056" xml:space="preserve">
+  <data name="Frontend.AgentsManager.RunningTask" xml:space="preserve">
     <value>Tâche en cours</value>
   </data>
-  <data name="Frontend.057" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Started" xml:space="preserve">
     <value>Heure de début</value>
   </data>
-  <data name="Frontend.058" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Duration" xml:space="preserve">
     <value>Durée</value>
   </data>
-  <data name="Frontend.059" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ModelName" xml:space="preserve">
     <value>Nom du modèle</value>
   </data>
-  <data name="Frontend.060" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TaskDescription" xml:space="preserve">
     <value>Description de la tâche</value>
   </data>
-  <data name="Frontend.061" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
-  <data name="Frontend.062" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AgentParameters" xml:space="preserve">
     <value>Paramètres de l'agent</value>
   </data>
-  <data name="Frontend.063" xml:space="preserve">
+  <data name="Frontend.AgentsManager.RunAgain" xml:space="preserve">
     <value>Exécuter à nouveau</value>
   </data>
-  <data name="Frontend.064" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ForceStop" xml:space="preserve">
     <value>Arrêt forcé</value>
   </data>
-  <data name="Frontend.065" xml:space="preserve">
+  <data name="Frontend.AgentsManager.UsageAnalytics" xml:space="preserve">
     <value>Analyse de l'utilisation</value>
   </data>
-  <data name="Frontend.066" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TaskStartTime" xml:space="preserve">
     <value>Heure de début de la tâche :</value>
   </data>
-  <data name="Frontend.067" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TaskEndTime" xml:space="preserve">
     <value>Heure de fin de la tâche :</value>
   </data>
-  <data name="Frontend.068" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ScoreLabel" xml:space="preserve">
     <value>Score :</value>
   </data>
-  <data name="Frontend.069" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TaskReview" xml:space="preserve">
     <value>Évaluation de la tâche :</value>
   </data>
-  <data name="Frontend.070" xml:space="preserve">
+  <data name="Frontend.AgentsManager.UsageOverview" xml:space="preserve">
     <value>Aperçu de l'utilisation</value>
   </data>
-  <data name="Frontend.071" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TotalMessages" xml:space="preserve">
     <value>Nombre total de messages</value>
   </data>
-  <data name="Frontend.072" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TotalTokenInputOutput" xml:space="preserve">
     <value>Token total (entrée+sortie)</value>
   </data>
-  <data name="Frontend.073" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AverageResponseTime" xml:space="preserve">
     <value>Temps de réponse moyen</value>
   </data>
-  <data name="Frontend.074" xml:space="preserve">
+  <data name="Frontend.AgentsManager.MaximumDuration" xml:space="preserve">
     <value>Durée maximale</value>
   </data>
-  <data name="Frontend.075" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Agents" xml:space="preserve">
     <value>Agents ·</value>
   </data>
-  <data name="Frontend.076" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TaskUsageAnalytics" xml:space="preserve">
     <value>Analyse d'utilisation des tâches</value>
   </data>
-  <data name="Frontend.077" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Task" xml:space="preserve">
     <value>Tâche :</value>
   </data>
-  <data name="Frontend.078" xml:space="preserve">
+  <data name="Frontend.AgentsManager.To" xml:space="preserve">
     <value>à</value>
   </data>
-  <data name="Frontend.079" xml:space="preserve">
-    <value>Heure de début</value>
-  </data>
-  <data name="Frontend.080" xml:space="preserve">
+
+  <data name="Frontend.AgentsManager.Finished" xml:space="preserve">
     <value>Heure de fin</value>
   </data>
-  <data name="Frontend.081" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AllAgentsAlternate" xml:space="preserve">
     <value>Tous les Agents</value>
   </data>
-  <data name="Frontend.082" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Search" xml:space="preserve">
     <value>Rechercher</value>
   </data>
-  <data name="Frontend.083" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Reset" xml:space="preserve">
     <value>Réinitialiser</value>
   </data>
-  <data name="Frontend.084" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TotalToken" xml:space="preserve">
     <value>Token total</value>
   </data>
-  <data name="Frontend.085" xml:space="preserve">
+  <data name="Frontend.AgentsManager.InputOutputToken" xml:space="preserve">
     <value>Token d'entrée / de sortie</value>
   </data>
-  <data name="Frontend.086" xml:space="preserve">
+  <data name="Frontend.AgentsManager.P95MaxDuration" xml:space="preserve">
     <value>P95 / durée maximale</value>
   </data>
-  <data name="Frontend.087" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ConversationRounds" xml:space="preserve">
     <value>Tours de conversation</value>
   </data>
-  <data name="Frontend.088" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Round" xml:space="preserve">
     <value>Tour</value>
   </data>
-  <data name="Frontend.089" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Messages" xml:space="preserve">
     <value>Messages</value>
   </data>
-  <data name="Frontend.090" xml:space="preserve">
+  <data name="Frontend.AgentsManager.InputTokens" xml:space="preserve">
     <value>Tokens d'entrée</value>
   </data>
-  <data name="Frontend.091" xml:space="preserve">
+  <data name="Frontend.AgentsManager.OutputTokens" xml:space="preserve">
     <value>Tokens de sortie</value>
   </data>
-  <data name="Frontend.092" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AverageResponseMs" xml:space="preserve">
     <value>Réponse moyenne (ms)</value>
   </data>
-  <data name="Frontend.093" xml:space="preserve">
+  <data name="Frontend.AgentsManager.IndividualAgents" xml:space="preserve">
     <value>Agents individuels</value>
   </data>
-  <data name="Frontend.094" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ByTime" xml:space="preserve">
     <value>Par période</value>
   </data>
-  <data name="Frontend.095" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TimeBucketHours" xml:space="preserve">
     <value>Tranche horaire (heures)</value>
   </data>
-  <data name="Frontend.096" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EditAgent" xml:space="preserve">
     <value>Modifier l'agent</value>
   </data>
-  <data name="Frontend.097" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AddAgent" xml:space="preserve">
     <value>Ajouter un agent</value>
   </data>
-  <data name="Frontend.098" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AgentName" xml:space="preserve">
     <value>Nom de l'agent</value>
   </data>
-  <data name="Frontend.099" xml:space="preserve">
+  <data name="Frontend.AgentsManager.PleaseFillIn" xml:space="preserve">
     <value>Veuillez remplir</value>
   </data>
-  <data name="Frontend.100" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Select" xml:space="preserve">
     <value>Sélectionner</value>
   </data>
-  <data name="Frontend.101" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Manual" xml:space="preserve">
     <value>Manuel</value>
   </data>
-  <data name="Frontend.102" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SelectAlternate" xml:space="preserve">
     <value>Sélectionnez</value>
   </data>
-  <data name="Frontend.103" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ManualEntry" xml:space="preserve">
     <value>Saisie manuelle</value>
   </data>
-  <data name="Frontend.104" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EnabledAlternate" xml:space="preserve">
     <value>Activé</value>
   </data>
-  <data name="Frontend.105" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EnableAgent" xml:space="preserve">
     <value>Activer l'agent</value>
   </data>
-  <data name="Frontend.106" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ExternalPlatform" xml:space="preserve">
     <value>Plateforme externe</value>
   </data>
-  <data name="Frontend.107" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ExternalPlatformParameters" xml:space="preserve">
     <value>Paramètres de plateforme externe</value>
   </data>
-  <data name="Frontend.108" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AutomaticallyAttachAllXNCFFeaturePlugins" xml:space="preserve">
     <value>Joindre automatiquement tous les plugins de fonctions XNCF</value>
   </data>
-  <data name="Frontend.109" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ManualSelection" xml:space="preserve">
     <value>Sélection manuelle</value>
   </data>
-  <data name="Frontend.110" xml:space="preserve">
+  <data name="Frontend.AgentsManager.WhenEnabledAllRegisteredXNCFFeaturePluginsAreAttachedAutomaticallySoThe" xml:space="preserve">
     <value>Si cette option est activée, tous les plugins de fonctions XNCF enregistrés sont joints automatiquement, afin que l'Agent reconnaisse et déclenche les fonctions du Module correspondant</value>
   </data>
-  <data name="Frontend.111" xml:space="preserve">
+  <data name="Frontend.AgentsManager.YouCanEnterAPluginClassNameOrAFullNameThat" xml:space="preserve">
     <value>Vous pouvez saisir le nom de classe du Plugin, ou le nom complet avec l'espace de noms</value>
   </data>
-  <data name="Frontend.112" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Add" xml:space="preserve">
     <value>+ Ajouter</value>
   </data>
-  <data name="Frontend.113" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AvailablePluginTypes" xml:space="preserve">
     <value>Types de plugin disponibles :</value>
   </data>
-  <data name="Frontend.114" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ConnectedSuccessfully" xml:space="preserve">
     <value>Connecté</value>
   </data>
-  <data name="Frontend.115" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ViewTools" xml:space="preserve">
     <value>Voir les outils</value>
   </data>
-  <data name="Frontend.116" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ConnectionFailed" xml:space="preserve">
     <value>Échec de la connexion :</value>
   </data>
-  <data name="Frontend.117" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TestConnection" xml:space="preserve">
     <value>Tester la connexion</value>
   </data>
-  <data name="Frontend.118" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AddMCPEndpoint" xml:space="preserve">
     <value>+ Ajouter un MCP Endpoint</value>
   </data>
-  <data name="Frontend.119" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EditMCPEndpoint" xml:space="preserve">
     <value>Modifier le MCP Endpoint</value>
   </data>
-  <data name="Frontend.120" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AddMCPEndpointAlternate" xml:space="preserve">
     <value>Ajouter un MCP Endpoint</value>
   </data>
-  <data name="Frontend.121" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EndpointNameForExampleMcpServerNCFSeven" xml:space="preserve">
     <value>Nom de l'Endpoint (par exemple : mcp-server-NCF-7)</value>
   </data>
-  <data name="Frontend.122" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Confirm" xml:space="preserve">
     <value>Confirmer</value>
   </data>
-  <data name="Frontend.123" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Notes" xml:space="preserve">
     <value>Notes</value>
   </data>
-  <data name="Frontend.124" xml:space="preserve">
+  <data name="Frontend.AgentsManager.FillInAdministratorsOnly" xml:space="preserve">
     <value>Renseignez (administrateurs uniquement)</value>
   </data>
-  <data name="Frontend.125" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EditGroup" xml:space="preserve">
     <value>Modifier le groupe</value>
   </data>
-  <data name="Frontend.126" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AddGroup" xml:space="preserve">
     <value>Ajouter un groupe</value>
   </data>
-  <data name="Frontend.127" xml:space="preserve">
+  <data name="Frontend.AgentsManager.GroupName" xml:space="preserve">
     <value>Nom du groupe</value>
   </data>
-  <data name="Frontend.128" xml:space="preserve">
+  <data name="Frontend.AgentsManager.GroupMembersAlternate" xml:space="preserve">
     <value>Membres du groupe</value>
   </data>
-  <data name="Frontend.129" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SearchAlternate" xml:space="preserve">
     <value>Rechercher</value>
   </data>
-  <data name="Frontend.130" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Selected" xml:space="preserve">
     <value>Sélectionné :</value>
   </data>
-  <data name="Frontend.131" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Description" xml:space="preserve">
     <value>Description</value>
   </data>
-  <data name="Frontend.132" xml:space="preserve">
+  <data name="Frontend.AgentsManager.OwnerAlternate" xml:space="preserve">
     <value>Propriétaire</value>
   </data>
-  <data name="Frontend.133" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ContactAlternate" xml:space="preserve">
     <value>Contact</value>
   </data>
-  <data name="Frontend.134" xml:space="preserve">
+  <data name="Frontend.AgentsManager.DescriptionAlternate" xml:space="preserve">
     <value>Description</value>
   </data>
-  <data name="Frontend.135" xml:space="preserve">
+  <data name="Frontend.AgentsManager.StartGroup" xml:space="preserve">
     <value>Démarrer le groupe</value>
   </data>
-  <data name="Frontend.136" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SelectGroup" xml:space="preserve">
     <value>Sélectionner un groupe</value>
   </data>
-  <data name="Frontend.137" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TaskTitle" xml:space="preserve">
     <value>Titre de la tâche</value>
   </data>
-  <data name="Frontend.138" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SelectModel" xml:space="preserve">
     <value>Sélectionner un modèle</value>
   </data>
-  <data name="Frontend.139" xml:space="preserve">
+  <data name="Frontend.AgentsManager.PersonalizedAgent" xml:space="preserve">
     <value>Agent personnalisé</value>
   </data>
-  <data name="Frontend.140" xml:space="preserve">
+  <data name="Frontend.AgentsManager.RunAgentWithPersonalizedParameters" xml:space="preserve">
     <value>Exécuter l'Agent avec des paramètres personnalisés</value>
   </data>
-  <data name="Frontend.141" xml:space="preserve">
+  <data name="Frontend.AgentsManager.WhatCanIHelpYouWith" xml:space="preserve">
     <value>Que puis-je faire pour vous ?</value>
   </data>
-  <data name="Frontend.142" xml:space="preserve">
+  <data name="Frontend.AgentsManager.MCPToolList" xml:space="preserve">
     <value>Liste d'outils MCP</value>
   </data>
-  <data name="Frontend.143" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ToolName" xml:space="preserve">
     <value>Nom de l'outil</value>
   </data>
-  <data name="Frontend.144" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Parameters" xml:space="preserve">
     <value>Paramètres</value>
   </data>
-  <data name="Frontend.145" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NoParameters" xml:space="preserve">
     <value>Aucun paramètre</value>
   </data>
-  <data name="Frontend.146" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NoToolsAvailable" xml:space="preserve">
     <value>Aucun outil disponible</value>
   </data>
-  <data name="Frontend.147" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Close" xml:space="preserve">
     <value>Fermer</value>
   </data>
-  <data name="Frontend.148" xml:space="preserve">
+  <data name="Frontend.AgentsManager.All" xml:space="preserve">
     <value>Tout</value>
   </data>
-  <data name="Frontend.149" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Events" xml:space="preserve">
     <value>Événements</value>
   </data>
-  <data name="Frontend.150" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Standby" xml:space="preserve">
     <value>En attente</value>
   </data>
-  <data name="Frontend.151" xml:space="preserve">
+  <data name="Frontend.AgentsManager.PausedAlternate" xml:space="preserve">
     <value>En pause</value>
   </data>
-  <data name="Frontend.152" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Failed" xml:space="preserve">
     <value>Échoué</value>
   </data>
-  <data name="Frontend.153" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Archive" xml:space="preserve">
     <value>Archiver</value>
   </data>
-  <data name="Frontend.154" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Running" xml:space="preserve">
     <value>En cours</value>
   </data>
-  <data name="Frontend.155" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Chat" xml:space="preserve">
     <value>Chat</value>
   </data>
-  <data name="Frontend.156" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EnterTheFunctionCallName" xml:space="preserve">
     <value>Saisissez le nom du Function Call</value>
   </data>
-  <data name="Frontend.157" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Refresh" xml:space="preserve">
     <value>Actualiser</value>
   </data>
-  <data name="Frontend.158" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ManagePromptRange" xml:space="preserve">
     <value>Gérer PromptRange</value>
   </data>
-  <data name="Frontend.159" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NoDescription" xml:space="preserve">
     <value>Aucune description</value>
   </data>
-  <data name="Frontend.160" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ParametersLabel" xml:space="preserve">
     <value>Paramètres :</value>
   </data>
-  <data name="Frontend.161" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ThisAgentIsNotCurrentlyAMemberOfAnyGroup" xml:space="preserve">
     <value>Cet Agent ne fait actuellement partie d'aucun groupe.</value>
   </data>
-  <data name="Frontend.162" xml:space="preserve">
-    <value>Veuillez remplir</value>
-  </data>
-  <data name="Frontend.163" xml:space="preserve">
+
+  <data name="Frontend.AgentsManager.TargetString" xml:space="preserve">
     <value>Chaîne cible</value>
   </data>
-  <data name="Frontend.164" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NonTargetString" xml:space="preserve">
     <value>Chaîne non cible</value>
   </data>
-  <data name="Frontend.165" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SavedSuccessfully" xml:space="preserve">
     <value>Enregistré</value>
   </data>
-  <data name="Frontend.166" xml:space="preserve">
+  <data name="Frontend.AgentsManager.DeletedSuccessfully" xml:space="preserve">
     <value>Suppression réussie</value>
   </data>
-  <data name="Frontend.167" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Success" xml:space="preserve">
     <value>Succès</value>
   </data>
-  <data name="Frontend.168" xml:space="preserve">
+  <data name="Frontend.AgentsManager.OperationFailed" xml:space="preserve">
     <value>Erreur</value>
   </data>
-  <data name="Frontend.169" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SelectAtLeastOneItem" xml:space="preserve">
     <value>Sélectionnez au moins un élément</value>
   </data>
-  <data name="Frontend.170" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Continue" xml:space="preserve">
     <value>Continuer ?</value>
   </data>
-  <data name="Frontend.171" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Notice" xml:space="preserve">
     <value>Information</value>
   </data>
-  <data name="Frontend.172" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ConfirmAlternate" xml:space="preserve">
     <value>Confirmer</value>
   </data>
-  <data name="Frontend.173" xml:space="preserve">
+  <data name="Frontend.AgentsManager.FailedToLoad" xml:space="preserve">
     <value>Échec du chargement</value>
   </data>
-  <data name="Frontend.174" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NoContent" xml:space="preserve">
     <value>Aucun contenu</value>
   </data>
-  <data name="Frontend.175" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Sec" xml:space="preserve">
     <value>s</value>
   </data>
-  <data name="Frontend.176" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Min" xml:space="preserve">
     <value>min</value>
   </data>
-  <data name="Frontend.177" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Hr" xml:space="preserve">
     <value>h</value>
   </data>
-  <data name="Frontend.178" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Days" xml:space="preserve">
     <value>jours</value>
   </data>
-  <data name="Frontend.179" xml:space="preserve">
+  <data name="Frontend.AgentsManager.CopiedSuccessfully" xml:space="preserve">
     <value>Copié</value>
   </data>
-  <data name="Frontend.180" xml:space="preserve">
+  <data name="Frontend.AgentsManager.CopyFailed" xml:space="preserve">
     <value>Échec de la copie</value>
   </data>
-  <data name="Frontend.181" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TaskDescriptionLabel" xml:space="preserve">
     <value>Description de la tâche :</value>
   </data>
-  <data name="Frontend.182" xml:space="preserve">
+  <data name="Frontend.AgentsManager.GroupList" xml:space="preserve">
     <value>Liste des groupes</value>
   </data>
-  <data name="Frontend.183" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TasksAlternate" xml:space="preserve">
     <value>Tâches</value>
   </data>
-  <data name="Frontend.184" xml:space="preserve">
+  <data name="Frontend.AgentsManager.LastRun" xml:space="preserve">
     <value>Dernière exécution</value>
   </data>
-  <data name="Frontend.185" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TaskList" xml:space="preserve">
     <value>Liste des tâches</value>
   </data>
-  <data name="Frontend.186" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Unarchive" xml:space="preserve">
     <value>Désarchiver</value>
   </data>
-  <data name="Frontend.187" xml:space="preserve">
-    <value>Archiver</value>
-  </data>
-  <data name="Frontend.188" xml:space="preserve">
+
+  <data name="Frontend.AgentsManager.TaskAlternate" xml:space="preserve">
     <value>Tâche : (#)</value>
   </data>
-  <data name="Frontend.189" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AgentAvatar" xml:space="preserve">
     <value>Avatar de l'Agent</value>
   </data>
-  <data name="Frontend.190" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EndpointURLForExampleHttpLocalhost5000McpSse" xml:space="preserve">
     <value>Endpoint URL (par exemple : http://localhost:5000/mcp/sse)</value>
   </data>
-  <data name="Frontend.191" xml:space="preserve">
+  <data name="Frontend.AgentsManager.CancelAlternate" xml:space="preserve">
     <value>Annuler</value>
   </data>
-  <data name="Frontend.192" xml:space="preserve">
+  <data name="Frontend.AgentsManager.OK" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="Frontend.193" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Aim" xml:space="preserve">
     <value>Visée :</value>
   </data>
-  <data name="Frontend.194" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AverageScore" xml:space="preserve">
     <value>Score moyen :</value>
   </data>
-  <data name="Frontend.195" xml:space="preserve">
+  <data name="Frontend.AgentsManager.HighestScore" xml:space="preserve">
     <value>Meilleur score :</value>
   </data>
-  <data name="Frontend.196" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ElapsedMs" xml:space="preserve">
     <value>[Durée (ms) :]</value>
   </data>
-  <data name="Frontend.197" xml:space="preserve">
+  <data name="Frontend.AgentsManager.CopyFormattedHTMLCode" xml:space="preserve">
     <value>Copier le code HTML mis en forme</value>
   </data>
-  <data name="Frontend.198" xml:space="preserve">
+  <data name="Frontend.AgentsManager.CopyRawContentForExampleMarkdownMarkersWillBeCopied" xml:space="preserve">
     <value>Copier le contenu brut (par exemple, les balises markdown seront copiées)</value>
   </data>
-  <data name="Frontend.199" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Raw" xml:space="preserve">
     <value>Brut</value>
   </data>
-  <data name="Frontend.200" xml:space="preserve">
+  <data name="Frontend.AgentsManager.CloseAlternate" xml:space="preserve">
     <value>Fermer</value>
   </data>
-  <data name="Frontend.201" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TaskEvaluation" xml:space="preserve">
     <value>Évaluation de la tâche</value>
   </data>
-  <data name="Frontend.202" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EnterAScoreZeroTen" xml:space="preserve">
     <value>Saisissez une note (0-10)</value>
   </data>
-  <data name="Frontend.203" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EnterAnEvaluation" xml:space="preserve">
     <value>Saisissez une évaluation</value>
   </data>
-  <data name="Frontend.204" xml:space="preserve">
+  <data name="Frontend.AgentsManager.DatabaseSample" xml:space="preserve">
     <value>Exemple de base de données</value>
   </data>
-  <data name="Frontend.205" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NoExecutableTasksYet" xml:space="preserve">
     <value>Aucune tâche exécutable pour le moment</value>
   </data>
-  <data name="Frontend.206" xml:space="preserve">
+  <data name="Frontend.AgentsManager.FailedToLoadStatistics" xml:space="preserve">
     <value>Échec du chargement des statistiques</value>
   </data>
-  <data name="Frontend.207" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ValueFailed" xml:space="preserve">
     <value>{0} échecs</value>
   </data>
-  <data name="Frontend.208" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ValueSucceeded" xml:space="preserve">
     <value>{0} réussites</value>
   </data>
-  <data name="Frontend.209" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ValueFailedValue" xml:space="preserve">
     <value>{0} a échoué : {1}</value>
   </data>
-  <data name="Frontend.210" xml:space="preserve">
+  <data name="Frontend.AgentsManager.UnknownError" xml:space="preserve">
     <value>Erreur inconnue</value>
   </data>
-  <data name="Frontend.211" xml:space="preserve">
+  <data name="Frontend.AgentsManager.CloseNow" xml:space="preserve">
     <value>Fermer maintenant ?</value>
   </data>
-  <data name="Frontend.212" xml:space="preserve">
+  <data name="Frontend.AgentsManager.DisableAgentValue" xml:space="preserve">
     <value>Désactiver l'Agent {0} ?</value>
   </data>
-  <data name="Frontend.213" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ThisAgentWillNotTakePartInLaterNewTasks" xml:space="preserve">
     <value>Cet Agent ne participera pas aux nouvelles tâches suivantes</value>
   </data>
-  <data name="Frontend.214" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EnableAgentValue" xml:space="preserve">
     <value>Activer l'Agent {0} ?</value>
   </data>
-  <data name="Frontend.215" xml:space="preserve">
+  <data name="Frontend.AgentsManager.LeaveGroupValue" xml:space="preserve">
     <value>Quitter le groupe {0} ?</value>
   </data>
-  <data name="Frontend.216" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AfterRemovalTaskRecordsYouPreviouslyTookPartInWillNoLonger" xml:space="preserve">
     <value>Après le retrait, les enregistrements des tâches auxquelles vous avez participé ne seront plus visibles</value>
   </data>
-  <data name="Frontend.217" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ConfirmAction" xml:space="preserve">
     <value>Confirmer l'action</value>
   </data>
-  <data name="Frontend.218" xml:space="preserve">
+  <data name="Frontend.AgentsManager.OperationSucceeded" xml:space="preserve">
     <value>Opération réussie !</value>
   </data>
-  <data name="Frontend.219" xml:space="preserve">
+  <data name="Frontend.AgentsManager.OperationCanceled" xml:space="preserve">
     <value>Opération annulée</value>
   </data>
-  <data name="Frontend.220" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AgentValueCannotBeDeletedRightNow" xml:space="preserve">
     <value>L'Agent « {0} » ne peut pas être supprimé pour le moment.</value>
   </data>
-  <data name="Frontend.221" xml:space="preserve">
+  <data name="Frontend.AgentsManager.GroupsAsOwnerValue" xml:space="preserve">
     <value>Groupes en tant que propriétaire : {0}</value>
   </data>
-  <data name="Frontend.222" xml:space="preserve">
+  <data name="Frontend.AgentsManager.GroupsAsContactValue" xml:space="preserve">
     <value>Groupes en tant que contact : {0}</value>
   </data>
-  <data name="Frontend.223" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ReplaceTheOwnerContactInTheCorrespondingGroupBeforeDeleting" xml:space="preserve">
     <value>Remplacez le Propriétaire/Contact du groupe correspondant avant de supprimer.</value>
   </data>
-  <data name="Frontend.224" xml:space="preserve">
+  <data name="Frontend.AgentsManager.DeletionBlocked" xml:space="preserve">
     <value>Suppression bloquée</value>
   </data>
-  <data name="Frontend.225" xml:space="preserve">
+  <data name="Frontend.AgentsManager.GotIt" xml:space="preserve">
     <value>Compris</value>
   </data>
-  <data name="Frontend.226" xml:space="preserve">
+  <data name="Frontend.AgentsManager.DeleteAgentValue" xml:space="preserve">
     <value>Supprimer l'Agent « {0} » ?</value>
   </data>
-  <data name="Frontend.227" xml:space="preserve">
+  <data name="Frontend.AgentsManager.GroupsTheMemberWillLeaveValue" xml:space="preserve">
     <value>Groupes dont le membre sera retiré : {0}</value>
   </data>
-  <data name="Frontend.228" xml:space="preserve">
+  <data name="Frontend.AgentsManager.MessageHistoryRelatedToThisAgentWillAlsoBeDeletedAndCannot" xml:space="preserve">
     <value>L'historique des messages lié à cet Agent sera aussi supprimé et ne pourra pas être récupéré.</value>
   </data>
-  <data name="Frontend.229" xml:space="preserve">
+  <data name="Frontend.AgentsManager.DeletedSuccessfullyEmphasis" xml:space="preserve">
     <value>Supprimé avec succès !</value>
   </data>
-  <data name="Frontend.230" xml:space="preserve">
+  <data name="Frontend.AgentsManager.DeletionPreCheckFailedPleaseTryAgainLater" xml:space="preserve">
     <value>La vérification préalable à la suppression a échoué. Veuillez réessayer plus tard.</value>
   </data>
-  <data name="Frontend.231" xml:space="preserve">
+  <data name="Frontend.AgentsManager.DeleteThisData" xml:space="preserve">
     <value>Supprimer ces données ?</value>
   </data>
-  <data name="Frontend.232" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SelectGroupsToDeleteFirst" xml:space="preserve">
     <value>Sélectionnez d'abord les groupes à supprimer</value>
   </data>
-  <data name="Frontend.233" xml:space="preserve">
+  <data name="Frontend.AgentsManager.DeleteTheSelectedDataInBatch" xml:space="preserve">
     <value>Supprimer les données sélectionnées en lot ?</value>
   </data>
-  <data name="Frontend.234" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SelectTasksToStartFirst" xml:space="preserve">
     <value>Sélectionnez d'abord les tâches à démarrer</value>
   </data>
-  <data name="Frontend.235" xml:space="preserve">
+  <data name="Frontend.AgentsManager.StartTheSelectedDataInBatch" xml:space="preserve">
     <value>Démarrer les données sélectionnées en lot ?</value>
   </data>
-  <data name="Frontend.236" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SelectTasksToDeleteFirst" xml:space="preserve">
     <value>Sélectionnez d'abord les tâches à supprimer</value>
   </data>
-  <data name="Frontend.237" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ForceStopThisTask" xml:space="preserve">
     <value>Forcer l'arrêt de cette tâche ?</value>
   </data>
-  <data name="Frontend.238" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SelectTasksToStopFirst" xml:space="preserve">
     <value>Sélectionnez d'abord les tâches à arrêter</value>
   </data>
-  <data name="Frontend.239" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ForceStopTheSelectedTasks" xml:space="preserve">
     <value>Forcer l'arrêt des tâches sélectionnées ?</value>
   </data>
-  <data name="Frontend.240" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NotSet" xml:space="preserve">
     <value>Non renseigné</value>
   </data>
-  <data name="Frontend.241" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Draft" xml:space="preserve">
     <value>(Brouillon)</value>
   </data>
-  <data name="Frontend.242" xml:space="preserve">
+  <data name="Frontend.AgentsManager.UnnamedTool" xml:space="preserve">
     <value>Outil sans nom</value>
   </data>
-  <data name="Frontend.243" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ConnectionTestSucceeded" xml:space="preserve">
     <value>Test de connexion réussi</value>
   </data>
-  <data name="Frontend.244" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ConnectionTestFailed" xml:space="preserve">
     <value>Échec du test de connexion :</value>
   </data>
-  <data name="Frontend.245" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ConnectionTestError" xml:space="preserve">
     <value>Erreur du test de connexion :</value>
   </data>
-  <data name="Frontend.246" xml:space="preserve">
+  <data name="Frontend.AgentsManager.FailedToLoadPluginTypes" xml:space="preserve">
     <value>Échec du chargement des types de plugin</value>
   </data>
-  <data name="Frontend.247" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NameAndURLCannotBeEmpty" xml:space="preserve">
     <value>Le nom et l'URL ne peuvent pas être vides</value>
   </data>
-  <data name="Frontend.248" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EndpointParameterIsEmpty" xml:space="preserve">
     <value>Le paramètre endpoint est vide</value>
   </data>
-  <data name="Frontend.249" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NoToolInformationAvailable" xml:space="preserve">
     <value>Aucune information d'outil disponible</value>
   </data>
-  <data name="Frontend.250" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ToolListValue" xml:space="preserve">
     <value>Liste d'outils ({0})</value>
   </data>
-  <data name="Frontend.251" xml:space="preserve">
-    <value>Aucune description</value>
-  </data>
-  <data name="Frontend.252" xml:space="preserve">
-    <value>Paramètres :</value>
-  </data>
-  <data name="Frontend.253" xml:space="preserve">
-    <value>Aucun paramètre</value>
-  </data>
-  <data name="Frontend.254" xml:space="preserve">
+
+
+
+  <data name="Frontend.AgentsManager.MCPToolListAlternate" xml:space="preserve">
     <value>Liste d'outils MCP</value>
   </data>
-  <data name="Frontend.255" xml:space="preserve">
-    <value>Fermer</value>
-  </data>
-  <data name="Frontend.256" xml:space="preserve">
+
+  <data name="Frontend.AgentsManager.ValueYears" xml:space="preserve">
     <value>{0} ans</value>
   </data>
-  <data name="Frontend.257" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ValueDays" xml:space="preserve">
     <value>{0} jours</value>
   </data>
-  <data name="Frontend.258" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ValueHours" xml:space="preserve">
     <value>{0} heures</value>
   </data>
-  <data name="Frontend.259" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ValueMinutes" xml:space="preserve">
     <value>{0} minutes</value>
   </data>
-  <data name="Frontend.260" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ValueSeconds" xml:space="preserve">
     <value>{0} secondes</value>
   </data>
-  <data name="Frontend.261" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ManageModels" xml:space="preserve">
     <value>Gérer les modèles</value>
   </data>
-  <data name="Frontend.262" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AgentID" xml:space="preserve">
     <value>ID de l'agent</value>
   </data>
-  <data name="Frontend.263" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SystemMessage" xml:space="preserve">
     <value>Message système</value>
   </data>
-  <data name="Frontend.264" xml:space="preserve">
+  <data name="Frontend.AgentsManager.None" xml:space="preserve">
     <value>Aucun</value>
   </data>
-  <data name="Frontend.265" xml:space="preserve">
+  <data name="Frontend.AgentsManager.FunctionCall" xml:space="preserve">
     <value>Appel de fonction</value>
   </data>
-  <data name="Frontend.266" xml:space="preserve">
+  <data name="Frontend.AgentsManager.MCPEndpoint" xml:space="preserve">
     <value>Point de terminaison MCP</value>
   </data>
-  <data name="Frontend.267" xml:space="preserve">
-    <value>Nom de l'Endpoint (par exemple : mcp-server-NCF-7)</value>
-  </data>
-  <data name="Frontend.268" xml:space="preserve">
+
+  <data name="Frontend.AgentsManager.EndpointURLForExampleHttpLocalhost5000McpSseAlternate" xml:space="preserve">
     <value>URL de l'Endpoint (par exemple : http://localhost:5000/mcp/sse)</value>
   </data>
-  <data name="Frontend.269" xml:space="preserve">
-    <value>Liste d'outils MCP</value>
-  </data>
-  <data name="Frontend.270" xml:space="preserve">
+
+  <data name="Frontend.AgentsManager.TopP" xml:space="preserve">
     <value>Top P：</value>
   </data>
-  <data name="Frontend.271" xml:space="preserve">
+  <data name="Frontend.AgentsManager.MaxTokenCount" xml:space="preserve">
     <value>Nombre maximal de Token :</value>
   </data>
-  <data name="Frontend.272" xml:space="preserve">
+  <data name="Frontend.AgentsManager.PresencePenalty" xml:space="preserve">
     <value>Pénalité de présence :</value>
   </data>
-  <data name="Frontend.273" xml:space="preserve">
+  <data name="Frontend.AgentsManager.Temperature" xml:space="preserve">
     <value>Température :</value>
   </data>
-  <data name="Frontend.274" xml:space="preserve">
+  <data name="Frontend.AgentsManager.FrequencyPenalty" xml:space="preserve">
     <value>Pénalité de fréquence :</value>
   </data>
-  <data name="Frontend.275" xml:space="preserve">
+  <data name="Frontend.AgentsManager.StopSequence" xml:space="preserve">
     <value>Séquence d'arrêt :</value>
   </data>
-  <data name="Frontend.276" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NoAvailableChatAIModelWasFoundTheDatabaseHasValueModels" xml:space="preserve">
     <value>Aucun AI Model de type Chat disponible. La base de données contient {0} modèles, mais aucun n'est de type Chat. Configurez d'abord au moins un Chat Model dans le Module AIKernel.</value>
   </data>
-  <data name="Frontend.277" xml:space="preserve">
+  <data name="Frontend.AgentsManager.FailedToLoadValue" xml:space="preserve">
     <value>Échec du chargement : {0}</value>
   </data>
-  <data name="Frontend.278" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SelectAValidAIModel" xml:space="preserve">
     <value>Sélectionnez un AI Model valide</value>
   </data>
-  <data name="Frontend.279" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NoAIModelWithIDValueWasFound" xml:space="preserve">
     <value>Aucun AI Model avec l'ID {0}</value>
   </data>
-  <data name="Frontend.280" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ModelValueIsNotAChatTypePleaseSelectAChatModel" xml:space="preserve">
     <value>Model '{0}' n'est pas de type Chat. Veuillez sélectionner un Model de type Chat.</value>
   </data>
-  <data name="Frontend.281" xml:space="preserve">
+  <data name="Frontend.AgentsManager.InitializationCompletedSuccessfully" xml:space="preserve">
     <value>Initialisation réussie</value>
   </data>
-  <data name="Frontend.282" xml:space="preserve">
+  <data name="Frontend.AgentsManager.OptimizationRequestTimedOutValue" xml:space="preserve">
     <value>Délai de la requête d'optimisation dépassé : {0}</value>
   </data>
-  <data name="Frontend.283" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ChatGroupNotFoundValue" xml:space="preserve">
     <value>Groupe de Chat introuvable : {0}</value>
   </data>
-  <data name="Frontend.284" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TheSelectedAIModelDoesNotExistValue" xml:space="preserve">
     <value>Le modèle d'IA sélectionné n'existe pas : {0}</value>
   </data>
-  <data name="Frontend.285" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ChatGroupValueHasNoEnabledAgentsAvailable" xml:space="preserve">
     <value>Le groupe de Chat [{0}] n'a aucun agent activé disponible.</value>
   </data>
-  <data name="Frontend.286" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NoValidAdminAgentIDValueWasFoundInChatGroupValue" xml:space="preserve">
     <value>Aucun agent administrateur valide (ID: {1}) n'a été trouvé dans le groupe de chat [{0}].</value>
   </data>
-  <data name="Frontend.287" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ChatGroupValueNeedsAtLeastTwoEnabledAgentsForMultiAgent" xml:space="preserve">
     <value>Le groupe de Chat [{0}] nécessite au moins deux agents activés pour la collaboration multi-agent.</value>
   </data>
-  <data name="Frontend.288" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TheMultiAgentWorkflowIsWaitingForAnExternalResponseAndThe" xml:space="preserve">
     <value>Le flux de travail multi-agent attend une réponse externe, et le chemin d'exécution actuel ne peut pas continuer automatiquement.</value>
   </data>
-  <data name="Frontend.289" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SystemMessageMultiAgentOrchestrationFailedValueAndFallbackExecutionReturnedNo" xml:space="preserve">
     <value>Message système : l'orchestration multi-agent a échoué ({0}), et l'exécution de repli n'a renvoyé aucun texte affichable.</value>
   </data>
-  <data name="Frontend.290" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SystemMessageTheAIServiceReturned403ForbiddenAndTheCurrentTask" xml:space="preserve">
     <value>Message système : le service d'IA a renvoyé 403 (Forbidden) et la tâche actuelle ne peut pas continuer. Vérifiez les droits du modèle, l'API Key ou la disponibilité du modèle choisi.</value>
   </data>
-  <data name="Frontend.291" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SystemMessageAIServiceAuthenticationFailed401CheckTheAPIKeyEndpoint" xml:space="preserve">
     <value>Message système : l'authentification du service d'IA a échoué (401). Vérifiez la configuration de l'API Key / Endpoint.</value>
   </data>
-  <data name="Frontend.292" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SystemMessageTheAIServiceCallFailedAndTheTaskWasInterrupted" xml:space="preserve">
     <value>Message système : l'appel au service d'IA a échoué et la tâche a été interrompue. Motif : {0}</value>
   </data>
-  <data name="Frontend.293" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ModelConfigurationIsEmptyAIModelDtoNull" xml:space="preserve">
     <value>La configuration du modèle est vide (AIModelDto == null)</value>
   </data>
-  <data name="Frontend.294" xml:space="preserve">
+  <data name="Frontend.AgentsManager.PromptCatalyzerChatGroupWasNotFoundFinishInitializationFirst" xml:space="preserve">
     <value>PromptCatalyzer ChatGroup introuvable. Terminez d'abord l'initialisation.</value>
   </data>
-  <data name="Frontend.295" xml:space="preserve">
+  <data name="Frontend.AgentsManager.PromptCatalyzerAgentWasNotFoundFinishInitializationFirst" xml:space="preserve">
     <value>PromptCatalyzer Agent introuvable. Terminez d'abord l'initialisation.</value>
   </data>
-  <data name="Frontend.296" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AgentConversationFailedValue" xml:space="preserve">
     <value>Échec de la conversation de l'Agent : {0}</value>
   </data>
-  <data name="Frontend.297" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SelectOrManuallyEnterAPromptCode" xml:space="preserve">
     <value>Sélectionnez ou saisissez manuellement un PromptCode</value>
   </data>
-  <data name="Frontend.298" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EnterAgentName" xml:space="preserve">
     <value>Saisissez le nom de l'Agent</value>
   </data>
-  <data name="Frontend.299" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EnterASearchTermNamePromptCodeOrKeyword" xml:space="preserve">
     <value>Saisissez un terme de recherche (nom, PromptCode ou mot-clé)</value>
   </data>
-  <data name="Frontend.300" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EnterAValidSearchTerm" xml:space="preserve">
     <value>Saisissez un terme de recherche valide</value>
   </data>
-  <data name="Frontend.301" xml:space="preserve">
+  <data name="Frontend.AgentsManager.EnabledSuccessfully" xml:space="preserve">
     <value>Activé</value>
   </data>
-  <data name="Frontend.302" xml:space="preserve">
+  <data name="Frontend.AgentsManager.DisabledSuccessfully" xml:space="preserve">
     <value>Désactivé</value>
   </data>
-  <data name="Frontend.303" xml:space="preserve">
-    <value>Connecté</value>
-  </data>
-  <data name="Frontend.304" xml:space="preserve">
+
+  <data name="Frontend.AgentsManager.ConnectionFailedAlternate" xml:space="preserve">
     <value>Échec de la connexion</value>
   </data>
-  <data name="Frontend.305" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AgentIDNotProvided" xml:space="preserve">
     <value>Agent ID non fourni</value>
   </data>
-  <data name="Frontend.306" xml:space="preserve">
+  <data name="Frontend.AgentsManager.PromptCatalyzerInitializationTimedOutTwoMinutes" xml:space="preserve">
     <value>L'initialisation de PromptCatalyzer a expiré (2 minutes)</value>
   </data>
-  <data name="Frontend.307" xml:space="preserve">
+  <data name="Frontend.AgentsManager.PromptInitializationFailedValue" xml:space="preserve">
     <value>Échec de l'initialisation du Prompt : {0}</value>
   </data>
-  <data name="Frontend.308" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ThePromptCodeReturnedByPromptInitializationIsEmpty" xml:space="preserve">
     <value>Le PromptCode renvoyé par l'initialisation du Prompt est vide</value>
   </data>
-  <data name="Frontend.309" xml:space="preserve">
+  <data name="Frontend.AgentsManager.AnOptimizationTaskIsAlreadyRunningForThisPromptDoNotSubmit" xml:space="preserve">
     <value>Une tâche d'optimisation est déjà en cours pour ce Prompt. Ne la soumettez pas de nouveau (par exemple, évitez le double clic).</value>
   </data>
-  <data name="Frontend.310" xml:space="preserve">
+  <data name="Frontend.AgentsManager.PromptOptimizationRequestTimedOut15Minutes" xml:space="preserve">
     <value>La demande d'optimisation du Prompt a expiré (15 minutes)</value>
   </data>
-  <data name="Frontend.311" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TheChatGroupToEditWasNotFoundIDValue" xml:space="preserve">
     <value>ChatGroup à modifier introuvable. ID : {0}</value>
   </data>
-  <data name="Frontend.312" xml:space="preserve">
+  <data name="Frontend.AgentsManager.FailedToSelectGroupMembersValue" xml:space="preserve">
     <value>Échec de la sélection des membres du groupe : {0}</value>
   </data>
-  <data name="Frontend.313" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ProvideAtLeastOneGroupMemberIDOrName" xml:space="preserve">
     <value>Indiquez au moins un membre du groupe (ID ou nom)</value>
   </data>
-  <data name="Frontend.314" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NoAvailableChatAIModelWasFoundSoAHostAgentCannot" xml:space="preserve">
     <value>Aucun modèle d'IA de type Chat disponible, un Agent hôte ne peut pas être créé automatiquement</value>
   </data>
-  <data name="Frontend.315" xml:space="preserve">
+  <data name="Frontend.AgentsManager.InputIsEmptyPassAnAgentIDNameOrPromptCode" xml:space="preserve">
     <value>L'entrée est vide. Indiquez un ID d'Agent, un nom ou un PromptCode.</value>
   </data>
-  <data name="Frontend.316" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NoEnabledAgentWasFoundIDValue" xml:space="preserve">
     <value>Aucun Agent activé trouvé. ID : {0}</value>
   </data>
-  <data name="Frontend.317" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ValueMatchedMultipleAgentsPleaseSpecifyAnIDValue" xml:space="preserve">
     <value>« {0} » correspond à plusieurs Agent. Veuillez indiquer un ID : {1}</value>
   </data>
-  <data name="Frontend.318" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NoMatchingAgentFoundValue" xml:space="preserve">
     <value>Aucun Agent correspondant : {0}</value>
   </data>
-  <data name="Frontend.319" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SelectAtLeastOneGroup" xml:space="preserve">
     <value>Sélectionnez au moins un groupe !</value>
   </data>
-  <data name="Frontend.320" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TheTaskWasCreatedAndStartedCheckItsStatusInTheChatTask" xml:space="preserve">
     <value>La tâche a été créée et démarrée. Consultez son état dans la liste ChatTask.</value>
   </data>
-  <data name="Frontend.321" xml:space="preserve">
+  <data name="Frontend.AgentsManager.SelectConversationsToDelete" xml:space="preserve">
     <value>Sélectionnez les conversations à supprimer !</value>
   </data>
-  <data name="Frontend.322" xml:space="preserve">
+  <data name="Frontend.AgentsManager.CheckTheConfirmDeletionBoxToConfirmTheDeletion" xml:space="preserve">
     <value>Cochez la case « Confirmer la suppression » pour confirmer la suppression !</value>
   </data>
-  <data name="Frontend.323" xml:space="preserve">
+  <data name="Frontend.AgentsManager.GroupIDNotProvided" xml:space="preserve">
     <value>ID de groupe non fourni</value>
   </data>
-  <data name="Frontend.324" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TaskDoesNotExistValue" xml:space="preserve">
     <value>La tâche n'existe pas : {0}</value>
   </data>
-  <data name="Frontend.325" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ArchivedSuccessfully" xml:space="preserve">
     <value>Archivé</value>
   </data>
-  <data name="Frontend.326" xml:space="preserve">
+  <data name="Frontend.AgentsManager.UnarchivedSuccessfully" xml:space="preserve">
     <value>Désarchivé</value>
   </data>
-  <data name="Frontend.327" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TaskIDNotProvided" xml:space="preserve">
     <value>ID de tâche non fourni</value>
   </data>
-  <data name="Frontend.328" xml:space="preserve">
+  <data name="Frontend.AgentsManager.NoStartableTaskFound" xml:space="preserve">
     <value>Aucune tâche pouvant être démarrée</value>
   </data>
-  <data name="Frontend.329" xml:space="preserve">
+  <data name="Frontend.AgentsManager.BatchStartFinishedValueSucceededValueSkipped" xml:space="preserve">
     <value>Démarrage groupé terminé : {0} réussis, {1} ignorés</value>
   </data>
-  <data name="Frontend.330" xml:space="preserve">
+  <data name="Frontend.AgentsManager.ForceStopFinishedValueSucceededValueSkipped" xml:space="preserve">
     <value>Arrêt forcé terminé : {0} réussies, {1} ignorées</value>
   </data>
-  <data name="Frontend.331" xml:space="preserve">
+  <data name="Frontend.AgentsManager.TaskDeletionFinishedValueSucceeded" xml:space="preserve">
     <value>Suppression des tâches terminée : {0} réussies</value>
   </data>
   <data name="Agents.Error.MissingRunRequest" xml:space="preserve">
@@ -1313,6 +1293,12 @@
   </data>
   <data name="Studio.Loading" xml:space="preserve">
     <value>Chargement…</value>
+  </data>
+  <data name="Studio.LoadingConversation" xml:space="preserve">
+    <value>Chargement de la conversation…</value>
+  </data>
+  <data name="Studio.NoConversationRecords" xml:space="preserve">
+    <value>Aucun historique de conversation pour le moment</value>
   </data>
   <data name="Studio.Rounds" xml:space="preserve">
     <value>tours</value>
@@ -1502,233 +1488,233 @@
   </data>
 
 
-  <data name="Frontend.332" xml:space="preserve"><value>Une carte Agent A2A n'expose que le nom, la description et les compétences ; elle n'expose ni les Prompts, ni les secrets, ni les outils internes.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.333" xml:space="preserve"><value>Service public A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.334" xml:space="preserve"><value>A2A distant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.335" xml:space="preserve"><value>Agent A2A distant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.336" xml:space="preserve"><value>A2A:Secrets:nom-de-clé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.337" xml:space="preserve"><value>Nom de la carte Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.338" xml:space="preserve"><value>URL de la carte Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.339" xml:space="preserve"><value>Le modèle Agent ne dispose d'aucun connecteur autorisé ; le sélectionner ici ne l'appellera pas.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.340" xml:space="preserve"><value>Lorsqu'un groupe contient des membres humains, il se met en pause pour attendre une réponse textuelle au tour humain.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.341" xml:space="preserve"><value>Niveau HIL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.342" xml:space="preserve"><value>Un humain n'appelle pas de modèle ; cette liaison conserve la politique de tâches de l'Agent système et suit par défaut la tâche du groupe.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.343" xml:space="preserve"><value>Participant humain</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.344" xml:space="preserve"><value>Tour humain</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.345" xml:space="preserve"><value>L0 entièrement automatique (les plugins/MCP s'exécutent automatiquement)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.346" xml:space="preserve"><value>L1 approbation fondée sur le risque (approbation MCP par défaut)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.347" xml:space="preserve"><value>L2 approbation des outils (confirmer chaque outil au préalable)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.348" xml:space="preserve"><value>L3 participant humain + approbation des outils</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.349" xml:space="preserve"><value>Autorisations des outils MCP</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.350" xml:space="preserve"><value>Partage du contexte</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.351" xml:space="preserve"><value>N'autoriser aucun connecteur</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.352" xml:space="preserve"><value>Ne pas lier de base de connaissances</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.353" xml:space="preserve"><value>Laisser non sélectionné pour n'utiliser aucun connecteur cette fois</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.354" xml:space="preserve"><value>Paramètres personnalisés</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.355" xml:space="preserve"><value>maintenu ici.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.356" xml:space="preserve"><value>Instructions de tâche uniquement</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.357" xml:space="preserve"><value>Sélectionner dans la liste MCP</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.358" xml:space="preserve"><value>Hériter de PromptRange</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.359" xml:space="preserve"><value>Ces endpoints proviennent du registre du module MCP. Sélectionnez-en un pour l'ajouter à la configuration actuelle sous forme de nom + URL ; il peut être supprimé à tout moment.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.360" xml:space="preserve"><value>Instructions de tâche + conclusion clé du tour actuel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.361" xml:space="preserve"><value>Description de la tâche et stratégie d'exécution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.362" xml:space="preserve"><value>Créer une Prompt Range à partir du Prompt en texte brut actuel et du modèle Chat sélectionné, l'exécuter une fois, la noter avec l'IA et basculer automatiquement vers une référence au niveau de la plage.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.363" xml:space="preserve"><value>Par exemple X-A2A-Token</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.364" xml:space="preserve"><value>Par exemple X-API-Key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.365" xml:space="preserve"><value>Par exemple partner-ncf</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.366" xml:space="preserve"><value>Par exemple research-agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.367" xml:space="preserve"><value>Par exemple : assistant de recherche externe</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.368" xml:space="preserve"><value>Utilisé par les systèmes distants pour choisir un Agent ; ne saisissez pas de Prompts ni d'informations internes.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.369" xml:space="preserve"><value>Enregistrer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.370" xml:space="preserve"><value>Enregistrer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.371" xml:space="preserve"><value>Autoriser les appels d'outils locaux</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.372" xml:space="preserve"><value>Authentification entrante</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.373" xml:space="preserve"><value>Description publique</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.374" xml:space="preserve"><value>Identifiant public</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.375" xml:space="preserve"><value>Compatibilité des plugins</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.376" xml:space="preserve"><value>Approbation forcée compatible</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.377" xml:space="preserve"><value>Commutateur de compatibilité : exiger une approbation avant chaque appel d'outil</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.378" xml:space="preserve"><value>Compatibilité des groupes hérités : historique complet (uniquement sans membres distants)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.379" xml:space="preserve"><value>Supprimer l'Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.380" xml:space="preserve"><value>Actualiser les données</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.381" xml:space="preserve"><value>Actualiser l'état</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.382" xml:space="preserve"><value>Ajouter un participant humain textuel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.383" xml:space="preserve"><value>La publication crée une carte Agent standard, détectable et appelable par tout système compatible avec A2A.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.384" xml:space="preserve"><value>Publier l'Agent local comme service A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.385" xml:space="preserve"><value>Seules les lettres minuscules, les chiffres et les tirets sont autorisés ; l'adresse reste stable après l'activation.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.386" xml:space="preserve"><value>Saisissez uniquement le nom du secret, pas la valeur du jeton</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.387" xml:space="preserve"><value>Seuls les Workflows disponibles pour l'administrateur actuel sont affichés ; les autorisations et les références circulaires sont vérifiées à nouveau lors de l'enregistrement d'un Agent ou d'un Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.388" xml:space="preserve"><value>Seuls les connecteurs sélectionnés ici peuvent être appelés par cet Agent. Laissez vide pour n'accorder aucun accès aux outils externes.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.389" xml:space="preserve"><value>Membres de groupe mentionnables</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.390" xml:space="preserve"><value>Facultatif ; visible uniquement par les administrateurs</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.391" xml:space="preserve"><value>Nom</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.392" xml:space="preserve"><value>Activer le service public</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.393" xml:space="preserve"><value>Activer ce groupe</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.394" xml:space="preserve"><value>Copier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.395" xml:space="preserve"><value>Les liaisons complexes sont gérées dans le panneau latéral droit ; l'état actuel de modification de l'Agent est conservé.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.396" xml:space="preserve"><value>Paramètres complets</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.397" xml:space="preserve"><value>Le service public est activé : des systèmes externes authentifiés peuvent appeler cet Agent. Vérifiez que le Prompt, la base de connaissances et les réponses peuvent être partagés, puis contrôlez l'accès et le coût du modèle avec HTTPS, des limites de passerelle et une supervision.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.398" xml:space="preserve"><value>Outils</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.399" xml:space="preserve"><value>Outils et workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.400" xml:space="preserve"><value>Approbation des appels d'outils</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.401" xml:space="preserve"><value>Données cumulées/en direct enregistrées pour les Agents locaux</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.402" xml:space="preserve"><value>Connecté</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.403" xml:space="preserve"><value>Lorsqu'elle est activée, cette option remplace les autorisations d'outils plus permissives ci-dessous ; les nouvelles configurations doivent utiliser directement les niveaux HIL et les autorisations par catégorie.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.404" xml:space="preserve"><value>Lorsqu'elle est activée, les requêtes externes peuvent déclencher indirectement les Functions ou outils MCP configurés pour cet Agent local. N'ouvrez cette option qu'aux appelants de confiance.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.405" xml:space="preserve"><value>Le groupe actuel attend un tour humain et une réponse textuelle.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.406" xml:space="preserve"><value>L'authentification entrante est désactivée. Utilisez cette option uniquement sur un réseau isolé et contrôlé ; les appels publics ou interorganisationnels doivent utiliser un Bearer Token ou un en-tête personnalisé.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.407" xml:space="preserve"><value>Le groupe actuel ne possède aucun membre mentionnable.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.408" xml:space="preserve"><value>Modification rapide</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.409" xml:space="preserve"><value>Un Prompt manuel nécessite de sélectionner manuellement un modèle Chat AI.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.410" xml:space="preserve"><value>Aucun modèle PromptRange n'est disponible pour l'héritage de ce Prompt manuel ; sélectionnez manuellement un modèle Chat AI.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.411" xml:space="preserve"><value>Sélectionner manuellement un AIModel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.412" xml:space="preserve"><value>Approuver avant l'exécution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.413" xml:space="preserve"><value>Approuver</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.414" xml:space="preserve"><value>Description publique de la compétence</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.415" xml:space="preserve"><value>Identifiant / nom de la compétence</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.416" xml:space="preserve"><value>Rejeter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.417" xml:space="preserve"><value>Filtrer par nom</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.418" xml:space="preserve"><value>Envoyer la réponse humaine</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.419" xml:space="preserve"><value>Autorisations des outils de plugins</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.420" xml:space="preserve"><value>Rechercher un nom, une URL ou une description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.421" xml:space="preserve"><value>Rechercher un nom, un module ou une description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.422" xml:space="preserve"><value>La base de données ne stocke que la référence du secret ; configurez le jeton réel dans les paramètres de déploiement.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.423" xml:space="preserve"><value>Ajouter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.424" xml:space="preserve"><value>Ajouter un A2A distant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.425" xml:space="preserve"><value>Les nouveaux groupes sont activés par défaut. Les groupes désactivés ne créent pas de nouvelles tâches et n'agissent pas comme des nœuds Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.426" xml:space="preserve"><value>La surface de la tuile représente la taille relative de la métrique sélectionnée ; cliquez sur une tuile pour modifier l'Agent.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.427" xml:space="preserve"><value>Aucune authentification</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.428" xml:space="preserve"><value>Aucune (réseaux contrôlés uniquement)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.429" xml:space="preserve"><value>Les anciennes données vectorielles doivent être re-vectorisées dans la base de connaissances avant de devenir une collection publiée pour une récupération isolée et sûre par Agent.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.430" xml:space="preserve"><value>Graphique des statistiques des Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.431" xml:space="preserve"><value>Aucun Agent n'est disponible pour les statistiques.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.432" xml:space="preserve"><value>Nombre maximal de tours de chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.433" xml:space="preserve"><value>Non testé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.434" xml:space="preserve"><value>Non lié</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.435" xml:space="preserve"><value>Aucune base de connaissances liée</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.436" xml:space="preserve"><value>Local</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.437" xml:space="preserve"><value>Agents locaux</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.438" xml:space="preserve"><value>Les appels d'outils locaux sont activés. Les requêtes externes peuvent déclencher indirectement des écritures Function/MCP ou des accès externes ; n'ouvrez cette option qu'aux appelants de confiance.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.439" xml:space="preserve"><value>Membres locaux</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.440" xml:space="preserve"><value>Politique d'exécution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.441" xml:space="preserve"><value>Connecteurs pour cette exécution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.442" xml:space="preserve"><value>Voir les tâches</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.443" xml:space="preserve"><value>Voir les tâches associées à cet Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.444" xml:space="preserve"><value>Cette tâche a été créée avant l'activation de l'enregistrement des politiques ; ses autorisations HIL et d'outils historiques ne peuvent pas être restaurées.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.445" xml:space="preserve"><value>Tester</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.446" xml:space="preserve"><value>Tout tester</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.447" xml:space="preserve"><value>Échec du test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.448" xml:space="preserve"><value>Les groupes mixtes utilisent la politique la plus stricte requise par tous les membres distants ; sans paramètres de groupe locaux, le comportement antérieur à la mise à niveau est conservé.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.449" xml:space="preserve"><value>Cliquez sur un membre pour insérer une mention à la position actuelle du curseur dans la description de tâche ci-dessous.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.450" xml:space="preserve"><value>État</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.451" xml:space="preserve"><value>Générer dans PromptRange et lancer l'évaluation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.452" xml:space="preserve"><value>Laisser vide pour utiliser le nom de la carte</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.453" xml:space="preserve"><value>Laisser vide pour utiliser la description publique</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.454" xml:space="preserve"><value>Laisser vide pour utiliser le nom de l'Agent local</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.455" xml:space="preserve"><value>Interdit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.456" xml:space="preserve"><value>Répondre plus tard</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.457" xml:space="preserve"><value>Traiter plus tard</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.458" xml:space="preserve"><value>Gérer les liaisons</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.459" xml:space="preserve"><value>Gérer les ressources</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.460" xml:space="preserve"><value>Gérer les A2A distants</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.461" xml:space="preserve"><value>Gérer les Agents A2A distants</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.462" xml:space="preserve"><value>Type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.463" xml:space="preserve"><value>Lier un modèle</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.464" xml:space="preserve"><value>Lier une base de connaissances</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.465" xml:space="preserve"><value>Base de connaissances :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.466" xml:space="preserve"><value>Graphique des statistiques</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.467" xml:space="preserve"><value>Périmètre des statistiques</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.468" xml:space="preserve"><value>Hériter du niveau HIL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.469" xml:space="preserve"><value>Modifier les paramètres</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.470" xml:space="preserve"><value>Exécution automatique</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.471" xml:space="preserve"><value>En-tête de requête personnalisé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.472" xml:space="preserve"><value>Laisser le modèle appeler FunctionRender, Workflow ou des plugins compatibles si nécessaire.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.473" xml:space="preserve"><value>Paramètres</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.474" xml:space="preserve"><value>Nom de l'en-tête de requête</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.475" xml:space="preserve"><value>Saisissez du texte ; la tâche continue après l'envoi</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.476" xml:space="preserve"><value>Sélectionner un modèle Chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.477" xml:space="preserve"><value>Ressources</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.478" xml:space="preserve"><value>Suivre la tâche du groupe</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.479" xml:space="preserve"><value>Lorsqu'une exécution atteint un tour humain, la tâche se met en pause et la boîte de dialogue accepte le texte ; après une réponse réussie, le Workflow MAF continue.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.480" xml:space="preserve"><value>A2A distant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.481" xml:space="preserve"><value>Membres A2A distants</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.482" xml:space="preserve"><value>Agents A2A distants</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.483" xml:space="preserve"><value>Par défaut, les membres distants ne reçoivent que les instructions de la tâche et la conclusion textuelle du tour actuel ; les appels d'outils, le contenu brut du modèle et l'historique complet ne sont pas partagés.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.484" xml:space="preserve"><value>Valeur par défaut du membre distant : instructions + conclusions clés</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.485" xml:space="preserve"><value>Agent distant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.486" xml:space="preserve"><value>Connexion</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.487" xml:space="preserve"><value>Autorisations des connecteurs</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.488" xml:space="preserve"><value>Délai d'expiration de connexion (secondes)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.489" xml:space="preserve"><value>Nom du secret de déploiement</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.490" xml:space="preserve"><value>Configurer / publier comme Agent A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.491" xml:space="preserve"><value>Mode d'authentification</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.492" xml:space="preserve"><value>Nombre maximal de caractères en entrée</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.493" xml:space="preserve"><value>Les appels d'outils locaux sont activés. Les requêtes externes peuvent déclencher indirectement des écritures Function/MCP ou des accès externes ; n'ouvrez cette option qu'aux appelants de confiance.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.494" xml:space="preserve"><value>Les appels d'outils locaux sont activés. Les requêtes externes peuvent déclencher indirectement des écritures Function/MCP ou des accès externes ; n'ouvrez cette option qu'aux appelants de confiance.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.495" xml:space="preserve"><value>Les appels d'outils locaux sont activés. Les requêtes externes peuvent déclencher indirectement des écritures Function/MCP ou des accès externes ; n'ouvrez que les outils minimum nécessaires aux appelants explicitement approuvés.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.496" xml:space="preserve"><value>Total</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.497" xml:space="preserve"><value>Tours terminés</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.498" xml:space="preserve"><value>Base de connaissances</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.499" xml:space="preserve"><value>Gérer la publication A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.500" xml:space="preserve"><value>Publier en tant que A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.501" xml:space="preserve"><value>Désactiver</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.502" xml:space="preserve"><value>Activer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.503" xml:space="preserve"><value>Tours de conversation terminés :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.504" xml:space="preserve"><value>Tâches terminées :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.505" xml:space="preserve"><value>Tokens d'entrée :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.506" xml:space="preserve"><value>Tokens de sortie :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.507" xml:space="preserve"><value>Tokens totaux :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.508" xml:space="preserve"><value>Réponse moyenne :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.509" xml:space="preserve"><value>Dernière activité :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.510" xml:space="preserve"><value>Aucune liaison n'est disponible pour la sélection.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.511" xml:space="preserve"><value>Aucun endpoint MCP n'est disponible pour la sélection.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.512" xml:space="preserve"><value>{0} endpoints sont configurés</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.513" xml:space="preserve"><value>Chargement de la configuration du groupe</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.514" xml:space="preserve"><value>Inspecter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.515" xml:space="preserve"><value>Autoriser les appels A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.516" xml:space="preserve"><value>Autorisé explicitement</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.517" xml:space="preserve"><value>Liaisons d'outils et de workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.518" xml:space="preserve"><value>Copier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.AnATwoAAgentCardExposesOnlyTheNameDescriptionAnd" xml:space="preserve"><value>Une carte Agent A2A n'expose que le nom, la description et les compétences ; elle n'expose ni les Prompts, ni les secrets, ni les outils internes.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ATwoAPublicService" xml:space="preserve"><value>Service public A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.RemoteATwoA" xml:space="preserve"><value>A2A distant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.RemoteATwoAAgent" xml:space="preserve"><value>Agent A2A distant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ATwoASecretsKeyName" xml:space="preserve"><value>A2A:Secrets:nom-de-clé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.AgentCardName" xml:space="preserve"><value>Nom de la carte Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.AgentCardURL" xml:space="preserve"><value>URL de la carte Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.TheAgentTemplateHasNoAuthorizedConnectorsSelectingOneHereWillNot" xml:space="preserve"><value>Le modèle Agent ne dispose d'aucun connecteur autorisé ; le sélectionner ici ne l'appellera pas.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.WhenAGroupHasHumanMembersItPausesForATextReply" xml:space="preserve"><value>Lorsqu'un groupe contient des membres humains, il se met en pause pour attendre une réponse textuelle au tour humain.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.HILLevel" xml:space="preserve"><value>Niveau HIL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.HumanDoesNotCallAModelThisBindingPreservesTheSystemAgent" xml:space="preserve"><value>Un humain n'appelle pas de modèle ; cette liaison conserve la politique de tâches de l'Agent système et suit par défaut la tâche du groupe.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.HumanParticipant" xml:space="preserve"><value>Participant humain</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.HumanTurn" xml:space="preserve"><value>Tour humain</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LZeroFullyAutomaticPluginsMCPExecuteAutomatically" xml:space="preserve"><value>L0 entièrement automatique (les plugins/MCP s'exécutent automatiquement)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LOneRiskBasedApprovalMCPDefaultApproval" xml:space="preserve"><value>L1 approbation fondée sur le risque (approbation MCP par défaut)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LTwoToolApprovalConfirmEveryToolFirst" xml:space="preserve"><value>L2 approbation des outils (confirmer chaque outil au préalable)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LThreeHumanParticipantToolApproval" xml:space="preserve"><value>L3 participant humain + approbation des outils</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.MCPToolPermissions" xml:space="preserve"><value>Autorisations des outils MCP</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ContextSharing" xml:space="preserve"><value>Partage du contexte</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.DoNotAuthorizeAnyConnector" xml:space="preserve"><value>N'autoriser aucun connecteur</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.DoNotBindAKnowledgeBase" xml:space="preserve"><value>Ne pas lier de base de connaissances</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LeaveUnselectedToUseNoConnectorThisTime" xml:space="preserve"><value>Laisser non sélectionné pour n'utiliser aucun connecteur cette fois</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.PersonalizedParameters" xml:space="preserve"><value>Paramètres personnalisés</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.MaintainedHere" xml:space="preserve"><value>maintenu ici.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.TaskInstructionsOnly" xml:space="preserve"><value>Instructions de tâche uniquement</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.SelectFromTheMCPList" xml:space="preserve"><value>Sélectionner dans la liste MCP</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.InheritFromPromptRange" xml:space="preserve"><value>Hériter de PromptRange</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.TheseEndpointsComeFromTheMCPModuleRegistrySelectOneToAdd" xml:space="preserve"><value>Ces endpoints proviennent du registre du module MCP. Sélectionnez-en un pour l'ajouter à la configuration actuelle sous forme de nom + URL ; il peut être supprimé à tout moment.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.TaskInstructionsKeyConclusionFromTheCurrentTurn" xml:space="preserve"><value>Instructions de tâche + conclusion clé du tour actuel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.TaskDescriptionAndExecutionStrategy" xml:space="preserve"><value>Description de la tâche et stratégie d'exécution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.CreateAPromptRangeFromTheCurrentPlainTextPromptAndSelected" xml:space="preserve"><value>Créer une Prompt Range à partir du Prompt en texte brut actuel et du modèle Chat sélectionné, l'exécuter une fois, la noter avec l'IA et basculer automatiquement vers une référence au niveau de la plage.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ForExampleXATwoAToken" xml:space="preserve"><value>Par exemple X-A2A-Token</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ForExampleXAPIKey" xml:space="preserve"><value>Par exemple X-API-Key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ForExamplePartnerNcf" xml:space="preserve"><value>Par exemple partner-ncf</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ForExampleResearchAgent" xml:space="preserve"><value>Par exemple research-agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ForExampleExternalResearchAssistant" xml:space="preserve"><value>Par exemple : assistant de recherche externe</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.UsedByRemoteSystemsToChooseAnAgentDoNotEnterPrompts" xml:space="preserve"><value>Utilisé par les systèmes distants pour choisir un Agent ; ne saisissez pas de Prompts ni d'informations internes.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Save" xml:space="preserve"><value>Enregistrer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.SaveAlternate" xml:space="preserve"><value>Enregistrer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.AllowLocalToolCalls" xml:space="preserve"><value>Autoriser les appels d'outils locaux</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.InboundAuthentication" xml:space="preserve"><value>Authentification entrante</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.PublicDescription" xml:space="preserve"><value>Description publique</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.PublicIdentifier" xml:space="preserve"><value>Identifiant public</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.PluginCompatibility" xml:space="preserve"><value>Compatibilité des plugins</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.CompatibleForcedApproval" xml:space="preserve"><value>Approbation forcée compatible</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.CompatibilitySwitchRequireApprovalBeforeEveryToolCall" xml:space="preserve"><value>Commutateur de compatibilité : exiger une approbation avant chaque appel d'outil</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LegacyGroupCompatibilityFullHistoryOnlyWithoutRemoteMembers" xml:space="preserve"><value>Compatibilité des groupes hérités : historique complet (uniquement sans membres distants)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.DeleteAgent" xml:space="preserve"><value>Supprimer l'Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.RefreshData" xml:space="preserve"><value>Actualiser les données</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.RefreshStatus" xml:space="preserve"><value>Actualiser l'état</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.AddAHumanTextParticipant" xml:space="preserve"><value>Ajouter un participant humain textuel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.PublishingCreatesAStandardAgentCardDiscoverableAndCallableByAnyA" xml:space="preserve"><value>La publication crée une carte Agent standard, détectable et appelable par tout système compatible avec A2A.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.PublishLocalAgentAsAnATwoAService" xml:space="preserve"><value>Publier l'Agent local comme service A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.OnlyLowercaseLettersDigitsAndHyphensAreAllowedTheAddressRemainsStable" xml:space="preserve"><value>Seules les lettres minuscules, les chiffres et les tirets sont autorisés ; l'adresse reste stable après l'activation.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.EnterOnlyTheSecretNameNotTheTokenValue" xml:space="preserve"><value>Saisissez uniquement le nom du secret, pas la valeur du jeton</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.OnlyWorkflowsAvailableToTheCurrentAdministratorAreShownPermissionsAndCircular" xml:space="preserve"><value>Seuls les Workflows disponibles pour l'administrateur actuel sont affichés ; les autorisations et les références circulaires sont vérifiées à nouveau lors de l'enregistrement d'un Agent ou d'un Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.OnlyConnectorsSelectedHereCanBeCalledByThisAgentLeaveEmpty" xml:space="preserve"><value>Seuls les connecteurs sélectionnés ici peuvent être appelés par cet Agent. Laissez vide pour n'accorder aucun accès aux outils externes.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.MentionableGroupMembers" xml:space="preserve"><value>Membres de groupe mentionnables</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.OptionalVisibleToAdministratorsOnly" xml:space="preserve"><value>Facultatif ; visible uniquement par les administrateurs</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Name" xml:space="preserve"><value>Nom</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.EnablePublicService" xml:space="preserve"><value>Activer le service public</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.EnableThisGroup" xml:space="preserve"><value>Activer ce groupe</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Copy" xml:space="preserve"><value>Copier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ComplexBindingsAreManagedInTheRightDrawerTheCurrentAgentEditing" xml:space="preserve"><value>Les liaisons complexes sont gérées dans le panneau latéral droit ; l'état actuel de modification de l'Agent est conservé.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.FullParameters" xml:space="preserve"><value>Paramètres complets</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.PublicServiceIsEnabledAuthenticatedExternalSystemsCanCallThisAgentConfirm" xml:space="preserve"><value>Le service public est activé : des systèmes externes authentifiés peuvent appeler cet Agent. Vérifiez que le Prompt, la base de connaissances et les réponses peuvent être partagés, puis contrôlez l'accès et le coût du modèle avec HTTPS, des limites de passerelle et une supervision.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Tools" xml:space="preserve"><value>Outils</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ToolsAndWorkflows" xml:space="preserve"><value>Outils et workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ToolCallApproval" xml:space="preserve"><value>Approbation des appels d'outils</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.RecordedCumulativeLiveDataForLocalAgents" xml:space="preserve"><value>Données cumulées/en direct enregistrées pour les Agents locaux</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Connected" xml:space="preserve"><value>Connecté</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.WhenEnabledThisOverridesTheMorePermissiveToolPermissionsBelowNewConfigurations" xml:space="preserve"><value>Lorsqu'elle est activée, cette option remplace les autorisations d'outils plus permissives ci-dessous ; les nouvelles configurations doivent utiliser directement les niveaux HIL et les autorisations par catégorie.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.WhenEnabledExternalRequestsMayIndirectlyTriggerFunctionsOrMCPToolsConfigured" xml:space="preserve"><value>Lorsqu'elle est activée, les requêtes externes peuvent déclencher indirectement les Functions ou outils MCP configurés pour cet Agent local. N'ouvrez cette option qu'aux appelants de confiance.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.TheCurrentGroupIsWaitingForAHumanTurnAndAText" xml:space="preserve"><value>Le groupe actuel attend un tour humain et une réponse textuelle.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.InboundAuthenticationIsDisabledUseThisOnlyOnAnIsolatedControlledNetwork" xml:space="preserve"><value>L'authentification entrante est désactivée. Utilisez cette option uniquement sur un réseau isolé et contrôlé ; les appels publics ou interorganisationnels doivent utiliser un Bearer Token ou un en-tête personnalisé.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.TheCurrentGroupHasNoMentionableMembers" xml:space="preserve"><value>Le groupe actuel ne possède aucun membre mentionnable.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.QuickEdit" xml:space="preserve"><value>Modification rapide</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.AManualPromptRequiresManuallySelectingAChatAIModel" xml:space="preserve"><value>Un Prompt manuel nécessite de sélectionner manuellement un modèle Chat AI.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.NoPromptRangeModelIsAvailableToInheritForThisManualPromptSelect" xml:space="preserve"><value>Aucun modèle PromptRange n'est disponible pour l'héritage de ce Prompt manuel ; sélectionnez manuellement un modèle Chat AI.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.SelectAIModelManually" xml:space="preserve"><value>Sélectionner manuellement un AIModel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ApproveBeforeExecution" xml:space="preserve"><value>Approuver avant l'exécution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Approve" xml:space="preserve"><value>Approuver</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.PublicSkillDescription" xml:space="preserve"><value>Description publique de la compétence</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.SkillIdentifierName" xml:space="preserve"><value>Identifiant / nom de la compétence</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Reject" xml:space="preserve"><value>Rejeter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.FilterByName" xml:space="preserve"><value>Filtrer par nom</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.SubmitHumanResponse" xml:space="preserve"><value>Envoyer la réponse humaine</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.PluginToolPermissions" xml:space="preserve"><value>Autorisations des outils de plugins</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.SearchNameURLOrDescription" xml:space="preserve"><value>Rechercher un nom, une URL ou une description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.SearchNameModuleOrDescription" xml:space="preserve"><value>Rechercher un nom, un module ou une description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.TheDatabaseStoresOnlyTheSecretReferenceConfigureTheActualTokenIn" xml:space="preserve"><value>La base de données ne stocke que la référence du secret ; configurez le jeton réel dans les paramètres de déploiement.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.AddAlternate" xml:space="preserve"><value>Ajouter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.AddRemoteATwoA" xml:space="preserve"><value>Ajouter un A2A distant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.NewGroupsAreEnabledByDefaultDisabledGroupsDoNotCreateNew" xml:space="preserve"><value>Les nouveaux groupes sont activés par défaut. Les groupes désactivés ne créent pas de nouvelles tâches et n'agissent pas comme des nœuds Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.TileAreaRepresentsTheRelativeSizeOfTheSelectedMetricClickA" xml:space="preserve"><value>La surface de la tuile représente la taille relative de la métrique sélectionnée ; cliquez sur une tuile pour modifier l'Agent.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.NoAuthentication" xml:space="preserve"><value>Aucune authentification</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.NoneControlledNetworksOnly" xml:space="preserve"><value>Aucune (réseaux contrôlés uniquement)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LegacyVectorDataMustBeReVectorizedInTheKnowledgeBaseBefore" xml:space="preserve"><value>Les anciennes données vectorielles doivent être re-vectorisées dans la base de connaissances avant de devenir une collection publiée pour une récupération isolée et sûre par Agent.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.AgentStatisticsChart" xml:space="preserve"><value>Graphique des statistiques des Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.NoAgentsAreAvailableForStatistics" xml:space="preserve"><value>Aucun Agent n'est disponible pour les statistiques.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.MaximumChatRounds" xml:space="preserve"><value>Nombre maximal de tours de chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.NotTested" xml:space="preserve"><value>Non testé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.NotBound" xml:space="preserve"><value>Non lié</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.NoKnowledgeBaseBound" xml:space="preserve"><value>Aucune base de connaissances liée</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Local" xml:space="preserve"><value>Local</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LocalAgents" xml:space="preserve"><value>Agents locaux</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LocalToolCallsAreEnabledExternalRequestsMayIndirectlyTriggerFunctionMCP" xml:space="preserve"><value>Les appels d'outils locaux sont activés. Les requêtes externes peuvent déclencher indirectement des écritures Function/MCP ou des accès externes ; n'ouvrez cette option qu'aux appelants de confiance.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LocalMembers" xml:space="preserve"><value>Membres locaux</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.RunPolicy" xml:space="preserve"><value>Politique d'exécution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ConnectorsForThisRun" xml:space="preserve"><value>Connecteurs pour cette exécution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ViewTasks" xml:space="preserve"><value>Voir les tâches</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ViewTasksAssociatedWithThisAgent" xml:space="preserve"><value>Voir les tâches associées à cet Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ThisTaskWasCreatedBeforePolicyRecordingWasEnabledItsHistoricalHIL" xml:space="preserve"><value>Cette tâche a été créée avant l'activation de l'enregistrement des politiques ; ses autorisations HIL et d'outils historiques ne peuvent pas être restaurées.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Test" xml:space="preserve"><value>Tester</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.TestAll" xml:space="preserve"><value>Tout tester</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.TestFailed" xml:space="preserve"><value>Échec du test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.MixedGroupsUseTheStrictestPolicyRequiredByAllRemoteMembersWithout" xml:space="preserve"><value>Les groupes mixtes utilisent la politique la plus stricte requise par tous les membres distants ; sans paramètres de groupe locaux, le comportement antérieur à la mise à niveau est conservé.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ClickAMemberToInsertAMentionAtTheCurrentCursorPosition" xml:space="preserve"><value>Cliquez sur un membre pour insérer une mention à la position actuelle du curseur dans la description de tâche ci-dessous.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.StatusAlternate" xml:space="preserve"><value>État</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.GenerateInPromptRangeAndRunScoring" xml:space="preserve"><value>Générer dans PromptRange et lancer l'évaluation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LeaveEmptyToUseTheCardName" xml:space="preserve"><value>Laisser vide pour utiliser le nom de la carte</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LeaveEmptyToUseThePublicDescription" xml:space="preserve"><value>Laisser vide pour utiliser la description publique</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LeaveEmptyToUseTheLocalAgentName" xml:space="preserve"><value>Laisser vide pour utiliser le nom de l'Agent local</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Prohibited" xml:space="preserve"><value>Interdit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ReplyLater" xml:space="preserve"><value>Répondre plus tard</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.HandleLater" xml:space="preserve"><value>Traiter plus tard</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ManageBindings" xml:space="preserve"><value>Gérer les liaisons</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ManageMaterials" xml:space="preserve"><value>Gérer les ressources</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ManageRemoteATwoA" xml:space="preserve"><value>Gérer les A2A distants</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ManageRemoteATwoAAgents" xml:space="preserve"><value>Gérer les Agents A2A distants</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Type" xml:space="preserve"><value>Type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.BindModel" xml:space="preserve"><value>Lier un modèle</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.BindKnowledgeBase" xml:space="preserve"><value>Lier une base de connaissances</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.KnowledgeBase" xml:space="preserve"><value>Base de connaissances :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.StatisticsChart" xml:space="preserve"><value>Graphique des statistiques</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.StatisticsScope" xml:space="preserve"><value>Périmètre des statistiques</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.InheritHILLevel" xml:space="preserve"><value>Hériter du niveau HIL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.EditSettings" xml:space="preserve"><value>Modifier les paramètres</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.AutomaticExecution" xml:space="preserve"><value>Exécution automatique</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.CustomRequestHeader" xml:space="preserve"><value>En-tête de requête personnalisé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LetTheModelCallFunctionRenderWorkflowOrCompatiblePluginsAsNeeded" xml:space="preserve"><value>Laisser le modèle appeler FunctionRender, Workflow ou des plugins compatibles si nécessaire.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Settings" xml:space="preserve"><value>Paramètres</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.RequestHeaderName" xml:space="preserve"><value>Nom de l'en-tête de requête</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.EnterTextTheTaskContinuesAfterSubmission" xml:space="preserve"><value>Saisissez du texte ; la tâche continue après l'envoi</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.SelectAChatModel" xml:space="preserve"><value>Sélectionner un modèle Chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Materials" xml:space="preserve"><value>Ressources</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.FollowGroupTask" xml:space="preserve"><value>Suivre la tâche du groupe</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.WhenARunReachesAHumanTurnTheTaskPausesAndThe" xml:space="preserve"><value>Lorsqu'une exécution atteint un tour humain, la tâche se met en pause et la boîte de dialogue accepte le texte ; après une réponse réussie, le Workflow MAF continue.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.RemoteATwoAAlternate" xml:space="preserve"><value>A2A distant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.RemoteATwoAMembers" xml:space="preserve"><value>Membres A2A distants</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.RemoteATwoAAgents" xml:space="preserve"><value>Agents A2A distants</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.RemoteMembersReceiveOnlyTaskInstructionsAndTheCurrentTurnSText" xml:space="preserve"><value>Par défaut, les membres distants ne reçoivent que les instructions de la tâche et la conclusion textuelle du tour actuel ; les appels d'outils, le contenu brut du modèle et l'historique complet ne sont pas partagés.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.RemoteMemberDefaultInstructionsKeyConclusions" xml:space="preserve"><value>Valeur par défaut du membre distant : instructions + conclusions clés</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.RemoteAgent" xml:space="preserve"><value>Agent distant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Connection" xml:space="preserve"><value>Connexion</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ConnectorPermissions" xml:space="preserve"><value>Autorisations des connecteurs</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ConnectionTimeoutSeconds" xml:space="preserve"><value>Délai d'expiration de connexion (secondes)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.DeploymentSecretName" xml:space="preserve"><value>Nom du secret de déploiement</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ConfigurePublishAsATwoAAgent" xml:space="preserve"><value>Configurer / publier comme Agent A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.AuthenticationMode" xml:space="preserve"><value>Mode d'authentification</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.MaximumInputCharacters" xml:space="preserve"><value>Nombre maximal de caractères en entrée</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LocalToolCallsAreEnabledExternalRequestsMayIndirectlyTriggerFunctionMCPAlternate" xml:space="preserve"><value>Les appels d'outils locaux sont activés. Les requêtes externes peuvent déclencher indirectement des écritures Function/MCP ou des accès externes ; n'ouvrez cette option qu'aux appelants de confiance.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="Frontend.AgentsManager.LocalToolCallsAreEnabledExternalRequestsMayIndirectlyTriggerFunctionMCPSupplemental" xml:space="preserve"><value>Les appels d'outils locaux sont activés. Les requêtes externes peuvent déclencher indirectement des écritures Function/MCP ou des accès externes ; n'ouvrez que les outils minimum nécessaires aux appelants explicitement approuvés.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Total" xml:space="preserve"><value>Total</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.CompletedRounds" xml:space="preserve"><value>Tours terminés</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.KnowledgeBaseAlternate" xml:space="preserve"><value>Base de connaissances</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ManageATwoAPublishing" xml:space="preserve"><value>Gérer la publication A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.PublishAsATwoA" xml:space="preserve"><value>Publier en tant que A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Disable" xml:space="preserve"><value>Désactiver</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Enable" xml:space="preserve"><value>Activer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.CompletedConversationRounds" xml:space="preserve"><value>Tours de conversation terminés :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.CompletedTasks" xml:space="preserve"><value>Tâches terminées :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.InputTokensLabel" xml:space="preserve"><value>Tokens d'entrée :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.OutputTokensLabel" xml:space="preserve"><value>Tokens de sortie :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.TotalTokens" xml:space="preserve"><value>Tokens totaux :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.AverageResponse" xml:space="preserve"><value>Réponse moyenne :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LastActivity" xml:space="preserve"><value>Dernière activité :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.NoBindingsAreAvailableForSelection" xml:space="preserve"><value>Aucune liaison n'est disponible pour la sélection.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.NoMCPEndpointsAreAvailableForSelection" xml:space="preserve"><value>Aucun endpoint MCP n'est disponible pour la sélection.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ValueEndpointsAreConfigured" xml:space="preserve"><value>{0} endpoints sont configurés</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.LoadingGroupConfiguration" xml:space="preserve"><value>Chargement de la configuration du groupe</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.Inspect" xml:space="preserve"><value>Inspecter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.AllowATwoACalls" xml:space="preserve"><value>Autoriser les appels A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ExplicitlyAllowed" xml:space="preserve"><value>Autorisé explicitement</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.ToolAndWorkflowBindings" xml:space="preserve"><value>Liaisons d'outils et de workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.AgentsManager.CopyAlternate" xml:space="preserve"><value>Copier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 
 
-  <data name="Frontend.520" xml:space="preserve"><value>Utiliser les connecteurs autorisés par chaque Agent</value></data>
-  <data name="Frontend.521" xml:space="preserve"><value>Utiliser uniquement les connecteurs sélectionnés</value></data>
-  <data name="Frontend.522" xml:space="preserve"><value>Chaîne cible</value></data>
-  <data name="Frontend.523" xml:space="preserve"><value>Chaîne non cible</value></data>
-  <data name="Frontend.524" xml:space="preserve"><value>Statistiques actualisées</value></data>
-  <data name="Frontend.525" xml:space="preserve"><value>Impossible de charger les membres du groupe</value></data>
-  <data name="Frontend.526" xml:space="preserve"><value>Impossible d’actualiser la liste complète des membres ; seuls les membres déjà chargés sont affichés</value></data>
-  <data name="Frontend.527" xml:space="preserve"><value>Des modifications ne sont pas enregistrées. Fermer quand même ?</value></data>
-  <data name="Frontend.528" xml:space="preserve"><value>Confirmer l’action</value></data>
-  <data name="Frontend.529" xml:space="preserve"><value>Non testé</value></data><data name="Frontend.530" xml:space="preserve"><value>Disponible</value></data><data name="Frontend.531" xml:space="preserve"><value>Indisponible</value></data><data name="Frontend.532" xml:space="preserve"><value>Désactivé</value></data><data name="Frontend.533" xml:space="preserve"><value>Échec du test de connexion</value></data><data name="Frontend.534" xml:space="preserve"><value>Aucun Agent A2A distant à tester</value></data><data name="Frontend.535" xml:space="preserve"><value>Tous réussis : {0} Agents A2A distants sont disponibles</value></data><data name="Frontend.536" xml:space="preserve"><value>Résultats du test groupé A2A distant</value></data><data name="Frontend.537" xml:space="preserve"><value>Compris</value></data><data name="Frontend.538" xml:space="preserve"><value>Échec du chargement des Agents A2A distants</value></data><data name="Frontend.539" xml:space="preserve"><value>Enregistrez d’abord l’Agent local, puis configurez la publication A2A</value></data><data name="Frontend.540" xml:space="preserve"><value>Échec du chargement de la configuration de publication A2A</value></data><data name="Frontend.541" xml:space="preserve"><value>Échec de l’enregistrement</value></data><data name="Frontend.542" xml:space="preserve"><value>Agent A2A distant enregistré</value></data><data name="Frontend.543" xml:space="preserve"><value>Échec de l’enregistrement de l’Agent A2A distant</value></data><data name="Frontend.544" xml:space="preserve"><value>Connexion réussie à l’Agent Card A2A</value></data><data name="Frontend.545" xml:space="preserve"><value>Échec du test groupé des connexions</value></data><data name="Frontend.546" xml:space="preserve"><value>Échec de la mise à jour de l’état</value></data><data name="Frontend.547" xml:space="preserve"><value>État mis à jour</value></data><data name="Frontend.548" xml:space="preserve"><value>Confirmer la suppression</value></data><data name="Frontend.549" xml:space="preserve"><value>Supprimer l’Agent A2A distant « {0} » ? Les Agents déjà présents dans un groupe ne peuvent pas être supprimés.</value></data><data name="Frontend.550" xml:space="preserve"><value>Échec de la suppression</value></data><data name="Frontend.551" xml:space="preserve"><value>Supprimé</value></data>
-  <data name="Frontend.552" xml:space="preserve"><value>Aucune tâche exécutable pour le moment</value></data>
-  <data name="Frontend.553" xml:space="preserve"><value>Impossible de charger les membres de la tâche</value></data>
-  <data name="Frontend.554" xml:space="preserve"><value>Impossible d’obtenir les statistiques</value></data>
-  <data name="Frontend.555" xml:space="preserve"><value>Aucun</value></data>
-  <data name="Frontend.556" xml:space="preserve"><value>Aucun groupe de discussion valide trouvé. Ouvrez la fenêtre de démarrage depuis un groupe ou les détails de la tâche.</value></data>
-  <data name="Frontend.557" xml:space="preserve"><value>Utilisateur confirmé</value></data>
-  <data name="Frontend.558" xml:space="preserve"><value>Utilisateur refusé</value></data>
-  <data name="Frontend.559" xml:space="preserve"><value>Échec de l’envoi de l’approbation humaine</value></data>
-  <data name="Frontend.560" xml:space="preserve"><value>Appel d’outil approuvé ; la tâche continue</value></data>
-  <data name="Frontend.561" xml:space="preserve"><value>Appel d’outil refusé ; la tâche continue</value></data>
-  <data name="Frontend.562" xml:space="preserve"><value>Saisissez la réponse humaine</value></data>
-  <data name="Frontend.563" xml:space="preserve"><value>Échec de l’envoi de la réponse humaine</value></data>
-  <data name="Frontend.564" xml:space="preserve"><value>Réponse humaine envoyée</value></data>
-  <data name="Frontend.565" xml:space="preserve"><value>(Aucun paramètre fourni)</value></data>
-  <data name="Frontend.566" xml:space="preserve"><value>Utilisation de la tâche actuelle</value></data>
-  <data name="Frontend.567" xml:space="preserve"><value>Réponse moyenne</value></data>
-  <data name="Frontend.568" xml:space="preserve"><value>Total des tokens</value></data>
-  <data name="Frontend.569" xml:space="preserve"><value>Activité récente</value></data>
-  <data name="Frontend.570" xml:space="preserve"><value>Test de connexion</value></data>
-  <data name="Frontend.571" xml:space="preserve"><value>L’utilisation compte uniquement les enregistrements chargés pour la tâche actuelle</value></data>
-  <data name="Frontend.572" xml:space="preserve"><value>Modifier l’Agent dans une nouvelle fenêtre</value></data>
-  <data name="Frontend.573" xml:space="preserve"><value>Type {0}</value></data>
-  <data name="Frontend.574" xml:space="preserve"><value>Plateforme {0}</value></data>
-  <data name="Frontend.575" xml:space="preserve"><value>Configuration de publication A2A enregistrée (actuellement désactivée)</value></data>
-  <data name="Frontend.576" xml:space="preserve"><value>Échec de la copie ; copiez l’adresse manuellement</value></data>
-  <data name="Frontend.577" xml:space="preserve"><value>{0} Agents A2A distants sont indisponibles ; retestez-les manuellement depuis la liste des membres</value></data>
-  <data name="Frontend.578" xml:space="preserve"><value>Inclus dans cette tâche</value></data>
-  <data name="Frontend.579" xml:space="preserve"><value>Non activé pour cette tâche</value></data>
+  <data name="Frontend.AgentsManager.UseConnectorsAuthorizedByEachAgent" xml:space="preserve"><value>Utiliser les connecteurs autorisés par chaque Agent</value></data>
+  <data name="Frontend.AgentsManager.UseOnlyTheSelectedConnectors" xml:space="preserve"><value>Utiliser uniquement les connecteurs sélectionnés</value></data>
+  <data name="Frontend.AgentsManager.TargetStringAlternate" xml:space="preserve"><value>Chaîne cible</value></data>
+  <data name="Frontend.AgentsManager.NonTargetStringAlternate" xml:space="preserve"><value>Chaîne non cible</value></data>
+  <data name="Frontend.AgentsManager.StatisticsRefreshed" xml:space="preserve"><value>Statistiques actualisées</value></data>
+  <data name="Frontend.AgentsManager.FailedToLoadGroupMembers" xml:space="preserve"><value>Impossible de charger les membres du groupe</value></data>
+  <data name="Frontend.AgentsManager.CouldNotRefreshTheCompleteMemberListShowingOnlyTheMembersAlready" xml:space="preserve"><value>Impossible d’actualiser la liste complète des membres ; seuls les membres déjà chargés sont affichés</value></data>
+  <data name="Frontend.AgentsManager.UnsavedChangesExistCloseAnyway" xml:space="preserve"><value>Des modifications ne sont pas enregistrées. Fermer quand même ?</value></data>
+  <data name="Frontend.AgentsManager.ConfirmActionAlternate" xml:space="preserve"><value>Confirmer l’action</value></data>
+  <data name="Frontend.AgentsManager.NotTestedAlternate" xml:space="preserve"><value>Non testé</value></data><data name="Frontend.AgentsManager.Available" xml:space="preserve"><value>Disponible</value></data><data name="Frontend.AgentsManager.Unavailable" xml:space="preserve"><value>Indisponible</value></data><data name="Frontend.AgentsManager.DisabledAlternate" xml:space="preserve"><value>Désactivé</value></data><data name="Frontend.AgentsManager.ConnectionTestFailedAlternate" xml:space="preserve"><value>Échec du test de connexion</value></data><data name="Frontend.AgentsManager.NoRemoteATwoAAgentsCanBeTested" xml:space="preserve"><value>Aucun Agent A2A distant à tester</value></data><data name="Frontend.AgentsManager.AllPassedValueRemoteATwoAAgentsAreAvailable" xml:space="preserve"><value>Tous réussis : {0} Agents A2A distants sont disponibles</value></data><data name="Frontend.AgentsManager.RemoteATwoABatchTestResults" xml:space="preserve"><value>Résultats du test groupé A2A distant</value></data><data name="Frontend.AgentsManager.GotItAlternate" xml:space="preserve"><value>Compris</value></data><data name="Frontend.AgentsManager.FailedToLoadRemoteATwoAAgents" xml:space="preserve"><value>Échec du chargement des Agents A2A distants</value></data><data name="Frontend.AgentsManager.SaveTheLocalAgentBeforeConfiguringATwoAPublishing" xml:space="preserve"><value>Enregistrez d’abord l’Agent local, puis configurez la publication A2A</value></data><data name="Frontend.AgentsManager.FailedToLoadATwoAPublishingConfiguration" xml:space="preserve"><value>Échec du chargement de la configuration de publication A2A</value></data><data name="Frontend.AgentsManager.SaveFailed" xml:space="preserve"><value>Échec de l’enregistrement</value></data><data name="Frontend.AgentsManager.RemoteATwoAAgentSaved" xml:space="preserve"><value>Agent A2A distant enregistré</value></data><data name="Frontend.AgentsManager.FailedToSaveRemoteATwoAAgent" xml:space="preserve"><value>Échec de l’enregistrement de l’Agent A2A distant</value></data><data name="Frontend.AgentsManager.ATwoAAgentCardConnectionSucceeded" xml:space="preserve"><value>Connexion réussie à l’Agent Card A2A</value></data><data name="Frontend.AgentsManager.BatchConnectionTestFailed" xml:space="preserve"><value>Échec du test groupé des connexions</value></data><data name="Frontend.AgentsManager.StatusUpdateFailed" xml:space="preserve"><value>Échec de la mise à jour de l’état</value></data><data name="Frontend.AgentsManager.StatusUpdated" xml:space="preserve"><value>État mis à jour</value></data><data name="Frontend.AgentsManager.ConfirmDeletion" xml:space="preserve"><value>Confirmer la suppression</value></data><data name="Frontend.AgentsManager.DeleteRemoteATwoAAgentValueAgentsAlreadyInAGroup" xml:space="preserve"><value>Supprimer l’Agent A2A distant « {0} » ? Les Agents déjà présents dans un groupe ne peuvent pas être supprimés.</value></data><data name="Frontend.AgentsManager.DeleteFailed" xml:space="preserve"><value>Échec de la suppression</value></data><data name="Frontend.AgentsManager.Deleted" xml:space="preserve"><value>Supprimé</value></data>
+  <data name="Frontend.AgentsManager.ThereAreNoExecutableTasksYet" xml:space="preserve"><value>Aucune tâche exécutable pour le moment</value></data>
+  <data name="Frontend.AgentsManager.FailedToLoadTaskMembers" xml:space="preserve"><value>Impossible de charger les membres de la tâche</value></data>
+  <data name="Frontend.AgentsManager.FailedToLoadStatisticsAlternate" xml:space="preserve"><value>Impossible d’obtenir les statistiques</value></data>
+  <data name="Frontend.AgentsManager.NoneAlternate" xml:space="preserve"><value>Aucun</value></data>
+  <data name="Frontend.AgentsManager.NoValidChatGroupWasFoundOpenTheStartWindowFromA" xml:space="preserve"><value>Aucun groupe de discussion valide trouvé. Ouvrez la fenêtre de démarrage depuis un groupe ou les détails de la tâche.</value></data>
+  <data name="Frontend.AgentsManager.UserConfirmed" xml:space="preserve"><value>Utilisateur confirmé</value></data>
+  <data name="Frontend.AgentsManager.UserRejected" xml:space="preserve"><value>Utilisateur refusé</value></data>
+  <data name="Frontend.AgentsManager.HumanApprovalSubmissionFailed" xml:space="preserve"><value>Échec de l’envoi de l’approbation humaine</value></data>
+  <data name="Frontend.AgentsManager.ToolCallApprovedTheTaskContinues" xml:space="preserve"><value>Appel d’outil approuvé ; la tâche continue</value></data>
+  <data name="Frontend.AgentsManager.ToolCallRejectedTheTaskContinues" xml:space="preserve"><value>Appel d’outil refusé ; la tâche continue</value></data>
+  <data name="Frontend.AgentsManager.EnterTheHumanReply" xml:space="preserve"><value>Saisissez la réponse humaine</value></data>
+  <data name="Frontend.AgentsManager.HumanReplySubmissionFailed" xml:space="preserve"><value>Échec de l’envoi de la réponse humaine</value></data>
+  <data name="Frontend.AgentsManager.HumanReplySubmitted" xml:space="preserve"><value>Réponse humaine envoyée</value></data>
+  <data name="Frontend.AgentsManager.NoParametersProvided" xml:space="preserve"><value>(Aucun paramètre fourni)</value></data>
+  <data name="Frontend.AgentsManager.CurrentTaskUsage" xml:space="preserve"><value>Utilisation de la tâche actuelle</value></data>
+  <data name="Frontend.AgentsManager.AverageResponseAlternate" xml:space="preserve"><value>Réponse moyenne</value></data>
+  <data name="Frontend.AgentsManager.TotalTokensAlternate" xml:space="preserve"><value>Total des tokens</value></data>
+  <data name="Frontend.AgentsManager.RecentActivity" xml:space="preserve"><value>Activité récente</value></data>
+  <data name="Frontend.AgentsManager.ConnectionCheck" xml:space="preserve"><value>Test de connexion</value></data>
+  <data name="Frontend.AgentsManager.UsageCountsOnlyRecordsLoadedForTheCurrentTask" xml:space="preserve"><value>L’utilisation compte uniquement les enregistrements chargés pour la tâche actuelle</value></data>
+  <data name="Frontend.AgentsManager.EditAgentInANewWindow" xml:space="preserve"><value>Modifier l’Agent dans une nouvelle fenêtre</value></data>
+  <data name="Frontend.AgentsManager.TypeValue" xml:space="preserve"><value>Type {0}</value></data>
+  <data name="Frontend.AgentsManager.PlatformValue" xml:space="preserve"><value>Plateforme {0}</value></data>
+  <data name="Frontend.AgentsManager.ATwoAPublishingConfigurationSavedCurrentlyDisabled" xml:space="preserve"><value>Configuration de publication A2A enregistrée (actuellement désactivée)</value></data>
+  <data name="Frontend.AgentsManager.CopyFailedCopyTheAddressManually" xml:space="preserve"><value>Échec de la copie ; copiez l’adresse manuellement</value></data>
+  <data name="Frontend.AgentsManager.ValueRemoteATwoAAgentsAreUnavailableRetryThemManuallyFrom" xml:space="preserve"><value>{0} Agents A2A distants sont indisponibles ; retestez-les manuellement depuis la liste des membres</value></data>
+  <data name="Frontend.AgentsManager.IncludedInThisTask" xml:space="preserve"><value>Inclus dans cette tâche</value></data>
+  <data name="Frontend.AgentsManager.NotEnabledForThisTask" xml:space="preserve"><value>Non activé pour cette tâche</value></data>
   <data name="Function.Workflow.Execute.Description" xml:space="preserve"><value>Exécuter le Workflow « {0} ».</value></data>
   <data name="Function.Workflow.Execute.WithDescription" xml:space="preserve"><value>Exécuter le Workflow « {0} » : {1}</value></data>
   <data name="Function.Workflow.Input.Description" xml:space="preserve"><value>Entrée générale transmise au Workflow.</value></data>
@@ -1737,62 +1723,69 @@
   <data name="Error.Workflow.InputRequired" xml:space="preserve"><value>Échec de l'appel du Workflow : le paramètre input ne peut pas être vide.</value></data>
   <data name="Error.Workflow.InvocationFailed" xml:space="preserve"><value>Échec de l'appel du Workflow : {0}</value></data>
   <data name="Error.Workflow.Unknown" xml:space="preserve"><value>Erreur inconnue</value></data>
-  <data name="Frontend.580" xml:space="preserve"><value>Plus d'actions</value></data>
-  <data name="Frontend.581" xml:space="preserve"><value>Après liaison, la récupération RAG est exécutée avant les appels au modèle ; en cas d'échec, le recours au modèle reste disponible.</value></data>
-  <data name="Frontend.582" xml:space="preserve"><value>Enregistrer la configuration uniquement</value></data>
-  <data name="Frontend.583" xml:space="preserve"><value>Désactivé par défaut pour la sécurité</value></data>
-  <data name="Frontend.584" xml:space="preserve"><value>Il reste {0} éléments ; cliquez sur « Gérer les liaisons » pour les voir</value></data>
-  <data name="Frontend.585" xml:space="preserve"><value>Agent système : {0}</value></data>
-  <data name="Frontend.586" xml:space="preserve"><value>Le texte Human est saisi par l'utilisateur connecté ; aucun modèle ni outil n'est appelé. La liaison du modèle peut être ajustée, mais l'identité système et le Prompt ne peuvent pas être modifiés.</value></data>
-  <data name="Frontend.587" xml:space="preserve"><value>Les Agents système sont créés ou maintenus par les modules (par exemple PromptCatalyzer). Vérifiez les exigences des tâches automatisées associées avant de modifier la liaison du modèle.</value></data>
-  <data name="Frontend.588" xml:space="preserve"><value>Créez un Prompt Range avec le Prompt texte et le modèle Chat sélectionnés, exécutez une notation, puis passez automatiquement à la référence au niveau du Range.</value></data>
-  <data name="Frontend.589" xml:space="preserve"><value>Ce Prompt manuel ne possède aucun modèle PromptRange héritable ; sélectionnez manuellement un AIModel Chat.</value></data>
-  <data name="Frontend.590" xml:space="preserve"><value>Human n'appelle aucun modèle ; cette liaison conserve la politique de tâches de l'Agent système et suit la tâche du groupe par défaut.</value></data>
-  <data name="Frontend.591" xml:space="preserve"><value>Après un appel externe, l'entrée et la réponse normale de l'Agent franchissent la limite du système ; confirmez que le Prompt, la base de connaissances et les réponses peuvent être partagés à l'extérieur.</value></data>
-  <data name="Frontend.592" xml:space="preserve"><value>Chaque appel peut générer des coûts de modèle et d'outils ; configurez le contrôle d'accès, la limitation, la surveillance et les alertes sur la passerelle HTTPS.</value></data>
-  <data name="Frontend.593" xml:space="preserve"><value>L'authentification entrante est désactivée ; utilisez ceci uniquement sur un réseau isolé et contrôlé, jamais directement sur Internet.</value></data>
-  <data name="Frontend.594" xml:space="preserve"><value>Les appels aux outils Function / MCP locaux sont autorisés ; une entrée externe peut déclencher indirectement des écritures ou des accès externes, limitez donc les permissions.</value></data>
-  <data name="Frontend.595" xml:space="preserve"><value>Une fois activé, cet Agent local accepte les appels externes comme service A2A standard.</value></data>
-  <data name="Frontend.596" xml:space="preserve"><value>Confirmer l'activation du service public A2A</value></data>
-  <data name="Frontend.597" xml:space="preserve"><value>J'ai compris et j'enregistre</value></data>
-  <data name="Frontend.598" xml:space="preserve"><value>Annuler</value></data>
-  <data name="Frontend.599" xml:space="preserve"><value>Module indisponible</value></data>
-  <data name="Frontend.600" xml:space="preserve"><value>Appelable</value></data>
-  <data name="Frontend.601" xml:space="preserve"><value>Endpoint MCP ajouté : {0}</value></data>
-  <data name="Frontend.602" xml:space="preserve"><value>Confirmer l'activation du groupe « {0} » ?</value></data>
-  <data name="Frontend.603" xml:space="preserve"><value>Après activation, de nouvelles tâches peuvent être créées et le groupe peut être utilisé comme nœud Workflow.</value></data>
-  <data name="Frontend.604" xml:space="preserve"><value>Confirmer la désactivation du groupe « {0} » ?</value></data>
-  <data name="Frontend.605" xml:space="preserve"><value>Après désactivation, aucune nouvelle tâche ne sera créée et le groupe ne pourra pas être utilisé comme nœud Workflow ; les tâches déjà lancées ne seront pas interrompues.</value></data>
-  <data name="Frontend.606" xml:space="preserve"><value>Le groupe « {0} » a été {1}</value></data>
-  <data name="Frontend.607" xml:space="preserve"><value>activé</value></data>
-  <data name="Frontend.608" xml:space="preserve"><value>désactivé</value></data>
-  <data name="Frontend.609" xml:space="preserve"><value>Lors de la sélection manuelle d'un AIModel, vous devez choisir un modèle Chat.</value></data>
-  <data name="Frontend.610" xml:space="preserve"><value>Enregistrez d'abord un AgentTemplate contenant un Prompt en texte brut.</value></data>
-  <data name="Frontend.611" xml:space="preserve"><value>Non lié</value></data>
-  <data name="Frontend.612" xml:space="preserve"><value>Lecture de l’état</value></data>
-  <data name="Frontend.613" xml:space="preserve"><value>Base de connaissances indisponible</value></data>
-  <data name="Frontend.614" xml:space="preserve"><value>Vectorisation héritée ; publication en attente</value></data>
-  <data name="Frontend.615" xml:space="preserve"><value>Interrogeable</value></data>
-  <data name="Frontend.616" xml:space="preserve"><value>Vectorisation en attente</value></data>
-  <data name="Frontend.617" xml:space="preserve"><value>Vectorisée ; republication en attente</value></data>
-  <data name="Frontend.618" xml:space="preserve"><value>Non vectorisée</value></data>
-  <data name="Frontend.620" xml:space="preserve"><value>Saisissez le contenu de la tâche utilisé pour valider ce Prompt.</value></data>
-  <data name="Frontend.621" xml:space="preserve"><value>Entrée de test du Prompt</value></data>
-  <data name="Frontend.622" xml:space="preserve"><value>L’entrée de test ne peut pas être vide.</value></data>
-  <data name="Frontend.623" xml:space="preserve"><value>Le résultat doit correspondre aux responsabilités de l’Agent « {0} » et fournir une réponse précise, claire et exploitable pour l’entrée de test.</value></data>
-  <data name="Frontend.624" xml:space="preserve"><value>Utilisez la tâche de test comme référence.</value></data>
-  <data name="Frontend.625" xml:space="preserve"><value>Décrivez le résultat attendu ou les critères de notation ; PromptRange les utilisera pour l’évaluation par IA.</value></data>
-  <data name="Frontend.626" xml:space="preserve"><value>Critères de notation automatique du Prompt</value></data>
-  <data name="Frontend.627" xml:space="preserve"><value>Les critères de notation ne peuvent pas être vides.</value></data>
-  <data name="Frontend.628" xml:space="preserve"><value>Échec de la conversion PromptRange.</value></data>
-  <data name="Frontend.629" xml:space="preserve"><value>Conversion PromptRange terminée</value></data>
-  <data name="Frontend.630" xml:space="preserve"><value>Voir les informations de {0}</value></data>
-  <data name="Frontend.631" xml:space="preserve"><value>Prompt créé et noté une fois.\nRéférence du rang : {0}\nVersion notée : {1}\nScore : {2}/10\n\nRésultat de la notation :\n{3}</value></data>
-  <data name="Frontend.632" xml:space="preserve"><value>Réussis : {0} ; échoués : {1}.\n\n{2}</value></data>
-  <data name="Frontend.634" xml:space="preserve"><value>Sélectionnez d’abord une base de connaissances valide.</value></data>
-  <data name="Frontend.635" xml:space="preserve"><value>Cet environnement ne peut pas ouvrir de nouvelle fenêtre. Enregistrez d’abord l’Agent pour conserver les modifications non enregistrées ; après confirmation, ouvrez la base de connaissances dans la page actuelle.</value></data>
-  <data name="Frontend.636" xml:space="preserve"><value>Ouvrir la base de connaissances</value></data>
-  <data name="Frontend.637" xml:space="preserve"><value>Continuer la navigation</value></data>
-  <data name="Frontend.638" xml:space="preserve"><value>État de la base de connaissances actualisé</value></data>
-  <data name="Frontend.639" xml:space="preserve"><value>Échec de l’actualisation de l’état de la base de connaissances</value></data>
+  <data name="Frontend.AgentsManager.MoreActions" xml:space="preserve"><value>Plus d'actions</value></data>
+  <data name="Frontend.AgentsManager.AfterBindingRAGRetrievalRunsBeforeModelCallsModelFallbackRemainsAvailable" xml:space="preserve"><value>Après liaison, la récupération RAG est exécutée avant les appels au modèle ; en cas d'échec, le recours au modèle reste disponible.</value></data>
+  <data name="Frontend.AgentsManager.SaveConfigurationOnly" xml:space="preserve"><value>Enregistrer la configuration uniquement</value></data>
+  <data name="Frontend.AgentsManager.SecureDefaultOff" xml:space="preserve"><value>Désactivé par défaut pour la sécurité</value></data>
+  <data name="Frontend.AgentsManager.ValueMoreClickManageBindingsToView" xml:space="preserve"><value>Il reste {0} éléments ; cliquez sur « Gérer les liaisons » pour les voir</value></data>
+  <data name="Frontend.AgentsManager.SystemAgentValue" xml:space="preserve"><value>Agent système : {0}</value></data>
+  <data name="Frontend.AgentsManager.HumanInputIsProvidedByTheSignedInUserNoModelOr" xml:space="preserve"><value>Le texte Human est saisi par l'utilisateur connecté ; aucun modèle ni outil n'est appelé. La liaison du modèle peut être ajustée, mais l'identité système et le Prompt ne peuvent pas être modifiés.</value></data>
+  <data name="Frontend.AgentsManager.SystemAgentsAreCreatedOrMaintainedByModulesForExamplePromptCatalyzerConfirm" xml:space="preserve"><value>Les Agents système sont créés ou maintenus par les modules (par exemple PromptCatalyzer). Vérifiez les exigences des tâches automatisées associées avant de modifier la liaison du modèle.</value></data>
+  <data name="Frontend.AgentsManager.CreateAPromptRangeWithTheCurrentPlainTextPromptAndSelected" xml:space="preserve"><value>Créez un Prompt Range avec le Prompt texte et le modèle Chat sélectionnés, exécutez une notation, puis passez automatiquement à la référence au niveau du Range.</value></data>
+  <data name="Frontend.AgentsManager.ThisManualPromptHasNoInheritablePromptRangeModelSelectAChatAIModel" xml:space="preserve"><value>Ce Prompt manuel ne possède aucun modèle PromptRange héritable ; sélectionnez manuellement un AIModel Chat.</value></data>
+  <data name="Frontend.AgentsManager.HumanDoesNotCallAModelThisBindingPreservesTheSystemAgentAlternate" xml:space="preserve"><value>Human n'appelle aucun modèle ; cette liaison conserve la politique de tâches de l'Agent système et suit la tâche du groupe par défaut.</value></data>
+  <data name="Frontend.AgentsManager.AfterAnExternalSystemCallsThisServiceTheInputAndTheAgent" xml:space="preserve"><value>Après un appel externe, l'entrée et la réponse normale de l'Agent franchissent la limite du système ; confirmez que le Prompt, la base de connaissances et les réponses peuvent être partagés à l'extérieur.</value></data>
+  <data name="Frontend.AgentsManager.EachCallMayIncurModelAndToolCostsConfigureAccessControlRate" xml:space="preserve"><value>Chaque appel peut générer des coûts de modèle et d'outils ; configurez le contrôle d'accès, la limitation, la surveillance et les alertes sur la passerelle HTTPS.</value></data>
+  <data name="Frontend.AgentsManager.InboundAuthenticationIsDisabledUseThisOnlyOnAnIsolatedControlledNetworkAlternate" xml:space="preserve"><value>L'authentification entrante est désactivée ; utilisez ceci uniquement sur un réseau isolé et contrôlé, jamais directement sur Internet.</value></data>
+  <data name="Frontend.AgentsManager.LocalFunctionMCPToolCallsAreAllowedExternalInputMayIndirectlyTrigger" xml:space="preserve"><value>Les appels aux outils Function / MCP locaux sont autorisés ; une entrée externe peut déclencher indirectement des écritures ou des accès externes, limitez donc les permissions.</value></data>
+  <data name="Frontend.AgentsManager.WhenEnabledThisLocalAgentAcceptsExternalCallsAsAStandardA" xml:space="preserve"><value>Une fois activé, cet Agent local accepte les appels externes comme service A2A standard.</value></data>
+  <data name="Frontend.AgentsManager.ConfirmEnablingTheATwoAPublicService" xml:space="preserve"><value>Confirmer l'activation du service public A2A</value></data>
+  <data name="Frontend.AgentsManager.IUnderstandAndSave" xml:space="preserve"><value>J'ai compris et j'enregistre</value></data>
+
+  <data name="Frontend.AgentsManager.ModuleUnavailable" xml:space="preserve"><value>Module indisponible</value></data>
+  <data name="Frontend.AgentsManager.Callable" xml:space="preserve"><value>Appelable</value></data>
+  <data name="Frontend.AgentsManager.MCPEndpointAddedValue" xml:space="preserve"><value>Endpoint MCP ajouté : {0}</value></data>
+  <data name="Frontend.AgentsManager.ConfirmEnablingGroupValue" xml:space="preserve"><value>Confirmer l'activation du groupe « {0} » ?</value></data>
+  <data name="Frontend.AgentsManager.AfterEnablingNewTasksCanBeCreatedAndTheGroupCanBe" xml:space="preserve"><value>Après activation, de nouvelles tâches peuvent être créées et le groupe peut être utilisé comme nœud Workflow.</value></data>
+  <data name="Frontend.AgentsManager.ConfirmDisablingGroupValue" xml:space="preserve"><value>Confirmer la désactivation du groupe « {0} » ?</value></data>
+  <data name="Frontend.AgentsManager.AfterDisablingNoNewTasksWillBeCreatedAndTheGroupCannot" xml:space="preserve"><value>Après désactivation, aucune nouvelle tâche ne sera créée et le groupe ne pourra pas être utilisé comme nœud Workflow ; les tâches déjà lancées ne seront pas interrompues.</value></data>
+  <data name="Frontend.AgentsManager.GroupValueHasBeenValue" xml:space="preserve"><value>Le groupe « {0} » a été {1}</value></data>
+  <data name="Frontend.AgentsManager.EnabledSupplemental" xml:space="preserve"><value>activé</value></data>
+  <data name="Frontend.AgentsManager.DisabledSupplemental" xml:space="preserve"><value>désactivé</value></data>
+  <data name="Frontend.AgentsManager.WhenSelectingAnAIModelManuallyYouMustSelectAChatModel" xml:space="preserve"><value>Lors de la sélection manuelle d'un AIModel, vous devez choisir un modèle Chat.</value></data>
+  <data name="Frontend.AgentsManager.SaveAnAgentTemplateContainingAPlainTextPromptFirst" xml:space="preserve"><value>Enregistrez d'abord un AgentTemplate contenant un Prompt en texte brut.</value></data>
+  <data name="Frontend.AgentsManager.NotBoundAlternate" xml:space="preserve"><value>Non lié</value></data>
+  <data name="Frontend.AgentsManager.ReadingStatus" xml:space="preserve"><value>Lecture de l’état</value></data>
+  <data name="Frontend.AgentsManager.KnowledgeBaseUnavailable" xml:space="preserve"><value>Base de connaissances indisponible</value></data>
+  <data name="Frontend.AgentsManager.LegacyVectorizedPendingPublication" xml:space="preserve"><value>Vectorisation héritée ; publication en attente</value></data>
+  <data name="Frontend.AgentsManager.Searchable" xml:space="preserve"><value>Interrogeable</value></data>
+  <data name="Frontend.AgentsManager.PendingVectorization" xml:space="preserve"><value>Vectorisation en attente</value></data>
+  <data name="Frontend.AgentsManager.VectorizedPendingRepublishing" xml:space="preserve"><value>Vectorisée ; republication en attente</value></data>
+  <data name="Frontend.AgentsManager.NotVectorized" xml:space="preserve"><value>Non vectorisée</value></data>
+  <data name="Frontend.AgentsManager.EnterTheTaskContentUsedToValidateThisPrompt" xml:space="preserve"><value>Saisissez le contenu de la tâche utilisé pour valider ce Prompt.</value></data>
+  <data name="Frontend.AgentsManager.PromptTestInput" xml:space="preserve"><value>Entrée de test du Prompt</value></data>
+  <data name="Frontend.AgentsManager.TestInputCannotBeEmpty" xml:space="preserve"><value>L’entrée de test ne peut pas être vide.</value></data>
+  <data name="Frontend.AgentsManager.TheResultShouldMatchTheResponsibilitiesOfAgentValueAndProvideAn" xml:space="preserve"><value>Le résultat doit correspondre aux responsabilités de l’Agent « {0} » et fournir une réponse précise, claire et exploitable pour l’entrée de test.</value></data>
+  <data name="Frontend.AgentsManager.UseTheTestTaskAsTheBasis" xml:space="preserve"><value>Utilisez la tâche de test comme référence.</value></data>
+  <data name="Frontend.AgentsManager.DescribeTheExpectedResultOrScoringCriteriaPromptRangeWillUseItFor" xml:space="preserve"><value>Décrivez le résultat attendu ou les critères de notation ; PromptRange les utilisera pour l’évaluation par IA.</value></data>
+  <data name="Frontend.AgentsManager.AutomaticPromptScoringCriteria" xml:space="preserve"><value>Critères de notation automatique du Prompt</value></data>
+  <data name="Frontend.AgentsManager.ScoringCriteriaCannotBeEmpty" xml:space="preserve"><value>Les critères de notation ne peuvent pas être vides.</value></data>
+  <data name="Frontend.AgentsManager.PromptRangeConversionFailed" xml:space="preserve"><value>Échec de la conversion PromptRange.</value></data>
+  <data name="Frontend.AgentsManager.PromptRangeConversionCompleted" xml:space="preserve"><value>Conversion PromptRange terminée</value></data>
+  <data name="Frontend.AgentsManager.ViewInformationForValue" xml:space="preserve"><value>Voir les informations de {0}</value></data>
+  <data name="Frontend.AgentsManager.PromptCreatedAndScoredOnceNRangeReferenceValueNScoredVersionValueNScore" xml:space="preserve"><value>Prompt créé et noté une fois.\nRéférence du rang : {0}\nVersion notée : {1}\nScore : {2}/10\n\nRésultat de la notation :\n{3}</value></data>
+  <data name="Frontend.AgentsManager.PassedValueFailedValueNNValue" xml:space="preserve"><value>Réussis : {0} ; échoués : {1}.\n\n{2}</value></data>
+  <data name="Frontend.AgentsManager.SelectAValidKnowledgeBaseFirst" xml:space="preserve"><value>Sélectionnez d’abord une base de connaissances valide.</value></data>
+  <data name="Frontend.AgentsManager.ThisEnvironmentCannotOpenANewWindowSaveTheAgentFirstTo" xml:space="preserve"><value>Cet environnement ne peut pas ouvrir de nouvelle fenêtre. Enregistrez d’abord l’Agent pour conserver les modifications non enregistrées ; après confirmation, ouvrez la base de connaissances dans la page actuelle.</value></data>
+  <data name="Frontend.AgentsManager.OpenKnowledgeBase" xml:space="preserve"><value>Ouvrir la base de connaissances</value></data>
+  <data name="Frontend.AgentsManager.ContinueNavigation" xml:space="preserve"><value>Continuer la navigation</value></data>
+  <data name="Frontend.AgentsManager.KnowledgeBaseStatusRefreshed" xml:space="preserve"><value>État de la base de connaissances actualisé</value></data>
+  <data name="Frontend.AgentsManager.FailedToRefreshKnowledgeBaseStatus" xml:space="preserve"><value>Échec de l’actualisation de l’état de la base de connaissances</value></data>
+  <data name="AdminChat.Command.RunAgentGroup" xml:space="preserve"><value>Exécuter un groupe d’agents</value></data>
+  <data name="AdminChat.Command.RunAgentGroupHint" xml:space="preserve"><value>Décrivez la tâche et réutilisez le groupe existant le plus pertinent</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.Group" xml:space="preserve"><value>Groupe d’agents</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.GroupHint" xml:space="preserve"><value>Sélectionnez un groupe d’agents activé</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.Task" xml:space="preserve"><value>Tâche</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.TaskHint" xml:space="preserve"><value>Décrivez la tâche à exécuter</value></data>
+  <data name="AdminChat.Command.RunAgentGroup.Parameter.TaskPlaceholder" xml:space="preserve"><value>Saisissez la description de la tâche</value></data>
 </root>

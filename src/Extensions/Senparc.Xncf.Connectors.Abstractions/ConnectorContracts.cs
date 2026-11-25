@@ -105,8 +105,18 @@ public sealed class ConnectorInvocationContext
 
 public sealed record ConnectorInvocationResult(bool Success, string Output, string? Error = null)
 {
+    /// <summary>
+    /// Creates a successful invocation result containing the connector output.
+    /// </summary>
+    /// <param name="output">The output returned by the connector.</param>
+    /// <returns>A successful result with an empty error value.</returns>
     public static ConnectorInvocationResult Ok(string output) => new(true, output);
 
+    /// <summary>
+    /// Creates a failed invocation result containing the connector error.
+    /// </summary>
+    /// <param name="error">The error description to expose to the caller.</param>
+    /// <returns>A failed result with an empty output value.</returns>
     public static ConnectorInvocationResult Fail(string error) => new(false, string.Empty, error);
 }
 
@@ -117,12 +127,28 @@ public sealed record ConnectorTestResult(bool Success, string Message);
 /// </summary>
 public interface IConnectorProvider
 {
+    /// <summary>
+    /// Describes the connector fields and actions exposed by this provider.
+    /// </summary>
+    /// <returns>The static connector descriptor used by configuration and invocation surfaces.</returns>
     ConnectorDescriptor Describe();
 
+    /// <summary>
+    /// Invokes one connector action using the supplied instance context and arguments.
+    /// </summary>
+    /// <param name="context">The instance, action, configuration, and invocation arguments.</param>
+    /// <param name="cancellationToken">The token used to cancel outbound or long-running work.</param>
+    /// <returns>A result containing connector output or a failure message.</returns>
     Task<ConnectorInvocationResult> InvokeAsync(
         ConnectorInvocationContext context,
         CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Verifies whether a connector configuration can be used before an action is invoked.
+    /// </summary>
+    /// <param name="configuration">The configured field values to validate or test.</param>
+    /// <param name="cancellationToken">The token used to cancel the test operation.</param>
+    /// <returns>A result containing the test status and an explanatory message.</returns>
     Task<ConnectorTestResult> TestAsync(
         IReadOnlyDictionary<string, string> configuration,
         CancellationToken cancellationToken);
@@ -145,10 +171,28 @@ public sealed class ConfiguredConnector
 
 public interface IConnectorGateway
 {
+    /// <summary>
+    /// Lists connector types registered in the current application.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel catalog discovery.</param>
+    /// <returns>The available connector descriptors.</returns>
     Task<IReadOnlyList<ConnectorDescriptor>> ListCatalogAsync(CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Lists enabled connector instances available to the current caller.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel instance discovery.</param>
+    /// <returns>The enabled configured connector instances.</returns>
     Task<IReadOnlyList<ConfiguredConnector>> ListEnabledAsync(CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Invokes an action on one enabled connector instance.
+    /// </summary>
+    /// <param name="instanceId">The configured connector instance identifier.</param>
+    /// <param name="actionKey">The action identifier declared by the connector.</param>
+    /// <param name="arguments">The action arguments keyed by connector parameter name.</param>
+    /// <param name="cancellationToken">The token used to cancel invocation.</param>
+    /// <returns>A result containing connector output or a failure message.</returns>
     Task<ConnectorInvocationResult> InvokeAsync(
         string instanceId,
         string actionKey,

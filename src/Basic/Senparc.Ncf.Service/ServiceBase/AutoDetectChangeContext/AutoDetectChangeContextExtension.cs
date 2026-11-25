@@ -22,30 +22,32 @@ namespace Senparc.Ncf.Service
     public static class AutoDetectChangeContextExtension
     {
        /// <summary>
-        ///Legacy comment translated to English.
+       /// Creates a disposable scope that coordinates automatic entity-change detection
+       /// through the supplied service data object.
        /// </summary>
-       /// <param name="serviceData"></param>
-       /// <returns></returns>
+       /// <param name="serviceData">The service data object whose database context is controlled by the scope.</param>
+       /// <returns>A wrapper that can be disposed to close the change-detection scope.</returns>
        public static AutoDetectChangeContextWrap InstanceAutoDetectChangeContextWrap(this IServiceDataBase serviceData)
        {
            return new AutoDetectChangeContextWrap(serviceData);
        }
 
        /// <summary>
-       ///Legacy comment translated to English.
+       /// Creates a disposable closer for an existing automatic change-detection wrapper.
        /// </summary>
-       ///Legacy comment translated to English.
-       /// <returns></returns>
+       /// <param name="wrap">The wrapper whose automatic detection scope should be closed.</param>
+       /// <returns>A disposable closer associated with <paramref name="wrap"/>.</returns>
        public static CloseAutoDetectChangeContext InstanceCloseAutoDetectChangeContext(this AutoDetectChangeContextWrap wrap)
        {
            return new CloseAutoDetectChangeContext(wrap);
        }
 
        /// <summary>
-       ///Legacy comment translated to English.
+       /// Forces Entity Framework Core to treat an entity as modified in the database context
+       /// owned by the supplied change-detection wrapper.
        /// </summary>
-       ///Legacy comment translated to English.
-       /// <returns></wrap>
+       /// <param name="wrap">The wrapper that exposes the target service data and database context.</param>
+       /// <param name="entity">The entity whose state should be set to <see cref="EntityState.Modified"/>.</param>
        public static void ForceDetectChange(this AutoDetectChangeContextWrap wrap, object entity)
        {
            wrap.ServiceData.BaseData.BaseDB.BaseDataContext.Entry(entity).State = EntityState.Modified;

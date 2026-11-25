@@ -28,6 +28,10 @@ namespace Senparc.Xncf.AIAgentsHub.OHS.Local.AppService
 {
     public class ApiAppService : AppServiceBase
     {
+        /// <summary>
+        /// Initializes the sample API application service.
+        /// </summary>
+        /// <param name="serviceProvider">Dependency-injection provider.</param>
         public ApiAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
@@ -43,9 +47,9 @@ namespace Senparc.Xncf.AIAgentsHub.OHS.Local.AppService
          */
 
         /// <summary>
-        /// expose AppService as a Web API
+        /// Returns the sample integer response after the demonstration delay.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An app-service response containing <c>200</c>.</returns>
         [ApiBind]
         public async Task<AppResponseBase<int>> MyApi()
         {
@@ -57,9 +61,10 @@ namespace Senparc.Xncf.AIAgentsHub.OHS.Local.AppService
         }
 
         /// <summary>
-        /// custom Post types and complex parameters while testing exception throwing and custom status codes
+        /// Demonstrates POST binding, exception handling, and custom response status processing.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="request">The request containing first and last name values.</param>
+        /// <returns>A string response whose exception handler appends diagnostic text.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> MyCustomApi(Api_MyCustomApiRequest request)
         {

@@ -25,6 +25,10 @@ public sealed class ProcessIsolatedRuntimeConnection : IIsolatedRuntimeConnectio
     private readonly Process _process;
     private bool _disposed;
 
+    /// <summary>
+    /// Wraps a started isolated-runtime process.
+    /// </summary>
+    /// <param name="process">The process whose streams and lifecycle are exposed.</param>
     private ProcessIsolatedRuntimeConnection(Process process)
     {
         _process = process;
@@ -42,6 +46,13 @@ public sealed class ProcessIsolatedRuntimeConnection : IIsolatedRuntimeConnectio
 
     public StreamReader StandardError => _process.StandardError;
 
+    /// <summary>
+    /// Starts an isolated-runtime process from the supplied start information.
+    /// </summary>
+    /// <param name="startInfo">The executable, arguments, and stream redirection settings.</param>
+    /// <returns>A connection wrapper for the started process.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="startInfo"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the process cannot be started.</exception>
     public static ProcessIsolatedRuntimeConnection Start(ProcessStartInfo startInfo)
     {
         ArgumentNullException.ThrowIfNull(startInfo);
@@ -50,9 +61,17 @@ public sealed class ProcessIsolatedRuntimeConnection : IIsolatedRuntimeConnectio
         return new ProcessIsolatedRuntimeConnection(process);
     }
 
+    /// <summary>
+    /// Asynchronously waits for the wrapped process to exit.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to stop waiting.</param>
+    /// <returns>A task that completes when the process exits or waiting is cancelled.</returns>
     public Task WaitForExitAsync(CancellationToken cancellationToken = default) =>
         _process.WaitForExitAsync(cancellationToken);
 
+    /// <summary>
+    /// Terminates the process tree when it is still running.
+    /// </summary>
     public void Terminate()
     {
         if (_process.HasExited)
@@ -69,6 +88,10 @@ public sealed class ProcessIsolatedRuntimeConnection : IIsolatedRuntimeConnectio
         }
     }
 
+    /// <summary>
+    /// Terminates and disposes the wrapped process exactly once.
+    /// </summary>
+    /// <returns>A value task that completes after process termination and disposal.</returns>
     public async ValueTask DisposeAsync()
     {
         if (_disposed)

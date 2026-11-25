@@ -39,7 +39,7 @@ using Senparc.Xncf.Sandbox.Domain.Services;
 namespace Senparc.Xncf.Sandbox.Domain.Models.DatabaseModel;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Persists the lifecycle, runtime, ownership, quota, and access state of one Sandbox session.
 /// </summary>
 [Table(Register.DATABASE_PREFIX + nameof(SandboxSession))]
 [Serializable]
@@ -91,6 +91,16 @@ public class SandboxSession : EntityBase<int>
     {
     }
 
+    /// <summary>
+    /// Creates a new session in the <see cref="SandboxSessionStatus.Creating"/> state.
+    /// </summary>
+    /// <param name="sessionId">The unique session identifier.</param>
+    /// <param name="ownerUserId">The owning administrator/user identifier.</param>
+    /// <param name="templateKey">The sandbox template key.</param>
+    /// <param name="runtimeKind">The selected runtime kind.</param>
+    /// <param name="cpuLimit">The configured CPU limit.</param>
+    /// <param name="memoryMb">The configured memory limit in megabytes.</param>
+    /// <param name="expiresAtUtc">The UTC expiration time.</param>
     public SandboxSession(
         string sessionId,
         int ownerUserId,
@@ -114,6 +124,14 @@ public class SandboxSession : EntityBase<int>
         LastUpdateTime = DateTime.Now;
     }
 
+    /// <summary>
+    /// Marks the session running and records runtime/access details.
+    /// </summary>
+    /// <param name="runtimeHandle">The isolated runtime handle.</param>
+    /// <param name="hostPort">Optional host port.</param>
+    /// <param name="accessUrl">Optional access URL.</param>
+    /// <param name="accessToken">Optional access token.</param>
+    /// <param name="message">Optional status message.</param>
     public void MarkRunning(string runtimeHandle, int? hostPort, string? accessUrl, string? accessToken, string? message = null)
     {
         RuntimeHandle = runtimeHandle;
@@ -125,6 +143,10 @@ public class SandboxSession : EntityBase<int>
         Touch();
     }
 
+    /// <summary>
+    /// Marks the session failed and stores a bounded failure message.
+    /// </summary>
+    /// <param name="message">The failure message.</param>
     public void MarkFailed(string message)
     {
         Status = SandboxSessionStatus.Failed;
@@ -132,12 +154,19 @@ public class SandboxSession : EntityBase<int>
         Touch();
     }
 
+    /// <summary>
+    /// Marks the session as stopping.
+    /// </summary>
     public void MarkStopping()
     {
         Status = SandboxSessionStatus.Stopping;
         Touch();
     }
 
+    /// <summary>
+    /// Marks the session stopped and clears runtime/access handles.
+    /// </summary>
+    /// <param name="message">Optional status message.</param>
     public void MarkStopped(string? message = null)
     {
         Status = SandboxSessionStatus.Stopped;
@@ -149,6 +178,10 @@ public class SandboxSession : EntityBase<int>
         Touch();
     }
 
+    /// <summary>
+    /// Marks the session expired and clears runtime/access handles.
+    /// </summary>
+    /// <param name="message">Optional expiration message.</param>
     public void MarkExpired(string? message = null)
     {
         Status = SandboxSessionStatus.Expired;
@@ -160,6 +193,10 @@ public class SandboxSession : EntityBase<int>
         Touch();
     }
 
+    /// <summary>
+    /// Determines whether the persisted record is safe to delete permanently.
+    /// </summary>
+    /// <returns><see langword="true"/> only for terminal states without a runtime handle.</returns>
     public bool CanDeleteRecord()
     {
         return Status is (SandboxSessionStatus.Stopped
@@ -168,6 +205,10 @@ public class SandboxSession : EntityBase<int>
             && string.IsNullOrWhiteSpace(RuntimeHandle);
     }
 
+    /// <summary>
+    /// Sets a trimmed, length-bounded display alias.
+    /// </summary>
+    /// <param name="alias">The desired alias.</param>
     public void SetAlias(string? alias)
     {
         var normalized = (alias ?? string.Empty).Trim();
@@ -175,6 +216,10 @@ public class SandboxSession : EntityBase<int>
         Touch();
     }
 
+    /// <summary>
+    /// Sets a trimmed, length-bounded display string for extra port mappings.
+    /// </summary>
+    /// <param name="extraPorts">The extra-port display value.</param>
     public void SetExtraPorts(string? extraPorts)
     {
         var normalized = (extraPorts ?? string.Empty).Trim();
@@ -182,18 +227,29 @@ public class SandboxSession : EntityBase<int>
         Touch();
     }
 
+    /// <summary>
+    /// Updates the session expiration time.
+    /// </summary>
+    /// <param name="newExpiresAtUtc">The new UTC expiration time.</param>
     public void SetExpiresAtUtc(DateTime newExpiresAtUtc)
     {
         ExpiresAtUtc = newExpiresAtUtc;
         Touch();
     }
 
+    /// <summary>
+    /// Updates activity and modification timestamps.
+    /// </summary>
     public void Touch()
     {
         LastActivityAtUtc = DateTime.UtcNow;
         LastUpdateTime = DateTime.Now;
     }
 
+    /// <summary>
+    /// Maps persistence state into the public Sandbox session information contract.
+    /// </summary>
+    /// <returns>A public session snapshot.</returns>
     public SandboxSessionInfo ToInfo()
     {
         return new SandboxSessionInfo

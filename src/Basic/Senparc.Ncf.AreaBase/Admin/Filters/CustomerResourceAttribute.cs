@@ -22,10 +22,17 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Senparc.Ncf.AreaBase.Admin.Filters
 {
+    /// <summary>
+    /// Associates a handler with the resource codes used by administration permission checks.
+    /// </summary>
     public class CustomerResourceAttribute : Attribute
     {
         public string[] ResourceCodes { get; set; }
 
+        /// <summary>
+        /// Initializes resource-code metadata for a handler.
+        /// </summary>
+        /// <param name="resuouceCodes">The resource codes required by the handler.</param>
         public CustomerResourceAttribute(params string[] resuouceCodes)
         {
             ResourceCodes = resuouceCodes;

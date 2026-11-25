@@ -21,6 +21,10 @@ using System.Net;
 
 namespace Senparc.Ncf.Utility
 {
+    /// <summary>
+    /// Provides helpers for constructing request URLs, classifying user agents,
+    /// and reading the remote connection address.
+    /// </summary>
     public static class RequestExtension
     {
         private const string NullIpAddress = "::1";
@@ -89,10 +93,11 @@ namespace Senparc.Ncf.Utility
         //}
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds the absolute URI represented by the request scheme, host, path base,
+        /// path, and query string.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The HTTP request to convert.</param>
+        /// <returns>The absolute request URI.</returns>
         public static string AbsoluteUri(this HttpRequest request)
         {
             var absoluteUri = string.Concat(
@@ -107,10 +112,10 @@ namespace Senparc.Ncf.Utility
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the User-Agent header supplied by the client.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The HTTP request whose headers are inspected.</param>
+        /// <returns>The User-Agent value, or an empty string when the header is absent.</returns>
         public static string UserAgent(this HttpRequest request)
         {
             return request.Headers["User-Agent"].ToString();
@@ -118,10 +123,11 @@ namespace Senparc.Ncf.Utility
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Classifies the request using simple User-Agent substring matching.
+        /// Unknown or missing user agents fall back to <see cref="AgentType.Android"/>.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The HTTP request whose User-Agent header is inspected.</param>
+        /// <returns>The first matching <see cref="AgentType"/> classification.</returns>
         public static AgentType UserAgentType(this HttpRequest request)
         {
             var userAgent = request.Headers["User-Agent"].ToString();
@@ -159,10 +165,10 @@ namespace Senparc.Ncf.Utility
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the remote IP address exposed by the HTTP connection feature.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="httpContext">The HTTP context whose connection feature is inspected.</param>
+        /// <returns>The remote address, or <see langword="null"/> when the feature is unavailable.</returns>
         public static IPAddress UserHostAddress(this HttpContext httpContext)
         {
             return httpContext.Features.Get<IHttpConnectionFeature>()?.RemoteIpAddress;

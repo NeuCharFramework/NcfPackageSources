@@ -31,6 +31,11 @@ public sealed class ConnectorAppService : AppServiceBase
 {
     private readonly IConnectorGateway _gateway;
 
+    /// <summary>
+    /// Initializes the connector function application service.
+    /// </summary>
+    /// <param name="serviceProvider">The dependency provider required by the base service.</param>
+    /// <param name="gateway">The gateway used to invoke configured connector instances.</param>
     public ConnectorAppService(IServiceProvider serviceProvider, IConnectorGateway gateway)
         : base(serviceProvider)
     {
@@ -45,6 +50,11 @@ public sealed class ConnectorAppService : AppServiceBase
         "Invoke connector",
         "Invoke an enabled connector action. Add a Function node in Workflow, then choose the connector and action.",
         AllowAiInvocation = true)]
+    /// <summary>
+    /// Invokes the selected connector action with structured fields and optional JSON arguments.
+    /// </summary>
+    /// <param name="request">The connector instance, action, and action-specific arguments.</param>
+    /// <returns>A function response containing connector output or a failure message.</returns>
     public Task<StringAppResponse> InvokeConfiguredConnector(InvokeConnectorRequest request)
     {
         return this.GetStringResponseAsync(async (_, logger) =>
@@ -70,6 +80,14 @@ public sealed class ConnectorAppService : AppServiceBase
         });
     }
 
+    /// <summary>
+    /// Merges additional JSON string arguments without overwriting an already populated field.
+    /// </summary>
+    /// <param name="arguments">The mutable argument dictionary receiving additional values.</param>
+    /// <param name="json">An optional JSON object containing extra string arguments.</param>
+    /// <remarks>
+    /// Invalid JSON is preserved under the <c>argumentsJson</c> key so the connector can decide how to handle it.
+    /// </remarks>
     private static void MergeArguments(Dictionary<string, string?> arguments, string? json)
     {
         if (string.IsNullOrWhiteSpace(json))
@@ -139,6 +157,11 @@ public sealed class InvokeConnectorRequest : FunctionAppRequestBase
     [LocalizedDescription(typeof(ConnectorsResource), "Parameter.Connectors.Arguments")]
     public string? ArgumentsJson { get; set; }
 
+    /// <inheritdoc/>
+    /// <remarks>
+    /// In addition to base data, this loads enabled connector instances and distinct action choices
+    /// into the non-serialized selection lists used by the function UI.
+    /// </remarks>
     public override async Task LoadData(IServiceProvider serviceProvider)
     {
         await base.LoadData(serviceProvider).ConfigureAwait(false);

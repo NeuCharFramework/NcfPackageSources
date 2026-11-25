@@ -24,6 +24,12 @@ namespace Senparc.Ncf.IsolatedRuntime;
 
 public static class IsolatedRuntimeServiceCollectionExtensions
 {
+    /// <summary>
+    /// Registers Docker-backed isolated-runtime services and binds their configuration section.
+    /// </summary>
+    /// <param name="services">The dependency injection service collection.</param>
+    /// <param name="configuration">The application configuration containing the Docker runtime section.</param>
+    /// <returns>The same service collection for fluent registration.</returns>
     public static IServiceCollection AddDockerIsolatedRuntime(
         this IServiceCollection services,
         IConfiguration configuration)

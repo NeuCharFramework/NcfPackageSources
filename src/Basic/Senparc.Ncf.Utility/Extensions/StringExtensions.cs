@@ -161,9 +161,11 @@ namespace Senparc.Ncf.Core.Extensions
         //}
 
         /// <summary>
-        /// convert HTML code——TNT2
-        ///Legacy comment translated to English.
+        /// Converts line breaks and repeated spaces to simple HTML markup and turns
+        /// recognized HTTP(S) URLs into anchor elements. Existing markup is not encoded.
         /// </summary>
+        /// <param name="ntext">The text to convert; <see langword="null"/> produces an empty result.</param>
+        /// <returns>An HTML string containing the transformed text.</returns>
         public static HtmlString ExHTML(this string ntext)
         {
             if (!string.IsNullOrEmpty(ntext))
@@ -175,10 +177,10 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Removes tags matching the simple <c>&lt;...&gt;</c> pattern and removes CRLF sequences.
         /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
+        /// <param name="str">The HTML-like text to process.</param>
+        /// <returns>The text with matching tags and CRLF sequences removed.</returns>
         public static string DelHtml(this string str)
         {
             if (!string.IsNullOrEmpty(str))
@@ -199,10 +201,10 @@ namespace Senparc.Ncf.Core.Extensions
         //}
 
         /// <summary>
-        /// return a check mark or cross according to the Boolean value
+        /// Returns a styled check mark or cross according to a Boolean value.
         /// </summary>
         /// <param name="yesOrNo">true:√,false:×</param>
-        /// <returns></returns>
+        /// <returns>An HTML span containing a red check mark for <see langword="true"/> or a gray cross otherwise.</returns>
         public static HtmlString YesOrNo(this bool yesOrNo)
         {
             #region Legacy section
@@ -218,16 +220,13 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        /// 
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Returns a bounded excerpt of a string and adds ellipses when content exists
+        /// before or after the selected range.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="str">The source text; <see langword="null"/> or empty text produces an empty result.</param>
+        /// <param name="startIndex">The starting character index. Values beyond the end are shifted toward the final segment.</param>
+        /// <param name="maxLangth">The maximum number of characters to include.</param>
+        /// <returns>The selected excerpt with leading or trailing ellipses where applicable.</returns>
         public static string SubString(this string str, int startIndex, int maxLangth)
         {
             if (str == string.Empty || str == null)
@@ -238,27 +237,18 @@ namespace Senparc.Ncf.Core.Extensions
             {
                 string substring = "";
 
-                //Legacy comment translated to English.
-                if (startIndex > str.Length - 1)//Legacy comment translated to English.
+                if (startIndex > str.Length - 1)
                 {
-                    startIndex = (str.Length - maxLangth > 0) ? str.Length - maxLangth : 0;//Legacy comment translated to English.
+                    startIndex = (str.Length - maxLangth > 0) ? str.Length - maxLangth : 0;
                 }
 
-                //Legacy comment translated to English.
-                if (startIndex + maxLangth > str.Length)//Legacy comment translated to English.
+                if (startIndex + maxLangth > str.Length)
                 {
-                    maxLangth = str.Length - startIndex;//Legacy comment translated to English.
+                    maxLangth = str.Length - startIndex;
                 }
-                //Legacy comment translated to English.
-
-                //Legacy comment translated to English.
-                substring += (startIndex > 0) ? ".." : "";//Legacy comment translated to English.
-
-                //Legacy comment translated to English.
+                substring += (startIndex > 0) ? ".." : "";
                 substring += str.Substring(startIndex, maxLangth);
-
-                //Legacy comment translated to English.
-                substring += (str.Length - startIndex - maxLangth > 0) ? "..." : "";//Legacy comment translated to English.
+                substring += (str.Length - startIndex - maxLangth > 0) ? "..." : "";
 
                 return substring;
             }
@@ -266,11 +256,12 @@ namespace Senparc.Ncf.Core.Extensions
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Wraps case-insensitive matches of a keyword in a red HTML span.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="str">The text to search; null or empty text is returned unchanged.</param>
+        /// <param name="keyword">The regular-expression pattern to highlight.</param>
+        /// <returns>The text with matching regions wrapped in a red span.</returns>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="keyword"/> is not a valid regular-expression pattern.</exception>
         public static string HighlightKeyword(this string str, string keyword)
         {
             if (str.IsNullOrEmpty())
@@ -280,18 +271,18 @@ namespace Senparc.Ncf.Core.Extensions
 
             if (!keyword.IsNullOrEmpty())
             {
-                string replaceFormat = "<span class=\"red\">{0}</span>";//Legacy comment translated to English.
+                string replaceFormat = "<span class=\"red\">{0}</span>";
                 str = Regex.Replace(str, string.Format(@"({0})", keyword), string.Format(replaceFormat, "$1"), RegexOptions.IgnoreCase);
             }
             return str;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces the requested number of trailing IPv4 address segments with asterisks.
         /// </summary>
-        /// <param name="ip"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="ip">The dotted IPv4 address to mask.</param>
+        /// <param name="hideNum">The number of segments to replace, starting from the last segment.</param>
+        /// <returns>The masked address.</returns>
         public static string HideIP(this string ip, int hideNum)
         {
             string[] ipItems = ip.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
@@ -303,10 +294,10 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces the final IPv4 address segment with an asterisk.
         /// </summary>
-        /// <param name="ip"></param>
-        /// <returns></returns>
+        /// <param name="ip">The dotted IPv4 address to mask.</param>
+        /// <returns>The address with its final segment replaced by an asterisk.</returns>
         public static string HideIP(this string ip)
         {
             return ip.Substring(0, ip.LastIndexOf(".")) + ".*";

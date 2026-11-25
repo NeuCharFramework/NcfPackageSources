@@ -25,12 +25,12 @@ using System.Linq;
 namespace Senparc.Ncf.Utility.Helpers
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the cultures supported by NCF localization and normalizes culture names
+    /// to the resource-file naming convention.
     /// </summary>
     /// <remarks>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// The default culture is Chinese (Simplified); English and the listed additional
+    /// languages are accepted as fallback or requested cultures.
     /// </remarks>
     public static class NcfLocalizationOptions
     {
@@ -46,12 +46,18 @@ namespace Senparc.Ncf.Utility.Helpers
             "ru"
         };
 
+        /// <summary>
+        /// Gets the culture names supported by the NCF resource fallback policy.
+        /// </summary>
         public static IReadOnlyList<string> SupportedCultures { get; } =
             Array.AsReadOnly(_supportedCultures);
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Normalizes an exact or language-only culture name to one of <see cref="SupportedCultures"/>.
         /// </summary>
+        /// <param name="cultureName">The requested culture name, such as <c>en-US</c> or <c>zh-CN</c>.</param>
+        /// <param name="normalizedCulture">Receives the normalized supported culture, or <see cref="DefaultCulture"/> on failure.</param>
+        /// <returns><see langword="true"/> when a supported culture match is found; otherwise, <see langword="false"/>.</returns>
         public static bool TryNormalizeCulture(string cultureName, out string normalizedCulture)
         {
             normalizedCulture = DefaultCulture;
@@ -92,6 +98,11 @@ namespace Senparc.Ncf.Utility.Helpers
             return false;
         }
 
+        /// <summary>
+        /// Maps a .NET culture to the corresponding NCF system language.
+        /// </summary>
+        /// <param name="cultureInfo">The culture to map; the current UI culture is used when null.</param>
+        /// <returns>The matching <see cref="SystemLanguage"/>, defaulting to English for unknown languages.</returns>
         public static SystemLanguage GetSystemLanguage(CultureInfo cultureInfo)
         {
             var languageName = (cultureInfo ?? CultureInfo.CurrentUICulture)

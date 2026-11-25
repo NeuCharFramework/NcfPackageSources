@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v1.1.15 Integrated localization, tooling, and runtime improvements across the module.
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel.DataAnnotations;
@@ -20,13 +23,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
     /// </summary>
     public class CreateColorRequestDto
     {
-        [Range(0, 255, ErrorMessage = "红色值必须在0-255之间")]
+        [Range(0, 255, ErrorMessage = "The red value must be between 0 and 255")]
         public int Red { get; set; }
 
-        [Range(0, 255, ErrorMessage = "绿色值必须在0-255之间")]
+        [Range(0, 255, ErrorMessage = "The green value must be between 0 and 255")]
         public int Green { get; set; }
 
-        [Range(0, 255, ErrorMessage = "蓝色值必须在0-255之间")]
+        [Range(0, 255, ErrorMessage = "The blue value must be between 0 and 255")]
         public int Blue { get; set; }
 
         /// <summary>
@@ -43,13 +46,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
         [Required]
         public int Id { get; set; }
 
-        [Range(0, 255, ErrorMessage = "红色值必须在0-255之间")]
+        [Range(0, 255, ErrorMessage = "The red value must be between 0 and 255")]
         public int Red { get; set; }
 
-        [Range(0, 255, ErrorMessage = "绿色值必须在0-255之间")]
+        [Range(0, 255, ErrorMessage = "The green value must be between 0 and 255")]
         public int Green { get; set; }
 
-        [Range(0, 255, ErrorMessage = "蓝色值必须在0-255之间")]
+        [Range(0, 255, ErrorMessage = "The blue value must be between 0 and 255")]
         public int Blue { get; set; }
 
         /// <summary>

@@ -48,6 +48,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             "packages"
         };
 
+        /// <summary>
+        /// Resolves a unique module project directory from a solution path and full project name.
+        /// </summary>
+        /// <param name="solutionFilePath">The solution file path.</param>
+        /// <param name="moduleName">The full XNCF project name.</param>
+        /// <returns>The module directory.</returns>
         internal static string ResolveModuleDirectory(string solutionFilePath, string moduleName)
         {
             if (string.IsNullOrWhiteSpace(solutionFilePath)
@@ -82,6 +88,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             };
         }
 
+        /// <summary>
+        /// Resolves a relative module file path while rejecting traversal, directories, and symbolic links.
+        /// </summary>
+        /// <param name="moduleDirectory">The trusted module root.</param>
+        /// <param name="relativeFilePath">The module-relative file path.</param>
+        /// <returns>The validated physical file path.</returns>
         internal static string ResolveFilePath(string moduleDirectory, string relativeFilePath)
         {
             if (string.IsNullOrWhiteSpace(relativeFilePath))
@@ -118,6 +130,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             return fullFilePath;
         }
 
+        /// <summary>
+        /// Reads a bounded UTF-8 text file and returns its SHA-256 fingerprint.
+        /// </summary>
+        /// <param name="moduleDirectory">The trusted module root.</param>
+        /// <param name="relativeFilePath">The module-relative file path.</param>
+        /// <param name="cancellationToken">Token used to cancel reading.</param>
+        /// <returns>File path, text content, and fingerprint.</returns>
         internal static async Task<XncfWorkspaceReadResult> ReadTextAsync(
             string moduleDirectory,
             string relativeFilePath,
@@ -150,6 +169,16 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             return new XncfWorkspaceReadResult(fullFilePath, content, ComputeSha256(bytes));
         }
 
+        /// <summary>
+        /// Atomically writes an allowed code/resource file with size, NUL, path, symlink,
+        /// and optimistic SHA-256 checks.
+        /// </summary>
+        /// <param name="moduleDirectory">The trusted module root.</param>
+        /// <param name="relativeFilePath">The module-relative writable file path.</param>
+        /// <param name="content">The replacement text content.</param>
+        /// <param name="expectedSha256">Optional fingerprint captured before editing.</param>
+        /// <param name="cancellationToken">Token used to cancel writing.</param>
+        /// <returns>The write path, creation flag, previous fingerprint, and new fingerprint.</returns>
         internal static async Task<XncfWorkspaceWriteResult> WriteTextAtomicAsync(
             string moduleDirectory,
             string relativeFilePath,
@@ -224,12 +253,22 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
                 ComputeSha256(bytes));
         }
 
+        /// <summary>
+        /// Computes a lowercase SHA-256 digest for a file.
+        /// </summary>
+        /// <param name="filePath">The file to hash.</param>
+        /// <returns>The lowercase hexadecimal digest.</returns>
         internal static string ComputeFileSha256(string filePath)
         {
             using var stream = File.OpenRead(filePath);
             return Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant();
         }
 
+        /// <summary>
+        /// Validates that a relative path targets an allowed source/resource extension
+        /// and is not a project, package, build, or application configuration file.
+        /// </summary>
+        /// <param name="relativeFilePath">The module-relative path to validate.</param>
         internal static void ValidateWritableCodeFile(string relativeFilePath)
         {
             if (string.IsNullOrWhiteSpace(relativeFilePath))

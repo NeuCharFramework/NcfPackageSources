@@ -180,6 +180,14 @@ public static class WorkflowInterchangeCodec
         .WithNamingConvention(CamelCaseNamingConvention.Instance)
         .Build();
 
+    /// <summary>
+    /// Parses JSON or YAML workflow interchange content, validates its schema and
+    /// normalizes the supported trigger/metadata defaults.
+    /// </summary>
+    /// <param name="content">The interchange document text.</param>
+    /// <param name="format">Optional explicit format; otherwise the content is detected.</param>
+    /// <returns>The parsed definition and detected format.</returns>
+    /// <exception cref="WorkflowInterchangeException">Thrown when content, format, schema, or YAML/JSON structure is invalid.</exception>
     public static WorkflowInterchangeDocument Parse(
         string content,
         WorkflowInterchangeFormat? format = null)
@@ -204,6 +212,13 @@ public static class WorkflowInterchangeCodec
         return new WorkflowInterchangeDocument(definition, actualFormat);
     }
 
+    /// <summary>
+    /// Validates and serializes a workflow definition to JSON or YAML.
+    /// </summary>
+    /// <param name="definition">The workflow definition to serialize.</param>
+    /// <param name="format">The requested interchange format.</param>
+    /// <returns>The formatted workflow document.</returns>
+    /// <exception cref="WorkflowInterchangeException">Thrown when the definition is null or violates schema constraints.</exception>
     public static string Serialize(
         NeuCharWorkflowDefinition definition,
         WorkflowInterchangeFormat format)
@@ -215,6 +230,11 @@ public static class WorkflowInterchangeCodec
                 JsonSerializer.SerializeToNode(definition, JsonOptions)!));
     }
 
+    /// <summary>
+    /// Validates and normalizes the interchange envelope, metadata, trigger, and requirement collections.
+    /// </summary>
+    /// <param name="definition">The definition to validate and normalize.</param>
+    /// <exception cref="WorkflowInterchangeException">Thrown when format, schema version, text limits, tags, or trigger type are invalid.</exception>
     public static void ValidateDefinition(NeuCharWorkflowDefinition? definition)
     {
         if (definition == null)
@@ -271,6 +291,12 @@ public static class WorkflowInterchangeCodec
         definition.Trigger.Type = triggerType;
     }
 
+    /// <summary>
+    /// Converts a parsed JSON tree into the current workflow definition, including legacy graph envelopes.
+    /// </summary>
+    /// <param name="root">The parsed JSON/YAML tree.</param>
+    /// <returns>A normalized workflow definition.</returns>
+    /// <exception cref="WorkflowInterchangeException">Thrown when the root or definition structure is invalid.</exception>
     private static NeuCharWorkflowDefinition ParseDefinition(JsonNode root)
     {
         if (root is not JsonObject rootObject)
@@ -303,6 +329,11 @@ public static class WorkflowInterchangeCodec
         }
     }
 
+    /// <summary>
+    /// Infers the interchange trigger type from a legacy graph trigger node.
+    /// </summary>
+    /// <param name="graph">The legacy graph to inspect.</param>
+    /// <returns>The supported trigger type, defaulting to <c>manual</c>.</returns>
     private static string InferTriggerType(NeuCharWorkflowGraph graph)
     {
         var trigger = graph.Nodes?.SingleOrDefault(node =>
@@ -316,6 +347,12 @@ public static class WorkflowInterchangeCodec
         };
     }
 
+    /// <summary>
+    /// Parses JSON text into a mutable node tree and translates parser errors to interchange errors.
+    /// </summary>
+    /// <param name="content">The JSON document text.</param>
+    /// <returns>The parsed JSON node.</returns>
+    /// <exception cref="WorkflowInterchangeException">Thrown when the JSON is empty or malformed.</exception>
     private static JsonNode ParseJson(string content)
     {
         try
@@ -329,6 +366,11 @@ public static class WorkflowInterchangeCodec
         }
     }
 
+    /// <summary>
+    /// Detects JSON from its leading object/array token and treats all other content as YAML.
+    /// </summary>
+    /// <param name="content">The document text to inspect.</param>
+    /// <returns>The detected interchange format.</returns>
     private static WorkflowInterchangeFormat DetectFormat(string content)
     {
         var first = content.TrimStart();
@@ -338,6 +380,12 @@ public static class WorkflowInterchangeCodec
             : WorkflowInterchangeFormat.Yaml;
     }
 
+    /// <summary>
+    /// Parses one YAML document and converts its root node to the JSON node representation used by the codec.
+    /// </summary>
+    /// <param name="content">The YAML document text.</param>
+    /// <returns>The converted root node, or <see langword="null"/> for a YAML null root.</returns>
+    /// <exception cref="WorkflowInterchangeException">Thrown when YAML contains multiple documents or invalid syntax.</exception>
     private static JsonNode? ParseYaml(string content)
     {
         try
@@ -362,6 +410,12 @@ public static class WorkflowInterchangeCodec
         }
     }
 
+    /// <summary>
+    /// Recursively converts supported YAML mappings, sequences, and scalar values to JSON nodes.
+    /// </summary>
+    /// <param name="node">The YAML node to convert.</param>
+    /// <returns>The corresponding JSON node.</returns>
+    /// <exception cref="WorkflowInterchangeException">Thrown when keys, tags, or node types are unsupported.</exception>
     private static JsonNode? ConvertYamlNode(YamlNode node)
     {
         if (node is YamlMappingNode mapping)
@@ -415,6 +469,12 @@ public static class WorkflowInterchangeCodec
         throw new WorkflowInterchangeException("Workflow YAML 包含不支持的节点类型。");
     }
 
+    /// <summary>
+    /// Converts a YAML scalar using its explicit tag or conservative scalar-type inference.
+    /// </summary>
+    /// <param name="value">The scalar text.</param>
+    /// <param name="tag">The YAML tag, when supplied.</param>
+    /// <returns>A JSON scalar node or <see langword="null"/>.</returns>
     private static JsonNode? ParseYamlScalar(string? value, string? tag)
     {
         if (string.IsNullOrEmpty(value) || tag?.EndsWith(":null", StringComparison.OrdinalIgnoreCase) == true)
@@ -458,6 +518,11 @@ public static class WorkflowInterchangeCodec
         return JsonValue.Create(value);
     }
 
+    /// <summary>
+    /// Converts a JSON node tree to CLR dictionaries, lists, and scalar values for YAML serialization.
+    /// </summary>
+    /// <param name="node">The JSON node to convert.</param>
+    /// <returns>A YAML serializer-compatible CLR value.</returns>
     private static object? ToPlainObject(JsonNode node)
     {
         return node switch
@@ -472,6 +537,11 @@ public static class WorkflowInterchangeCodec
         };
     }
 
+    /// <summary>
+    /// Extracts the most specific supported CLR scalar value from a JSON value.
+    /// </summary>
+    /// <param name="value">The JSON scalar value.</param>
+    /// <returns>The extracted CLR value, or its JSON text when no supported type matches.</returns>
     private static object? GetJsonValue(JsonValue value)
     {
         if (value.TryGetValue<string>(out var text)) return text;
@@ -486,9 +556,18 @@ public static class WorkflowInterchangeCodec
 
 public sealed class WorkflowInterchangeException : InvalidOperationException
 {
+    /// <summary>
+    /// Initializes an interchange exception with a validation or parsing message.
+    /// </summary>
+    /// <param name="message">The error message.</param>
     public WorkflowInterchangeException(string message)
         : base(message) { }
 
+    /// <summary>
+    /// Initializes an interchange exception with a message and underlying parser exception.
+    /// </summary>
+    /// <param name="message">The normalized error message.</param>
+    /// <param name="innerException">The underlying parsing or conversion exception.</param>
     public WorkflowInterchangeException(string message, Exception innerException)
         : base(message, innerException) { }
 }

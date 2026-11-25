@@ -17,7 +17,10 @@
     Change description: v1.1.0 Updated module behavior and related support.
 
     Modified by: Senparc - 20261119
-    Change description: v1.1.15 Updated module behavior, localization metadata, and English source comments
+    Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
+
+    Modified by: Senparc - 20261124
+    Change description: v1.1.15 Integrated localization, tooling, and runtime improvements across the module.
 
 ----------------------------------------------------------------*/
 #nullable enable

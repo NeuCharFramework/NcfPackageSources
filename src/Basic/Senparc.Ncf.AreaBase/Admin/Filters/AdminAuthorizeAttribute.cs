@@ -31,10 +31,17 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
         //AuthorizeAttribute canand MVC common：https://docs.microsoft.com/en-us/aspnet/core/razor-pages/filter?view=aspnetcore-2.2
         public static string AuthenticationScheme => SiteConfig.NcfAdminAuthorizeScheme;
 
+        /// <summary>
+        /// Initializes authorization with the configured NCF administration authentication scheme.
+        /// </summary>
         public AdminAuthorizeAttribute()
         {
             base.AuthenticationSchemes = AuthenticationScheme;
         }
+        /// <summary>
+        /// Initializes authorization with the configured scheme and a required policy.
+        /// </summary>
+        /// <param name="policy">The authorization policy name.</param>
         public AdminAuthorizeAttribute(string policy) : this()
         {
             this.Policy = policy;

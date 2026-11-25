@@ -51,11 +51,21 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
     public class AuthenticationResultFilterAttribute : IAsyncPageFilter, IFilterMetadata
     {
         private IServiceProvider _serviceProvider;
+        /// <summary>
+        /// Initializes the filter with the service provider used to resolve authorization services.
+        /// </summary>
+        /// <param name="serviceProvider">The request service provider.</param>
         public AuthenticationResultFilterAttribute(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
+        /// <summary>
+        /// Rejects missing handlers or delegates the request to permission validation.
+        /// </summary>
+        /// <param name="context">The page-handler execution context.</param>
+        /// <param name="next">The next page-handler delegate.</param>
+        /// <returns>A task that completes after validation and, when allowed, downstream execution.</returns>
         public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
             if (context.HandlerMethod == null)
@@ -67,12 +77,12 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
         }
 
         /// <summary>
-        /// Validation permission for method
+        /// Validates the current administration session and resource permission before execution.
         /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <param name="context"></param>
-        /// <param name="next"></param>
-        /// <returns></returns>
+        /// <param name="serviceProvider">The provider used to resolve work-context and permission services.</param>
+        /// <param name="context">The page-handler execution context.</param>
+        /// <param name="next">The delegate to invoke when access is permitted.</param>
+        /// <returns>A task that completes after the request is allowed or a result is assigned.</returns>
         public virtual async Task ValidatePermissionAsync(IServiceProvider serviceProvider, PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
             bool canAccessResource = false;
@@ -140,10 +150,10 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
         }
 
         /// <summary>
-        /// whether it is an Ajax request
+        /// Determines whether the request carries the conventional XMLHttpRequest header.
         /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
+        /// <param name="context">The page-handler execution context to inspect.</param>
+        /// <returns><see langword="true"/> when the request identifies itself as XMLHttpRequest.</returns>
         public virtual bool IsAjax(PageHandlerExecutingContext context)
         {
             bool isAjax = false;
@@ -157,6 +167,11 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
             return isAjax;
         }
 
+        /// <summary>
+        /// Completes page-handler selection without changing the selected handler.
+        /// </summary>
+        /// <param name="context">The selected page-handler context.</param>
+        /// <returns>A completed task.</returns>
         public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
         {
             return Task.CompletedTask;

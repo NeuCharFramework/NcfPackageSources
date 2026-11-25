@@ -43,6 +43,13 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
     private readonly CancellationTokenSource _stoppingCts = new();
     private Task _runningTask;
 
+    /// <summary>
+    /// Initializes the tenant-aware Weixin Claw long-polling hosted service.
+    /// </summary>
+    /// <param name="scopeFactory">Factory for account-scoped services.</param>
+    /// <param name="tenantScopeFactory">Factory for enabled-tenant scopes.</param>
+    /// <param name="options">Polling and shutdown timing options.</param>
+    /// <param name="logger">Hosted-service logger.</param>
     public WeixinClawHostedService(
         IServiceScopeFactory scopeFactory,
         IBackgroundTenantScopeFactory tenantScopeFactory,
@@ -55,12 +62,22 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         _logger = logger;
     }
 
+    /// <summary>
+    /// Starts the periodic account discovery and long-polling loop.
+    /// </summary>
+    /// <param name="cancellationToken">Hosted-service startup cancellation token.</param>
+    /// <returns>A completed task after loop scheduling.</returns>
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _runningTask = Task.Run(() => RunAsync(_stoppingCts.Token), CancellationToken.None);
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Cancels account loops and waits within the configured shutdown window.
+    /// </summary>
+    /// <param name="cancellationToken">Token controlling the shutdown wait.</param>
+    /// <returns>A task that completes after stop requests and account waits.</returns>
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         _stoppingCts.Cancel();
@@ -127,6 +144,9 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Disposes the hosted-service cancellation source.
+    /// </summary>
     public void Dispose()
     {
         _stoppingCts.Dispose();

@@ -27,11 +27,21 @@ namespace Senparc.Ncf.Service
 {
     public class SysRoleService : ClientServiceBase<SysRole>
     {
+        /// <summary>
+        /// Initializes the role service with its repository and dependency provider.
+        /// </summary>
+        /// <param name="repo">The repository for role persistence.</param>
+        /// <param name="serviceProvider">The service provider used by the base service.</param>
         public SysRoleService(ClientRepositoryBase<SysRole> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
 
         }
 
+        /// <summary>
+        /// Creates a new role or updates the existing role identified by the DTO.
+        /// </summary>
+        /// <param name="dto">The role values to create or persist.</param>
+        /// <returns>A task that completes after the role has been saved.</returns>
         public async Task CreateOrUpdateAsync(SysRoleDto dto)
         {
             SysRole sysRole;

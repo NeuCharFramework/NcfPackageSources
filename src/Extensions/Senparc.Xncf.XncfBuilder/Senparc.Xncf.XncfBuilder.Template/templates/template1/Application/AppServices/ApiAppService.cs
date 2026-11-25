@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v1.1.15 Integrated localization, tooling, and runtime improvements across the module.
+
 ----------------------------------------------------------------*/
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
@@ -65,7 +68,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 throw new NcfExceptionBase(Template_XncfNameResource.Format(
-                    "Frontend.063",
+                    "Frontend.Template_XncfName.ExceptionThrowTestParametersPassedValueValue",
                     "Exception test with parameters: {0} {1}",
                     request.FirstName,
                     request.LastName));

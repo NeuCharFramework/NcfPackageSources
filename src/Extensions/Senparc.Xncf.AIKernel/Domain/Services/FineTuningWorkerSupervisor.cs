@@ -42,6 +42,14 @@ public sealed class FineTuningWorkerSupervisor : IHostedService, IDisposable
     private readonly ConcurrentDictionary<string, Session> _sessions = new(StringComparer.OrdinalIgnoreCase);
     private readonly CancellationTokenSource _shutdown = new();
 
+    /// <summary>
+    /// Initializes the managed fine-tuning worker supervisor.
+    /// </summary>
+    /// <param name="tenantScopeFactory">Factory used for tenant-scoped worker discovery.</param>
+    /// <param name="secrets">Worker secret store.</param>
+    /// <param name="runtime">Runtime enablement settings.</param>
+    /// <param name="options">Fine-tuning worker options.</param>
+    /// <param name="logger">Supervisor logger.</param>
     public FineTuningWorkerSupervisor(IBackgroundTenantScopeFactory tenantScopeFactory, FineTuningSecretStore secrets,
         FineTuningRuntimeSettings runtime, IOptions<FineTuningWorkerOptions> options,
         ILogger<FineTuningWorkerSupervisor> logger)
@@ -53,6 +61,11 @@ public sealed class FineTuningWorkerSupervisor : IHostedService, IDisposable
         _logger = logger;
     }
 
+    /// <summary>
+    /// Applies runtime settings and starts background auto-start processing.
+    /// </summary>
+    /// <param name="cancellationToken">Hosted-service startup cancellation token.</param>
+    /// <returns>A completed task after scheduling auto-start.</returns>
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _runtime.ApplyStartup();
@@ -60,6 +73,11 @@ public sealed class FineTuningWorkerSupervisor : IHostedService, IDisposable
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Cancels auto-start and stops all currently managed worker processes.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel shutdown waits.</param>
+    /// <returns>A task that completes after stop requests are issued.</returns>
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         await _shutdown.CancelAsync().ConfigureAwait(false);
@@ -76,6 +94,15 @@ public sealed class FineTuningWorkerSupervisor : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Starts one managed worker after validating its launch profile, secret, loopback binding,
+    /// peer ports, directories, and Python launch plan.
+    /// </summary>
+    /// <param name="worker">The persisted worker configuration.</param>
+    /// <param name="peers">Other worker configurations used for collision checks.</param>
+    /// <param name="cancellationToken">Token used to cancel startup.</param>
+    /// <returns>The managed worker status after startup.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the worker is not managed or launch validation/startup fails.</exception>
     public async Task<FineTuningManagedWorkerStatus> StartAsync(AIFineTuningWorker worker,
         IReadOnlyList<AIFineTuningWorker> peers, CancellationToken cancellationToken)
     {
@@ -135,6 +162,12 @@ public sealed class FineTuningWorkerSupervisor : IHostedService, IDisposable
         return GetStatus(worker);
     }
 
+    /// <summary>
+    /// Stops a managed worker session when one is registered for the alias.
+    /// </summary>
+    /// <param name="alias">The worker alias.</param>
+    /// <param name="cancellationToken">Token used to cancel the process wait.</param>
+    /// <returns>A task that completes after the stop request.</returns>
     public async Task StopWorkerAsync(string alias, CancellationToken cancellationToken)
     {
         if (!_sessions.TryGetValue(alias, out var session))
@@ -144,6 +177,11 @@ public sealed class FineTuningWorkerSupervisor : IHostedService, IDisposable
         Debug.WriteLine($"[AIKernel] Stopped managed fine-tuning worker '{alias}' pid={session.ProcessId}.");
     }
 
+    /// <summary>
+    /// Builds a status snapshot from persisted worker configuration and any live managed session.
+    /// </summary>
+    /// <param name="worker">The persisted worker configuration.</param>
+    /// <returns>The current managed-worker status.</returns>
     public FineTuningManagedWorkerStatus GetStatus(AIFineTuningWorker worker)
     {
         var status = new FineTuningManagedWorkerStatus
@@ -189,6 +227,9 @@ public sealed class FineTuningWorkerSupervisor : IHostedService, IDisposable
         return status;
     }
 
+    /// <summary>
+    /// Disposes supervisor cancellation state and managed worker processes.
+    /// </summary>
     public void Dispose()
     {
         _shutdown.Dispose();

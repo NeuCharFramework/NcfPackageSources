@@ -24,6 +24,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Senparc.Ncf.Core.Utility
 {
+    /// <summary>
+    /// Provides common web formatting, request-form, and legacy currency conversion helpers.
+    /// </summary>
     public static class CommonWebParts
     {
         //#region convert HTML code public static string exHTML(string ntext)
@@ -55,10 +58,10 @@ namespace Senparc.Ncf.Core.Utility
         //#endregion
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Removes tags matching the simple <c>&lt;...&gt;</c> pattern and removes CRLF sequences.
         /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
+        /// <param name="str">The HTML-like text to process.</param>
+        /// <returns>The text with matching tags and CRLF sequences removed.</returns>
         public static string DelHtml(this string str) {
             if (!string.IsNullOrEmpty(str)) {
                 str = Regex.Replace(str, "<[^>]*>", "").Replace("\r\n", "");
@@ -68,11 +71,11 @@ namespace Senparc.Ncf.Core.Utility
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reads one value from the current request form collection.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <param name="context">HttpContext</param>
-        /// <returns></returns>
+        /// <param name="key">The form key to read.</param>
+        /// <param name="context">The HTTP context containing the request form.</param>
+        /// <returns>The form value as a string, or an empty string when the key is absent.</returns>
         public static string GetFormValue(string key, HttpContext context)
         {
             return context.Request.Form[key].ToString();
@@ -80,11 +83,11 @@ namespace Senparc.Ncf.Core.Utility
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Applies a format string to a current file name and its extension.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="fileFormat">A composite format string receiving the file name and extension.</param>
+        /// <param name="currentFileName">The current file name whose extension is extracted.</param>
+        /// <returns>The formatted upload file name.</returns>
         public static string GetFormattedUpLoadFileName(string fileFormat, string currentFileName)
         {
             return string.Format(fileFormat, currentFileName, Path.GetExtension(currentFileName));
@@ -92,10 +95,10 @@ namespace Senparc.Ncf.Core.Utility
 
         #region Legacy section
         /// <summary>
-        /// currency number-to-words conversion
+        /// Converts a decimal amount to the legacy Chinese uppercase currency representation.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="num">The amount to round to two decimal places and convert.</param>
+        /// <returns>The uppercase currency text, or <c>溢出</c> when the scaled amount exceeds the supported length.</returns>
         public static string CmycurD(decimal num)
         {
             string str1 = "零壹贰叁肆伍陆柒捌玖"; //Legacy comment translated to English.
@@ -206,10 +209,10 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// currency number-to-words conversion
+        /// Converts a numeric string to the legacy Chinese uppercase currency representation.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="numstr">The numeric string to parse.</param>
+        /// <returns>The uppercase currency text, or the legacy non-numeric marker when parsing fails.</returns>
         public static string CmycurD(string numstr)
         {
             try

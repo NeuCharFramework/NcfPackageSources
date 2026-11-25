@@ -46,12 +46,24 @@ public sealed class WeixinClawLoginService
         return scope.ServiceProvider.GetRequiredService<WeixinClawApi>();
     }
 
+    /// <summary>
+    /// Initializes the QR login session service.
+    /// </summary>
+    /// <param name="scopeFactory">Factory used to persist the authenticated account.</param>
     public WeixinClawLoginService(
         IServiceScopeFactory scopeFactory)
     {
         _scopeFactory = scopeFactory;
     }
 
+    /// <summary>
+    /// Starts a QR login session and returns rendered QR-code data.
+    /// </summary>
+    /// <param name="name">The account display name.</param>
+    /// <param name="promptRangeCode">Optional PromptRange binding.</param>
+    /// <param name="cancellationToken">Token used to cancel QR retrieval.</param>
+    /// <returns>The new login session status.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the protocol returns an invalid QR response.</exception>
     public async Task<WeixinClawLoginStatus> StartAsync(
         string name,
         string promptRangeCode,
@@ -84,6 +96,14 @@ public sealed class WeixinClawLoginService
         return ToStatus(_sessions[sessionId]);
     }
 
+    /// <summary>
+    /// Polls a QR login session and persists the account when the protocol confirms login.
+    /// </summary>
+    /// <param name="sessionId">The local login session identifier.</param>
+    /// <param name="verifyCode">Optional protocol verification code.</param>
+    /// <param name="cancellationToken">Token used to cancel status polling.</param>
+    /// <param name="tenant">Optional tenant snapshot restored before account persistence.</param>
+    /// <returns>The current login status or an expired/invalid result.</returns>
     public async Task<WeixinClawLoginStatus> PollAsync(
         string sessionId,
         string verifyCode = null,

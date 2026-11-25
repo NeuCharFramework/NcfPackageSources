@@ -22,6 +22,20 @@ namespace Senparc.Xncf.Connectors.Abstractions;
 /// </summary>
 public static class ConnectorAuthorization
 {
+    /// <summary>
+    /// Determines whether a connector instance is enabled and permits a requested action.
+    /// </summary>
+    /// <param name="bindings">The configured instance bindings to inspect.</param>
+    /// <param name="instanceId">The connector instance identifier being requested.</param>
+    /// <param name="actionKey">The action identifier being requested.</param>
+    /// <param name="limitToSelection">
+    /// Whether the request must also be limited to <paramref name="selectedInstanceIds"/>.
+    /// </param>
+    /// <param name="selectedInstanceIds">The instance identifiers selected by the caller.</param>
+    /// <returns>
+    /// <see langword="true"/> when the request has a valid selected instance, an enabled binding,
+    /// and either no action restriction or a matching action key; otherwise, <see langword="false"/>.
+    /// </returns>
     public static bool Allows(
         IEnumerable<AgentConnectorBinding>? bindings,
         string? instanceId,

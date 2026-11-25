@@ -22,6 +22,9 @@ using Senparc.Xncf.DesktopBridge.Models;
 
 namespace Senparc.Xncf.DesktopBridge.Services;
 
+/// <summary>
+/// Stores short-lived PKCE-protected desktop-to-admin authorization handoffs.
+/// </summary>
 public sealed class DesktopAdminAuthHandoffStore
 {
     public static readonly TimeSpan HandoffLifetime = TimeSpan.FromSeconds(60);
@@ -32,6 +35,15 @@ public sealed class DesktopAdminAuthHandoffStore
     private readonly object _gate = new();
     private readonly Dictionary<Guid, PendingHandoff> _handoffs = new();
 
+    /// <summary>
+    /// Creates a bounded authorization handoff request for a desktop session.
+    /// </summary>
+    /// <param name="desktopSessionToken">The desktop session token to bind to the handoff.</param>
+    /// <param name="codeChallenge">The base64url SHA-256 PKCE code challenge.</param>
+    /// <param name="returnPath">The validated local admin return path.</param>
+    /// <returns>The request ID, approval path, expiration, and polling interval.</returns>
+    /// <exception cref="DesktopAdminAuthHandoffException">Thrown when the session or PKCE challenge is invalid.</exception>
+    /// <exception cref="DesktopAdminAuthHandoffRateLimitException">Thrown when pending handoff limits are exceeded.</exception>
     public DesktopAdminAuthHandoffCreateResponse Create(
         string desktopSessionToken,
         string? codeChallenge,
@@ -85,6 +97,11 @@ public sealed class DesktopAdminAuthHandoffStore
         }
     }
 
+    /// <summary>
+    /// Determines whether a handoff request is still awaiting administrator approval.
+    /// </summary>
+    /// <param name="requestId">The handoff request identifier.</param>
+    /// <returns><see langword="true"/> when the request is pending and unexpired.</returns>
     public bool IsPending(Guid requestId)
     {
         lock (_gate)
@@ -95,6 +112,14 @@ public sealed class DesktopAdminAuthHandoffStore
         }
     }
 
+    /// <summary>
+    /// Approves a pending handoff after validating administrator identity and source-session lifetime.
+    /// </summary>
+    /// <param name="requestId">The handoff request identifier.</param>
+    /// <param name="adminUserId">The authenticated administrator identifier.</param>
+    /// <param name="userName">The administrator display name.</param>
+    /// <param name="sourceAuthenticationExpiresUtc">The source authentication expiration time.</param>
+    /// <returns><see langword="true"/> when the pending request was approved.</returns>
     public bool Approve(
         Guid requestId,
         int adminUserId,
@@ -125,6 +150,12 @@ public sealed class DesktopAdminAuthHandoffStore
         }
     }
 
+    /// <summary>
+    /// Denies a pending handoff request with a bounded message.
+    /// </summary>
+    /// <param name="requestId">The handoff request identifier.</param>
+    /// <param name="message">The reason shown to the desktop client.</param>
+    /// <returns><see langword="true"/> when a pending request was denied.</returns>
     public bool Deny(Guid requestId, string message)
     {
         lock (_gate)
@@ -144,6 +175,13 @@ public sealed class DesktopAdminAuthHandoffStore
         }
     }
 
+    /// <summary>
+    /// Redeems an approved handoff after validating the desktop session token and PKCE verifier.
+    /// </summary>
+    /// <param name="requestId">The handoff request identifier.</param>
+    /// <param name="desktopSessionToken">The desktop session token bound at creation.</param>
+    /// <param name="codeVerifier">The PKCE verifier matching the stored challenge.</param>
+    /// <returns>Pending, invalid, denied, or approved identity data.</returns>
     public DesktopAdminAuthHandoffRedeemResult Redeem(
         Guid requestId,
         string desktopSessionToken,

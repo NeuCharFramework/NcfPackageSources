@@ -21,72 +21,69 @@ using System.Reflection;
 namespace Senparc.Ncf.Utility.Helpers
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides best-effort helpers for creating types and instances from assembly-qualified names.
     /// </summary>
     public static class ReflectionHelper
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates an instance from the named assembly, namespace, and class, then casts it
+        /// to <typeparamref name="T"/>. Any loading, construction, or cast failure is converted
+        /// to the default value for the requested type.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <typeparam name="T">The type to which the created instance is cast.</typeparam>
+        /// <param name="assemblyName">The assembly name passed to <see cref="Assembly.Load(string)"/>.</param>
+        /// <param name="nameSpace">The namespace containing the target type.</param>
+        /// <param name="className">The target class name without its namespace.</param>
+        /// <returns>The created instance cast to <typeparamref name="T"/>, or its default value on failure.</returns>
         public static T CreateInstance<T>(string assemblyName, string nameSpace, string className)
         {
             try
             {
                 var ect = CreateInstance(assemblyName, nameSpace, className);
-                return (T)ect;//Legacy comment translated to English.
+                return (T)ect;
             }
             catch
             {
-                //Legacy comment translated to English.
                 return default(T);
             }
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates an instance from the named assembly, namespace, and class.
+        /// Any assembly loading, type lookup, constructor, or reflection failure is suppressed.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="assemblyName">The assembly name passed to <see cref="Assembly.Load(string)"/>.</param>
+        /// <param name="nameSpace">The namespace containing the target type.</param>
+        /// <param name="className">The target class name without its namespace.</param>
+        /// <returns>The created object, or <see langword="null"/> when creation fails or the type cannot be found.</returns>
         public static object CreateInstance(string assemblyName, string nameSpace, string className)
         {
             try
             {
-                string fullName = nameSpace + "." + className;//Legacy comment translated to English.
-                //Legacy comment translated to English.
-                object ect = Assembly.Load(assemblyName).CreateInstance(fullName);//Legacy comment translated to English.
-                return ect;//return
-                //Legacy comment translated to English.
-                //Legacy comment translated to English.
-                //Legacy comment translated to English.
-                //Legacy comment translated to English.
-                //Legacy comment translated to English.
+                string fullName = nameSpace + "." + className;
+                object ect = Assembly.Load(assemblyName).CreateInstance(fullName);
+                return ect;
             }
             catch
             {
-                //Legacy comment translated to English.
                 return null;
             }
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves a type from an assembly-qualified name assembled from the supplied components.
+        /// Unlike <see cref="CreateInstance(string, string, string)"/>, this method does not
+        /// catch resolution failures; the reflection API determines the returned result.
         /// </summary>
-        /// <param name="assemblyName"></param>
-        /// <param name="nameSpace"></param>
-        /// <param name="className"></param>
-        /// <returns></returns>
+        /// <param name="assemblyName">The assembly name portion of the qualified type name.</param>
+        /// <param name="nameSpace">The namespace containing the target type.</param>
+        /// <param name="className">The target class name without its namespace.</param>
+        /// <returns>The resolved type, or <see langword="null"/> when the runtime cannot resolve it.</returns>
         public static Type GetTypeFromName(string assemblyName, string nameSpace, string className)
         {
-            string fullName = nameSpace + "." + className;//Legacy comment translated to English.
-            string path = fullName + "," + assemblyName;//Legacy comment translated to English.
-            Type o = Type.GetType(path);//Legacy comment translated to English.
+            string fullName = nameSpace + "." + className;
+            string path = fullName + "," + assemblyName;
+            Type o = Type.GetType(path);
             return o;
         }
     }

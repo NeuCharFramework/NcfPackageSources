@@ -16,6 +16,12 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
+
+    Modified by: Senparc - 20261125
+    Change description: v0.12.29 Improved AdminChat conversation loading and command parameter feedback.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +29,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.Core.WorkContext.Provider;
 using Senparc.Ncf.Service;
+using Senparc.Ncf.XncfBase.ChatTools;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -77,8 +85,38 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
         [BindProperty(SupportsGet = true)]
         public string ModuleUids { get; set; }
 
+        public IReadOnlyList<ChatToolCommandViewModel> ChatTools { get; private set; }
+            = Array.Empty<ChatToolCommandViewModel>();
+
         public async Task<IActionResult> OnGetAsync()
         {
+            ChatTools = ChatToolRegistry.GetChatTools()
+                .Select(tool => new ChatToolCommandViewModel(
+                    tool.Command,
+                    tool.Label,
+                    tool.Hint,
+                    tool.ModuleName,
+                    tool.ModuleUid,
+                    tool.Parameters
+                        .OrderBy(parameter => parameter.Order)
+                        .Select(parameter => new ChatToolParameterViewModel(
+                            parameter.Name,
+                            parameter.Label,
+                            parameter.Hint,
+                            parameter.Placeholder,
+                            parameter.Prefix,
+                            parameter.Required,
+                            parameter.IsPositional,
+                            parameter.AllowFreeform,
+                            parameter.OptionsProviderType != null,
+                            parameter.Options.Select(option => new ChatToolParameterOptionViewModel(
+                                option.Value,
+                                option.Label,
+                                option.Description))
+                            .ToList()))
+                        .ToList()))
+                .ToList();
+
             var adminWorkContext = _adminWorkContextProvider.GetAdminWorkContext();
             CurrentUserId = adminWorkContext.AdminUserId;
             IsSuperAdmin = (adminWorkContext.RoleCodes ?? Enumerable.Empty<string>())
@@ -96,4 +134,29 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
             return Page();
         }
     }
+
+    public sealed record ChatToolCommandViewModel(
+        string Command,
+        string Label,
+        string Hint,
+        string ModuleName,
+        string ModuleUid,
+        IReadOnlyList<ChatToolParameterViewModel> Parameters);
+
+    public sealed record ChatToolParameterViewModel(
+        string Name,
+        string Label,
+        string Hint,
+        string Placeholder,
+        string Prefix,
+        bool Required,
+        bool IsPositional,
+        bool AllowFreeform,
+        bool HasOptionsProvider,
+        IReadOnlyList<ChatToolParameterOptionViewModel> Options);
+
+    public sealed record ChatToolParameterOptionViewModel(
+        string Value,
+        string Label,
+        string Description);
 }

@@ -29,11 +29,18 @@ public sealed class DesktopBridgeTokenValidator : IDesktopBridgeSessionValidator
 
     private readonly DesktopBridgeCredentialStore _credentialStore;
 
+    /// <summary>
+    /// Initializes a validator using the default credential store.
+    /// </summary>
     public DesktopBridgeTokenValidator()
         : this(new DesktopBridgeCredentialStore())
     {
     }
 
+    /// <summary>
+    /// Initializes a validator over an explicit credential store.
+    /// </summary>
+    /// <param name="credentialStore">The store used to validate legacy and paired session tokens.</param>
     public DesktopBridgeTokenValidator(DesktopBridgeCredentialStore credentialStore)
     {
         _credentialStore = credentialStore;
@@ -43,8 +50,19 @@ public sealed class DesktopBridgeTokenValidator : IDesktopBridgeSessionValidator
 
     public string HeaderName => TokenHeaderName;
 
+    /// <summary>
+    /// Determines whether a supplied desktop token is authorized.
+    /// </summary>
+    /// <param name="suppliedToken">The token supplied by the desktop client.</param>
+    /// <returns><see langword="true"/> when the token is valid.</returns>
     public bool IsAuthorized(string? suppliedToken) => _credentialStore.IsAuthorized(suppliedToken);
 
+    /// <summary>
+    /// Validates a desktop token and returns its paired-session revocation token.
+    /// </summary>
+    /// <param name="suppliedToken">The token supplied by the desktop client.</param>
+    /// <param name="sessionRevoked">Receives a token canceled when the paired session is revoked.</param>
+    /// <returns><see langword="true"/> when authorization succeeds.</returns>
     public bool TryAuthorize(string? suppliedToken, out CancellationToken sessionRevoked) =>
         _credentialStore.TryAuthorize(suppliedToken, out sessionRevoked);
 }

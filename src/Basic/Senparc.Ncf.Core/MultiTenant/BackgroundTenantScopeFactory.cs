@@ -30,11 +30,23 @@ namespace Senparc.Ncf.Core.MultiTenant
     {
         private readonly IServiceScopeFactory _scopeFactory;
 
+        /// <summary>
+        /// Initializes a factory that creates tenant-initialized service scopes.
+        /// </summary>
+        /// <param name="scopeFactory">Factory used to create dependency-injection scopes.</param>
         public BackgroundTenantScopeFactory(IServiceScopeFactory scopeFactory)
         {
             _scopeFactory = scopeFactory;
         }
 
+        /// <summary>
+        /// Enumerates enabled tenants and executes an action inside an isolated initialized scope for each tenant.
+        /// </summary>
+        /// <param name="action">The operation receiving each tenant's scoped service provider.</param>
+        /// <param name="cancellationToken">Token used to cancel discovery or iteration.</param>
+        /// <returns>A task that completes after all enabled tenants have been processed.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="action"/> is <see langword="null"/>.</exception>
+        /// <exception cref="NcfTenantException">Thrown when the tenant provider returns invalid or duplicate data.</exception>
         public async Task ForEachEnabledTenantAsync(
             Func<IServiceProvider, CancellationToken, Task> action,
             CancellationToken cancellationToken = default)
@@ -56,6 +68,12 @@ namespace Senparc.Ncf.Core.MultiTenant
             }
         }
 
+        /// <summary>
+        /// Creates an initialized scope for a tenant when that tenant is enabled and visible.
+        /// </summary>
+        /// <param name="tenantId">The tenant identifier to locate in multi-tenant mode.</param>
+        /// <param name="cancellationToken">Token used to cancel discovery.</param>
+        /// <returns>The initialized scope, or <see langword="null"/> when no matching tenant exists.</returns>
         public async Task<IServiceScope> TryCreateScopeAsync(int tenantId, CancellationToken cancellationToken = default)
         {
             var multiTenantEnabled = SiteConfig.SenparcCoreSetting.EnableMultiTenant;

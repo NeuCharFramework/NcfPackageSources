@@ -70,8 +70,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Application-service boundary for workflow design, import/export, execution,
+/// task recovery, analytics, webhook triggers, and chat sessions.
 /// </summary>
 public sealed class NeuCharWorkflowAppService
 {
@@ -95,6 +95,25 @@ public sealed class NeuCharWorkflowAppService
     private readonly ILogger<NeuCharWorkflowAppService> _logger;
     private readonly IServiceProvider? _serviceProvider;
 
+    /// <summary>
+    /// Initializes the workflow application service and its design/runtime collaborators.
+    /// </summary>
+    /// <param name="workflowService">Workflow metadata persistence service.</param>
+    /// <param name="workflowVersionService">Workflow version persistence service.</param>
+    /// <param name="executionLogService">Execution log and replay persistence service.</param>
+    /// <param name="workflowEngine">Graph validation and execution engine.</param>
+    /// <param name="functionService">Workflow function catalog service.</param>
+    /// <param name="analyticsService">Workflow analytics service.</param>
+    /// <param name="runCoordinator">In-process run ownership and status coordinator.</param>
+    /// <param name="eventPublisher">Workflow event publisher.</param>
+    /// <param name="xncfModuleService">XNCF module availability service.</param>
+    /// <param name="humanInteractionBridge">Bridge for AgentManager human interactions.</param>
+    /// <param name="humanInputService">Native workflow human-input service.</param>
+    /// <param name="chatSessionService">In-memory workflow chat session service.</param>
+    /// <param name="chatMessageService">Persisted workflow chat message service.</param>
+    /// <param name="agentWorkflowReferenceValidators">Optional validators for AgentManager references.</param>
+    /// <param name="logger">Optional logger.</param>
+    /// <param name="serviceProvider">Optional provider used to capture tenant context.</param>
     public NeuCharWorkflowAppService(
         NeuCharWorkflowService workflowService,
         NeuCharWorkflowVersionService workflowVersionService,
@@ -131,6 +150,12 @@ public sealed class NeuCharWorkflowAppService
         _serviceProvider = serviceProvider;
     }
 
+    /// <summary>
+    /// Lists workflows owned by an administrator, newest updates first.
+    /// </summary>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>A task containing workflow list items.</returns>
     public async Task<IReadOnlyList<WorkflowListItem>> GetListAsync(int adminUserId, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -141,6 +166,13 @@ public sealed class NeuCharWorkflowAppService
         return workflows.Select(ToListItem).ToList();
     }
 
+    /// <summary>
+    /// Loads an owned workflow with an editable graph, running count, and observed output schemas.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel graph and runtime queries.</param>
+    /// <returns>The workflow detail, or <see langword="null"/> when it is not owned by the administrator.</returns>
     public async Task<WorkflowDetail?> GetDetailAsync(int workflowId, int adminUserId, CancellationToken cancellationToken = default)
     {
         var workflow = await GetOwnedWorkflowAsync(workflowId, adminUserId).ConfigureAwait(false);
@@ -163,6 +195,13 @@ public sealed class NeuCharWorkflowAppService
             observedOutputSchemas: Array.Empty<NeuCharWorkflowObservedOutputSchema>());
     }
 
+    /// <summary>
+    /// Reads observed output schemas from recent completed runs for an owned workflow.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel log reads.</param>
+    /// <returns>Observed schemas, or an empty list when the workflow is not owned.</returns>
     public async Task<IReadOnlyList<NeuCharWorkflowObservedOutputSchema>> GetObservedOutputSchemasAsync(
         int workflowId,
         int adminUserId,
@@ -177,6 +216,11 @@ public sealed class NeuCharWorkflowAppService
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Builds the designer catalog of available workflow functions and object references.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel catalog loading.</param>
+    /// <returns>Designer function metadata and workflow object metadata.</returns>
     public async Task<WorkflowDesignerData> GetDesignerDataAsync(CancellationToken cancellationToken = default)
     {
         var catalog = await _functionService.GetCatalogAsync(null, true, cancellationToken).ConfigureAwait(false);
@@ -201,6 +245,16 @@ public sealed class NeuCharWorkflowAppService
         return new WorkflowDesignerData(functions, objects);
     }
 
+    /// <summary>
+    /// Exports an owned workflow with editable graph data and redacted secret properties.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="format">The JSON or YAML interchange format.</param>
+    /// <param name="cancellationToken">Token used to cancel export processing.</param>
+    /// <returns>The file name, content type, and serialized workflow content.</returns>
+    /// <exception cref="WorkflowNotFoundException">Thrown when the workflow is not owned by the administrator.</exception>
+    /// <exception cref="WorkflowInputException">Thrown when stored graph data cannot be parsed.</exception>
     public async Task<WorkflowInterchangeExport> ExportAsync(
         int workflowId,
         int adminUserId,
@@ -238,6 +292,13 @@ public sealed class NeuCharWorkflowAppService
             WorkflowInterchangeCodec.Serialize(definition, format));
     }
 
+    /// <summary>
+    /// Parses and validates workflow interchange content without persisting it.
+    /// </summary>
+    /// <param name="content">The JSON or YAML workflow content.</param>
+    /// <param name="format">Optional explicit interchange format.</param>
+    /// <param name="cancellationToken">Token used to cancel validation before parsing.</param>
+    /// <returns>A task containing validation errors and the parsed definition when valid.</returns>
     public Task<WorkflowImportPreview> ValidateImportAsync(
         string content,
         WorkflowInterchangeFormat? format = null,
@@ -247,6 +308,15 @@ public sealed class NeuCharWorkflowAppService
         return Task.FromResult(CreateImportPreview(content, format));
     }
 
+    /// <summary>
+    /// Validates and persists an imported workflow as a disabled draft owned by the administrator.
+    /// </summary>
+    /// <param name="content">The JSON or YAML workflow content.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="format">Optional explicit interchange format.</param>
+    /// <param name="cancellationToken">Token used to cancel validation or persistence.</param>
+    /// <returns>The saved workflow detail.</returns>
+    /// <exception cref="WorkflowInputException">Thrown when import validation fails.</exception>
     public async Task<WorkflowDetail> ImportAsync(
         string content,
         int adminUserId,
@@ -276,6 +346,13 @@ public sealed class NeuCharWorkflowAppService
             cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Parses interchange content, validates its graph and trigger consistency,
+    /// and returns a non-persisting import preview.
+    /// </summary>
+    /// <param name="content">The JSON or YAML interchange content.</param>
+    /// <param name="format">An optional explicit format.</param>
+    /// <returns>The validation preview and parsed definition when valid.</returns>
     private WorkflowImportPreview CreateImportPreview(
         string content,
         WorkflowInterchangeFormat? format)
@@ -326,6 +403,12 @@ public sealed class NeuCharWorkflowAppService
             Array.Empty<WorkflowSecretRequirement>());
     }
 
+    /// <summary>
+    /// Parses a JSON object or returns an empty object for blank input.
+    /// </summary>
+    /// <param name="json">The JSON object text.</param>
+    /// <returns>The parsed object.</returns>
+    /// <exception cref="WorkflowInputException">Thrown when the value is not a JSON object.</exception>
     private static JsonObject ParseJsonObject(string json)
     {
         if (string.IsNullOrWhiteSpace(json))
@@ -337,6 +420,11 @@ public sealed class NeuCharWorkflowAppService
             ?? throw new WorkflowInputException("Workflow 触发器配置无效。");
     }
 
+    /// <summary>
+    /// Removes export-sensitive trigger secrets and records the required secret paths
+    /// in the interchange definition.
+    /// </summary>
+    /// <param name="definition">The export definition to redact.</param>
     private static void RedactExportSecrets(NeuCharWorkflowDefinition definition)
     {
         if (definition.Trigger.Type == "webhook")
@@ -355,6 +443,11 @@ public sealed class NeuCharWorkflowAppService
         }
     }
 
+    /// <summary>
+    /// Recursively replaces configured secret properties in a JSON value with empty strings.
+    /// </summary>
+    /// <param name="value">The JSON value to redact.</param>
+    /// <param name="secretNames">Property names treated as secrets.</param>
     private static void RedactSecretProperties(
         JsonObject config,
         string path,
@@ -383,6 +476,11 @@ public sealed class NeuCharWorkflowAppService
         }
     }
 
+    /// <summary>
+    /// Converts a workflow name into a safe interchange file-name component.
+    /// </summary>
+    /// <param name="name">The workflow name.</param>
+    /// <returns>A bounded file-name component.</returns>
     private static string SanitizeFileName(string name)
     {
         var invalid = Path.GetInvalidFileNameChars();
@@ -390,6 +488,16 @@ public sealed class NeuCharWorkflowAppService
         return string.IsNullOrWhiteSpace(sanitized) ? "workflow" : sanitized;
     }
 
+    /// <summary>
+    /// Validates, protects, normalizes, and persists a workflow graph with optimistic revision checks.
+    /// </summary>
+    /// <param name="request">The workflow name, graph, trigger, enablement, and revision command.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel validation or persistence.</param>
+    /// <returns>The saved workflow detail.</returns>
+    /// <exception cref="WorkflowInputException">Thrown when graph, references, trigger, secret, or request validation fails.</exception>
+    /// <exception cref="WorkflowConflictException">Thrown when the expected revision is stale.</exception>
+    /// <exception cref="WorkflowNotFoundException">Thrown when an update targets a workflow not owned by the administrator.</exception>
     public async Task<WorkflowDetail> SaveAsync(
         SaveWorkflowCommand request,
         int adminUserId,
@@ -550,6 +658,18 @@ public sealed class NeuCharWorkflowAppService
                 cancellationToken).ConfigureAwait(false));
     }
 
+    /// <summary>
+    /// Validates and executes an owned workflow synchronously in the current request.
+    /// Runtime start and completion state are persisted around engine execution.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="input">The workflow input text or JSON.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <param name="parseInputAsJson">Whether the input should be parsed as a JSON value.</param>
+    /// <returns>The workflow execution result.</returns>
+    /// <exception cref="WorkflowInputException">Thrown when input or graph validation fails.</exception>
+    /// <exception cref="WorkflowNotFoundException">Thrown when the workflow is not owned by the administrator.</exception>
     public async Task<NeuCharWorkflowRunResult> RunImmediatelyAsync(
         int workflowId,
         int adminUserId,
@@ -574,6 +694,14 @@ public sealed class NeuCharWorkflowAppService
         return result;
     }
 
+    /// <summary>
+    /// Validates that an owned workflow can run with the supplied input without starting execution.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="input">The input text to validate.</param>
+    /// <param name="cancellationToken">Token used to cancel validation.</param>
+    /// <exception cref="WorkflowInputException">Thrown when input, graph, or reference validation fails.</exception>
     public async Task ValidateRunAsync(int workflowId, int adminUserId, string input, CancellationToken cancellationToken = default)
     {
         await EnsureModuleEnabledAsync().ConfigureAwait(false);
@@ -583,6 +711,15 @@ public sealed class NeuCharWorkflowAppService
         await ValidateWorkflowAsync(workflow, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Validates and schedules an owned workflow for coordinated background execution.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="input">The workflow input text.</param>
+    /// <param name="cancellationToken">Token used to cancel validation.</param>
+    /// <returns>The newly assigned run identifier.</returns>
+    /// <exception cref="WorkflowConflictException">Thrown when another run owns the workflow or scheduling fails.</exception>
     public async Task<Guid> StartRunAsync(int workflowId, int adminUserId, string input, CancellationToken cancellationToken = default)
     {
         await ValidateRunAsync(workflowId, adminUserId, input, cancellationToken).ConfigureAwait(false);
@@ -593,6 +730,14 @@ public sealed class NeuCharWorkflowAppService
         return runId;
     }
 
+    /// <summary>
+    /// Returns a run snapshot and pending human interactions visible to the administrator.
+    /// </summary>
+    /// <param name="runId">The run identifier.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="afterSequence">Only return events after this sequence.</param>
+    /// <param name="cancellationToken">Token used to query external human interactions.</param>
+    /// <returns>The snapshot, or <see langword="null"/> when unavailable or unauthorized.</returns>
     public async Task<NeuCharWorkflowRunSnapshot?> GetRunStatusAsync(
         Guid runId,
         int adminUserId,
@@ -625,9 +770,27 @@ public sealed class NeuCharWorkflowAppService
         return snapshot with { HumanInteractions = interactions };
     }
 
+    /// <summary>
+    /// Returns a synchronous run snapshot without querying external human-interaction providers.
+    /// </summary>
+    /// <param name="runId">The run identifier.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="afterSequence">Only return events after this sequence.</param>
+    /// <returns>The snapshot, or <see langword="null"/> when unavailable.</returns>
     public NeuCharWorkflowRunSnapshot? GetRunStatus(Guid runId, int adminUserId, long afterSequence) =>
         runId == Guid.Empty ? null : _runCoordinator.GetSnapshot(runId, adminUserId, afterSequence);
 
+    /// <summary>
+    /// Resolves a pending native or AgentManager human interaction for a workflow run.
+    /// </summary>
+    /// <param name="runId">The workflow run identifier.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="requestId">The pending interaction identifier.</param>
+    /// <param name="approved">Whether the requested operation is approved.</param>
+    /// <param name="input">Optional human input text.</param>
+    /// <param name="reason">Optional approval/rejection reason.</param>
+    /// <param name="cancellationToken">Token used to cancel resolution.</param>
+    /// <returns>The interaction resolution result.</returns>
     public async Task<WorkflowHumanInteractionResult> ResolveHumanInteractionAsync(
         Guid runId,
         int adminUserId,
@@ -677,9 +840,24 @@ public sealed class NeuCharWorkflowAppService
             cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Builds the stable correlation identifier shared by workflow runtime and interaction stores.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="runId">The run identifier.</param>
+    /// <returns>A correlation identifier containing both values.</returns>
     public static string BuildRunCorrelationId(int workflowId, Guid runId)
         => $"workflow-{workflowId}-run-{runId:N}";
 
+    /// <summary>
+    /// Aborts an active coordinated run or safely closes an old persisted run after restart recovery checks.
+    /// </summary>
+    /// <param name="runId">Optional in-memory run identifier.</param>
+    /// <param name="executionLogId">Optional persisted execution-log identifier.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel persistence and event publication.</param>
+    /// <exception cref="WorkflowInputException">Thrown when neither run identifier is valid.</exception>
+    /// <exception cref="WorkflowConflictException">Thrown when the run is missing, not owned, or too recent for recovery abort.</exception>
     public async Task AbortRunAsync(
         Guid? runId,
         int? executionLogId,
@@ -726,9 +904,17 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Returns a paged list of workflow execution tasks, combining active coordinator runs
+    /// with persisted logs and optional status/date/workflow filters.
     /// </summary>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="beforeExecutionLogId">Optional cursor for older persisted logs.</param>
+    /// <param name="workflowId">Optional workflow filter.</param>
+    /// <param name="status">Optional normalized status filter.</param>
+    /// <param name="from">Optional inclusive date filter.</param>
+    /// <param name="to">Optional inclusive date filter.</param>
+    /// <param name="cancellationToken">Token used to cancel queries.</param>
+    /// <returns>A task list page with optional analytics summary.</returns>
     public async Task<WorkflowTaskListPage> GetTaskListAsync(
         int adminUserId,
         int? beforeExecutionLogId = null,
@@ -832,13 +1018,22 @@ public sealed class NeuCharWorkflowAppService
                 .ConfigureAwait(false));
     }
 
-    ///Legacy comment translated to English.
+    /// <summary>
+    /// Backward-compatible task-list overload that exposes only the owner and cursor filters.
+    /// </summary>
     public Task<WorkflowTaskListPage> GetTaskListAsync(
         int adminUserId,
         int? beforeExecutionLogId,
         CancellationToken cancellationToken) =>
         GetTaskListAsync(adminUserId, beforeExecutionLogId, null, null, null, null, cancellationToken);
 
+    /// <summary>
+    /// Retrieves workflow analytics for an administrator and query range.
+    /// </summary>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="query">Analytics filters and date range.</param>
+    /// <param name="cancellationToken">Token used to cancel analytics queries.</param>
+    /// <returns>A task containing the analytics result.</returns>
     public Task<WorkflowAnalyticsResult> GetAnalyticsAsync(
         int adminUserId,
         WorkflowAnalyticsQuery query,
@@ -846,8 +1041,11 @@ public sealed class NeuCharWorkflowAppService
         _analyticsService.GetAsync(adminUserId, query, cancellationToken);
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Previews completed execution logs eligible for cleanup.
     /// </summary>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>A task containing cleanup counts and cutoff metadata.</returns>
     public async Task<WorkflowTaskCleanupPreview> PreviewTaskCleanupAsync(
         int adminUserId,
         CancellationToken cancellationToken = default)
@@ -858,8 +1056,13 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Deletes completed execution logs at or before the normalized cutoff.
     /// </summary>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="cutoff">The UTC or convertible cutoff time.</param>
+    /// <param name="cancellationToken">Token used to cancel querying and deletion.</param>
+    /// <returns>A task containing the deleted count and effective cutoff.</returns>
+    /// <exception cref="WorkflowInputException">Thrown when the cutoff is invalid.</exception>
     public async Task<WorkflowTaskCleanupResult> CleanupCompletedTasksAsync(
         int adminUserId,
         DateTime cutoff,
@@ -885,8 +1088,14 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Loads a replay definition and event sequence for a completed owned execution.
     /// </summary>
+    /// <param name="executionLogId">The persisted execution-log identifier.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel replay loading.</param>
+    /// <returns>The replay data, or <see langword="null"/> when not found or not owned.</returns>
+    /// <exception cref="WorkflowConflictException">Thrown when execution is still running.</exception>
+    /// <exception cref="WorkflowInputException">Thrown when replay data is unavailable or malformed.</exception>
     public async Task<WorkflowRunReplay?> GetReplayAsync(
         int executionLogId,
         int adminUserId,
@@ -961,7 +1170,13 @@ public sealed class NeuCharWorkflowAppService
             events);
     }
 
-    ///Legacy comment translated to English.
+    /// <summary>
+    /// Copies a completed replay snapshot into a new disabled workflow draft.
+    /// </summary>
+    /// <param name="executionLogId">The persisted execution-log identifier.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel copy persistence.</param>
+    /// <returns>The copied workflow detail.</returns>
     public async Task<WorkflowDetail> CopyReplayAsDraftAsync(
         int executionLogId,
         int adminUserId,
@@ -990,6 +1205,13 @@ public sealed class NeuCharWorkflowAppService
         return ToDetail(copy, editableGraphJson);
     }
 
+    /// <summary>
+    /// Deletes an owned workflow, its versions, execution logs, chat messages, and metadata.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel event publication.</param>
+    /// <exception cref="WorkflowNotFoundException">Thrown when the workflow is not owned by the administrator.</exception>
     public async Task DeleteAsync(int workflowId, int adminUserId, CancellationToken cancellationToken = default)
     {
         var workflow = await GetOwnedWorkflowAsync(workflowId, adminUserId).ConfigureAwait(false)
@@ -1009,6 +1231,15 @@ public sealed class NeuCharWorkflowAppService
         await _eventPublisher.PublishAsync(workflow.Id, "deleted", adminUserId, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Validates a webhook method/token and schedules an enabled webhook workflow run.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="method">The HTTP method supplied by the webhook caller.</param>
+    /// <param name="suppliedToken">The caller-supplied webhook token.</param>
+    /// <param name="values">Webhook parameter values.</param>
+    /// <param name="cancellationToken">Token used to cancel scheduling.</param>
+    /// <returns>A structured HTTP-style trigger result.</returns>
     public async Task<WorkflowWebhookTriggerResult> TriggerWebhookAsync(
         int workflowId,
         string method,
@@ -1072,8 +1303,12 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Loads the chat workflow bootstrap data, restoring persisted history when memory is empty.
     /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The validated user or guest participant key.</param>
+    /// <param name="cancellationToken">Token used to cancel access and history queries.</param>
+    /// <returns>A structured chat bootstrap result.</returns>
     public async Task<WorkflowChatBootstrapResult> GetChatBootstrapAsync(
         int workflowId,
         string participantKey,
@@ -1112,8 +1347,13 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Persists a chat user message and schedules a chat-triggered workflow run.
     /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The validated user or guest participant key.</param>
+    /// <param name="message">The trimmed user message, limited to 8,000 characters.</param>
+    /// <param name="cancellationToken">Token used to cancel scheduling and persistence.</param>
+    /// <returns>A structured chat send result.</returns>
     public async Task<WorkflowChatSendResult> SendChatMessageAsync(
         int workflowId,
         string participantKey,
@@ -1155,8 +1395,14 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Returns the status and newly completed output for a pending chat workflow run.
     /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The validated user or guest participant key.</param>
+    /// <param name="runId">The pending run identifier.</param>
+    /// <param name="afterSequence">Only return events after this sequence.</param>
+    /// <param name="cancellationToken">Token used to cancel history persistence.</param>
+    /// <returns>A structured chat run result.</returns>
     public async Task<WorkflowChatRunResult> GetChatRunStatusAsync(
         int workflowId,
         string participantKey,
@@ -1230,8 +1476,12 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Clears in-memory and persisted chat history for an accessible workflow session.
     /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The validated user or guest participant key.</param>
+    /// <param name="cancellationToken">Token used to cancel deletion.</param>
+    /// <returns>A structured reset result.</returns>
     public async Task<WorkflowChatResult> ResetChatSessionAsync(
         int workflowId,
         string participantKey,
@@ -1324,6 +1574,10 @@ public sealed class NeuCharWorkflowAppService
         }
     }
 
+    /// <summary>
+    /// Persists a chat message while logging and suppressing non-fatal persistence failures.
+    /// </summary>
+    /// <param name="message">The chat message to persist.</param>
     private async Task SafePersistChatMessageAsync(
         int workflowId,
         string participantKey,
@@ -1348,6 +1602,12 @@ public sealed class NeuCharWorkflowAppService
         }
     }
 
+    /// <summary>
+    /// Deletes persisted chat messages for one workflow participant without failing the caller
+    /// when cleanup storage is unavailable.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The participant key.</param>
     private async Task SafeDeleteChatMessagesByParticipantAsync(
         int workflowId,
         string participantKey,
@@ -1365,6 +1625,10 @@ public sealed class NeuCharWorkflowAppService
         }
     }
 
+    /// <summary>
+    /// Deletes all persisted chat messages for a workflow and suppresses cleanup failures.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
     private async Task SafeDeleteChatMessagesByWorkflowAsync(int workflowId)
     {
         try
@@ -1377,6 +1641,11 @@ public sealed class NeuCharWorkflowAppService
         }
     }
 
+    /// <summary>
+    /// Validates the bounded participant-key format used by chat sessions.
+    /// </summary>
+    /// <param name="participantKey">The participant key to validate.</param>
+    /// <returns><see langword="true"/> when the key is safe and non-empty.</returns>
     private static bool IsValidParticipantKey(string? participantKey)
     {
         var normalized = participantKey?.Trim();
@@ -1389,6 +1658,11 @@ public sealed class NeuCharWorkflowAppService
             && (normalized[..index] == "user" || normalized[..index] == "guest");
     }
 
+    /// <summary>
+    /// Normalizes a workflow output for chat display and applies the chat output size limit.
+    /// </summary>
+    /// <param name="output">The workflow output text.</param>
+    /// <returns>A normalized display string.</returns>
     private static string NormalizeChatOutput(string? output)
     {
         var normalized = (output ?? string.Empty).Trim();
@@ -1410,6 +1684,14 @@ public sealed class NeuCharWorkflowAppService
         return normalized.Length == 0 ? "工作流已完成。" : normalized;
     }
 
+    /// <summary>
+    /// Validates graph structure, references, nested workflows, and module availability
+    /// before an operation that requires an executable workflow.
+    /// </summary>
+    /// <param name="workflow">The persisted workflow to validate.</param>
+    /// <param name="cancellationToken">Token used to cancel validation.</param>
+    /// <exception cref="WorkflowInputException">Thrown when the graph or references are invalid.</exception>
+    /// <exception cref="WorkflowModuleUnavailableException">Thrown when the module is unavailable.</exception>
     private async Task ValidateWorkflowAsync(WorkflowEntity workflow, CancellationToken cancellationToken)
     {
         NeuCharWorkflowGraph graph;
@@ -1438,6 +1720,10 @@ public sealed class NeuCharWorkflowAppService
         }
     }
 
+    /// <summary>
+    /// Ensures the NeuChar Workflow module is installed and enabled.
+    /// </summary>
+    /// <exception cref="WorkflowModuleUnavailableException">Thrown when the module is unavailable.</exception>
     private async Task EnsureModuleEnabledAsync()
     {
         if (!await IsModuleEnabledAsync().ConfigureAwait(false))
@@ -1446,12 +1732,22 @@ public sealed class NeuCharWorkflowAppService
         }
     }
 
+    /// <summary>
+    /// Checks whether the NeuChar Workflow module is installed and enabled.
+    /// </summary>
+    /// <returns>A task whose result indicates module availability.</returns>
     private async Task<bool> IsModuleEnabledAsync()
     {
         var module = await _xncfModuleService.GetObjectAsync(z => z.Uid == new Register().Uid).ConfigureAwait(false);
         return module?.State == XncfModules_State.开放;
     }
 
+    /// <summary>
+    /// Persists a workflow version snapshot when the save operation represents a new version.
+    /// </summary>
+    /// <param name="workflow">The workflow being versioned.</param>
+    /// <param name="adminUserId">The owner identifier.</param>
+    /// <param name="saveSource">The source label for the version record.</param>
     private async Task SaveVersionAsync(WorkflowEntity workflow, int adminUserId, string? saveSource)
     {
         await _workflowVersionService.SaveObjectAsync(new NeuCharWorkflowVersion(workflow, adminUserId, saveSource))
@@ -1466,9 +1762,20 @@ public sealed class NeuCharWorkflowAppService
         }
     }
 
+    /// <summary>
+    /// Loads a workflow only when it belongs to the specified administrator.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="adminUserId">The owner identifier.</param>
+    /// <returns>A task containing the owned workflow, or <see langword="null"/> when not found.</returns>
     private Task<WorkflowEntity?> GetOwnedWorkflowAsync(int workflowId, int adminUserId) =>
         _workflowService.GetObjectAsync(z => z.Id == workflowId && z.AdminUserId == adminUserId);
 
+    /// <summary>
+    /// Extracts AgentManager workflow references from a graph for save-time validation.
+    /// </summary>
+    /// <param name="graph">The workflow graph.</param>
+    /// <returns>The distinct referenced agent workflow values.</returns>
     private static IReadOnlyList<AgentWorkflowReference> GetAgentWorkflowReferences(
         NeuCharWorkflowGraph graph)
     {
@@ -1504,6 +1811,13 @@ public sealed class NeuCharWorkflowAppService
             .ToList();
     }
 
+    /// <summary>
+    /// Reads a node configuration string and applies a fallback.
+    /// </summary>
+    /// <param name="node">The node to inspect.</param>
+    /// <param name="name">The configuration property name.</param>
+    /// <param name="fallback">The fallback value.</param>
+    /// <returns>The configured or fallback string.</returns>
     private static string ReadNodeString(
         System.Text.Json.Nodes.JsonObject? config,
         string key)
@@ -1511,9 +1825,22 @@ public sealed class NeuCharWorkflowAppService
             ? value?.ToString() ?? string.Empty
             : string.Empty;
 
+    /// <summary>
+    /// Parses an integer node identifier from a prefixed string.
+    /// </summary>
+    /// <param name="value">The value to parse.</param>
+    /// <param name="prefix">The expected prefix.</param>
+    /// <returns>The parsed identifier, or zero when parsing fails.</returns>
     private static int ParseNodeId(string value, string prefix)
         => int.TryParse(value[prefix.Length..], out var id) ? id : 0;
 
+    /// <summary>
+    /// Loads completed execution logs for task-list cleanup and pagination.
+    /// </summary>
+    /// <param name="adminUserId">The workflow owner identifier.</param>
+    /// <param name="workflowId">Optional workflow filter.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>A task containing matching completed logs.</returns>
     private async Task<List<NeuCharWorkflowExecutionLog>> GetCompletedTaskLogsAsync(
         int adminUserId,
         DateTime cutoff,
@@ -1538,6 +1865,11 @@ public sealed class NeuCharWorkflowAppService
         return logs.ToList();
     }
 
+    /// <summary>
+    /// Converts completed execution logs into cleanup-preview items.
+    /// </summary>
+    /// <param name="logs">The completed logs.</param>
+    /// <returns>The cleanup preview.</returns>
     private static WorkflowTaskCleanupPreview ToTaskCleanupPreview(
         IReadOnlyCollection<NeuCharWorkflowExecutionLog> logs,
         DateTime cutoff) => new(
@@ -1546,6 +1878,11 @@ public sealed class NeuCharWorkflowAppService
         logs.Count(log => log.Succeeded != true),
         cutoff);
 
+    /// <summary>
+    /// Validates required workflow save fields and graph size limits.
+    /// </summary>
+    /// <param name="request">The save command to validate.</param>
+    /// <exception cref="WorkflowInputException">Thrown when save input is invalid.</exception>
     private static void ValidateSaveCommand(SaveWorkflowCommand? request)
     {
         if (request == null || string.IsNullOrWhiteSpace(request.Name))
@@ -1566,6 +1903,12 @@ public sealed class NeuCharWorkflowAppService
         }
     }
 
+    /// <summary>
+    /// Validates the workflow identifier and initial run input size.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="input">The initial input text.</param>
+    /// <exception cref="WorkflowInputException">Thrown when the identifier or input is invalid.</exception>
     private static void ValidateRunInput(int workflowId, string? input)
     {
         if (workflowId <= 0 || input?.Length > 100_000)
@@ -1574,6 +1917,16 @@ public sealed class NeuCharWorkflowAppService
         }
     }
 
+    /// <summary>
+    /// Determines whether a save request leaves all persisted workflow fields unchanged.
+    /// </summary>
+    /// <param name="workflow">The persisted workflow.</param>
+    /// <param name="request">The requested changes.</param>
+    /// <param name="graphJson">The normalized graph JSON.</param>
+    /// <param name="enabled">The normalized enabled state.</param>
+    /// <param name="triggerType">The normalized trigger type.</param>
+    /// <param name="triggerConfigJson">The normalized trigger configuration.</param>
+    /// <returns><see langword="true"/> when no persisted value changes.</returns>
     private static bool IsUnchanged(WorkflowEntity workflow, SaveWorkflowCommand request, string graphJson, bool enabled,
         string triggerType, string triggerConfigJson, int autoSaveMinutes) =>
         string.Equals(workflow.Name, request.Name?.Trim(), StringComparison.Ordinal) &&
@@ -1584,6 +1937,12 @@ public sealed class NeuCharWorkflowAppService
         string.Equals(workflow.TriggerConfigJson, triggerConfigJson, StringComparison.Ordinal) &&
         workflow.AutoSaveMinutes == autoSaveMinutes;
 
+    /// <summary>
+    /// Reads recent replay events and collects the first observed output schema for each node.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel log reads.</param>
+    /// <returns>A task containing observed schemas.</returns>
     private async Task<IReadOnlyList<NeuCharWorkflowObservedOutputSchema>> ReadObservedOutputSchemasAsync(
         int workflowId,
         CancellationToken cancellationToken)
@@ -1601,6 +1960,12 @@ public sealed class NeuCharWorkflowAppService
         return result.Values.ToList();
     }
 
+    /// <summary>
+    /// Adds successful-run output schemas from one replay-event JSON payload,
+    /// ignoring malformed historical logs.
+    /// </summary>
+    /// <param name="result">The schema map receiving new entries.</param>
+    /// <param name="replayEventsJson">Serialized replay events.</param>
     private static void AddObservedSchemas(
         IDictionary<string, NeuCharWorkflowObservedOutputSchema> result,
         string? replayEventsJson)
@@ -1639,6 +2004,15 @@ public sealed class NeuCharWorkflowAppService
         }
     }
 
+    /// <summary>
+    /// Maps a persisted workflow entity to a workflow-detail DTO.
+    /// </summary>
+    /// <param name="workflow">The workflow entity.</param>
+    /// <param name="graphJson">Optional editable graph JSON.</param>
+    /// <param name="unchanged">Whether the latest save was unchanged.</param>
+    /// <param name="runningCount">The current running count.</param>
+    /// <param name="observedOutputSchemas">Observed output schemas.</param>
+    /// <returns>The workflow detail DTO.</returns>
     private static WorkflowDetail ToDetail(
         WorkflowEntity workflow,
         string? graphJson = null,
@@ -1650,20 +2024,40 @@ public sealed class NeuCharWorkflowAppService
         workflow.LastError, workflow.Revision, workflow.AutoSaveMinutes, unchanged, workflow.LastUpdateTime,
         runningCount, observedOutputSchemas);
 
+    /// <summary>
+    /// Maps a persisted workflow entity to a list-item DTO.
+    /// </summary>
+    /// <param name="workflow">The workflow entity.</param>
+    /// <returns>The list-item DTO.</returns>
     private static WorkflowListItem ToListItem(WorkflowEntity workflow) => new(
         workflow.Id, workflow.Name, workflow.Description, workflow.Enabled, workflow.TriggerType, workflow.NextRunAt,
         workflow.LastRunAt, workflow.LastSucceeded, workflow.LastError, workflow.Revision, workflow.AutoSaveMinutes,
         workflow.LastUpdateTime);
 
+    /// <summary>
+    /// Maps an execution log to the task-list status string.
+    /// </summary>
+    /// <param name="log">The execution log.</param>
+    /// <returns><c>running</c>, <c>success</c>, or <c>failed</c>.</returns>
     private static string ToTaskStatus(NeuCharWorkflowExecutionLog log) => log.FinishedAt == null
         ? "running"
         : log.Succeeded == true ? "success" : "failed";
 
+    /// <summary>
+    /// Determines whether an execution log has enough persisted data for replay.
+    /// </summary>
+    /// <param name="log">The execution log.</param>
+    /// <returns><see langword="true"/> when snapshot and replay events are available.</returns>
     private static bool CanReplay(NeuCharWorkflowExecutionLog log) =>
         log.FinishedAt != null &&
         !string.IsNullOrWhiteSpace(log.ReplaySnapshotHash) &&
         !string.IsNullOrWhiteSpace(log.ReplayEventsJson);
 
+    /// <summary>
+    /// Builds a short human-readable summary from an active run's latest node state.
+    /// </summary>
+    /// <param name="run">The active run.</param>
+    /// <returns>The live summary text.</returns>
     private static string? BuildLiveSummary(NeuCharWorkflowActiveRun run)
     {
         if (string.IsNullOrWhiteSpace(run.LastNodeName) && string.IsNullOrWhiteSpace(run.LastMessage))
@@ -1676,12 +2070,25 @@ public sealed class NeuCharWorkflowAppService
         return $"{node}：{message}";
     }
 
+    /// <summary>Converts a DateTime value to a UTC DateTimeOffset.</summary>
+    /// <param name="value">The DateTime value.</param>
+    /// <returns>The UTC offset value.</returns>
     private static DateTimeOffset ToUtcOffset(DateTime value) =>
         new(DateTime.SpecifyKind(value, DateTimeKind.Utc));
 
+    /// <summary>Converts an optional DateTime value to a UTC DateTimeOffset.</summary>
+    /// <param name="value">The optional DateTime value.</param>
+    /// <returns>The converted value, or <see langword="null"/>.</returns>
     private static DateTimeOffset? ToUtcOffset(DateTime? value) =>
         value.HasValue ? ToUtcOffset(value.Value) : null;
 
+    /// <summary>
+    /// Combines in-process and persisted unfinished-run counts, returning the larger value.
+    /// </summary>
+    /// <param name="adminUserId">The workflow owner identifier.</param>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the persisted-count query.</param>
+    /// <returns>A task containing the running count.</returns>
     private async Task<int> GetRunningCountAsync(
         int adminUserId,
         int workflowId,
@@ -1694,6 +2101,12 @@ public sealed class NeuCharWorkflowAppService
         return Math.Max(activeCount, persistedCount);
     }
 
+    /// <summary>
+    /// Extracts a run GUID from the persisted workflow correlation-ID format.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier expected in the prefix.</param>
+    /// <param name="correlationId">The correlation ID to parse.</param>
+    /// <returns>The run ID, or <see langword="null"/> when the format does not match.</returns>
     private static Guid? GetTaskRunId(int workflowId, string? correlationId)
     {
         var prefix = $"workflow-{workflowId}-run-";
@@ -1705,6 +2118,11 @@ public sealed class NeuCharWorkflowAppService
         return Guid.TryParse(correlationId[prefix.Length..], out var runId) ? runId : null;
     }
 
+    /// <summary>
+    /// Creates a bounded name for a replay-created workflow draft.
+    /// </summary>
+    /// <param name="sourceName">The source workflow name.</param>
+    /// <returns>The copy name with the task-copy suffix.</returns>
     private static string CreateReplayCopyName(string? sourceName)
     {
         const string suffix = "（任务副本）";
@@ -1714,6 +2132,12 @@ public sealed class NeuCharWorkflowAppService
             : prefix[..(200 - suffix.Length)] + suffix;
     }
 
+    /// <summary>
+    /// Compares two non-empty tokens using a fixed-time byte comparison.
+    /// </summary>
+    /// <param name="expected">The expected token.</param>
+    /// <param name="actual">The supplied token.</param>
+    /// <returns><see langword="true"/> when both tokens match.</returns>
     private static bool TokensEqual(string? expected, string? actual)
     {
         if (string.IsNullOrEmpty(expected) || string.IsNullOrEmpty(actual))
@@ -1725,6 +2149,11 @@ public sealed class NeuCharWorkflowAppService
         return expectedBytes.Length == actualBytes.Length && CryptographicOperations.FixedTimeEquals(expectedBytes, actualBytes);
     }
 
+    /// <summary>
+    /// Determines whether a supported input value is null, whitespace, or an empty collection.
+    /// </summary>
+    /// <param name="value">The value to inspect.</param>
+    /// <returns><see langword="true"/> when the value is empty.</returns>
     private static bool IsEmpty(object? value) => value switch
     {
         null => true,
@@ -1845,12 +2274,19 @@ public sealed record WorkflowWebhookTriggerResult(
     int? WorkflowId = null,
     Guid? RunId = null)
 {
+    /// <summary>Creates a 404 webhook result for a missing workflow.</summary>
     public static WorkflowWebhookTriggerResult NotFound() => new(404, "工作流不存在。");
+    /// <summary>Creates a 409 webhook result for a workflow conflict.</summary>
     public static WorkflowWebhookTriggerResult Conflict(string? error) => new(409, error);
+    /// <summary>Creates a 500 webhook result for an internal failure.</summary>
     public static WorkflowWebhookTriggerResult ServerError(string? error) => new(500, error);
+    /// <summary>Creates a 405 result and reports the allowed HTTP method.</summary>
     public static WorkflowWebhookTriggerResult MethodNotAllowed(string method) => new(405, $"Webhook 只接受 {method.ToUpperInvariant()} 请求。", method);
+    /// <summary>Creates a 401 result for an invalid webhook token.</summary>
     public static WorkflowWebhookTriggerResult Unauthorized() => new(401, "Webhook 访问密钥无效。");
+    /// <summary>Creates a 400 result for missing webhook parameters.</summary>
     public static WorkflowWebhookTriggerResult BadRequest(string error, IReadOnlyList<string> missing) => new(400, error, MissingParameters: missing);
+    /// <summary>Creates a 202 result for an accepted webhook-triggered run.</summary>
     public static WorkflowWebhookTriggerResult Accepted(int workflowId, Guid runId) => new(202, WorkflowId: workflowId, RunId: runId);
 }
 
@@ -1873,11 +2309,16 @@ public sealed record WorkflowChatAccess(
     NeuCharWorkflowChatConfig? Config = null,
     bool IsGuest = false)
 {
+    /// <summary>Creates a successful workflow-chat access result.</summary>
     public static WorkflowChatAccess Success(WorkflowEntity workflow, NeuCharWorkflowChatConfig config, bool isGuest)
         => new(true, 200, Workflow: workflow, Config: config, IsGuest: isGuest);
+    /// <summary>Creates a not-found chat-access result.</summary>
     public static WorkflowChatAccess NotFound() => new(false, 404, "工作流不存在。");
+    /// <summary>Creates a conflict chat-access result.</summary>
     public static WorkflowChatAccess Conflict(string? error) => new(false, 409, error);
+    /// <summary>Creates an unauthorized chat-access result.</summary>
     public static WorkflowChatAccess Unauthorized() => new(false, 401, "该工作流未开启访客访问，请先登录。");
+    /// <summary>Creates a server-error chat-access result.</summary>
     public static WorkflowChatAccess ServerError(string? error) => new(false, 500, error);
 }
 
@@ -1895,9 +2336,13 @@ public sealed record WorkflowChatBootstrapResult(
     Guid? PendingRunId = null,
     IReadOnlyList<WorkflowChatMessage>? Messages = null)
 {
+    /// <summary>Creates a not-found chat-bootstrap result.</summary>
     public static WorkflowChatBootstrapResult NotFound() => new(404, "工作流不存在。");
+    /// <summary>Creates a bad-request chat-bootstrap result.</summary>
     public static WorkflowChatBootstrapResult BadRequest(string error) => new(400, error);
+    /// <summary>Maps an access result into a bootstrap response.</summary>
     public static WorkflowChatBootstrapResult From(WorkflowChatAccess access) => new(access.StatusCode, access.ErrorMessage);
+    /// <summary>Creates a successful chat-bootstrap result with session metadata.</summary>
     public static WorkflowChatBootstrapResult Ok(
         int workflowId,
         string title,
@@ -1918,10 +2363,15 @@ public sealed record WorkflowChatSendResult(
     int? WorkflowId = null,
     Guid? RunId = null)
 {
+    /// <summary>Creates a not-found chat-send result.</summary>
     public static WorkflowChatSendResult NotFound() => new(404, "工作流不存在。");
+    /// <summary>Creates a bad-request chat-send result.</summary>
     public static WorkflowChatSendResult BadRequest(string error) => new(400, error);
+    /// <summary>Creates a conflict chat-send result.</summary>
     public static WorkflowChatSendResult Conflict(string? error) => new(409, error);
+    /// <summary>Maps an access result into a send response.</summary>
     public static WorkflowChatSendResult From(WorkflowChatAccess access) => new(access.StatusCode, access.ErrorMessage);
+    /// <summary>Creates an accepted chat-send result with the started run ID.</summary>
     public static WorkflowChatSendResult Accepted(int workflowId, Guid runId) => new(202, WorkflowId: workflowId, RunId: runId);
 }
 
@@ -1939,13 +2389,19 @@ public sealed record WorkflowChatRunResult(
     string? LastNodeMessage = null,
     long LastSequence = 0)
 {
+    /// <summary>Creates a not-found chat-run result.</summary>
     public static WorkflowChatRunResult NotFound() => new(404, "运行任务不存在或不属于当前会话。");
+    /// <summary>Creates a bad-request chat-run result.</summary>
     public static WorkflowChatRunResult BadRequest(string error) => new(400, error);
+    /// <summary>Maps an access result into a run-status response.</summary>
     public static WorkflowChatRunResult From(WorkflowChatAccess access) => new(access.StatusCode, access.ErrorMessage);
+    /// <summary>Creates an in-progress run-status result.</summary>
     public static WorkflowChatRunResult InProgress(int workflowId, Guid runId, string lastNodeMessage, long lastSequence)
         => new(200, WorkflowId: workflowId, RunId: runId, Running: true, LastNodeMessage: lastNodeMessage, LastSequence: lastSequence);
+    /// <summary>Creates a successful completed run-status result.</summary>
     public static WorkflowChatRunResult Succeeded(int workflowId, Guid runId, string finalOutput)
         => new(200, WorkflowId: workflowId, RunId: runId, FinalOutput: finalOutput);
+    /// <summary>Creates a failed completed run-status result.</summary>
     public static WorkflowChatRunResult Failed(int workflowId, Guid runId, string? error)
         => new(200, WorkflowId: workflowId, RunId: runId, RunError: error);
 }
@@ -1957,9 +2413,13 @@ public sealed record WorkflowChatResult(
     int StatusCode,
     string? ErrorMessage = null)
 {
+    /// <summary>Creates a not-found chat result.</summary>
     public static WorkflowChatResult NotFound() => new(404, "工作流不存在。");
+    /// <summary>Creates a bad-request chat result.</summary>
     public static WorkflowChatResult BadRequest(string error) => new(400, error);
+    /// <summary>Maps an access result into a chat response.</summary>
     public static WorkflowChatResult From(WorkflowChatAccess access) => new(access.StatusCode, access.ErrorMessage);
+    /// <summary>Creates an empty successful chat result.</summary>
     public static WorkflowChatResult Ok() => new(200);
 }
 

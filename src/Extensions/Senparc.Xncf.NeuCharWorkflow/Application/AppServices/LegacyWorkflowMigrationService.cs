@@ -35,8 +35,8 @@ using WorkflowEntity = Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.
 namespace Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Migrates legacy Admin Workflow tables into the standalone NeuChar Workflow module,
+/// preserving source keys and refusing destructive cleanup until all records are copied.
 /// </summary>
 public sealed class LegacyWorkflowMigrationService
 {
@@ -50,6 +50,12 @@ public sealed class LegacyWorkflowMigrationService
         _scopeFactory = scopeFactory;
     }
 
+    /// <summary>
+    /// Reads legacy workflow/version/function data, copies it idempotently into the XNCF tables,
+    /// upgrades Function node references, and drops legacy tables only after completeness checks.
+    /// </summary>
+    /// <param name="installOrUpdate">The installation operation triggering migration.</param>
+    /// <exception cref="InvalidOperationException">Thrown when context resolution, orphan versions, incomplete copy, or cleanup fails.</exception>
     public async Task MigrateAsync(InstallOrUpdate installOrUpdate)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -169,6 +175,11 @@ public sealed class LegacyWorkflowMigrationService
             $"已将 {workflows.Count} 个工作流和 {versions.Count} 个版本迁移到独立 XNCF，并删除 Admin 旧 Workflow 表。安装操作：{installOrUpdate}");
     }
 
+    /// <summary>
+    /// Reads legacy workflow rows using the current database connection.
+    /// </summary>
+    /// <param name="context">The database context.</param>
+    /// <returns>A task containing legacy workflow rows.</returns>
     private static async Task<List<LegacyWorkflowRow>> ReadLegacyWorkflowsAsync(DbContext context)
     {
         const string sql = "SELECT Id, Name, Description, GraphJson, AdminUserId, Enabled, TriggerType, TriggerConfigJson, NextRunAt, LastRunAt, LastSucceeded, LastError, Revision, AutoSaveMinutes, Flag, AddTime, LastUpdateTime, TenantId, AdminRemark, Remark FROM ADMIN_NeuCharWorkflow";
@@ -195,6 +206,11 @@ public sealed class LegacyWorkflowMigrationService
             GetString(reader, "Remark"))).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Reads legacy workflow versions and reports whether the version table exists.
+    /// </summary>
+    /// <param name="context">The database context.</param>
+    /// <returns>A task containing version rows and table-existence state.</returns>
     private static async Task<LegacyVersionsReadResult> ReadLegacyVersionsAsync(DbContext context)
     {
         const string sql = "SELECT Id, WorkflowId, Revision, Name, Description, GraphJson, Enabled, TriggerType, TriggerConfigJson, AutoSaveMinutes, AdminUserId, SaveSource, Flag, AddTime, LastUpdateTime, TenantId, AdminRemark, Remark FROM ADMIN_NeuCharWorkflowVersion";
@@ -228,6 +244,12 @@ public sealed class LegacyWorkflowMigrationService
         }
     }
 
+    /// <summary>
+    /// Reads legacy Pivot Function IDs and maps them to module/function references.
+    /// Missing legacy tables produce an empty map.
+    /// </summary>
+    /// <param name="context">The database context.</param>
+    /// <returns>A task containing the legacy Function map.</returns>
     private static async Task<IReadOnlyDictionary<int, (string ModuleUid, string FunctionKey)>> TryReadFunctionMapAsync(DbContext context)
     {
         const string sql = "SELECT Id, ModuleUid, FunctionKey FROM ADMIN_NeuCharPivotFunction";
@@ -246,6 +268,14 @@ public sealed class LegacyWorkflowMigrationService
         }
     }
 
+    /// <summary>
+    /// Executes a read-only SQL query and projects each data-reader row.
+    /// </summary>
+    /// <typeparam name="T">The projected row type.</typeparam>
+    /// <param name="context">The database context.</param>
+    /// <param name="sql">The fixed migration SQL statement.</param>
+    /// <param name="projector">The row projection function.</param>
+    /// <returns>A task containing projected rows.</returns>
     private static async Task<List<T>> ReadRowsAsync<T>(DbContext context, string sql, Func<DbDataReader, T> projector)
     {
         var connection = context.Database.GetDbConnection();
@@ -275,6 +305,13 @@ public sealed class LegacyWorkflowMigrationService
         }
     }
 
+    /// <summary>
+    /// Drops one of the explicitly allowlisted legacy Workflow tables.
+    /// </summary>
+    /// <param name="context">The database context.</param>
+    /// <param name="tableName">The allowlisted legacy table name.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown for any table name outside the allowlist.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when table deletion fails after migration.</exception>
     private static async Task DropLegacyTableAsync(DbContext context, string tableName)
     {
         var sql = tableName switch
@@ -293,6 +330,13 @@ public sealed class LegacyWorkflowMigrationService
         }
     }
 
+    /// <summary>
+    /// Adds current module/function references to legacy Function nodes using the old numeric ID map.
+    /// Malformed graph JSON is returned unchanged for later validation.
+    /// </summary>
+    /// <param name="json">The legacy graph JSON.</param>
+    /// <param name="functions">Legacy Function ID mapping.</param>
+    /// <returns>The upgraded or original graph JSON.</returns>
     private static string UpgradeGraphReferences(string json, IReadOnlyDictionary<int, (string ModuleUid, string FunctionKey)> functions)
     {
         if (functions.Count == 0 || string.IsNullOrWhiteSpace(json))
@@ -326,15 +370,21 @@ public sealed class LegacyWorkflowMigrationService
         }
     }
 
+    /// <summary>Reads an integer database column with a fallback.</summary>
+    /// <param name="reader">The data reader.</param><param name="name">The column name.</param><param name="fallback">The fallback value.</param>
     private static int GetInt(DbDataReader reader, string name, int fallback = 0)
     {
         var value = GetValue(reader, name);
         return value == null ? fallback : Convert.ToInt32(value);
     }
 
+    /// <summary>Reads a database Boolean column, treating null as false.</summary>
+    /// <param name="reader">The data reader.</param><param name="name">The column name.</param>
     private static bool GetBool(DbDataReader reader, string name) =>
         GetBoolNullable(reader, name) ?? false;
 
+    /// <summary>Reads a nullable database Boolean column.</summary>
+    /// <param name="reader">The data reader.</param><param name="name">The column name.</param>
     private static bool? GetBoolNullable(DbDataReader reader, string name)
     {
         var value = GetValue(reader, name);
@@ -342,20 +392,29 @@ public sealed class LegacyWorkflowMigrationService
         return value is bool boolValue ? boolValue : Convert.ToInt32(value) != 0;
     }
 
+    /// <summary>Reads a nullable database date-time column.</summary>
+    /// <param name="reader">The data reader.</param><param name="name">The column name.</param>
     private static DateTime? GetDateTime(DbDataReader reader, string name)
     {
         var value = GetValue(reader, name);
         return value == null ? null : Convert.ToDateTime(value);
     }
 
+    /// <summary>Reads a nullable database column and converts it to text.</summary>
+    /// <param name="reader">The data reader.</param><param name="name">The column name.</param>
     private static string? GetString(DbDataReader reader, string name) => GetValue(reader, name)?.ToString();
 
+    /// <summary>Reads a database column value, returning null for SQL NULL.</summary>
+    /// <param name="reader">The data reader.</param><param name="name">The column name.</param>
     private static object? GetValue(DbDataReader reader, string name)
     {
         var ordinal = reader.GetOrdinal(name);
         return reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal);
     }
 
+    /// <summary>Attempts to read a positive integer from a JSON node.</summary>
+    /// <param name="node">The JSON node.</param><param name="value">Receives the parsed integer.</param>
+    /// <returns><see langword="true"/> when a positive integer is available.</returns>
     private static bool TryGetInt(JsonNode? node, out int value)
     {
         try

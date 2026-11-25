@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Senparc.Areas.Admin.Areas.Admin.Pages.SenparcTrace_IndexModel
 @{
     ViewData["Title"] = AR["Trace.日志"];
@@ -9,33 +9,40 @@
     <el-breadcrumb-item>@AR["Trace.日志"]</el-breadcrumb-item>
 }
 
-<div>
+@section HeaderContent {
+    <link rel="stylesheet" href="~/css/Admin/Pages/SenparcTrace/trace.css" />
+}
+
+<el-card shadow="never" class="trace-date-card" v-loading="loading">
     <el-table :data="tableData"
               border
+              stripe
+              :empty-text="ncfT('Trace.NoData')"
               style="width: 100%">
-        <el-table-column align="center"
-                         label="@AR["Trace.编号"]"
-                         width="120">
-            <template slot-scope="scope">
-                {{ scope.row.no}}
-            </template>
+        <el-table-column align="center" :label="ncfT('Trace.编号')" width="100">
+            <template slot-scope="scope">{{scope.row.no}}</template>
         </el-table-column>
-        <el-table-column align="center"
-                         label="@AR["Trace.日期"]">
+        <el-table-column :label="ncfT('Trace.日期')">
             <template slot-scope="scope">
-                <a :href="'/Admin/SenparcTrace/DateLog?date=' + scope.row.text">
-                    {{ scope.row.text }}
+                <a class="trace-date-link" :href="'/Admin/SenparcTrace/DateLog?date=' + scope.row.date">
+                    <i class="el-icon-document"></i>
+                    {{scope.row.date}}
                 </a>
             </template>
+        </el-table-column>
+        <el-table-column :label="ncfT('Trace.FileSize')" width="140" align="right">
+            <template slot-scope="scope">{{formatBytes(scope.row.fileSize)}}</template>
+        </el-table-column>
+        <el-table-column :label="ncfT('Trace.LastUpdated')" width="200">
+            <template slot-scope="scope">{{formatTime(scope.row.lastModified)}}</template>
         </el-table-column>
     </el-table>
     <pagination :total="searchData.total"
                 :page.sync="searchData.pageIndex"
                 :limit.sync="searchData.pageSize"
                 @@pagination="fetchData"></pagination>
-</div>
+</el-card>
 
-@section scripts{
+@section scripts {
     <script src="~/js/Admin/Pages/SenparcTrace/Index.js"></script>
 }
-

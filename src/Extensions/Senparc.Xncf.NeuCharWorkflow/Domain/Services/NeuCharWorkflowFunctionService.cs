@@ -75,20 +75,32 @@ public sealed record NeuCharFunctionExecutionResult(
     string? RequestTempId);
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Catalogs registered XNCF FunctionRender methods and safely invokes supported
+/// one-request-object function contracts for workflows.
 /// </summary>
 public sealed class NeuCharWorkflowFunctionService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly XncfModuleService _moduleService;
 
+    /// <summary>
+    /// Initializes the workflow function catalog and invocation service.
+    /// </summary>
+    /// <param name="serviceProvider">Provider used to resolve function service instances.</param>
+    /// <param name="moduleService">Module state service used to check availability.</param>
     public NeuCharWorkflowFunctionService(IServiceProvider serviceProvider, XncfModuleService moduleService)
     {
         _serviceProvider = serviceProvider;
         _moduleService = moduleService;
     }
 
+    /// <summary>
+    /// Builds a catalog of registered functions with optional parameter metadata.
+    /// </summary>
+    /// <param name="moduleUid">Optional module UID filter.</param>
+    /// <param name="loadParameterOptions">Whether dynamic parameter options should be resolved.</param>
+    /// <param name="cancellationToken">Token used to cancel catalog loading.</param>
+    /// <returns>Available function descriptors ordered by module/name.</returns>
     public async Task<IReadOnlyList<NeuCharFunctionDescriptor>> GetCatalogAsync(
         string? moduleUid = null,
         bool loadParameterOptions = true,
@@ -127,6 +139,14 @@ public sealed class NeuCharWorkflowFunctionService
             .ToList();
     }
 
+    /// <summary>
+    /// Resolves one function by module UID and function key or localized name.
+    /// </summary>
+    /// <param name="moduleUid">The module UID.</param>
+    /// <param name="functionKeyOrName">The function key or display name.</param>
+    /// <param name="loadParameterOptions">Whether dynamic parameter options should be resolved.</param>
+    /// <param name="cancellationToken">Token used to cancel lookup.</param>
+    /// <returns>The descriptor, or <see langword="null"/> when unavailable.</returns>
     public async Task<NeuCharFunctionDescriptor?> GetFunctionAsync(
         string moduleUid,
         string functionKeyOrName,
@@ -164,6 +184,15 @@ public sealed class NeuCharWorkflowFunctionService
             loadParameterOptions).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Builds a Function descriptor and falls back to metadata without dynamic options
+    /// when option loading fails.
+    /// </summary>
+    /// <param name="register">The XNCF module registration.</param>
+    /// <param name="moduleAvailable">Whether the module is enabled.</param>
+    /// <param name="bag">The reflected FunctionRender bag.</param>
+    /// <param name="loadParameterOptions">Whether dynamic parameter options are loaded.</param>
+    /// <returns>A task containing the Function descriptor.</returns>
     private async Task<NeuCharFunctionDescriptor> BuildDescriptorAsync(
         IXncfRegister register,
         bool moduleAvailable,
@@ -209,6 +238,15 @@ public sealed class NeuCharWorkflowFunctionService
             bag.FunctionRenderAttribute.AllowAiInvocation);
     }
 
+    /// <summary>
+    /// Validates module/function availability, normalizes defaults, binds one request object,
+    /// invokes the registered asynchronous function, and converts its response to a workflow result.
+    /// </summary>
+    /// <param name="moduleUid">The module UID.</param>
+    /// <param name="functionKeyOrName">The function key or display name.</param>
+    /// <param name="parametersJson">The JSON request-object parameters.</param>
+    /// <param name="cancellationToken">Token used to cancel invocation.</param>
+    /// <returns>A success/failure execution result; invocation exceptions are converted to failure messages.</returns>
     public async Task<NeuCharFunctionExecutionResult> ExecuteAsync(
         string moduleUid,
         string functionKeyOrName,
@@ -317,6 +355,12 @@ public sealed class NeuCharWorkflowFunctionService
         }
     }
 
+    /// <summary>
+    /// Validates required function parameters against a JSON object.
+    /// </summary>
+    /// <param name="parameterInfos">Function parameter metadata.</param>
+    /// <param name="parametersJson">The JSON parameters to validate.</param>
+    /// <returns>An error message, or <see langword="null"/> when validation succeeds.</returns>
     public static string? ValidateRequiredParameters(
         IReadOnlyList<FunctionParameterInfo> parameterInfos,
         string parametersJson)
@@ -358,6 +402,9 @@ public sealed class NeuCharWorkflowFunctionService
         return null;
     }
 
+    /// <summary>Reads a JSON property using case-insensitive fallback.</summary>
+    /// <param name="element">The JSON object.</param><param name="name">The property name.</param><param name="value">Receives the value.</param>
+    /// <returns><see langword="true"/> when the property exists.</returns>
     private static bool TryGetPropertyIgnoreCase(JsonElement element, string name, out JsonElement value)
     {
         foreach (var property in element.EnumerateObject())
@@ -373,6 +420,9 @@ public sealed class NeuCharWorkflowFunctionService
         return false;
     }
 
+    /// <summary>Determines whether a JSON value is null, blank, or an empty array.</summary>
+    /// <param name="value">The JSON value.</param>
+    /// <returns><see langword="true"/> when the value is empty.</returns>
     private static bool IsEmpty(JsonElement value) => value.ValueKind switch
     {
         JsonValueKind.Null or JsonValueKind.Undefined => true,
@@ -381,6 +431,11 @@ public sealed class NeuCharWorkflowFunctionService
         _ => false
     };
 
+    /// <summary>
+    /// Builds output shape metadata from a function return type and response contract.
+    /// </summary>
+    /// <param name="methodInfo">The reflected function method.</param>
+    /// <returns>The output descriptor.</returns>
     public static NeuCharFunctionOutputDescriptor BuildOutputDescriptor(MethodInfo methodInfo)
     {
         var dataType = GetResponseDataType(methodInfo?.ReturnType) ?? typeof(object);
@@ -404,6 +459,11 @@ public sealed class NeuCharWorkflowFunctionService
             fields);
     }
 
+    /// <summary>
+    /// Converts a CLR type into the normalized workflow function value-type name.
+    /// </summary>
+    /// <param name="type">The CLR type to normalize.</param>
+    /// <returns>The normalized type name.</returns>
     public static string NormalizeValueType(Type? type)
     {
         type ??= typeof(object);
@@ -434,6 +494,11 @@ public sealed class NeuCharWorkflowFunctionService
         return type == typeof(object) ? "any" : "object";
     }
 
+    /// <summary>
+    /// Resolves the data payload type from a Task/AppResponseBase return type.
+    /// </summary>
+    /// <param name="returnType">The reflected Function return type.</param>
+    /// <returns>The response data type, or <see langword="null"/> when unsupported.</returns>
     private static Type? GetResponseDataType(Type? returnType)
     {
         if (returnType == null)
@@ -454,6 +519,16 @@ public sealed class NeuCharWorkflowFunctionService
         return typeof(IAppResponse).IsAssignableFrom(returnType) ? typeof(object) : null;
     }
 
+    /// <summary>
+    /// Recursively builds bounded output-field metadata for object properties and collections.
+    /// </summary>
+    /// <param name="fields">The output field collection.</param>
+    /// <param name="type">The CLR type to inspect.</param>
+    /// <param name="path">The JSON path prefix.</param>
+    /// <param name="labelPrefix">The display label prefix.</param>
+    /// <param name="parentRequiresIndex">Whether an ancestor collection requires indexing.</param>
+    /// <param name="depth">The current recursion depth.</param>
+    /// <param name="ancestors">Types already visited on the current path.</param>
     private static void AddOutputFields(
         ICollection<NeuCharFunctionOutputFieldDescriptor> fields,
         Type type,
@@ -495,6 +570,12 @@ public sealed class NeuCharWorkflowFunctionService
         }
     }
 
+    /// <summary>
+    /// Detects array/enumerable element types while excluding strings.
+    /// </summary>
+    /// <param name="type">The CLR type.</param>
+    /// <param name="elementType">Receives the element type.</param>
+    /// <returns><see langword="true"/> when the type is a collection.</returns>
     private static bool TryGetCollectionElementType(Type type, out Type elementType)
     {
         type = Nullable.GetUnderlyingType(type) ?? type;
@@ -517,9 +598,15 @@ public sealed class NeuCharWorkflowFunctionService
         return false;
     }
 
+    /// <summary>Determines whether a type maps to a scalar workflow value type.</summary>
+    /// <param name="type">The CLR type.</param>
+    /// <returns><see langword="true"/> for scalar types.</returns>
     private static bool IsSimpleType(Type type) =>
         NormalizeValueType(type) is not ("object" or "any");
 
+    /// <summary>Builds a concise display name for a CLR type or collection.</summary>
+    /// <param name="type">The CLR type.</param>
+    /// <returns>The display type name.</returns>
     private static string GetFriendlyTypeName(Type type)
     {
         if (TryGetCollectionElementType(type, out var elementType))
@@ -529,6 +616,9 @@ public sealed class NeuCharWorkflowFunctionService
         return (Nullable.GetUnderlyingType(type) ?? type).Name;
     }
 
+    /// <summary>Creates a failed Function execution result with the supplied message.</summary>
+    /// <param name="message">The failure message.</param>
+    /// <returns>A failed execution result.</returns>
     private static NeuCharFunctionExecutionResult Failure(string message) =>
         new(false, null, message, null);
 }

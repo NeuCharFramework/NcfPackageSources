@@ -231,10 +231,10 @@ test('page overviews and nearby controls retain their audited contextual topics'
 
     const root = path.resolve(admin, '../../..');
     for (const [module, page, pattern] of [
-        ['Workspace', 'Workspace/Index', /我的工作区<ncf-doc-help topic="workspace.manage"/],
-        ['KnowledgeBase', 'KnowledgeBase/Index', /新建知识库[\s\S]{0,250}<ncf-doc-help topic="knowledge.create"/],
-        ['KnowledgeBase', 'KnowledgeBase/RecallTest', /Top K）<ncf-doc-help topic="knowledge.recall.top-k"/],
-        ['PromptRange', 'PromptRange/Prompt', /选择靶场[\s\S]{0,160}<ncf-doc-help topic="prompts.manage"/],
+        ['Workspace', 'Workspace/Index', /(?:我的工作区|Frontend\.Workspace\.MyWorkspaces)[\s\S]{0,80}<ncf-doc-help topic="workspace.manage"/],
+        ['KnowledgeBase', 'KnowledgeBase/Index', /(?:新建知识库|Frontend\.KnowledgeBase\.NewKnowledgeBase)[\s\S]{0,250}<ncf-doc-help topic="knowledge.create"/],
+        ['KnowledgeBase', 'KnowledgeBase/RecallTest', /(?:Top K）|Frontend\.KnowledgeBase\.ReturnedFragmentCountTopK)[\s\S]{0,120}<ncf-doc-help topic="knowledge.recall.top-k"/],
+        ['PromptRange', 'PromptRange/Prompt', /(?:选择靶场|Frontend\.PromptRange\.SelectRange)[\s\S]{0,160}<ncf-doc-help topic="prompts.manage"/],
         ['Sandbox', 'Sandbox/Setup', /<ncf-doc-help topic="sandbox.setup"/],
         ['Sandbox', 'Sandbox/Setup', /NcfDocHelp\.resolve\('sandbox.setup', document.documentElement.lang\)/],
         ['SenMapic', 'SenMapic/Task/Detail', /PartialAsync\("_DocHelpStandalone", "crawler.detail"\)/]
@@ -249,7 +249,47 @@ test('page overviews and nearby controls retain their audited contextual topics'
     for (const [control] of topKControls) {
         for (const attribute of [':min="1"', ':max="20"', ':step="1"']) assert.ok(control.includes(attribute));
     }
-    assert.match(recall, /先从 5 开始/);
+    assert.match(recall, /(?:先从 5 开始|Frontend\.KnowledgeBase\.StartAtFiveIncreaseItWhenResultsAreTooFewOrLower)/);
+});
+
+test('high-value page sections keep contextual help beside their controls', () => {
+    const root = path.resolve(admin, '../../..');
+    const cases = [
+        ['tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/SystemConfig/Index.cshtml', 'admin.config'],
+        ['tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/TenantInfo/Index.cshtml', 'admin.tenants'],
+        ['tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/NeuBell/Index.cshtml', 'admin.neubell'],
+        ['tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/NeuCharPivot/Board.cshtml', 'pivot.boards'],
+        ['tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/NeuCharPivot/Aggregate.cshtml', 'pivot.aggregate'],
+        ['tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/NeuCharPivot/Access.cshtml', 'pivot.access'],
+        ['tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/XncfModule/Start.cshtml', 'modules.lifecycle'],
+        ['src/Extensions/Senparc.Xncf.AIKernel/Areas/Admin/Pages/AIKernel/Index.cshtml', 'ai.models'],
+        ['src/Extensions/Senparc.Xncf.AIKernel/Areas/Admin/Pages/AITokenMonitor/Index.cshtml', 'ai.tokens'],
+        ['src/Extensions/Senparc.Xncf.AIKernel/Areas/Admin/Pages/Dashboard/Index.cshtml', 'ai.dashboard'],
+        ['src/Extensions/Senparc.Xncf.AIKernel/Areas/Admin/Pages/AIFineTuning/Index.cshtml', 'ai.fine-tuning'],
+        ['src/Extensions/Senparc.Xncf.Connectors/Areas/Admin/Pages/Connectors/Index.cshtml', 'connectors.manage'],
+        ['src/Extensions/Senparc.Xncf.DynamicData/Areas/Admin/Pages/DynamicData/DataSheetSet.cshtml', 'dynamic.tables'],
+        ['src/Extensions/Senparc.Xncf.DynamicData/Areas/Admin/Pages/DynamicData/LayoutSet.cshtml', 'dynamic.layouts'],
+        ['src/Extensions/Senparc.Xncf.DynamicData/Areas/Admin/Pages/DynamicData/PageSet.cshtml', 'dynamic.pages'],
+        ['src/Extensions/Senparc.Xncf.DynamicData/Areas/Admin/Pages/DynamicData/renderLayoutPage.cshtml', 'dynamic.render'],
+        ['src/Extensions/Senparc.Xncf.NeuCharWorkflow/Areas/Admin/Pages/NeuCharWorkflow/Tasks.cshtml', 'workflow.tasks'],
+        ['src/Extensions/Senparc.Xncf.NeuCharWorkflow/Areas/Admin/Pages/NeuCharWorkflow/Replay.cshtml', 'workflow.replay'],
+        ['src/Extensions/Senparc.Xncf.NeuCharWorkflow/Areas/Admin/Pages/NeuCharWorkflow/Analytics.cshtml', 'workflow.analytics'],
+        ['src/Extensions/Senparc.Xncf.PromptRange/Areas/Admin/Pages/PromptRange/Index.cshtml', 'prompts.dashboard'],
+        ['src/Extensions/Senparc.Xncf.PromptRange/Areas/Admin/Pages/PromptRange/Model.cshtml', 'prompts.models'],
+        ['src/Extensions/Senparc.Xncf.PromptRange/Areas/Admin/Pages/PromptRange/Skill.cshtml', 'prompts.skills'],
+        ['src/Extensions/Senparc.Xncf.MCP/Areas/Admin/Pages/MCP/Index.cshtml', 'mcp.home'],
+        ['src/Extensions/Senparc.Xncf.Sandbox/Areas/Admin/Pages/Sandbox/Index.cshtml', 'sandbox.manage'],
+        ['src/Extensions/Senparc.Xncf.WeixinManager/Senparc.Xncf.WeixinManager/Areas/Admin/Pages/WeixinManager/Index.cshtml', 'weixin.overview'],
+        ['src/Extensions/Senparc.Xncf.WeixinManager/Senparc.Xncf.WeixinManager/Areas/Admin/Pages/WeixinManager/MpAccount/Index.cshtml', 'weixin.accounts'],
+        ['src/Extensions/Senparc.Xncf.WeixinManager/Senparc.Xncf.WeixinManager/Areas/Admin/Pages/WeixinManager/WeixinUser/Index.cshtml', 'weixin.users'],
+        ['src/Extensions/Senparc.Xncf.WeixinManager/Senparc.Xncf.WeixinManager/Areas/Admin/Pages/WeixinManager/WeixinClaw/Index.cshtml', 'weixin.claw'],
+        ['src/Extensions/Senparc.Xncf.Workspace/Areas/Admin/Pages/Workspace/Index.cshtml', 'desktop.pairing']
+    ];
+    for (const [file, topic] of cases) {
+        const source = fs.readFileSync(path.join(root, file), 'utf8');
+        const escapedTopic = topic.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        assert.match(source, new RegExp('<ncf-doc-help\\s+topic="' + escapedTopic + '"'), file);
+    }
 });
 
 test('substantial help opens its owning guide directly, not the general directory', () => {

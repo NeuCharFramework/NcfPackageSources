@@ -66,6 +66,11 @@ public sealed class NeuCharWorkflowHumanInputService
     private readonly NeuCharWorkflowNeuBellProvider? _neuBellProvider;
     private readonly INeuBellPublisher? _neuBellPublisher;
 
+    /// <summary>
+    /// Initializes the in-process human-input wait queue and optional notification services.
+    /// </summary>
+    /// <param name="neuBellProvider">Optional provider used to consume approval notifications.</param>
+    /// <param name="neuBellPublisher">Optional publisher used to refresh notifications.</param>
     public NeuCharWorkflowHumanInputService(
         NeuCharWorkflowNeuBellProvider? neuBellProvider = null,
         INeuBellPublisher? neuBellPublisher = null)
@@ -74,6 +79,19 @@ public sealed class NeuCharWorkflowHumanInputService
         _neuBellPublisher = neuBellPublisher;
     }
 
+    /// <summary>
+    /// Creates a bounded pending human-input request for a workflow run.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="correlationId">The workflow run correlation identifier.</param>
+    /// <param name="adminUserId">The owner/admin user identifier.</param>
+    /// <param name="nodeId">The human-input node identifier.</param>
+    /// <param name="nodeName">The human-input node display name.</param>
+    /// <param name="prompt">The prompt shown to the human.</param>
+    /// <param name="externalResumeEnabled">Whether external resumption is allowed.</param>
+    /// <param name="externalResumeKey">The secret key used for external resumption.</param>
+    /// <returns>The pending request object.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when context, external key, or queue capacity constraints fail.</exception>
     public PendingRequest Create(
         int workflowId,
         string correlationId,
@@ -112,6 +130,12 @@ public sealed class NeuCharWorkflowHumanInputService
         return request;
     }
 
+    /// <summary>
+    /// Returns pending interactions visible to an authenticated owner.
+    /// </summary>
+    /// <param name="correlationId">The workflow run correlation identifier.</param>
+    /// <param name="userId">The owner/user identifier.</param>
+    /// <returns>Pending interaction views ordered by creation time.</returns>
     public IReadOnlyList<WorkflowHumanInteraction> GetPendingInteractions(string correlationId, string userId)
     {
         if (string.IsNullOrWhiteSpace(correlationId) || string.IsNullOrWhiteSpace(userId))
@@ -127,6 +151,12 @@ public sealed class NeuCharWorkflowHumanInputService
             .ToList();
     }
 
+    /// <summary>
+    /// Returns pending interactions accessible with an external resume key without exposing the key.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="externalResumeKey">The external resume key.</param>
+    /// <returns>Minimal pending interaction views.</returns>
     public IReadOnlyList<WorkflowExternalHumanInput> GetExternalPending(int workflowId, string? externalResumeKey)
     {
         if (workflowId <= 0 || string.IsNullOrWhiteSpace(externalResumeKey))
@@ -147,6 +177,17 @@ public sealed class NeuCharWorkflowHumanInputService
             .ToList();
     }
 
+    /// <summary>
+    /// Resolves a pending request for its authenticated workflow owner.
+    /// </summary>
+    /// <param name="correlationId">The workflow run correlation identifier.</param>
+    /// <param name="userId">The owner/user identifier.</param>
+    /// <param name="requestId">The pending request identifier.</param>
+    /// <param name="approved">Whether the human input is approved.</param>
+    /// <param name="input">The optional human input.</param>
+    /// <param name="reason">The optional rejection/approval reason.</param>
+    /// <param name="cancellationToken">Token used to cancel notification cleanup.</param>
+    /// <returns>The resolution result.</returns>
     public async Task<WorkflowHumanInputResolution> ResolveForAdminAsync(
         string correlationId,
         string userId,
@@ -172,6 +213,16 @@ public sealed class NeuCharWorkflowHumanInputService
         return await ResolveCoreAsync(request, approved, input, reason, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Resolves a pending request using its one-time external resume key.
+    /// </summary>
+    /// <param name="requestId">The pending request identifier.</param>
+    /// <param name="externalResumeKey">The configured external resume key.</param>
+    /// <param name="approved">Whether the human input is approved.</param>
+    /// <param name="input">The optional human input.</param>
+    /// <param name="reason">The optional rejection/approval reason.</param>
+    /// <param name="cancellationToken">Token used to cancel notification cleanup.</param>
+    /// <returns>The resolution result.</returns>
     public async Task<WorkflowHumanInputResolution> ResolveFromExternalAsync(
         string requestId,
         string? externalResumeKey,
@@ -192,6 +243,10 @@ public sealed class NeuCharWorkflowHumanInputService
         return await ResolveCoreAsync(request, approved, input, reason, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Removes and cancels a pending human-input request.
+    /// </summary>
+    /// <param name="requestId">The pending request identifier.</param>
     public void Cancel(string? requestId)
     {
         if (!string.IsNullOrWhiteSpace(requestId) && _pending.TryRemove(requestId.Trim(), out var request))
@@ -200,6 +255,15 @@ public sealed class NeuCharWorkflowHumanInputService
         }
     }
 
+    /// <summary>
+    /// Validates, atomically consumes, and completes a pending human-input request.
+    /// </summary>
+    /// <param name="request">The pending request to resolve.</param>
+    /// <param name="approved">Whether the submitted decision approves continuation.</param>
+    /// <param name="input">The optional human input required for an approval.</param>
+    /// <param name="reason">The optional decision explanation.</param>
+    /// <param name="cancellationToken">Token used for best-effort notification cleanup.</param>
+    /// <returns>The resolution result visible to the caller.</returns>
     private async Task<WorkflowHumanInputResolution> ResolveCoreAsync(
         PendingRequest request,
         bool approved,
@@ -234,6 +298,12 @@ public sealed class NeuCharWorkflowHumanInputService
             decision.Approved ? "Human input submitted; the Workflow will continue." : "This human input was rejected; the Workflow will end the current branch.");
     }
 
+    /// <summary>
+    /// Looks up a pending request by its normalized one-time identifier.
+    /// </summary>
+    /// <param name="requestId">The request identifier to locate.</param>
+    /// <param name="request">Receives the pending request when found.</param>
+    /// <returns><see langword="true"/> when an active request exists.</returns>
     private bool TryGet(string? requestId, out PendingRequest request)
     {
         if (string.IsNullOrWhiteSpace(requestId))
@@ -252,6 +322,12 @@ public sealed class NeuCharWorkflowHumanInputService
         return false;
     }
 
+    /// <summary>
+    /// Best-effort consumes the notification associated with a resolved request.
+    /// </summary>
+    /// <param name="request">The resolved request and optional notification identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel notification cleanup.</param>
+    /// <returns>A task that completes after cleanup or ignored non-cancellation failures.</returns>
     private async Task ConsumeNeuBellAsync(PendingRequest request, CancellationToken cancellationToken)
     {
         if (_neuBellProvider == null || string.IsNullOrWhiteSpace(request.NeuBellItemId))
@@ -282,14 +358,36 @@ public sealed class NeuCharWorkflowHumanInputService
         }
     }
 
+    /// <summary>
+    /// Creates the standard result for a missing, expired, or already-consumed request.
+    /// </summary>
+    /// <param name="message">The caller-facing explanation.</param>
+    /// <returns>A resolution marked as not handled and unsuccessful.</returns>
     private static WorkflowHumanInputResolution NotHandled(string message)
         => new(false, false, false, null, null, message);
 
+    /// <summary>
+    /// Creates the standard result for a request that exists but cannot be resolved.
+    /// </summary>
+    /// <param name="message">The caller-facing failure explanation.</param>
+    /// <returns>A resolution marked as handled but unsuccessful.</returns>
     private static WorkflowHumanInputResolution Failure(string message)
         => new(true, false, false, null, null, message);
 
+    /// <summary>
+    /// Hashes a resume key after trimming it for constant-time comparison.
+    /// </summary>
+    /// <param name="value">The resume key to hash.</param>
+    /// <returns>The SHA-256 digest of the normalized key.</returns>
     private static byte[] Hash(string value) => SHA256.HashData(Encoding.UTF8.GetBytes(value.Trim()));
 
+    /// <summary>
+    /// Trims input, substitutes a fallback for blank text, and bounds the result length.
+    /// </summary>
+    /// <param name="value">The text to normalize.</param>
+    /// <param name="maxLength">The maximum number of characters to retain.</param>
+    /// <param name="fallback">The value used for blank input.</param>
+    /// <returns>The normalized bounded text.</returns>
     private static string Limit(string? value, int maxLength, string fallback)
     {
         var normalized = value?.Trim();
@@ -306,6 +404,16 @@ public sealed class NeuCharWorkflowHumanInputService
         private readonly TaskCompletionSource<WorkflowHumanInputDecision> _completion =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
 
+        /// <summary>
+        /// Creates an in-process request and prepares its one-time completion source.
+        /// </summary>
+        /// <param name="workflowId">The workflow identifier.</param>
+        /// <param name="correlationId">The run correlation identifier.</param>
+        /// <param name="ownerUserId">The owner identifier.</param>
+        /// <param name="nodeId">The human-input node identifier.</param>
+        /// <param name="nodeName">The human-input node display name.</param>
+        /// <param name="prompt">The bounded prompt text.</param>
+        /// <param name="externalResumeKeyHash">The optional hashed external resume key.</param>
         internal PendingRequest(
             int workflowId,
             string correlationId,
@@ -338,18 +446,38 @@ public sealed class NeuCharWorkflowHumanInputService
         /// <summary>Return the human decision after completion; callers may wait but cannot alter the decision.</summary>
         public Task<WorkflowHumanInputDecision> Completion => _completion.Task;
 
+        /// <summary>
+        /// Associates the request with a notification item for later best-effort consumption.
+        /// </summary>
+        /// <param name="itemId">The notification item identifier.</param>
         public void SetNeuBellItemId(string? itemId) =>
             NeuBellItemId = string.IsNullOrWhiteSpace(itemId) ? null : itemId.Trim();
 
+        /// <summary>
+        /// Completes the request with a human decision.
+        /// </summary>
+        /// <param name="decision">The decision delivered to the waiting workflow.</param>
         internal void Complete(WorkflowHumanInputDecision decision) => _completion.TrySetResult(decision);
 
+        /// <summary>
+        /// Cancels the waiting workflow without producing a decision.
+        /// </summary>
         internal void Cancel() => _completion.TrySetCanceled();
 
+        /// <summary>
+        /// Compares a candidate external key with the stored digest in constant time.
+        /// </summary>
+        /// <param name="key">The candidate external resume key.</param>
+        /// <returns><see langword="true"/> when the key matches an enabled request.</returns>
         internal bool MatchesExternalKey(string? key) =>
             _externalResumeKeyHash != null
             && !string.IsNullOrWhiteSpace(key)
             && CryptographicOperations.FixedTimeEquals(_externalResumeKeyHash, NeuCharWorkflowHumanInputService.Hash(key));
 
+        /// <summary>
+        /// Projects the request into the owner-visible interaction contract without exposing the resume key.
+        /// </summary>
+        /// <returns>The interaction view returned to authenticated callers.</returns>
         internal WorkflowHumanInteraction ToInteraction() => new(
             RequestId,
             0,

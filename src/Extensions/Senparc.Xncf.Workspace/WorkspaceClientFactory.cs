@@ -23,11 +23,16 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
 {
     private readonly IWorkspaceStorage _storage;
 
+    /// <summary>
+    /// Initializes a factory over the tenant-aware workspace storage boundary.
+    /// </summary>
+    /// <param name="storage">Storage implementation used by created clients.</param>
     public WorkspaceClientFactory(IWorkspaceStorage storage)
     {
         _storage = storage;
     }
 
+    /// <inheritdoc />
     public IWorkspaceClient Create(WorkspaceAccessContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -44,6 +49,11 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
         private readonly IWorkspaceStorage _storage;
         private readonly WorkspaceAccessContext _context;
 
+        /// <summary>
+        /// Initializes a client bound to one workspace access context.
+        /// </summary>
+        /// <param name="storage">Storage implementation used for operations.</param>
+        /// <param name="context">Workspace identity, actor, session, and policy.</param>
         public WorkspaceClient(IWorkspaceStorage storage, WorkspaceAccessContext context)
         {
             _storage = storage;
@@ -54,6 +64,7 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
 
         public WorkspacePolicy Policy => _context.Policy;
 
+        /// <inheritdoc />
         public Task<IReadOnlyList<WorkspaceEntry>> ListAsync(
             string relativePath = "",
             CancellationToken cancellationToken = default)
@@ -62,6 +73,7 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
             return _storage.ListAsync(WorkspaceId, relativePath, cancellationToken);
         }
 
+        /// <inheritdoc />
         public Task<WorkspaceFileMetadata> GetFileInfoAsync(
             string relativePath,
             CancellationToken cancellationToken = default)
@@ -70,6 +82,7 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
             return _storage.GetFileInfoAsync(WorkspaceId, relativePath, cancellationToken);
         }
 
+        /// <inheritdoc />
         public Task<WorkspaceFileContent> ReadFileAsync(
             string relativePath,
             int maxBytes = 2 * 1024 * 1024,
@@ -86,6 +99,7 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
                 cancellationToken);
         }
 
+        /// <inheritdoc />
         public Task<WorkspaceWriteFileResult> WriteFileAsync(
             WorkspaceWriteFileRequest request,
             CancellationToken cancellationToken = default)
@@ -99,6 +113,7 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
             return _storage.WriteFileBytesAsync(WorkspaceId, request, cancellationToken);
         }
 
+        /// <inheritdoc />
         public Task CreateDirectoryAsync(
             string relativePath,
             CancellationToken cancellationToken = default)
@@ -107,6 +122,7 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
             return _storage.CreateDirectoryAsync(WorkspaceId, relativePath, cancellationToken);
         }
 
+        /// <inheritdoc />
         public Task DeleteEntryAsync(
             WorkspaceDeleteEntryRequest request,
             CancellationToken cancellationToken = default)
@@ -115,6 +131,7 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
             return _storage.DeleteEntryAsync(WorkspaceId, request, cancellationToken);
         }
 
+        /// <inheritdoc />
         public Task MoveEntryAsync(
             WorkspaceMoveEntryRequest request,
             CancellationToken cancellationToken = default)
@@ -123,6 +140,7 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
             return _storage.MoveEntryAsync(WorkspaceId, request, cancellationToken);
         }
 
+        /// <inheritdoc />
         public Task<IReadOnlyList<WorkspaceSearchResult>> SearchAsync(
             WorkspaceSearchRequest request,
             CancellationToken cancellationToken = default)
@@ -131,6 +149,7 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
             return _storage.SearchAsync(WorkspaceId, request, cancellationToken);
         }
 
+        /// <inheritdoc />
         public Task<WorkspacePatchResult> ApplyPatchAsync(
             WorkspacePatchRequest request,
             CancellationToken cancellationToken = default)
@@ -139,6 +158,7 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
             return _storage.ApplyPatchAsync(WorkspaceId, request, cancellationToken);
         }
 
+        /// <inheritdoc />
         public Task<WorkspaceCommandResult> ExecuteCommandAsync(
             WorkspaceCommandRequest request,
             CancellationToken cancellationToken = default)
@@ -160,6 +180,7 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
             return _storage.ExecuteCommandAsync(WorkspaceId, request, cancellationToken);
         }
 
+        /// <inheritdoc />
         public Task<WorkspaceCommandResult> ExecutePythonAsync(
             WorkspacePythonRequest request,
             CancellationToken cancellationToken = default)
@@ -172,8 +193,13 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
             return _storage.ExecutePythonAsync(WorkspaceId, request, cancellationToken);
         }
 
+        /// <inheritdoc />
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 
+        /// <summary>
+        /// Enforces the access-context read permission before delegating a read operation.
+        /// </summary>
+        /// <exception cref="UnauthorizedAccessException">Thrown when the session does not allow reads.</exception>
         private void EnsureRead()
         {
             if (!Policy.AllowRead)
@@ -182,6 +208,10 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
             }
         }
 
+        /// <summary>
+        /// Enforces the access-context write permission before delegating a mutation.
+        /// </summary>
+        /// <exception cref="UnauthorizedAccessException">Thrown when the session does not allow writes.</exception>
         private void EnsureWrite()
         {
             if (!Policy.AllowWrite)

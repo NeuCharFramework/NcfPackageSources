@@ -1,7 +1,7 @@
 ﻿@page
 @model Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager.IndexModel
 @{
-    ViewData["Title"] = XR["Frontend.004"];
+    ViewData["Title"] = XR["Frontend.WeixinManager.OfficialAccountControlCenter"];
     Layout = "_Layout_Vue";
 }
 @section HeaderContent{
@@ -62,14 +62,14 @@
 
 }
 @section breadcrumbs {
-    <el-breadcrumb-item>@XR["Frontend.001"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@XR["Frontend.003"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@XR["Frontend.004"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.WeixinManager.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.WeixinManager.WeixinManagement"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.WeixinManager.OfficialAccountControlCenter"]</el-breadcrumb-item>
 }
 <div>
     <el-container>
         <el-header class="module-header">
-            <span class="start-title"> <i class="fa fa-weixin"></i>&nbsp;<span class="module-header-v">{{ ncfST('Frontend.004') }}</span></span>
+            <span class="start-title"> <i class="fa fa-weixin"></i>&nbsp;<span class="module-header-v">{{ ncfST('Frontend.WeixinManager.OfficialAccountControlCenter') }}</span> <ncf-doc-help topic="weixin.overview"></ncf-doc-help></span>
         </el-header>
         <el-main>
             <el-row :gutter="20">
@@ -79,8 +79,8 @@
                         <div class="icon">
                             <i class="fa fa-comments"></i>
                         </div>
-                        <p class="tit">{{ ncfST('Frontend.005') }}</p>
-                        <p class="des">{{ ncfST('Frontend.006') }}</p>
+                        <p class="tit">{{ ncfST('Frontend.WeixinManager.OfficialAccountCount') }}</p>
+                        <p class="des">{{ ncfST('Frontend.WeixinManager.OfficialAccountsAlreadyInTheSystem') }}</p>
                     </div>
                 </el-col>
                 <el-col :span="6">
@@ -89,8 +89,8 @@
                         <div class="icon">
                             <i class="fa fa-tachometer"></i>
                         </div>
-                        <p class="tit">{{ ncfST('Frontend.007') }}</p>
-                        <p class="des">{{ ncfST('Frontend.008') }}</p>
+                        <p class="tit">{{ ncfST('Frontend.WeixinManager.RunningAccountCount') }}</p>
+                        <p class="des">{{ ncfST('Frontend.WeixinManager.NumberOfAccountsThatAreActiveAndConnectedToTheWeChatServer') }}</p>
                     </div>
                 </el-col>
                 <el-col :span="6">
@@ -99,8 +99,8 @@
                         <div class="icon">
                             <i class="fa fa-users"></i>
                         </div>
-                        <p class="tit">{{ ncfST('Frontend.009') }}</p>
-                        <p class="des">{{ ncfST('Frontend.010') }}</p>
+                        <p class="tit">{{ ncfST('Frontend.WeixinManager.TotalWeChatUsers') }}</p>
+                        <p class="des">{{ ncfST('Frontend.WeixinManager.NumberOfUsersWhoInteractedOnThisPlatformOrWereFetchedAutomatically') }}</p>
                     </div>
                 </el-col>
                 <el-col :span="6">
@@ -109,8 +109,8 @@
                         <div class="icon">
                             <i class="fa fa-users"></i>
                         </div>
-                        <p class="tit">{{ ncfST('Frontend.011') }}</p>
-                        <p class="des">{{ ncfST('Frontend.012') }}</p>
+                        <p class="tit">{{ ncfST('Frontend.WeixinManager.NewUsersToday') }}</p>
+                        <p class="des">{{ ncfST('Frontend.WeixinManager.NumberOfUsersSyncedOrAddedToThePlatformToday') }}</p>
                     </div>
                 </el-col>
             </el-row>
@@ -128,17 +128,17 @@
                                 <el-col :span="8" :offset="1">
                                     <div class="chart-li">
                                         <ul class="quick-list">
-                                            <li><i class="fa fa-line-chart"></i><a :href="`/Admin/WeixinManager/WeixinUser?uid=${uid}&mpid=${item.id}`">{{ ncfST('Frontend.013') }}</a></li>
-                                            <li><i class="fa fa-thumbs-up"></i><a href="#">{{ ncfST('Frontend.014') }}</a></li>
-                                            <li><i class="fa fa-calendar-o"></i><a href="#">{{ ncfST('Frontend.015') }}</a></li>
-                                            <li><i class="fa fa-area-chart"></i><a href="#">{{ ncfST('Frontend.016') }}</a></li>
-                                            <li><i class="fa fa-cog"></i><a :href="`/Admin/WeixinManager/MpAccount?uid=${uid}`">{{ ncfST('Frontend.017') }}</a></li>
+                                            <li><i class="fa fa-line-chart"></i><a :href="`/Admin/WeixinManager/WeixinUser?uid=${uid}&mpid=${item.id}`">{{ ncfST('Frontend.WeixinManager.ViewUsers') }}</a></li>
+                                            <li><i class="fa fa-thumbs-up"></i><a href="#">{{ ncfST('Frontend.WeixinManager.ViewGroups') }}</a></li>
+                                            <li><i class="fa fa-calendar-o"></i><a href="#">{{ ncfST('Frontend.WeixinManager.ViewTags') }}</a></li>
+                                            <li><i class="fa fa-area-chart"></i><a href="#">{{ ncfST('Frontend.WeixinManager.Conversation') }}</a></li>
+                                            <li><i class="fa fa-cog"></i><a :href="`/Admin/WeixinManager/MpAccount?uid=${uid}`">{{ ncfST('Frontend.WeixinManager.Edit') }}</a></li>
                                         </ul>
                                     </div>
                                 </el-col>
                                 <el-col :span="10">
                                     <div class="chart-li">
-                                        <h4>{{ ncfST('Frontend.018') }}</h4>
+                                        <h4>{{ ncfST('Frontend.WeixinManager.AccessTokenCredentialValidity') }}</h4>
                                         <div :id="'chart_mpaccount_'+item.id" style="width: 400px;height:300px;"></div>
                                     </div>
                                 </el-col>
@@ -231,7 +231,7 @@
                                     },
                                     series: [
                                         {
-                                            name: ncfST('Frontend.019'),
+                                            name: ncfST('Frontend.WeixinManager.AccessTokenCredentialStatus'),
                                             type: 'gauge',
                                             detail: { formatter: '{value}%' },
                                             data: [{ value: leftTimePercent, name: status }]

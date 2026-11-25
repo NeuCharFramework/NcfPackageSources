@@ -35,6 +35,12 @@ internal sealed class WorkspaceAgentConnection : IAsyncDisposable
     private readonly Task _errorPump;
     private bool _disposed;
 
+    /// <summary>
+    /// Initializes a serialized stdio connection to one Workspace Agent process.
+    /// </summary>
+    /// <param name="process">The isolated process exposing JSON request/response streams.</param>
+    /// <param name="workspaceId">The workspace identifier used in diagnostics.</param>
+    /// <param name="logger">Logger used for agent diagnostics.</param>
     public WorkspaceAgentConnection(
         IIsolatedRuntimeConnection process,
         string workspaceId,
@@ -48,6 +54,18 @@ internal sealed class WorkspaceAgentConnection : IAsyncDisposable
 
     public bool HasExited => _process.HasExited;
 
+    /// <summary>
+    /// Sends one JSON operation and deserializes its response while serializing concurrent requests.
+    /// </summary>
+    /// <typeparam name="TPayload">The request payload type.</typeparam>
+    /// <typeparam name="TResult">The expected response result type.</typeparam>
+    /// <param name="operation">The Workspace Agent operation name.</param>
+    /// <param name="payload">The operation payload.</param>
+    /// <param name="cancellationToken">Token used to cancel queueing or stream reads.</param>
+    /// <returns>The deserialized operation result.</returns>
+    /// <exception cref="IOException">Thrown when the process or protocol response is invalid.</exception>
+    /// <exception cref="WorkspaceLimitException">Thrown when the agent reports a resource limit.</exception>
+    /// <exception cref="WorkspaceConflictException">Thrown when the agent reports a write conflict.</exception>
     public async Task<TResult> InvokeAsync<TPayload, TResult>(
         string operation,
         TPayload payload,
@@ -113,6 +131,10 @@ internal sealed class WorkspaceAgentConnection : IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Attempts graceful shutdown, then terminates and disposes the isolated process.
+    /// </summary>
+    /// <returns>A value task that completes after all connection resources are released.</returns>
     public async ValueTask DisposeAsync()
     {
         if (_disposed)
@@ -144,6 +166,11 @@ internal sealed class WorkspaceAgentConnection : IAsyncDisposable
         await _process.DisposeAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Sends the protocol shutdown operation and waits for the process to exit.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to bound graceful shutdown.</param>
+    /// <returns>A task that completes after the shutdown response and process exit.</returns>
     private async Task InvokeShutdownAsync(CancellationToken cancellationToken)
     {
         var request = new WorkspaceAgentRequest(
@@ -158,6 +185,10 @@ internal sealed class WorkspaceAgentConnection : IAsyncDisposable
         await _process.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Drains agent standard error and forwards non-empty diagnostics to the logger.
+    /// </summary>
+    /// <returns>A task that completes when the error stream closes.</returns>
     private async Task PumpErrorsAsync()
     {
         while (await _process.StandardError.ReadLineAsync().ConfigureAwait(false) is { } line)
@@ -172,6 +203,11 @@ internal sealed class WorkspaceAgentConnection : IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Maps a protocol error code to the corresponding local exception type.
+    /// </summary>
+    /// <param name="error">The protocol error payload.</param>
+    /// <exception cref="Exception">Always throws the mapped operation exception.</exception>
     private static void ThrowAgentError(WorkspaceAgentError? error)
     {
         var message = error?.Message ?? "Workspace Agent operation failed.";

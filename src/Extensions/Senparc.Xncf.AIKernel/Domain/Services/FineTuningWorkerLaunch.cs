@@ -41,9 +41,20 @@ public sealed class FineTuningWorkerLaunch
     public IReadOnlyList<string> Arguments { get; private set; } = [];
     public IReadOnlyDictionary<string, string> Variables { get; private set; } = new Dictionary<string, string>();
 
+    /// <summary>
+    /// Computes the default tenant-local data root for a worker alias.
+    /// </summary>
+    /// <param name="contentRoot">The application content root.</param>
+    /// <param name="alias">The worker alias.</param>
+    /// <returns>The default data directory path.</returns>
     public static string DefaultDataRoot(string contentRoot, string alias) =>
         Path.Combine(contentRoot, "App_Data", "Senparc.Xncf.AIKernel", "fine-tuning", "workers", alias, "data");
 
+    /// <summary>
+    /// Searches upward from the supplied path and application base directory for the bundled worker project.
+    /// </summary>
+    /// <param name="start">Optional starting directory.</param>
+    /// <returns>The worker project directory, or an empty string when it cannot be found.</returns>
     public static string DiscoverProject(string? start)
     {
         foreach (var root in new[] { start, AppContext.BaseDirectory })
@@ -72,6 +83,14 @@ public sealed class FineTuningWorkerLaunch
         return "";
     }
 
+    /// <summary>
+    /// Normalizes and validates a persisted launch profile request without starting a process.
+    /// </summary>
+    /// <param name="request">The worker launch configuration request.</param>
+    /// <param name="contentRoot">The application content root used for defaults.</param>
+    /// <param name="peers">Other worker profiles used for collision checks.</param>
+    /// <returns>A normalized launch profile.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when loopback, port, path, secret-directory, or peer constraints fail.</exception>
     public static FineTuningLaunchProfile Prepare(AIFineTuningWorker_CreateOrEditRequest request, string contentRoot,
         IEnumerable<FineTuningWorkerPeer> peers)
     {
@@ -114,6 +133,15 @@ public sealed class FineTuningWorkerLaunch
         return profile;
     }
 
+    /// <summary>
+    /// Builds the fixed Python worker process launch plan and environment variables.
+    /// </summary>
+    /// <param name="alias">The worker alias.</param>
+    /// <param name="profile">The validated managed launch profile.</param>
+    /// <param name="apiKey">The secret passed only through the process environment.</param>
+    /// <param name="peers">Other worker profiles used for collision checks.</param>
+    /// <returns>A launch plan containing executable, arguments, paths, and environment values.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when managed mode, API key, loopback, path, Python, or peer validation fails.</exception>
     public static FineTuningWorkerLaunch Create(string alias, FineTuningLaunchProfile profile, string apiKey,
         IEnumerable<FineTuningWorkerPeer> peers)
     {
@@ -160,6 +188,12 @@ public sealed class FineTuningWorkerLaunch
         };
     }
 
+    /// <summary>
+    /// Produces a shell command preview for a validated launch profile without exposing the secret value.
+    /// </summary>
+    /// <param name="profile">The launch profile to render.</param>
+    /// <param name="secretPath">The path from which the shell reads the secret.</param>
+    /// <returns>A newline-delimited shell command preview, or an empty string for incomplete paths.</returns>
     public static string Preview(FineTuningLaunchProfile profile, string secretPath)
     {
         if (string.IsNullOrWhiteSpace(profile.ModelsRoot) || string.IsNullOrWhiteSpace(profile.DataRoot))
@@ -187,6 +221,13 @@ public sealed class FineTuningWorkerLaunch
         return string.Join('\n', lines);
     }
 
+    /// <summary>
+    /// Checks a worker profile against managed peers for alias, port, and data-directory conflicts.
+    /// </summary>
+    /// <param name="alias">The worker alias being prepared.</param>
+    /// <param name="profile">The normalized launch profile.</param>
+    /// <param name="peers">Other persisted worker profiles.</param>
+    /// <exception cref="NcfExceptionBase">Thrown when a peer conflicts with the profile.</exception>
     private static void EnsurePeers(string alias, FineTuningLaunchProfile profile, IEnumerable<FineTuningWorkerPeer> peers)
     {
         foreach (var peer in peers)
@@ -202,6 +243,13 @@ public sealed class FineTuningWorkerLaunch
         }
     }
 
+    /// <summary>
+    /// Resolves and validates the bundled fine-tuning worker project directory.
+    /// </summary>
+    /// <param name="configured">An optional configured project path.</param>
+    /// <param name="contentRoot">The application content root used for discovery.</param>
+    /// <returns>The worker project directory.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the worker project cannot be found.</exception>
     private static string ResolveProject(string configured, string contentRoot)
     {
         var project = string.IsNullOrWhiteSpace(configured) ? DiscoverProject(contentRoot) : Path.GetFullPath(configured);
@@ -210,12 +258,23 @@ public sealed class FineTuningWorkerLaunch
         return project;
     }
 
+    /// <summary>
+    /// Resolves the project virtual-environment Python executable or a platform fallback.
+    /// </summary>
+    /// <param name="project">The worker project directory.</param>
+    /// <returns>The Python executable path/name.</returns>
     private static string ResolvePython(string project)
     {
         var venv = Path.Combine(project, ".venv", OperatingSystem.IsWindows() ? Path.Combine("Scripts", "python.exe") : Path.Combine("bin", "python"));
         return File.Exists(venv) ? venv : OperatingSystem.IsWindows() ? "python" : "python3";
     }
 
+    /// <summary>
+    /// Normalizes and validates an explicitly configured absolute Python path.
+    /// </summary>
+    /// <param name="path">The configured Python path.</param>
+    /// <returns>The normalized absolute path.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the path is relative or missing.</exception>
     private static string NormalizePython(string path)
     {
         if (!Path.IsPathRooted(path))
@@ -226,6 +285,14 @@ public sealed class FineTuningWorkerLaunch
         return full;
     }
 
+    /// <summary>
+    /// Validates and normalizes a model/data directory, rejecting roots, unsafe characters,
+    /// excessive lengths, and symbolic links.
+    /// </summary>
+    /// <param name="path">The configured directory path.</param>
+    /// <param name="label">The path label used in errors.</param>
+    /// <returns>The normalized absolute directory path.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the directory violates safety constraints.</exception>
     private static string NormalizeDirectory(string path, string label)
     {
         if (string.IsNullOrWhiteSpace(path))
@@ -244,6 +311,12 @@ public sealed class FineTuningWorkerLaunch
         return full;
     }
 
+    /// <summary>
+    /// Rejects an existing directory or file when it is a reparse point/symbolic link.
+    /// </summary>
+    /// <param name="path">The path to inspect.</param>
+    /// <param name="label">The path label used in errors.</param>
+    /// <exception cref="NcfExceptionBase">Thrown when the path is a symbolic link.</exception>
     private static void RejectSymlink(string path, string label)
     {
         if (!Directory.Exists(path) && !File.Exists(path))
@@ -253,6 +326,13 @@ public sealed class FineTuningWorkerLaunch
             throw new NcfExceptionBase($"The {label} directory must not be a symbolic link.");
     }
 
+    /// <summary>
+    /// Determines whether two normalized paths overlap by containment.
+    /// Invalid paths return <see langword="false"/> after diagnostic logging.
+    /// </summary>
+    /// <param name="left">The first path.</param>
+    /// <param name="right">The second path.</param>
+    /// <returns><see langword="true"/> when either path contains the other.</returns>
     public static bool PathsOverlap(string? left, string? right)
     {
         if (string.IsNullOrWhiteSpace(left) || string.IsNullOrWhiteSpace(right))
@@ -271,6 +351,11 @@ public sealed class FineTuningWorkerLaunch
         }
     }
 
+    /// <summary>
+    /// Expands a leading tilde or tilde-slash path using the current user's home directory.
+    /// </summary>
+    /// <param name="path">The path to expand.</param>
+    /// <returns>The expanded path, or an empty string for blank input.</returns>
     private static string ExpandHome(string? path)
     {
         if (string.IsNullOrWhiteSpace(path))
@@ -284,6 +369,12 @@ public sealed class FineTuningWorkerLaunch
         return path;
     }
 
+    /// <summary>
+    /// Quotes a path for the generated shell preview and rejects shell-sensitive characters.
+    /// </summary>
+    /// <param name="value">The path value.</param>
+    /// <returns>A single-quoted shell-safe path.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the path contains quotes or line breaks.</exception>
     private static string Quote(string value)
     {
         if (value.IndexOfAny(['\'', '\r', '\n', '\0']) >= 0)
@@ -291,5 +382,8 @@ public sealed class FineTuningWorkerLaunch
         return "'" + value + "'";
     }
 
+    /// <summary>Removes trailing platform path separators.</summary>
+    /// <param name="path">The path to trim.</param>
+    /// <returns>The path without trailing separators.</returns>
     private static string TrimSlash(string path) => path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 }

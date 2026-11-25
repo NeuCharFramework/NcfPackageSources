@@ -27,6 +27,10 @@ public sealed class DesktopBridgeNeuBellProvider : INeuBellProvider
     public const string ProviderIdValue = "desktop-bridge-pairing";
     private readonly DesktopBridgeCredentialStore _credentialStore;
 
+    /// <summary>
+    /// Initializes the DesktopBridge NeuBell provider.
+    /// </summary>
+    /// <param name="credentialStore">Store used to count pending pairing requests.</param>
     public DesktopBridgeNeuBellProvider(DesktopBridgeCredentialStore credentialStore)
     {
         _credentialStore = credentialStore;
@@ -37,6 +41,12 @@ public sealed class DesktopBridgeNeuBellProvider : INeuBellProvider
     //Legacy comment translated to English.
     public string ModuleUid => Register.ModuleUid;
 
+    /// <summary>
+    /// Builds a notification snapshot describing pending desktop pairing approvals.
+    /// </summary>
+    /// <param name="context">NeuBell request context.</param>
+    /// <param name="cancellationToken">Token used to cancel snapshot creation.</param>
+    /// <returns>The current DesktopBridge notification snapshot.</returns>
     public ValueTask<NeuBellSnapshot> GetSnapshotAsync(
         NeuBellRequestContext context,
         CancellationToken cancellationToken = default)

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261124
+    Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -20,6 +23,7 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -41,7 +45,8 @@ public sealed class AdminChatAttachmentService
     public const int MaxAttachments = 4;
     public const int MaxVisionBytes = 512 * 1024;
     public static readonly string[] AllowedExtensions =
-        [".txt", ".md", ".csv", ".tsv", ".json", ".docx", ".xlsx", ".pptx", ".pdf", ".doc", ".xls", ".ppt", ".png", ".jpg", ".jpeg", ".webp"];
+        [".txt", ".md", ".csv", ".tsv", ".json", ".docx", ".xlsx", ".pptx", ".pdf", ".doc", ".xls", ".ppt",
+            ".png", ".jpg", ".jpeg", ".webp", ".glb", ".gltf", ".obj", ".stl", ".ply"];
     private readonly IServiceProvider _services;
     private IWorkspaceStorage Storage => _services.GetService<IWorkspaceStorage>()
         ?? throw new InvalidOperationException("Workspace 模块不可用。");
@@ -305,18 +310,21 @@ public sealed class AdminChatAttachmentService
         return new AdminChatAttachment
         {
             RelativePath = path, Name = path.Split('/').Last(), Size = metadata.Length, ETag = metadata.ETag,
-            ContentType = IsImage(extension) ? "image/" + (extension is ".jpg" or ".jpeg" ? "jpeg" : extension[1..])
-                : extension == ".pdf" ? "application/pdf" : "application/octet-stream",
+            ContentType = WorkspaceTextFiles.ResolveContentType(path),
+            PreviewKind = WorkspaceTextFiles.Is3D(path) ? "3d" : "file",
             LocalStatus = deferredProcessing ? "已保存，需使用 Workspace/Python 处理"
                 : document != null ? document.HasText ? "已本地解析"
                     : extension == ".pdf" ? "未提取到文字，可能需要 OCR" : "未提取到可读文字"
+                : WorkspaceTextFiles.Is3D(path) ? "3D 模型已保存，可直接预览"
                 : IsImage(extension) ? "图片已保存，默认不发给模型" : "仅保存，需转换为新版 Office 格式",
             SectionCount = document?.Sections.Count ?? 0, ExtractedCharacters = document?.Characters ?? 0,
             Notice = deferredProcessing
                 ? "文件较大，服务端未读取全文。请让 AI 使用 Workspace 工具编写 Python，采用流式或分批方式处理；文件全文不会自动发送给模型。"
                 : document?.Notice ?? (IsImage(extension)
                 ? "勾选视觉后仅发送压缩预览。需要选择支持图片的模型；可能产生额外视觉 Token。"
-                : "未解析旧版二进制 Office，未执行其中的宏；请另存为 DOCX/XLSX/PPTX。")
+                : WorkspaceTextFiles.Is3D(path)
+                    ? "仅在安全隔离 Viewer 中读取模型几何；外部依赖必须位于同一 Workspace。"
+                    : "未解析旧版二进制 Office，未执行其中的宏；请另存为 DOCX/XLSX/PPTX。")
         };
     }
 
@@ -345,6 +353,10 @@ public sealed class AdminChatAttachmentService
             ".png" => bytes.AsSpan().StartsWith(new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 }),
             ".jpg" or ".jpeg" => bytes.AsSpan().StartsWith(new byte[] { 0xff, 0xd8, 0xff }),
             ".webp" => bytes.Length >= 12 && bytes.AsSpan(0, 4).SequenceEqual("RIFF"u8) && bytes.AsSpan(8, 4).SequenceEqual("WEBP"u8),
+            ".glb" => bytes.Length >= 12 && bytes.AsSpan(0, 4).SequenceEqual("glTF"u8)
+                && BinaryPrimitives.ReadUInt32LittleEndian(bytes.AsSpan(4, 4)) == 2,
+            ".gltf" or ".obj" or ".ply" => Encoding.UTF8.GetString(bytes.AsSpan(0, Math.Min(bytes.Length, 256)))
+                .Contains(extension == ".gltf" ? "\"asset\"" : extension == ".ply" ? "ply" : "v ", StringComparison.OrdinalIgnoreCase),
             _ => true
         };
         if (!match) throw new InvalidDataException("文件内容与扩展名不符，已拒绝上传。");

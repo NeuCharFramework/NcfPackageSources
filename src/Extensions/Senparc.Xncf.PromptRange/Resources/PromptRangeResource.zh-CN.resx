@@ -104,1231 +104,1200 @@
   <data name="Model.EnterApi" xml:space="preserve"><value>请输入模型 API</value></data>
   <data name="Model.EnterApiKey" xml:space="preserve"><value>请输入模型 API key</value></data>
   <data name="Area.DatabaseSample" xml:space="preserve"><value>数据库操作示例</value></data>
-  <data name="Frontend.001" xml:space="preserve"><value>选择靶场</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>导出 plugins</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>导入 plugins</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>新增靶场</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>请选择靶场</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>重命名靶场</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>删除</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>选择靶道</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>优化</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>导图</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>创建智能体</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>请选择靶道</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>请先选择靶场</value></data>
-  <data name="Frontend.014" xml:space="preserve"><value>对比</value></data>
-  <data name="Frontend.015" xml:space="preserve"><value>修改靶道名称</value></data>
-  <data name="Frontend.016" xml:space="preserve"><value>设置靶道名称</value></data>
-  <data name="Frontend.017" xml:space="preserve"><value>重置名称</value></data>
-  <data name="Frontend.018" xml:space="preserve"><value>选择模型</value></data>
-  <data name="Frontend.019" xml:space="preserve"><value>刷新</value></data>
-  <data name="Frontend.020" xml:space="preserve"><value>管理模型</value></data>
-  <data name="Frontend.021" xml:space="preserve"><value>请选择模型</value></data>
-  <data name="Frontend.022" xml:space="preserve"><value>未命名模型</value></data>
-  <data name="Frontend.023" xml:space="preserve"><value>请新建或选择靶场后再进行操作</value></data>
-  <data name="Frontend.024" xml:space="preserve"><value>当前处于连发模式，内容已锁定</value></data>
-  <data name="Frontend.025" xml:space="preserve"><value>如需修改，请切换其他模式</value></data>
-  <data name="Frontend.026" xml:space="preserve"><value>模型参数</value></data>
-  <data name="Frontend.027" xml:space="preserve"><value>重置</value></data>
-  <data name="Frontend.028" xml:space="preserve"><value>设置 AI 评分标准</value></data>
-  <data name="Frontend.029" xml:space="preserve"><value>开</value></data>
-  <data name="Frontend.030" xml:space="preserve"><value>关</value></data>
-  <data name="Frontend.031" xml:space="preserve"><value>拖动调整宽度 | 双击还原默认</value></data>
-  <data name="Frontend.032" xml:space="preserve"><value>请求参数</value></data>
-  <data name="Frontend.033" xml:space="preserve"><value>音频文件</value></data>
-  <data name="Frontend.034" xml:space="preserve"><value>上传音频</value></data>
-  <data name="Frontend.035" xml:space="preserve"><value>清空</value></data>
-  <data name="Frontend.036" xml:space="preserve"><value>支持格式：flac / m4a / mp3 / mp4 / mpeg / mpga / oga / ogg / wav / webm</value></data>
-  <data name="Frontend.037" xml:space="preserve"><value>识别语言</value></data>
-  <data name="Frontend.038" xml:space="preserve"><value>可空，例如 zh / en</value></data>
-  <data name="Frontend.039" xml:space="preserve"><value>音色</value></data>
-  <data name="Frontend.040" xml:space="preserve"><value>格式</value></data>
-  <data name="Frontend.041" xml:space="preserve"><value>选择输出格式</value></data>
-  <data name="Frontend.042" xml:space="preserve"><value>语速</value></data>
-  <data name="Frontend.043" xml:space="preserve"><value>请选择向量库</value></data>
-  <data name="Frontend.044" xml:space="preserve"><value>可空，自动生成</value></data>
-  <data name="Frontend.045" xml:space="preserve"><value>测试查询</value></data>
-  <data name="Frontend.046" xml:space="preserve"><value>可空，首次打靶后自动查询</value></data>
-  <data name="Frontend.047" xml:space="preserve"><value>请输入待合成语音的文本</value></data>
-  <data name="Frontend.048" xml:space="preserve"><value>请输入Prompt内容</value></data>
-  <data name="Frontend.049" xml:space="preserve"><value>检测到</value></data>
-  <data name="Frontend.050" xml:space="preserve"><value>个变量</value></data>
-  <data name="Frontend.051" xml:space="preserve"><value>已定义</value></data>
-  <data name="Frontend.052" xml:space="preserve"><value>未定义</value></data>
-  <data name="Frontend.053" xml:space="preserve"><value>请输入备注</value></data>
-  <data name="Frontend.054" xml:space="preserve"><value>连发次数：</value></data>
-  <data name="Frontend.055" xml:space="preserve"><value>Prompt请求参数</value></data>
-  <data name="Frontend.056" xml:space="preserve"><value>前缀</value></data>
-  <data name="Frontend.057" xml:space="preserve"><value>后缀</value></data>
-  <data name="Frontend.058" xml:space="preserve"><value>变量名</value></data>
-  <data name="Frontend.059" xml:space="preserve"><value>请输入变量名</value></data>
-  <data name="Frontend.060" xml:space="preserve"><value>变量值</value></data>
-  <data name="Frontend.061" xml:space="preserve"><value>请输入变量值</value></data>
-  <data name="Frontend.062" xml:space="preserve"><value>操作</value></data>
-  <data name="Frontend.063" xml:space="preserve"><value>新增变量</value></data>
-  <data name="Frontend.064" xml:space="preserve"><value>Prompt 版本:</value></data>
-  <data name="Frontend.065" xml:space="preserve"><value>靶场:</value></data>
-  <data name="Frontend.066" xml:space="preserve"><value>靶道:</value></data>
-  <data name="Frontend.067" xml:space="preserve"><value>瞄准:</value></data>
-  <data name="Frontend.068" xml:space="preserve"><value>输出</value></data>
-  <data name="Frontend.069" xml:space="preserve"><value>平均分:</value></data>
-  <data name="Frontend.070" xml:space="preserve"><value>最高分:</value></data>
-  <data name="Frontend.071" xml:space="preserve"><value>耗时(毫秒):</value></data>
-  <data name="Frontend.072" xml:space="preserve"><value>复制带格式的 HTML 代码</value></data>
-  <data name="Frontend.073" xml:space="preserve"><value>复制原始内容（例如将复制 markdown 标记）</value></data>
-  <data name="Frontend.074" xml:space="preserve"><value>原始</value></data>
-  <data name="Frontend.075" xml:space="preserve"><value>图片已生成，但未获得可访问地址</value></data>
-  <data name="Frontend.076" xml:space="preserve"><value>存储：</value></data>
-  <data name="Frontend.077" xml:space="preserve"><value>查看原图</value></data>
-  <data name="Frontend.078" xml:space="preserve"><value>音频已生成，但未获得可访问地址</value></data>
-  <data name="Frontend.079" xml:space="preserve"><value>输入查询文本进行向量检索</value></data>
-  <data name="Frontend.080" xml:space="preserve"><value>查询</value></data>
-  <data name="Frontend.081" xml:space="preserve"><value>输入</value></data>
-  <data name="Frontend.082" xml:space="preserve"><value>AI评分:</value></data>
-  <data name="Frontend.083" xml:space="preserve"><value>AI 评分中...</value></data>
-  <data name="Frontend.084" xml:space="preserve"><value>手动评分:</value></data>
-  <data name="Frontend.085" xml:space="preserve"><value>继续聊天</value></data>
-  <data name="Frontend.086" xml:space="preserve"><value>AI评分</value></data>
-  <data name="Frontend.087" xml:space="preserve"><value>手动评分</value></data>
-  <data name="Frontend.088" xml:space="preserve"><value>请输入</value></data>
-  <data name="Frontend.089" xml:space="preserve"><value>开始打分</value></data>
-  <data name="Frontend.090" xml:space="preserve"><value>保存</value></data>
-  <data name="Frontend.091" xml:space="preserve"><value>取消</value></data>
-  <data name="Frontend.092" xml:space="preserve"><value>暂无生成结果</value></data>
-  <data name="Frontend.093" xml:space="preserve"><value>分</value></data>
-  <data name="Frontend.094" xml:space="preserve"><value>分数趋势图</value></data>
-  <data name="Frontend.095" xml:space="preserve"><value>只有一个有分数，图表无法渲染一个数构成的折线</value></data>
-  <data name="Frontend.096" xml:space="preserve"><value>平均分</value></data>
-  <data name="Frontend.097" xml:space="preserve"><value>最高分</value></data>
-  <data name="Frontend.098" xml:space="preserve"><value>暂无数据</value></data>
-  <data name="Frontend.099" xml:space="preserve"><value>版本记录</value></data>
-  <data name="Frontend.100" xml:space="preserve"><value>请输入名称</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>是否公开</value></data>
-  <data name="Frontend.102" xml:space="preserve"><value>编辑</value></data>
-  <data name="Frontend.103" xml:space="preserve"><value>生成代码</value></data>
-  <data name="Frontend.104" xml:space="preserve"><value>战术选择</value></data>
-  <data name="Frontend.105" xml:space="preserve"><value>打靶模式</value></data>
-  <data name="Frontend.106" xml:space="preserve"><value>战术</value></data>
-  <data name="Frontend.107" xml:space="preserve"><value>创建顶级战术</value></data>
-  <data name="Frontend.108" xml:space="preserve"><value>将创建：</value></data>
-  <data name="Frontend.109" xml:space="preserve"><value>当前：</value></data>
-  <data name="Frontend.110" xml:space="preserve"><value>(新)</value></data>
-  <data name="Frontend.111" xml:space="preserve"><value>创建平行战术</value></data>
-  <data name="Frontend.112" xml:space="preserve"><value>创建子战术</value></data>
-  <data name="Frontend.113" xml:space="preserve"><value>重新瞄准</value></data>
-  <data name="Frontend.114" xml:space="preserve"><value>对话模式</value></data>
-  <data name="Frontend.115" xml:space="preserve"><value>直接测试</value></data>
-  <data name="Frontend.116" xml:space="preserve"><value>以对话方式输入，输入后进行打靶</value></data>
-  <data name="Frontend.117" xml:space="preserve"><value>直接使用当前的 Prompt 进行测试</value></data>
-  <data name="Frontend.118" xml:space="preserve"><value>继续聊天模式已锁定为对话模式</value></data>
-  <data name="Frontend.119" xml:space="preserve"><value>当前模型不支持对话模式，将按直接测试执行</value></data>
-  <data name="Frontend.120" xml:space="preserve"><value>对话历史</value></data>
-  <data name="Frontend.121" xml:space="preserve"><value>收起</value></data>
-  <data name="Frontend.122" xml:space="preserve"><value>展开</value></data>
-  <data name="Frontend.123" xml:space="preserve"><value>查看当前对话使用的 Prompt</value></data>
-  <data name="Frontend.124" xml:space="preserve"><value>加载中...</value></data>
-  <data name="Frontend.125" xml:space="preserve"><value>Token 总量：</value></data>
-  <data name="Frontend.126" xml:space="preserve"><value>暂无对话记录</value></data>
-  <data name="Frontend.127" xml:space="preserve"><value>用户</value></data>
-  <data name="Frontend.128" xml:space="preserve"><value>助手</value></data>
-  <data name="Frontend.129" xml:space="preserve"><value>点赞</value></data>
-  <data name="Frontend.130" xml:space="preserve"><value>已点赞</value></data>
-  <data name="Frontend.131" xml:space="preserve"><value>点踩</value></data>
-  <data name="Frontend.132" xml:space="preserve"><value>已点踩</value></data>
-  <data name="Frontend.133" xml:space="preserve"><value>正在保存...</value></data>
-  <data name="Frontend.134" xml:space="preserve"><value>对话输入</value></data>
-  <data name="Frontend.135" xml:space="preserve"><value>请输入您的下一句话... (Ctrl+Enter / Cmd+Enter 发送)</value></data>
-  <data name="Frontend.136" xml:space="preserve"><value>请输入您的问题... (Ctrl+Enter / Cmd+Enter 发送)</value></data>
-  <data name="Frontend.137" xml:space="preserve"><value>输入内容将追加到现有对话中</value></data>
-  <data name="Frontend.138" xml:space="preserve"><value>输入内容将作为 userMessage 参数传递到后端接口</value></data>
-  <data name="Frontend.139" xml:space="preserve"><value>快捷键：Ctrl+Enter (Windows) / Cmd+Enter (Mac)</value></data>
-  <data name="Frontend.140" xml:space="preserve"><value>发 射</value></data>
-  <data name="Frontend.141" xml:space="preserve"><value>3D 结构导图</value></data>
-  <data name="Frontend.142" xml:space="preserve"><value>重置视角</value></data>
-  <data name="Frontend.143" xml:space="preserve"><value>全屏</value></data>
-  <data name="Frontend.144" xml:space="preserve"><value>适应视图</value></data>
-  <data name="Frontend.145" xml:space="preserve"><value>🖱️ 鼠标操作</value></data>
-  <data name="Frontend.146" xml:space="preserve"><value>左键拖拽：旋转视角</value></data>
-  <data name="Frontend.147" xml:space="preserve"><value>右键拖拽：平移场景</value></data>
-  <data name="Frontend.148" xml:space="preserve"><value>滚轮：缩放</value></data>
-  <data name="Frontend.149" xml:space="preserve"><value>单击节点：高亮</value></data>
-  <data name="Frontend.150" xml:space="preserve"><value>双击节点：跳转靶道</value></data>
-  <data name="Frontend.151" xml:space="preserve"><value>⌨️ 键盘快捷键</value></data>
-  <data name="Frontend.152" xml:space="preserve"><value>W / A / S / D：前后左右平移</value></data>
-  <data name="Frontend.153" xml:space="preserve"><value>Q / E：深度平移（前后）</value></data>
-  <data name="Frontend.154" xml:space="preserve"><value>R：重置视角</value></data>
-  <data name="Frontend.155" xml:space="preserve"><value>F：适应视图</value></data>
-  <data name="Frontend.156" xml:space="preserve"><value>+/-：放大/缩小</value></data>
-  <data name="Frontend.157" xml:space="preserve"><value>快捷键</value></data>
-  <data name="Frontend.158" xml:space="preserve"><value>个节点</value></data>
-  <data name="Frontend.159" xml:space="preserve"><value>从 PromptCode 创建智能体</value></data>
-  <data name="Frontend.160" xml:space="preserve"><value>智能体名称</value></data>
-  <data name="Frontend.161" xml:space="preserve"><value>请输入智能体名称</value></data>
-  <data name="Frontend.162" xml:space="preserve"><value>覆盖范围</value></data>
-  <data name="Frontend.163" xml:space="preserve"><value>靶场级别</value></data>
-  <data name="Frontend.164" xml:space="preserve"><value>PromptCode 只包含靶场名称，匹配该靶场下的所有靶道</value></data>
-  <data name="Frontend.165" xml:space="preserve"><value>靶道级别</value></data>
-  <data name="Frontend.166" xml:space="preserve"><value>PromptCode 包含靶场名称和战术编号，匹配当前战术下所有瞄准版本</value></data>
-  <data name="Frontend.167" xml:space="preserve"><value>完整定位</value></data>
-  <data name="Frontend.168" xml:space="preserve"><value>PromptCode 为完整版本号，精确匹配当前靶道</value></data>
-  <data name="Frontend.169" xml:space="preserve"><value>说明</value></data>
-  <data name="Frontend.170" xml:space="preserve"><value>对新智能体的说明（可选）</value></data>
-  <data name="Frontend.171" xml:space="preserve"><value>Function Call 名称，多个用逗号分隔（可选）</value></data>
-  <data name="Frontend.172" xml:space="preserve"><value>创 建</value></data>
-  <data name="Frontend.173" xml:space="preserve"><value>新增模型</value></data>
-  <data name="Frontend.174" xml:space="preserve"><value>模型类型</value></data>
-  <data name="Frontend.175" xml:space="preserve"><value>请选择模型类型</value></data>
-  <data name="Frontend.176" xml:space="preserve"><value>模型别名</value></data>
-  <data name="Frontend.177" xml:space="preserve"><value>请输入模型别名</value></data>
-  <data name="Frontend.178" xml:space="preserve"><value>模型名称</value></data>
-  <data name="Frontend.179" xml:space="preserve"><value>请输入模型名称</value></data>
-  <data name="Frontend.180" xml:space="preserve"><value>请输入API Version</value></data>
-  <data name="Frontend.181" xml:space="preserve"><value>请输入API key</value></data>
-  <data name="Frontend.182" xml:space="preserve"><value>请输入End Point</value></data>
-  <data name="Frontend.183" xml:space="preserve"><value>请输入Organization Id</value></data>
-  <data name="Frontend.184" xml:space="preserve"><value>新增靶场</value></data>
-  <data name="Frontend.185" xml:space="preserve"><value>靶场名称</value></data>
-  <data name="Frontend.186" xml:space="preserve"><value>请输入靶场名称</value></data>
-  <data name="Frontend.187" xml:space="preserve"><value>AI 评分标准</value></data>
-  <data name="Frontend.188" xml:space="preserve"><value>请输入期望结果</value></data>
-  <data name="Frontend.189" xml:space="preserve"><value>注意：设置预期结果后，将会根据预期结果自动进行AI评分。</value></data>
-  <data name="Frontend.190" xml:space="preserve"><value>关闭</value></data>
-  <data name="Frontend.191" xml:space="preserve"><value>导入 plugin 文件夹</value></data>
-  <data name="Frontend.192" xml:space="preserve"><value>可直接上传 OpenAI / Semantic Kernel 标准的 plugin 文件夹，自动生成靶场。（需选择选择整个 plugin 文件夹）</value></data>
-  <data name="Frontend.193" xml:space="preserve"><value>将文件夹拖到此处，或</value></data>
-  <data name="Frontend.194" xml:space="preserve"><value>点击上传</value></data>
-  <data name="Frontend.195" xml:space="preserve"><value>重新上传</value></data>
-  <data name="Frontend.196" xml:space="preserve"><value>文件名</value></data>
-  <data name="Frontend.197" xml:space="preserve"><value>文件路径</value></data>
-  <data name="Frontend.198" xml:space="preserve"><value>上 传</value></data>
-  <data name="Frontend.199" xml:space="preserve"><value>导出 plugin 文件夹</value></data>
-  <data name="Frontend.200" xml:space="preserve"><value>靶场和靶道</value></data>
-  <data name="Frontend.201" xml:space="preserve"><value>全选</value></data>
-  <data name="Frontend.202" xml:space="preserve"><value>反选</value></data>
-  <data name="Frontend.203" xml:space="preserve"><value>展开全部</value></data>
-  <data name="Frontend.204" xml:space="preserve"><value>收起全部</value></data>
-  <data name="Frontend.205" xml:space="preserve"><value>已选择:</value></data>
-  <data name="Frontend.206" xml:space="preserve"><value>个靶道</value></data>
-  <data name="Frontend.207" xml:space="preserve"><value>确 认</value></data>
-  <data name="Frontend.208" xml:space="preserve"><value>请选择或输入备注名称</value></data>
-  <data name="Frontend.209" xml:space="preserve"><value>选择已存在的名称时，将把其名称转移到当前靶道，原靶道名称重置为“未设置”</value></data>
-  <data name="Frontend.210" xml:space="preserve"><value>请输入靶道备注名称</value></data>
-  <data name="Frontend.211" xml:space="preserve"><value>对比 Prompt</value></data>
-  <data name="Frontend.212" xml:space="preserve"><value>选择 Prompt A</value></data>
-  <data name="Frontend.213" xml:space="preserve"><value>交换</value></data>
-  <data name="Frontend.214" xml:space="preserve"><value>选择 Prompt B</value></data>
-  <data name="Frontend.215" xml:space="preserve"><value>警告：您正在对比同一个 Prompt！</value></data>
-  <data name="Frontend.216" xml:space="preserve"><value>当前选择的两个 Prompt 是同一个（版本号:</value></data>
-  <data name="Frontend.217" xml:space="preserve"><value>建议选择不同的 Prompt 进行对比以查看差异。</value></data>
-  <data name="Frontend.218" xml:space="preserve"><value>跳转到此 Prompt</value></data>
-  <data name="Frontend.219" xml:space="preserve"><value>字段</value></data>
-  <data name="Frontend.220" xml:space="preserve"><value>复制版本号</value></data>
-  <data name="Frontend.221" xml:space="preserve"><value>靶场</value></data>
-  <data name="Frontend.222" xml:space="preserve"><value>靶道</value></data>
-  <data name="Frontend.223" xml:space="preserve"><value>别名</value></data>
-  <data name="Frontend.224" xml:space="preserve"><value>模型</value></data>
-  <data name="Frontend.225" xml:space="preserve"><value>📄 Prompt 内容对比</value></data>
-  <data name="Frontend.226" xml:space="preserve"><value>有差异</value></data>
-  <data name="Frontend.227" xml:space="preserve"><value>🎯 请求参数对比</value></data>
-  <data name="Frontend.228" xml:space="preserve"><value>参数</value></data>
-  <data name="Frontend.229" xml:space="preserve"><value>(未设置)</value></data>
-  <data name="Frontend.230" xml:space="preserve"><value>Prompt A - 变量配置</value></data>
-  <data name="Frontend.231" xml:space="preserve"><value>Prompt B - 变量配置</value></data>
-  <data name="Frontend.232" xml:space="preserve"><value>两个Prompt都未配置变量</value></data>
-  <data name="Frontend.233" xml:space="preserve"><value>请选择两个 Prompt 进行对比</value></data>
-  <data name="Frontend.234" xml:space="preserve"><value>AI 自动优化 Prompt（Agent）</value></data>
-  <data name="Frontend.235" xml:space="preserve"><value>说明</value></data>
-  <data name="Frontend.236" xml:space="preserve"><value>优化由 Agents 模块中的 PromptCatalyzer 智能体通过多轮对话与工具调用完成；点击开始后请等待对话结束（可能需要数分钟），随后本页将自动选中新版本并可按需打靶、评分。</value></data>
-  <data name="Frontend.237" xml:space="preserve"><value>优化失败</value></data>
-  <data name="Frontend.238" xml:space="preserve"><value>优化需求描述</value></data>
-  <data name="Frontend.239" xml:space="preserve"><value>例如：让回答更具创造性，或者是减少幻觉...</value></data>
-  <data name="Frontend.240" xml:space="preserve"><value>优化后处理</value></data>
-  <data name="Frontend.241" xml:space="preserve"><value>创建后立即打靶</value></data>
-  <data name="Frontend.242" xml:space="preserve"><value>优化完成后自动执行一次打靶测试，验证新 Prompt 的效果</value></data>
-  <data name="Frontend.243" xml:space="preserve"><value>打靶后使用 AI 评分</value></data>
-  <data name="Frontend.244" xml:space="preserve"><value>打靶完成后自动调用 AI 评分功能，快速获得质量反馈</value></data>
-  <data name="Frontend.245" xml:space="preserve"><value>开始优化</value></data>
-  <data name="Frontend.246" xml:space="preserve"><value>🚀 首次使用：初始化 Prompt 优化功能</value></data>
-  <data name="Frontend.247" xml:space="preserve"><value>欢迎使用 AI 自动优化功能！</value></data>
-  <data name="Frontend.248" xml:space="preserve"><value>首次使用需要初始化 PromptCatalyzer Agent。</value></data>
-  <data name="Frontend.249" xml:space="preserve"><value>请选择一个 AI Model 来驱动优化功能，系统将自动创建相关资源。</value></data>
-  <data name="Frontend.250" xml:space="preserve"><value>选择 AI Model</value></data>
-  <data name="Frontend.251" xml:space="preserve"><value>请选择 AI Model</value></data>
-  <data name="Frontend.252" xml:space="preserve"><value>提示：</value></data>
-  <data name="Frontend.253" xml:space="preserve"><value>默认参数预览</value></data>
-  <data name="Frontend.254" xml:space="preserve"><value>控制输出的随机性：0.0-1.0，越低越精确，越高越创意</value></data>
-  <data name="Frontend.255" xml:space="preserve"><value>(平衡模式)</value></data>
-  <data name="Frontend.256" xml:space="preserve"><value>核采样参数：0.0-1.0，控制词汇选择范围</value></data>
-  <data name="Frontend.257" xml:space="preserve"><value>(高质量)</value></data>
-  <data name="Frontend.258" xml:space="preserve"><value>生成的最大 token 数量，影响输出长度</value></data>
-  <data name="Frontend.259" xml:space="preserve"><value>(标准长度)</value></data>
-  <data name="Frontend.260" xml:space="preserve"><value>频率惩罚：-2.0 到 2.0，减少重复词汇</value></data>
-  <data name="Frontend.261" xml:space="preserve"><value>(不惩罚)</value></data>
-  <data name="Frontend.262" xml:space="preserve"><value>ℹ️ 这些是初始参数，创建后可以在 PromptRange 中调整</value></data>
-  <data name="Frontend.263" xml:space="preserve"><value>初始化中...</value></data>
-  <data name="Frontend.264" xml:space="preserve"><value>开始初始化</value></data>
-  <data name="Frontend.265" xml:space="preserve"><value>打靶</value></data>
-  <data name="Frontend.266" xml:space="preserve"><value>连发</value></data>
-  <data name="Frontend.267" xml:space="preserve"><value>草稿</value></data>
-  <data name="Frontend.268" xml:space="preserve"><value>保存成功！</value></data>
-  <data name="Frontend.269" xml:space="preserve"><value>删除成功</value></data>
-  <data name="Frontend.270" xml:space="preserve"><value>删除失败</value></data>
-  <data name="Frontend.271" xml:space="preserve"><value>已取消删除</value></data>
-  <data name="Frontend.272" xml:space="preserve"><value>添加成功！</value></data>
-  <data name="Frontend.273" xml:space="preserve"><value>请求失败</value></data>
-  <data name="Frontend.274" xml:space="preserve"><value>未知错误</value></data>
-  <data name="Frontend.275" xml:space="preserve"><value>复制失败</value></data>
-  <data name="Frontend.276" xml:space="preserve"><value>上传成功</value></data>
-  <data name="Frontend.277" xml:space="preserve"><value>上传文件大小不能超过 80MB!</value></data>
-  <data name="Frontend.278" xml:space="preserve"><value>请至少选择一个靶场</value></data>
-  <data name="Frontend.279" xml:space="preserve"><value>请至少选择一个靶道</value></data>
-  <data name="Frontend.280" xml:space="preserve"><value>导出成功！</value></data>
-  <data name="Frontend.281" xml:space="preserve"><value>导出失败</value></data>
-  <data name="Frontend.282" xml:space="preserve"><value>导出过程中发生错误</value></data>
-  <data name="Frontend.283" xml:space="preserve"><value>刷新完成！</value></data>
-  <data name="Frontend.284" xml:space="preserve"><value>请先选择一个Prompt！</value></data>
-  <data name="Frontend.285" xml:space="preserve"><value>请选择一个模型！</value></data>
-  <data name="Frontend.286" xml:space="preserve"><value>请选择一个靶道！</value></data>
-  <data name="Frontend.287" xml:space="preserve"><value>请输入内容！</value></data>
-  <data name="Frontend.288" xml:space="preserve"><value>请选择文件夹</value></data>
-  <data name="Frontend.289" xml:space="preserve"><value>请先上传音频文件</value></data>
-  <data name="Frontend.290" xml:space="preserve"><value>读取音频失败：</value></data>
-  <data name="Frontend.291" xml:space="preserve"><value>向量库列表加载失败</value></data>
-  <data name="Frontend.292" xml:space="preserve"><value>Embedding 查询失败</value></data>
-  <data name="Frontend.293" xml:space="preserve"><value>继续聊天失败</value></data>
-  <data name="Frontend.294" xml:space="preserve"><value>加载对话历史失败</value></data>
-  <data name="Frontend.295" xml:space="preserve"><value>更新反馈失败</value></data>
-  <data name="Frontend.296" xml:space="preserve"><value>消息ID无效，请刷新页面后重试</value></data>
-  <data name="Frontend.297" xml:space="preserve"><value>未找到对应的对话记录，请刷新页面后重试</value></data>
-  <data name="Frontend.298" xml:space="preserve"><value>当前浏览器不支持流式输出，已切换为普通模式</value></data>
-  <data name="Frontend.299" xml:space="preserve"><value>实时流连接失败，已自动切换为普通模式（刷新页面可重试）</value></data>
-  <data name="Frontend.300" xml:space="preserve"><value>流式输出</value></data>
-  <data name="Frontend.301" xml:space="preserve"><value>Agent 已完成，正在刷新靶道并选中新版本…</value></data>
-  <data name="Frontend.302" xml:space="preserve"><value>Agent 正在推理并调用工具（可能需要数分钟，请勿关闭此窗口）…</value></data>
-  <data name="Frontend.303" xml:space="preserve"><value>代码复制成功</value></data>
-  <data name="Frontend.304" xml:space="preserve"><value>代码复制失败</value></data>
-  <data name="Frontend.305" xml:space="preserve"><value>Copy</value></data>
-  <data name="Frontend.306" xml:space="preserve"><value>个可用 Model</value></data>
-  <data name="Frontend.307" xml:space="preserve"><value>优化未成功</value></data>
-  <data name="Frontend.308" xml:space="preserve"><value>优化正在进行中，请勿重复点击</value></data>
-  <data name="Frontend.309" xml:space="preserve"><value>不保存</value></data>
-  <data name="Frontend.310" xml:space="preserve"><value>保存草稿</value></data>
-  <data name="Frontend.311" xml:space="preserve"><value>刚刚</value></data>
-  <data name="Frontend.312" xml:space="preserve"><value>分钟前</value></data>
-  <data name="Frontend.313" xml:space="preserve"><value>小时前</value></data>
-  <data name="Frontend.314" xml:space="preserve"><value>天前</value></data>
-  <data name="Frontend.315" xml:space="preserve"><value>创建失败，请确认 AgentsManager 模块已安装</value></data>
-  <data name="Frontend.316" xml:space="preserve"><value>创建智能体失败</value></data>
-  <data name="Frontend.317" xml:space="preserve"><value>初始化失败</value></data>
-  <data name="Frontend.318" xml:space="preserve"><value>初始化成功，刷新页面数据...</value></data>
-  <data name="Frontend.319" xml:space="preserve"><value>加载 AI Model 列表失败</value></data>
-  <data name="Frontend.320" xml:space="preserve"><value>已创建</value></data>
-  <data name="Frontend.321" xml:space="preserve"><value>对话已追加</value></data>
-  <data name="Frontend.322" xml:space="preserve"><value>对话记录ID无效，请刷新页面后重试</value></data>
-  <data name="Frontend.323" xml:space="preserve"><value>导出 plugins 失败</value></data>
-  <data name="Frontend.324" xml:space="preserve"><value>导出 plugins 确认</value></data>
-  <data name="Frontend.325" xml:space="preserve"><value>已全选所有靶道</value></data>
-  <data name="Frontend.326" xml:space="preserve"><value>已反选</value></data>
-  <data name="Frontend.327" xml:space="preserve"><value>已清空所有选择</value></data>
-  <data name="Frontend.328" xml:space="preserve"><value>已取消反馈</value></data>
-  <data name="Frontend.329" xml:space="preserve"><value>已取消操作</value></data>
-  <data name="Frontend.330" xml:space="preserve"><value>开启后，打靶/连发/继续对话会实时输出；关闭后使用整块输出。</value></data>
-  <data name="Frontend.331" xml:space="preserve"><value>当前 Prompt 尚无平均分数</value></data>
-  <data name="Frontend.332" xml:space="preserve"><value>当前靶场还没有进行过打靶，请打靶后再来看吧！</value></data>
-  <data name="Frontend.333" xml:space="preserve"><value>您的数据已经修改，是否保存为草稿？</value></data>
-  <data name="Frontend.334" xml:space="preserve"><value>您确定要离开本页面吗？</value></data>
-  <data name="Frontend.335" xml:space="preserve"><value>是否保存为草稿</value></data>
-  <data name="Frontend.336" xml:space="preserve"><value>留在页面</value></data>
-  <data name="Frontend.337" xml:space="preserve"><value>惩罚已出现的词</value></data>
-  <data name="Frontend.338" xml:space="preserve"><value>惩罚频繁出现的词</value></data>
-  <data name="Frontend.339" xml:space="preserve"><value>控制词的选择范围，值越高，生成的文本将包含更多的不常见词汇</value></data>
-  <data name="Frontend.340" xml:space="preserve"><value>设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成。（输入的内容将会根据英文逗号进行分割）</value></data>
-  <data name="Frontend.341" xml:space="preserve"><value>采样温度，较高的值如0.8会使输出更加随机，而较低的值如0.2则会使其输出更具有确定性</value></data>
-  <data name="Frontend.342" xml:space="preserve"><value>请求与返回的Token总数或生成文本的最大长度，具体请参考API文档！</value></data>
-  <data name="Frontend.343" xml:space="preserve"><value>提示</value></data>
-  <data name="Frontend.344" xml:space="preserve"><value>提高 Prompt 的质量和效果</value></data>
-  <data name="Frontend.345" xml:space="preserve"><value>敬请期待</value></data>
-  <data name="Frontend.346" xml:space="preserve"><value>无法获取当前 Prompt 信息</value></data>
-  <data name="Frontend.347" xml:space="preserve"><value>无法获取当前 Prompt 的详细信息</value></data>
-  <data name="Frontend.348" xml:space="preserve"><value>无法获取当前Prompt的版本号(Prompt Code)</value></data>
-  <data name="Frontend.349" xml:space="preserve"><value>无法获取版本号</value></data>
-  <data name="Frontend.350" xml:space="preserve"><value>无法获取有效分数，跳过优化提示</value></data>
-  <data name="Frontend.351" xml:space="preserve"><value>未命名</value></data>
-  <data name="Frontend.352" xml:space="preserve"><value>未命名向量库</value></data>
-  <data name="Frontend.353" xml:space="preserve"><value>未知战术</value></data>
-  <data name="Frontend.354" xml:space="preserve"><value>未知靶场</value></data>
-  <data name="Frontend.355" xml:space="preserve"><value>未知靶道</value></data>
-  <data name="Frontend.356" xml:space="preserve"><value>未设置</value></data>
-  <data name="Frontend.357" xml:space="preserve"><value>未返回有效的优化结果</value></data>
-  <data name="Frontend.358" xml:space="preserve"><value>未配置预期结果，已跳过 AI 评分</value></data>
-  <data name="Frontend.359" xml:space="preserve"><value>模型已被删除，请选择模型后重新打靶！</value></data>
-  <data name="Frontend.360" xml:space="preserve"><value>正在 AI 评分（与手动 AI 评分相同）…</value></data>
-  <data name="Frontend.361" xml:space="preserve"><value>正在打靶（与手动打靶相同，可在主界面查看输出）…</value></data>
-  <data name="Frontend.362" xml:space="preserve"><value>此操作将删除该期望结果, 是否继续?</value></data>
-  <data name="Frontend.363" xml:space="preserve"><value>此操作将永久删除该靶场下的所有内容</value></data>
-  <data name="Frontend.364" xml:space="preserve"><value>此操作将永久删除该靶道</value></data>
-  <data name="Frontend.365" xml:space="preserve"><value>此操作将永久删除该靶道版本, 是否继续?</value></data>
-  <data name="Frontend.366" xml:space="preserve"><value>此操作将重置该靶道名称</value></data>
-  <data name="Frontend.367" xml:space="preserve"><value>没有找到可用的 AI Model，请先在 AIKernel 模块中配置 Chat 类型的 Model</value></data>
-  <data name="Frontend.368" xml:space="preserve"><value>自动打靶未返回输出记录，已跳过 AI 评分；可在主界面手动打靶后再评分</value></data>
-  <data name="Frontend.369" xml:space="preserve"><value>请设置预 AI 评分标准</value></data>
-  <data name="Frontend.370" xml:space="preserve"><value>请输入别名</value></data>
-  <data name="Frontend.371" xml:space="preserve"><value>请输入前缀</value></data>
-  <data name="Frontend.372" xml:space="preserve"><value>请输入后缀</value></data>
-  <data name="Frontend.373" xml:space="preserve"><value>请输入对话内容</value></data>
-  <data name="Frontend.374" xml:space="preserve"><value>请输入新的靶道名称</value></data>
-  <data name="Frontend.375" xml:space="preserve"><value>请输入要查询的文本</value></data>
-  <data name="Frontend.376" xml:space="preserve"><value>请选择 VectorDB</value></data>
-  <data name="Frontend.377" xml:space="preserve"><value>请选择一个 AI Model</value></data>
-  <data name="Frontend.378" xml:space="preserve"><value>请选择战术</value></data>
-  <data name="Frontend.379" xml:space="preserve"><value>请选择打靶测试模式</value></data>
-  <data name="Frontend.380" xml:space="preserve"><value>请选择模型！</value></data>
-  <data name="Frontend.381" xml:space="preserve"><value>请选择靶道后再复制信息！</value></data>
-  <data name="Frontend.382" xml:space="preserve"><value>输入Prompt</value></data>
-  <data name="Frontend.383" xml:space="preserve"><value>打靶测试</value></data>
-  <data name="Frontend.384" xml:space="preserve"><value>预期结果</value></data>
-  <data name="Frontend.385" xml:space="preserve"><value>语音识别输入</value></data>
-  <data name="Frontend.386" xml:space="preserve"><value>请选择靶道以确定 PromptCode</value></data>
-  <data name="Frontend.387" xml:space="preserve"><value>立即优化</value></data>
-  <data name="Frontend.388" xml:space="preserve"><value>暂不优化</value></data>
-  <data name="Frontend.389" xml:space="preserve"><value>确认创建</value></data>
-  <data name="Frontend.390" xml:space="preserve"><value>继续创建</value></data>
-  <data name="Frontend.391" xml:space="preserve"><value>智能体「{0}」创建成功！</value></data>
-  <data name="Frontend.392" xml:space="preserve"><value>复制【{0}】成功</value></data>
-  <data name="Frontend.393" xml:space="preserve"><value>复制{0}【{1}】成功</value></data>
-  <data name="Frontend.394" xml:space="preserve"><value>当前 PromptCode（{0}）已有 {1} 个智能体使用。是否继续创建新智能体？</value></data>
-  <data name="Frontend.395" xml:space="preserve"><value>当前 Prompt 的平均分为 {0} 分，建议使用 AI 自动优化功能来改进。点击"优化"按钮开始。</value></data>
-  <data name="Frontend.396" xml:space="preserve"><value>当前 Prompt 的{0}为 {1} 分（低于 {2} 分）。是否使用 AI 自动优化功能来改进 Prompt？</value></data>
-  <data name="Frontend.397" xml:space="preserve"><value>✅ 初始化成功！已创建 PromptCatalyzer Agent，PromptCode: {0}</value></data>
-  <data name="Frontend.398" xml:space="preserve"><value>✅ 优化完成&#10;&#10;新 Prompt：{0}</value></data>
-  <data name="Frontend.399" xml:space="preserve"><value>当前 Prompt 平均分数: {0}</value></data>
-  <data name="Frontend.400" xml:space="preserve"><value>图片已生成，但未获得可访问地址。</value></data>
-  <data name="Frontend.401" xml:space="preserve">
+  <data name="Frontend.PromptRange.SelectRange" xml:space="preserve"><value>选择靶场</value></data>
+  <data name="Frontend.PromptRange.ExportPlugins" xml:space="preserve"><value>导出 plugins</value></data>
+  <data name="Frontend.PromptRange.ImportPlugins" xml:space="preserve"><value>导入 plugins</value></data>
+  <data name="Frontend.PromptRange.AddRange" xml:space="preserve"><value>新增靶场</value></data>
+  <data name="Frontend.PromptRange.SelectARange" xml:space="preserve"><value>请选择靶场</value></data>
+  <data name="Frontend.PromptRange.RenameRange" xml:space="preserve"><value>重命名靶场</value></data>
+  <data name="Frontend.PromptRange.Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Frontend.PromptRange.SelectTactic" xml:space="preserve"><value>选择靶道</value></data>
+  <data name="Frontend.PromptRange.Optimize" xml:space="preserve"><value>优化</value></data>
+  <data name="Frontend.PromptRange.Map" xml:space="preserve"><value>导图</value></data>
+  <data name="Frontend.PromptRange.CreateAgent" xml:space="preserve"><value>创建智能体</value></data>
+  <data name="Frontend.PromptRange.SelectATactic" xml:space="preserve"><value>请选择靶道</value></data>
+  <data name="Frontend.PromptRange.SelectARangeFirst" xml:space="preserve"><value>请先选择靶场</value></data>
+  <data name="Frontend.PromptRange.Compare" xml:space="preserve"><value>对比</value></data>
+  <data name="Frontend.PromptRange.ChangeTacticName" xml:space="preserve"><value>修改靶道名称</value></data>
+  <data name="Frontend.PromptRange.SetTacticName" xml:space="preserve"><value>设置靶道名称</value></data>
+  <data name="Frontend.PromptRange.ResetName" xml:space="preserve"><value>重置名称</value></data>
+  <data name="Frontend.PromptRange.SelectModel" xml:space="preserve"><value>选择模型</value></data>
+  <data name="Frontend.PromptRange.Refresh" xml:space="preserve"><value>刷新</value></data>
+  <data name="Frontend.PromptRange.ManageModels" xml:space="preserve"><value>管理模型</value></data>
+  <data name="Frontend.PromptRange.PleaseSelectAModel" xml:space="preserve"><value>请选择模型</value></data>
+  <data name="Frontend.PromptRange.UnnamedModel" xml:space="preserve"><value>未命名模型</value></data>
+  <data name="Frontend.PromptRange.CreateOrSelectARangeBeforeContinuing" xml:space="preserve"><value>请新建或选择靶场后再进行操作</value></data>
+  <data name="Frontend.PromptRange.BurstModeIsOnAndTheContentIsLocked" xml:space="preserve"><value>当前处于连发模式，内容已锁定</value></data>
+  <data name="Frontend.PromptRange.SwitchToAnotherModeToMakeChanges" xml:space="preserve"><value>如需修改，请切换其他模式</value></data>
+  <data name="Frontend.PromptRange.ModelParameters" xml:space="preserve"><value>模型参数</value></data>
+  <data name="Frontend.PromptRange.Reset" xml:space="preserve"><value>重置</value></data>
+  <data name="Frontend.PromptRange.SetAIScoringCriteria" xml:space="preserve"><value>设置 AI 评分标准</value></data>
+  <data name="Frontend.PromptRange.On" xml:space="preserve"><value>开</value></data>
+  <data name="Frontend.PromptRange.Off" xml:space="preserve"><value>关</value></data>
+  <data name="Frontend.PromptRange.DragToAdjustWidthDoubleClickToRestoreTheDefault" xml:space="preserve"><value>拖动调整宽度 | 双击还原默认</value></data>
+  <data name="Frontend.PromptRange.RequestParameters" xml:space="preserve"><value>请求参数</value></data>
+  <data name="Frontend.PromptRange.AudioFile" xml:space="preserve"><value>音频文件</value></data>
+  <data name="Frontend.PromptRange.UploadAudio" xml:space="preserve"><value>上传音频</value></data>
+  <data name="Frontend.PromptRange.Clear" xml:space="preserve"><value>清空</value></data>
+  <data name="Frontend.PromptRange.SupportedFormatsFlacMFourAMpThreeMpFourMpegMpga" xml:space="preserve"><value>支持格式：flac / m4a / mp3 / mp4 / mpeg / mpga / oga / ogg / wav / webm</value></data>
+  <data name="Frontend.PromptRange.RecognitionLanguage" xml:space="preserve"><value>识别语言</value></data>
+  <data name="Frontend.PromptRange.OptionalForExampleZhEn" xml:space="preserve"><value>可空，例如 zh / en</value></data>
+  <data name="Frontend.PromptRange.Voice" xml:space="preserve"><value>音色</value></data>
+  <data name="Frontend.PromptRange.Format" xml:space="preserve"><value>格式</value></data>
+  <data name="Frontend.PromptRange.SelectOutputFormat" xml:space="preserve"><value>选择输出格式</value></data>
+  <data name="Frontend.PromptRange.Speed" xml:space="preserve"><value>语速</value></data>
+  <data name="Frontend.PromptRange.SelectAVectorDatabase" xml:space="preserve"><value>请选择向量库</value></data>
+  <data name="Frontend.PromptRange.OptionalAutoGenerated" xml:space="preserve"><value>可空，自动生成</value></data>
+  <data name="Frontend.PromptRange.TestQuery" xml:space="preserve"><value>测试查询</value></data>
+  <data name="Frontend.PromptRange.OptionalAutoQueryAfterTheFirstRun" xml:space="preserve"><value>可空，首次打靶后自动查询</value></data>
+  <data name="Frontend.PromptRange.EnterTextToSynthesize" xml:space="preserve"><value>请输入待合成语音的文本</value></data>
+  <data name="Frontend.PromptRange.EnterPromptContent" xml:space="preserve"><value>请输入Prompt内容</value></data>
+  <data name="Frontend.PromptRange.Detected" xml:space="preserve"><value>检测到</value></data>
+  <data name="Frontend.PromptRange.Variables" xml:space="preserve"><value>个变量</value></data>
+  <data name="Frontend.PromptRange.Defined" xml:space="preserve"><value>已定义</value></data>
+  <data name="Frontend.PromptRange.Undefined" xml:space="preserve"><value>未定义</value></data>
+  <data name="Frontend.PromptRange.EnterNotes" xml:space="preserve"><value>请输入备注</value></data>
+  <data name="Frontend.PromptRange.BurstCount" xml:space="preserve"><value>连发次数：</value></data>
+  <data name="Frontend.PromptRange.PromptRequestParameters" xml:space="preserve"><value>Prompt请求参数</value></data>
+  <data name="Frontend.PromptRange.Prefix" xml:space="preserve"><value>前缀</value></data>
+  <data name="Frontend.PromptRange.Suffix" xml:space="preserve"><value>后缀</value></data>
+  <data name="Frontend.PromptRange.VariableName" xml:space="preserve"><value>变量名</value></data>
+  <data name="Frontend.PromptRange.EnterAVariableName" xml:space="preserve"><value>请输入变量名</value></data>
+  <data name="Frontend.PromptRange.VariableValue" xml:space="preserve"><value>变量值</value></data>
+  <data name="Frontend.PromptRange.EnterAVariableValue" xml:space="preserve"><value>请输入变量值</value></data>
+  <data name="Frontend.PromptRange.Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="Frontend.PromptRange.AddVariable" xml:space="preserve"><value>新增变量</value></data>
+  <data name="Frontend.PromptRange.PromptVersion" xml:space="preserve"><value>Prompt 版本:</value></data>
+  <data name="Frontend.PromptRange.Range" xml:space="preserve"><value>靶场:</value></data>
+  <data name="Frontend.PromptRange.Tactic" xml:space="preserve"><value>靶道:</value></data>
+  <data name="Frontend.PromptRange.Aim" xml:space="preserve"><value>瞄准:</value></data>
+  <data name="Frontend.PromptRange.Output" xml:space="preserve"><value>输出</value></data>
+  <data name="Frontend.PromptRange.AverageScore" xml:space="preserve"><value>平均分:</value></data>
+  <data name="Frontend.PromptRange.HighestScore" xml:space="preserve"><value>最高分:</value></data>
+  <data name="Frontend.PromptRange.ElapsedMs" xml:space="preserve"><value>耗时(毫秒):</value></data>
+  <data name="Frontend.PromptRange.CopyFormattedHTMLCode" xml:space="preserve"><value>复制带格式的 HTML 代码</value></data>
+  <data name="Frontend.PromptRange.CopyRawContentForExampleMarkdownMarkersWillBeCopied" xml:space="preserve"><value>复制原始内容（例如将复制 markdown 标记）</value></data>
+  <data name="Frontend.PromptRange.Raw" xml:space="preserve"><value>原始</value></data>
+  <data name="Frontend.PromptRange.TheImageWasGeneratedButNoAccessibleAddressWasReturned" xml:space="preserve"><value>图片已生成，但未获得可访问地址</value></data>
+  <data name="Frontend.PromptRange.Storage" xml:space="preserve"><value>存储：</value></data>
+  <data name="Frontend.PromptRange.ViewOriginalImage" xml:space="preserve"><value>查看原图</value></data>
+  <data name="Frontend.PromptRange.TheAudioWasGeneratedButNoAccessibleAddressWasReturned" xml:space="preserve"><value>音频已生成，但未获得可访问地址</value></data>
+  <data name="Frontend.PromptRange.EnterQueryTextForVectorSearch" xml:space="preserve"><value>输入查询文本进行向量检索</value></data>
+  <data name="Frontend.PromptRange.Search" xml:space="preserve"><value>查询</value></data>
+  <data name="Frontend.PromptRange.Input" xml:space="preserve"><value>输入</value></data>
+  <data name="Frontend.PromptRange.AIScore" xml:space="preserve"><value>AI评分:</value></data>
+  <data name="Frontend.PromptRange.AIScoring" xml:space="preserve"><value>AI 评分中...</value></data>
+  <data name="Frontend.PromptRange.ManualScore" xml:space="preserve"><value>手动评分:</value></data>
+  <data name="Frontend.PromptRange.ContinueChat" xml:space="preserve"><value>继续聊天</value></data>
+  <data name="Frontend.PromptRange.AIScoreAlternate" xml:space="preserve"><value>AI评分</value></data>
+  <data name="Frontend.PromptRange.ManualScoreAlternate" xml:space="preserve"><value>手动评分</value></data>
+  <data name="Frontend.PromptRange.PleaseEnter" xml:space="preserve"><value>请输入</value></data>
+  <data name="Frontend.PromptRange.StartScoring" xml:space="preserve"><value>开始打分</value></data>
+  <data name="Frontend.PromptRange.Save" xml:space="preserve"><value>保存</value></data>
+  <data name="Frontend.PromptRange.Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Frontend.PromptRange.NoGeneratedResults" xml:space="preserve"><value>暂无生成结果</value></data>
+  <data name="Frontend.PromptRange.Points" xml:space="preserve"><value>分</value></data>
+  <data name="Frontend.PromptRange.ScoreTrend" xml:space="preserve"><value>分数趋势图</value></data>
+  <data name="Frontend.PromptRange.OnlyOneItemHasAScoreAChartCannotDrawALine" xml:space="preserve"><value>只有一个有分数，图表无法渲染一个数构成的折线</value></data>
+  <data name="Frontend.PromptRange.AverageScoreAlternate" xml:space="preserve"><value>平均分</value></data>
+  <data name="Frontend.PromptRange.HighestScoreAlternate" xml:space="preserve"><value>最高分</value></data>
+  <data name="Frontend.PromptRange.NoData" xml:space="preserve"><value>暂无数据</value></data>
+  <data name="Frontend.PromptRange.VersionHistory" xml:space="preserve"><value>版本记录</value></data>
+  <data name="Frontend.PromptRange.EnterAName" xml:space="preserve"><value>请输入名称</value></data>
+  <data name="Frontend.PromptRange.Public" xml:space="preserve"><value>是否公开</value></data>
+  <data name="Frontend.PromptRange.Edit" xml:space="preserve"><value>编辑</value></data>
+  <data name="Frontend.PromptRange.GenerateCode" xml:space="preserve"><value>生成代码</value></data>
+  <data name="Frontend.PromptRange.TacticSelection" xml:space="preserve"><value>战术选择</value></data>
+  <data name="Frontend.PromptRange.RunMode" xml:space="preserve"><value>打靶模式</value></data>
+  <data name="Frontend.PromptRange.TacticAlternate" xml:space="preserve"><value>战术</value></data>
+  <data name="Frontend.PromptRange.CreateTopLevelTactic" xml:space="preserve"><value>创建顶级战术</value></data>
+  <data name="Frontend.PromptRange.WillCreate" xml:space="preserve"><value>将创建：</value></data>
+  <data name="Frontend.PromptRange.Current" xml:space="preserve"><value>当前：</value></data>
+  <data name="Frontend.PromptRange.New" xml:space="preserve"><value>(新)</value></data>
+  <data name="Frontend.PromptRange.CreateParallelTactic" xml:space="preserve"><value>创建平行战术</value></data>
+  <data name="Frontend.PromptRange.CreateChildTactic" xml:space="preserve"><value>创建子战术</value></data>
+  <data name="Frontend.PromptRange.ReAim" xml:space="preserve"><value>重新瞄准</value></data>
+  <data name="Frontend.PromptRange.ChatMode" xml:space="preserve"><value>对话模式</value></data>
+  <data name="Frontend.PromptRange.DirectTest" xml:space="preserve"><value>直接测试</value></data>
+  <data name="Frontend.PromptRange.EnterItAsAConversationThenRun" xml:space="preserve"><value>以对话方式输入，输入后进行打靶</value></data>
+  <data name="Frontend.PromptRange.TestDirectlyWithTheCurrentPrompt" xml:space="preserve"><value>直接使用当前的 Prompt 进行测试</value></data>
+  <data name="Frontend.PromptRange.ContinueChatModeIsLockedToConversationMode" xml:space="preserve"><value>继续聊天模式已锁定为对话模式</value></data>
+  <data name="Frontend.PromptRange.TheCurrentModelDoesNotSupportConversationModeAndWillRunAs" xml:space="preserve"><value>当前模型不支持对话模式，将按直接测试执行</value></data>
+  <data name="Frontend.PromptRange.ConversationHistory" xml:space="preserve"><value>对话历史</value></data>
+  <data name="Frontend.PromptRange.Collapse" xml:space="preserve"><value>收起</value></data>
+  <data name="Frontend.PromptRange.Expand" xml:space="preserve"><value>展开</value></data>
+  <data name="Frontend.PromptRange.ViewThePromptUsedByTheCurrentConversation" xml:space="preserve"><value>查看当前对话使用的 Prompt</value></data>
+  <data name="Frontend.PromptRange.Loading" xml:space="preserve"><value>加载中...</value></data>
+  <data name="Frontend.PromptRange.TotalToken" xml:space="preserve"><value>Token 总量：</value></data>
+  <data name="Frontend.PromptRange.NoConversationHistory" xml:space="preserve"><value>暂无对话记录</value></data>
+  <data name="Frontend.PromptRange.User" xml:space="preserve"><value>用户</value></data>
+  <data name="Frontend.PromptRange.Assistant" xml:space="preserve"><value>助手</value></data>
+  <data name="Frontend.PromptRange.Like" xml:space="preserve"><value>点赞</value></data>
+  <data name="Frontend.PromptRange.Liked" xml:space="preserve"><value>已点赞</value></data>
+  <data name="Frontend.PromptRange.Dislike" xml:space="preserve"><value>点踩</value></data>
+  <data name="Frontend.PromptRange.Disliked" xml:space="preserve"><value>已点踩</value></data>
+  <data name="Frontend.PromptRange.Saving" xml:space="preserve"><value>正在保存...</value></data>
+  <data name="Frontend.PromptRange.ConversationInput" xml:space="preserve"><value>对话输入</value></data>
+  <data name="Frontend.PromptRange.EnterYourNextMessageCtrlEnterCmdEnterToSend" xml:space="preserve"><value>请输入您的下一句话... (Ctrl+Enter / Cmd+Enter 发送)</value></data>
+  <data name="Frontend.PromptRange.EnterYourQuestionCtrlEnterCmdEnterToSend" xml:space="preserve"><value>请输入您的问题... (Ctrl+Enter / Cmd+Enter 发送)</value></data>
+  <data name="Frontend.PromptRange.EnteredContentWillBeAppendedToTheExistingConversation" xml:space="preserve"><value>输入内容将追加到现有对话中</value></data>
+  <data name="Frontend.PromptRange.TheEnteredContentIsPassedToTheBackendAPIAsTheUserMessage" xml:space="preserve"><value>输入内容将作为 userMessage 参数传递到后端接口</value></data>
+  <data name="Frontend.PromptRange.ShortcutCtrlEnterWindowsCmdEnterMac" xml:space="preserve"><value>快捷键：Ctrl+Enter (Windows) / Cmd+Enter (Mac)</value></data>
+  <data name="Frontend.PromptRange.Run" xml:space="preserve"><value>发 射</value></data>
+  <data name="Frontend.PromptRange.ThreeDStructureMap" xml:space="preserve"><value>3D 结构导图</value></data>
+  <data name="Frontend.PromptRange.ResetView" xml:space="preserve"><value>重置视角</value></data>
+  <data name="Frontend.PromptRange.FullScreen" xml:space="preserve"><value>全屏</value></data>
+  <data name="Frontend.PromptRange.FitView" xml:space="preserve"><value>适应视图</value></data>
+  <data name="Frontend.PromptRange.MouseActions" xml:space="preserve"><value>🖱️ 鼠标操作</value></data>
+  <data name="Frontend.PromptRange.LeftDragRotateView" xml:space="preserve"><value>左键拖拽：旋转视角</value></data>
+  <data name="Frontend.PromptRange.RightDragPanScene" xml:space="preserve"><value>右键拖拽：平移场景</value></data>
+  <data name="Frontend.PromptRange.MouseWheelZoom" xml:space="preserve"><value>滚轮：缩放</value></data>
+  <data name="Frontend.PromptRange.ClickNodeHighlight" xml:space="preserve"><value>单击节点：高亮</value></data>
+  <data name="Frontend.PromptRange.DoubleClickNodeOpenTactic" xml:space="preserve"><value>双击节点：跳转靶道</value></data>
+  <data name="Frontend.PromptRange.KeyboardShortcuts" xml:space="preserve"><value>⌨️ 键盘快捷键</value></data>
+  <data name="Frontend.PromptRange.WASDPanForwardBackwardLeftAndRight" xml:space="preserve"><value>W / A / S / D：前后左右平移</value></data>
+  <data name="Frontend.PromptRange.QEDepthPanForwardBackward" xml:space="preserve"><value>Q / E：深度平移（前后）</value></data>
+  <data name="Frontend.PromptRange.RResetView" xml:space="preserve"><value>R：重置视角</value></data>
+  <data name="Frontend.PromptRange.FFitView" xml:space="preserve"><value>F：适应视图</value></data>
+  <data name="Frontend.PromptRange.ZoomInOut" xml:space="preserve"><value>+/-：放大/缩小</value></data>
+  <data name="Frontend.PromptRange.Shortcuts" xml:space="preserve"><value>快捷键</value></data>
+  <data name="Frontend.PromptRange.Nodes" xml:space="preserve"><value>个节点</value></data>
+  <data name="Frontend.PromptRange.CreateAnAgentFromAPromptCode" xml:space="preserve"><value>从 PromptCode 创建智能体</value></data>
+  <data name="Frontend.PromptRange.AgentName" xml:space="preserve"><value>智能体名称</value></data>
+  <data name="Frontend.PromptRange.EnterAgentName" xml:space="preserve"><value>请输入智能体名称</value></data>
+  <data name="Frontend.PromptRange.Scope" xml:space="preserve"><value>覆盖范围</value></data>
+  <data name="Frontend.PromptRange.RangeLevel" xml:space="preserve"><value>靶场级别</value></data>
+  <data name="Frontend.PromptRange.PromptCodeContainsOnlyTheRangeNameAndMatchesEveryTacticInThat" xml:space="preserve"><value>PromptCode 只包含靶场名称，匹配该靶场下的所有靶道</value></data>
+  <data name="Frontend.PromptRange.TacticLevel" xml:space="preserve"><value>靶道级别</value></data>
+  <data name="Frontend.PromptRange.PromptCodeIncludesTheRangeNameAndTacticNumberAndMatchesEveryAim" xml:space="preserve"><value>PromptCode 包含靶场名称和战术编号，匹配当前战术下所有瞄准版本</value></data>
+  <data name="Frontend.PromptRange.ExactVersion" xml:space="preserve"><value>完整定位</value></data>
+  <data name="Frontend.PromptRange.PromptCodeIsTheFullVersionNumberAndMatchesTheCurrentTacticExactly" xml:space="preserve"><value>PromptCode 为完整版本号，精确匹配当前靶道</value></data>
+  <data name="Frontend.PromptRange.Description" xml:space="preserve"><value>说明</value></data>
+  <data name="Frontend.PromptRange.DescriptionOfTheNewAgentOptional" xml:space="preserve"><value>对新智能体的说明（可选）</value></data>
+  <data name="Frontend.PromptRange.FunctionCallNamesSeparatedByCommasOptional" xml:space="preserve"><value>Function Call 名称，多个用逗号分隔（可选）</value></data>
+  <data name="Frontend.PromptRange.Create" xml:space="preserve"><value>创 建</value></data>
+  <data name="Frontend.PromptRange.AddModel" xml:space="preserve"><value>新增模型</value></data>
+  <data name="Frontend.PromptRange.ModelType" xml:space="preserve"><value>模型类型</value></data>
+  <data name="Frontend.PromptRange.SelectAModelType" xml:space="preserve"><value>请选择模型类型</value></data>
+  <data name="Frontend.PromptRange.ModelAlias" xml:space="preserve"><value>模型别名</value></data>
+  <data name="Frontend.PromptRange.EnterModelAlias" xml:space="preserve"><value>请输入模型别名</value></data>
+  <data name="Frontend.PromptRange.ModelName" xml:space="preserve"><value>模型名称</value></data>
+  <data name="Frontend.PromptRange.EnterModelName" xml:space="preserve"><value>请输入模型名称</value></data>
+  <data name="Frontend.PromptRange.EnterAPIVersion" xml:space="preserve"><value>请输入API Version</value></data>
+  <data name="Frontend.PromptRange.EnterAPIKey" xml:space="preserve"><value>请输入API key</value></data>
+  <data name="Frontend.PromptRange.EnterEndPoint" xml:space="preserve"><value>请输入End Point</value></data>
+  <data name="Frontend.PromptRange.EnterOrganizationId" xml:space="preserve"><value>请输入Organization Id</value></data>
+
+  <data name="Frontend.PromptRange.RangeName" xml:space="preserve"><value>靶场名称</value></data>
+  <data name="Frontend.PromptRange.EnterRangeName" xml:space="preserve"><value>请输入靶场名称</value></data>
+  <data name="Frontend.PromptRange.AIScoringCriteria" xml:space="preserve"><value>AI 评分标准</value></data>
+  <data name="Frontend.PromptRange.EnterExpectedResult" xml:space="preserve"><value>请输入期望结果</value></data>
+  <data name="Frontend.PromptRange.NoteAfterYouSetAnExpectedResultAIScoringRunsAutomaticallyFrom" xml:space="preserve"><value>注意：设置预期结果后，将会根据预期结果自动进行AI评分。</value></data>
+  <data name="Frontend.PromptRange.Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="Frontend.PromptRange.ImportPluginFolder" xml:space="preserve"><value>导入 plugin 文件夹</value></data>
+  <data name="Frontend.PromptRange.YouCanUploadAnOpenAISemanticKernelStandardPluginFolderToGenerate" xml:space="preserve"><value>可直接上传 OpenAI / Semantic Kernel 标准的 plugin 文件夹，自动生成靶场。（需选择选择整个 plugin 文件夹）</value></data>
+  <data name="Frontend.PromptRange.DragTheFolderHereOr" xml:space="preserve"><value>将文件夹拖到此处，或</value></data>
+  <data name="Frontend.PromptRange.ClickToUpload" xml:space="preserve"><value>点击上传</value></data>
+  <data name="Frontend.PromptRange.UploadAgain" xml:space="preserve"><value>重新上传</value></data>
+  <data name="Frontend.PromptRange.FileName" xml:space="preserve"><value>文件名</value></data>
+  <data name="Frontend.PromptRange.FilePath" xml:space="preserve"><value>文件路径</value></data>
+  <data name="Frontend.PromptRange.Upload" xml:space="preserve"><value>上 传</value></data>
+  <data name="Frontend.PromptRange.ExportPluginFolder" xml:space="preserve"><value>导出 plugin 文件夹</value></data>
+  <data name="Frontend.PromptRange.RangesAndTactics" xml:space="preserve"><value>靶场和靶道</value></data>
+  <data name="Frontend.PromptRange.SelectAll" xml:space="preserve"><value>全选</value></data>
+  <data name="Frontend.PromptRange.InvertSelection" xml:space="preserve"><value>反选</value></data>
+  <data name="Frontend.PromptRange.ExpandAll" xml:space="preserve"><value>展开全部</value></data>
+  <data name="Frontend.PromptRange.CollapseAll" xml:space="preserve"><value>收起全部</value></data>
+  <data name="Frontend.PromptRange.Selected" xml:space="preserve"><value>已选择:</value></data>
+  <data name="Frontend.PromptRange.Tactics" xml:space="preserve"><value>个靶道</value></data>
+  <data name="Frontend.PromptRange.Confirm" xml:space="preserve"><value>确 认</value></data>
+  <data name="Frontend.PromptRange.SelectOrEnterANoteName" xml:space="preserve"><value>请选择或输入备注名称</value></data>
+  <data name="Frontend.PromptRange.IfYouSelectAnExistingNameThatNameMovesToTheCurrent" xml:space="preserve"><value>选择已存在的名称时，将把其名称转移到当前靶道，原靶道名称重置为“未设置”</value></data>
+  <data name="Frontend.PromptRange.EnterTacticNoteName" xml:space="preserve"><value>请输入靶道备注名称</value></data>
+  <data name="Frontend.PromptRange.ComparePrompt" xml:space="preserve"><value>对比 Prompt</value></data>
+  <data name="Frontend.PromptRange.SelectPromptA" xml:space="preserve"><value>选择 Prompt A</value></data>
+  <data name="Frontend.PromptRange.Swap" xml:space="preserve"><value>交换</value></data>
+  <data name="Frontend.PromptRange.SelectPromptB" xml:space="preserve"><value>选择 Prompt B</value></data>
+  <data name="Frontend.PromptRange.WarningYouAreComparingTheSamePrompt" xml:space="preserve"><value>警告：您正在对比同一个 Prompt！</value></data>
+  <data name="Frontend.PromptRange.TheTwoSelectedPromptsAreTheSameVersionNumber" xml:space="preserve"><value>当前选择的两个 Prompt 是同一个（版本号:</value></data>
+  <data name="Frontend.PromptRange.SelectDifferentPromptsToCompareSoYouCanSeeTheDifferences" xml:space="preserve"><value>建议选择不同的 Prompt 进行对比以查看差异。</value></data>
+  <data name="Frontend.PromptRange.GoToThisPrompt" xml:space="preserve"><value>跳转到此 Prompt</value></data>
+  <data name="Frontend.PromptRange.Field" xml:space="preserve"><value>字段</value></data>
+  <data name="Frontend.PromptRange.CopyVersionNumber" xml:space="preserve"><value>复制版本号</value></data>
+  <data name="Frontend.PromptRange.RangeAlternate" xml:space="preserve"><value>靶场</value></data>
+  <data name="Frontend.PromptRange.TacticSupplemental" xml:space="preserve"><value>靶道</value></data>
+  <data name="Frontend.PromptRange.Alias" xml:space="preserve"><value>别名</value></data>
+  <data name="Frontend.PromptRange.Model" xml:space="preserve"><value>模型</value></data>
+  <data name="Frontend.PromptRange.PromptContentComparison" xml:space="preserve"><value>📄 Prompt 内容对比</value></data>
+  <data name="Frontend.PromptRange.Different" xml:space="preserve"><value>有差异</value></data>
+  <data name="Frontend.PromptRange.RequestParameterComparison" xml:space="preserve"><value>🎯 请求参数对比</value></data>
+  <data name="Frontend.PromptRange.Parameters" xml:space="preserve"><value>参数</value></data>
+  <data name="Frontend.PromptRange.NotSet" xml:space="preserve"><value>(未设置)</value></data>
+  <data name="Frontend.PromptRange.PromptAVariableConfiguration" xml:space="preserve"><value>Prompt A - 变量配置</value></data>
+  <data name="Frontend.PromptRange.PromptBVariableConfiguration" xml:space="preserve"><value>Prompt B - 变量配置</value></data>
+  <data name="Frontend.PromptRange.NeitherPromptHasVariablesConfigured" xml:space="preserve"><value>两个Prompt都未配置变量</value></data>
+  <data name="Frontend.PromptRange.SelectTwoPromptsToCompare" xml:space="preserve"><value>请选择两个 Prompt 进行对比</value></data>
+  <data name="Frontend.PromptRange.AIAutomaticPromptOptimizationAgent" xml:space="preserve"><value>AI 自动优化 Prompt（Agent）</value></data>
+
+  <data name="Frontend.PromptRange.OptimizationIsDoneByThePromptCatalyzerAgentInTheAgentsModuleThrough" xml:space="preserve"><value>优化由 Agents 模块中的 PromptCatalyzer 智能体通过多轮对话与工具调用完成；点击开始后请等待对话结束（可能需要数分钟），随后本页将自动选中新版本并可按需打靶、评分。</value></data>
+  <data name="Frontend.PromptRange.OptimizationFailed" xml:space="preserve"><value>优化失败</value></data>
+  <data name="Frontend.PromptRange.OptimizationRequirements" xml:space="preserve"><value>优化需求描述</value></data>
+  <data name="Frontend.PromptRange.ForExampleMakeTheAnswersMoreCreativeOrReduceHallucinations" xml:space="preserve"><value>例如：让回答更具创造性，或者是减少幻觉...</value></data>
+  <data name="Frontend.PromptRange.AfterOptimization" xml:space="preserve"><value>优化后处理</value></data>
+  <data name="Frontend.PromptRange.RunImmediatelyAfterCreation" xml:space="preserve"><value>创建后立即打靶</value></data>
+  <data name="Frontend.PromptRange.AfterOptimizationRunOneTestAutomaticallyToCheckTheNewPrompt" xml:space="preserve"><value>优化完成后自动执行一次打靶测试，验证新 Prompt 的效果</value></data>
+  <data name="Frontend.PromptRange.UseAIScoringAfterRun" xml:space="preserve"><value>打靶后使用 AI 评分</value></data>
+  <data name="Frontend.PromptRange.AfterARunFinishesAIScoringRunsAutomaticallySoYouGetQuality" xml:space="preserve"><value>打靶完成后自动调用 AI 评分功能，快速获得质量反馈</value></data>
+  <data name="Frontend.PromptRange.StartOptimization" xml:space="preserve"><value>开始优化</value></data>
+  <data name="Frontend.PromptRange.FirstUseInitializePromptOptimization" xml:space="preserve"><value>🚀 首次使用：初始化 Prompt 优化功能</value></data>
+  <data name="Frontend.PromptRange.WelcomeToAIAutomaticOptimization" xml:space="preserve"><value>欢迎使用 AI 自动优化功能！</value></data>
+  <data name="Frontend.PromptRange.FirstUseRequiresInitializingThePromptCatalyzerAgent" xml:space="preserve"><value>首次使用需要初始化 PromptCatalyzer Agent。</value></data>
+  <data name="Frontend.PromptRange.SelectAnAIModelToDriveOptimizationTheSystemWillCreateThe" xml:space="preserve"><value>请选择一个 AI Model 来驱动优化功能，系统将自动创建相关资源。</value></data>
+  <data name="Frontend.PromptRange.SelectAIModel" xml:space="preserve"><value>选择 AI Model</value></data>
+  <data name="Frontend.PromptRange.SelectAnAIModel" xml:space="preserve"><value>请选择 AI Model</value></data>
+  <data name="Frontend.PromptRange.Tip" xml:space="preserve"><value>提示：</value></data>
+  <data name="Frontend.PromptRange.DefaultParameterPreview" xml:space="preserve"><value>默认参数预览</value></data>
+  <data name="Frontend.PromptRange.ControlsOutputRandomnessZeroZeroOneZeroLowerIsMorePreciseHigher" xml:space="preserve"><value>控制输出的随机性：0.0-1.0，越低越精确，越高越创意</value></data>
+  <data name="Frontend.PromptRange.BalancedMode" xml:space="preserve"><value>(平衡模式)</value></data>
+  <data name="Frontend.PromptRange.NucleusSamplingParameterZeroZeroOneZeroItControlsTheRangeOf" xml:space="preserve"><value>核采样参数：0.0-1.0，控制词汇选择范围</value></data>
+  <data name="Frontend.PromptRange.HighQuality" xml:space="preserve"><value>(高质量)</value></data>
+  <data name="Frontend.PromptRange.MaximumNumberOfTokensToGenerateThisAffectsOutputLength" xml:space="preserve"><value>生成的最大 token 数量，影响输出长度</value></data>
+  <data name="Frontend.PromptRange.StandardLength" xml:space="preserve"><value>(标准长度)</value></data>
+  <data name="Frontend.PromptRange.FrequencyPenaltyTwoZeroToTwoZeroItReducesRepeatedWords" xml:space="preserve"><value>频率惩罚：-2.0 到 2.0，减少重复词汇</value></data>
+  <data name="Frontend.PromptRange.NoPenalty" xml:space="preserve"><value>(不惩罚)</value></data>
+  <data name="Frontend.PromptRange.ITheseAreInitialParametersYouCanAdjustThemInPromptRangeAfter" xml:space="preserve"><value>ℹ️ 这些是初始参数，创建后可以在 PromptRange 中调整</value></data>
+  <data name="Frontend.PromptRange.Initializing" xml:space="preserve"><value>初始化中...</value></data>
+  <data name="Frontend.PromptRange.Initialize" xml:space="preserve"><value>开始初始化</value></data>
+  <data name="Frontend.PromptRange.RunAlternate" xml:space="preserve"><value>打靶</value></data>
+  <data name="Frontend.PromptRange.Burst" xml:space="preserve"><value>连发</value></data>
+  <data name="Frontend.PromptRange.Draft" xml:space="preserve"><value>草稿</value></data>
+  <data name="Frontend.PromptRange.SavedSuccessfully" xml:space="preserve"><value>保存成功！</value></data>
+  <data name="Frontend.PromptRange.DeletedSuccessfully" xml:space="preserve"><value>删除成功</value></data>
+  <data name="Frontend.PromptRange.DeleteFailed" xml:space="preserve"><value>删除失败</value></data>
+  <data name="Frontend.PromptRange.DeletionCancelled" xml:space="preserve"><value>已取消删除</value></data>
+  <data name="Frontend.PromptRange.AddedSuccessfully" xml:space="preserve"><value>添加成功！</value></data>
+  <data name="Frontend.PromptRange.RequestFailed" xml:space="preserve"><value>请求失败</value></data>
+  <data name="Frontend.PromptRange.UnknownError" xml:space="preserve"><value>未知错误</value></data>
+  <data name="Frontend.PromptRange.CopyFailed" xml:space="preserve"><value>复制失败</value></data>
+  <data name="Frontend.PromptRange.UploadedSuccessfully" xml:space="preserve"><value>上传成功</value></data>
+  <data name="Frontend.PromptRange.UploadedFileSizeCannotExceed80MB" xml:space="preserve"><value>上传文件大小不能超过 80MB!</value></data>
+  <data name="Frontend.PromptRange.SelectAtLeastOneRange" xml:space="preserve"><value>请至少选择一个靶场</value></data>
+  <data name="Frontend.PromptRange.SelectAtLeastOneTactic" xml:space="preserve"><value>请至少选择一个靶道</value></data>
+  <data name="Frontend.PromptRange.ExportedSuccessfully" xml:space="preserve"><value>导出成功！</value></data>
+  <data name="Frontend.PromptRange.ExportFailed" xml:space="preserve"><value>导出失败</value></data>
+  <data name="Frontend.PromptRange.AnErrorOccurredDuringExport" xml:space="preserve"><value>导出过程中发生错误</value></data>
+  <data name="Frontend.PromptRange.RefreshComplete" xml:space="preserve"><value>刷新完成！</value></data>
+  <data name="Frontend.PromptRange.PleaseSelectAPromptFirst" xml:space="preserve"><value>请先选择一个Prompt！</value></data>
+  <data name="Frontend.PromptRange.SelectAModel" xml:space="preserve"><value>请选择一个模型！</value></data>
+  <data name="Frontend.PromptRange.SelectATacticEmphasis" xml:space="preserve"><value>请选择一个靶道！</value></data>
+  <data name="Frontend.PromptRange.EnterContent" xml:space="preserve"><value>请输入内容！</value></data>
+  <data name="Frontend.PromptRange.SelectAFolder" xml:space="preserve"><value>请选择文件夹</value></data>
+  <data name="Frontend.PromptRange.UploadAnAudioFileFirst" xml:space="preserve"><value>请先上传音频文件</value></data>
+  <data name="Frontend.PromptRange.FailedToReadAudio" xml:space="preserve"><value>读取音频失败：</value></data>
+  <data name="Frontend.PromptRange.FailedToLoadVectorDatabaseList" xml:space="preserve"><value>向量库列表加载失败</value></data>
+  <data name="Frontend.PromptRange.EmbeddingQueryFailed" xml:space="preserve"><value>Embedding 查询失败</value></data>
+  <data name="Frontend.PromptRange.FailedToContinueChat" xml:space="preserve"><value>继续聊天失败</value></data>
+  <data name="Frontend.PromptRange.FailedToLoadChatHistory" xml:space="preserve"><value>加载对话历史失败</value></data>
+  <data name="Frontend.PromptRange.FailedToUpdateFeedback" xml:space="preserve"><value>更新反馈失败</value></data>
+  <data name="Frontend.PromptRange.TheMessageIDIsInvalidRefreshThePageAndTryAgain" xml:space="preserve"><value>消息ID无效，请刷新页面后重试</value></data>
+  <data name="Frontend.PromptRange.TheCorrespondingConversationRecordWasNotFoundRefreshThePageAndTry" xml:space="preserve"><value>未找到对应的对话记录，请刷新页面后重试</value></data>
+  <data name="Frontend.PromptRange.ThisBrowserDoesNotSupportStreamingOutputSwitchedToNormalMode" xml:space="preserve"><value>当前浏览器不支持流式输出，已切换为普通模式</value></data>
+  <data name="Frontend.PromptRange.TheLiveStreamFailedToConnectAndSwitchedToNormalModeRefresh" xml:space="preserve"><value>实时流连接失败，已自动切换为普通模式（刷新页面可重试）</value></data>
+  <data name="Frontend.PromptRange.StreamingOutput" xml:space="preserve"><value>流式输出</value></data>
+  <data name="Frontend.PromptRange.TheAgentHasFinishedRefreshingTacticsAndSelectingTheNewVersion" xml:space="preserve"><value>Agent 已完成，正在刷新靶道并选中新版本…</value></data>
+  <data name="Frontend.PromptRange.TheAgentIsReasoningAndCallingToolsThisMayTakeSeveralMinutes" xml:space="preserve"><value>Agent 正在推理并调用工具（可能需要数分钟，请勿关闭此窗口）…</value></data>
+  <data name="Frontend.PromptRange.CodeCopied" xml:space="preserve"><value>代码复制成功</value></data>
+  <data name="Frontend.PromptRange.FailedToCopyCode" xml:space="preserve"><value>代码复制失败</value></data>
+  <data name="Frontend.PromptRange.Copy" xml:space="preserve"><value>Copy</value></data>
+  <data name="Frontend.PromptRange.AvailableModel" xml:space="preserve"><value>个可用 Model</value></data>
+  <data name="Frontend.PromptRange.OptimizationDidNotCompleteSuccessfully" xml:space="preserve"><value>优化未成功</value></data>
+  <data name="Frontend.PromptRange.OptimizationIsInProgressPleaseDoNotClickAgain" xml:space="preserve"><value>优化正在进行中，请勿重复点击</value></data>
+  <data name="Frontend.PromptRange.DoNotSave" xml:space="preserve"><value>不保存</value></data>
+  <data name="Frontend.PromptRange.SaveDraft" xml:space="preserve"><value>保存草稿</value></data>
+  <data name="Frontend.PromptRange.JustNow" xml:space="preserve"><value>刚刚</value></data>
+  <data name="Frontend.PromptRange.MinutesAgo" xml:space="preserve"><value>分钟前</value></data>
+  <data name="Frontend.PromptRange.HoursAgo" xml:space="preserve"><value>小时前</value></data>
+  <data name="Frontend.PromptRange.DaysAgo" xml:space="preserve"><value>天前</value></data>
+  <data name="Frontend.PromptRange.CreationFailedMakeSureTheAgentsManagerModuleIsInstalled" xml:space="preserve"><value>创建失败，请确认 AgentsManager 模块已安装</value></data>
+  <data name="Frontend.PromptRange.FailedToCreateAgent" xml:space="preserve"><value>创建智能体失败</value></data>
+  <data name="Frontend.PromptRange.InitializationFailed" xml:space="preserve"><value>初始化失败</value></data>
+  <data name="Frontend.PromptRange.InitializationSucceededRefreshingPageData" xml:space="preserve"><value>初始化成功，刷新页面数据...</value></data>
+  <data name="Frontend.PromptRange.FailedToLoadTheAIModelList" xml:space="preserve"><value>加载 AI Model 列表失败</value></data>
+  <data name="Frontend.PromptRange.Created" xml:space="preserve"><value>已创建</value></data>
+  <data name="Frontend.PromptRange.ConversationAppended" xml:space="preserve"><value>对话已追加</value></data>
+  <data name="Frontend.PromptRange.TheConversationRecordIDIsInvalidRefreshThePageAndTryAgain" xml:space="preserve"><value>对话记录ID无效，请刷新页面后重试</value></data>
+  <data name="Frontend.PromptRange.FailedToExportPlugins" xml:space="preserve"><value>导出 plugins 失败</value></data>
+  <data name="Frontend.PromptRange.ConfirmPluginsExport" xml:space="preserve"><value>导出 plugins 确认</value></data>
+  <data name="Frontend.PromptRange.AllTacticsSelected" xml:space="preserve"><value>已全选所有靶道</value></data>
+  <data name="Frontend.PromptRange.SelectionInverted" xml:space="preserve"><value>已反选</value></data>
+  <data name="Frontend.PromptRange.AllSelectionsCleared" xml:space="preserve"><value>已清空所有选择</value></data>
+  <data name="Frontend.PromptRange.FeedbackCanceled" xml:space="preserve"><value>已取消反馈</value></data>
+  <data name="Frontend.PromptRange.OperationCanceled" xml:space="preserve"><value>已取消操作</value></data>
+  <data name="Frontend.PromptRange.WhenOnRunBurstAndContinuedConversationStreamLiveWhenOffOutput" xml:space="preserve"><value>开启后，打靶/连发/继续对话会实时输出；关闭后使用整块输出。</value></data>
+  <data name="Frontend.PromptRange.TheCurrentPromptHasNoAverageScoreYet" xml:space="preserve"><value>当前 Prompt 尚无平均分数</value></data>
+  <data name="Frontend.PromptRange.ThisRangeHasNoRunsYetRunFirstThenComeBack" xml:space="preserve"><value>当前靶场还没有进行过打靶，请打靶后再来看吧！</value></data>
+  <data name="Frontend.PromptRange.YourDataHasBeenModifiedSaveItAsADraft" xml:space="preserve"><value>您的数据已经修改，是否保存为草稿？</value></data>
+  <data name="Frontend.PromptRange.AreYouSureYouWantToLeaveThisPage" xml:space="preserve"><value>您确定要离开本页面吗？</value></data>
+  <data name="Frontend.PromptRange.SaveAsDraft" xml:space="preserve"><value>是否保存为草稿</value></data>
+  <data name="Frontend.PromptRange.StayOnPage" xml:space="preserve"><value>留在页面</value></data>
+  <data name="Frontend.PromptRange.PenalizeWordsAlreadyUsed" xml:space="preserve"><value>惩罚已出现的词</value></data>
+  <data name="Frontend.PromptRange.PenalizeFrequentlyUsedWords" xml:space="preserve"><value>惩罚频繁出现的词</value></data>
+  <data name="Frontend.PromptRange.ControlsHowWideTheWordChoiceIsHigherValuesMakeTheGenerated" xml:space="preserve"><value>控制词的选择范围，值越高，生成的文本将包含更多的不常见词汇</value></data>
+  <data name="Frontend.PromptRange.StopSequencesForGeneratedTextWhenTheModelMeetsTheseSequencesIt" xml:space="preserve"><value>设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成。（输入的内容将会根据英文逗号进行分割）</value></data>
+  <data name="Frontend.PromptRange.SamplingTemperatureAHigherValueSuchAsZeroEightMakesTheOutput" xml:space="preserve"><value>采样温度，较高的值如0.8会使输出更加随机，而较低的值如0.2则会使其输出更具有确定性</value></data>
+  <data name="Frontend.PromptRange.TheTotalNumberOfRequestAndResponseTokensOrTheMaximumLength" xml:space="preserve"><value>请求与返回的Token总数或生成文本的最大长度，具体请参考API文档！</value></data>
+  <data name="Frontend.PromptRange.Notice" xml:space="preserve"><value>提示</value></data>
+  <data name="Frontend.PromptRange.ImprovePromptQualityAndResults" xml:space="preserve"><value>提高 Prompt 的质量和效果</value></data>
+  <data name="Frontend.PromptRange.ComingSoon" xml:space="preserve"><value>敬请期待</value></data>
+  <data name="Frontend.PromptRange.UnableToGetTheCurrentPromptInformation" xml:space="preserve"><value>无法获取当前 Prompt 信息</value></data>
+  <data name="Frontend.PromptRange.UnableToGetDetailsForTheCurrentPrompt" xml:space="preserve"><value>无法获取当前 Prompt 的详细信息</value></data>
+  <data name="Frontend.PromptRange.UnableToGetTheVersionNumberPromptCodeOfTheCurrentPrompt" xml:space="preserve"><value>无法获取当前Prompt的版本号(Prompt Code)</value></data>
+  <data name="Frontend.PromptRange.UnableToGetTheVersionNumber" xml:space="preserve"><value>无法获取版本号</value></data>
+  <data name="Frontend.PromptRange.NoValidScoreWasObtainedTheOptimizationPromptWasSkipped" xml:space="preserve"><value>无法获取有效分数，跳过优化提示</value></data>
+  <data name="Frontend.PromptRange.Unnamed" xml:space="preserve"><value>未命名</value></data>
+  <data name="Frontend.PromptRange.UnnamedVectorDatabase" xml:space="preserve"><value>未命名向量库</value></data>
+  <data name="Frontend.PromptRange.UnknownTactic" xml:space="preserve"><value>未知战术</value></data>
+  <data name="Frontend.PromptRange.UnknownRange" xml:space="preserve"><value>未知靶场</value></data>
+  <data name="Frontend.PromptRange.UnknownTacticAlternate" xml:space="preserve"><value>未知靶道</value></data>
+  <data name="Frontend.PromptRange.NotSetAlternate" xml:space="preserve"><value>未设置</value></data>
+  <data name="Frontend.PromptRange.NoValidOptimizationResultReturned" xml:space="preserve"><value>未返回有效的优化结果</value></data>
+  <data name="Frontend.PromptRange.NoExpectedResultIsConfiguredAIScoringWasSkipped" xml:space="preserve"><value>未配置预期结果，已跳过 AI 评分</value></data>
+  <data name="Frontend.PromptRange.TheModelHasBeenDeletedSelectAModelAndRunAgain" xml:space="preserve"><value>模型已被删除，请选择模型后重新打靶！</value></data>
+  <data name="Frontend.PromptRange.AIScoringInProgressSameAsManualAIScoring" xml:space="preserve"><value>正在 AI 评分（与手动 AI 评分相同）…</value></data>
+  <data name="Frontend.PromptRange.RunningSameAsAManualRunOutputIsVisibleOnTheMain" xml:space="preserve"><value>正在打靶（与手动打靶相同，可在主界面查看输出）…</value></data>
+  <data name="Frontend.PromptRange.ThisWillDeleteThisExpectedResultContinue" xml:space="preserve"><value>此操作将删除该期望结果, 是否继续?</value></data>
+  <data name="Frontend.PromptRange.ThisActionWillPermanentlyDeleteEverythingInThisRange" xml:space="preserve"><value>此操作将永久删除该靶场下的所有内容</value></data>
+  <data name="Frontend.PromptRange.ThisWillPermanentlyDeleteThisTactic" xml:space="preserve"><value>此操作将永久删除该靶道</value></data>
+  <data name="Frontend.PromptRange.ThisWillPermanentlyDeleteThisTacticVersionContinue" xml:space="preserve"><value>此操作将永久删除该靶道版本, 是否继续?</value></data>
+  <data name="Frontend.PromptRange.ThisWillResetThisTacticName" xml:space="preserve"><value>此操作将重置该靶道名称</value></data>
+  <data name="Frontend.PromptRange.NoUsableAIModelCouldBeFoundPleaseConfigureAChatModel" xml:space="preserve"><value>没有找到可用的 AI Model，请先在 AIKernel 模块中配置 Chat 类型的 Model</value></data>
+  <data name="Frontend.PromptRange.TheAutomaticRunReturnedNoOutputRecordSoAIScoringWasSkipped" xml:space="preserve"><value>自动打靶未返回输出记录，已跳过 AI 评分；可在主界面手动打靶后再评分</value></data>
+  <data name="Frontend.PromptRange.SetPreAIScoringCriteria" xml:space="preserve"><value>请设置预 AI 评分标准</value></data>
+  <data name="Frontend.PromptRange.EnterAnAlias" xml:space="preserve"><value>请输入别名</value></data>
+  <data name="Frontend.PromptRange.EnterAPrefix" xml:space="preserve"><value>请输入前缀</value></data>
+  <data name="Frontend.PromptRange.EnterASuffix" xml:space="preserve"><value>请输入后缀</value></data>
+  <data name="Frontend.PromptRange.EnterConversationContent" xml:space="preserve"><value>请输入对话内容</value></data>
+  <data name="Frontend.PromptRange.EnterANewTacticName" xml:space="preserve"><value>请输入新的靶道名称</value></data>
+  <data name="Frontend.PromptRange.EnterTheTextToQuery" xml:space="preserve"><value>请输入要查询的文本</value></data>
+  <data name="Frontend.PromptRange.SelectVectorDB" xml:space="preserve"><value>请选择 VectorDB</value></data>
+  <data name="Frontend.PromptRange.SelectAnAIModelAlternate" xml:space="preserve"><value>请选择一个 AI Model</value></data>
+  <data name="Frontend.PromptRange.SelectATacticAlternate" xml:space="preserve"><value>请选择战术</value></data>
+  <data name="Frontend.PromptRange.SelectARunTestMode" xml:space="preserve"><value>请选择打靶测试模式</value></data>
+  <data name="Frontend.PromptRange.SelectAModelEmphasis" xml:space="preserve"><value>请选择模型！</value></data>
+  <data name="Frontend.PromptRange.SelectATacticBeforeCopying" xml:space="preserve"><value>请选择靶道后再复制信息！</value></data>
+  <data name="Frontend.PromptRange.EnterPrompt" xml:space="preserve"><value>输入Prompt</value></data>
+  <data name="Frontend.PromptRange.RunTest" xml:space="preserve"><value>打靶测试</value></data>
+  <data name="Frontend.PromptRange.ExpectedResult" xml:space="preserve"><value>预期结果</value></data>
+  <data name="Frontend.PromptRange.SpeechRecognitionInput" xml:space="preserve"><value>语音识别输入</value></data>
+  <data name="Frontend.PromptRange.SelectATacticToDetermineThePromptCode" xml:space="preserve"><value>请选择靶道以确定 PromptCode</value></data>
+  <data name="Frontend.PromptRange.OptimizeNow" xml:space="preserve"><value>立即优化</value></data>
+  <data name="Frontend.PromptRange.NotNow" xml:space="preserve"><value>暂不优化</value></data>
+  <data name="Frontend.PromptRange.ConfirmCreation" xml:space="preserve"><value>确认创建</value></data>
+  <data name="Frontend.PromptRange.ContinueCreation" xml:space="preserve"><value>继续创建</value></data>
+  <data name="Frontend.PromptRange.AgentValueWasCreatedSuccessfully" xml:space="preserve"><value>智能体「{0}」创建成功！</value></data>
+  <data name="Frontend.PromptRange.CopiedValue" xml:space="preserve"><value>复制【{0}】成功</value></data>
+  <data name="Frontend.PromptRange.CopiedValueValue" xml:space="preserve"><value>复制{0}【{1}】成功</value></data>
+  <data name="Frontend.PromptRange.PromptCodeValueIsAlreadyUsedByValueAgentsCreateANewAgent" xml:space="preserve"><value>当前 PromptCode（{0}）已有 {1} 个智能体使用。是否继续创建新智能体？</value></data>
+  <data name="Frontend.PromptRange.TheCurrentPromptHasAnAverageScoreOfValueConsiderUsingAI" xml:space="preserve"><value>当前 Prompt 的平均分为 {0} 分，建议使用 AI 自动优化功能来改进。点击"优化"按钮开始。</value></data>
+  <data name="Frontend.PromptRange.TheCurrentPromptSValueIsValuePointsBelowValuePointsUse" xml:space="preserve"><value>当前 Prompt 的{0}为 {1} 分（低于 {2} 分）。是否使用 AI 自动优化功能来改进 Prompt？</value></data>
+  <data name="Frontend.PromptRange.InitializationSucceededPromptCatalyzerAgentCreatedPromptCodeValue" xml:space="preserve"><value>✅ 初始化成功！已创建 PromptCatalyzer Agent，PromptCode: {0}</value></data>
+  <data name="Frontend.PromptRange.OptimizationCompleteNewPromptValue" xml:space="preserve"><value>✅ 优化完成&#10;&#10;新 Prompt：{0}</value></data>
+  <data name="Frontend.PromptRange.CurrentPromptAverageScoreValue" xml:space="preserve"><value>当前 Prompt 平均分数: {0}</value></data>
+  <data name="Frontend.PromptRange.TheImageWasGeneratedButNoAccessibleAddressWasReturnedAlternate" xml:space="preserve"><value>图片已生成，但未获得可访问地址。</value></data>
+  <data name="Frontend.PromptRange.ExtensionModules" xml:space="preserve">
     <value>扩展模块</value>
   </data>
-  <data name="Frontend.402" xml:space="preserve">
+  <data name="Frontend.PromptRange.PromptRange" xml:space="preserve">
     <value>提示词靶场</value>
   </data>
-  <data name="Frontend.403" xml:space="preserve">
+  <data name="Frontend.PromptRange.RunCreateANewTacticFromTheCurrentInputOrFromThe" xml:space="preserve">
     <value>打靶: 根据当前填写的内容或者选择的靶场和靶道，创建新的靶道。</value>
   </data>
-  <data name="Frontend.404" xml:space="preserve">
+  <data name="Frontend.PromptRange.BurstProduceMultipleResultsInARowFromTheCurrentlySelectedTactic" xml:space="preserve">
     <value>连发：根据当前选择的靶道信息，连续输出多个结果。</value>
   </data>
-  <data name="Frontend.405" xml:space="preserve">
+  <data name="Frontend.PromptRange.DraftSaveTheCurrentInputAndCreateANewTactic" xml:space="preserve">
     <value>草稿：保存当前输入的内容，并创建新的靶道。</value>
   </data>
-  <data name="Frontend.406" xml:space="preserve">
+  <data name="Frontend.PromptRange.Example" xml:space="preserve">
     <value>如：{{$</value>
   </data>
-  <data name="Frontend.407" xml:space="preserve">
+  <data name="Frontend.PromptRange.ExampleAlternate" xml:space="preserve">
     <value>如：}}</value>
   </data>
-  <data name="Frontend.408" xml:space="preserve">
+  <data name="Frontend.PromptRange.ElapsedMsAlternate" xml:space="preserve">
     <value>[耗时(毫秒):]</value>
   </data>
-  <data name="Frontend.409" xml:space="preserve">
+  <data name="Frontend.PromptRange.TokenInputOutput" xml:space="preserve">
     <value>Token: （输入 / 输出 ）</value>
   </data>
-  <data name="Frontend.410" xml:space="preserve">
+  <data name="Frontend.PromptRange.ClickToViewThePromptUsedByTheCurrentConversation" xml:space="preserve">
     <value>(点击查看当前对话使用的 Prompt)</value>
   </data>
-  <data name="Frontend.411" xml:space="preserve">
+  <data name="Frontend.PromptRange.CancelAlternate" xml:space="preserve">
     <value>取 消</value>
   </data>
-  <data name="Frontend.412" xml:space="preserve">
+  <data name="Frontend.PromptRange.OK" xml:space="preserve">
     <value>确 定</value>
   </data>
-  <data name="Frontend.413" xml:space="preserve">
+  <data name="Frontend.PromptRange.InitializationIsRequiredOnFirstUse" xml:space="preserve">
     <value>首次使用需要初始化</value>
   </data>
-  <data name="Frontend.414" xml:space="preserve">
+  <data name="Frontend.PromptRange.Or" xml:space="preserve">
     <value>或</value>
   </data>
-  <data name="Frontend.415" xml:space="preserve">
-    <value>预期结果</value>
-  </data>
-  <data name="Frontend.416" xml:space="preserve">
+
+  <data name="Frontend.PromptRange.ExpectedResultOne" xml:space="preserve">
     <value>预期结果1</value>
   </data>
-  <data name="Frontend.417" xml:space="preserve">
+  <data name="Frontend.PromptRange.ExpectedResultTwo" xml:space="preserve">
     <value>预期结果2</value>
   </data>
-  <data name="Frontend.418" xml:space="preserve">
+  <data name="Frontend.PromptRange.ExpectedResultThree" xml:space="preserve">
     <value>预期结果3</value>
   </data>
-  <data name="Frontend.419" xml:space="preserve">
-    <value>图片已生成，但未获得可访问地址。</value>
-  </data>
-  <data name="Frontend.420" xml:space="preserve">
+
+  <data name="Frontend.PromptRange.EmbeddingQueryFailedLabel" xml:space="preserve">
     <value>Embedding 查询失败：</value>
   </data>
-  <data name="Frontend.421" xml:space="preserve">
+  <data name="Frontend.PromptRange.ConfirmAlternate" xml:space="preserve">
     <value>确定</value>
   </data>
-  <data name="Frontend.422" xml:space="preserve">
+  <data name="Frontend.PromptRange.TacticNameCannotBeEmpty" xml:space="preserve">
     <value>靶道名称不能为空！</value>
   </data>
-  <data name="Frontend.423" xml:space="preserve">
+  <data name="Frontend.PromptRange.Name" xml:space="preserve">
     <value>名称：</value>
   </data>
-  <data name="Frontend.424" xml:space="preserve">
+  <data name="Frontend.PromptRange.Version" xml:space="preserve">
     <value>| 版本号：</value>
   </data>
-  <data name="Frontend.425" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToContinueChatLabel" xml:space="preserve">
     <value>继续聊天失败：</value>
   </data>
-  <data name="Frontend.426" xml:space="preserve">
+  <data name="Frontend.PromptRange.ServerError" xml:space="preserve">
     <value>服务器错误：</value>
   </data>
-  <data name="Frontend.427" xml:space="preserve">
+  <data name="Frontend.PromptRange.PromptValueVersion" xml:space="preserve">
     <value>Prompt {0} 版本号</value>
   </data>
-  <data name="Frontend.428" xml:space="preserve">
-    <value>复制{0}【{1}】成功</value>
-  </data>
-  <data name="Frontend.429" xml:space="preserve">
-    <value>复制【{0}】成功</value>
-  </data>
-  <data name="Frontend.430" xml:space="preserve">
+
+
+  <data name="Frontend.PromptRange.FailedToUpdateFeedbackLabel" xml:space="preserve">
     <value>更新反馈失败：</value>
   </data>
-  <data name="Frontend.431" xml:space="preserve">
+  <data name="Frontend.PromptRange.CustomNameValue" xml:space="preserve">
     <value>自定义名称：{0}</value>
   </data>
-  <data name="Frontend.432" xml:space="preserve">
+  <data name="Frontend.PromptRange.RangeValue" xml:space="preserve">
     <value>靶场：{0}</value>
   </data>
-  <data name="Frontend.433" xml:space="preserve">
+  <data name="Frontend.PromptRange.VersionValue" xml:space="preserve">
     <value>版本：{0}</value>
   </data>
-  <data name="Frontend.434" xml:space="preserve">
+  <data name="Frontend.PromptRange.AverageScoreValue" xml:space="preserve">
     <value>平均分：{0}</value>
   </data>
-  <data name="Frontend.435" xml:space="preserve">
+  <data name="Frontend.PromptRange.HighestScoreValue" xml:space="preserve">
     <value>最高分：{0}</value>
   </data>
-  <data name="Frontend.436" xml:space="preserve">
+  <data name="Frontend.PromptRange.TimeValue" xml:space="preserve">
     <value>时间：{0}</value>
   </data>
-  <data name="Frontend.437" xml:space="preserve">
+  <data name="Frontend.PromptRange.CurrentAlternate" xml:space="preserve">
     <value>当前</value>
   </data>
-  <data name="Frontend.438" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToLoadChatHistoryLabel" xml:space="preserve">
     <value>加载对话历史失败：</value>
   </data>
-  <data name="Frontend.439" xml:space="preserve">
+  <data name="Frontend.PromptRange.SelectATacticFirstToDetermineThePromptCode" xml:space="preserve">
     <value>请先选择靶道以确定 PromptCode</value>
   </data>
-  <data name="Frontend.440" xml:space="preserve">
+  <data name="Frontend.PromptRange.InvalidPromptCode" xml:space="preserve">
     <value>无效的 PromptCode</value>
   </data>
-  <data name="Frontend.441" xml:space="preserve">
-    <value>当前 PromptCode（{0}）已有 {1} 个智能体使用。是否继续创建新智能体？</value>
-  </data>
-  <data name="Frontend.442" xml:space="preserve">
-    <value>智能体「{0}」创建成功！</value>
-  </data>
-  <data name="Frontend.443" xml:space="preserve">
+
+
+  <data name="Frontend.PromptRange.CreationFailed" xml:space="preserve">
     <value>创建失败：</value>
   </data>
-  <data name="Frontend.444" xml:space="preserve">
+  <data name="Frontend.PromptRange.THREEJsIsNotLoadedRefreshThePageAndTryAgain" xml:space="preserve">
     <value>THREE.js 未加载，请刷新页面重试</value>
   </data>
-  <data name="Frontend.445" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToLoadTheModelList" xml:space="preserve">
     <value>获取模型列表失败</value>
   </data>
-  <data name="Frontend.446" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToLoadTheAIModelListLabel" xml:space="preserve">
     <value>加载 AI Model 列表失败:</value>
   </data>
-  <data name="Frontend.447" xml:space="preserve">
+  <data name="Frontend.PromptRange.InitializationFailedLabel" xml:space="preserve">
     <value>初始化失败:</value>
   </data>
-  <data name="Frontend.448" xml:space="preserve">
-    <value>当前 Prompt 的{0}为 {1} 分（低于 {2} 分）。是否使用 AI 自动优化功能来改进 Prompt？</value>
-  </data>
-  <data name="Frontend.449" xml:space="preserve">
+
+  <data name="Frontend.PromptRange.SuggestedOptimization" xml:space="preserve">
     <value>💡 建议优化</value>
   </data>
-  <data name="Frontend.450" xml:space="preserve">
+  <data name="Frontend.PromptRange.OptimizationSuggestions" xml:space="preserve">
     <value>💡 优化建议</value>
   </data>
-  <data name="Frontend.451" xml:space="preserve">
+  <data name="Frontend.PromptRange.FirstUseRequiresInitializingPromptCatalyzerLoadingAvailableAIModels" xml:space="preserve">
     <value>🚀 首次使用需要初始化 PromptCatalyzer，正在加载可用的 AI Model...</value>
   </data>
-  <data name="Frontend.452" xml:space="preserve">
+  <data name="Frontend.PromptRange.OptimizationFailedLabel" xml:space="preserve">
     <value>优化失败：</value>
   </data>
-  <data name="Frontend.453" xml:space="preserve">
+  <data name="Frontend.PromptRange.ANewVersionWasCreatedButNoPromptCodeInTheList" xml:space="preserve">
     <value>已创建新版本，但未在列表中匹配到 Prompt Code：</value>
   </data>
-  <data name="Frontend.454" xml:space="preserve">
+  <data name="Frontend.PromptRange.OptimizationCompleteNNNewPromptValue" xml:space="preserve">
     <value>✅ 优化完成\n\n新 Prompt：{0}</value>
   </data>
-  <data name="Frontend.455" xml:space="preserve">
+  <data name="Frontend.PromptRange.OptimizationFailedAlternate" xml:space="preserve">
     <value>❌ 优化失败:</value>
   </data>
-  <data name="Frontend.456" xml:space="preserve">
+  <data name="Frontend.PromptRange.ValueResults" xml:space="preserve">
     <value>{0} 个结果</value>
   </data>
-  <data name="Frontend.457" xml:space="preserve">
+  <data name="Frontend.PromptRange.AValueIsValueUnitsInFrontOfTFacingTheCamera" xml:space="preserve">
     <value>A{0} 在 T 前方 {1} 单位（朝向摄像机）</value>
   </data>
-  <data name="Frontend.458" xml:space="preserve">
+  <data name="Frontend.PromptRange.RangeSupplemental" xml:space="preserve">
     <value>📦 靶场</value>
   </data>
-  <data name="Frontend.459" xml:space="preserve">
+  <data name="Frontend.PromptRange.ContainsValueResults" xml:space="preserve">
     <value>包含 {0} 个结果</value>
   </data>
-  <data name="Frontend.460" xml:space="preserve">
+  <data name="Frontend.PromptRange.TacticNode" xml:space="preserve">
     <value>🎯 战术节点</value>
   </data>
-  <data name="Frontend.461" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoTValue" xml:space="preserve">
     <value>编号: T{0}</value>
   </data>
-  <data name="Frontend.462" xml:space="preserve">
+  <data name="Frontend.PromptRange.AimPoint" xml:space="preserve">
     <value>🎲 瞄准点</value>
   </data>
-  <data name="Frontend.463" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoAValue" xml:space="preserve">
     <value>编号: A{0}</value>
   </data>
-  <data name="Frontend.464" xml:space="preserve">
+  <data name="Frontend.PromptRange.RankValueValue" xml:space="preserve">
     <value>排名: {0}/{1}</value>
   </data>
-  <data name="Frontend.465" xml:space="preserve">
+  <data name="Frontend.PromptRange.FirstPlace" xml:space="preserve">
     <value>👑 第一名</value>
   </data>
-  <data name="Frontend.466" xml:space="preserve">
+  <data name="Frontend.PromptRange.Middle" xml:space="preserve">
     <value>中游</value>
   </data>
-  <data name="Frontend.467" xml:space="preserve">
+  <data name="Frontend.PromptRange.LowerTier" xml:space="preserve">
     <value>靠后</value>
   </data>
-  <data name="Frontend.468" xml:space="preserve">
+  <data name="Frontend.PromptRange.AverageScoreLabel" xml:space="preserve">
     <value>📊 平均分:</value>
   </data>
-  <data name="Frontend.469" xml:space="preserve">
+  <data name="Frontend.PromptRange.HighestScoreLabel" xml:space="preserve">
     <value>⭐ 最高分:</value>
   </data>
-  <data name="Frontend.470" xml:space="preserve">
+  <data name="Frontend.PromptRange.DoubleClickToQuicklySelectThisTactic" xml:space="preserve">
     <value>💡 双击可快速选中此靶道</value>
   </data>
-  <data name="Frontend.471" xml:space="preserve">
+  <data name="Frontend.PromptRange.ThisWillPermanentlyDeleteModelValueContinue" xml:space="preserve">
     <value>此操作将永久删除模型【{0}】, 是否继续?</value>
   </data>
-  <data name="Frontend.472" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToLoadVectorDatabaseListLabel" xml:space="preserve">
     <value>向量库列表加载失败：</value>
   </data>
-  <data name="Frontend.473" xml:space="preserve">
+  <data name="Frontend.PromptRange.EnterANewRangeName" xml:space="preserve">
     <value>请输入新的靶场名称</value>
   </data>
-  <data name="Frontend.474" xml:space="preserve">
+  <data name="Frontend.PromptRange.RangeNameCannotBeEmpty" xml:space="preserve">
     <value>靶场名称不能为空</value>
   </data>
-  <data name="Frontend.475" xml:space="preserve">
+  <data name="Frontend.PromptRange.DraftAlternate" xml:space="preserve">
     <value>(草稿)</value>
   </data>
-  <data name="Frontend.476" xml:space="preserve">
+  <data name="Frontend.PromptRange.DeletedSuccessfullyEmphasis" xml:space="preserve">
     <value>删除成功!</value>
   </data>
-  <data name="Frontend.477" xml:space="preserve">
+  <data name="Frontend.PromptRange.CopiedSuccessfully" xml:space="preserve">
     <value>复制成功</value>
   </data>
-  <data name="Frontend.478" xml:space="preserve">
-    <value>复制失败</value>
-  </data>
-  <data name="Frontend.479" xml:space="preserve">
+
+  <data name="Frontend.PromptRange.CopyCode" xml:space="preserve">
     <value>复制代码</value>
   </data>
-  <data name="Frontend.480" xml:space="preserve">
+  <data name="Frontend.PromptRange.FinalScore" xml:space="preserve">
     <value>最终评分</value>
   </data>
-  <data name="Frontend.481" xml:space="preserve">
+  <data name="Frontend.PromptRange.ValueValuePts" xml:space="preserve">
     <value>{0}: {1}分</value>
   </data>
-  <data name="Frontend.482" xml:space="preserve">
+  <data name="Frontend.PromptRange.RestoredToTheDefaultLayoutWidth" xml:space="preserve">
     <value>已还原为默认布局宽度</value>
   </data>
-  <data name="Frontend.483" xml:space="preserve">
+  <data name="Frontend.PromptRange.WarningYouSelectedTheSamePromptForComparison" xml:space="preserve">
     <value>警告：您选择了同一个 Prompt 进行对比！</value>
   </data>
-  <data name="Frontend.484" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToLoadPromptAData" xml:space="preserve">
     <value>加载Prompt A数据失败</value>
   </data>
-  <data name="Frontend.485" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToLoadPromptBData" xml:space="preserve">
     <value>加载Prompt B数据失败</value>
   </data>
-  <data name="Frontend.486" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToLoadPromptDetails" xml:space="preserve">
     <value>获取Prompt详情失败</value>
   </data>
-  <data name="Frontend.487" xml:space="preserve">
+  <data name="Frontend.PromptRange.InvalidPromptID" xml:space="preserve">
     <value>无效的Prompt ID</value>
   </data>
-  <data name="Frontend.488" xml:space="preserve">
+  <data name="Frontend.PromptRange.UnableToGetPromptDetails" xml:space="preserve">
     <value>无法获取Prompt详细信息</value>
   </data>
-  <data name="Frontend.489" xml:space="preserve">
+  <data name="Frontend.PromptRange.CorrespondingRangeNotFoundValue" xml:space="preserve">
     <value>未找到对应的靶场: {0}</value>
   </data>
-  <data name="Frontend.490" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoCorrespondingPromptWasFoundInTheCurrentRange" xml:space="preserve">
     <value>在当前靶场中未找到对应的Prompt</value>
   </data>
-  <data name="Frontend.491" xml:space="preserve">
+  <data name="Frontend.PromptRange.SwitchedToPromptValue" xml:space="preserve">
     <value>已切换到 Prompt: {0}</value>
   </data>
-  <data name="Frontend.492" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToSwitchPromptPleaseTryAgain" xml:space="preserve">
     <value>切换Prompt失败，请重试</value>
   </data>
-  <data name="Frontend.493" xml:space="preserve">
+  <data name="Frontend.PromptRange.None" xml:space="preserve">
     <value>无</value>
   </data>
-  <data name="Frontend.494" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoContent" xml:space="preserve">
     <value>暂无内容</value>
   </data>
-  <data name="Frontend.495" xml:space="preserve">
+  <data name="Frontend.PromptRange.UnknownModel" xml:space="preserve">
     <value>未知模型</value>
   </data>
-  <data name="Frontend.496" xml:space="preserve">
-    <value>未设置</value>
-  </data>
-  <data name="Frontend.497" xml:space="preserve">
+
+  <data name="Frontend.PromptRange.NameValueVersionValueAverageValueHighestValueValue" xml:space="preserve">
     <value>名称：{0} | 版本号：{1} | 平均分：{2} | 最高分：{3} {4}</value>
   </data>
-  <data name="Frontend.498" xml:space="preserve">
-    <value>刚刚</value>
-  </data>
-  <data name="Frontend.499" xml:space="preserve">
+
+  <data name="Frontend.PromptRange.ValueMinutesAgo" xml:space="preserve">
     <value>{0}分钟前</value>
   </data>
-  <data name="Frontend.500" xml:space="preserve">
+  <data name="Frontend.PromptRange.ValueHoursAgo" xml:space="preserve">
     <value>{0}小时前</value>
   </data>
-  <data name="Frontend.501" xml:space="preserve">
+  <data name="Frontend.PromptRange.YesterdayValue" xml:space="preserve">
     <value>昨天 {0}</value>
   </data>
-  <data name="Frontend.502" xml:space="preserve">
+  <data name="Frontend.PromptRange.ValueDaysAgo" xml:space="preserve">
     <value>{0}天前</value>
   </data>
-  <data name="Frontend.503" xml:space="preserve">
+  <data name="Frontend.PromptRange.ValueDays" xml:space="preserve">
     <value>{0}天</value>
   </data>
-  <data name="Frontend.504" xml:space="preserve">
+  <data name="Frontend.PromptRange.ValueHours" xml:space="preserve">
     <value>{0}小时</value>
   </data>
-  <data name="Frontend.505" xml:space="preserve">
+  <data name="Frontend.PromptRange.ValueMinutes" xml:space="preserve">
     <value>{0}分钟</value>
   </data>
-  <data name="Frontend.506" xml:space="preserve">
+  <data name="Frontend.PromptRange.ValueSeconds" xml:space="preserve">
     <value>{0}秒</value>
   </data>
-  <data name="Frontend.507" xml:space="preserve">
+  <data name="Frontend.PromptRange.ZeroSeconds" xml:space="preserve">
     <value>0秒</value>
   </data>
-  <data name="Frontend.508" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoContentToCopy" xml:space="preserve">
     <value>没有可复制的内容</value>
   </data>
-  <data name="Frontend.509" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoResultToCopy" xml:space="preserve">
     <value>没有可复制的结果</value>
   </data>
-  <data name="Frontend.510" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheResultIsEmpty" xml:space="preserve">
     <value>结果为空</value>
   </data>
-  <data name="Frontend.511" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoObjectToCopy" xml:space="preserve">
     <value>没有可复制的对象</value>
   </data>
-  <data name="Frontend.512" xml:space="preserve">
+  <data name="Frontend.PromptRange.JSONCopied" xml:space="preserve">
     <value>JSON 复制成功</value>
   </data>
-  <data name="Frontend.513" xml:space="preserve">
+  <data name="Frontend.PromptRange.ObjectSerializationFailed" xml:space="preserve">
     <value>对象序列化失败</value>
   </data>
-  <data name="Frontend.514" xml:space="preserve">
+  <data name="Frontend.PromptRange.NotAValidArray" xml:space="preserve">
     <value>不是有效的数组</value>
   </data>
-  <data name="Frontend.515" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheArrayIsEmpty" xml:space="preserve">
     <value>数组为空</value>
   </data>
-  <data name="Frontend.516" xml:space="preserve">
+  <data name="Frontend.PromptRange.ArrayContentCopied" xml:space="preserve">
     <value>数组内容复制成功</value>
   </data>
-  <data name="Frontend.517" xml:space="preserve">
+  <data name="Frontend.PromptRange.ThereIsNoHTMLContentToCopy" xml:space="preserve">
     <value>没有可复制的 HTML 内容</value>
   </data>
-  <data name="Frontend.518" xml:space="preserve">
+  <data name="Frontend.PromptRange.HTMLContentCopied" xml:space="preserve">
     <value>HTML 内容复制成功</value>
   </data>
-  <data name="Frontend.519" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToCopyHTMLContent" xml:space="preserve">
     <value>HTML 内容复制失败</value>
   </data>
-  <data name="Frontend.520" xml:space="preserve">
+  <data name="Frontend.PromptRange.Unknown" xml:space="preserve">
     <value>未知</value>
   </data>
-  <data name="Frontend.521" xml:space="preserve">
-    <value>未命名</value>
-  </data>
-  <data name="Frontend.522" xml:space="preserve">
-    <value>未命名向量库</value>
-  </data>
-  <data name="Frontend.523" xml:space="preserve">
+
+
+  <data name="Frontend.PromptRange.RevisedContent" xml:space="preserve">
     <value>Revised：</value>
   </data>
-  <data name="Frontend.524" xml:space="preserve">
+  <data name="Frontend.PromptRange.Prompt" xml:space="preserve">
     <value>Prompt：</value>
   </data>
-  <data name="Frontend.525" xml:space="preserve">
+  <data name="Frontend.PromptRange.VoiceLabel" xml:space="preserve">
     <value>Voice：</value>
   </data>
-  <data name="Frontend.526" xml:space="preserve">
+  <data name="Frontend.PromptRange.FormatLabel" xml:space="preserve">
     <value>Format：</value>
   </data>
-  <data name="Frontend.527" xml:space="preserve">
+  <data name="Frontend.PromptRange.SpeedLabel" xml:space="preserve">
     <value>Speed：</value>
   </data>
-  <data name="Frontend.528" xml:space="preserve">
+  <data name="Frontend.PromptRange.Text" xml:space="preserve">
     <value>Text：</value>
   </data>
-  <data name="Frontend.529" xml:space="preserve">
+  <data name="Frontend.PromptRange.Language" xml:space="preserve">
     <value>Language：</value>
   </data>
-  <data name="Frontend.530" xml:space="preserve">
+  <data name="Frontend.PromptRange.Duration" xml:space="preserve">
     <value>Duration：</value>
   </data>
-  <data name="Frontend.531" xml:space="preserve">
+  <data name="Frontend.PromptRange.VectorDatabase" xml:space="preserve">
     <value>VectorDB：</value>
   </data>
-  <data name="Frontend.532" xml:space="preserve">
+  <data name="Frontend.PromptRange.Collection" xml:space="preserve">
     <value>Collection：</value>
   </data>
-  <data name="Frontend.533" xml:space="preserve">
+  <data name="Frontend.PromptRange.Dimension" xml:space="preserve">
     <value>Dimension：</value>
   </data>
-  <data name="Frontend.534" xml:space="preserve">
+  <data name="Frontend.PromptRange.Source" xml:space="preserve">
     <value>Source：</value>
   </data>
-  <data name="Frontend.535" xml:space="preserve">
+  <data name="Frontend.PromptRange.Score" xml:space="preserve">
     <value>Score:</value>
   </data>
-  <data name="Frontend.536" xml:space="preserve">
+  <data name="Frontend.PromptRange.SystemMessagePrompt" xml:space="preserve">
     <value>System Message (Prompt)</value>
   </data>
-  <data name="Frontend.537" xml:space="preserve">
+  <data name="Frontend.PromptRange.GeneratedImage" xml:space="preserve">
     <value>Generated Image</value>
   </data>
-  <data name="Frontend.538" xml:space="preserve">
+  <data name="Frontend.PromptRange.FunctionCall" xml:space="preserve">
     <value>Function Calls</value>
   </data>
-  <data name="Frontend.539" xml:space="preserve">
-    <value>Function Call 名称，多个用逗号分隔（可选）</value>
-  </data>
-  <data name="Frontend.540" xml:space="preserve">
+
+  <data name="Frontend.PromptRange.APIVersion" xml:space="preserve">
     <value>API Version</value>
   </data>
-  <data name="Frontend.541" xml:space="preserve">
+  <data name="Frontend.PromptRange.EnterAPIVersionAlternate" xml:space="preserve">
     <value>请输入API Version</value>
   </data>
-  <data name="Frontend.542" xml:space="preserve">
+  <data name="Frontend.PromptRange.APIKey" xml:space="preserve">
     <value>API key</value>
   </data>
-  <data name="Frontend.543" xml:space="preserve">
+  <data name="Frontend.PromptRange.EnterAPIKeyAlternate" xml:space="preserve">
     <value>请输入API key</value>
   </data>
-  <data name="Frontend.544" xml:space="preserve">
+  <data name="Frontend.PromptRange.Endpoint" xml:space="preserve">
     <value>End Point</value>
   </data>
-  <data name="Frontend.545" xml:space="preserve">
+  <data name="Frontend.PromptRange.EnterAnEndpoint" xml:space="preserve">
     <value>请输入End Point</value>
   </data>
-  <data name="Frontend.546" xml:space="preserve">
+  <data name="Frontend.PromptRange.OrganizationID" xml:space="preserve">
     <value>Organization Id</value>
   </data>
-  <data name="Frontend.547" xml:space="preserve">
-    <value>请输入Organization Id</value>
-  </data>
-  <data name="Frontend.548" xml:space="preserve">
+  <data name="Frontend.PromptRange.Temperature" xml:space="preserve">
     <value>Temperature</value>
   </data>
-  <data name="Frontend.549" xml:space="preserve">
+  <data name="Frontend.PromptRange.MaxTokenCount" xml:space="preserve">
     <value>Max Tokens</value>
   </data>
-  <data name="Frontend.550" xml:space="preserve">
+  <data name="Frontend.PromptRange.TopPSamplingValue" xml:space="preserve">
     <value>Top P</value>
   </data>
-  <data name="Frontend.551" xml:space="preserve">
+  <data name="Frontend.PromptRange.PresencePenalty" xml:space="preserve">
     <value>Presence Penalty</value>
   </data>
-  <data name="Frontend.552" xml:space="preserve">
+  <data name="Frontend.PromptRange.FrequencyPenalty" xml:space="preserve">
     <value>Frequency Penalty</value>
   </data>
-  <data name="Frontend.553" xml:space="preserve">
+  <data name="Frontend.PromptRange.PromptCatalyzerAgent" xml:space="preserve">
     <value>PromptCatalyzer Agent</value>
   </data>
-  <data name="Frontend.554" xml:space="preserve">
+  <data name="Frontend.PromptRange.AIModel" xml:space="preserve">
     <value>AI Model</value>
   </data>
-  <data name="Frontend.555" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoModelsFoundToDelete" xml:space="preserve">
     <value>未找到任何要删除的模型！</value>
   </data>
-  <data name="Frontend.556" xml:space="preserve">
+  <data name="Frontend.PromptRange.ExceptionThrowTestParametersPassedValueValue" xml:space="preserve">
     <value>抛出异常测试，传输参数：{0} {1}</value>
   </data>
-  <data name="Frontend.557" xml:space="preserve">
-    <value>删除失败</value>
-  </data>
-  <data name="Frontend.558" xml:space="preserve">
+
+  <data name="Frontend.PromptRange.AverageScoreValueOptimizeThePromptStructureOrModelParametersThenTest" xml:space="preserve">
     <value>平均分 {0}，建议优化 Prompt 结构或模型参数后重测。</value>
   </data>
-  <data name="Frontend.559" xml:space="preserve">
+  <data name="Frontend.PromptRange.RunResultsExistButScoringIsNotFinishedSoQualityIsHard" xml:space="preserve">
     <value>已有打靶结果但尚未完成评分，难以判断优劣。</value>
   </data>
-  <data name="Frontend.560" xml:space="preserve">
+  <data name="Frontend.PromptRange.AFormalTacticExistsButThereAreNoRunResultsSoBaseline" xml:space="preserve">
     <value>已存在正式靶道但没有任何打靶结果，缺少基线数据。</value>
   </data>
-  <data name="Frontend.561" xml:space="preserve">
+  <data name="Frontend.PromptRange.ThisDraftVersionHasAlreadyBeenUsedPromoteAStableVersionBefore" xml:space="preserve">
     <value>草稿版本已被调用，建议沉淀稳定版后继续协作。</value>
   </data>
-  <data name="Frontend.562" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoPromptItemWithIdValueWasFound" xml:space="preserve">
     <value>未找到 id 为 {0} 的 PromptItem</value>
   </data>
-  <data name="Frontend.563" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoPromptDraftWithIDValueWasFound" xml:space="preserve">
     <value>未找到 ID　为{0}prompt草稿</value>
   </data>
-  <data name="Frontend.564" xml:space="preserve">
+  <data name="Frontend.PromptRange.PromptNotFound" xml:space="preserve">
     <value>未找到prompt</value>
   </data>
-  <data name="Frontend.565" xml:space="preserve">
+  <data name="Frontend.PromptRange.ExportDirectoryDoesNotExistValue" xml:space="preserve">
     <value>导出目录不存在: {0}</value>
   </data>
-  <data name="Frontend.566" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoFilesWereFoundInTheExportDirectoryValue" xml:space="preserve">
     <value>导出目录中没有找到任何文件: {0}</value>
   </data>
-  <data name="Frontend.567" xml:space="preserve">
+  <data name="Frontend.PromptRange.CannotGetParentDirectoryValue" xml:space="preserve">
     <value>无法获取父目录: {0}</value>
   </data>
-  <data name="Frontend.568" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToExportPluginsValue" xml:space="preserve">
     <value>导出 plugins 失败: {0}</value>
   </data>
-  <data name="Frontend.569" xml:space="preserve">
+  <data name="Frontend.PromptRange.AutomaticScoringIsUnavailableWhenTheExpectedResultIsEmpty" xml:space="preserve">
     <value>期望结果为空时不能自动打分</value>
   </data>
-  <data name="Frontend.570" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoPromptResultWithIDValueWasFound" xml:space="preserve">
     <value>未找到 ID 为 {0} 的 PromptResult</value>
   </data>
-  <data name="Frontend.571" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheSpecifiedAIModelIDValueDoesNotExist" xml:space="preserve">
     <value>指定的 AI Model ID {0} 不存在</value>
   </data>
-  <data name="Frontend.572" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoAvailableAIModelWasFoundConfigureAChatModelInThe" xml:space="preserve">
     <value>未找到可用的 AI Model，请先在 AIKernel 模块中配置 Chat 类型的 Model</value>
   </data>
-  <data name="Frontend.573" xml:space="preserve">
+  <data name="Frontend.PromptRange.ThePromptItemCouldNotBeQueriedAfterCreationItemIdValue" xml:space="preserve">
     <value>PromptItem 创建后无法查询到，ItemId: {0}</value>
   </data>
-  <data name="Frontend.574" xml:space="preserve">
+  <data name="Frontend.PromptRange.InitializationFinishedButPromptItemIsNullThisShouldNotHappen" xml:space="preserve">
     <value>初始化流程完成，但 PromptItem 为 null（不应该发生）</value>
   </data>
-  <data name="Frontend.575" xml:space="preserve">
+  <data name="Frontend.PromptRange.InitializationSucceededModelIDValuePromptCodeValue" xml:space="preserve">
     <value>初始化成功：Model ID: {0}, PromptCode: {1}</value>
   </data>
-  <data name="Frontend.576" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheScoreMustBeBetweenZeroAndTen" xml:space="preserve">
     <value>评分必须在 0-10 之间</value>
   </data>
-  <data name="Frontend.577" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoRangeFoundForValue" xml:space="preserve">
     <value>未找到{0}对应的靶场</value>
   </data>
-  <data name="Frontend.578" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoRangeFoundForValueAlternate" xml:space="preserve">
     <value>没有找到{0}对应的靶场</value>
   </data>
-  <data name="Frontend.579" xml:space="preserve">
+  <data name="Frontend.PromptRange.IsTopTacticIsNewTacticIsNewSubTacticCannotAllBeTrueAtTheSameTime" xml:space="preserve">
     <value>IsTopTactic IsNewTactic IsNewSubTactic不能同时为True</value>
   </data>
-  <data name="Frontend.580" xml:space="preserve">
+  <data name="Frontend.PromptRange.RangeIdMustBeAPositiveIntegerTheCurrentValueIsValue" xml:space="preserve">
     <value>RangeId必须为正整数，当前是{0}</value>
   </data>
-  <data name="Frontend.581" xml:space="preserve">
+  <data name="Frontend.PromptRange.VersionGenerationErrorPleaseRunAgain" xml:space="preserve">
     <value>版号生成错误，请重新打靶</value>
   </data>
-  <data name="Frontend.582" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoPromptItemFoundForValue" xml:space="preserve">
     <value>找不到{0}对应的promptItem</value>
   </data>
-  <data name="Frontend.583" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoTacticFoundForValue" xml:space="preserve">
     <value>找不到{0}对应的靶道</value>
   </data>
-  <data name="Frontend.584" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoPromptItemFoundForValueAlternate" xml:space="preserve">
     <value>找不到 {0} 对应的 PromptItem</value>
   </data>
-  <data name="Frontend.585" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoRangeFoundForValueSupplemental" xml:space="preserve">
     <value>找不到 {0} 对应的靶场</value>
   </data>
-  <data name="Frontend.586" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoPromptItemMatchedTheConditionsCheckThatThePromptRangeNameIsCorrect" xml:space="preserve">
     <value>找不到匹配条件的 PromptItem，请检查 PromptRange 的名称是否准确，或其靶场（PromptRange）下面的所有的 PromptItem 结果是否都未进行打分，系统必须选择一个评分最高的 PromptItem。</value>
   </data>
-  <data name="Frontend.587" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoAIModelConfigurationWasFoundForPromptItemValue" xml:space="preserve">
     <value>找不到 PromptItem（{0}）对应的 AI 模型配置</value>
   </data>
-  <data name="Frontend.588" xml:space="preserve">
+  <data name="Frontend.PromptRange.PrefixAndSuffixCannotBeEmpty" xml:space="preserve">
     <value>前后缀不能为空</value>
   </data>
-  <data name="Frontend.589" xml:space="preserve">
+  <data name="Frontend.PromptRange.PromptContentCannotBeEmpty" xml:space="preserve">
     <value>Prompt 内容不能为空</value>
   </data>
-  <data name="Frontend.590" xml:space="preserve">
+  <data name="Frontend.PromptRange.ImageGenerationSucceededButNoAccessibleImageAddressWasReturnedImageBytesImageUri" xml:space="preserve">
     <value>图像生成成功，但未返回可访问的图片地址（ImageBytes / ImageUri 均为空）</value>
   </data>
-  <data name="Frontend.591" xml:space="preserve">
+  <data name="Frontend.PromptRange.TextToImageCallFailedKernelWasNotCreated" xml:space="preserve">
     <value>TextToImage 调用失败：Kernel 未创建成功</value>
   </data>
-  <data name="Frontend.592" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheTTSCallSucceededButNoValidAudioContentWasReturned" xml:space="preserve">
     <value>TTS 调用成功，但未返回有效音频内容</value>
   </data>
-  <data name="Frontend.593" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheSTTCallSucceededButNoRecognizedTextWasReturned" xml:space="preserve">
     <value>STT 调用成功，但未返回识别文本</value>
   </data>
-  <data name="Frontend.594" xml:space="preserve">
+  <data name="Frontend.PromptRange.TextEmbeddingExecutionContentCannotBeEmpty" xml:space="preserve">
     <value>TextEmbedding 执行内容不能为空</value>
   </data>
-  <data name="Frontend.595" xml:space="preserve">
+  <data name="Frontend.PromptRange.TextEmbeddingRequiresAVectorDBToBeSelectedFirst" xml:space="preserve">
     <value>TextEmbedding 需要先选择 VectorDB</value>
   </data>
-  <data name="Frontend.596" xml:space="preserve">
+  <data name="Frontend.PromptRange.VectorDBNotFoundIDValue" xml:space="preserve">
     <value>未找到 VectorDB（ID={0}）</value>
   </data>
-  <data name="Frontend.597" xml:space="preserve">
+  <data name="Frontend.PromptRange.PromptResultIdCannotBeEmpty" xml:space="preserve">
     <value>PromptResultId 不能为空</value>
   </data>
-  <data name="Frontend.598" xml:space="preserve">
+  <data name="Frontend.PromptRange.QueryContentCannotBeEmpty" xml:space="preserve">
     <value>查询内容不能为空</value>
   </data>
-  <data name="Frontend.599" xml:space="preserve">
+  <data name="Frontend.PromptRange.PromptResultNotFoundIDValue" xml:space="preserve">
     <value>未找到 PromptResult（ID={0}）</value>
   </data>
-  <data name="Frontend.600" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheCurrentResultIsNotATextEmbeddingTypeSoTheQueryTest" xml:space="preserve">
     <value>当前结果不是 TextEmbedding 类型，无法执行查询测试</value>
   </data>
-  <data name="Frontend.601" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheCurrentTextEmbeddingResultIsMissingVectorDBInformation" xml:space="preserve">
     <value>当前 TextEmbedding 结果缺少 VectorDB 信息</value>
   </data>
-  <data name="Frontend.602" xml:space="preserve">
+  <data name="Frontend.PromptRange.UserMessageCannotBeEmpty" xml:space="preserve">
     <value>用户消息不能为空</value>
   </data>
-  <data name="Frontend.603" xml:space="preserve">
+  <data name="Frontend.PromptRange.OnlyAChatModePromptResultCanContinueTheChat" xml:space="preserve">
     <value>只有聊天模式的 PromptResult 才能继续聊天</value>
   </data>
-  <data name="Frontend.604" xml:space="preserve">
+  <data name="Frontend.PromptRange.ScoreCannotBeLessThanZero" xml:space="preserve">
     <value>分数不能小于0</value>
   </data>
-  <data name="Frontend.605" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoResultFoundForValue" xml:space="preserve">
     <value>未找到{0}对应的结果</value>
   </data>
-  <data name="Frontend.606" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheCorrespondingPromptResultWasNotFound" xml:space="preserve">
     <value>找不到对应的promptResult</value>
   </data>
-  <data name="Frontend.607" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheCorrespondingPromptItemWasNotFound" xml:space="preserve">
     <value>找不到对应的promptItem</value>
   </data>
-  <data name="Frontend.608" xml:space="preserve">
+  <data name="Frontend.PromptRange.ThisResultHasAlreadyBeenScoredChooseForceRefresh" xml:space="preserve">
     <value>该结果已经评分过了, 请选择强制刷新</value>
   </data>
-  <data name="Frontend.609" xml:space="preserve">
+  <data name="Frontend.PromptRange.AtLeastOneChatModelMustBeSetBeforeAutomaticScoringIn" xml:space="preserve">
     <value>必须至少设置一个 Chat 类型的模型才能自动打分（在 AIKernel 模块中）</value>
   </data>
-  <data name="Frontend.610" xml:space="preserve">
+  <data name="Frontend.PromptRange.AutomaticScoreMatchingFailedTheScoredResultStringIsValueAndThe" xml:space="preserve">
     <value>自动打分结果匹配失败, 被打分的结果字符串为：{0}, 模型返回为{1}，</value>
   </data>
-  <data name="Frontend.611" xml:space="preserve">
+  <data name="Frontend.PromptRange.AICallFailedValueModelConfigurationIsEmptyAIModelDtoNull" xml:space="preserve">
     <value>AI 调用失败（{0}）：模型配置为空（AIModelDto == null）</value>
   </data>
-  <data name="Frontend.612" xml:space="preserve">
+  <data name="Frontend.PromptRange.DeploymentNameFallbackConfiguration" xml:space="preserve">
     <value>部署名称回退配置：</value>
   </data>
-  <data name="Frontend.613" xml:space="preserve">
+  <data name="Frontend.PromptRange.DeploymentNameFallbackRetryFailed" xml:space="preserve">
     <value>部署名称回退重试失败：</value>
   </data>
-  <data name="Frontend.614" xml:space="preserve">
+  <data name="Frontend.PromptRange.SystemDefaultFallbackConfiguration" xml:space="preserve">
     <value>系统默认回退配置：</value>
   </data>
-  <data name="Frontend.615" xml:space="preserve">
+  <data name="Frontend.PromptRange.RetryOfTheDefaultSystemChatConfigurationFailed" xml:space="preserve">
     <value>系统默认聊天配置重试失败：</value>
   </data>
-  <data name="Frontend.616" xml:space="preserve">
+  <data name="Frontend.PromptRange.AvailableChatModelCandidates" xml:space="preserve">
     <value>可用 Chat 模型候选：</value>
   </data>
-  <data name="Frontend.617" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoAvailableCandidates" xml:space="preserve">
     <value>（无可用候选）</value>
   </data>
-  <data name="Frontend.618" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToReadCandidatesValueValue" xml:space="preserve">
     <value>（读取候选失败：{0} {1}）</value>
   </data>
-  <data name="Frontend.619" xml:space="preserve">
+  <data name="Frontend.PromptRange.AgentKernelDidNotCreateAnAgentSessionCheckWhetherTheAIModelConfiguration" xml:space="preserve">
     <value>AgentKernel 未创建 AgentSession，请检查 AI 模型配置是否为 Chat 类型</value>
   </data>
-  <data name="Frontend.620" xml:space="preserve">
+  <data name="Frontend.PromptRange.AICallFailedValueValue" xml:space="preserve">
     <value>AI 调用失败（{0}）。{1}</value>
   </data>
-  <data name="Frontend.621" xml:space="preserve">
+  <data name="Frontend.PromptRange.AnUpstream403ForbiddenWasDetectedThisIsUsuallyCausedByModel" xml:space="preserve">
     <value>；检测到上游返回 403（Forbidden），通常由模型端点权限、API Key、Deployment 名称或账号配额/策略导致。</value>
   </data>
-  <data name="Frontend.622" xml:space="preserve">
+  <data name="Frontend.PromptRange.SystemDefaultChatConfiguration" xml:space="preserve">
     <value>系统默认聊天配置：</value>
   </data>
-  <data name="Frontend.623" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheTLSSSLConnectionWasResetDuringTransferConnectionResetByPeer" xml:space="preserve">
     <value>；检测到 TLS/SSL 连接在传输阶段被重置（Connection reset by peer）。这通常是网络链路、代理、中间设备或目标区域可达性问题，而不是 Prompt 或模型参数本身错误。</value>
   </data>
-  <data name="Frontend.624" xml:space="preserve">
+  <data name="Frontend.PromptRange.OriginalErrorChain" xml:space="preserve">
     <value>原始错误链：</value>
   </data>
-  <data name="Frontend.625" xml:space="preserve">
+  <data name="Frontend.PromptRange.SenparcAiSettingWasNotLoadedNull" xml:space="preserve">
     <value>未读取到 SenparcAiSetting（null）</value>
   </data>
-  <data name="Frontend.626" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToReadSenparcAiSettingValueValue" xml:space="preserve">
     <value>读取 SenparcAiSetting 失败：{0} {1}</value>
   </data>
-  <data name="Frontend.627" xml:space="preserve">
+  <data name="Frontend.PromptRange.ModelConfigurationIsEmptyAIModelDtoNull" xml:space="preserve">
     <value>模型配置为空（AIModelDto == null）</value>
   </data>
-  <data name="Frontend.628" xml:space="preserve">
+  <data name="Frontend.PromptRange.STTRequiresAnUploadedAudioFile" xml:space="preserve">
     <value>STT 需要上传音频文件</value>
   </data>
-  <data name="Frontend.629" xml:space="preserve">
+  <data name="Frontend.PromptRange.InvalidSTTAudioPath" xml:space="preserve">
     <value>STT 音频路径无效</value>
   </data>
-  <data name="Frontend.630" xml:space="preserve">
+  <data name="Frontend.PromptRange.STTAudioPathIsNotAllowed" xml:space="preserve">
     <value>STT 音频路径不合法</value>
   </data>
-  <data name="Frontend.631" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheSTTAudioFileDoesNotExistPleaseUploadItAgain" xml:space="preserve">
     <value>STT 音频文件不存在，请重新上传</value>
   </data>
-  <data name="Frontend.632" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheUploadedSTTAudioContentIsEmpty" xml:space="preserve">
     <value>上传的 STT 音频内容为空</value>
   </data>
-  <data name="Frontend.633" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheUploadedSTTAudioBase64FormatIsInvalid" xml:space="preserve">
     <value>上传的 STT 音频 Base64 格式不正确</value>
   </data>
-  <data name="Frontend.634" xml:space="preserve">
+  <data name="Frontend.PromptRange.FilePathIsNotAllowed" xml:space="preserve">
     <value>文件路径不合法</value>
   </data>
-  <data name="Frontend.635" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheFilePathIsOutsideTheAllowedDirectory" xml:space="preserve">
     <value>文件路径越界</value>
   </data>
-  <data name="Frontend.636" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToDeleteTheResultForValueMsgValue" xml:space="preserve">
     <value>删除{0}对应的结果失败, msg: {1}</value>
   </data>
-  <data name="Frontend.637" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoModelFoundForValue" xml:space="preserve">
     <value>找不到{0}对应的模型</value>
   </data>
-  <data name="Frontend.638" xml:space="preserve">
+  <data name="Frontend.PromptRange.WhenUsingAzureOpenAIApiVersionAndEndpointCannotBeEmpty" xml:space="preserve">
     <value>使用AzureOpenAI时，ApiVersion和Endpoint不能为空</value>
   </data>
-  <data name="Frontend.639" xml:space="preserve">
+  <data name="Frontend.PromptRange.ApiVersionDoesNotExist" xml:space="preserve">
     <value>ApiVersion不存在</value>
   </data>
-  <data name="Frontend.640" xml:space="preserve">
+  <data name="Frontend.PromptRange.TheModelWasNotFound" xml:space="preserve">
     <value>未找到该模型</value>
   </data>
-  <data name="Frontend.641" xml:space="preserve">
+  <data name="Frontend.PromptRange.FailedToSaveTheConversationRecordNoSavedEntityWasFoundFor" xml:space="preserve">
     <value>保存对话记录失败：未找到 Sequence={0}, RoleType={1} 的已保存实体，或 ID 为 0。PromptResultId={2}</value>
   </data>
-  <data name="Frontend.642" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoConversationRecordWithIDValueWasFound" xml:space="preserve">
     <value>未找到 ID 为 {0} 的对话记录</value>
   </data>
-  <data name="Frontend.643" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoPromptTacticFoundForValue" xml:space="preserve">
     <value>未找到{0}对应的提示词靶道</value>
   </data>
-  <data name="Frontend.644" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoPathFoundToExport" xml:space="preserve">
     <value>没有找到需要导出的路径</value>
   </data>
-  <data name="Frontend.645" xml:space="preserve">
+  <data name="Frontend.PromptRange.FileNotFound" xml:space="preserve">
     <value>文件未找到</value>
   </data>
-  <data name="Frontend.646" xml:space="preserve">
+  <data name="Frontend.PromptRange.FileSizeExceedsTheLimit50M" xml:space="preserve">
     <value>文件大小超过限制（50 M）</value>
   </data>
-  <data name="Frontend.647" xml:space="preserve">
+  <data name="Frontend.PromptRange.InvalidFileFormat" xml:space="preserve">
     <value>文件格式错误</value>
   </data>
-  <data name="Frontend.648" xml:space="preserve">
+  <data name="Frontend.PromptRange.ArchiveEntryCountExceedsTheLimit" xml:space="preserve">
     <value>压缩包条目数量超过限制</value>
   </data>
-  <data name="Frontend.649" xml:space="preserve">
+  <data name="Frontend.PromptRange.ExtractedArchiveExceedsTheSizeLimit" xml:space="preserve">
     <value>压缩包解压后大小超过限制</value>
   </data>
-  <data name="Frontend.650" xml:space="preserve">
+  <data name="Frontend.PromptRange.ArchiveContainsDuplicatePaths" xml:space="preserve">
     <value>压缩包包含重复路径</value>
   </data>
-  <data name="Frontend.651" xml:space="preserve">
+  <data name="Frontend.PromptRange.InvalidArchivePathFormat" xml:space="preserve">
     <value>压缩包路径格式错误</value>
   </data>
-  <data name="Frontend.652" xml:space="preserve">
+  <data name="Frontend.PromptRange.InvalidValueName" xml:space="preserve">
     <value>{0}名称不合法</value>
   </data>
-  <data name="Frontend.653" xml:space="preserve">
+  <data name="Frontend.PromptRange.ArchiveContainsADisallowedPath" xml:space="preserve">
     <value>压缩包包含不合法路径</value>
   </data>
-  <data name="Frontend.654" xml:space="preserve">
+  <data name="Frontend.PromptRange.ArchiveContainsPathTraversal" xml:space="preserve">
     <value>压缩包包含路径穿越内容</value>
   </data>
-  <data name="Frontend.655" xml:space="preserve">
+  <data name="Frontend.PromptRange.ArchiveContainsAnOutOfBoundsPath" xml:space="preserve">
     <value>压缩包包含越界路径</value>
   </data>
-  <data name="Frontend.656" xml:space="preserve">
+  <data name="Frontend.PromptRange.NoSuchModelTypeValue" xml:space="preserve">
     <value>没有该模型类型：{0}</value>
   </data>
-  <data name="Frontend.657" xml:space="preserve">
+  <data name="Frontend.PromptRange.TranscribeTheAudioValue" xml:space="preserve">
     <value>请识别音频内容：{0}</value>
   </data>
-  <data name="Frontend.700" xml:space="preserve"><value>Skill 管理</value></data>
-  <data name="Frontend.701" xml:space="preserve"><value>提示词靶场</value></data>
-  <data name="Frontend.702" xml:space="preserve"><value>刷新</value></data>
-  <data name="Frontend.703" xml:space="preserve"><value>AI 创建 / 修改 Skill</value></data>
-  <data name="Frontend.704" xml:space="preserve"><value>导入 Skill</value></data>
-  <data name="Frontend.705" xml:space="preserve"><value>所有外部导入和 AI 生成的 Skill 都会先进入 Draft。请先预览内容、确认权限并完成测试，再发布给 Agent 或 AdminChat。</value></data>
-  <data name="Frontend.706" xml:space="preserve"><value>Skill 总数</value></data>
-  <data name="Frontend.707" xml:space="preserve"><value>待审核 Draft</value></data>
-  <data name="Frontend.708" xml:space="preserve"><value>已发布版本</value></data>
-  <data name="Frontend.709" xml:space="preserve"><value>预览内容</value></data>
-  <data name="Frontend.710" xml:space="preserve"><value>名称</value></data>
-  <data name="Frontend.711" xml:space="preserve"><value>当前版本</value></data>
-  <data name="Frontend.712" xml:space="preserve"><value>状态</value></data>
-  <data name="Frontend.713" xml:space="preserve"><value>操作</value></data>
-  <data name="Frontend.714" xml:space="preserve"><value>预览</value></data>
-  <data name="Frontend.715" xml:space="preserve"><value>发布</value></data>
-  <data name="Frontend.716" xml:space="preserve"><value>本地上传</value></data>
-  <data name="Frontend.717" xml:space="preserve"><value>支持 skill.json 位于根目录、平铺文件，或包含外层文件夹的 ZIP。单个 ZIP 最大 50 MB。</value></data>
-  <data name="Frontend.718" xml:space="preserve"><value>GitHub 文件夹</value></data>
-  <data name="Frontend.719" xml:space="preserve"><value>需要包含 SKILL.md 或 skprompt.txt。导入后会自动转换为 PromptRange Skill 包。</value></data>
-  <data name="Frontend.720" xml:space="preserve"><value>导入并生成 Draft</value></data>
-  <data name="Frontend.721" xml:space="preserve"><value>需求描述</value></data>
-  <data name="Frontend.722" xml:space="preserve"><value>描述 Skill 的目标、输入、输出和边界</value></data>
-  <data name="Frontend.723" xml:space="preserve"><value>可选</value></data>
-  <data name="Frontend.724" xml:space="preserve"><value>显示名称</value></data>
-  <data name="Frontend.725" xml:space="preserve"><value>修改现有 Skill</value></data>
-  <data name="Frontend.726" xml:space="preserve"><value>不选择则创建新的 Skill</value></data>
-  <data name="Frontend.727" xml:space="preserve"><value>基准版本</value></data>
-  <data name="Frontend.728" xml:space="preserve"><value>默认使用当前版本</value></data>
-  <data name="Frontend.729" xml:space="preserve"><value>生成模型</value></data>
-  <data name="Frontend.730" xml:space="preserve"><value>选择 AIKernel Chat 模型</value></data>
-  <data name="Frontend.731" xml:space="preserve"><value>生成 Draft Skill</value></data>
-  <data name="Frontend.732" xml:space="preserve"><value>Skill 内容预览</value></data>
-  <data name="Frontend.733" xml:space="preserve"><value>当前版本没有可预览的文件</value></data>
-  <data name="Frontend.734" xml:space="preserve"><value>此文件类型不支持在线预览，仅展示文件信息。</value></data>
-  <data name="Frontend.735" xml:space="preserve"><value>确认发布当前 Skill 版本吗？</value></data>
-  <data name="Frontend.736" xml:space="preserve"><value>发布确认</value></data>
-  <data name="Frontend.737" xml:space="preserve"><value>Skill 已发布</value></data>
-  <data name="Frontend.738" xml:space="preserve"><value>加载 Skill 失败：</value></data>
-  <data name="Frontend.739" xml:space="preserve"><value>加载 Chat 模型失败：</value></data>
-  <data name="Frontend.740" xml:space="preserve"><value>未知错误</value></data>
-  <data name="Frontend.741" xml:space="preserve"><value>Skill ZIP 不能超过 50 MB</value></data>
-  <data name="Frontend.742" xml:space="preserve"><value>请选择要上传的 Skill ZIP</value></data>
-  <data name="Frontend.743" xml:space="preserve"><value>Skill 已导入为 Draft，请预览、测试并审核后发布</value></data>
-  <data name="Frontend.744" xml:space="preserve"><value>上传失败：</value></data>
-  <data name="Frontend.745" xml:space="preserve"><value>只允许使用 HTTPS 地址</value></data>
-  <data name="Frontend.746" xml:space="preserve"><value>安装失败：</value></data>
-  <data name="Frontend.747" xml:space="preserve"><value>请填写需求描述并选择 Chat 模型</value></data>
-  <data name="Frontend.748" xml:space="preserve"><value>AI 已生成 Draft Skill，可展开版本树进行预览</value></data>
-  <data name="Frontend.749" xml:space="preserve"><value>生成失败：</value></data>
-  <data name="Frontend.750" xml:space="preserve"><value>预览失败：</value></data>
-  <data name="Frontend.751" xml:space="preserve"><value>确认发布当前 Skill 版本吗？</value></data>
-  <data name="Frontend.752" xml:space="preserve"><value>发布确认</value></data>
-  <data name="Frontend.753" xml:space="preserve"><value>Skill 已发布</value></data>
+  <data name="Frontend.PromptRange.SkillManagement" xml:space="preserve"><value>Skill 管理</value></data>
+  <data name="Frontend.PromptRange.PromptRangeAlternate" xml:space="preserve"><value>提示词靶场</value></data>
+
+  <data name="Frontend.PromptRange.CreateEditSkillWithAI" xml:space="preserve"><value>AI 创建 / 修改 Skill</value></data>
+  <data name="Frontend.PromptRange.ImportSkill" xml:space="preserve"><value>导入 Skill</value></data>
+  <data name="Frontend.PromptRange.AllExternallyImportedAndAIGeneratedSkillsEnterDraftFirstPreviewThe" xml:space="preserve"><value>所有外部导入和 AI 生成的 Skill 都会先进入 Draft。请先预览内容、确认权限并完成测试，再发布给 Agent 或 AdminChat。</value></data>
+  <data name="Frontend.PromptRange.TotalSkills" xml:space="preserve"><value>Skill 总数</value></data>
+  <data name="Frontend.PromptRange.DraftsAwaitingReview" xml:space="preserve"><value>待审核 Draft</value></data>
+  <data name="Frontend.PromptRange.PublishedVersions" xml:space="preserve"><value>已发布版本</value></data>
+  <data name="Frontend.PromptRange.PreviewContent" xml:space="preserve"><value>预览内容</value></data>
+  <data name="Frontend.PromptRange.NameAlternate" xml:space="preserve"><value>名称</value></data>
+  <data name="Frontend.PromptRange.CurrentVersion" xml:space="preserve"><value>当前版本</value></data>
+  <data name="Frontend.PromptRange.Status" xml:space="preserve"><value>状态</value></data>
+  <data name="Frontend.PromptRange.ActionsAlternate" xml:space="preserve"><value>操作</value></data>
+  <data name="Frontend.PromptRange.Preview" xml:space="preserve"><value>预览</value></data>
+  <data name="Frontend.PromptRange.Publish" xml:space="preserve"><value>发布</value></data>
+  <data name="Frontend.PromptRange.LocalUpload" xml:space="preserve"><value>本地上传</value></data>
+  <data name="Frontend.PromptRange.SupportsARootSkillJsonFlatFilesOrAZIPWithAn" xml:space="preserve"><value>支持 skill.json 位于根目录、平铺文件，或包含外层文件夹的 ZIP。单个 ZIP 最大 50 MB。</value></data>
+  <data name="Frontend.PromptRange.GitHubFolder" xml:space="preserve"><value>GitHub 文件夹</value></data>
+  <data name="Frontend.PromptRange.TheFolderMustContainSKILLMdOrSkpromptTxtItIsConverted" xml:space="preserve"><value>需要包含 SKILL.md 或 skprompt.txt。导入后会自动转换为 PromptRange Skill 包。</value></data>
+  <data name="Frontend.PromptRange.ImportAndCreateDraft" xml:space="preserve"><value>导入并生成 Draft</value></data>
+  <data name="Frontend.PromptRange.RequirementDescription" xml:space="preserve"><value>需求描述</value></data>
+  <data name="Frontend.PromptRange.DescribeTheSkillGoalInputsOutputsAndBoundaries" xml:space="preserve"><value>描述 Skill 的目标、输入、输出和边界</value></data>
+  <data name="Frontend.PromptRange.Optional" xml:space="preserve"><value>可选</value></data>
+  <data name="Frontend.PromptRange.DisplayName" xml:space="preserve"><value>显示名称</value></data>
+  <data name="Frontend.PromptRange.EditExistingSkill" xml:space="preserve"><value>修改现有 Skill</value></data>
+  <data name="Frontend.PromptRange.LeaveEmptyToCreateANewSkill" xml:space="preserve"><value>不选择则创建新的 Skill</value></data>
+  <data name="Frontend.PromptRange.BaseVersion" xml:space="preserve"><value>基准版本</value></data>
+  <data name="Frontend.PromptRange.UseTheCurrentVersionByDefault" xml:space="preserve"><value>默认使用当前版本</value></data>
+  <data name="Frontend.PromptRange.GenerationModel" xml:space="preserve"><value>生成模型</value></data>
+  <data name="Frontend.PromptRange.SelectAnAIKernelChatModel" xml:space="preserve"><value>选择 AIKernel Chat 模型</value></data>
+  <data name="Frontend.PromptRange.GenerateDraftSkill" xml:space="preserve"><value>生成 Draft Skill</value></data>
+  <data name="Frontend.PromptRange.SkillContentPreview" xml:space="preserve"><value>Skill 内容预览</value></data>
+  <data name="Frontend.PromptRange.TheCurrentVersionHasNoPreviewableFiles" xml:space="preserve"><value>当前版本没有可预览的文件</value></data>
+  <data name="Frontend.PromptRange.ThisFileTypeCannotBePreviewedOnlineOnlyFileInformationIsShown" xml:space="preserve"><value>此文件类型不支持在线预览，仅展示文件信息。</value></data>
+  <data name="Frontend.PromptRange.PublishTheCurrentSkillVersion" xml:space="preserve"><value>确认发布当前 Skill 版本吗？</value></data>
+  <data name="Frontend.PromptRange.PublishConfirmation" xml:space="preserve"><value>发布确认</value></data>
+  <data name="Frontend.PromptRange.SkillPublished" xml:space="preserve"><value>Skill 已发布</value></data>
+  <data name="Frontend.PromptRange.FailedToLoadSkill" xml:space="preserve"><value>加载 Skill 失败：</value></data>
+  <data name="Frontend.PromptRange.FailedToLoadChatModels" xml:space="preserve"><value>加载 Chat 模型失败：</value></data>
+
+  <data name="Frontend.PromptRange.SkillZIPFilesMustNotExceed50MB" xml:space="preserve"><value>Skill ZIP 不能超过 50 MB</value></data>
+  <data name="Frontend.PromptRange.SelectASkillZIPToUpload" xml:space="preserve"><value>请选择要上传的 Skill ZIP</value></data>
+  <data name="Frontend.PromptRange.SkillImportedAsDraftPreviewTestReviewAndPublishIt" xml:space="preserve"><value>Skill 已导入为 Draft，请预览、测试并审核后发布</value></data>
+  <data name="Frontend.PromptRange.UploadFailed" xml:space="preserve"><value>上传失败：</value></data>
+  <data name="Frontend.PromptRange.OnlyHTTPSURLsAreAllowed" xml:space="preserve"><value>只允许使用 HTTPS 地址</value></data>
+  <data name="Frontend.PromptRange.InstallationFailed" xml:space="preserve"><value>安装失败：</value></data>
+  <data name="Frontend.PromptRange.EnterARequirementDescriptionAndSelectAChatModel" xml:space="preserve"><value>请填写需求描述并选择 Chat 模型</value></data>
+  <data name="Frontend.PromptRange.AIGeneratedADraftSkillExpandTheVersionTreeToPreviewIt" xml:space="preserve"><value>AI 已生成 Draft Skill，可展开版本树进行预览</value></data>
+  <data name="Frontend.PromptRange.GenerationFailed" xml:space="preserve"><value>生成失败：</value></data>
+  <data name="Frontend.PromptRange.PreviewFailed" xml:space="preserve"><value>预览失败：</value></data>
+
+
+
   <data name="AdminChat.SystemPrompt.Default" xml:space="preserve">
     <value>你是 NeuCharFramework 管理后台首页中的 AI 智能助手。
 请使用简洁、准确、可执行的中文回答用户问题。若信息不足，请明确指出缺失信息。
@@ -1340,55 +1309,55 @@ workspace_write 的 relativePath 必须是非空的 Workspace 相对文件路径
 附件只提供索引，不表示你已经读取内容。文档先用 workspace_document_info/search 定位，再用 workspace_document_read 按页、工作表或分段读取；每次最多 4000 字符，Workspace 资料读取、目录与搜索工具每轮共享 16000 字符输出限额。明确区分部分读取与全文分析并引用文件名和页/表/分段；无文字层的扫描件不可声称已 OCR。公式缓存可能过期，不要虚构重新计算结果。只有本轮明确授权且实际收到图片内容时才能做视觉分析；否则请用户勾选视觉处理并选择支持图片的模型。</value>
   </data>
 
-  <data name="Frontend.754" xml:space="preserve"><value>保 存</value></data>
-  <data name="Frontend.755" xml:space="preserve"><value>查看备注</value></data>
-  <data name="Frontend.756" xml:space="preserve"><value>当前：{0}</value></data>
-  <data name="Frontend.757" xml:space="preserve"><value>Token 总量：{0}（输入 {1} / 输出 {2}）</value></data>
-  <data name="Frontend.758" xml:space="preserve"><value>{0} [耗时(毫秒):{1}]</value></data>
-  <data name="Frontend.759" xml:space="preserve"><value>手动评分: {0}</value></data>
-  <data name="Frontend.760" xml:space="preserve"><value>以版本树管理 Skill，以 Draft 作为 AI 生成和外部导入的安全边界</value></data>
-  <data name="Frontend.761" xml:space="preserve"><value>可选，例如 excel.report</value></data>
+  <data name="Frontend.PromptRange.SaveAlternate" xml:space="preserve"><value>保 存</value></data>
+  <data name="Frontend.PromptRange.ViewNotes" xml:space="preserve"><value>查看备注</value></data>
+  <data name="Frontend.PromptRange.CurrentValue" xml:space="preserve"><value>当前：{0}</value></data>
+  <data name="Frontend.PromptRange.TotalTokensValueInputValueOutputValue" xml:space="preserve"><value>Token 总量：{0}（输入 {1} / 输出 {2}）</value></data>
+  <data name="Frontend.PromptRange.ValueDurationMsValue" xml:space="preserve"><value>{0} [耗时(毫秒):{1}]</value></data>
+  <data name="Frontend.PromptRange.ManualScoreValue" xml:space="preserve"><value>手动评分: {0}</value></data>
+  <data name="Frontend.PromptRange.ManageSkillsThroughAVersionTreeUsingDraftAsTheSafeBoundary" xml:space="preserve"><value>以版本树管理 Skill，以 Draft 作为 AI 生成和外部导入的安全边界</value></data>
+  <data name="Frontend.PromptRange.OptionalForExampleExcelReport" xml:space="preserve"><value>可选，例如 excel.report</value></data>
 
   <data name="Function.PromptRange.ViewCodes.Name" xml:space="preserve"><value>查看 PromptCode 列表</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
   <data name="Function.PromptRange.ViewCodes.Description" xml:space="preserve"><value>查看所有靶场和靶道的 PromptCode，可用于在 AgentsManager 中快速创建智能体</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.762" xml:space="preserve"><value>备注:</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.763" xml:space="preserve"><value>检测到 {0} 个变量</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.764" xml:space="preserve"><value>共 {0} 个节点</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.765" xml:space="preserve"><value>已选择: {0} 个靶道</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.766" xml:space="preserve"><value>请输入 Prompt 内容</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.767" xml:space="preserve"><value>请输入您的问题... (Ctrl+Enter / Cmd+Enter 发送)</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.768" xml:space="preserve"><value>请输入您的下一句话... (Ctrl+Enter / Cmd+Enter 发送)</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.769" xml:space="preserve"><value>当前 PromptCode 下已有 {0} 个智能体：{1}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.770" xml:space="preserve"><value>备注:</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.771" xml:space="preserve"><value>已发布</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.PromptRange.Notes" xml:space="preserve"><value>备注:</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.PromptRange.DetectedValueVariables" xml:space="preserve"><value>检测到 {0} 个变量</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.PromptRange.ValueNodes" xml:space="preserve"><value>共 {0} 个节点</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.PromptRange.SelectedValueLanes" xml:space="preserve"><value>已选择: {0} 个靶道</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.PromptRange.EnterPromptContentAlternate" xml:space="preserve"><value>请输入 Prompt 内容</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.PromptRange.EnterYourQuestionCtrlEnterCmdEnterToSendAlternate" xml:space="preserve"><value>请输入您的问题... (Ctrl+Enter / Cmd+Enter 发送)</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.PromptRange.EnterYourNextMessageCtrlEnterCmdEnterToSendAlternate" xml:space="preserve"><value>请输入您的下一句话... (Ctrl+Enter / Cmd+Enter 发送)</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.PromptRange.ValueAgentsAlreadyExistForTheCurrentPromptCodeValue" xml:space="preserve"><value>当前 PromptCode 下已有 {0} 个智能体：{1}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
 
-  <data name="Frontend.772" xml:space="preserve"><value>请输入靶场名称</value></data>
-  <data name="Frontend.773" xml:space="preserve"><value>请选择战术</value></data>
-  <data name="Frontend.774" xml:space="preserve"><value>请输入前缀</value></data>
-  <data name="Frontend.775" xml:space="preserve"><value>请输入后缀</value></data>
-  <data name="Frontend.776" xml:space="preserve"><value>请输入变量值</value></data>
-  <data name="Frontend.777" xml:space="preserve"><value>请选择模型类型</value></data>
-  <data name="Frontend.778" xml:space="preserve"><value>请输入别名</value></data>
-  <data name="Frontend.779" xml:space="preserve"><value>请输入模型名称</value></data>
-  <data name="Frontend.780" xml:space="preserve"><value>请输入API Version</value></data>
-  <data name="Frontend.781" xml:space="preserve"><value>请输入API key</value></data>
-  <data name="Frontend.782" xml:space="preserve"><value>请输入变量名</value></data>
-  <data name="Frontend.783" xml:space="preserve"><value>请输入End Point</value></data>
-  <data name="Frontend.784" xml:space="preserve"><value>请输入Organization Id</value></data>
-  <data name="Frontend.785" xml:space="preserve"><value>请输入期望结果</value></data>
-  <data name="Frontend.786" xml:space="preserve"><value>请至少选择一个靶场</value></data>
-  <data name="Frontend.787" xml:space="preserve"><value>请至少选择一个靶道</value></data>
+  <data name="Frontend.PromptRange.Published" xml:space="preserve"><value>已发布</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
 
-  <data name="Frontend.788" xml:space="preserve"><value>当前 PromptCode（{0}）已有 {1} 个智能体使用。是否继续创建新智能体？</value></data>
-  <data name="Frontend.789" xml:space="preserve"><value>确认创建</value></data>
-  <data name="Frontend.790" xml:space="preserve"><value>继续创建</value></data>
-  <data name="Frontend.791" xml:space="preserve"><value>智能体「{0}」创建成功！</value></data>
-  <data name="Frontend.792" xml:space="preserve"><value>全屏请求失败:</value></data>
+  <data name="Frontend.PromptRange.EnterTheRangeName" xml:space="preserve"><value>请输入靶场名称</value></data>
+  <data name="Frontend.PromptRange.SelectATacticSupplemental" xml:space="preserve"><value>请选择战术</value></data>
+  <data name="Frontend.PromptRange.EnterThePrefix" xml:space="preserve"><value>请输入前缀</value></data>
+  <data name="Frontend.PromptRange.EnterTheSuffix" xml:space="preserve"><value>请输入后缀</value></data>
+  <data name="Frontend.PromptRange.EnterTheVariableValue" xml:space="preserve"><value>请输入变量值</value></data>
+  <data name="Frontend.PromptRange.SelectAModelTypeAlternate" xml:space="preserve"><value>请选择模型类型</value></data>
+  <data name="Frontend.PromptRange.EnterAnAliasAlternate" xml:space="preserve"><value>请输入别名</value></data>
+  <data name="Frontend.PromptRange.EnterTheModelName" xml:space="preserve"><value>请输入模型名称</value></data>
+  <data name="Frontend.PromptRange.EnterTheAPIVersion" xml:space="preserve"><value>请输入API Version</value></data>
+  <data name="Frontend.PromptRange.EnterTheAPIKey" xml:space="preserve"><value>请输入API key</value></data>
+  <data name="Frontend.PromptRange.EnterTheVariableName" xml:space="preserve"><value>请输入变量名</value></data>
+  <data name="Frontend.PromptRange.EnterTheEndpoint" xml:space="preserve"><value>请输入End Point</value></data>
+  <data name="Frontend.PromptRange.EnterTheOrganizationID" xml:space="preserve"><value>请输入Organization Id</value></data>
+  <data name="Frontend.PromptRange.EnterTheExpectedResult" xml:space="preserve"><value>请输入期望结果</value></data>
+  <data name="Frontend.PromptRange.SelectAtLeastOneRangeAlternate" xml:space="preserve"><value>请至少选择一个靶场</value></data>
+  <data name="Frontend.PromptRange.SelectAtLeastOnePrompt" xml:space="preserve"><value>请至少选择一个靶道</value></data>
 
-  <data name="Frontend.793" xml:space="preserve"><value>Top 20%</value></data>
-  <data name="Frontend.794" xml:space="preserve"><value>Top 40%</value></data>
-  <data name="Frontend.795" xml:space="preserve"><value>Bottom 20%</value></data>
-  <data name="Frontend.796" xml:space="preserve"><value>已选择：{0}</value></data>
-  <data name="Frontend.797" xml:space="preserve"><value>文件为空或超过在线预览大小限制。</value></data>
-  <data name="Frontend.663" xml:space="preserve"><value>选择的 Model 将用于创建 "PromptCatalyzer" 默认 Prompt，之后可以在优化时选择其他 Model。</value></data>
+  <data name="Frontend.PromptRange.PromptCodeValueIsAlreadyUsedByValueAgentsContinueCreatingANew" xml:space="preserve"><value>当前 PromptCode（{0}）已有 {1} 个智能体使用。是否继续创建新智能体？</value></data>
+
+  <data name="Frontend.PromptRange.ContinueCreationAlternate" xml:space="preserve"><value>继续创建</value></data>
+  <data name="Frontend.PromptRange.AgentValueCreatedSuccessfully" xml:space="preserve"><value>智能体「{0}」创建成功！</value></data>
+  <data name="Frontend.PromptRange.FullscreenRequestFailed" xml:space="preserve"><value>全屏请求失败:</value></data>
+
+  <data name="Frontend.PromptRange.Top20" xml:space="preserve"><value>Top 20%</value></data>
+  <data name="Frontend.PromptRange.Top40" xml:space="preserve"><value>Top 40%</value></data>
+  <data name="Frontend.PromptRange.Bottom20" xml:space="preserve"><value>Bottom 20%</value></data>
+  <data name="Frontend.PromptRange.SelectedValue" xml:space="preserve"><value>已选择：{0}</value></data>
+  <data name="Frontend.PromptRange.TheFileIsEmptyOrExceedsTheOnlinePreviewSizeLimit" xml:space="preserve"><value>文件为空或超过在线预览大小限制。</value></data>
+  <data name="Frontend.PromptRange.TheSelectedModelCreatesTheDefaultPromptCatalyzerPromptAnotherModelCanBe" xml:space="preserve"><value>选择的 Model 将用于创建 "PromptCatalyzer" 默认 Prompt，之后可以在优化时选择其他 Model。</value></data>
 </root>

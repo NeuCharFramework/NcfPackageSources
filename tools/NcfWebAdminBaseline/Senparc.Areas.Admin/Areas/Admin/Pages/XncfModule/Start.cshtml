@@ -16,7 +16,7 @@
 <div>
     <el-container v-if="data.xncfModule" direction="vertical" class="module-start-shell">
         <el-header class="module-header">
-            <span class="start-title"><i :class="data.xncfRegister.icon"></i>&nbsp;{{data.xncfRegister.menuName}} <span class="module-header-v">@AR["Xncf.Module"] {{data.xncfModule.version}}</span></span>
+            <span class="start-title"><i :class="data.xncfRegister.icon"></i>&nbsp;{{data.xncfRegister.menuName}} <span class="module-header-v">@AR["Xncf.Module"] {{data.xncfModule.version}}</span> <ncf-doc-help topic="modules.lifecycle"></ncf-doc-help></span>
             <span class="module-header-actions">
                 <el-button size="mini" icon="el-icon-document" @@click="updateLogVisible=true">@AR["Xncf.UpdateLog"]</el-button>
                 <el-button size="mini" icon="el-icon-chat-line-round" @@click="openModuleChat">ChatAgent</el-button>
@@ -44,7 +44,7 @@
             <el-tabs v-model="activeModuleTab" class="module-mode-tabs">
                 <el-tab-pane label="@AR["Xncf.Function"]" name="function">
                 <div class="module-function-toolbar">
-                    <span>@AR["Xncf.ModuleFunctionCatalog"]</span>
+                    <span>@AR["Xncf.ModuleFunctionCatalog"] <ncf-doc-help topic="modules.functions"></ncf-doc-help></span>
                     <el-button size="mini" icon="el-icon-lock" @@click="openAccessControl">@AR["Xncf.ModuleFunctionAccessControl"]</el-button>
                 </div>
                 <template v-if="!data.mustUpdate">
@@ -88,7 +88,6 @@
                          :class="['box-card', {'function-card-highlight': isFocusedFunction(item)}]">
                     <div slot="header" class="clearfix">
                         <span><i class="fa fa-terminal"></i> {{item.key.name}}</span>
-                        <ncf-doc-help topic="modules.functions"></ncf-doc-help>
                             <span type="text" :class="[data.xncfModule.state===1?'box-card-action':'box-card-action2']" @@click="openRun(item,data.xncfModule.state)">@AR["Xncf.Execute"]</span>
                         <p class="box-card-des">{{item.key.description}}</p>
                     </div>

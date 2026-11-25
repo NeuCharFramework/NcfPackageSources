@@ -27,10 +27,7 @@ using System.Text.Json;
 namespace Senparc.Xncf.Sandbox.Domain.Services;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Builds bounded Jupyter Notebook JSON for supported Python and C# kernels.
 /// </summary>
 public static class SandboxNotebookBuilder
 {
@@ -43,6 +40,14 @@ public static class SandboxNotebookBuilder
         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
+    /// <summary>
+    /// Builds a notebook document from marker-delimited source cells.
+    /// </summary>
+    /// <param name="language">The supported notebook language.</param>
+    /// <param name="title">Optional markdown title.</param>
+    /// <param name="cellsSource">The source text containing code/markdown cell markers.</param>
+    /// <returns>Indented notebook JSON.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the language or cell content is invalid.</exception>
     public static string Build(string language, string? title, string cellsSource)
     {
         var normalizedLanguage = NormalizeLanguage(language);
@@ -74,6 +79,12 @@ public static class SandboxNotebookBuilder
         return JsonSerializer.Serialize(notebook, JsonOptions);
     }
 
+    /// <summary>
+    /// Normalizes supported Python and C# language aliases.
+    /// </summary>
+    /// <param name="language">The requested language alias.</param>
+    /// <returns><c>python</c> or <c>csharp</c>.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the language is unsupported.</exception>
     public static string NormalizeLanguage(string? language)
     {
         var value = (language ?? string.Empty).Trim().ToLowerInvariant();
