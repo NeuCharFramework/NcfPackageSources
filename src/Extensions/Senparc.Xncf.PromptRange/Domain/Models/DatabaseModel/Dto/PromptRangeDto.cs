@@ -26,6 +26,7 @@ using Senparc.Xncf.PromptRange.Abstractions.Skills;
 
 namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
+/// <summary>Transfers PromptRange identity and source metadata to application clients.</summary>
 public class PromptRangeDto : DtoBase
 {
     /// <summary>
@@ -38,17 +39,19 @@ public class PromptRangeDto : DtoBase
     /// </summary>
     public string Alias { get; set; }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets the display name of the range.</summary>
     public string RangeName { get; set; }
 
+    /// <summary>Gets or sets the prompt or skill kind.</summary>
     public SkillKind Kind { get; set; }
 
+    /// <summary>Gets or sets the optional managed source file identifier.</summary>
     public int? SourceFileId { get; set; }
 
+    /// <summary>Gets or sets the source type.</summary>
     public string SourceType { get; set; }
 
+    /// <summary>Gets or sets the source URL.</summary>
     public string SourceUrl { get; set; }
 
     // /// <summary>

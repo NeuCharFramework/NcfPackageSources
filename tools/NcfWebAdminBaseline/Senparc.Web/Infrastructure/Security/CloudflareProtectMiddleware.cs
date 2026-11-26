@@ -25,24 +25,34 @@ using Microsoft.Extensions.Options;
 namespace Senparc.Web.Infrastructure.Security
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Applies optional security headers and fixed-window rate limiting to
+    /// configured request paths.
     /// <para>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Requests exceeding the configured limit receive HTTP 429 and are not
+    /// passed to the downstream pipeline.
     /// </para>
     /// </summary>
     public sealed class CloudflareProtectMiddleware
     {
         private readonly RequestDelegate _next;
 
-        //Legacy comment translated to English.
         private DateTime _lastPruneUtc = DateTime.MinValue;
 
+        /// <summary>
+        /// Initializes the middleware with the downstream request delegate.
+        /// </summary>
+        /// <param name="next">The next middleware component in the pipeline.</param>
         public CloudflareProtectMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
+        /// <summary>
+        /// Applies configured headers and rate limiting, then invokes the downstream
+        /// pipeline when the request is allowed.
+        /// </summary>
+        /// <param name="context">The current HTTP request context.</param>
+        /// <returns>A task representing middleware execution.</returns>
         public async Task InvokeAsync(HttpContext context)
         {
             var options = context.RequestServices.GetRequiredService<IOptions<CloudflareProtectOptions>>().Value;
@@ -82,6 +92,12 @@ namespace Senparc.Web.Infrastructure.Security
             await _next(context).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Determines whether a request path matches the configured protected prefixes.
+        /// </summary>
+        /// <param name="path">The request path.</param>
+        /// <param name="options">The active protection options.</param>
+        /// <returns><see langword="true"/> when the path should be rate limited.</returns>
         private static bool IsPathProtected(PathString path, CloudflareProtectOptions options)
         {
             var prefixes = options.ProtectedPathPrefixes;
@@ -93,12 +109,23 @@ namespace Senparc.Web.Infrastructure.Security
             return prefixes.Any(p => !string.IsNullOrWhiteSpace(p) && path.StartsWithSegments(p));
         }
 
+        /// <summary>
+        /// Gets a stable client key from the remote connection address.
+        /// </summary>
+        /// <param name="context">The current HTTP request context.</param>
+        /// <returns>The normalized IPv4 address, or <c>unknown</c>.</returns>
         private static string GetClientKey(HttpContext context)
         {
             var remote = context.Connection.RemoteIpAddress;
             return remote?.MapToIPv4()?.ToString() ?? "unknown";
         }
 
+        /// <summary>
+        /// Periodically removes expired limiter entries to bound in-process state.
+        /// </summary>
+        /// <param name="limiter">The limiter whose stale entries are removed.</param>
+        /// <param name="window">The active rate-limit window.</param>
+        /// <param name="now">The current timestamp.</param>
         private void PruneIfNeeded(FixedWindowRateLimiter limiter, TimeSpan window, DateTimeOffset now)
         {
             var nowUtc = now.UtcDateTime;
@@ -120,6 +147,10 @@ namespace Senparc.Web.Infrastructure.Security
             limiter.Prune(now, window);
         }
 
+        /// <summary>
+        /// Adds the response headers selected by the protection options.
+        /// </summary>
+        /// <param name="response">The response receiving the headers.</param>
         private static void ApplySecurityHeaders(HttpResponse response)
         {
             response.Headers["X-Content-Type-Options"] = "nosniff";

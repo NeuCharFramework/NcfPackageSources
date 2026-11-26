@@ -37,8 +37,8 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.WeixinClawIntegration;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Bridges NeuBell snapshots from the administration process to bound personal WeChat
+/// conversations, with startup compensation, provider-level throttling, and duplicate suppression.
 /// </summary>
 public sealed class WeixinClawNeuBellPushHostedService : BackgroundService
 {
@@ -48,6 +48,13 @@ public sealed class WeixinClawNeuBellPushHostedService : BackgroundService
     private readonly ILogger<WeixinClawNeuBellPushHostedService> _logger;
     private readonly ConcurrentDictionary<string, DateTimeOffset> _lastPush = new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// Initializes the hosted NeuBell forwarding service.
+    /// </summary>
+    /// <param name="scopeFactory">The scope factory used to resolve scoped binding and snapshot services.</param>
+    /// <param name="changeNotifier">The notifier that yields provider changes.</param>
+    /// <param name="options">The integration enablement and feature options.</param>
+    /// <param name="logger">The hosted-service logger.</param>
     public WeixinClawNeuBellPushHostedService(
         IServiceScopeFactory scopeFactory,
         NeuBellChangeNotifier changeNotifier,
@@ -60,6 +67,11 @@ public sealed class WeixinClawNeuBellPushHostedService : BackgroundService
         _logger = logger;
     }
 
+    /// <inheritdoc/>
+    /// <remarks>
+    /// Performs an initial all-provider compensation pass and then forwards debounced provider changes
+    /// until the host requests cancellation. Individual provider failures are logged and do not stop the loop.
+    /// </remarks>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         if (!_options.Value.Enabled || !_options.Value.EnableNeuBell)
@@ -110,6 +122,11 @@ public sealed class WeixinClawNeuBellPushHostedService : BackgroundService
         }
     }
 
+    /// <summary>
+    /// Loads all administrator bindings and forwards the selected provider snapshot to each applicable binding.
+    /// </summary>
+    /// <param name="providerId">The provider identifier whose snapshot changed.</param>
+    /// <param name="cancellationToken">The forwarding cancellation token.</param>
     private async Task PushProviderAsync(string providerId, CancellationToken cancellationToken)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -129,6 +146,10 @@ public sealed class WeixinClawNeuBellPushHostedService : BackgroundService
         }
     }
 
+    /// <summary>
+    /// Performs the startup compensation pass for every provider snapshot and every bound administrator.
+    /// </summary>
+    /// <param name="cancellationToken">The forwarding cancellation token.</param>
     private async Task PushAllProvidersAsync(CancellationToken cancellationToken)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -150,6 +171,18 @@ public sealed class WeixinClawNeuBellPushHostedService : BackgroundService
         }
     }
 
+    /// <summary>
+    /// Filters and sends one provider snapshot when it contains actionable items that have not
+    /// already been sent to the binding. Successful delivery records the fingerprint for deduplication.
+    /// </summary>
+    /// <param name="binding">The administrator's personal-WeChat binding.</param>
+    /// <param name="snapshot">The provider snapshot to evaluate.</param>
+    /// <param name="sender">The outbound WeChat message sender.</param>
+    /// <param name="bindingService">The binding service used to persist delivery state.</param>
+    /// <param name="cancellationToken">The forwarding cancellation token.</param>
+    /// <exception cref="InvalidOperationException">
+    /// Context-related sender failures are handled as a deferred delivery; other sender failures propagate.
+    /// </exception>
     private async Task PushSnapshotAsync(
         WeixinClawAdminBinding binding,
         NeuBellSnapshot snapshot,
@@ -196,6 +229,12 @@ public sealed class WeixinClawNeuBellPushHostedService : BackgroundService
         await bindingService.SaveObjectAsync(binding).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Computes a stable SHA-256 fingerprint from provider identity and item content.
+    /// </summary>
+    /// <param name="providerId">The provider identifier.</param>
+    /// <param name="items">The filtered notification items.</param>
+    /// <returns>The uppercase hexadecimal fingerprint.</returns>
     private static string ComputeFingerprint(string providerId, IReadOnlyList<NeuBellItem> items)
     {
         var input = string.Join(

@@ -286,6 +286,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             return result;
         }
 
+        /// <summary>
+        /// Determines whether an event is the legacy standalone TextContent form
+        /// that should not be duplicated during replay normalization.
+        /// </summary>
+        /// <param name="item">The trajectory event.</param>
+        /// <returns><see langword="true"/> for recognized legacy text event types.</returns>
         private static bool IsLegacyTextContentEvent(AdminChatTrajectoryEventDto item)
         {
             return item != null
@@ -294,6 +300,12 @@ namespace Senparc.Areas.Admin.Domain.Services
                     || string.Equals(item.EventType, "text", StringComparison.OrdinalIgnoreCase));
         }
 
+        /// <summary>
+        /// Determines whether an event belongs to an assistant text/reasoning phase
+        /// that can be coalesced during replay.
+        /// </summary>
+        /// <param name="item">The trajectory event.</param>
+        /// <returns><see langword="true"/> for recognized phase event types.</returns>
         private static bool IsTextPhaseEvent(AdminChatTrajectoryEventDto item)
         {
             return item != null
@@ -302,6 +314,12 @@ namespace Senparc.Areas.Admin.Domain.Services
                     || string.Equals(item.EventType, "Microsoft.Extensions.AI.TextReasoningContent", StringComparison.OrdinalIgnoreCase));
         }
 
+        /// <summary>
+        /// Extracts text from event content or compatible legacy payload JSON.
+        /// Malformed payloads produce an empty string.
+        /// </summary>
+        /// <param name="item">The trajectory event.</param>
+        /// <returns>The extracted text.</returns>
         private static string GetText(AdminChatTrajectoryEventDto item)
         {
             if (!string.IsNullOrEmpty(item?.Content))

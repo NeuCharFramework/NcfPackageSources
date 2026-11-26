@@ -31,41 +31,44 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AgentsManager.Application.Dtos
 {
+    /// <summary>Contains the paged Agent-group list returned by administration queries.</summary>
     public class ChatGroup_GetListResponse
     {
+        /// <summary>Gets or sets the paged group DTO collection.</summary>
         public PagedList<ChatGroupDto> ChatGroupDtoList { get; set; }
     }
 
+    /// <summary>Contains one group and the Agent templates used by its roles.</summary>
     public class ChatGroup_GetItemResponse
     {
+        /// <summary>Gets or sets the group DTO.</summary>
         public ChatGroupDto ChatGroupDto { get; set; }
+        /// <summary>Gets or sets all Agent templates available to the group editor.</summary>
         public List<AgentTemplateDto> AgentTemplateDtoList { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets role-specific Agent template projections.</summary>
         public List<ChatGroupRoleAgentDto> RoleAgentTemplateDtoList { get; set; } = new List<ChatGroupRoleAgentDto>();
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets remote Agent members assigned to the group.</summary>
         public List<ChatGroupRemoteMemberDto> RemoteMemberDtoList { get; set; } = new List<ChatGroupRemoteMemberDto>();
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Associates a group role name with an Agent template.</summary>
     public class ChatGroupRoleAgentDto
     {
+        /// <summary>Gets or sets the role name.</summary>
         public string RoleName { get; set; }
+        /// <summary>Gets or sets the Agent template DTO.</summary>
         public AgentTemplateDto AgentTemplateDto { get; set; }
     }
 
 
+    /// <summary>Contains logs and the saved group returned by group-chat setup.</summary>
     public class ChatGroup_SetGroupChatResponse
     {
+        /// <summary>Gets or sets operation logs.</summary>
         public string Logs { get; set; }
+        /// <summary>Gets or sets the saved group DTO.</summary>
         public ChatGroupDto ChatGroupDto { get; set; }
     }
 }

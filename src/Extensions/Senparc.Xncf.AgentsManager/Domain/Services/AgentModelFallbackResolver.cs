@@ -371,6 +371,11 @@ public static class AgentModelFallbackResolver
             : "custom";
     }
 
+    /// <summary>
+    /// Determines whether diagnostic text contains a recognized forbidden/403 signature.
+    /// </summary>
+    /// <param name="text">The provider or exception text to inspect.</param>
+    /// <returns><see langword="true"/> when a forbidden response signature is present.</returns>
     private static bool HasForbiddenSignature(string text)
     {
         if (string.IsNullOrEmpty(text))
@@ -386,6 +391,13 @@ public static class AgentModelFallbackResolver
                        || text.Contains("拒绝", StringComparison.OrdinalIgnoreCase)));
     }
 
+    /// <summary>
+    /// Adds a distinct, bounded API-version fallback candidate unless it is empty,
+    /// the default version, too long, or already present.
+    /// </summary>
+    /// <param name="candidates">The candidate collection.</param>
+    /// <param name="apiVersion">The candidate API version.</param>
+    /// <param name="source">The diagnostic source label.</param>
     private static void AddApiVersionCandidate(
         ICollection<ApiVersionCompatibilityFallback> candidates,
         string apiVersion,

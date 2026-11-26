@@ -61,10 +61,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a new legacy LLM model configuration for PromptRange.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The provider, model identifier, alias, and connection settings.</param>
+        /// <returns>A response containing the persisted model DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the model configuration is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<LlModelDto>> Add(LlModel_AddRequest request)
         {
@@ -79,11 +80,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// editmodel
+        /// Updates an existing legacy LLM model configuration.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
+        /// <param name="request">The model identifier and replacement values.</param>
+        /// <returns>A string response indicating whether the update completed.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the model does not exist or the replacement configuration is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Put)]
         public async Task<StringAppResponse> Modify(LlmModel_ModifyRequest request)
         {
@@ -97,12 +98,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// getmodel
+        /// Returns a paged legacy LLM model list filtered by model identifier.
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="pageIndex">The page index.</param>
+        /// <param name="pageSize">The page size.</param>
+        /// <param name="key">Optional model identifier filter.</param>
+        /// <returns>A response containing mapped page items and total count.</returns>
         [ApiBind]
         public async Task<AppResponseBase<LlModel_GetPageResponse>> GetLlmModelList(int pageIndex, int pageSize, string key)
         {
@@ -127,11 +128,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// modeldelete
+        /// Deletes the existing legacy LLM models identified by the supplied IDs.
         /// </summary>
-        /// <param name="ids"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
+        /// <param name="ids">The model identifiers to delete.</param>
+        /// <returns>A string response indicating whether any model was deleted.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when persistence fails.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> BatchDelete(List<int> ids)
         {
@@ -161,6 +162,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Returns model identifiers and aliases in ascending identifier order.
+        /// </summary>
+        /// <returns>A response containing model ID/name options.</returns>
         [ApiBind]
         public async Task<AppResponseBase<List<LlModel_GetIdAndNameResponse>>> GetIdAndName()
         {

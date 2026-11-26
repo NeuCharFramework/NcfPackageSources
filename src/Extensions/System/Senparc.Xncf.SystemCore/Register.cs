@@ -76,7 +76,8 @@ namespace Senparc.Xncf.SystemCore
 
         public override string Description => RegisterText.Description;
 
-        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+    /// <inheritdoc/>
+    public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //Legacy comment translated to English.
             //await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
@@ -130,7 +131,8 @@ namespace Senparc.Xncf.SystemCore
             await base.InstallOrUpdateAsync(serviceProvider, installOrUpdate);
         }
 
-        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+    /// <inheritdoc/>
+    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             //Legacy comment translated to English.
 
@@ -138,7 +140,8 @@ namespace Senparc.Xncf.SystemCore
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+    /// <inheritdoc/>
+    public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             //readLogconfigurationfile
             try
@@ -189,7 +192,8 @@ namespace Senparc.Xncf.SystemCore
             return base.AddXncfModule(services, configuration, env);
         }
 
-        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+    /// <inheritdoc/>
+    public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             #region Legacy section
 

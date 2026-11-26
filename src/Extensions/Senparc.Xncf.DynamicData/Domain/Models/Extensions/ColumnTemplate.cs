@@ -28,6 +28,11 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.Extensions
     {
         public int TableId { get; set; }
 
+        /// <summary>
+        /// Initializes a column template for a table and optionally copies metadata entries.
+        /// </summary>
+        /// <param name="tableId">The table identifier.</param>
+        /// <param name="data">Optional column metadata entries.</param>
         public ColumnTemplate(int tableId, IEnumerable<ColumnMetadataDto> data = null)
         {
             TableId = tableId;

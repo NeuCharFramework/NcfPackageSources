@@ -26,9 +26,8 @@ using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Carries the group, model, prompt, hook, cancellation, and human-in-the-loop policy
+/// used to start one Agent-group execution.
 /// </summary>
 public sealed class ChatGroupRunCommand
 {
@@ -42,14 +41,10 @@ public sealed class ChatGroupRunCommand
     /// </summary>
     public int ChatGroupId { get; set; }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets the AI model identifier.</summary>
     public int AiModelId { get; set; }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets the command or prompt submitted to the group.</summary>
     public string PromptCommand { get; set; }
 
     /// <summary>
@@ -57,60 +52,45 @@ public sealed class ChatGroupRunCommand
     /// </summary>
     public string Description { get; set; }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets whether personality behavior is enabled.</summary>
     public bool Personality { get; set; }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets the hook platform used for output delivery.</summary>
     public HookPlatform HookPlatform { get; set; }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets the hook platform parameter.</summary>
     public string HookParameter { get; set; }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets the maximum chat round count.</summary>
     public int ChatMaxRound { get; set; } = ChatGroupService.DefaultChatMaxRound;
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets the correlation identifier shared by the run and streamed events.</summary>
     public string CorrelationId { get; set; }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets whether tool calls require human approval.</summary>
     public bool RequireHumanApproval { get; set; }
 
-    ///Legacy comment translated to English.
+    /// <summary>Gets or sets the human-in-the-loop level.</summary>
     public HumanInTheLoopLevel HumanInTheLoopLevel { get; set; } = HumanInTheLoopLevel.Automatic;
 
-    ///Legacy comment translated to English.
+    /// <summary>Gets or sets the plugin tool permission mode.</summary>
     public ToolPermissionMode PluginToolPermission { get; set; } = ToolPermissionMode.Inherit;
 
-    ///Legacy comment translated to English.
+    /// <summary>Gets or sets the MCP tool permission mode.</summary>
     public ToolPermissionMode McpToolPermission { get; set; } = ToolPermissionMode.Inherit;
 
-    ///Legacy comment translated to English.
+    /// <summary>Gets or sets whether a human participant should be included.</summary>
     public bool IncludeHumanParticipant { get; set; }
 
-    ///Legacy comment translated to English.
+    /// <summary>Gets or sets whether connector invocation is limited to selected instances.</summary>
     public bool LimitConnectors { get; set; }
 
-    ///Legacy comment translated to English.
+    /// <summary>Gets or sets connector instance identifiers allowed for this run.</summary>
     public List<string> ConnectorInstanceIds { get; set; }
 
-    ///Legacy comment translated to English.
+    /// <summary>Gets or sets the user receiving human-interaction notifications.</summary>
     public string HumanRecipientUserId { get; set; }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets the cancellation token for the execution.</summary>
     public CancellationToken CancellationToken { get; set; }
 }

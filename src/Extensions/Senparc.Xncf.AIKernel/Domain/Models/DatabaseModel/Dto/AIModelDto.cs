@@ -54,7 +54,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         public string Endpoint { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the AI platform provider.
         /// </summary>
         public AiPlatform AiPlatform { get; set; }
         /// <summary>
@@ -64,17 +64,17 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the provider organization identifier.
         /// </summary>
         public string OrganizationId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the provider credential.
         /// </summary>
         public string ApiKey { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the provider API version.
         /// </summary>
         public string ApiVersion { get; set; }
 
@@ -84,7 +84,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         public string Note { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the model token limit.
         /// </summary>
         public int MaxToken { get; set; }
 
@@ -103,10 +103,18 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         /// </summary>
         public AITokenModelUsage Usage { get; set; }
 
+        /// <summary>
+        /// Initializes an empty AI model DTO for binding.
+        /// </summary>
         public AIModelDto()
         {
         }
 
+        /// <summary>
+        /// Projects an AI model entity into a transport DTO, including metadata and usage fields.
+        /// </summary>
+        /// <param name="aIModel">The model entity to project.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="aIModel"/> is null.</exception>
         public AIModelDto(AIModel aIModel)
         {
             Id = aIModel.Id;

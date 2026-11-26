@@ -34,18 +34,22 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             _colorService = colorService;
         }
 
+        /// <summary>
+        /// Handles the initial sample database page request.
+        /// </summary>
         public void OnGet()
         {
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns a paged list of sample colors using the requested sort expression.
+        /// Database failures are converted into a failed JSON response.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="keyword">Reserved search text for the sample list.</param>
+        /// <param name="orderField">The service-supported sort expression.</param>
+        /// <param name="pageIndex">The one-based page number.</param>
+        /// <param name="pageSize">The maximum number of rows per page.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing paging metadata and color rows.</returns>
         public async Task<IActionResult> OnGetColorListAsync(string keyword, string orderField, int pageIndex, int pageSize)
         {
             try
@@ -102,10 +106,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates and persists a sample color from the JSON request.
         /// </summary>
-        /// <param name="request">createcolorrequest</param>
-        /// <returns></returns>
+        /// <param name="request">The RGB and note values for the new color.</param>
+        /// <returns>An <see cref="OkObjectResult"/> indicating success or a localized failure message.</returns>
         public async Task<IActionResult> OnPostCreateColorAsync([FromBody] CreateColorRequestDto request)
         {
             try
@@ -131,10 +135,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// updatecolor
+        /// Loads and updates an existing sample color from the JSON request.
         /// </summary>
-        /// <param name="request">updatecolorrequest</param>
-        /// <returns></returns>
+        /// <param name="request">The identifier and replacement RGB/note values.</param>
+        /// <returns>An <see cref="OkObjectResult"/> indicating success or a localized failure message.</returns>
         public async Task<IActionResult> OnPostUpdateColorAsync([FromBody] UpdateColorRequestDto request)
         {
             try
@@ -168,10 +172,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// deletecolor
+        /// Deletes the sample color identified by the JSON request.
         /// </summary>
-        /// <param name="request">deletecolorrequest</param>
-        /// <returns></returns>
+        /// <param name="request">The identifier of the color to delete.</param>
+        /// <returns>An <see cref="OkObjectResult"/> indicating success or a localized failure message.</returns>
         public async Task<IActionResult> OnPostDeleteColorAsync([FromBody] DeleteColorRequestDto request)
         {
             try
@@ -201,10 +205,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Generates and persists a new random RGB value for an existing sample color.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="request">The identifier of the color to randomize.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing the randomized color or a failure message.</returns>
         public async Task<IActionResult> OnPostRandomizeColorAsync([FromBody] RandomizeColorRequestDto request)
         {
             try
@@ -236,10 +240,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Retrieves one sample color by identifier for the edit view.
         /// </summary>
         /// <param name="id">colorID</param>
-        /// <returns></returns>
+        /// <returns>An <see cref="OkObjectResult"/> containing the color data or a failure message.</returns>
         public async Task<IActionResult> OnGetColorDetailAsync(int id)
         {
             try

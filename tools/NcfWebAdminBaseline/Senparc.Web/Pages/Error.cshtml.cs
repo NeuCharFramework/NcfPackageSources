@@ -15,6 +15,9 @@ namespace Senparc.Web.Pages
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
+        /// <summary>
+        /// Captures the current activity or HTTP trace identifier for error-page display.
+        /// </summary>
         public void OnGet()
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;

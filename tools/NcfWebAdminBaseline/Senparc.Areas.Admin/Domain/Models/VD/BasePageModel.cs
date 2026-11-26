@@ -23,7 +23,7 @@ namespace Senparc.Areas.Admin.Domain.Models.VD
     { }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides the common page-model contract for administration Razor Pages.
     /// </summary>
     public class BasePageModel : PageModelBase, IBasePageModel
     {

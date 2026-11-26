@@ -21,15 +21,21 @@ using System;
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Removes the global resilience handler from the dedicated Remote A2A HTTP client,
+    /// allowing the remote-agent factory to apply its own timeout and retry policy.
     /// </summary>
     internal sealed class RemoteA2AHttpMessageHandlerBuilderFilter : IHttpMessageHandlerBuilderFilter
     {
         private const string ResilienceHandlerTypeName =
             "Microsoft.Extensions.Http.Resilience.ResilienceHandler";
 
+        /// <summary>
+        /// Returns a handler-builder callback that removes the global resilience handler
+        /// from the dedicated Remote A2A client.
+        /// </summary>
+        /// <param name="next">The next handler-builder callback in the filter chain.</param>
+        /// <returns>The filtered handler-builder callback.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="next"/> is null.</exception>
         public Action<HttpMessageHandlerBuilder> Configure(Action<HttpMessageHandlerBuilder> next)
         {
             ArgumentNullException.ThrowIfNull(next);

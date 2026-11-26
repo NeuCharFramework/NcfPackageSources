@@ -373,11 +373,20 @@ public sealed class DesktopBridgeController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Authorizes the current request using the desktop bridge token.
+    /// </summary>
+    /// <returns>An HTTP error result when unauthorized; otherwise <see langword="null"/>.</returns>
     private ActionResult? AuthorizeDesktopSession()
     {
         return AuthorizeDesktopSession(out _);
     }
 
+    /// <summary>
+    /// Authorizes the current request and exposes the matched session revocation token.
+    /// </summary>
+    /// <param name="sessionRevoked">Receives cancellation for the matched session, when applicable.</param>
+    /// <returns>An HTTP error result when unauthorized; otherwise <see langword="null"/>.</returns>
     private ActionResult? AuthorizeDesktopSession(out CancellationToken sessionRevoked)
     {
         sessionRevoked = CancellationToken.None;
@@ -397,12 +406,20 @@ public sealed class DesktopBridgeController : ControllerBase
         return _tokenValidator.TryAuthorize(suppliedToken, out sessionRevoked) ? null : Unauthorized();
     }
 
+    /// <summary>
+    /// Checks whether the current request carries an authorized desktop session token.
+    /// </summary>
+    /// <returns><see langword="true"/> when the token is currently valid.</returns>
     private bool HasAuthorizedDesktopSession()
     {
         var suppliedToken = Request.Headers[DesktopBridgeTokenValidator.TokenHeaderName].FirstOrDefault();
         return _tokenValidator.IsAuthorized(suppliedToken);
     }
 
+    /// <summary>
+    /// Rejects remote HTTP requests for desktop authentication handoff operations.
+    /// </summary>
+    /// <returns>An HTTP error result when transport is unsafe; otherwise <see langword="null"/>.</returns>
     private ActionResult? ValidateSecureTransport()
     {
         var remoteAddress = HttpContext.Connection.RemoteIpAddress;
@@ -421,6 +438,9 @@ public sealed class DesktopBridgeController : ControllerBase
             });
     }
 
+    /// <summary>
+    /// Applies no-store headers to sensitive desktop bridge responses.
+    /// </summary>
     private void SetNoStoreHeaders()
     {
         Response.Headers.CacheControl = "no-store, no-cache";

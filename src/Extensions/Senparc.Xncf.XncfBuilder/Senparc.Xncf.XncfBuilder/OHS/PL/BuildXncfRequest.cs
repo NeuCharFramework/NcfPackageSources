@@ -163,10 +163,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         public string PreviewEnvironmentName { get; set; } = XncfPreviewService.DefaultEnvironmentName;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads persisted builder configuration into the request before rendering options.
         /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <returns></returns>
+        /// <param name="serviceProvider">The provider used to resolve builder configuration services.</param>
+        /// <returns>A task that completes after configuration loading.</returns>
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
             Config config = null;
@@ -212,19 +212,19 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a directory contains at least one solution file.
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
+        /// <param name="path">The directory to inspect.</param>
+        /// <returns><see langword="true"/> when a solution file exists.</returns>
         private bool IsSlnDir(string path)
         {
             return Directory.GetFiles(path, "*.sln").Length > 0;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Locates the nearest solution file by walking upward from the application base directory.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The selected solution path, or an empty string when none is found.</returns>
         public string GetSlnFilePath()
         {
             var slnFilePath = string.Empty;

@@ -29,6 +29,10 @@ public sealed class DesktopBridgePairingController : ControllerBase
 {
     private readonly DesktopBridgeCredentialStore _credentialStore;
 
+    /// <summary>
+    /// Initializes the anonymous desktop pairing controller.
+    /// </summary>
+    /// <param name="credentialStore">The pairing/session credential store.</param>
     public DesktopBridgePairingController(DesktopBridgeCredentialStore credentialStore)
     {
         _credentialStore = credentialStore;
@@ -36,6 +40,11 @@ public sealed class DesktopBridgePairingController : ControllerBase
 
     [HttpPost("requests")]
     [RequestSizeLimit(4096)]
+    /// <summary>
+    /// Creates a loopback/HTTPS desktop pairing request.
+    /// </summary>
+    /// <param name="request">The desktop client name and pairing metadata.</param>
+    /// <returns>The pairing data or a mapped transport/rate-limit error.</returns>
     public ActionResult<DesktopBridgePairingCreateResponse> CreateRequest(
         [FromBody] DesktopBridgePairingCreateRequest request)
     {
@@ -68,6 +77,11 @@ public sealed class DesktopBridgePairingController : ControllerBase
 
     [HttpPost("poll")]
     [RequestSizeLimit(4096)]
+    /// <summary>
+    /// Polls a pairing request using its one-time polling secret.
+    /// </summary>
+    /// <param name="request">The pairing request identifier and poll secret.</param>
+    /// <returns>The current pairing status or an unauthorized response.</returns>
     public ActionResult<DesktopBridgePairingPollResponse> Poll(
         [FromBody] DesktopBridgePairingPollRequest request)
     {
@@ -95,6 +109,10 @@ public sealed class DesktopBridgePairingController : ControllerBase
             result.Message));
     }
 
+    /// <summary>
+    /// Rejects remote HTTP pairing while allowing HTTPS and loopback transport.
+    /// </summary>
+    /// <returns>An HTTP error result when transport is unsafe; otherwise <see langword="null"/>.</returns>
     private ActionResult? ValidateTransport()
     {
         var remoteAddress = HttpContext.Connection.RemoteIpAddress;

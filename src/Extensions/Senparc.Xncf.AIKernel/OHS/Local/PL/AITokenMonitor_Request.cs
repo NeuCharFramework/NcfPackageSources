@@ -22,7 +22,7 @@ using System;
 namespace Senparc.Xncf.AIKernel.OHS.Local.PL
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines filters for querying persisted AI token-usage records.
     /// </summary>
     public class AITokenUsage_GetListRequest : PagedRequest
     {
@@ -37,7 +37,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public string ModelId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the AI platform filter.
         /// </summary>
         public AiPlatform? AiPlatform { get; set; }
 
@@ -47,7 +47,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public ConfigModelType? ConfigModelType { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the source subsystem filter.
         /// </summary>
         public string Source { get; set; }
 
@@ -57,23 +57,23 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public int? Status { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the inclusive start of the usage time range.
         /// </summary>
         public DateTime? StartTime { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the inclusive end of the usage time range.
         /// </summary>
         public DateTime? EndTime { get; set; }
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the input required to run one model through the token monitor.
     /// </summary>
     public class AITokenMonitor_RunModelRequest
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the AI model identifier.
         /// </summary>
         public int ModelId { get; set; }
 
@@ -83,44 +83,44 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public string Prompt { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the system instruction sent to the model.
         /// </summary>
         public string SystemMessage { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the source label recorded with the run.
         /// </summary>
         public string Source { get; set; } = "Monitor";
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the maximum completion-token budget.
         /// </summary>
         public int MaxTokens { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the optional sampling temperature.
         /// </summary>
         public float? Temperature { get; set; }
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the request used to poll a token-monitor run.
     /// </summary>
     public class AITokenMonitor_GetProgressRequest
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the run identifier to query.
         /// </summary>
         public Guid RunId { get; set; }
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents the output and token diagnostics of a monitored model run.
     /// </summary>
     public class AITokenMonitor_RunModelResponse
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the monitored run identifier.
         /// </summary>
         public Guid RunId { get; set; }
 
@@ -130,7 +130,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public bool Success { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the generated output text.
         /// </summary>
         public string Output { get; set; }
 
@@ -155,12 +155,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public long CachedInputTokens { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the reasoning-token count.
         /// </summary>
         public long ReasoningTokens { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the elapsed execution time in milliseconds.
         /// </summary>
         public int DurationMs { get; set; }
 

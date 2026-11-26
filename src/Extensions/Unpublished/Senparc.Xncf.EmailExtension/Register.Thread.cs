@@ -27,6 +27,10 @@ namespace Senparc.Xncf.EmailExtension
     public partial class Register : IXncfThread
     {
         private static AutoSendEmailThreadUtility EmailUtility = new AutoSendEmailThreadUtility();
+        /// <summary>
+        /// Registers the recurring email-sending worker that dispatches pending automatic email events.
+        /// </summary>
+        /// <param name="xncfThreadBuilder">The thread builder receiving the scheduled worker.</param>
         public void ThreadConfig(XncfThreadBuilder xncfThreadBuilder)
         {
             xncfThreadBuilder.AddThreadInfo(new ThreadInfo(

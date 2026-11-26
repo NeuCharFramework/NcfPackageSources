@@ -41,6 +41,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
             _eventBusRequestClient = eventBusRequestClient;
         }
 
+        /// <summary>
+        /// Calculates the requested arithmetic expression and optional square/cube transformations,
+        /// returning the result through the standard application-service response.
+        /// </summary>
+        /// <param name="request">The operands, operator, display name, and optional powers.</param>
+        /// <returns>A response containing the formatted calculation result.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is <see langword="null"/>.</exception>
         [FunctionRender(
             typeof(Template_XncfNameResource),
             "Function.Sample.Name",
@@ -126,9 +133,11 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Sends a timestamped internal event-bus request and returns the round-trip result
+        /// through the standard application-service response.
         /// </summary>
+        /// <param name="request">The request containing the event-bus test payload.</param>
+        /// <returns>A string response describing the event-bus round trip.</returns>
         [FunctionRender(
             typeof(Template_XncfNameResource),
             "Function.EventBusRoundTrip.Name",

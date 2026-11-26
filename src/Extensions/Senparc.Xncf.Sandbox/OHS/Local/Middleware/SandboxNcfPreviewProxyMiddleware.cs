@@ -47,6 +47,13 @@ public sealed class SandboxNcfPreviewProxyMiddleware
     private readonly SandboxOrchestrator _orchestrator;
     private readonly ILogger<SandboxNcfPreviewProxyMiddleware> _logger;
 
+    /// <summary>
+    /// Initializes the authenticated reverse proxy for running NCF preview sessions.
+    /// </summary>
+    /// <param name="next">The next middleware in the request pipeline.</param>
+    /// <param name="httpClientFactory">The factory for loopback preview HTTP clients.</param>
+    /// <param name="orchestrator">The service that resolves active preview targets.</param>
+    /// <param name="logger">The proxy diagnostic logger.</param>
     public SandboxNcfPreviewProxyMiddleware(
         RequestDelegate next,
         IHttpClientFactory httpClientFactory,
@@ -59,6 +66,12 @@ public sealed class SandboxNcfPreviewProxyMiddleware
         _logger = logger;
     }
 
+    /// <summary>
+    /// Routes a recognized preview path to its authenticated loopback target,
+    /// strips browser credentials, and passes unrelated paths to the next middleware.
+    /// </summary>
+    /// <param name="context">The current HTTP request context.</param>
+    /// <returns>A task that completes after proxying or delegating the request.</returns>
     public async Task InvokeAsync(HttpContext context)
     {
         if (!SandboxNcfPreviewPaths.TryParse(context.Request.Path.Value ?? string.Empty, out var sessionId, out var remaining))
@@ -110,6 +123,12 @@ public sealed class SandboxNcfPreviewProxyMiddleware
         await ProxyHttpAsync(context, target, backendPath).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Proxies an HTTP request to the fixed NCF preview backend.
+    /// </summary>
+    /// <param name="context">The incoming HTTP context.</param>
+    /// <param name="target">The resolved preview target.</param>
+    /// <param name="backendPath">The backend path including the preview base path.</param>
     private async Task ProxyHttpAsync(HttpContext context, SandboxNcfPreviewProxyTarget target, string backendPath)
     {
         var client = _httpClientFactory.CreateClient(HttpClientName);
@@ -136,6 +155,12 @@ public sealed class SandboxNcfPreviewProxyMiddleware
         await response.Content.CopyToAsync(context.Response.Body, context.RequestAborted).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Bridges a client WebSocket to the fixed NCF preview backend.
+    /// </summary>
+    /// <param name="context">The incoming WebSocket context.</param>
+    /// <param name="target">The resolved preview target.</param>
+    /// <param name="backendPath">The backend WebSocket path.</param>
     private async Task ProxyWebSocketAsync(HttpContext context, SandboxNcfPreviewProxyTarget target, string backendPath)
     {
         var destination = new Uri($"ws://127.0.0.1:{target.HostPort}{backendPath}{context.Request.QueryString}");
@@ -163,6 +188,12 @@ public sealed class SandboxNcfPreviewProxyMiddleware
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Copies WebSocket frames until either side closes or cancellation is requested.
+    /// </summary>
+    /// <param name="source">The source socket.</param>
+    /// <param name="destination">The destination socket.</param>
+    /// <param name="cancellationToken">Token used to stop frame pumping.</param>
     private static async Task PumpAsync(WebSocket source, WebSocket destination, CancellationToken cancellationToken)
     {
         var buffer = new byte[16 * 1024];
@@ -190,6 +221,11 @@ public sealed class SandboxNcfPreviewProxyMiddleware
         }
     }
 
+    /// <summary>
+    /// Copies safe request headers to the preview backend.
+    /// </summary>
+    /// <param name="source">The incoming request.</param>
+    /// <param name="destination">The upstream request.</param>
     private static void CopyRequestHeaders(HttpRequest source, HttpRequestMessage destination)
     {
         foreach (var header in source.Headers)
@@ -207,6 +243,11 @@ public sealed class SandboxNcfPreviewProxyMiddleware
         }
     }
 
+    /// <summary>
+    /// Copies response headers while excluding hop-by-hop and cookie headers.
+    /// </summary>
+    /// <param name="source">The upstream response headers.</param>
+    /// <param name="destination">The client response headers.</param>
     private static void CopyResponseHeaders(HttpHeaders source, IHeaderDictionary destination)
     {
         foreach (var header in source)

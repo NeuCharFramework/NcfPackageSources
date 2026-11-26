@@ -24,14 +24,20 @@ using System.Data.Common;
 
 namespace Senparc.Ncf.Database.Dm
 {
+    /// <summary>Configures the Dameng EF Core provider for NCF contexts.</summary>
     public class DmDatabaseConfiguration : DatabaseConfigurationBase<DmDbContextOptionsBuilder, DmOptionsExtension>
     {
+        /// <summary>
+        /// Initializes the database configuration for the Dameng provider.
+        /// </summary>
         public DmDatabaseConfiguration()
         {
         }
 
+        /// <inheritdoc />
         public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.Dm;
 
+        /// <inheritdoc />
         public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => 
             (optionsBuilder, xncfDatabaseData) =>
         {
@@ -42,6 +48,7 @@ namespace Senparc.Ncf.Database.Dm
             //           errorNumbersToAdd: new int[] { 2 });
         };
 
+        /// <inheritdoc />
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase => 
         (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
         {
@@ -49,11 +56,13 @@ namespace Senparc.Ncf.Database.Dm
             optionsBuilder.UseDm(connectionString, actionBase);
         };
 
+        /// <inheritdoc />
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
             return $"BACKUP DATABASE FULL BACKUPSET '{backupFilePath}' compressed;";
         }
 
+        /// <inheritdoc />
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
             return $"DROP TABLE '{tableName}';";

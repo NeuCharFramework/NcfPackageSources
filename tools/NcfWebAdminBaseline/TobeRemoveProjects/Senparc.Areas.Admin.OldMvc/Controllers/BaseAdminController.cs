@@ -33,6 +33,9 @@ namespace Senparc.Areas.Admin.Controllers
     [SenparcAdminAuthorize()]
     public class BaseAdminController : Controller, IResultFilter
     {
+        /// <summary>
+        /// Initializes the legacy administrator controller base.
+        /// </summary>
         public BaseAdminController()
         {
         }
@@ -49,6 +52,8 @@ namespace Senparc.Areas.Admin.Controllers
             }
         }
 
+        /// <inheritdoc/>
+        /// <remarks>Preserves TempData messages before the action executes.</remarks>
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             TempData["Messager"] = TempData["Messager"];
@@ -57,6 +62,11 @@ namespace Senparc.Areas.Admin.Controllers
         }
 
 
+        /// <summary>
+        /// Copies authenticated user, route, and TempData messages into the
+        /// legacy administrator view-data model.
+        /// </summary>
+        /// <param name="context">The result execution context.</param>
         public void OnResultExecuting(ResultExecutingContext context)
         {
             if (ViewData.Model is IBaseAdminVD)
@@ -85,6 +95,7 @@ namespace Senparc.Areas.Admin.Controllers
             }
         }
 
+        /// <inheritdoc/>
         public void OnResultExecuted(ResultExecutedContext context)
         {
         }
@@ -92,9 +103,9 @@ namespace Senparc.Areas.Admin.Controllers
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Redirects the legacy create action to the shared edit action.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A redirect action targeting the edit view.</returns>
         public ActionResult Create()
         {
             return RedirectToAction("Edit");
@@ -103,6 +114,14 @@ namespace Senparc.Areas.Admin.Controllers
         #region Legacy section
 
         [NonAction]
+        /// <summary>
+        /// Creates the legacy administrator success view with navigation metadata.
+        /// </summary>
+        /// <param name="message">The success message.</param>
+        /// <param name="backAction">Optional return action.</param>
+        /// <param name="backController">Optional return controller.</param>
+        /// <param name="backRouteValues">Optional return route values.</param>
+        /// <returns>The success view result.</returns>
         public virtual ActionResult RenderSuccess(string message, string backAction = null, string backController = null, RouteValueDictionary backRouteValues = null)
         {
             backAction = backAction ?? RouteData.Values["controller"] as string;
@@ -118,6 +137,11 @@ namespace Senparc.Areas.Admin.Controllers
             return View("Success", vd);
         }
         [NonAction]
+        /// <summary>
+        /// Creates the legacy administrator error view while preserving route metadata.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        /// <returns>The error view result.</returns>
         public virtual ActionResult RenderError(string message)
         {
             //preserve the original controller and action information
@@ -130,16 +154,20 @@ namespace Senparc.Areas.Admin.Controllers
             });
         }
         [NonAction]
+        /// <summary>
+        /// Renders a not-found result using the current request path.
+        /// </summary>
+        /// <returns>The legacy 404 view result.</returns>
         public ActionResult RenderError404()
         {
             //return RedirectToAction("Error404", "Error", new { aspxerrorpath = Request.Url.PathAndQuery });
             return Error404(Request.PathAndQuery());
         }
         /// <summary>
-        /// display404page
+        /// Renders the legacy administration 404 view and sets the HTTP status code.
         /// </summary>
-        /// <param name="aspxerrorpath"></param>
-        /// <returns></returns>
+        /// <param name="aspxerrorpath">The original request path to expose to the error view.</param>
+        /// <returns>The rendered 404 action result.</returns>
         [NonAction]
         public virtual ActionResult Error404(string aspxerrorpath = null)
         {
@@ -159,11 +187,11 @@ namespace Senparc.Areas.Admin.Controllers
         #endregion
 
         /// <summary>
-        /// displayJsonresult
+        /// Creates the legacy JSON envelope used by AJAX callers.
         /// </summary>
-        /// <param name="success">whethersuccess</param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="success">Whether the operation succeeded.</param>
+        /// <param name="result">The operation payload.</param>
+        /// <returns>A JSON result containing success and payload fields.</returns>
         [NonAction]
         public JsonResult RenderJsonSuccessResult(bool success, object result)
         {
@@ -173,6 +201,12 @@ namespace Senparc.Areas.Admin.Controllers
                 Result = result
             });
         }
+        /// <summary>
+        /// Stores an administrator-area message in TempData for the next result.
+        /// </summary>
+        /// <param name="messageType">The message severity/type.</param>
+        /// <param name="messageText">The message text.</param>
+        /// <param name="showClose">Whether the UI may dismiss the message.</param>
         public void SetMessager(MessageType messageType, string messageText, bool showClose = true)
         {
             TempData["Messager"] = new Messager(messageType, messageText).ToJson();

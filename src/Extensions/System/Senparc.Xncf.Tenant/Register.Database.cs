@@ -39,11 +39,19 @@ namespace Senparc.Xncf.Tenant
 
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Registers tenant database services that are not supplied by the shared database pipeline.
+        /// </summary>
+        /// <param name="services">The application service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             
         }
 
+        /// <summary>
+        /// Applies tenant Entity Framework Core model configuration.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework Core model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
 

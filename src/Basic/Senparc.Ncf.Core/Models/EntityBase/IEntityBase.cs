@@ -22,7 +22,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the common persistence fields shared by all NCF entities.
     /// </summary>
     public interface IEntityBase : ISoftDelete
     {
@@ -31,7 +31,7 @@ namespace Senparc.Ncf.Core.Models
         /// </summary>
         DateTime AddTime { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the most recent update time.
         /// </summary>
         DateTime LastUpdateTime { get; set; }
     }
@@ -39,7 +39,7 @@ namespace Senparc.Ncf.Core.Models
     public interface IEntityBase<TKey> : IEntityBase
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the entity identifier.
         /// </summary>
         TKey Id { get; set; }
     }

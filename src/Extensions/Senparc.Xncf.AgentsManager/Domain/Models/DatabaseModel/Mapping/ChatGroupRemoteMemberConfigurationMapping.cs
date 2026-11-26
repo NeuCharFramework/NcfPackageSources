@@ -26,6 +26,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Mapping
     [XncfAutoConfigurationMapping]
     public class ChatGroupRemoteMemberConfigurationMapping : ConfigurationMappingWithIdBase<ChatGroupRemoteMember, int>
     {
+        /// <inheritdoc/>
         public override void Configure(EntityTypeBuilder<ChatGroupRemoteMember> builder)
         {
             base.Configure(builder);

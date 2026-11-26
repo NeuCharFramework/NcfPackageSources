@@ -201,9 +201,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
 
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
+        // The legacy ResetPasswordCodes XML collection was removed from the active context.
         //public List<ResetPasswordCode> ResetPasswordCodes
         //{
         //    get
@@ -501,9 +499,7 @@ namespace Senparc.Ncf.Core.Utility
 
     #region Legacy section
 
-    ///// <summary>
-    ///Legacy comment translated to English.
-    ///// </summary>
+    // The former ResetPasswordCode entity is retained only in migration history.
     //public partial class ResetPasswordCode
     //{
     //    public string UserName { get; set; }

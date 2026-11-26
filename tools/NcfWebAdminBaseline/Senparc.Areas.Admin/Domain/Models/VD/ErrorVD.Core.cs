@@ -17,7 +17,7 @@ using System;
 namespace Senparc.Areas.Admin.Domain.Models.VD
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the common view-data contract for administration error pages.
     /// </summary>
     public interface IError_BaseVD : IBaseVD
     {
@@ -27,16 +27,19 @@ namespace Senparc.Areas.Admin.Domain.Models.VD
         //HandleErrorInfo HandleErrorInfo { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the URL associated with the failed request.
         /// </summary>
         string Url { get; set; }
     }
 
 
+    /// <summary>
+    /// Provides the base view data shared by administration error responses.
+    /// </summary>
     public class Error_BaseVD : BaseVD, IError_BaseVD
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the URL associated with the failed request.
         /// </summary>
         //public HandleErrorInfo HandleErrorInfo { get; set; }
 
@@ -46,6 +49,9 @@ namespace Senparc.Areas.Admin.Domain.Models.VD
         public string Url { get; set; }
     }
 
+    /// <summary>
+    /// Carries an exception and display message for an administration error view.
+    /// </summary>
     public class Error_ExceptionVD : Error_BaseVD
     {
         public string Message { get; set; }
@@ -53,6 +59,9 @@ namespace Senparc.Areas.Admin.Domain.Models.VD
     }
 
 
+    /// <summary>
+    /// Represents view data for an administration 404 response.
+    /// </summary>
     public class Error_Error404VD : Error_BaseVD
     {
     }

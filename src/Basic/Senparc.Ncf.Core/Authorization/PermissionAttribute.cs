@@ -21,17 +21,16 @@ using Microsoft.AspNetCore.Mvc;
 namespace Senparc.Ncf.Core.Authorization
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Applies one or more comma-separated resource codes to an MVC action or controller.
     /// </summary>
     public class PermissionAttribute : TypeFilterAttribute
     {
         //public string[] Codes { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Initializes a permission filter with the requested resource codes.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <param name="codes">Comma-separated resource codes required by the action.</param>
         public PermissionAttribute(string codes)
             : base(typeof(PermissionFilterAttribute))
         {

@@ -79,7 +79,8 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         private int _threadInUsing = 0;//Legacy comment translated to English.
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the number of crawler threads currently processing pages.
+        /// Access is synchronized by <see cref="syncLock"/>.
         /// </summary>
         private int threadInUsing
         {

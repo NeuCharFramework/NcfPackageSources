@@ -22,6 +22,14 @@ namespace Senparc.Ncf.Core.Utility
 {
     public static class FullEntityCache
     {
+        /// <summary>
+        /// Copies properties marked with <see cref="AutoSetCacheAttribute"/> from an entity to a cache projection.
+        /// </summary>
+        /// <typeparam name="TFullEntity">The cache projection type.</typeparam>
+        /// <typeparam name="TEntity">The source entity type.</typeparam>
+        /// <param name="fullEntity">The cache projection receiving values.</param>
+        /// <param name="entity">The source entity.</param>
+        /// <exception cref="Exception">Thrown when either object is null or a marked property is missing/incompatible.</exception>
         public static void SetFullEntityCache<TFullEntity, TEntity>(TFullEntity fullEntity, TEntity entity)
         {
             if (fullEntity == null || entity == null)

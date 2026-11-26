@@ -30,10 +30,13 @@ namespace Senparc.Areas.Admin.ACL
 
     public class AdminAuthConfigRepository : ClientRepositoryBase<AdminAuthConfig>, IAdminAuthConfigRepository
     {
+        /// <summary>Reserved parameterless constructor for repository infrastructure.</summary>
         private AdminAuthConfigRepository() : base(null)
         {
         }
 
+        /// <summary>Initializes the authentication-config repository with the NCF database provider.</summary>
+        /// <param name="ncfDbData">The database data provider used by the base repository.</param>
         public AdminAuthConfigRepository(INcfDbData ncfDbData) : base(ncfDbData)
         {
         }

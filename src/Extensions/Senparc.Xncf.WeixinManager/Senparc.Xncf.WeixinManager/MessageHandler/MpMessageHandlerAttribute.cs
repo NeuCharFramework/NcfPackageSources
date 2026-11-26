@@ -22,16 +22,23 @@ using System.Text;
 namespace Senparc.Xncf.WeixinManager
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Marks a message-handler type with the logical handler name used by discovery.
     /// </summary>
     public class MpMessageHandlerAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes the attribute with a handler name.
+        /// </summary>
+        /// <param name="name">The logical handler name.</param>
         public MpMessageHandlerAttribute(string name)
         {
             Name = name;
         }
 
 
+        /// <summary>
+        /// Gets or sets the logical handler name.
+        /// </summary>
         public string Name { get; set; }
     }
 }

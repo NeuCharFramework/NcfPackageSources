@@ -24,11 +24,9 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             return provider;
         }
 
-        //Legacy comment translated to English.
-
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Verifies that the internal always-true predicate is an expression tree,
+        /// not a compiled delegate.
         /// </summary>
         [TestMethod]
         public void AlwaysTrue_ShouldReturn_ExpressionPredicate_NotRawFunc()
@@ -46,8 +44,8 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Verifies that the expression-based GetFullListAsync overload is discoverable
+        /// with its complete parameter signature.
         /// </summary>
         [TestMethod]
         public void GetFullListAsync_ShouldBeLocatable_WithExpressionPredicateAndAllParams()
@@ -58,7 +56,6 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             var funcType = typeof(Func<,>).MakeGenericType(entityType, typeof(bool));
             var expressionPredicateType = typeof(Expression<>).MakeGenericType(funcType);
 
-            //Legacy comment translated to English.
             var method = serviceType.GetMethod("GetFullListAsync",
                 new[] { expressionPredicateType, typeof(string), typeof(string[]) });
 
@@ -68,8 +65,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Verifies that the obsolete raw-Func overload is not selected by reflection.
         /// </summary>
         [TestMethod]
         public void GetFullListAsync_ShouldNotBeFound_WhenUsingRawFuncAndSingleParam()
@@ -77,7 +73,6 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             var entityType = typeof(FakeTestEntity);
             var serviceType = typeof(ServiceBase<>).MakeGenericType(entityType);
 
-            //Legacy comment translated to English.
             var wrongPredicateType = typeof(Func<,>).MakeGenericType(entityType, typeof(bool));
 
             var method = serviceType.GetMethod("GetFullListAsync", new[] { wrongPredicateType });
@@ -86,10 +81,8 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
                 "用未包装的 Func<T,bool> 查找 GetFullListAsync 时不应找到方法（对照旧 Bug）");
         }
 
-        //Legacy comment translated to English.
-
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Verifies that an unregistered service produces an empty result rather than throwing.
         /// </summary>
         [TestMethod]
         public async Task QueryRecordsAsync_WhenServiceNotInDI_ReturnsZeroTotal()
@@ -99,7 +92,6 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
 
             var executor = new DatabaseExecutor(emptyDiProvider, metadataProvider);
 
-            //Legacy comment translated to English.
             var raw = await executor.QueryRecordsAsync(
                 TestAssemblyModuleName, nameof(FakeTestEntity), "", 1, 10);
             using var doc = JsonDocument.Parse(JsonSerializer.Serialize(raw));
@@ -109,9 +101,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Verifies that a registered service is queried through its expression-based list API.
         /// </summary>
         [TestMethod]
         public async Task QueryRecordsAsync_WhenServiceRegistered_ReturnsDataFromGetFullListAsync()
@@ -119,7 +109,6 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             // --- Arrange ---
             var mockRepo = new Mock<IRepositoryBase<FakeTestEntity>>();
 
-            //Legacy comment translated to English.
             var mockInnerSp = new Mock<IServiceProvider>();
 
             var testItems = new List<FakeTestEntity>
@@ -129,7 +118,6 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             };
             var pagedList = new PagedList<FakeTestEntity>(testItems, 1, 10, testItems.Count);
 
-            //Legacy comment translated to English.
             var mockService = new Mock<ServiceBase<FakeTestEntity>>(
                 mockRepo.Object, mockInnerSp.Object);
             mockService
@@ -141,7 +129,6 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
                     It.IsAny<string[]>()))
                 .ReturnsAsync(pagedList);
 
-            //Legacy comment translated to English.
             var services = new ServiceCollection();
             services.AddScoped<ServiceBase<FakeTestEntity>>(_ => mockService.Object);
             var serviceProvider = services.BuildServiceProvider();
@@ -154,7 +141,6 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
                 TestAssemblyModuleName, nameof(FakeTestEntity), "", 1, 10);
 
             // --- Assert ---
-            //Legacy comment translated to English.
             using var doc2 = JsonDocument.Parse(JsonSerializer.Serialize(raw));
             Assert.AreEqual(2, doc2.RootElement.GetProperty("total").GetInt32(),
                 "应返回 mock 中的 2 条记录");
@@ -171,7 +157,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Verifies table statistics for a registered service with an empty result set.
         /// </summary>
         [TestMethod]
         public async Task GetTableStatisticsAsync_WhenServiceRegistered_ReturnsCorrectStats()

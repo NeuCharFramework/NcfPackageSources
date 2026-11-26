@@ -34,6 +34,12 @@ namespace Senparc.Xncf.Accounts
 	{
 		private static readonly ResourceManager AreaResourceManager = new("Senparc.Xncf.Accounts.AccountsResource", typeof(AccountsResource).Assembly);
 
+		/// <summary>
+		/// Resolves an Accounts area resource in the current UI culture.
+		/// </summary>
+		/// <param name="key">The resource key.</param>
+		/// <param name="fallback">The fallback label.</param>
+		/// <returns>The localized or fallback label.</returns>
 		private static string AreaT(string key, string fallback)
 		{
 			return AreaResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? fallback;
@@ -48,6 +54,12 @@ namespace Senparc.Xncf.Accounts
 		 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/Account/DatabaseSample"), AreaT("Accounts.DatabaseSample", "数据库操作示例"),"fa fa-bookmark-o")
 			 		};
 
+		/// <summary>
+		/// Registers Accounts Razor Pages and emits module startup diagnostics.
+		/// </summary>
+		/// <param name="builder">The MVC builder being configured.</param>
+		/// <param name="env">The host environment used by the area contract.</param>
+		/// <returns>The configured MVC builder.</returns>
 		public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
 		{
 			builder.AddRazorPagesOptions(options =>

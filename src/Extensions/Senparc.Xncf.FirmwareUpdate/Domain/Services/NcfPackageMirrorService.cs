@@ -49,7 +49,7 @@ public class NcfPackageMirrorService
 {
     public const string GitHubReleasesApi = "https://api.github.com/repos/NeuCharFramework/NCF/releases";
     public const string NcfDesktopGitHubReleasesApi = "https://api.github.com/repos/NeuCharFramework/NcfDesktop/releases";
-    ///Legacy comment translated to English.
+    /// <summary>Public base URL used when publishing mirrored packages.</summary>
     public const string PublicPackageBaseUrl = "https://www.ncf.pub/NcfPackages";
     public const string LatestReleaseFileName = "latest-release.json";
     public const string LatestDesktopReleaseFileName = "latest-desktop-release.json";

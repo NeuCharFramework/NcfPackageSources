@@ -32,12 +32,24 @@ public sealed class NeuCharParameterProtector
     private const string ProtectedPrefix = "ncp:v1:";
     private readonly IDataProtector _protector;
 
+    /// <summary>
+    /// Initializes the versioned Data Protection purpose used for NeuCharPivot
+    /// function-parameter secret values.
+    /// </summary>
+    /// <param name="provider">The application Data Protection provider.</param>
     public NeuCharParameterProtector(IDataProtectionProvider provider)
     {
         _protector = provider.CreateProtector(
             "Senparc.Areas.Admin.NeuCharPivot.FunctionParameters.v1");
     }
 
+    /// <summary>
+    /// Protects non-empty string values for the named secret properties while
+    /// preserving the surrounding JSON object shape.
+    /// </summary>
+    /// <param name="parametersJson">The parameter JSON object.</param>
+    /// <param name="secretNames">The case-insensitive property names treated as secrets.</param>
+    /// <returns>JSON containing protected secret values with the version prefix.</returns>
     public string Protect(string parametersJson, IEnumerable<string> secretNames)
     {
         var parameters = ParseObject(parametersJson);
@@ -55,6 +67,12 @@ public sealed class NeuCharParameterProtector
         return parameters.ToJsonString();
     }
 
+    /// <summary>
+    /// Unprotects every value carrying the recognized protected-value prefix.
+    /// </summary>
+    /// <param name="parametersJson">The protected parameter JSON object.</param>
+    /// <returns>JSON with protected values restored to plaintext.</returns>
+    /// <exception cref="Exception">Propagates Data Protection failures for invalid or unavailable payloads.</exception>
     public string Unprotect(string parametersJson)
     {
         var parameters = ParseObject(parametersJson);
@@ -70,6 +88,14 @@ public sealed class NeuCharParameterProtector
         return parameters.ToJsonString();
     }
 
+    /// <summary>
+    /// Merges submitted parameters with existing protected secret values when
+    /// the submitted object leaves those secret fields empty.
+    /// </summary>
+    /// <param name="submittedJson">The new parameter JSON object.</param>
+    /// <param name="existingProtectedJson">The previously persisted protected object.</param>
+    /// <param name="secretNames">The properties eligible for preservation.</param>
+    /// <returns>JSON containing submitted values and preserved secret values.</returns>
     public string MergeWithExisting(
         string submittedJson,
         string existingProtectedJson,
@@ -99,6 +125,13 @@ public sealed class NeuCharParameterProtector
         return submitted.ToJsonString();
     }
 
+    /// <summary>
+    /// Replaces secret property values with empty strings for client-side editing
+    /// without revealing protected or plaintext content.
+    /// </summary>
+    /// <param name="protectedJson">The stored parameter JSON object.</param>
+    /// <param name="secretNames">The properties to mask.</param>
+    /// <returns>JSON safe to return to a client editor.</returns>
     public string MaskForClient(string protectedJson, IEnumerable<string> secretNames)
     {
         var parameters = ParseObject(protectedJson);
@@ -114,6 +147,12 @@ public sealed class NeuCharParameterProtector
         return parameters.ToJsonString();
     }
 
+    /// <summary>
+    /// Parses a JSON object, treating blank input as an empty object.
+    /// </summary>
+    /// <param name="json">The JSON text.</param>
+    /// <returns>The parsed object.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when input is not a JSON object.</exception>
     private static JsonObject ParseObject(string json)
     {
         if (string.IsNullOrWhiteSpace(json))
@@ -131,10 +170,21 @@ public sealed class NeuCharParameterProtector
         }
     }
 
+    /// <summary>
+    /// Resolves an existing property key case-insensitively or returns the requested name.
+    /// </summary>
+    /// <param name="value">The JSON object.</param>
+    /// <param name="requestedName">The requested property name.</param>
+    /// <returns>The existing matching key or requested name.</returns>
     private static string FindKey(JsonObject value, string requestedName) =>
         value.Select(z => z.Key).FirstOrDefault(z =>
             string.Equals(z, requestedName, StringComparison.OrdinalIgnoreCase)) ?? requestedName;
 
+    /// <summary>
+    /// Removes blank secret names and deduplicates the remaining names case-insensitively.
+    /// </summary>
+    /// <param name="names">The raw secret-name sequence.</param>
+    /// <returns>Distinct non-empty secret names.</returns>
     private static IReadOnlyCollection<string> NormalizeNames(IEnumerable<string> names) =>
         (names ?? Array.Empty<string>())
             .Where(z => !string.IsNullOrWhiteSpace(z))

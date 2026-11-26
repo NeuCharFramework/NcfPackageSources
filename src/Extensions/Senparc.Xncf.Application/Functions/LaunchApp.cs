@@ -33,7 +33,7 @@ using System.Linq;
 namespace Senparc.Xncf.Application.Functions
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides the function that starts a local application process from a supplied path.
     /// </summary>
     public class LaunchApp : FunctionBase
     {

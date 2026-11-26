@@ -27,6 +27,11 @@ namespace Senparc.Areas.Admin.Domain.Services;
 
 public sealed class AdminChatSessionWorkflowService : BaseClientService<AdminChatSessionWorkflow>
 {
+    /// <summary>
+    /// Initializes persistence for workflow associations attached to administrator chat sessions.
+    /// </summary>
+    /// <param name="repository">The session-workflow repository.</param>
+    /// <param name="serviceProvider">The dependency provider used by the base service.</param>
     public AdminChatSessionWorkflowService(
         IAdminChatSessionWorkflowRepository repository,
         IServiceProvider serviceProvider)
@@ -34,6 +39,11 @@ public sealed class AdminChatSessionWorkflowService : BaseClientService<AdminCha
     {
     }
 
+    /// <summary>
+    /// Lists workflows attached to a session in insertion order.
+    /// </summary>
+    /// <param name="sessionId">The chat session identifier.</param>
+    /// <returns>The session workflow associations.</returns>
     public async Task<List<AdminChatSessionWorkflow>> GetSessionWorkflowsAsync(int sessionId)
     {
         var workflows = await GetFullListAsync(
@@ -42,6 +52,12 @@ public sealed class AdminChatSessionWorkflowService : BaseClientService<AdminCha
         return workflows.ToList();
     }
 
+    /// <summary>
+    /// Adds valid workflow associations that are not already attached to the session.
+    /// </summary>
+    /// <param name="sessionId">The target chat session identifier.</param>
+    /// <param name="workflows">Workflow IDs and display metadata to attach.</param>
+    /// <returns>A task that completes after all missing associations are persisted.</returns>
     public async Task AddWorkflowsToSessionAsync(
         int sessionId,
         IEnumerable<(int id, string name, string description)> workflows)
@@ -69,6 +85,13 @@ public sealed class AdminChatSessionWorkflowService : BaseClientService<AdminCha
         }
     }
 
+    /// <summary>
+    /// Reconciles a session's workflow associations with the supplied desired set,
+    /// adding missing items and deleting obsolete items.
+    /// </summary>
+    /// <param name="sessionId">The target chat session identifier.</param>
+    /// <param name="workflows">The desired workflow associations.</param>
+    /// <returns>A task that completes after reconciliation is persisted.</returns>
     public async Task SetSessionWorkflowsAsync(
         int sessionId,
         IEnumerable<(int id, string name, string description)> workflows)

@@ -49,76 +49,79 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         public float FrequencyPenalty { get; set; }
 
 
+        /// <summary>Gets or sets the presence penalty applied during generation.</summary>
         public float PresencePenalty { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets optional stop sequences passed to the model.
         /// </summary>
         public string StopSequences { get; set; }
 
         #endregion
 
+        /// <summary>Gets or sets the AI model identifier.</summary>
         [Required] public int ModelId { get; set; }
 
+        /// <summary>Gets or sets the prompt content.</summary>
         [Required] public string Content { get; set; }
 
         // public string Version { get; set; }
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the number of generated result variants.
         /// </summary>
         [Required]
         public int NumsOfResults { get; set; }
 
+        /// <summary>Gets or sets whether this item is a top-level tactic.</summary>
         [Required] public bool IsTopTactic { get; set; } = false;
+        /// <summary>Gets or sets whether a new tactic should be created.</summary>
         [Required] public bool IsNewTactic { get; set; } = false;
+        /// <summary>Gets or sets whether a new sub-tactic should be created.</summary>
         [Required] public bool IsNewSubTactic { get; set; } = false;
 
+        /// <summary>Gets or sets whether a new aiming branch should be created.</summary>
         [Required] public bool IsNewAiming { get; set; } = false;
 
+        /// <summary>Gets or sets the existing prompt-item identifier for an edit request.</summary>
         public int? Id { get; set; }
 
+        /// Gets or sets the owning PromptRange identifier.
         [Required] public int RangeId { get; set; }
 
+        /// <summary>Gets or sets an administrative note.</summary>
         public string Note { get; set; }
 
+        /// <summary>Gets or sets serialized expected results used by evaluation.</summary>
         public string ExpectedResultsJson { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether automatic grading is enabled.</summary>
         public bool isAIGrade { get; set; } = false;
 
+        /// <summary>Gets or sets the variable prefix used during prompt rendering.</summary>
         public string Prefix { get; set; }
+        /// <summary>Gets or sets the variable suffix used during prompt rendering.</summary>
         public string Suffix { get; set; }
+        /// <summary>Gets or sets serialized variable definitions.</summary>
         public string VariableDictJson { get; set; }
 
+        /// <summary>Gets or sets whether the prompt item is a draft.</summary>
         [Required] public bool IsDraft { get; set; }
         
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the user message used for chat continuation.</summary>
         public string UserMessage { get; set; }
         
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets prior chat messages supplied to the execution.</summary>
         public List<ChatHistoryItem> ChatHistory { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the stream identifier used for incremental output.</summary>
         public string StreamId { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets advanced execution options.</summary>
         public PromptExecutionOptions ExecutionOptions { get; set; }
     }
     
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Represents one prior user or assistant message in a chat request.</summary>
     public class ChatHistoryItem
     {
         /// <summary>
@@ -126,9 +129,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         /// </summary>
         public string Role { get; set; }
         
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the message content.</summary>
         public string Content { get; set; }
     }
 }

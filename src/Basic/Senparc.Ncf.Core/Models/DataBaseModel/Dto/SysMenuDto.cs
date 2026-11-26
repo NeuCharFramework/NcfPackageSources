@@ -22,12 +22,11 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
+    /// <summary>Transfers administration menu, route, visibility, and permission metadata.</summary>
     public class SysMenuDto : DtoBase
     {
       
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the legacy menu flag; use <see cref="MenuType"/> for new code.</summary>
         [Obsolete("使用MenuType字段代替")]
         public bool IsMenu { get; set; }
 
@@ -38,9 +37,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         [Required]
         public string MenuName { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the parent menu identifier.</summary>
         [MaxLength(50)]
         public string ParentId { get; set; }
 
@@ -53,25 +50,37 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         [MaxLength(50)]
         public string Icon { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the display ordering value.</summary>
         public int Sort { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether the menu is visible.</summary>
         public bool Visible { get; set; }
 
         public string ResourceCode { get; set; }
 
         public bool IsLocked { get; set; }
 
+        /// <summary>
+        /// Initializes an empty menu DTO for binding.
+        /// </summary>
         public SysMenuDto() { }
 
         public MenuType MenuType { get; set; }
 
 
+        /// <summary>
+        /// Initializes a menu DTO with its route, hierarchy, display, and permission metadata.
+        /// </summary>
+        /// <param name="isMenu">The legacy menu flag.</param>
+        /// <param name="id">The menu identifier.</param>
+        /// <param name="menuName">The display name.</param>
+        /// <param name="parentId">The parent menu identifier.</param>
+        /// <param name="url">The route URL.</param>
+        /// <param name="icon">The icon descriptor.</param>
+        /// <param name="sort">The display ordering value.</param>
+        /// <param name="visible">Whether the menu is visible.</param>
+        /// <param name="resourceCode">The permission/resource code.</param>
+        /// <param name="menuType">The menu classification.</param>
         public SysMenuDto(bool isMenu, string id, string menuName, string parentId, string url, string icon, int sort, bool visible, string resourceCode, MenuType menuType = MenuType.菜单)
         {
             IsMenu = isMenu;
@@ -88,9 +97,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
 
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Represents one node in the hierarchical administration menu tree.</summary>
     public class SysMenuTreeItemDto
     {
         public string MenuName { get; set; }

@@ -51,6 +51,13 @@ public sealed class NeuBellProviderCatalog
         _logger = logger;
     }
 
+    /// <summary>
+    /// Returns providers whose declaring XNCF modules are currently open.
+    /// Providers without a module UID or when module availability cannot be read
+    /// are excluded to keep the notification surface fail-closed.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to query module availability.</param>
+    /// <returns>The available provider instances in stable provider-ID order.</returns>
     public async Task<IReadOnlyList<INeuBellProvider>> GetAvailableProvidersAsync(
         CancellationToken cancellationToken = default)
     {

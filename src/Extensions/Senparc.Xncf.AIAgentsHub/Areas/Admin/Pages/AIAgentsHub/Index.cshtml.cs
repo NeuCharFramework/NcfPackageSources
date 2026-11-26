@@ -27,6 +27,9 @@ namespace Senparc.Xncf.AIAgentsHub.Areas.AIAgentsHub.Pages
 
         }
 
+        /// <summary>
+        /// Handles the initial GET request for the AI Agents Hub administration page.
+        /// </summary>
         public void OnGet()
         {
         }

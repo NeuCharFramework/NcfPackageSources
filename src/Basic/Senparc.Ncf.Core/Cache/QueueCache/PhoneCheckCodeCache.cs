@@ -46,7 +46,7 @@ namespace Senparc.Ncf.Core.Cache
     //}
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores phone verification-code payloads with a ten-minute expiration window.
     /// </summary>
     [Serializable]
     public class PhoneCheckCodeCache : QueueCache<PhoneCheckCodeData>/*, IPhoneCheckCodeCache*/

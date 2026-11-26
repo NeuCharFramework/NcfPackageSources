@@ -36,6 +36,12 @@ public sealed class PromptResultStreamHub
 
     private readonly ConcurrentDictionary<string, StreamGroup> _streams = new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// Subscribes to one result stream and replays buffered events before live events.
+    /// </summary>
+    /// <param name="streamId">The result stream identifier.</param>
+    /// <param name="cancellationToken">Token used to terminate the subscription.</param>
+    /// <returns>An asynchronous sequence of stream events.</returns>
     public async IAsyncEnumerable<PromptResultStreamEvent> Subscribe(
         string streamId,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -76,6 +82,10 @@ public sealed class PromptResultStreamHub
         }
     }
 
+    /// <summary>
+    /// Buffers and broadcasts one prompt result stream event.
+    /// </summary>
+    /// <param name="streamEvent">The event to publish.</param>
     public void Publish(PromptResultStreamEvent streamEvent)
     {
         if (streamEvent == null || string.IsNullOrWhiteSpace(streamEvent.StreamId))
@@ -113,6 +123,11 @@ public sealed class PromptResultStreamHub
         }
     }
 
+    /// <summary>
+    /// Removes a completed stream when it no longer has subscribers.
+    /// </summary>
+    /// <param name="streamId">The stream identifier.</param>
+    /// <param name="group">The stream group.</param>
     private void CleanupStreamIfFinished(string streamId, StreamGroup group)
     {
         if (!group.IsComplete || !group.Subscribers.IsEmpty)

@@ -18,6 +18,10 @@ namespace Senparc.Xncf.NeuCharWorkflow;
 
 public partial class Register : IChatTool
 {
+    /// <summary>
+    /// Returns the AdminChat workflow run/edit command definitions and their callable functions.
+    /// </summary>
+    /// <returns>The workflow-related chat tools.</returns>
     public IReadOnlyCollection<ChatToolDefinition> GetChatTools()
     {
         return new[]
@@ -179,6 +183,10 @@ Help the user edit an existing NeuChar Workflow. Only this command's explicit to
         };
     }
 
+    /// <summary>
+    /// Registers dynamic workflow chat-tool option providers.
+    /// </summary>
+    /// <param name="services">The dependency injection service collection.</param>
     private static void AddChatToolServices(IServiceCollection services)
     {
         services.AddScoped<WorkflowChatToolParameterOptionsProvider>();

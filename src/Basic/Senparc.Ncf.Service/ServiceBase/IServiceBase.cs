@@ -88,18 +88,18 @@ namespace Senparc.Ncf.Service
         void TryDetectChange(T obj);
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Maps one entity to a DTO using the configured AutoMapper profile.
         /// </summary>
-        /// <typeparam name="TDto"></typeparam>
-        /// <param name="entity"></param>
-        /// <returns></returns>
+        /// <typeparam name="TDto">The destination DTO type.</typeparam>
+        /// <param name="entity">The entity to map.</param>
+        /// <returns>The mapped DTO.</returns>
         TDto Mapping<TDto>(T entity);
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Applies tenant information to the underlying multi-tenant database context when supported.
         /// </summary>
-        /// <param name="requestTenantInfo"></param>
-        /// <returns></returns>
+        /// <param name="requestTenantInfo">The tenant information to assign.</param>
+        /// <returns><see langword="true"/> when the current context accepts tenant information.</returns>
         bool SetTenantInfo(RequestTenantInfo requestTenantInfo);
     }
 }

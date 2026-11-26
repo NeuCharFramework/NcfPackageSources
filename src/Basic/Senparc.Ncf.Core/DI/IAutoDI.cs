@@ -23,8 +23,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.DI
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Marker interface for types that participate in NCF automatic dependency injection.
     /// </summary>
     public interface IAutoDI
     {

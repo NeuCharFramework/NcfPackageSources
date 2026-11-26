@@ -98,6 +98,20 @@ namespace Senparc.Areas.Admin.Domain.Services
             return session;
         }
 
+        /// <summary>
+        /// Moves one active session before or after another active session owned by
+        /// the same user, tenant, and workspace, then rewrites the complete sibling
+        /// ordering in one persistence operation.
+        /// </summary>
+        /// <param name="userId">The administrator who owns both sessions.</param>
+        /// <param name="sessionId">The session being moved.</param>
+        /// <param name="targetSessionId">The existing session used as the insertion anchor.</param>
+        /// <param name="insertAfter">Whether the moved session is inserted after the anchor.</param>
+        /// <returns>The reordered active sessions in their new order.</returns>
+        /// <exception cref="NcfExceptionBase">
+        /// Thrown when identifiers are invalid or the sessions are not reorderable
+        /// within the same user, tenant, and workspace boundary.
+        /// </exception>
         public async Task<List<AdminChatSession>> ReorderSessionAsync(
             int userId, int sessionId, int targetSessionId, bool insertAfter)
         {
@@ -136,6 +150,16 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Creates and persists a new administrator chat session with optional
+        /// workspace association and workspace capability flags.
+        /// </summary>
+        /// <param name="title">The initial session title.</param>
+        /// <param name="userId">The owning administrator identifier.</param>
+        /// <param name="workspaceId">Optional workspace identifier.</param>
+        /// <param name="workspaceWriteEnabled">Whether workspace writes are enabled.</param>
+        /// <param name="workspaceCliEnabled">Whether workspace CLI operations are enabled.</param>
+        /// <returns>The persisted session entity.</returns>
         public async Task<AdminChatSession> CreateSessionAsync(
             string title,
             int userId,
@@ -156,6 +180,13 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Updates the title of an owner-scoped session.
+        /// </summary>
+        /// <param name="sessionId">The session identifier.</param>
+        /// <param name="userId">The owning administrator identifier.</param>
+        /// <param name="newTitle">The replacement title.</param>
+        /// <returns><see langword="true"/> when the session was found and saved.</returns>
         public async Task<bool> UpdateSessionTitleAsync(int sessionId, int userId, string newTitle)
         {
             var session = await GetSessionByIdAsync(sessionId, userId);
@@ -169,6 +200,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Updates the last-message timestamp for an existing session.
+        /// Missing sessions are ignored.
+        /// </summary>
+        /// <param name="sessionId">The session identifier.</param>
+        /// <returns>A task that completes after the update is persisted.</returns>
         public async Task UpdateLastMessageTimeAsync(int sessionId)
         {
             var session = await base.GetObjectAsync(s => s.Id == sessionId);
@@ -182,6 +219,13 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Archives an owner-scoped session unless it is missing or already deleted.
+        /// Re-archiving an already archived session is idempotent.
+        /// </summary>
+        /// <param name="sessionId">The session identifier.</param>
+        /// <param name="userId">The owning administrator identifier.</param>
+        /// <returns><see langword="true"/> when the requested state is achieved.</returns>
         public async Task<bool> ArchiveSessionAsync(int sessionId, int userId)
         {
             var session = await GetSessionByIdAsync(sessionId, userId);
@@ -196,6 +240,13 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Sets the unread marker for an owner-scoped session.
+        /// </summary>
+        /// <param name="sessionId">The session identifier.</param>
+        /// <param name="userId">The owning administrator identifier.</param>
+        /// <param name="unread">The desired unread state.</param>
+        /// <returns><see langword="true"/> when the state is applied or already matches.</returns>
         public async Task<bool> SetSessionUnreadAsync(int sessionId, int userId, bool unread)
         {
             var session = await GetSessionByIdAsync(sessionId, userId);
@@ -210,6 +261,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Marks an owner-scoped session as deleted and persists the terminal state.
+        /// </summary>
+        /// <param name="sessionId">The session identifier.</param>
+        /// <param name="userId">The owning administrator identifier.</param>
+        /// <returns><see langword="true"/> when the session was found and marked deleted.</returns>
         public async Task<bool> DeleteSessionAsync(int sessionId, int userId)
         {
             var session = await GetSessionByIdAsync(sessionId, userId);
@@ -223,6 +280,13 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Restores an owner-scoped archived session to the active state.
+        /// Missing, deleted, or already active sessions are handled idempotently.
+        /// </summary>
+        /// <param name="sessionId">The session identifier.</param>
+        /// <param name="userId">The owning administrator identifier.</param>
+        /// <returns><see langword="true"/> when the session is active after the call.</returns>
         public async Task<bool> RestoreSessionAsync(int sessionId, int userId)
         {
             var session = await GetSessionByIdAsync(sessionId, userId);
@@ -237,6 +301,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Counts the sessions owned by an administrator that have the specified status.
+        /// </summary>
+        /// <param name="userId">The administrator identifier.</param>
+        /// <param name="status">The session status to count.</param>
+        /// <returns>The number of matching sessions.</returns>
         public async Task<int> GetSessionCountByStatusAsync(int userId, ChatSessionStatus status)
         {
             var sessions = await base.GetFullListAsync(s => s.UserId == userId && s.Status == status);
@@ -246,6 +316,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Aggregates session totals by administrator, including active, archived,
+        /// deleted, and most-recent activity counts.
+        /// </summary>
+        /// <returns>One aggregate record per administrator represented in persistence.</returns>
         public async Task<List<AdminChatUserSessionStat>> GetUserSessionStatsAsync()
         {
             var db = base.BaseData.BaseDB.BaseDataContext;

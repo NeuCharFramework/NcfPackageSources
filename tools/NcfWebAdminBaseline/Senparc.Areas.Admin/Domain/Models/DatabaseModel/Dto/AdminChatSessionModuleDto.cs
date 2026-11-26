@@ -17,32 +17,32 @@ using System;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents a module attached to an administrator chat session.
     /// </summary>
     public class AdminChatSessionModuleDto : DtoBase<int>
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the chat session identifier.
         /// </summary>
         public int SessionId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the registered XNCF module UID.
         /// </summary>
         public string XncfModuleUid { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the module's internal name.
         /// </summary>
         public string ModuleName { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the module version recorded when it was attached.
         /// </summary>
         public string ModuleVersion { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the localized display name exposed to the client.
         /// </summary>
         public string DisplayName { get; set; }
 
@@ -52,18 +52,20 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         public string MenuName { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the localized module description.
         /// </summary>
         public string ModuleDescription { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the timestamp at which the module was attached.
         /// </summary>
         public DateTime AddedTime { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a session-module DTO from a persisted <see cref="AdminChatSessionModule"/> entity.
         /// </summary>
+        /// <param name="entity">The persisted association; <see langword="null"/> returns <see langword="null"/>.</param>
+        /// <returns>A populated DTO, or <see langword="null"/> when <paramref name="entity"/> is null.</returns>
         public static AdminChatSessionModuleDto CreateFromEntity(AdminChatSessionModule entity)
         {
             if (entity == null) return null;

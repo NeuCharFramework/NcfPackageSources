@@ -33,6 +33,10 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
 {
     public class TerminalAppService : AppServiceBase
     {
+        /// <summary>
+        /// Initializes the disabled legacy Terminal application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public TerminalAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
@@ -148,19 +152,20 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Executes one command through the array-based command runner.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="commandText">The command text to submit.</param>
+        /// <returns>The captured standard output or the exception message returned by the runner.</returns>
         private string ExeCommand(string commandText)
         {
             return ExeCommand(new string[] { commandText });
         }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Starts the platform command interpreter, writes the supplied commands, and captures
+        /// standard output. Process-start and execution failures are converted to the returned text.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="commandTexts">The command lines to write before sending the exit command.</param>
+        /// <returns>The captured standard output, or the exception message when execution fails.</returns>
         private string ExeCommand(string[] commandTexts)
         {
             Process p = new Process();
@@ -191,6 +196,12 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
             return strOutput;
         }
 
+        /// <summary>
+        /// Executes a filtered terminal command through the module's legacy command runner
+        /// and returns the captured process output in the standard function response.
+        /// </summary>
+        /// <param name="request">The command-line request supplied by the function renderer.</param>
+        /// <returns>A response containing command output or a failure message when the command is rejected.</returns>
         [FunctionRender(typeof(TerminalResource), "Function.Terminal.Command.Name", "Function.Terminal.Command.Description", typeof(Register))]
         public async Task<StringAppResponse> Run(Terminal_RunRequest request)
         {

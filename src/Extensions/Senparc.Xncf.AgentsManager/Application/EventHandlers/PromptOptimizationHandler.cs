@@ -25,6 +25,13 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
     //Legacy comment translated to English.
     public class PromptOptimizationHandler : IIntegrationEventHandler<PromptTestFinishedEvent>
     {
+        /// <summary>
+        /// Handles a completed PromptRange test event. The current handler retains
+        /// the integration-event boundary for compatibility and performs no additional action.
+        /// </summary>
+        /// <param name="event">The completed prompt-test event.</param>
+        /// <param name="cancellationToken">The handler cancellation token.</param>
+        /// <returns>A completed task after the event is observed.</returns>
         public async Task Handle(PromptTestFinishedEvent @event, CancellationToken cancellationToken)
         {
             //Legacy comment translated to English.

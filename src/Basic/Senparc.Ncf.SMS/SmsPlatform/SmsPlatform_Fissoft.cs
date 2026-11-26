@@ -28,14 +28,30 @@ namespace Senparc.Ncf.SMS
 {
     public class SmsPlatform_Fissoft : SmsPlatform, ISmsPlatform
     {
+        /// <summary>
+        /// Initializes the Fissoft SMS provider with account credentials.
+        /// </summary>
+        /// <param name="smsServiceAddress">An optional endpoint override.</param>
+        /// <param name="smsAccountCORPID">The provider account identifier.</param>
+        /// <param name="smsAccountName">The provider account name.</param>
+        /// <param name="smsAccountPassword">The provider account password.</param>
+        /// <param name="smsAccountSubNumber">The provider sub-number.</param>
         public SmsPlatform_Fissoft(string smsServiceAddress, string smsAccountCORPID, string smsAccountName, string smsAccountPassword, string smsAccountSubNumber)
             : base(SmsPlatformType.Fissoft, smsServiceAddress, smsAccountCORPID, smsAccountName, smsAccountPassword, smsAccountSubNumber)
         {
 
         }
 
+        /// <summary>
+        /// Gets the fixed Fissoft endpoint used by the legacy provider API.
+        /// </summary>
         public override string SmsServiceAddress => "http://api.fissoft.com/pubservice";
 
+        /// <inheritdoc cref="ISmsPlatform.Send(string, string)"/>
+        /// <remarks>
+        /// Long content is split into provider-sized segments. Provider or transport
+        /// failures are logged and returned as <see cref="SmsResult.未知错误"/>.
+        /// </remarks>
         public override SmsResult Send(string content, string number)
         {
             SmsResult smsResult = SmsResult.未知错误;
@@ -48,7 +64,6 @@ namespace Senparc.Ncf.SMS
                 int contentIndex = 0;
                 int limitedLetterCount = 65 * 4;
 
-                //Legacy comment translated to English.
                 List<string> messageList = new List<string>();
                 while (contentIndex < content.Length)
                 {
@@ -57,7 +72,6 @@ namespace Senparc.Ncf.SMS
                     contentIndex += limitedLetterCount;
                 }
 
-                //Legacy comment translated to English.
                 for (int i = 0; i < messageList.Count; i++)
                 {
                     var msg = messageList[i];
@@ -65,7 +79,6 @@ namespace Senparc.Ncf.SMS
                     {
                         msg = $" [{i + 1}/{messageList.Count}]" + msg;
                     }
-                    //Legacy comment translated to English.
                     string encodedLimitedConent = UrlEncode(msg, encoding);
 
 
@@ -100,6 +113,7 @@ namespace Senparc.Ncf.SMS
             return smsResult;
         }
 
+        /// <inheritdoc />
         public override string GetLastCount()
         {
             var url = string.Format("{0}/SMSAccountInfo?OperId={1}&OperPass={2}",
@@ -116,35 +130,44 @@ namespace Senparc.Ncf.SMS
     }
 
     /// <summary>
-    /// sendresult
+    /// Deserializes the status returned by the Fissoft send endpoint.
     /// </summary>
     public class Fissosoft_SendResult
     {
+        /// <summary>Gets or sets the provider result code.</summary>
         public int Code { get; set; }
+        /// <summary>Gets or sets the provider result message.</summary>
         public string Msg { get; set; }
     }
 
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Deserializes the account-status envelope returned by the Fissoft provider.
     /// </summary>
     public class Fissoft_LastCountResult
     {
+        /// <summary>Gets or sets the provider result code.</summary>
         public int Code { get; set; }
+        /// <summary>Gets or sets the provider result message.</summary>
         public string Msg { get; set; }
+        /// <summary>Gets or sets the serialized account-status payload.</summary>
         public string Value { get; set; }
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Deserializes the account usage payload returned by the Fissoft provider.
     /// </summary>
     public class Fissoft_LastCountResult_Value
     {
+        /// <summary>Gets or sets the provider account name.</summary>
         public string UserName { get; set; }
+        /// <summary>Gets or sets the provider operator identifier.</summary>
         public string OperId { get; set; }
+        /// <summary>Gets or sets the remaining SMS count.</summary>
         public int SMSNum { get; set; }
+        /// <summary>Gets or sets the remaining emergency SMS count.</summary>
         public int EmergentSMSNum { get; set; }
+        /// <summary>Gets or sets whether the provider account is enabled.</summary>
         public int IsEnable { get; set; }
     }
 

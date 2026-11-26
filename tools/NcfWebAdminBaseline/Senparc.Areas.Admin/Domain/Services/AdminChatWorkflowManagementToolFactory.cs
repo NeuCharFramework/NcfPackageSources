@@ -33,6 +33,14 @@ public static class AdminChatWorkflowManagementToolFactory
 {
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
 
+    /// <summary>
+    /// Creates workflow capability/validation tools and an approval-required
+    /// workflow creation tool for an administrator.
+    /// </summary>
+    /// <param name="provider">The workflow creation provider.</param>
+    /// <param name="adminUserId">The administrator owner.</param>
+    /// <param name="localizer">Optional resource localizer.</param>
+    /// <returns>The AI function collection.</returns>
     public static IReadOnlyList<AIFunction> Create(
         IWorkflowCreationProvider provider,
         int adminUserId,
@@ -71,11 +79,23 @@ public static class AdminChatWorkflowManagementToolFactory
             Localizer = localizer;
         }
 
+        /// <summary>
+        /// Resolves a localized resource value or returns its fallback text.
+        /// </summary>
+        /// <param name="key">The resource key.</param>
+        /// <param name="fallback">The fallback text.</param>
+        /// <returns>The localized or fallback value.</returns>
         protected string Text(string key, string fallback) =>
             Localizer?[key].ResourceNotFound == false
                 ? Localizer[key].Value
                 : fallback;
 
+        /// <summary>
+        /// Converts one AI argument to invariant string input.
+        /// </summary>
+        /// <param name="arguments">The AI argument collection.</param>
+        /// <param name="name">The argument name.</param>
+        /// <returns>The string value, or an empty string.</returns>
         protected static string StringArgument(AIFunctionArguments arguments, string name) =>
             arguments != null && arguments.TryGetValue(name, out var value)
                 ? value switch
@@ -88,6 +108,14 @@ public static class AdminChatWorkflowManagementToolFactory
                 }
                 : string.Empty;
 
+        /// <summary>
+        /// Converts one AI argument to a boolean, returning the supplied fallback
+        /// for missing or unparseable values.
+        /// </summary>
+        /// <param name="arguments">The AI argument collection.</param>
+        /// <param name="name">The argument name.</param>
+        /// <param name="fallback">The fallback value.</param>
+        /// <returns>The parsed boolean or fallback.</returns>
         protected static bool BoolArgument(AIFunctionArguments arguments, string name, bool fallback) =>
             arguments != null && arguments.TryGetValue(name, out var value)
                 ? value switch
@@ -100,6 +128,11 @@ public static class AdminChatWorkflowManagementToolFactory
                 }
                 : fallback;
 
+        /// <summary>
+        /// Serializes an anonymous schema object into a detached JSON element.
+        /// </summary>
+        /// <param name="value">The schema object.</param>
+        /// <returns>The serialized JSON schema element.</returns>
         protected static JsonElement Schema(object value)
         {
             using var document = JsonDocument.Parse(JsonSerializer.Serialize(value, SerializerOptions));

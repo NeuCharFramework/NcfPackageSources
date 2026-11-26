@@ -24,49 +24,35 @@ using Microsoft.AspNetCore.Routing.Tree;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines common audit and soft-delete fields exposed by NCF DTOs.
     /// </summary>
     public interface IDtoBase<T> : IDtoBase
     {
         T Id { get; set; }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Defines common audit, tenant, and soft-delete fields for NCF DTOs.</summary>
     public interface IDtoBase
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the soft-delete flag.
         /// </summary>
         bool Flag { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the administrator-only remark.</summary>
         [MaxLength(150)]
         string AdminRemark { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the general remark.</summary>
         [MaxLength(150)]
         string Remark { get; set; }
 
-        /// <summary>
-        /// creation time
-        /// </summary>
+        /// <summary>Gets or sets the creation timestamp.</summary>
         DateTime AddTime { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the last-update timestamp.</summary>
         DateTime LastUpdateTime { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the tenant identifier.</summary>
         public int TenantId { get; set; }
     }
 }

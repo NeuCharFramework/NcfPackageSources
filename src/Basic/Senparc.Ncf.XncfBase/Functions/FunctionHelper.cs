@@ -44,27 +44,29 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.XncfBase.Functions
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides reflection and filesystem helpers used to describe and prepare rendered functions.
     /// </summary>
     public class FunctionHelper
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Appends a timestamped function log line to a string builder.
         /// </summary>
-        /// <param name="sb"></param>
-        /// <param name="msg"></param>
+        /// <param name="sb">The log builder.</param>
+        /// <param name="msg">The message to append.</param>
         public static void RecordLog(StringBuilder sb, string msg)
         {
             sb.AppendLine($"[{SystemTime.Now.ToString()}]\t{msg}");
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reflects a function request type into parameter metadata, optionally loading
+        /// dynamic selection data from the service provider and resolving localized descriptions.
         /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <param name="functionRenderBag">FunctionRenderBag</param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="serviceProvider">The provider used by request data-loading hooks.</param>
+        /// <param name="functionRenderBag">The function metadata and request type.</param>
+        /// <param name="tryLoadData">Whether to invoke the request's data-loading hook.</param>
+        /// <returns>The reflected function parameter metadata.</returns>
+        /// <exception cref="Exception">Propagates failures raised while loading dynamic request data.</exception>
         public static async Task<List<FunctionParameterInfo>> GetFunctionParameterInfoAsync(IServiceProvider serviceProvider, FunctionRenderBag functionRenderBag, bool tryLoadData = true)
         {
             var functionParameterType = functionRenderBag.FunctionParameterType;
@@ -229,6 +231,11 @@ namespace Senparc.Ncf.XncfBase.Functions
             return result;
         }
 
+        /// <summary>
+        /// Determines whether a property has either System.Text.Json or Newtonsoft.Json ignore metadata.
+        /// </summary>
+        /// <param name="propertyInfo">The property to inspect.</param>
+        /// <returns><see langword="true"/> when the property should be excluded from function parameters.</returns>
         private static bool ShouldIgnoreProperty(PropertyInfo propertyInfo)
         {
             if (propertyInfo.GetCustomAttribute<JsonIgnoreAttribute>() != null)
@@ -239,12 +246,22 @@ namespace Senparc.Ncf.XncfBase.Functions
             return propertyInfo.CustomAttributes.Any(z => z.AttributeType.FullName == "Newtonsoft.Json.JsonIgnoreAttribute");
         }
 
+        /// <summary>
+        /// Determines whether a property is a Boolean or nullable Boolean.
+        /// </summary>
+        /// <param name="prop">The property to inspect.</param>
+        /// <returns><see langword="true"/> when the property represents Boolean data.</returns>
         private static bool IsBooleanProperty(PropertyInfo prop)
         {
             var t = prop.PropertyType;
             return t == typeof(bool) || Nullable.GetUnderlyingType(t) == typeof(bool);
         }
 
+        /// <summary>
+        /// Determines whether a type is a supported collection of Function file references.
+        /// </summary>
+        /// <param name="type">The type to inspect.</param>
+        /// <returns><see langword="true"/> for arrays/lists/read-only lists/enumerables of file references.</returns>
         private static bool IsFileCollection(Type type)
         {
             if (type == typeof(FunctionFileReference[]))
@@ -260,12 +277,13 @@ namespace Senparc.Ncf.XncfBase.Functions
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Searches upward for a solution and returns selectable standard XNCF project folders.
+        /// Additional glob patterns can extend the discovered project set.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="mustHaveXncfModule">Whether to return an N/A option when no project is found.</param>
+        /// <param name="rootDir">Optional directory from which the solution search begins.</param>
+        /// <param name="additionalProjects">Additional directory patterns to include.</param>
+        /// <returns>Selection entries representing discovered XNCF projects.</returns>
         public static List<SelectionItem> LoadXncfProjects(bool mustHaveXncfModule = false, string rootDir = null, params string[] additionalProjects)
         {
             var selectList = new List<SelectionItem>();
@@ -339,12 +357,12 @@ namespace Senparc.Ncf.XncfBase.Functions
         }
 
         /// <summary>
-        /// get xxxSenparcEntities.cs database file
+        /// Resolves the database entity file name for a project and optional database suffix.
         /// </summary>
-        /// <param name="projectPath"></param>
-        /// <param name="dbType">databasetype</param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
+        /// <param name="projectPath">The project directory.</param>
+        /// <param name="dbType">Optional database provider suffix.</param>
+        /// <returns>The entity file name without its <c>.cs</c> extension.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when no matching entity file exists.</exception>
         public static string GetSenparcEntitiesFilePath(string projectPath, string dbType)
         {
             var databaseModelPath = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel");

@@ -43,12 +43,22 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
         private readonly IServiceProvider _serviceProvider;
         private readonly FindApiService _findApiService;
 
+        /// <summary>
+        /// Initializes the Weixin service with dependency access and API discovery support.
+        /// </summary>
+        /// <param name="serviceProvider">The provider used to resolve caches and settings.</param>
+        /// <param name="findApiService">The Weixin API discovery service.</param>
         public WeixinService(IServiceProvider serviceProvider, FindApiService findApiService)
         {
             _serviceProvider = serviceProvider;
             _findApiService = findApiService;
         }
 
+        /// <summary>
+        /// Replaces recognized Weixin face-code tokens with HTML image elements.
+        /// </summary>
+        /// <param name="content">The source text containing face codes.</param>
+        /// <returns>The text with recognized face codes replaced.</returns>
         public string ReplaceWeixinFace(string content)
         {
             var weixinFaceCahce = _serviceProvider.GetService<WeixinFaceCache>();
@@ -66,6 +76,12 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
             return content;
         }
 
+        /// <summary>
+        /// Normalizes a pipe-delimited keyword string into the standard leading/trailing-pipe format.
+        /// </summary>
+        /// <param name="keyword">The raw keyword string.</param>
+        /// <param name="maxKeywordCount">The optional maximum number of keywords to retain.</param>
+        /// <returns>The normalized keyword string, or <see langword="null"/> for blank input.</returns>
         public string GetStandardKeyword(string keyword, int maxKeywordCount = 0)
         {
             //Legacy comment translated to English.
@@ -84,11 +100,12 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
         }
 
         /// <summary>
-        /// 
+        /// Downloads a Weixin media resource, retrying with a refreshed token
+        /// when the first attempt fails.
         /// </summary>
-        /// <param name="serverId"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="serverId">The Weixin media server identifier.</param>
+        /// <param name="filePath">The destination file path.</param>
+        /// <returns><see langword="true"/> when the resource is saved successfully.</returns>
         public bool DownloadTemplate(string serverId, string filePath)
         {
             try
@@ -116,12 +133,12 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Downloads a Weixin media resource to a file.
         /// </summary>
-        /// <param name="serverId"></param>
-        /// <param name="fileName"></param>
-        /// <param name="getNewToken"></param>
-        /// <returns></returns>
+        /// <param name="serverId">The Weixin media server identifier.</param>
+        /// <param name="fileName">The destination file path.</param>
+        /// <param name="getNewToken">Whether to refresh the access token.</param>
+        /// <returns><see langword="true"/> when media content is written.</returns>
         public bool DownloadTemplate(string serverId, string fileName, bool getNewToken = false)
         {
             using (MemoryStream ms = new MemoryStream())
@@ -161,6 +178,13 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
         }
 
 
+        /// <summary>
+        /// Sends a Weixin template message using the configured template payload.
+        /// </summary>
+        /// <param name="data">The template data object.</param>
+        /// <param name="openId">The recipient OpenID.</param>
+        /// <param name="url">The optional template redirect URL.</param>
+        /// <returns>The provider result, or <see langword="null"/> when sending fails.</returns>
         public SendTemplateMessageResult SendTemplateMessage(IWeixinTemplateBase data, string openId, string url = null)
         {
             try
@@ -184,6 +208,14 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
             }
             return null;
         }
+        /// <summary>
+        /// Exchanges an OAuth authorization code for an access token and retrieves the user profile.
+        /// </summary>
+        /// <param name="appId">The Weixin application identifier.</param>
+        /// <param name="appSecret">The Weixin application secret.</param>
+        /// <param name="code">The OAuth authorization code.</param>
+        /// <returns>The OAuth user profile.</returns>
+        /// <exception cref="Exception">Thrown when the Weixin OAuth API returns a failure code.</exception>
         public OAuthUserInfo GetOAuthResult(string appId, string appSecret, string code)
         {
             OAuthAccessTokenResult result = null;

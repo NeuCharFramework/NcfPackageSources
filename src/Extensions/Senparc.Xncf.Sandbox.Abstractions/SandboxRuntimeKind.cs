@@ -14,7 +14,7 @@
 namespace Senparc.Xncf.Sandbox.Abstractions;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Identifies the runtime provider used to host a Sandbox session.
 /// </summary>
 public enum SandboxRuntimeKind
 {

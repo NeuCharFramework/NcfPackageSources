@@ -34,8 +34,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Provides AI-facing database query guidance and reusable query templates.
     /// </summary>
     public class AIAgentIntegrationAppService : AppServiceBase
     {
@@ -45,9 +44,9 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Returns a structured system prompt describing the DatabaseToolkit functions and safety guidance.
         /// </summary>
+        /// <returns>A response containing the serialized system-prompt document.</returns>
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.AgentPrompt.Name", "Function.Database.AgentPrompt.Description", typeof(Register))]
         public async Task<AppResponseBase<string>> GetSystemPrompt()
         {
@@ -141,9 +140,9 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Returns reusable examples for common DatabaseToolkit queries and filters.
         /// </summary>
+        /// <returns>A response containing serialized query templates.</returns>
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.QueryTemplates.Name", "Function.Database.QueryTemplates.Description", typeof(Register))]
         public async Task<AppResponseBase<string>> GetCommonQueryTemplates()
         {

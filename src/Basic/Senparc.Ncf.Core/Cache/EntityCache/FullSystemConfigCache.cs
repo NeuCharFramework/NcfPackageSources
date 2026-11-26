@@ -38,6 +38,10 @@ namespace Senparc.Ncf.Core.Cache
         public const string CACHE_KEY = "FullSystemConfigCache";
         private INcfDbData _dataContext => base._db as INcfDbData;
 
+        /// <summary>
+        /// Initializes the full system-configuration cache with database access.
+        /// </summary>
+        /// <param name="db">The NCF database data provider.</param>
         public FullSystemConfigCache(INcfDbData db)
             : base(CACHE_KEY, db)
         {

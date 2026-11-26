@@ -29,6 +29,13 @@ public interface INeuCharFunctionProvitAccessRepository : IClientRepositoryBase<
 
 public sealed class NeuCharFunctionProvitAccessRepository : ClientRepositoryBase<NeuCharFunctionProvitAccess>, INeuCharFunctionProvitAccessRepository
 {
+    /// <summary>
+    /// Reserved parameterless constructor for repository infrastructure.
+    /// </summary>
     private NeuCharFunctionProvitAccessRepository() : base(null) { }
+    /// <summary>
+    /// Initializes the repository with the current NCF database data provider.
+    /// </summary>
+    /// <param name="ncfDbData">The database data provider used by the base repository.</param>
     public NeuCharFunctionProvitAccessRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }

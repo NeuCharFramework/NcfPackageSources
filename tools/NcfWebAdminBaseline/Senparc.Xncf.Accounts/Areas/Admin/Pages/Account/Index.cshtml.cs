@@ -10,6 +10,9 @@ namespace Senparc.Xncf.Accounts.Areas.Account.Pages
 
         }
 
+        /// <summary>
+        /// Handles the account module administration page GET request.
+        /// </summary>
         public void OnGet()
         {
         }

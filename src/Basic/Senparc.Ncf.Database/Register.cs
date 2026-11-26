@@ -28,94 +28,42 @@ using System.Reflection;
 namespace Senparc.Ncf.Database
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides ASP.NET Core application-builder extensions for selecting the
+    /// <see cref="IDatabaseConfiguration"/> used by NCF database services.
+    /// </summary>
+    /// <remarks>
+    /// The selected configuration is stored in
+    /// <see cref="DatabaseConfigurationFactory.Instance"/>. This class does not
+    /// register a database provider by itself; the selected configuration is
+    /// consumed later when NCF creates or configures an EF Core context.
     /// </summary>
     public static class Register
     {
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        ///// <typeparam name="TDatabaseConfiguration"></typeparam>
-        ///// <param name="services"></param>
-        ///// <returns></returns>
-        //public static IServiceCollection AddDatabase<TDatabaseConfiguration>(this IServiceCollection services)
-        //        where TDatabaseConfiguration : IDatabaseConfiguration, new()
-        //{
-        //    DatabaseConfigurationFactory.Instance.Current = new TDatabaseConfiguration();
-        //    return services;
-        //}
-
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        ///// <param name="services"></param>
-        ///// <param name="databaseConfigurationType"></param>
-        ///// <returns></returns>
-        //public static IServiceCollection AddDatabase(this IServiceCollection services, Type databaseConfigurationType)
-        //{
-        //Legacy comment translated to English.
-        //    if (typeof(IDatabaseConfiguration).IsAssignableFrom(databaseConfigurationType))
-        //    {
-        //Legacy comment translated to English.
-        //    }
-
-        //    var databaseConfiguration = Activator.CreateInstance(databaseConfigurationType, true) as IDatabaseConfiguration;
-
-        //    DatabaseConfigurationFactory.Instance.Current = databaseConfiguration;
-        //    return services;
-        //}
-
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        ///// <param name="services"></param>
-        ///// <param name="databaseConfiguration"></param>
-        ///// <returns></returns>
-        //public static IServiceCollection AddDatabase(this IServiceCollection services, IDatabaseConfiguration databaseConfiguration)
-        //{
-        //Legacy comment translated to English.
-        //    if (databaseConfiguration == null)
-        //    {
-        //Legacy comment translated to English.
-        //    }
-
-        //    DatabaseConfigurationFactory.Instance.Current = databaseConfiguration;
-        //    return services;
-        //}
-
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        ///// <param name="services"></param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///// <returns></returns>
-        //public static IServiceCollection AddDatabase(this IServiceCollection services, string assemblyName, string nameSpace, string className)
-        //{
-        //Legacy comment translated to English.
-        //Legacy comment translated to English.
-        //Legacy comment translated to English.
-        //    return services.AddDatabase(databaseConfiguration);
-        //}
-
-
         #region UseNcfDatabase
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Indicates whether the application has selected an NCF database configuration
+        /// through one of the <see cref="UseNcfDatabase(IApplicationBuilder, Type)"/>
+        /// overloads.
         /// </summary>
         public static bool UseNcfDatabaseSetted = false;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Selects an already-created database configuration for the current application.
         /// </summary>
-        /// <param name="app"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="app">The application builder whose database configuration is being initialized.</param>
+        /// <param name="databaseConfiguration">
+        /// The provider-specific configuration instance. It must implement
+        /// <see cref="IDatabaseConfiguration"/> and must be ready for use by the NCF
+        /// database context factory.
+        /// </param>
+        /// <returns>The same <paramref name="app"/> instance so calls can be chained.</returns>
+        /// <exception cref="NcfDatabaseException">
+        /// Thrown when <paramref name="databaseConfiguration"/> is
+        /// <see langword="null"/>.
+        /// </exception>
         public static IApplicationBuilder UseNcfDatabase(this IApplicationBuilder app, IDatabaseConfiguration databaseConfiguration)
         {
-            //Legacy comment translated to English.
             if (databaseConfiguration == null)
             {
                 throw new NcfDatabaseException($"{nameof(databaseConfiguration)} 参数不能为 null", null);
@@ -126,30 +74,56 @@ namespace Senparc.Ncf.Database
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads a database configuration type from an assembly and selects it for
+        /// the current application.
         /// </summary>
-        /// <param name="app"></param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="app">The application builder whose database configuration is being initialized.</param>
+        /// <param name="assemblyName">The assembly name that contains the configuration type.</param>
+        /// <param name="nameSpace">The namespace containing the configuration type.</param>
+        /// <param name="className">The configuration class name without its namespace.</param>
+        /// <returns>The same <paramref name="app"/> instance so calls can be chained.</returns>
+        /// <remarks>
+        /// The three type-identifying values are combined as
+        /// <c>{nameSpace}.{className}</c>. The resulting object is then passed to
+        /// <see cref="UseNcfDatabase(IApplicationBuilder, IDatabaseConfiguration)"/>.
+        /// </remarks>
+        /// <exception cref="System.IO.FileNotFoundException">
+        /// Thrown when <paramref name="assemblyName"/> cannot be loaded.
+        /// </exception>
+        /// <exception cref="NcfDatabaseException">
+        /// Thrown when the assembly does not expose the requested configuration
+        /// object or when the loaded object is not a valid database configuration.
+        /// </exception>
         public static IApplicationBuilder UseNcfDatabase(this IApplicationBuilder app, string assemblyName, string nameSpace, string className)
         {
-            //Legacy comment translated to English.
-            string fullName = nameSpace + "." + className;//Legacy comment translated to English.
-            var databaseConfiguration = Assembly.Load(assemblyName).CreateInstance(fullName) as IDatabaseConfiguration;//Legacy comment translated to English.
+            string fullName = nameSpace + "." + className;
+            var databaseConfiguration = Assembly.Load(assemblyName).CreateInstance(fullName) as IDatabaseConfiguration;
             return app.UseNcfDatabase(databaseConfiguration);
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates and selects a database configuration represented by
+        /// <paramref name="databaseConfigurationType"/>.
         /// </summary>
-        /// <param name="app"></param>
-        /// <param name="databaseConfigurationType"></param>
-        /// <returns></returns>
+        /// <param name="app">The application builder whose database configuration is being initialized.</param>
+        /// <param name="databaseConfigurationType">
+        /// A concrete type implementing <see cref="IDatabaseConfiguration"/>.
+        /// When the type is <see cref="BySettingDatabaseConfiguration"/>, the
+        /// provider is resolved from
+        /// <see cref="SiteConfig.SenparcCoreSetting"/> before the instance is created.
+        /// </param>
+        /// <returns>The same <paramref name="app"/> instance so calls can be chained.</returns>
+        /// <exception cref="NcfDatabaseException">
+        /// Thrown when the supplied type does not implement
+        /// <see cref="IDatabaseConfiguration"/>, when the configured provider cannot
+        /// be resolved, or when the application setting names an invalid provider.
+        /// </exception>
+        /// <exception cref="MissingMethodException">
+        /// Thrown when the selected configuration type has no usable parameterless
+        /// constructor.
+        /// </exception>
         public static IApplicationBuilder UseNcfDatabase(this IApplicationBuilder app, Type databaseConfigurationType)
         {
-            //Legacy comment translated to English.
             if (!typeof(IDatabaseConfiguration).IsAssignableFrom(databaseConfigurationType))
             {
                 throw new NcfDatabaseException($"类型{databaseConfigurationType.Name} 必须实现接口：IDatabaseConfiguration", databaseConfigurationType);
@@ -200,14 +174,21 @@ namespace Senparc.Ncf.Database
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates and selects the specified database configuration type.
         /// </summary>
-        /// <param name="app"></param>
-        /// <returns></returns>
+        /// <typeparam name="TDatabaseConfiguration">
+        /// A parameterless-construction database configuration implementing
+        /// <see cref="IDatabaseConfiguration"/>.
+        /// </typeparam>
+        /// <param name="app">The application builder whose database configuration is being initialized.</param>
+        /// <returns>The same <paramref name="app"/> instance so calls can be chained.</returns>
+        /// <exception cref="NcfDatabaseException">
+        /// Propagated from <see cref="UseNcfDatabase(IApplicationBuilder, Type)"/>
+        /// when the configuration cannot be selected.
+        /// </exception>
         public static IApplicationBuilder UseNcfDatabase<TDatabaseConfiguration>(this IApplicationBuilder app)
         where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
-            //Legacy comment translated to English.
             app.UseNcfDatabase(typeof(TDatabaseConfiguration));
             return app;
         }

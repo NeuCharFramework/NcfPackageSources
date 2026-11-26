@@ -24,11 +24,20 @@ namespace Senparc.Ncf.XncfBase.ChatTools
 {
     public static class ChatToolRegistry
     {
+        /// <summary>
+        /// Collects valid chat tools from all registered chat-tool providers.
+        /// </summary>
+        /// <returns>Distinct tools ordered by module and command.</returns>
         public static IReadOnlyCollection<ChatToolDefinition> GetChatTools()
         {
             return GetChatTools(XncfRegisterManager.RegisterList.OfType<IChatTool>());
         }
 
+        /// <summary>
+        /// Collects, validates, de-duplicates, and orders tools from supplied providers.
+        /// </summary>
+        /// <param name="providers">The chat-tool providers to inspect.</param>
+        /// <returns>Distinct valid tool definitions.</returns>
         public static IReadOnlyCollection<ChatToolDefinition> GetChatTools(
             IEnumerable<IChatTool> providers)
         {
@@ -42,11 +51,22 @@ namespace Senparc.Ncf.XncfBase.ChatTools
                 .ToArray();
         }
 
+        /// <summary>
+        /// Matches slash-command tools against a message prefix.
+        /// </summary>
+        /// <param name="message">The message whose leading command should be matched.</param>
+        /// <returns>Matching tool definitions, or an empty collection.</returns>
         public static IReadOnlyCollection<ChatToolDefinition> Match(string message)
         {
             return Match(message, GetChatTools());
         }
 
+        /// <summary>
+        /// Matches a message command against a supplied tool collection.
+        /// </summary>
+        /// <param name="message">The message whose leading command should be matched.</param>
+        /// <param name="tools">The tool definitions to search.</param>
+        /// <returns>Matching tool definitions, or an empty collection.</returns>
         public static IReadOnlyCollection<ChatToolDefinition> Match(
             string message,
             IEnumerable<ChatToolDefinition> tools)
@@ -64,6 +84,13 @@ namespace Senparc.Ncf.XncfBase.ChatTools
                 .ToArray();
         }
 
+        /// <summary>
+        /// Resolves parameter options using the globally registered tool definitions.
+        /// </summary>
+        /// <param name="serviceProvider">The provider used to resolve dynamic option providers.</param>
+        /// <param name="request">The command, parameter, query, and result limit.</param>
+        /// <param name="cancellationToken">Token used to cancel dynamic option lookup.</param>
+        /// <returns>A bounded option result.</returns>
         public static async Task<ChatToolParameterOptionsResult> GetParameterOptionsAsync(
             IServiceProvider serviceProvider,
             ChatToolParameterOptionsRequest request,
@@ -76,6 +103,14 @@ namespace Senparc.Ncf.XncfBase.ChatTools
                 cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Resolves parameter options using a supplied tool collection.
+        /// </summary>
+        /// <param name="serviceProvider">The provider used to resolve dynamic option providers.</param>
+        /// <param name="request">The command, parameter, query, and result limit.</param>
+        /// <param name="tools">The tool definitions to search.</param>
+        /// <param name="cancellationToken">Token used to cancel dynamic option lookup.</param>
+        /// <returns>A bounded option result.</returns>
         public static async Task<ChatToolParameterOptionsResult> GetParameterOptionsAsync(
             IServiceProvider serviceProvider,
             ChatToolParameterOptionsRequest request,
@@ -150,6 +185,11 @@ namespace Senparc.Ncf.XncfBase.ChatTools
             };
         }
 
+        /// <summary>
+        /// Validates command, label, function, parameter, and options-provider metadata.
+        /// </summary>
+        /// <param name="tool">The tool definition.</param>
+        /// <returns><see langword="true"/> when the tool is safe to expose.</returns>
         private static bool IsValid(ChatToolDefinition tool)
         {
             return tool != null
@@ -170,6 +210,11 @@ namespace Senparc.Ncf.XncfBase.ChatTools
                                || typeof(IChatToolParameterOptionsProvider).IsAssignableFrom(parameter.OptionsProviderType))));
         }
 
+        /// <summary>
+        /// Validates one parameter option's required display/value fields.
+        /// </summary>
+        /// <param name="option">The option to validate.</param>
+        /// <returns><see langword="true"/> when the option can be exposed.</returns>
         private static bool IsValid(ChatToolParameterOption option)
         {
             return option != null
@@ -177,6 +222,12 @@ namespace Senparc.Ncf.XncfBase.ChatTools
                    && !string.IsNullOrWhiteSpace(option.Label);
         }
 
+        /// <summary>
+        /// Performs a case-insensitive substring match against an option field.
+        /// </summary>
+        /// <param name="value">The candidate field value.</param>
+        /// <param name="query">The query text.</param>
+        /// <returns><see langword="true"/> when the value contains the query.</returns>
         private static bool Contains(string value, string query)
         {
             return value?.Contains(query, StringComparison.OrdinalIgnoreCase) == true;

@@ -22,11 +22,14 @@ namespace Senparc.Xncf.DynamicData.Areas.DynamicData.Pages
 {
     public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
+        /// <summary>Initializes the DynamicData module index page.</summary>
+        /// <param name="xncfModuleService">The lazy module service used by the base page model.</param>
         public Index(Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
         {
 
         }
 
+        /// <summary>Initializes the DynamicData index page request.</summary>
         public void OnGet()
         {
         }

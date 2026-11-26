@@ -20,10 +20,10 @@ namespace Senparc.Ncf.Core.Extensions
     public static class ObjectExtensions
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a reference is <see langword="null"/>.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        /// <param name="obj">The reference to inspect.</param>
+        /// <returns><see langword="true"/> when <paramref name="obj"/> is <see langword="null"/>.</returns>
         public static bool IsNull(object obj)
         {
             return obj == null;

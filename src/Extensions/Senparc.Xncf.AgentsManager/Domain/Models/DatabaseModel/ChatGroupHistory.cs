@@ -31,7 +31,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Persists one message exchanged between Agent participants during a group task.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(ChatGroupHistory))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
@@ -59,21 +59,19 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         [InverseProperty(nameof(AgentTemplate.ToChatGroupHistoies))]
         public AgentTemplate ToAgentTemplate { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the participant key that emitted the message.</summary>
         public string FromParticipantKey { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets the kind of the emitting participant.</summary>
         public string FromParticipantKind { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets the display name of the emitting participant.</summary>
         public string FromParticipantName { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets the remote context identifier, when applicable.</summary>
         public string RemoteContextId { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets the remote task identifier, when applicable.</summary>
         public string RemoteTaskId { get; private set; }
 
         //[ForeignKey(nameof(FromChatGroupMember))]
@@ -97,8 +95,14 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 
         public int MyProperty { get; set; }
 
+        /// <summary>
+        /// Reserved for EF Core materialization.
+        /// </summary>
         private ChatGroupHistory() { }
 
+        /// <summary>
+        /// Initializes a persisted group-history message with its sender/recipient agents and status.
+        /// </summary>
         public ChatGroupHistory(int chatGroupId,int chatTaskId, ChatGroup chatGroup, int? fromAgentTemplateId, AgentTemplate fromAgentTemplate, int? toAgentTemplateId, AgentTemplate toAgentTemplate, /*int? fromChatGroupMemberId, ChatGroupMember fromChatGroupMember, int? toChatGroupMemberId, ChatGroupMember toChatGroupMember,*/ string message, MessageType messageType, Status status)
         {
             ChatGroupId = chatGroupId;
@@ -117,6 +121,8 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             Status = status;
         }
 
+        /// <summary>Initializes a history entity from its DTO.</summary>
+        /// <param name="chatGroupHistoryDto">The history values to copy.</param>
         public ChatGroupHistory(ChatGroupHistoryDto chatGroupHistoryDto)
         {
             ChatGroupId = chatGroupHistoryDto.ChatGroupId;

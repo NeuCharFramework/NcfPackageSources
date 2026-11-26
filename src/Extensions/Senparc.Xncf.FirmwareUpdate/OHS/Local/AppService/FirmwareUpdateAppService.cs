@@ -30,10 +30,20 @@ namespace Senparc.Xncf.FirmwareUpdate.OHS.Local.AppService;
 
 public class FirmwareUpdateAppService : AppServiceBase
 {
+    /// <summary>
+    /// Initializes the firmware-update configuration and synchronization application service.
+    /// </summary>
+    /// <param name="serviceProvider">The dependency provider used by the base service.</param>
     public FirmwareUpdateAppService(IServiceProvider serviceProvider) : base(serviceProvider)
     {
     }
 
+    /// <summary>
+    /// Saves the automatic mirror enablement and clamps its package synchronization interval
+    /// to the supported one-to-24-hour range.
+    /// </summary>
+    /// <param name="request">The mirror enablement and requested interval.</param>
+    /// <returns>A response containing the saved configuration message.</returns>
     [FunctionRender(typeof(FirmwareUpdateResource), "Function.FirmwareUpdate.Settings.Name", "Function.FirmwareUpdate.Settings.Description", typeof(Register))]
     public async Task<StringAppResponse> ConfigureMirror(FirmwareUpdate_ConfigureRequest request)
     {
@@ -57,6 +67,11 @@ public class FirmwareUpdateAppService : AppServiceBase
         }, saveLogAfterFinished: true, saveLogName: "FirmwareUpdate 镜像设置");
     }
 
+    /// <summary>
+    /// Runs the package mirror immediately through the configured mirror service.
+    /// </summary>
+    /// <param name="_">The invocation request; its current fields are not used.</param>
+    /// <returns>A response containing the mirror operation message.</returns>
     [FunctionRender(typeof(FirmwareUpdateResource), "Function.FirmwareUpdate.Sync.Name", "Function.FirmwareUpdate.Sync.Description", typeof(Register))]
     public async Task<StringAppResponse> SyncNow(FirmwareUpdate_SyncNowRequest _)
     {

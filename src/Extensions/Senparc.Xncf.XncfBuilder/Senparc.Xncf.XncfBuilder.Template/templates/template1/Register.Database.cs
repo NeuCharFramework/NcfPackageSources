@@ -38,12 +38,23 @@ namespace Template_OrgName.Xncf.Template_XncfName
         /// </summary>
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Applies module-specific Entity Framework Core model configuration.
+        /// Convention and attribute-based mappings are sufficient for the template sample.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder supplied by Entity Framework Core.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             //after implementing the [XncfAutoConfigurationMapping] attribute, this runs automatically and no manual registration is needed
             //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
         }
 
+        /// <summary>
+        /// Registers template-specific database services.
+        /// Add module entity registrations here when a generated module introduces
+        /// services that are not covered by the standard XNCF registration pipeline.
+        /// </summary>
+        /// <param name="services">The application service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             //DOT REMOVE OR MODIFY THIS LINE - Entities Point

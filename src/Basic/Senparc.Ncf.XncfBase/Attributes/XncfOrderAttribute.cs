@@ -22,21 +22,21 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Assigns an explicit ordering value to an XNCF-discovered type or member.
     /// </summary>
     public class XncfOrderAttribute : Attribute
     {
         /// <summary>
-        /// 
+        /// Initializes an ordering attribute.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <param name="order">The numeric order used by the discovery consumer.</param>
         public XncfOrderAttribute(int order)
         {
             Order = order;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the numeric discovery order.
         /// </summary>
         public int Order { get; set; }
     }

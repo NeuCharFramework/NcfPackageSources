@@ -30,6 +30,11 @@ namespace Senparc.Ncf.Utility.StreamExtensions
         private readonly Stream _stream;
         private long _position;
 
+        /// <summary>
+        /// Initializes a write-only wrapper around an underlying stream.
+        /// </summary>
+        /// <param name="stream">The stream receiving forwarded writes.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="stream"/> is null.</exception>
         public WriteOnlyStreamWrapper(Stream stream)
         {
             _stream = stream;

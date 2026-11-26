@@ -18,24 +18,46 @@
 namespace Senparc.Xncf.Connectors.Abstractions;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Defines the provider contract used to describe, test, and invoke a connector implementation.
+/// Stores the connector binding rules used to restrict an agent or chat to selected instances
+/// and optionally selected action keys.
 /// </summary>
 public sealed class ConnectorDescriptor
 {
+    /// <summary>
+    /// Gets the stable provider key used to select this connector implementation.
+    /// </summary>
     public required string Key { get; init; }
 
+    /// <summary>
+    /// Gets the human-readable connector name shown in configuration and selection views.
+    /// </summary>
     public required string Name { get; init; }
 
+    /// <summary>
+    /// Gets the description of the connector's purpose and supported integration boundary.
+    /// </summary>
     public required string Description { get; init; }
 
+    /// <summary>
+    /// Gets the optional icon identifier used by the connector UI.
+    /// </summary>
     public string Icon { get; init; } = "fa fa-plug";
 
+    /// <summary>
+    /// Gets the configuration fields required to create or validate a connector instance.
+    /// </summary>
     public IReadOnlyList<ConnectorFieldDescriptor> Fields { get; init; } = [];
 
+    /// <summary>
+    /// Gets the actions that can be invoked after a connector instance is configured.
+    /// </summary>
     public IReadOnlyList<ConnectorActionDescriptor> Actions { get; init; } = [];
 }
 
+/// <summary>
+/// Identifies the editor control and value-handling rules for a connector configuration field.
+/// </summary>
 public enum ConnectorFieldKind
 {
     Text = 0,
@@ -46,60 +68,126 @@ public enum ConnectorFieldKind
 
 public sealed class ConnectorFieldDescriptor
 {
+    /// <summary>
+    /// Gets the stable field key used in configuration dictionaries.
+    /// </summary>
     public required string Key { get; init; }
 
+    /// <summary>
+    /// Gets the field label shown to administrators.
+    /// </summary>
     public required string Label { get; init; }
 
+    /// <summary>
+    /// Gets the field-specific explanation shown beside the editor.
+    /// </summary>
     public string Description { get; init; } = string.Empty;
 
+    /// <summary>
+    /// Gets the control kind used to edit this field.
+    /// </summary>
     public ConnectorFieldKind Kind { get; init; } = ConnectorFieldKind.Text;
 
+    /// <summary>
+    /// Gets a value indicating whether the field must contain a value before testing or invoking.
+    /// </summary>
     public bool Required { get; init; }
 
+    /// <summary>
+    /// Gets the placeholder text displayed when the field has no value.
+    /// </summary>
     public string Placeholder { get; init; } = string.Empty;
 
+    /// <summary>
+    /// Gets the selectable values used when <see cref="Kind"/> is <see cref="ConnectorFieldKind.Select"/>.
+    /// </summary>
     public IReadOnlyList<ConnectorOption> Options { get; init; } = [];
 }
 
 public sealed class ConnectorOption
 {
+    /// <summary>
+    /// Gets the machine-readable value submitted for this option.
+    /// </summary>
     public required string Value { get; init; }
 
+    /// <summary>
+    /// Gets the human-readable option label.
+    /// </summary>
     public required string Label { get; init; }
 }
 
 public sealed class ConnectorActionDescriptor
 {
+    /// <summary>
+    /// Gets the stable action key used when an invocation is requested.
+    /// </summary>
     public required string Key { get; init; }
 
+    /// <summary>
+    /// Gets the action name shown to users.
+    /// </summary>
     public required string Name { get; init; }
 
+    /// <summary>
+    /// Gets the action description and its intended effect.
+    /// </summary>
     public required string Description { get; init; }
 
+    /// <summary>
+    /// Gets the arguments that may or must be supplied to the action.
+    /// </summary>
     public IReadOnlyList<ConnectorParameterDescriptor> Parameters { get; init; } = [];
 }
 
 public sealed class ConnectorParameterDescriptor
 {
+    /// <summary>
+    /// Gets the stable parameter key used in invocation argument dictionaries.
+    /// </summary>
     public required string Key { get; init; }
 
+    /// <summary>
+    /// Gets the parameter label shown to users.
+    /// </summary>
     public required string Label { get; init; }
 
+    /// <summary>
+    /// Gets the parameter explanation used by configuration or invocation UIs.
+    /// </summary>
     public string Description { get; init; } = string.Empty;
 
+    /// <summary>
+    /// Gets a value indicating whether the action requires this parameter.
+    /// </summary>
     public bool Required { get; init; }
 }
 
 public sealed class ConnectorInvocationContext
 {
+    /// <summary>
+    /// Gets the configured connector instance identifier.
+    /// </summary>
     public required string InstanceId { get; init; }
 
+    /// <summary>
+    /// Gets the configured connector instance name.
+    /// </summary>
     public required string InstanceName { get; init; }
 
+    /// <summary>
+    /// Gets the action key requested for this invocation.
+    /// </summary>
     public required string ActionKey { get; init; }
 
+    /// <summary>
+    /// Gets the connector configuration values associated with the instance.
+    /// </summary>
     public required IReadOnlyDictionary<string, string> Configuration { get; init; }
 
+    /// <summary>
+    /// Gets the action arguments supplied for this invocation.
+    /// </summary>
     public required IReadOnlyDictionary<string, string> Arguments { get; init; }
 }
 
@@ -120,10 +208,16 @@ public sealed record ConnectorInvocationResult(bool Success, string Output, stri
     public static ConnectorInvocationResult Fail(string error) => new(false, string.Empty, error);
 }
 
+/// <summary>
+/// Represents the result of validating a connector configuration without invoking an action.
+/// </summary>
+/// <param name="Success">Whether the configuration passed the provider's validation.</param>
+/// <param name="Message">The human-readable validation result.</param>
 public sealed record ConnectorTestResult(bool Success, string Message);
 
 /// <summary>
-///Legacy comment translated to English.
+/// Defines the provider contract used to describe, validate, and invoke one connector type.
+/// Implementations own provider-specific validation and outbound integration behavior.
 /// </summary>
 public interface IConnectorProvider
 {
@@ -156,16 +250,34 @@ public interface IConnectorProvider
 
 public sealed class ConfiguredConnector
 {
+    /// <summary>
+    /// Gets the stable identifier of the configured connector instance.
+    /// </summary>
     public required string InstanceId { get; init; }
 
+    /// <summary>
+    /// Gets the administrator-defined instance name.
+    /// </summary>
     public required string Name { get; init; }
 
+    /// <summary>
+    /// Gets the provider key used to resolve the connector implementation.
+    /// </summary>
     public required string ConnectorKey { get; init; }
 
+    /// <summary>
+    /// Gets the provider display name.
+    /// </summary>
     public required string ConnectorName { get; init; }
 
+    /// <summary>
+    /// Gets the description of the configured connector type.
+    /// </summary>
     public required string Description { get; init; }
 
+    /// <summary>
+    /// Gets the actions exposed by this configured connector instance.
+    /// </summary>
     public IReadOnlyList<ConnectorActionDescriptor> Actions { get; init; } = [];
 }
 
@@ -201,13 +313,23 @@ public interface IConnectorGateway
 }
 
 /// <summary>
-///Legacy comment translated to English.
+/// Binds a connector instance to an agent, chat, or other host capability.
+/// An empty action-key list allows the host to use the connector's complete action set.
 /// </summary>
 public sealed class AgentConnectorBinding
 {
+    /// <summary>
+    /// Gets or sets the configured connector instance identifier.
+    /// </summary>
     public string InstanceId { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the binding may be used by the host.
+    /// </summary>
     public bool Enabled { get; set; } = true;
 
+    /// <summary>
+    /// Gets or sets the action keys allowed through this binding.
+    /// </summary>
     public List<string> ActionKeys { get; set; } = [];
 }

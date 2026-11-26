@@ -27,6 +27,9 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.AutoMapper
 {
     public class WeixinManagerProfile : Profile
     {
+        /// <summary>
+        /// Initializes AutoMapper mappings for public accounts, users, tags, and user-tag links.
+        /// </summary>
         public WeixinManagerProfile()
         {
             //MpAccount

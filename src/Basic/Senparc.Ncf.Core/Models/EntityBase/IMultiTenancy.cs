@@ -27,7 +27,7 @@ namespace Senparc.Ncf.Core.Models
     public interface IMultiTenancy
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the tenant identifier owning the current entity or request.
         /// </summary>
         public int TenantId { get; set; }
     }

@@ -11,20 +11,28 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Senparc.Service
 {
+    /// <summary>
+    /// Coordinates SMS verification tokens, provider dispatch, and usage estimates.
+    /// </summary>
     public class SmsRecordService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IServiceProvider _serviceProvider;
         private const string TokenSessionKey = "SendSMS";
+        /// <summary>
+        /// Initializes the SMS record service.
+        /// </summary>
+        /// <param name="httpContextAccessor">Accessor for the current session.</param>
+        /// <param name="serviceProvider">Provider for cache and SMS dependencies.</param>
         public SmsRecordService(IHttpContextAccessor httpContextAccessor, IServiceProvider serviceProvider)
         {
             _httpContextAccessor = httpContextAccessor;
             _serviceProvider = _serviceProvider;
         }
         /// <summary>
-        /// set the allowed sending token
+        /// Creates and stores a new session token used to authorize SMS sending.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The newly generated session token.</returns>
         public string SetSendSmsToken()
         {
             var token = Guid.NewGuid().ToString("n");
@@ -33,15 +41,20 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// get the SMS sending token
+        /// Gets the session token currently authorizing SMS sending.
         /// </summary>
-        /// <param name="ctx"></param>
-        /// <returns></returns>
+        /// <returns>The stored token, or <see langword="null"/> when absent.</returns>
         public string GetSendSmsToken()
         {
             return _httpContextAccessor.HttpContext.Session.GetString(TokenSessionKey);
         }
 
+        /// <summary>Sends a phone verification code using the default message format.</summary>
+        /// <param name="ip">The caller IP address used for provider accounting.</param>
+        /// <param name="phoneNumber">The destination phone number.</param>
+        /// <param name="token">The session SMS authorization token.</param>
+        /// <param name="checkToken">Whether the session token must be validated.</param>
+        /// <returns>The provider send result.</returns>
         public SmsResult SendPhoneCheck(string ip, string phoneNumber, string token,
             bool checkToken = true)
         {
@@ -49,6 +62,13 @@ namespace Senparc.Service
         }
 
 
+        /// <summary>Generates, caches, and sends a phone verification code.</summary>
+        /// <param name="ip">The caller IP address used for provider accounting.</param>
+        /// <param name="phoneNumber">The destination phone number.</param>
+        /// <param name="token">The session SMS authorization token.</param>
+        /// <param name="checkToken">Whether the session token must be validated.</param>
+        /// <param name="format">The message format receiving the generated code.</param>
+        /// <returns>The provider send result.</returns>
         public SmsResult SendPhoneCheck(string ip, string phoneNumber, string token,
             bool checkToken, string format = "")
         {
@@ -73,14 +93,15 @@ namespace Senparc.Service
 
 
         /// <summary>
-        /// 
+        /// Sends a message through the configured SMS provider after adding the NCF
+        /// prefix and optional hotline suffix.
         /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="content"></param>
-        /// <param name="phoneNumber"></param>
-        /// <param name="addHotLine"></param>
-        /// <param name="postfix"></param>
-        /// <returns></returns>
+        /// <param name="ip">The caller IP address retained for compatibility.</param>
+        /// <param name="content">The message body.</param>
+        /// <param name="phoneNumber">The destination phone number.</param>
+        /// <param name="addHotLine">Whether the hotline option should be considered.</param>
+        /// <param name="postfix">The suffix appended to the message.</param>
+        /// <returns>The provider send result.</returns>
         public SmsResult Send(string ip, string content, string phoneNumber,
             bool addHotLine = true, string postfix = " 客服热线：400-9939-858")
         {
@@ -93,6 +114,8 @@ namespace Senparc.Service
             return smsResult;
         }
 
+        /// <summary>Gets the configured provider's remaining SMS count.</summary>
+        /// <returns>The provider-formatted usage string.</returns>
         public string GetLastCount()
         {
             var senparcSmsSetting = _serviceProvider.GetService<IOptions<SenparcSmsSetting>>();
@@ -101,11 +124,12 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// replace placeholders
+        /// Replaces the supported name and gender placeholders in an SMS template.
         /// </summary>
-        /// <param name="content"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="content">The template containing placeholders.</param>
+        /// <param name="name">The recipient name.</param>
+        /// <param name="sex">The recipient gender text.</param>
+        /// <returns>The rendered SMS content.</returns>
         public string ReplacePlaceHolder(string content, string name, string sex)
         {
             var smsContent = content.Replace("$姓名$", name.SubString(0, 5)).Replace("$性别$", sex);
@@ -114,11 +138,11 @@ namespace Senparc.Service
 
 
         /// <summary>
-        /// check whether the SMS balance is sufficient
+        /// Estimates the number of provider message segments required for a recipient count.
         /// </summary>
-        /// <param name="phoneCount"></param>
-        /// <param name="content"></param>
-        /// <returns></returns>
+        /// <param name="phoneCount">The number of recipients.</param>
+        /// <param name="content">The template used to estimate rendered length.</param>
+        /// <returns>The estimated number of SMS segments.</returns>
         public int GetSmsUseCount(int phoneCount, string content)
         {
             string finalContent = this.ReplacePlaceHolder(content, "随便五个字", "先生");

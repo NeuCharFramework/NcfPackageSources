@@ -329,6 +329,13 @@ public sealed class WeixinClawMediaService
         }
     }
 
+    /// <summary>
+    /// Extracts inbound CDN media and derives the logical media kind and optional file name.
+    /// </summary>
+    /// <param name="item">The inbound message item.</param>
+    /// <param name="kind">Receives the logical media kind.</param>
+    /// <param name="name">Receives the source file name when supplied.</param>
+    /// <returns>The CDN media payload, or <see langword="null"/> when the item has no supported media.</returns>
     private static WeixinClawCdnMedia GetInboundMedia(
         WeixinClawMessageItem item,
         out string kind,
@@ -361,6 +368,12 @@ public sealed class WeixinClawMediaService
         }
     }
 
+    /// <summary>
+    /// Chooses a safe default file name for an inbound media kind.
+    /// </summary>
+    /// <param name="kind">The logical media kind.</param>
+    /// <param name="item">The inbound item used to distinguish SILK voice.</param>
+    /// <returns>The default display file name.</returns>
     private static string DefaultFileName(string kind, WeixinClawMessageItem item)
     {
         return kind switch
@@ -372,9 +385,22 @@ public sealed class WeixinClawMediaService
         };
     }
 
+    /// <summary>
+    /// Detects the content type from media kind, file name, and leading bytes.
+    /// </summary>
+    /// <param name="kind">The logical media kind.</param>
+    /// <param name="fileName">The file name hint.</param>
+    /// <param name="bytes">The file bytes.</param>
+    /// <returns>The detected MIME type.</returns>
     private static string GuessContentType(string kind, string fileName, byte[] bytes)
         => WeixinClawMediaFormat.GetContentType(kind, fileName, bytes);
 
+    /// <summary>
+    /// Encrypts media bytes using AES ECB with PKCS7 padding for the protocol payload.
+    /// </summary>
+    /// <param name="plain">The plaintext media bytes.</param>
+    /// <param name="key">The protocol AES key.</param>
+    /// <returns>The encrypted bytes.</returns>
     private static byte[] EncryptAesEcb(byte[] plain, byte[] key)
     {
         using var aes = Aes.Create();
@@ -385,6 +411,13 @@ public sealed class WeixinClawMediaService
         return encryptor.TransformFinalBlock(plain, 0, plain.Length);
     }
 
+    /// <summary>
+    /// Maps a supported voice file extension or MIME type to the protocol encoding code.
+    /// </summary>
+    /// <param name="fileName">The voice file name.</param>
+    /// <param name="contentType">The voice MIME type.</param>
+    /// <returns>The protocol voice encoding code.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the voice format is unsupported.</exception>
     private static int GetVoiceEncodeType(string fileName, string contentType)
     {
         var extension = Path.GetExtension(fileName).ToLowerInvariant();
@@ -400,6 +433,11 @@ public sealed class WeixinClawMediaService
             "语音消息仅支持 SILK 或 MP3；其他音频格式请使用文件发送，不能标记为 OGG-Speex。");
     }
 
+    /// <summary>
+    /// Maps a media kind to the protocol message-item type.
+    /// </summary>
+    /// <param name="kind">The application media kind.</param>
+    /// <returns>The protocol item type.</returns>
     private static WeixinClawMessageItemType GetMessageItemType(WeixinClawMediaKind kind) =>
         kind switch
         {

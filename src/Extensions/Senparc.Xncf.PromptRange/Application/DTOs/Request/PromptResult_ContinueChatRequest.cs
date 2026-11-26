@@ -19,26 +19,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Requests continuation of an existing prompt-result chat.</summary>
     public class PromptResult_ContinueChatRequest
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the prompt-result chat identifier.</summary>
         [Required]
         public int PromptResultId { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the new user message.</summary>
         [Required]
         public string UserMessage { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the optional stream identifier.</summary>
         public string StreamId { get; set; }
     }
 }

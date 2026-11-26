@@ -28,6 +28,13 @@ namespace Senparc.Ncf.Core.AppServices.Exceptions
         /// Status Code
         /// </summary>
         public int StateCode { get; set; }
+        /// <summary>
+        /// Initializes an application-service exception with a response state code.
+        /// </summary>
+        /// <param name="stateCode">The application response state code.</param>
+        /// <param name="message">The exception message.</param>
+        /// <param name="inner">The underlying exception.</param>
+        /// <param name="logged">Whether the exception has already been logged.</param>
         public BaseAppServiceException(int stateCode, string message, Exception inner, bool logged = false) : base(message, inner, logged)
         {
             StateCode = stateCode;

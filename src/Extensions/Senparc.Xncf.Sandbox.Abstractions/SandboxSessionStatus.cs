@@ -14,7 +14,7 @@
 namespace Senparc.Xncf.Sandbox.Abstractions;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Lifecycle states reported for a Sandbox session.
 /// </summary>
 public enum SandboxSessionStatus
 {

@@ -34,19 +34,28 @@ using Senparc.Xncf.XncfModuleManager.Domain.Services;
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides shared administrator identity and role helpers for local
+    /// application services.
     /// </summary>
     public class LocalAppServiceBase : AppServiceBase
     {
+        /// <summary>
+        /// Initializes the local application-service base with a request service provider.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency-injection service provider.</param>
         public LocalAppServiceBase(IServiceProvider serviceProvider) : base(serviceProvider)
         {
 
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the current administrator identifier from the name-identifier claim.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="httpContext">
+        /// Optional context to inspect. When omitted, the current context is resolved
+        /// from <see cref="IHttpContextAccessor"/>.
+        /// </param>
+        /// <returns>The parsed administrator identifier, or <c>-1</c> when unavailable.</returns>
         public int GetCurrentAdminUserInfoId(HttpContext httpContext = null)
         {
             IEnumerable<Claim> claims = httpContext == null ? ServiceProvider.GetService<IHttpContextAccessor>().HttpContext.User.Claims : httpContext.User.Claims;
@@ -59,8 +68,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets distinct administrator role codes from the current request claims.
         /// </summary>
+        /// <param name="httpContext">
+        /// Optional context to inspect. When omitted, the current context is resolved
+        /// from <see cref="IHttpContextAccessor"/>.
+        /// </param>
+        /// <returns>A case-insensitive distinct list of trimmed role codes.</returns>
         public List<string> GetCurrentAdminRoleCodes(HttpContext httpContext = null)
         {
             IEnumerable<Claim> claims = httpContext == null ? ServiceProvider.GetService<IHttpContextAccessor>().HttpContext.User.Claims : httpContext.User.Claims;
@@ -74,8 +88,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether the current administrator has the configured
+        /// super-administrator role code.
         /// </summary>
+        /// <param name="httpContext">Optional request context to inspect.</param>
+        /// <returns><see langword="true"/> when the administrator has the super-admin role.</returns>
         public bool IsCurrentAdminSuperAdmin(HttpContext httpContext = null)
         {
             return GetCurrentAdminRoleCodes(httpContext)

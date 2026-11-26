@@ -81,11 +81,13 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Description => RegisterText.Description;
 
+    /// <inheritdoc/>
     public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {
         await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this).ConfigureAwait(false);
     }
 
+    /// <inheritdoc/>
     public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
     {
         var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
@@ -95,6 +97,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         await unsinstallFunc().ConfigureAwait(false);
     }
 
+    /// <inheritdoc/>
     public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
     {
         services.Configure<SandboxImageOptions>(configuration.GetSection(SandboxImageOptions.SectionName));
@@ -130,6 +133,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         return base.AddXncfModule(services, configuration, env);
     }
 
+    /// <inheritdoc/>
     public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
     {
         app.UseStaticFiles(new StaticFileOptions

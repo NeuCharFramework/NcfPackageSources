@@ -20,7 +20,8 @@ using System;
 namespace Senparc.Ncf.Service
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Disposable scope that switches an EF Core context from automatic change detection
+    /// to NCF's explicit/manual entity change tracking mode.
     /// </summary>
     public class AutoDetectChangeContextWrap : IDisposable
     {
@@ -53,6 +54,10 @@ namespace Senparc.Ncf.Service
         }
     }
 
+    /// <summary>
+    /// Disposable nested scope that temporarily re-enables automatic change detection
+    /// while an outer manual-detection wrapper remains active.
+    /// </summary>
     public class CloseAutoDetectChangeContext : IDisposable
     {
         AutoDetectChangeContextWrap _wrap;

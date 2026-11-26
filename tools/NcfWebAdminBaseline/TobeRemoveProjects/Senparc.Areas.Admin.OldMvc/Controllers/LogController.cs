@@ -32,11 +32,20 @@ namespace Senparc.Areas.Admin.Controllers
     {
         private const string ROLE_MODULE_NAME = "系统日志";
 
+        /// <summary>
+        /// Redirects the legacy log landing page to the paged web-log list.
+        /// </summary>
+        /// <returns>A redirect to <c>WebLogList</c>.</returns>
         public ActionResult Index()
         {
             return RedirectToAction("WebLogList");
         }
 
+        /// <summary>
+        /// Lists available log dates from the application log directory with paging.
+        /// </summary>
+        /// <param name="pageIndex">The one-based date page number.</param>
+        /// <returns>The paged log-date view.</returns>
         public ActionResult WebLogList([DefaultValue(1)]int pageIndex)
         {
             int pageCount = 31;
@@ -56,6 +65,12 @@ namespace Senparc.Areas.Admin.Controllers
             return View(vd);
         }
 
+        /// <summary>
+        /// Parses one dated log directory and renders the selected log-file page.
+        /// </summary>
+        /// <param name="date">The date in dashed, slashed, or compact form.</param>
+        /// <param name="pageIndex">The log-file page index.</param>
+        /// <returns>The log-date view or a legacy error view when the directory is missing.</returns>
         public ActionResult WebLogDate(string date, [DefaultValue(1)]int pageIndex)
         {
             if (!date.Contains("-") && !date.Contains("/"))//20100102
@@ -134,6 +149,13 @@ namespace Senparc.Areas.Admin.Controllers
             return View(vd);
         }
 
+        /// <summary>
+        /// Reads one selected log file and returns the requested line-level detail.
+        /// </summary>
+        /// <param name="date">The date in dashed, slashed, or compact form.</param>
+        /// <param name="line">The source line number to inspect.</param>
+        /// <param name="pageIndex">The log-file page index.</param>
+        /// <returns>The log detail view or a failed result with an explanatory message.</returns>
         public ActionResult WebLogDetail(string date, int line, [DefaultValue(1)]int pageIndex)
         {
             bool success = true;

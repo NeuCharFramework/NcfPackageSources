@@ -38,6 +38,9 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
+/// <summary>
+/// Represents the outcome of resolving an AgentsManager human interaction request.
+/// </summary>
 public sealed record AgentsManagerHumanInteractionResolution(
     bool Success,
     PendingHumanRequest Pending,

@@ -13,32 +13,28 @@ namespace Senparc.Service.OperationQueue
         更新用户头像,
         活动消息记录
     }
-
-
+    /// <summary>
+    /// Provides a process-local keyed queue for deferred account operations.
+    /// </summary>
     public class OperationQueue
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Stores queued operations by their case-insensitive composite key.</summary>
         private static Dictionary<string, OperationQueueItem> MessageQueueDictionary = new Dictionary<string, OperationQueueItem>(StringComparer.OrdinalIgnoreCase);
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Serializes access to the queued-operation dictionary.</summary>
         private static object MessageQueueSyncLock = new object();
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Serializes queue flushing so only one worker drains it at a time.</summary>
         private static object FlushCacheLock = new object();
 
         /// <summary>
-        /// generateKey
+        /// Builds a stable queue key from an operation name, sender type,
+        /// identity value, and action name.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="name">The logical operation name.</param>
+        /// <param name="senderType">The type that originated the operation.</param>
+        /// <param name="identityKey">The business identity used to coalesce operations.</param>
+        /// <param name="actionName">The action being deferred.</param>
+        /// <returns>The composite key used by the in-memory queue.</returns>
         public static string GenerateKey(string name, Type senderType, string identityKey, string actionName)
         {
             var key = string.Format("Name@{0}||Type@{1}||Key@{2}||ActionName@{3}",
@@ -47,7 +43,8 @@ namespace Senparc.Service.OperationQueue
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Drains queued operations and dispatches supported operation types.
+        /// Individual failures are logged and skipped so later items can continue.
         /// </summary>
         public static void OperateQueue()
         {
@@ -84,10 +81,8 @@ namespace Senparc.Service.OperationQueue
             }
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <returns></returns>
+        /// <summary>Gets the first currently queued operation key.</summary>
+        /// <returns>The first key, or <see langword="null"/> when the queue is empty.</returns>
         public string GetCurrentKey()
         {
             lock (MessageQueueSyncLock)
@@ -96,11 +91,9 @@ namespace Senparc.Service.OperationQueue
             }
         }
 
-        /// <summary>
-        /// getOperationQueueItem
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <summary>Gets a queued operation by its composite key.</summary>
+        /// <param name="key">The key returned by <see cref="GenerateKey"/>.</param>
+        /// <returns>The queued item, or <see langword="null"/> when no item exists.</returns>
         public OperationQueueItem GetItem(string key)
         {
             lock (MessageQueueSyncLock)
@@ -113,11 +106,12 @@ namespace Senparc.Service.OperationQueue
             }
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="action"></param>
+        /// <summary>Adds or replaces a queued operation under a composite key.</summary>
+        /// <param name="key">The key used to coalesce the operation.</param>
+        /// <param name="operationQueueType">The operation dispatcher type.</param>
+        /// <param name="data">The operation arguments consumed by the dispatcher.</param>
+        /// <param name="description">Optional diagnostic text.</param>
+        /// <returns>The newly stored queue item.</returns>
         public OperationQueueItem Add(string key, OperationQueueType operationQueueType, List<object> data, string description = null)
         {
             lock (MessageQueueSyncLock)
@@ -138,10 +132,8 @@ namespace Senparc.Service.OperationQueue
             }
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="key"></param>
+        /// <summary>Removes a queued operation when its key is present.</summary>
+        /// <param name="key">The queued operation key.</param>
         public void Remove(string key)
         {
             lock (MessageQueueSyncLock)
@@ -154,10 +146,8 @@ namespace Senparc.Service.OperationQueue
             }
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <returns></returns>
+        /// <summary>Gets the number of currently queued operations.</summary>
+        /// <returns>The number of items in the process-local queue.</returns>
         public int GetCount()
         {
             lock (MessageQueueSyncLock)

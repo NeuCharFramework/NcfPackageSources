@@ -34,6 +34,11 @@ public sealed class AuthHandoff : PageModel
     private readonly DesktopAdminAuthHandoffStore _handoffStore;
     private readonly IStringLocalizer<DesktopBridgeResource> _localizer;
 
+    /// <summary>
+    /// Initializes the administrator approval page for desktop authentication handoffs.
+    /// </summary>
+    /// <param name="handoffStore">The handoff request store.</param>
+    /// <param name="localizer">The localized message provider.</param>
     public AuthHandoff(
         DesktopAdminAuthHandoffStore handoffStore,
         IStringLocalizer<DesktopBridgeResource> localizer)
@@ -52,6 +57,9 @@ public sealed class AuthHandoff : PageModel
 
     public string? ErrorMessage { get; private set; }
 
+    /// <summary>
+    /// Loads whether the requested handoff is still pending and applies no-store security headers.
+    /// </summary>
     public void OnGet()
     {
         ApplySecurityHeaders();
@@ -62,6 +70,10 @@ public sealed class AuthHandoff : PageModel
         }
     }
 
+    /// <summary>
+    /// Authenticates the administrator, approves a valid handoff, or returns a localized failure page.
+    /// </summary>
+    /// <returns>A local redirect after approval or the current page on failure.</returns>
     public async Task<IActionResult> OnPostAsync()
     {
         ApplySecurityHeaders();
@@ -113,6 +125,9 @@ public sealed class AuthHandoff : PageModel
         return LocalRedirect(returnUrl);
     }
 
+    /// <summary>
+    /// Applies no-cache, referrer, framing, and content-security headers to the handoff page.
+    /// </summary>
     private void ApplySecurityHeaders()
     {
         Response.Headers.CacheControl = "no-store, no-cache";

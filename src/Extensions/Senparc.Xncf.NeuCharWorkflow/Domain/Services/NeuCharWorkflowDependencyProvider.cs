@@ -34,11 +34,23 @@ public sealed class NeuCharWorkflowDependencyProvider : IWorkflowDependencyProvi
 {
     private readonly NeuCharWorkflowService _workflowService;
 
+    /// <summary>
+    /// Initializes the dependency provider with the workflow persistence service.
+    /// </summary>
+    /// <param name="workflowService">The service used to load owner-scoped workflows.</param>
     public NeuCharWorkflowDependencyProvider(NeuCharWorkflowService workflowService)
     {
         _workflowService = workflowService;
     }
 
+    /// <summary>
+    /// Returns the cross-module dependency edges for an owner-scoped workflow.
+    /// Only identifiers and dependency kinds are exposed; graph content and parameters remain private.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier to inspect.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="cancellationToken">The cancellation token for the lookup.</param>
+    /// <returns>A dependency snapshot, or <see langword="null"/> when the identifiers are invalid or the workflow is not owned by the administrator.</returns>
     public async Task<WorkflowDependencySnapshot?> GetSnapshotAsync(
         int workflowId,
         int adminUserId,
@@ -64,6 +76,12 @@ public sealed class NeuCharWorkflowDependencyProvider : IWorkflowDependencyProvi
             ExtractReferences(workflow));
     }
 
+    /// <summary>
+    /// Parses a workflow graph and extracts distinct sub-workflow, agent, and group references.
+    /// Malformed graph JSON is treated as having no references.
+    /// </summary>
+    /// <param name="workflow">The workflow whose graph is inspected.</param>
+    /// <returns>A distinct list of dependency references.</returns>
     private static IReadOnlyList<WorkflowDependencyReference> ExtractReferences(
         WorkflowEntity workflow)
     {
@@ -116,6 +134,12 @@ public sealed class NeuCharWorkflowDependencyProvider : IWorkflowDependencyProvi
         }
     }
 
+    /// <summary>
+    /// Adds a positive dependency identifier to the collection.
+    /// </summary>
+    /// <param name="references">The destination reference collection.</param>
+    /// <param name="kind">The dependency kind.</param>
+    /// <param name="id">The referenced identifier.</param>
     private static void AddReference(
         ICollection<WorkflowDependencyReference> references,
         string kind,
@@ -127,11 +151,23 @@ public sealed class NeuCharWorkflowDependencyProvider : IWorkflowDependencyProvi
         }
     }
 
+    /// <summary>
+    /// Reads an integer-valued graph property, returning zero for absent or invalid values.
+    /// </summary>
+    /// <param name="config">The node configuration object.</param>
+    /// <param name="key">The property name.</param>
+    /// <returns>The parsed integer or zero.</returns>
     private static int ReadInt(
         System.Text.Json.Nodes.JsonObject config,
         string key)
         => int.TryParse(ReadString(config, key), out var value) ? value : 0;
 
+    /// <summary>
+    /// Reads a graph configuration property as text.
+    /// </summary>
+    /// <param name="config">The node configuration object.</param>
+    /// <param name="key">The property name.</param>
+    /// <returns>The property text or an empty string when absent.</returns>
     private static string ReadString(
         System.Text.Json.Nodes.JsonObject config,
         string key)
@@ -139,6 +175,12 @@ public sealed class NeuCharWorkflowDependencyProvider : IWorkflowDependencyProvi
             ? value?.ToString() ?? string.Empty
             : string.Empty;
 
+    /// <summary>
+    /// Parses the numeric suffix after a known reference prefix.
+    /// </summary>
+    /// <param name="value">The complete reference value.</param>
+    /// <param name="prefix">The prefix whose length is removed before parsing.</param>
+    /// <returns>The parsed identifier or zero when parsing fails.</returns>
     private static int ParseSuffix(string value, string prefix)
         => int.TryParse(value[prefix.Length..], out var id) ? id : 0;
 }

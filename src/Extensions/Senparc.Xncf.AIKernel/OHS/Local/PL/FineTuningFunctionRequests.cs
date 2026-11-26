@@ -48,6 +48,10 @@ public class FineTuningWorkerFunctionRequest : FunctionAppRequestBase
     [JsonIgnore]
     public SelectionList WorkerOptions { get; set; } = new(SelectionType.DropDownList);
 
+    /// <inheritdoc />
+    /// <remarks>
+    /// This implementation also loads the enabled fine-tuning Worker choices used by the function UI.
+    /// </remarks>
     public override async Task LoadData(IServiceProvider serviceProvider)
     {
         try
@@ -188,6 +192,10 @@ public sealed class FineTuningStartJobFunctionRequest : FineTuningWorkerFunction
     [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.maxDurationMinutes", "FineTuning.Tip.maxDurationMinutes")]
     public int MaxDurationMinutes { get; set; } = 60;
 
+    /// <inheritdoc />
+    /// <remarks>
+    /// This implementation loads Worker, model, training-dataset, and optional validation-dataset choices.
+    /// </remarks>
     public override async Task LoadData(IServiceProvider serviceProvider)
     {
         try

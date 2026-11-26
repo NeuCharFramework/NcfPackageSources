@@ -31,6 +31,9 @@ namespace Senparc.Xncf.AIKernel.AutoMapperProfiles
 {
     public class AIKernelAutoMapperProfile : Profile
     {
+        /// <summary>
+        /// Initializes AIKernel entity/DTO mapping definitions.
+        /// </summary>
         public AIKernelAutoMapperProfile()
         {
             CreateMap<AIModel, AIModelDto>();

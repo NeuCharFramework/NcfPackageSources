@@ -47,10 +47,18 @@ public sealed class AIFineTuningWorkerDto : DtoBase
     public bool AutoStart { get; set; }
     public string SecretPath { get; set; } = "";
 
+    /// <summary>
+    /// Initializes an empty Worker DTO for model binding.
+    /// </summary>
     public AIFineTuningWorkerDto()
     {
     }
 
+    /// <summary>
+    /// Projects a Worker entity and its launch profile into a DTO.
+    /// </summary>
+    /// <param name="worker">The Worker entity.</param>
+    /// <param name="hasConfiguredSecret">Whether a usable secret is configured.</param>
     public AIFineTuningWorkerDto(AIFineTuningWorker worker, bool hasConfiguredSecret)
     {
         Id = worker.Id;

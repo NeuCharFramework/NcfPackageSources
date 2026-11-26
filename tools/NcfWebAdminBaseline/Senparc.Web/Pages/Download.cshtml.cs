@@ -21,6 +21,9 @@ namespace Senparc.Web.Pages;
 
 public class DownloadModel : BasePageModel
 {
+    /// <summary>
+    /// Handles the download page GET request; download options are rendered by the view.
+    /// </summary>
     public void OnGet()
     {
     }

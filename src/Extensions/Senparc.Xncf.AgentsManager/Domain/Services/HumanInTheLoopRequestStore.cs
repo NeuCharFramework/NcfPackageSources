@@ -259,6 +259,11 @@ public sealed class HumanInTheLoopRequestStore
         return cancelled;
     }
 
+    /// <summary>
+    /// Adds a pending request to the store and rejects duplicate request identifiers.
+    /// </summary>
+    /// <param name="pending">The request to add.</param>
+    /// <exception cref="InvalidOperationException">Thrown when the request ID is already present.</exception>
     private void Add(PendingHumanRequest pending)
     {
         if (!_pending.TryAdd(pending.RequestId, pending))
@@ -283,6 +288,19 @@ public sealed class PendingHumanRequest
     private readonly TaskCompletionSource<HumanInTheLoopDecision> _completion =
         new(TaskCreationOptions.RunContinuationsAsynchronously);
 
+    /// <summary>
+    /// Initializes a pending human-interaction request.
+    /// </summary>
+    /// <param name="chatTaskId">The owning chat-task identifier.</param>
+    /// <param name="agentName">The Agent display name.</param>
+    /// <param name="requestType">The interaction type.</param>
+    /// <param name="toolName">The requested tool name.</param>
+    /// <param name="toolArguments">Serialized tool arguments.</param>
+    /// <param name="prompt">The human-facing prompt.</param>
+    /// <param name="participantKey">The participant key for a human turn.</param>
+    /// <param name="responseFactory">The response factory used after approval.</param>
+    /// <param name="correlationId">Optional run correlation identifier.</param>
+    /// <param name="recipientUserId">Optional notification recipient.</param>
     private PendingHumanRequest(
         int chatTaskId,
         string agentName,
@@ -326,6 +344,16 @@ public sealed class PendingHumanRequest
 
     public object ResolvedResponse { get; private set; }
 
+    /// <summary>
+    /// Creates a pending request from an AI tool approval request.
+    /// </summary>
+    /// <param name="chatTaskId">The owning chat-task identifier.</param>
+    /// <param name="agentName">The Agent display name.</param>
+    /// <param name="request">The tool approval content.</param>
+    /// <param name="responseFactory">The response factory used after approval.</param>
+    /// <param name="correlationId">Optional run correlation identifier.</param>
+    /// <param name="recipientUserId">Optional notification recipient.</param>
+    /// <returns>A pending tool-approval request.</returns>
     public static PendingHumanRequest FromToolApproval(
         int chatTaskId,
         string agentName,
@@ -352,6 +380,16 @@ public sealed class PendingHumanRequest
             recipientUserId);
     }
 
+    /// <summary>
+    /// Creates a pending request for direct human input during a ChatTask.
+    /// </summary>
+    /// <param name="chatTaskId">The owning chat-task identifier.</param>
+    /// <param name="agentName">The Agent display name.</param>
+    /// <param name="participantKey">The participant key.</param>
+    /// <param name="prompt">The input prompt shown to the human.</param>
+    /// <param name="correlationId">Optional run correlation identifier.</param>
+    /// <param name="recipientUserId">Optional notification recipient.</param>
+    /// <returns>A pending human-turn request.</returns>
     public static PendingHumanRequest FromHumanTurn(
         int chatTaskId,
         string agentName,
@@ -373,23 +411,43 @@ public sealed class PendingHumanRequest
             recipientUserId);
     }
 
+    /// <summary>
+    /// Associates a NeuBell notification identifier with this pending request.
+    /// </summary>
+    /// <param name="itemId">The notification identifier; blank input clears it.</param>
     public void SetNeuBellItemId(string itemId)
     {
         NeuBellItemId = string.IsNullOrWhiteSpace(itemId) ? null : itemId.Trim();
     }
 
+    /// <summary>
+    /// Completes the request with a human decision and generated response.
+    /// </summary>
+    /// <param name="decision">The human decision.</param>
+    /// <param name="response">The response object returned to the Agent runtime.</param>
     internal void TrySetResult(HumanInTheLoopDecision decision, object response)
     {
         ResolvedResponse = response;
         _completion.TrySetResult(decision);
     }
 
+    /// <summary>
+    /// Completes the request with an execution exception.
+    /// </summary>
+    /// <param name="exception">The exception observed during interaction.</param>
     internal void TrySetException(Exception exception)
         => _completion.TrySetException(exception);
 
+    /// <summary>
+    /// Completes the request as canceled.
+    /// </summary>
     internal void TrySetCanceled()
         => _completion.TrySetCanceled();
 
+    /// <summary>
+    /// Projects the pending request into the client-facing DTO without exposing response factories.
+    /// </summary>
+    /// <returns>The transport DTO.</returns>
     public HumanInTheLoopRequestDto ToDto()
         => new()
         {

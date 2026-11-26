@@ -32,20 +32,31 @@ using Senparc.Ncf.Utility.Helpers;
 namespace Senparc.IntegrationSample
 {
     /// <summary>
-    /// global registration
+    /// Provides the integration sample's application and database registration helpers.
     /// </summary>
     public static class Register
     {
+        /// <summary>
+        /// Gets the timestamp captured when the integration sample registration type
+        /// was first initialized.
+        /// </summary>
         public static DateTime StartTime { get; }
 
+        /// <summary>
+        /// Captures the process-local startup timestamp used by the success banner.
+        /// </summary>
         static Register()
         {
             StartTime = System.DateTime.Now;
         }
 
+        /// <summary>
+        /// Registers the integration sample's global web-engine modules and optional
+        /// diagnostics on the application builder.
+        /// </summary>
+        /// <param name="builder">The web application builder receiving configuration.</param>
         public static void AddNcf(this WebApplicationBuilder builder)
         {
-            //Legacy comment translated to English.
             var logMsg = builder.StartWebEngine(new[] { "Senparc.IntegrationSample.AreaTests","Senparc.Weixin.MP" });
             Console.WriteLine("============ logMsg =============");
             Console.WriteLine(logMsg);
@@ -55,18 +66,22 @@ namespace Senparc.IntegrationSample
             //builder.Services.AddAndInitDynamicApi(mvcCoreBuilder, options => options.DocXmlPath = ServerUtility.ContentRootMapPath("~/App_Data/ApiDocXml"));
         }
 
+        /// <summary>
+        /// Applies global Senparc services, optional Redis configuration, XNCF modules,
+        /// and the selected database configuration to the application pipeline.
+        /// </summary>
+        /// <typeparam name="TDatabaseConfiguration">The parameterless database configuration type.</typeparam>
+        /// <param name="app">The web application receiving the registrations.</param>
         public static void UseNcf<TDatabaseConfiguration>(this WebApplication app)
             where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
             var env = app.Environment;
 
-            // start CO2NET global registration，must！
-            //Legacy comment translated to English.
+            // CO2NET global registration must run before module and database setup.
             var registerService = app
                 //global registration
                 .UseSenparcGlobal(env, null, globalRegister =>
                 {
-                    //Legacy comment translated to English.
                     if (UseRedis(null, out var redisConfigurationStr))//Legacy comment translated to English.
                     {
                         /* description：
@@ -78,7 +93,6 @@ namespace Senparc.IntegrationSample
                          */
                         CO2NET.Cache.CsRedis.Register.SetConfigurationOption(redisConfigurationStr);
 
-                        //Legacy comment translated to English.
                         CO2NET.Cache.CsRedis.Register.UseKeyValueRedisNow(); //Legacy comment translated to English.
                         /*Senparc.CO2NET.Cache.CsRedis.Register.UseHashRedisNow();*/ //Legacy comment translated to English.
 
@@ -86,7 +100,6 @@ namespace Senparc.IntegrationSample
                         //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisObjectCacheStrategy.Instance);//key-value pair
                         //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisHashSetObjectCacheStrategy.Instance);//HashSet
                     }
-                    //Legacy comment translated to English.
                 });
 
             //XncfModules（must）
@@ -98,10 +111,17 @@ namespace Senparc.IntegrationSample
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether Redis is enabled by the configured cache connection string.
         /// </summary>
-        /// <param name="senparcSetting"></param>
-        /// <returns></returns>
+        /// <param name="senparcSetting">
+        /// Optional settings to inspect. When omitted, the global Senparc setting is used.
+        /// </param>
+        /// <param name="redisConfigurationStr">
+        /// Receives the configured Redis connection string, including placeholder values.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> when a non-empty, non-placeholder Redis configuration exists.
+        /// </returns>
         internal static bool UseRedis(SenparcSetting? senparcSetting, out string redisConfigurationStr)
         {
             senparcSetting ??= Senparc.CO2NET.Config.SenparcSetting;
@@ -111,9 +131,9 @@ namespace Senparc.IntegrationSample
         }
 
         /// <summary>
-        /// output the startup success marker
+        /// Writes the localized startup success marker, version information, and elapsed time.
         /// </summary>
-        /// <param name="app"></param>
+        /// <param name="app">The started web application.</param>
         public static void ShowSuccessTip(this WebApplication app)
         {
             //output the startup success marker

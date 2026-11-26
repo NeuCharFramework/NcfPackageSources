@@ -28,7 +28,11 @@ namespace Senparc.Xncf.Swagger.Models
 {
     public class CustsomSwaggerOptions
     {
+        /// <summary>Initializes an empty Swagger options object.</summary>
         public CustsomSwaggerOptions() { }
+        /// <summary>Initializes Swagger options with project and API-version metadata.</summary>
+        /// <param name="projectName">The display title of the API project.</param>
+        /// <param name="apiVersions">The API document versions to expose.</param>
         public CustsomSwaggerOptions(string projectName, List<string> apiVersions)
         {
             ProjectName = projectName;
@@ -36,41 +40,40 @@ namespace Senparc.Xncf.Swagger.Models
         }
 
         /// <summary>
-        /// whether enabled
+        /// Gets or sets whether Swagger endpoints and UI are enabled.
         /// </summary>
         public bool Enabled { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Gets or sets the application path prefix used when constructing Swagger URLs.
         /// </summary>
         public string AppPath { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the project title displayed by Swagger UI.
         /// </summary>
         public string ProjectName { get; set; } = "My API";
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the API document versions exposed by Swagger.
         /// </summary>
         public List<string> ApiVersions { get; set; } = VersionHelper.GetApiVersions();
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the route prefix under which Swagger is served.
         /// </summary>
         public string RoutePrefix { get; set; } = "swagger";
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the embedded custom Swagger index page is used.
         /// </summary>
         public bool UseCustomIndex { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether Swagger routes may be accessed anonymously.
         /// </summary>
         public bool AllowAnonymous { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the NCF administrator authentication scheme is used.
         /// </summary>
         public bool UseAdminAuth { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the custom username/password entries accepted by legacy Swagger authentication.
         /// </summary>
         public List<CustomSwaggerAuth> CustomAuthList { get; set; }
         /// <summary>

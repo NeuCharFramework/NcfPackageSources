@@ -29,6 +29,9 @@ namespace Senparc.Web.DatabasePlant.Pages
             _logger = logger;
         }
 
+        /// <summary>
+        /// Handles the database-plant privacy page GET request.
+        /// </summary>
         public void OnGet()
         {
         }

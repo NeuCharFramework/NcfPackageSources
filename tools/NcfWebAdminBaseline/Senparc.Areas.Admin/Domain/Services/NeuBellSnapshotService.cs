@@ -47,6 +47,11 @@ public sealed class NeuBellSnapshotService
         _logger = logger;
     }
 
+    /// <summary>
+    /// Checks whether at least one NeuBell provider belongs to an open XNCF module.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to query module availability.</param>
+    /// <returns><see langword="true"/> when one or more providers are available.</returns>
     public async Task<bool> HasAvailableProvidersAsync(
         CancellationToken cancellationToken = default)
     {
@@ -55,6 +60,13 @@ public sealed class NeuBellSnapshotService
         return providers.Count > 0;
     }
 
+    /// <summary>
+    /// Loads provider snapshots concurrently, using revision-aware short-lived caching
+    /// and ignoring providers that fail or return mismatched module metadata.
+    /// </summary>
+    /// <param name="context">The tenant/user context passed to providers.</param>
+    /// <param name="cancellationToken">Token used to cancel snapshot loading.</param>
+    /// <returns>The successfully retrieved provider snapshots.</returns>
     public async Task<IReadOnlyList<NeuBellSnapshot>> GetSnapshotsAsync(
         NeuBellRequestContext context,
         CancellationToken cancellationToken = default)
@@ -75,6 +87,15 @@ public sealed class NeuBellSnapshotService
         return snapshots.Where(snapshot => snapshot != null).ToArray();
     }
 
+    /// <summary>
+    /// Reads one provider snapshot from revision-keyed cache or the provider with
+    /// a bounded timeout, validating the returned module UID.
+    /// </summary>
+    /// <param name="provider">The provider to query.</param>
+    /// <param name="context">The tenant/user request context.</param>
+    /// <param name="cache">The object cache.</param>
+    /// <param name="cancellationToken">Token used to cancel the provider call.</param>
+    /// <returns>The valid snapshot, or <see langword="null"/> when unavailable.</returns>
     private async Task<NeuBellSnapshot> GetSnapshotAsync(
         INeuBellProvider provider,
         NeuBellRequestContext context,

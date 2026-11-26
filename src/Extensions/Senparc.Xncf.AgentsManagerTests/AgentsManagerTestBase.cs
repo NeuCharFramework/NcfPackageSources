@@ -20,13 +20,16 @@ using System.Text;
 
 namespace Senparc.Xncf.AgentsManagerTests
 {
+    /// <summary>Builds the shared AgentsManager integration-test seed data.</summary>
     public class AgentsManagerSeedData : UnitTestSeedDataBuilder
     {
+        /// <inheritdoc />
         public override Task<DataList> ExecuteAsync(IServiceProvider serviceProvider)
         {
             return Task.FromResult(new DataList("AgentsManagerSeedData"));
         }
 
+        /// <inheritdoc />
         public override async Task OnExecutedAsync(IServiceProvider serviceProvider, DataList dataList)
         {
             #region Legacy section
@@ -177,6 +180,7 @@ namespace Senparc.Xncf.AgentsManagerTests
     }
 
     [TestClass]
+    /// <summary>Provides the AgentsManager test host and reusable integration assertions.</summary>
     public class AgentsManagerTestBase : BaseNcfUnitTest
     {
         public AgentsManagerTestBase() : base(null, new AgentsManagerSeedData())
@@ -184,9 +188,9 @@ namespace Senparc.Xncf.AgentsManagerTests
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Skips tests that require a configured, non-placeholder AI backend.
         /// </summary>
+        /// <param name="testName">The test name included in the inconclusive message.</param>
         protected void RequireRealAiBackend(string testName)
         {
             var setting = Senparc.AI.Config.SenparcAiSetting;

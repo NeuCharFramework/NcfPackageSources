@@ -31,8 +31,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Creates remote A2A agents and validates their agent-card connectivity.
     /// </summary>
     public class RemoteA2AAgentFactory
     {
@@ -42,6 +41,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         private readonly IConfiguration _configuration;
         private readonly ILoggerFactory _loggerFactory;
 
+        /// <summary>Initializes the remote A2A factory.</summary>
+        /// <param name="httpClientFactory">The named HTTP client factory.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="loggerFactory">The logger factory passed to A2A clients.</param>
         public RemoteA2AAgentFactory(
             IHttpClientFactory httpClientFactory,
             IConfiguration configuration,
@@ -52,6 +55,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             _loggerFactory = loggerFactory;
         }
 
+        /// <summary>Creates an AI agent backed by a remote A2A endpoint.</summary>
+        /// <param name="remoteAgent">The remote endpoint configuration.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The resolved remote AI agent.</returns>
         public async Task<AIAgent> CreateAsync(RemoteAgent remoteAgent, CancellationToken cancellationToken = default)
         {
             var resolver = CreateResolver(remoteAgent, out var httpClient);
@@ -70,6 +77,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 cancellationToken: cancellationToken);
         }
 
+        /// <summary>Loads the remote A2A Agent Card to verify connectivity.</summary>
+        /// <param name="remoteAgent">The remote endpoint configuration.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A localized success message containing the card name when available.</returns>
         public async Task<string> TestConnectionAsync(RemoteAgent remoteAgent, CancellationToken cancellationToken = default)
         {
             var resolver = CreateResolver(remoteAgent, out _);
@@ -80,8 +91,19 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 : $"A2A Agent Card 读取成功：{cardName}";
         }
 
+        /// <summary>Builds the stable participant key used for a remote Agent.</summary>
+        /// <param name="remoteAgentId">The persisted remote-agent identifier.</param>
+        /// <returns>The stable participant key.</returns>
         public static string BuildParticipantKey(int remoteAgentId) => $"remote:{remoteAgentId}";
 
+        /// <summary>
+        /// Validates a remote Agent configuration, creates the dedicated HTTP client,
+        /// applies authentication, and builds the A2A Agent Card resolver.
+        /// </summary>
+        /// <param name="remoteAgent">The remote Agent configuration.</param>
+        /// <param name="httpClient">Receives the configured HTTP client.</param>
+        /// <returns>The configured Agent Card resolver.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when protocol, URL, or authentication configuration is invalid.</exception>
         private A2ACardResolver CreateResolver(RemoteAgent remoteAgent, out HttpClient httpClient)
         {
             if (remoteAgent == null)
@@ -108,6 +130,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             return new A2ACardResolver(baseUrl, httpClient, agentCardPath, logger: null);
         }
 
+        /// <summary>
+        /// Applies bearer-token or custom-header authentication from the configured secret store.
+        /// </summary>
+        /// <param name="remoteAgent">The remote Agent authentication settings.</param>
+        /// <param name="httpClient">The HTTP client receiving authentication headers.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when required secret or header configuration is missing.</exception>
         private void ApplyAuthentication(RemoteAgent remoteAgent, HttpClient httpClient)
         {
             if (remoteAgent.AuthenticationMode == RemoteAgentAuthenticationMode.None)
@@ -140,6 +168,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             httpClient.DefaultRequestHeaders.TryAddWithoutValidation(remoteAgent.AuthHeaderName, secret);
         }
 
+        /// <summary>
+        /// Splits a configured Agent Card URL into the resolver base URL and relative card path.
+        /// </summary>
+        /// <param name="configuredUri">The validated configured Agent Card URI.</param>
+        /// <returns>The base URI and relative Agent Card path.</returns>
         private static (Uri BaseUrl, string AgentCardPath) SplitAgentCardUrl(Uri configuredUri)
         {
             const string wellKnownPath = "/.well-known/";

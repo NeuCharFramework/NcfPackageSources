@@ -32,9 +32,10 @@ namespace Senparc.Ncf.Database.Helpers
     public static class NcfDatabaseHelper
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reads the current client connection string and splits it into case-insensitive key/value pairs.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The parsed connection-string entries.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the configured client connection string cannot be resolved.</exception>
         public static Dictionary<string, string> GetCurrentConnectionInfo()
         {
             var connectionStr = SenparcDatabaseConnectionConfigs.GetClientConnectionString();
@@ -47,11 +48,11 @@ namespace Senparc.Ncf.Database.Helpers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns one named value from a parsed connection-string dictionary.
         /// </summary>
-        /// <param name="dic">databaseinformation</param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="dic">The parsed connection-string entries.</param>
+        /// <param name="name">The key to look up.</param>
+        /// <returns>The value, or <see langword="null"/> when the key is absent.</returns>
         public static string TryGetConnectionValue(Dictionary<string, string> dic, string name)
         {
             if (dic.TryGetValue(name, out var value))
@@ -62,10 +63,10 @@ namespace Senparc.Ncf.Database.Helpers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns one named value from the current client connection configuration.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="name">The connection-string key to look up.</param>
+        /// <returns>The value, or <see langword="null"/> when the key is absent.</returns>
         public static string TryGetConnectionValue(string name)
         {
             var dic = GetCurrentConnectionInfo();

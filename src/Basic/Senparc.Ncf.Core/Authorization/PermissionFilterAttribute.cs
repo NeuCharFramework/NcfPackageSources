@@ -31,12 +31,22 @@ namespace Senparc.Ncf.Core.Authorization
         private readonly PermissionRequirement _requirement;
         private readonly IAuthorizationService _authorizationService;
 
+        /// <summary>
+        /// Initializes a resource-permission authorization filter.
+        /// </summary>
+        /// <param name="authorizationService">The authorization service.</param>
+        /// <param name="requirement">The resource requirement to evaluate.</param>
         public PermissionFilterAttribute(IAuthorizationService authorizationService, PermissionRequirement requirement)
         {
             _authorizationService = authorizationService;
             _requirement = requirement;
         }
 
+        /// <summary>
+        /// Evaluates the requirement and returns a forbidden application response when unauthorized.
+        /// </summary>
+        /// <param name="context">The MVC authorization context.</param>
+        /// <returns>A task that completes after authorization evaluation.</returns>
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             var result = await _authorizationService.AuthorizeAsync(context.HttpContext.User, null, _requirement);

@@ -33,6 +33,11 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
     {
         private readonly AIModelService _aIModelService;
 
+        /// <summary>
+        /// Initializes the AI model studio application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="aIModelService">The AI model service.</param>
         public AIModelStudioAppService(IServiceProvider serviceProvider, AIModelService aIModelService) : base(serviceProvider)
         {
             this._aIModelService = aIModelService;

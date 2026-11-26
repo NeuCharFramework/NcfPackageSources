@@ -82,6 +82,17 @@ public sealed class AdminChatStreamController : ControllerBase
     private readonly IEventBus? _eventBus;
     private int _disconnectLogged;
 
+    /// <summary>
+    /// Initializes the authenticated AdminChat SSE controller and its session,
+    /// persistence, AI, run-registry, localization, and event-bus dependencies.
+    /// </summary>
+    /// <param name="sessionService">The owner-scoped chat session service.</param>
+    /// <param name="messageService">The chat message and artifact service.</param>
+    /// <param name="chatAiService">The AI generation service.</param>
+    /// <param name="runs">The in-memory active-run registry.</param>
+    /// <param name="serviceProvider">The provider used for optional event-bus resolution.</param>
+    /// <param name="localizer">The Admin resource localizer.</param>
+    /// <param name="logger">The stream controller logger.</param>
     public AdminChatStreamController(
         AdminChatSessionService sessionService,
         AdminChatMessageService messageService,
@@ -100,6 +111,13 @@ public sealed class AdminChatStreamController : ControllerBase
         _eventBus = serviceProvider.GetService(typeof(IEventBus)) as IEventBus;
     }
 
+    /// <summary>
+    /// Validates owner access, persists the user message, streams live AI events,
+    /// persists the assistant response, and emits a terminal SSE event.
+    /// </summary>
+    /// <param name="request">The session, content, mode, model, and attachment request.</param>
+    /// <param name="cancellationToken">Token used to cancel request processing.</param>
+    /// <returns>A task completing after the SSE stream is closed or cancelled.</returns>
     [HttpPost("send")]
     public async Task SendAsync(
         [FromBody] ChatMessageInputDto request,
@@ -267,6 +285,11 @@ public sealed class AdminChatStreamController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Returns owner-scoped active/just-finished run status and accumulated text.
+    /// </summary>
+    /// <param name="sessionId">The chat session identifier.</param>
+    /// <returns>An HTTP 200 status object, 401, or 404.</returns>
     [HttpGet("status")]
     public async Task<IActionResult> Status(int sessionId)
     {
@@ -284,6 +307,11 @@ public sealed class AdminChatStreamController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Requests cancellation of the owner-scoped active run for a session.
+    /// </summary>
+    /// <param name="sessionId">The chat session identifier.</param>
+    /// <returns>The cancellation request outcome.</returns>
     [HttpPost("cancel")]
     public async Task<IActionResult> Cancel(int sessionId)
     {
@@ -295,6 +323,12 @@ public sealed class AdminChatStreamController : ControllerBase
         return Ok(new { cancelled });
     }
 
+    /// <summary>
+    /// Attaches to an active owner-scoped run, sends an initial snapshot, and
+    /// streams subsequent SSE frames until completion or observer cancellation.
+    /// </summary>
+    /// <param name="sessionId">The chat session identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the observer connection.</param>
     [HttpGet("attach")]
     public async Task Attach(int sessionId, CancellationToken cancellationToken)
     {
@@ -337,6 +371,15 @@ public sealed class AdminChatStreamController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Converts one internal generation event into the corresponding SSE event,
+    /// updates the active-run snapshot, and preserves the connection state when
+    /// an event kind is not intended for the browser.
+    /// </summary>
+    /// <param name="run">The active owner-scoped AdminChat run.</param>
+    /// <param name="liveEvent">The generation event produced by the AI service.</param>
+    /// <param name="clientConnected">Whether the response connection is still writable.</param>
+    /// <returns><see langword="true"/> when the client remains connected after emission.</returns>
     private async Task<bool> EmitLiveAsync(AdminChatRun run, AdminChatLiveEvent liveEvent, bool clientConnected)
     {
         switch (liveEvent.Kind)
@@ -376,6 +419,16 @@ public sealed class AdminChatStreamController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Serializes and publishes one run event, records it for reconnecting observers,
+    /// and writes it to the current SSE response when the client is connected.
+    /// </summary>
+    /// <param name="run">The active run receiving the event.</param>
+    /// <param name="eventName">The SSE event name.</param>
+    /// <param name="payload">The event payload to serialize.</param>
+    /// <param name="clientConnected">Whether a browser response is currently writable.</param>
+    /// <param name="mutate">Optional state mutation applied before the event is published.</param>
+    /// <returns><see langword="true"/> when the response can still receive later events.</returns>
     private async Task<bool> EmitAsync(
         AdminChatRun run, string eventName, object payload, bool clientConnected, Action<AdminChatRun> mutate = null)
     {
@@ -399,6 +452,15 @@ public sealed class AdminChatStreamController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Writes a pre-serialized SSE frame and flushes the response body so the
+    /// browser can process the event without waiting for response buffering.
+    /// </summary>
+    /// <param name="eventName">The SSE event name written to the frame.</param>
+    /// <param name="json">The already serialized JSON data line.</param>
+    /// <param name="cancellationToken">Token used to stop the response write.</param>
+    /// <exception cref="OperationCanceledException">Thrown when the write is cancelled.</exception>
+    /// <exception cref="IOException">Thrown when the response connection is no longer writable.</exception>
     private async Task WriteRawEventAsync(string eventName, string json, CancellationToken cancellationToken)
     {
         await Response.WriteAsync($"event: {eventName}\n", cancellationToken).ConfigureAwait(false);
@@ -406,12 +468,22 @@ public sealed class AdminChatStreamController : ControllerBase
         await Response.Body.FlushAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Records the first observed client disconnect while leaving the server-side
+    /// run active so generation and persistence can complete independently.
+    /// </summary>
+    /// <param name="run">The run whose browser connection was lost.</param>
     private void NoteDisconnect(AdminChatRun run)
     {
         if (Interlocked.Exchange(ref _disconnectLogged, 1) == 0)
             _logger.LogInformation("AdminChat 页面已断开，任务继续执行。SessionId={SessionId}", run.SessionId);
     }
 
+    /// <summary>
+    /// Observes a generation task after cancellation or streaming failure so that
+    /// its eventual exception is consumed without masking the original request outcome.
+    /// </summary>
+    /// <param name="generationTask">The generation task to observe.</param>
     private static async Task ObserveGenerationAsync(Task generationTask)
     {
         try { await generationTask.ConfigureAwait(false); }
@@ -421,6 +493,19 @@ public sealed class AdminChatStreamController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Runs simple AdminChat generation, forwards token and usage events to the
+    /// stream channel, and completes the channel exactly once on exit.
+    /// </summary>
+    /// <param name="sessionId">The owner-authorized chat session.</param>
+    /// <param name="userId">The administrator requesting generation.</param>
+    /// <param name="content">The user content sent to the AI service.</param>
+    /// <param name="aiModelId">The selected AI model identifier.</param>
+    /// <param name="writer">The channel receiving live generation events.</param>
+    /// <param name="cancellationToken">Token used to cancel generation.</param>
+    /// <param name="attachments">Validated workspace attachments for the prompt.</param>
+    /// <param name="maxOutputTokens">Optional maximum output-token limit.</param>
+    /// <returns>The final response text and model identifier.</returns>
     private async Task<AdminChatStreamResult> GenerateResponseAsync(
         int sessionId,
         int userId,
@@ -469,6 +554,20 @@ public sealed class AdminChatStreamController : ControllerBase
             }
         }
 
+    /// <summary>
+    /// Runs plan/execute harness generation, forwards structured live events to
+    /// the stream channel, and returns the final response plus harness metadata.
+    /// </summary>
+    /// <param name="sessionId">The owner-authorized chat session.</param>
+    /// <param name="userId">The administrator requesting generation.</param>
+    /// <param name="content">The user instruction sent to the harness.</param>
+    /// <param name="aiModelId">The selected AI model identifier.</param>
+    /// <param name="writer">The channel receiving live harness events.</param>
+    /// <param name="cancellationToken">Token used to cancel generation.</param>
+    /// <param name="attachments">Validated workspace attachments for the prompt.</param>
+    /// <param name="requestedMode">The effective harness mode, such as plan or execute.</param>
+    /// <param name="harnessOptions">Optional tool and execution options.</param>
+    /// <returns>The final response, model identifier, and harness result.</returns>
     private async Task<AdminChatStreamResult> GenerateHarnessResponseAsync(
         int sessionId,
         int userId,
@@ -510,6 +609,13 @@ public sealed class AdminChatStreamController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Serializes an object payload as an SSE frame and flushes it to the response.
+    /// This helper is retained for event paths that do not need run-state mutation.
+    /// </summary>
+    /// <param name="eventName">The SSE event name.</param>
+    /// <param name="payload">The object serialized as the event data.</param>
+    /// <param name="cancellationToken">Token used to cancel the response write.</param>
     private async Task WriteEventAsync(string eventName, object payload, CancellationToken cancellationToken)
     {
         var serialized = JsonSerializer.Serialize(payload, JsonOptions);
@@ -525,6 +631,11 @@ public sealed class AdminChatStreamController : ControllerBase
         public AdminChatHarnessResult Harness { get; set; }
     }
 
+    /// <summary>
+    /// Reads the authenticated administrator identifier from the current claims
+    /// principal and returns a negative value when it is absent or malformed.
+    /// </summary>
+    /// <returns>The parsed administrator identifier, or <c>-1</c> when unavailable.</returns>
     private int GetCurrentAdminUserInfoId()
     {
         var value = User.FindFirstValue(ClaimTypes.NameIdentifier);

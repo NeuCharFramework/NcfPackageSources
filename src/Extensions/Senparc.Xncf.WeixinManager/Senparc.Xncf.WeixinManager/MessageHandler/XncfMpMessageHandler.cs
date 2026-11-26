@@ -49,16 +49,39 @@ namespace Senparc.Xncf.WeixinManager
         protected readonly MpAccountDto _mpAccountDto;
         protected readonly ServiceProvider _services;
 
+        /// <summary>
+        /// Initializes a Weixin message handler with public-account context and services.
+        /// </summary>
+        /// <param name="mpAccountDto">The public-account configuration.</param>
+        /// <param name="stream">The inbound request stream.</param>
+        /// <param name="postModel">The parsed Weixin post model.</param>
+        /// <param name="maxRecordCount">The maximum handler record count.</param>
+        /// <param name="services">The service provider used by the handler.</param>
         public XncfMpMessageHandler(MpAccountDto mpAccountDto, Stream stream, PostModel postModel, int maxRecordCount, ServiceProvider services) : this(stream, postModel, maxRecordCount)
         {
             this._mpAccountDto = mpAccountDto;
             this._services = services;
         }
 
+        /// <summary>
+        /// Initializes the base Weixin message handler with transport and encryption settings.
+        /// </summary>
+        /// <param name="inputStream">The inbound request stream.</param>
+        /// <param name="postModel">The parsed Weixin post model.</param>
+        /// <param name="maxRecordCount">The maximum handler record count.</param>
+        /// <param name="onlyAllowEncryptMessage">Whether only encrypted messages are accepted.</param>
+        /// <param name="developerInfo">Optional developer information.</param>
+        /// <param name="serviceProvider">Optional dependency provider.</param>
         public XncfMpMessageHandler(Stream inputStream, PostModel postModel, int maxRecordCount = 0, bool onlyAllowEncryptMessage = false, DeveloperInfo developerInfo = null, IServiceProvider serviceProvider = null) : base(inputStream, postModel, maxRecordCount, onlyAllowEncryptMessage, developerInfo, serviceProvider)
         {
         }
 
+        /// <summary>
+        /// Creates the asynchronous action that runs the AI response flow for one text message.
+        /// </summary>
+        /// <param name="services">The dependency provider used by the AI context.</param>
+        /// <param name="requestMessage">The inbound Weixin text message.</param>
+        /// <returns>An action that executes the AI request and sends the response.</returns>
         protected virtual Action RunBot(IServiceProvider services, RequestMessageText requestMessage) => async () =>
         {
             var dt = SystemTime.Now;
@@ -98,6 +121,14 @@ namespace Senparc.Xncf.WeixinManager
             await AfterRunBotAsync(services, requestMessage, _mpAccountDto, result, dt);
         };
 
+        /// <summary>
+        /// Sends the AI result back to the inbound Weixin user and logs elapsed time.
+        /// </summary>
+        /// <param name="serviceProvider">The request dependency provider.</param>
+        /// <param name="requestMessage">The inbound text message.</param>
+        /// <param name="mpAccountDto">The public-account configuration.</param>
+        /// <param name="senparcAiResult">The AI result to send.</param>
+        /// <param name="startTime">The start timestamp used for elapsed-time reporting.</param>
         protected virtual async Task AfterRunBotAsync(IServiceProvider serviceProvider, RequestMessageText requestMessage, MpAccountDto mpAccountDto, SenparcAiResult senparcAiResult, DateTimeOffset startTime)
         {
             //asyncsend AI resulttouser

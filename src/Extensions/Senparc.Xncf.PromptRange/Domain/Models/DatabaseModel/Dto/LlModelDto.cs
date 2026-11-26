@@ -20,11 +20,10 @@ using Senparc.Ncf.Core.Models;
 
 namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
 {
+    /// <summary>Transfers PromptRange language-model configuration to clients.</summary>
     public class LlModelDto : DtoBase
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the model identifier.</summary>
         public int Id { get; set; }
 
         public string Alias { get; set; }
@@ -34,9 +33,7 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// </summary>
         public string DeploymentName { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the provider platform.</summary>
         public AiPlatform ModelType { get; set; }
 
         /// <summary>
@@ -44,19 +41,13 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// </summary>
         public string Endpoint { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the organization identifier.</summary>
         public string OrganizationId { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the provider API key.</summary>
         public string ApiKey { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the provider API version.</summary>
         public string ApiVersion { get; set; }
 
         /// <summary>
@@ -64,9 +55,7 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// </summary>
         public string Note { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the maximum token limit.</summary>
         public int MaxToken { get; set; }
 
 

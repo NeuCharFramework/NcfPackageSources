@@ -24,7 +24,8 @@ using System.Text;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Tracks mutable state while one ChatGroup execution streams responses,
+/// records usage, invokes tools, and handles workflow pauses/failures.
 /// </summary>
 internal sealed class ChatGroupRunState
 {

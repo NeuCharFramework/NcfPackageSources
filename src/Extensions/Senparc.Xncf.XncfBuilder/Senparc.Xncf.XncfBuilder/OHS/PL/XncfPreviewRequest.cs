@@ -76,6 +76,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             }
         }
 
+        /// <summary>
+        /// Searches upward from the application base directory and returns the
+        /// shortest deterministically selected solution path.
+        /// </summary>
+        /// <returns>The nearest solution file path, or an empty string when none is found.</returns>
         private static string FindSolutionFilePath()
         {
             var currentDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);

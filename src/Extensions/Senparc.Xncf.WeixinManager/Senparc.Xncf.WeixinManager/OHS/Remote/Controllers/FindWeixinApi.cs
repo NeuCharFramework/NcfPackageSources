@@ -32,11 +32,23 @@ namespace Senparc.Xncf.WeixinManager.OHS.Remote.Controllers
     {
         private readonly FindApiService _findApiService;
 
+        /// <summary>
+        /// Initializes the local-only API discovery controller.
+        /// </summary>
+        /// <param name="findWeixinApiService">The service used to search the Weixin API catalog.</param>
         public FindWeixinApiController(FindApiService findWeixinApiService)
         {
             _findApiService = findWeixinApiService;
         }
 
+        /// <summary>
+        /// Searches the Weixin API catalog when the request originates from the local host.
+        /// Remote callers receive an empty result.
+        /// </summary>
+        /// <param name="platformType">Optional platform category filter.</param>
+        /// <param name="isAsync">Optional asynchronous API filter.</param>
+        /// <param name="keyword">The API name or description search text.</param>
+        /// <returns>The matching API discovery result.</returns>
         [HttpGet]
         public FindWeixinApiResult OnGetAsync(PlatformType? platformType, bool? isAsync, string keyword)
         {

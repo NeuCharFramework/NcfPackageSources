@@ -52,6 +52,11 @@ namespace Senparc.Xncf.Installer.Domain.Services
                 _previousUiCulture = previousUiCulture;
             }
 
+            /// <inheritdoc/>
+            /// <remarks>
+            /// Restores both the culture used for general formatting and the UI
+            /// culture used for localized resource lookup.
+            /// </remarks>
             public void Dispose()
             {
                 CultureInfo.CurrentCulture = _previousCulture;
@@ -63,6 +68,11 @@ namespace Senparc.Xncf.Installer.Domain.Services
         {
             public static readonly NoOpDisposable Instance = new();
 
+            /// <inheritdoc/>
+            /// <remarks>
+            /// Intentionally performs no work because the invalid-culture path
+            /// did not modify the ambient culture.
+            /// </remarks>
             public void Dispose()
             {
             }

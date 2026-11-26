@@ -29,8 +29,17 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService;
 [AdminOrJwtAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
 public sealed class AdminChatPromptReferenceAppService : LocalAppServiceBase
 {
+    /// <summary>
+    /// Initializes the PromptRange reference application service.
+    /// </summary>
+    /// <param name="serviceProvider">The request service provider used by the base service.</param>
     public AdminChatPromptReferenceAppService(IServiceProvider serviceProvider) : base(serviceProvider) { }
 
+    /// <summary>
+    /// Scores a persisted AdminChat message against a PromptRange item using AI.
+    /// </summary>
+    /// <param name="request">The message and PromptRange item identifiers.</param>
+    /// <returns>The scored prompt-reference response wrapped in an application response.</returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<PromptReferenceInfo>> ScoreWithAIAsync(AdminChatPromptScoreRequest request)
     {

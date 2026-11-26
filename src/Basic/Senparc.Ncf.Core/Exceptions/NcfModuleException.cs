@@ -24,10 +24,21 @@ namespace Senparc.Ncf.Core.Exceptions
     public class NcfModuleException : NcfExceptionBase
     {
         //public IXncfRegister XncfRegister;
+        /// <summary>
+        /// Initializes a module-scoped exception with an optional logging flag.
+        /// </summary>
+        /// <param name="message">The module failure message.</param>
+        /// <param name="logged">Whether the exception has already been logged.</param>
         public NcfModuleException(string message, bool logged = false) : base(message, logged)
         {
         }
 
+        /// <summary>
+        /// Initializes a module-scoped exception with an inner failure and optional logging flag.
+        /// </summary>
+        /// <param name="message">The module failure message.</param>
+        /// <param name="inner">The underlying exception.</param>
+        /// <param name="logged">Whether the exception has already been logged.</param>
         public NcfModuleException(string message, Exception inner, bool logged = false) : base(message, inner, logged)
         {
         }

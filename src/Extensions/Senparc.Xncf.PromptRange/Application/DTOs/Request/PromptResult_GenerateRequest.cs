@@ -21,29 +21,29 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
     public class PromptResult_GenerateRequest
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the prompt item identifier used for generation.
         /// </summary>
         [Required]
         public int PromptItemId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the number of results requested from the generator.
         /// </summary>
         [Required]
         public int NumsOfResults { get; set; } = 1;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the optional user message supplied to the prompt.
         /// </summary>
         public string UserMessage { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the optional stream identifier used for incremental output.
         /// </summary>
         public string StreamId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets execution-model and generation options.
         /// </summary>
         public PromptExecutionOptions ExecutionOptions { get; set; }
     }

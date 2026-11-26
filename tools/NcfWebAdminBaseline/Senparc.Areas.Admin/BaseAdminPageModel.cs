@@ -46,6 +46,9 @@ namespace Senparc.Areas.Admin
         public Senparc.Areas.Admin.Register _xncfRegister;
         protected readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// Gets the lazily initialized administration module registration used by the page model.
+        /// </summary>
         public Senparc.Areas.Admin.Register XncfRegister
         {
             get
@@ -56,15 +59,20 @@ namespace Senparc.Areas.Admin
         }
 
 
+        /// <summary>
+        /// Initializes a page model with the dependency provider used by administration helpers.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider for the current request.</param>
         public BaseAdminPageModel(IServiceProvider serviceProvider)
         {
             this._serviceProvider = serviceProvider;
         }
 
         /// <summary>
-        /// 
+        /// Converts invalid model state into the administration API's bad-request payload,
+        /// then delegates to the base page-model handler.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">The page-handler execution context for the current request.</param>
         public override void OnPageHandlerExecuting(PageHandlerExecutingContext context)
         {
             //context
@@ -79,6 +87,7 @@ namespace Senparc.Areas.Admin
             base.OnPageHandlerExecuting(context);
         }
 
+        /// <inheritdoc/>
         public override IActionResult RenderError(string message)
         {
             return base.RenderError(message);

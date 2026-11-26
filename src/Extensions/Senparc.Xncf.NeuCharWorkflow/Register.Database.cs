@@ -40,6 +40,10 @@ public partial class Register : IXncfDatabase
     public Type TryGetXncfDatabaseDbContextType =>
         MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+    /// <summary>
+    /// Configures workflow indexes used for migration lookup, revision checks, replay, and chat history.
+    /// </summary>
+    /// <param name="modelBuilder">The EF Core model builder.</param>
     public void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<WorkflowEntity>()
@@ -56,6 +60,10 @@ public partial class Register : IXncfDatabase
             .HasIndex(z => new { z.WorkflowId, z.ParticipantKeyHash });
     }
 
+    /// <summary>
+    /// Registers workflow database services required by the module.
+    /// </summary>
+    /// <param name="services">The dependency injection service collection.</param>
     public void AddXncfDatabaseModule(IServiceCollection services)
     {
     }

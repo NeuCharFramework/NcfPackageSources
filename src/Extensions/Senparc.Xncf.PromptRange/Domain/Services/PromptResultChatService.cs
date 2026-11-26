@@ -41,10 +41,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads chat messages for one prompt result in sequence order.
         /// </summary>
-        /// <param name="promptResultId">PromptResult ID</param>
-        /// <returns></returns>
+        /// <param name="promptResultId">The prompt-result identifier.</param>
+        /// <returns>The ordered chat message DTOs.</returns>
         public async Task<List<PromptResultChatDto>> GetByPromptResultIdAsync(int promptResultId)
         {
             var chatList = await this.GetFullListAsync(
@@ -56,12 +56,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Persists chat messages and assigns sequence values when the caller does not provide a start sequence.
         /// </summary>
-        /// <param name="promptResultId">PromptResult ID</param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="promptResultId">The owning prompt-result identifier.</param>
+        /// <param name="chatMessages">The user/assistant messages to persist.</param>
+        /// <param name="startSequence">Optional first sequence value.</param>
+        /// <returns>The persisted chat message DTOs.</returns>
+        /// <exception cref="Exception">Thrown when a saved message cannot be reloaded with a generated ID.</exception>
         public async Task<List<PromptResultChatDto>> AddChatMessagesAsync(int promptResultId, List<ChatMessageDto> chatMessages, int? startSequence = null)
         {
             if (chatMessages == null || chatMessages.Count == 0)
@@ -72,14 +73,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var chatEntities = new List<PromptResultChat>();
             int sequence;
 
-            //Legacy comment translated to English.
             if (startSequence.HasValue)
             {
                 sequence = startSequence.Value;
             }
             else
             {
-                //Legacy comment translated to English.
                 var existingChats = await this.GetFullListAsync(c => c.PromptResultId == promptResultId);
                 sequence = existingChats.Count > 0 ? existingChats.Max(c => c.Sequence) + 1 : 1;
             }
@@ -101,27 +100,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await this.SaveObjectListAsync(chatEntities);
             
-            //Legacy comment translated to English.
             await this.SaveChangesAsync();
 
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
             var savedDtos = new List<PromptResultChatDto>();
             
-            //Legacy comment translated to English.
             var entityKeys = chatEntities.Select(e => new { e.Sequence, e.RoleType }).ToList();
             
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
             var allSavedEntities = await this.GetFullListAsync(c => 
                 c.PromptResultId == promptResultId);
             
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
             foreach (var originalEntity in chatEntities)
             {
-                //Legacy comment translated to English.
                 var savedEntity = allSavedEntities.FirstOrDefault(e => 
                     e.Sequence == originalEntity.Sequence && 
                     e.RoleType == originalEntity.RoleType);
@@ -132,8 +121,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
                 else
                 {
-                    //Legacy comment translated to English.
-                    //Legacy comment translated to English.
                     throw new Exception($"保存对话记录失败：未找到 Sequence={originalEntity.Sequence}, RoleType={originalEntity.RoleType} 的已保存实体，或 ID 为 0。PromptResultId={promptResultId}");
                 }
             }
@@ -142,11 +129,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Updates the optional user score for one stored prompt-result chat record.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="chatId">The chat record identifier.</param>
+        /// <param name="score">The score to store, or <see langword="null"/> to clear it.</param>
+        /// <returns>The updated chat DTO.</returns>
+        /// <exception cref="Exception">Thrown when the chat record does not exist.</exception>
         public async Task<PromptResultChatDto> UpdateUserFeedbackAsync(int chatId, bool? feedback)
         {
             var chat = await this.GetObjectAsync(c => c.Id == chatId)
@@ -159,11 +147,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Updates the optional user score for one stored prompt-result chat record.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="chatId">The chat record identifier.</param>
+        /// <param name="score">The score from zero through ten, or <see langword="null"/> to clear it.</param>
+        /// <returns>The updated chat DTO.</returns>
+        /// <exception cref="Exception">Thrown when the chat record does not exist.</exception>
         public async Task<PromptResultChatDto> UpdateUserScoreAsync(int chatId, decimal? score)
         {
             var chat = await this.GetObjectAsync(c => c.Id == chatId)
@@ -176,10 +165,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deletes all chat records associated with a prompt result.
         /// </summary>
-        /// <param name="promptResultId">PromptResult ID</param>
-        /// <returns></returns>
+        /// <param name="promptResultId">The prompt-result identifier whose chat records should be deleted.</param>
+        /// <returns>A task that completes after all matching records have been deleted.</returns>
         public async Task DeleteByPromptResultIdAsync(int promptResultId)
         {
             var chatList = await this.GetFullListAsync(c => c.PromptResultId == promptResultId);
@@ -188,10 +177,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Converts stored prompt-result chat DTOs into AI chat messages while preserving
+        /// user/assistant role mapping and empty-content behavior.
         /// </summary>
-        /// <param name="promptResultDtos"></param>
-        /// <returns></returns>
+        /// <param name="promptResultDtos">The chat DTOs to convert.</param>
+        /// <returns>The converted chat messages, or an empty list when no DTOs are supplied.</returns>
         public List<ChatMessage> GetChatMessageList(List<PromptResultChatDto> promptResultDtos)
         {
             if (promptResultDtos == null || promptResultDtos.Count == 0)
@@ -208,9 +198,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Represents one user or assistant message supplied to chat persistence.</summary>
     public class ChatMessageDto
     {
         /// <summary>
@@ -218,9 +206,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// </summary>
         public string Role { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the message content.</summary>
         public string Content { get; set; }
     }
 }

@@ -11,11 +11,15 @@ using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 namespace Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// SQL Server-specific WeixinManager database context used by runtime registration and migrations.
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.SqlServer, typeof(Register))]
     public class WeixinSenparcEntities_SqlServer : WeixinSenparcEntities, IMultipleMigrationDbContext
     {
+        /// <summary>
+        /// Initializes the SQL Server-specific WeixinManager DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for SQL Server.</param>
         public WeixinSenparcEntities_SqlServer(DbContextOptions<WeixinSenparcEntities_SqlServer> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -34,6 +38,9 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase
             app.UseNcfDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SqlServerDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the SQL Server design-time DbContext factory.
+        /// </summary>
         public SenparcDbContextFactory_SqlServer()
             : base(SenparcDbContextFactoryConfig.RootDictionaryPath)
         {

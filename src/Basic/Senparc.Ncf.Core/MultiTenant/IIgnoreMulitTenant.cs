@@ -22,7 +22,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.MultiTenant
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Marks an entity or contract that must bypass ordinary tenant filtering.
     /// </summary>
     public interface IIgnoreMulitTenant
     {

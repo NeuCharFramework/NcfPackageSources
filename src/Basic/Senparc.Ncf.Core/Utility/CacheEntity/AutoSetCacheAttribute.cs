@@ -22,6 +22,9 @@ namespace Senparc.Ncf.Core.Utility
     [AttributeUsageAttribute(AttributeTargets.Property)]
     public class AutoSetCacheAttribute : Attribute
     {
+        /// <summary>
+        /// Marks a cache projection property for copying from a matching entity property.
+        /// </summary>
         public AutoSetCacheAttribute()
         {
         }

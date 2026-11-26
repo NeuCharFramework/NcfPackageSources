@@ -42,7 +42,7 @@ using Senparc.Xncf.XncfModuleManager.Models;
 namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Extends XNCF module persistence with installation, menu, and version-state operations.
     /// </summary>
     public class XncfModuleServiceExtension : XncfModuleService
     {
@@ -50,15 +50,22 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         private readonly Lazy<SysRoleService> _sysRoleService;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds the module-manager start URL for a registration.
         /// </summary>
-        /// <param name="register"></param>
-        /// <returns></returns>
+        /// <param name="register">The registered XNCF module.</param>
+        /// <returns>The administration start URL.</returns>
         private string GetStartUrl(IXncfRegister register)
         {
             return $"/Admin/XncfModule/Start/?uid={register.Uid}";
         }
 
+        /// <summary>
+        /// Initializes module persistence and lazy menu/role services.
+        /// </summary>
+        /// <param name="repo">The XNCF module repository.</param>
+        /// <param name="sysMenuService">The menu service.</param>
+        /// <param name="sysRoleService">The role service.</param>
+        /// <param name="serviceProvider">The dependency provider.</param>
         public XncfModuleServiceExtension(IRepositoryBase<XncfModule> repo, Lazy<SysMenuService> sysMenuService, Lazy<SysRoleService> sysRoleService, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             _sysMenuService = sysMenuService;
@@ -66,11 +73,13 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Scans and installs or updates one registered module, optionally creating its
+        /// administration menu and permissions.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="uid">The registered module UID.</param>
+        /// <param name="addMenu">Whether to install or update the module menu.</param>
+        /// <returns>The current module list, scan result, and install/update decision.</returns>
+        /// <exception cref="Exception">Thrown when the module is missing or already installed at the same version.</exception>
         //public async Task<Tuple<PagedList<XncfModule>, string, InstallOrUpdate?>> InstallModuleAsync(string uid)
         public async Task<(PagedList<XncfModule> XncfModuleList, string scanAndInstallResult, InstallOrUpdate? InstallOrUpdate)> InstallModuleAsync(string uid, bool addMenu = true)
         {
@@ -120,10 +129,10 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates or updates the administration menu and administrator permission for a module.
         /// </summary>
-        /// <param name="register"></param>
-        /// <returns></returns>
+        /// <param name="register">The module registration.</param>
+        /// <param name="installOrUpdate">Whether this is a first install or an update.</param>
         public async Task InstallMenuAsync(IXncfRegister register, InstallOrUpdate installOrUpdate)
         {
             var topMenu = await _sysMenuService.Value.GetObjectAsync(z => z.MenuName == "扩展模块").ConfigureAwait(false);
@@ -187,11 +196,11 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Formats the installed and registered versions for module-manager display.
         /// </summary>
-        /// <param name="xncfModules"></param>
-        /// <param name="xncfRegister"></param>
-        /// <returns></returns>
+        /// <param name="xncfModules">Installed module records.</param>
+        /// <param name="xncfRegister">The current registration.</param>
+        /// <returns>The current version or an installed-to-available version transition.</returns>
         public string GetVersionDisplayName(List<XncfModule> xncfModules, IXncfRegister xncfRegister)
         {
             var installedXncf = xncfModules.FirstOrDefault(z => z.Uid == xncfRegister.Uid);
@@ -203,9 +212,10 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Finds registered modules whose exact UID/version is not installed.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="xncfModules">Installed module records.</param>
+        /// <returns>Registrations that require installation or version reconciliation.</returns>
         public List<IXncfRegister> GetUnInstallXncfModule(List<XncfModule> xncfModules)
         {
             var newXncfRegisters = XncfRegisterManager.RegisterList.Where(z => !z.IgnoreInstall && !xncfModules.Exists(m => m.Uid == z.Uid && m.Version == z.Version)).ToList() ?? new List<IXncfRegister>();
@@ -213,9 +223,10 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Finds registered modules whose UID is not installed at any version.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="xncfModules">Installed module records.</param>
+        /// <returns>Registrations absent from the installed module set.</returns>
         public List<IXncfRegister> GetOnlyUnInstallXncfModule(List<XncfModule> xncfModules)
         {
             var newXncfRegisters = XncfRegisterManager.RegisterList.Where(z => !z.IgnoreInstall && !xncfModules.Exists(m => m.Uid == z.Uid)).ToList() ?? new List<IXncfRegister>();
@@ -223,9 +234,10 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Finds registered modules whose installed version differs from the current registration.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="xncfModules">Installed module records.</param>
+        /// <returns>Registrations that require an update.</returns>
         public List<IXncfRegister> GetUpdatedInstallXncfModule(List<XncfModule> xncfModules)
         {
 

@@ -132,6 +132,12 @@ public sealed class LocalFunctionFileStore : IFunctionFileStore
     private readonly FunctionFileStoreOptions _options;
     private readonly RequestTenantInfo _requestTenantInfo;
 
+    /// <summary>
+    /// Initializes the default local function-file store and validates its storage limits.
+    /// </summary>
+    /// <param name="options">The file-store size, retention, and root-path options.</param>
+    /// <param name="requestTenantInfo">The optional request tenant context.</param>
+    /// <exception cref="InvalidOperationException">Thrown when the root path or limits are invalid.</exception>
     public LocalFunctionFileStore(
         IOptions<FunctionFileStoreOptions> options,
         RequestTenantInfo requestTenantInfo = null)

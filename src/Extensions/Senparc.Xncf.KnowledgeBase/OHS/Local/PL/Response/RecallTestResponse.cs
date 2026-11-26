@@ -42,30 +42,37 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Response
 {
+    /// <summary>
+    /// Represents one retrieval candidate returned by a knowledge-base recall test.
+    /// </summary>
     public class RecallTestResponse
     {
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets the rank after retrieval and optional reranking.</summary>
         public int Rank { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the original vector-search rank before reranking.</summary>
         public int OriginalRank { get; set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets the initial retrieval score.</summary>
         public double? Score { get; set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets the reranker score, when reranking was enabled.</summary>
         public double? RerankScore { get; set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets the reranking mode used for this candidate.</summary>
         public string RerankMode { get; set; }
 
+        /// <summary>Gets or sets the retrieved content.</summary>
         public string Content { get; set; }
+        /// <summary>Gets or sets the content length.</summary>
         public int ContentLength { get; set; }
+        /// <summary>Gets or sets the formatted retrieval timestamp.</summary>
         public string RecallTime { get; set; }
+        /// <summary>Gets or sets retrieval elapsed time in milliseconds.</summary>
         public long ElapsedMilliseconds { get; set; }
+        /// <summary>Gets or sets the source display name.</summary>
         public string SourceName { get; set; }
+        /// <summary>Gets or sets the source link.</summary>
         public string SourceLink { get; set; }
     }
 }

@@ -30,6 +30,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
 {
     public class ApiAppService : AppServiceBase
     {
+        /// <summary>
+        /// Initializes the sample API application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base application service.</param>
         public ApiAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
@@ -44,9 +48,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
          */
 
         /// <summary>
-        /// expose AppService as a Web API
+        /// Demonstrates a minimal asynchronous application-service endpoint that returns a
+        /// successful integer response after the sample operation completes.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A response whose data value is the sample status value.</returns>
         [ApiBind]
         public async Task<AppResponseBase<int>> MyApi()
         {
@@ -58,9 +63,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
         }
 
         /// <summary>
-        /// custom Post types and complex parameters while testing exception throwing and custom status codes
+        /// Demonstrates a POST endpoint that receives a complex request, deliberately exercises
+        /// application-service exception handling, and sets custom response state codes.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="request">The request containing the values included in the exception message.</param>
+        /// <returns>A string response whose state reflects the handled exception.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the request is <see langword="null"/>.</exception>
+        /// <exception cref="NcfExceptionBase">Thrown by the sample operation before the application-service exception handler handles it.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> MyCustomApi(Api_MyCustomApiRequest request)
         {

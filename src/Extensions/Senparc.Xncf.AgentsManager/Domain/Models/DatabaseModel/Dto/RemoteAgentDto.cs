@@ -35,8 +35,15 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public System.DateTime? LastHealthCheckAt { get; set; }
         public string LastHealthCheckMessage { get; set; }
 
+        /// <summary>
+        /// Initializes an empty remote-Agent DTO for binding.
+        /// </summary>
         public RemoteAgentDto() { }
 
+        /// <summary>
+        /// Projects a persisted remote-Agent entity into a transport DTO.
+        /// </summary>
+        /// <param name="remoteAgent">The remote-Agent entity to project.</param>
         public RemoteAgentDto(RemoteAgent remoteAgent)
         {
             Id = remoteAgent.Id;
@@ -64,8 +71,15 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public ChatGroupContextSharingMode? ContextSharingMode { get; set; }
         public RemoteAgentDto RemoteAgentDto { get; set; }
 
+        /// <summary>
+        /// Initializes an empty remote-membership DTO for binding.
+        /// </summary>
         public ChatGroupRemoteMemberDto() { }
 
+        /// <summary>
+        /// Projects a persisted remote ChatGroup membership into a DTO.
+        /// </summary>
+        /// <param name="member">The membership entity to project.</param>
         public ChatGroupRemoteMemberDto(ChatGroupRemoteMember member)
         {
             Id = member.Id;

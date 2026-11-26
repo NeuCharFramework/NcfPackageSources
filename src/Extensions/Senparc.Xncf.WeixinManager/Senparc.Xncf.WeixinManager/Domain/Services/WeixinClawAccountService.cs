@@ -186,6 +186,11 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
         }
     }
 
+    /// <summary>
+    /// Trims a token and removes an optional Bearer scheme prefix.
+    /// </summary>
+    /// <param name="token">The stored or supplied token.</param>
+    /// <returns>The normalized token value.</returns>
     private static string NormalizeToken(string token)
     {
         var value = token?.Trim();

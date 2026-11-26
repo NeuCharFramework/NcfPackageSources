@@ -21,7 +21,20 @@ namespace Senparc.Ncf.Service
 {
     public partial interface IEncryptionServiceBase //: IBaseServiceData
     {
+        /// <summary>
+        /// Encrypts plaintext content with the implementation's configured algorithm and key.
+        /// </summary>
+        /// <param name="content">The plaintext content.</param>
+        /// <param name="encodeKey">The encryption key.</param>
+        /// <returns>The encrypted representation.</returns>
         string GetEncodedContent(string content, string encodeKey);
+
+        /// <summary>
+        /// Decrypts content produced by <see cref="GetEncodedContent"/>.
+        /// </summary>
+        /// <param name="content">The encrypted representation.</param>
+        /// <param name="encodeKey">The decryption key.</param>
+        /// <returns>The plaintext content.</returns>
         string GetDecodedContent(string content, string encodeKey);
     }
 

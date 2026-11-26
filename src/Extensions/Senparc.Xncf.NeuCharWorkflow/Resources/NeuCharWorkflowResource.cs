@@ -26,6 +26,12 @@ namespace Senparc.Xncf.NeuCharWorkflow;
 /// </summary>
 public sealed class NeuCharWorkflowResource
 {
+    /// <summary>
+    /// Resolves a workflow localization key and returns the fallback when the key is unavailable.
+    /// </summary>
+    /// <param name="key">The resource key to resolve.</param>
+    /// <param name="fallback">The text returned when the key has no localized value.</param>
+    /// <returns>The localized text or the fallback text.</returns>
     public static string Get(string key, string? fallback = null) =>
         ResourceStringLocalizer.Get(typeof(NeuCharWorkflowResource), key, fallback);
 }

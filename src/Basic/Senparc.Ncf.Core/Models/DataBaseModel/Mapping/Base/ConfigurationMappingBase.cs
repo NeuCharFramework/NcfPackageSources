@@ -24,16 +24,15 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the base mapping hook for entities with typed identifiers.
     /// </summary>
-    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TEntity">The entity type being configured.</typeparam>
+    /// <typeparam name="TKey">The entity identifier type.</typeparam>
     public class ConfigurationMappingWithIdBase<TEntity, TKey> : ConfigurationMappingBase<TEntity>, IEntityTypeConfiguration<TEntity>
         where TEntity : EntityBase<TKey>
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="builder"></param>
+        /// <inheritdoc />
+        /// <param name="builder">The EF Core entity builder.</param>
         public override void Configure(EntityTypeBuilder<TEntity> builder)
         {
             builder.HasKey(z => z.Id);
@@ -42,15 +41,15 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides the default mapping hook for NCF entities.
     /// </summary>
     public class ConfigurationMappingBase<TEntity> : IEntityTypeConfiguration<TEntity>
         where TEntity : EntityBase
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Applies shared entity mapping conventions. The base implementation is intentionally empty.
         /// </summary>
-        /// <param name="builder"></param>
+        /// <param name="builder">The EF Core entity builder.</param>
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
             //builder.Property(e => e.AddTime).HasColumnType("datetime").IsRequired();

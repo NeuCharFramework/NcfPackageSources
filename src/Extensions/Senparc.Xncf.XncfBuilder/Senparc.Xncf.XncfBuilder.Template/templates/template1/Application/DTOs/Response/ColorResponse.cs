@@ -41,6 +41,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.DTOs.Response
         /// </summary>
         public double CostMillionSeconds { get; set; }
 
+        /// <summary>
+        /// Initializes a response containing RGB values and the measured operation duration.
+        /// </summary>
+        /// <param name="red">The red component in the range 0 through 255.</param>
+        /// <param name="green">The green component in the range 0 through 255.</param>
+        /// <param name="blue">The blue component in the range 0 through 255.</param>
+        /// <param name="costMillionSeconds">The elapsed duration reported by the sample operation.</param>
         public Color_GetOrInitColorResponse(int red, int green, int blue, double costMillionSeconds)
         {
             Red = red;

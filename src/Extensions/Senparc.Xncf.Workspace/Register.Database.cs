@@ -34,10 +34,20 @@ public partial class Register : IXncfDatabase
     public Type TryGetXncfDatabaseDbContextType
         => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+    /// <summary>
+    /// Applies Workspace entity mappings to the module database model.
+    /// The current module uses shared conventions and has no explicit mappings here.
+    /// </summary>
+    /// <param name="modelBuilder">The Entity Framework Core model builder.</param>
     public void OnModelCreating(ModelBuilder modelBuilder)
     {
     }
 
+    /// <summary>
+    /// Registers Workspace database services.
+    /// The current module has no additional database services beyond shared infrastructure.
+    /// </summary>
+    /// <param name="services">The application dependency-injection service collection.</param>
     public void AddXncfDatabaseModule(IServiceCollection services)
     {
     }

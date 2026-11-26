@@ -10,21 +10,29 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Senparc.Service
 {
+    /// <summary>
+    /// Replaces the role assignments associated with an administrator account.
+    /// </summary>
     public class SysRoleAdminUserInfoService : ClientServiceBase<SysRoleAdminUserInfo>
     {
         private readonly SysRoleService _sysRoleService;
 
+        /// <summary>
+        /// Initializes the role-assignment service.
+        /// </summary>
+        /// <param name="repo">The role-assignment repository.</param>
+        /// <param name="serviceProvider">The service provider used to resolve role data.</param>
         public SysRoleAdminUserInfoService(ClientRepositoryBase<SysRoleAdminUserInfo> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             _sysRoleService = _serviceProvider.GetService<SysRoleService>();
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces all role links for an administrator account in one transaction.
         /// </summary>
-        /// <param name="roleId"></param>
-        /// <param name="accountId"></param>
-        /// <returns></returns>
+        /// <param name="roleId">The role identifiers to assign.</param>
+        /// <param name="accountId">The administrator account identifier.</param>
+        /// <returns>A task that completes after replacement is persisted.</returns>
         public async Task AddAsync(IEnumerable<string> roleId, int accountId)
         {
             IList<SysRoleAdminUserInfo> sysRoleAdminUserInfos = new List<SysRoleAdminUserInfo>();

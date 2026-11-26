@@ -183,6 +183,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             }
         }
 
+        /// <summary>
+        /// Finds the common source root used to construct an isolated development snapshot.
+        /// </summary>
+        /// <param name="solutionFilePath">The validated solution file path.</param>
+        /// <returns>The source root containing the solution and its project closure.</returns>
+        /// <exception cref="DirectoryNotFoundException">
+        /// Thrown when no suitable source root can be determined.
+        /// </exception>
         private static string FindSourceRoot(string solutionFilePath)
         {
             var solutionDirectory = Path.GetDirectoryName(solutionFilePath)
@@ -218,6 +226,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             return root;
         }
 
+        /// <summary>
+        /// Resolves the transitive ProjectReference closure of a solution, including the host fallback.
+        /// </summary>
+        /// <param name="solutionFilePath">The solution file path.</param>
+        /// <returns>Project paths in discovery order.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when a referenced project cannot be read.</exception>
         private static IEnumerable<string> ResolveProjectClosure(string solutionFilePath)
         {
             var solutionDirectory = Path.GetDirectoryName(solutionFilePath)!;
@@ -277,6 +291,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             }
         }
 
+        /// <summary>
+        /// Copies a source tree while excluding build/secrets and rejecting symbolic links.
+        /// </summary>
+        /// <param name="sourceRoot">The source tree root.</param>
+        /// <param name="destinationRoot">The isolated destination root.</param>
+        /// <param name="cancellationToken">Token used to cancel copying.</param>
+        /// <exception cref="UnauthorizedAccessException">Thrown when a symbolic link is encountered.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when the snapshot exceeds its size limit.</exception>
         private static async Task CopySanitizedTreeAsync(string sourceRoot, string destinationRoot, CancellationToken cancellationToken)
         {
             var pending = new Stack<(string Source, string Relative)>();
@@ -336,6 +358,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             }
         }
 
+        /// <summary>
+        /// Determines whether a file is excluded from an isolated source snapshot.
+        /// </summary>
+        /// <param name="fileName">The file name.</param>
+        /// <returns><see langword="true"/> for build, environment, certificate, or secret files.</returns>
         private static bool ShouldExcludeFile(string fileName)
         {
             var extension = Path.GetExtension(fileName);
@@ -349,6 +376,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
                    || extension.Equals(".snk", StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Builds a relative-path to SHA-256 map for tracked files under a root.
+        /// </summary>
+        /// <param name="root">The workspace root.</param>
+        /// <returns>The case-insensitive file hash map.</returns>
         private static Dictionary<string, string> CreateFileHashMap(string root)
         {
             return EnumerateTrackedFiles(root).ToDictionary(
@@ -357,6 +389,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
                 StringComparer.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Enumerates non-excluded, non-reparse files under a workspace root.
+        /// </summary>
+        /// <param name="root">The workspace root.</param>
+        /// <returns>Tracked file paths.</returns>
         private static IEnumerable<string> EnumerateTrackedFiles(string root)
         {
             var pending = new Stack<string>();
@@ -383,6 +420,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             }
         }
 
+        /// <summary>
+        /// Walks parent directories to locate the nearest Git repository root.
+        /// </summary>
+        /// <param name="directory">The directory from which to walk upward.</param>
+        /// <returns>The repository root, or <see langword="null"/> when none is found.</returns>
         private static string FindRepositoryRoot(string directory)
         {
             for (var current = new DirectoryInfo(directory); current != null; current = current.Parent)
@@ -395,6 +437,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             return null;
         }
 
+        /// <summary>
+        /// Finds a common ancestor path for two physical paths.
+        /// </summary>
+        /// <param name="first">The first path.</param>
+        /// <param name="second">The second path.</param>
+        /// <returns>The nearest common ancestor or filesystem root.</returns>
         private static string GetCommonAncestor(string first, string second)
         {
             var left = Path.GetFullPath(first).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
@@ -411,6 +459,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             return left;
         }
 
+        /// <summary>
+        /// Determines whether a path is the root or a descendant of it.
+        /// </summary>
+        /// <param name="root">The root path.</param>
+        /// <param name="path">The candidate path.</param>
+        /// <returns><see langword="true"/> when the candidate remains within the root.</returns>
         private static bool IsWithin(string root, string path)
         {
             var normalizedRoot = Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
@@ -419,9 +473,17 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
                    || normalizedPath.StartsWith(normalizedRoot + Path.DirectorySeparatorChar, GetPathComparison());
         }
 
+        /// <summary>
+        /// Gets the path comparer appropriate for the current operating system.
+        /// </summary>
+        /// <returns>The path comparer.</returns>
         private static StringComparer GetPathComparer() =>
             OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
 
+        /// <summary>
+        /// Gets the path comparison mode appropriate for the current operating system.
+        /// </summary>
+        /// <returns>The path comparison mode.</returns>
         private static StringComparison GetPathComparison() =>
             OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
     }

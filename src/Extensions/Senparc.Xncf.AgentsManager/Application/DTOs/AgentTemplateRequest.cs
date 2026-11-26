@@ -61,6 +61,7 @@ using Senparc.Xncf.Workspace.Abstractions;
 
 namespace Senparc.Xncf.AgentsManager.Application.Dtos
 {
+    /// <summary>Requests conversion of plain prompt text into an Agent prompt item.</summary>
     public class AgentTemplate_ConvertPlainPromptRequest
     {
         [Required]
@@ -82,15 +83,22 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         public int AiModelId { get; set; }
     }
 
+    /// <summary>Reports the generated prompt item and evaluation result.</summary>
     public class AgentTemplate_ConvertPlainPromptResponse
     {
+        /// <summary>Gets or sets the generated PromptRange code.</summary>
         public string PromptCode { get; set; }
+        /// <summary>Gets or sets the generated prompt-item version.</summary>
         public string PromptItemVersion { get; set; }
+        /// <summary>Gets or sets the generated prompt-result identifier.</summary>
         public int PromptResultId { get; set; }
+        /// <summary>Gets or sets the evaluation score.</summary>
         public decimal Score { get; set; }
+        /// <summary>Gets or sets the generated result text.</summary>
         public string ResultString { get; set; }
     }
 
+    /// <summary>Provides Agent-template management inputs and FunctionRender selection data.</summary>
     public class AgentTemplate_ManageRequest : FunctionAppRequestBase
     {
         [Required]
@@ -122,7 +130,8 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
 
         [JsonIgnore]
         public SelectionList HookRobotTypeOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
-        //Legacy comment translated to English.
+        // Bindings are optional; an empty collection keeps the template's explicit
+        // tool and workspace policy unchanged.
 
 
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.PlatformParameter")]
@@ -133,20 +142,22 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
 
         public int? KnowledgeBaseId { get; set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets skills explicitly bound to the Agent.</summary>
         public List<AgentSkillBinding> SkillBindings { get; set; } = new();
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets workspace access policy for the Agent.</summary>
         public WorkspacePolicy WorkspacePolicy { get; set; } = new();
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets connector bindings available to the Agent.</summary>
         public List<AgentConnectorBinding> ConnectorBindings { get; set; }
 
+        /// <summary>Returns the trimmed PromptRange code selected for the system message.</summary>
         public string GetSystemMessagePromptCode()
         {
             return SystemMessagePromptCode?.Trim();
         }
 
+        /// <summary>Compatibility alias for <see cref="GetSystemMessagePromptCode"/>.</summary>
         public string GetySystemMessagePromptCode()
         {
             return GetSystemMessagePromptCode();
@@ -156,7 +167,8 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         {
             await base.LoadData(serviceProvider);
 
-            //Legacy comment translated to English.
+            // Populate both the hook-platform and PromptRange selectors before
+            // the Function request is rendered.
             var hookRobotTypeItems = Enum.GetValues<HookRobotType>();
             foreach (var item in hookRobotTypeItems)
             {
@@ -169,9 +181,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
 
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Requests creation of an Agent template from a PromptRange code.</summary>
     public class AgentTemplate_CreateFromPromptCodeRequest : FunctionAppRequestBase
     {
         [Required]
@@ -192,6 +202,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Create.FunctionCalls")]
         public string FunctionCallNames { get; set; }
 
+        /// <summary>Returns the manually supplied PromptRange code.</summary>
         public string GetPromptCode()
         {
             // if (!string.IsNullOrEmpty(ScopeSelection))
@@ -209,9 +220,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         // }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Requests a bounded Agent-template name search.</summary>
     public class AgentTemplate_FindByNameRequest : FunctionAppRequestBase
     {
         [Required]

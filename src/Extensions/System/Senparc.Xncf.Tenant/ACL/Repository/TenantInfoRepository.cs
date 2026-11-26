@@ -22,10 +22,14 @@ using Senparc.Xncf.Tenant.Domain.Models;
 namespace Senparc.Xncf.Tenant.ACL.Repository
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Repository for persisted tenant registrations.
     /// </summary>
     public class TenantInfoRepository : ClientRepositoryBase<TenantInfo>
     {
+        /// <summary>
+        /// Initializes the repository with tenant database access.
+        /// </summary>
+        /// <param name="db">The tenant database wrapper.</param>
         public TenantInfoRepository(ITenantInfoDbData db) : base(db)
         {
         }

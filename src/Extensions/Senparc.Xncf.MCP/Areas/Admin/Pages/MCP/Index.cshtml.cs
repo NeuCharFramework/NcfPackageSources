@@ -22,11 +22,18 @@ namespace Senparc.Xncf.MCP.Areas.MCP.Pages
 {
     public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
+        /// <summary>
+        /// Initializes the MCP administration page model.
+        /// </summary>
+        /// <param name="xncfModuleService">The lazy module service required by the base page.</param>
         public Index(Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
         {
 
         }
 
+        /// <summary>
+        /// Handles the initial MCP administration page request.
+        /// </summary>
         public void OnGet()
         {
         }

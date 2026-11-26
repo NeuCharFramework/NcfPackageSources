@@ -25,46 +25,46 @@ namespace Senparc.Ncf.Core.Cache.Extensions
     public static class BaseCacheExtensions
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets all raw cache entries from the underlying cache strategy.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="baseCache"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The cached value type.</typeparam>
+        /// <param name="baseCache">The cache wrapper.</param>
+        /// <returns>All raw cache entries.</returns>
         public static IDictionary<string, object> GetAll<T>(this IBaseCache<T> baseCache) where T : class, new()
         {
             return baseCache.Cache.GetAll();
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Asynchronously gets all raw cache entries.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="baseCache"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The cached value type.</typeparam>
+        /// <param name="baseCache">The cache wrapper.</param>
+        /// <returns>A task containing all raw cache entries.</returns>
         public static Task<IDictionary<string, object>> GetAsync<T>(this IBaseCache<T> baseCache) where T : class, new()
         {
             return baseCache.Cache.GetAllAsync();
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets all cached values whose keys share the supplied prefix.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="baseCache"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The cached value type.</typeparam>
+        /// <param name="baseCache">The cache wrapper.</param>
+        /// <param name="key">The key prefix to match.</param>
+        /// <returns>The matching cached values.</returns>
         public static IList<T> GetAllByPrefix<T>(this IBaseCache<T> baseCache, string key) where T : class, new()
         {
             return baseCache.Cache.GetAllByPrefix<T>(key);
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Asynchronously gets all cached values whose keys share the supplied prefix.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="baseCache"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The cached value type.</typeparam>
+        /// <param name="baseCache">The cache wrapper.</param>
+        /// <param name="key">The key prefix to match.</param>
+        /// <returns>A task containing the matching cached values.</returns>
         public static Task<IList<T>> GetAllByPrefixAsync<T>(this IBaseCache<T> baseCache, string key) where T : class, new()
         {
             return baseCache.Cache.GetAllByPrefixAsync<T>(key);

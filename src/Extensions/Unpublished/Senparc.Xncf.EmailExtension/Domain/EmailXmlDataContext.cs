@@ -28,16 +28,27 @@ namespace Senparc.Xncf.EmailExtension.Domain
 
         public XmlDataContext XmlDataContext { get; set; }
 
+        /// <summary>
+        /// Initializes an email XML data context backed by the shared XML storage helper.
+        /// </summary>
         public EmailXmlDataContext()
         {
             XmlDataContext = new XmlDataContext();
         }
 
+        /// <summary>
+        /// Loads pending automatic email records from XML storage.
+        /// </summary>
+        /// <returns>The persisted automatic-email records.</returns>
         public List<AutoSendEmail> GetAutoSendEmailList()
         {
             return XmlDataContext.GetXmlList<AutoSendEmail>();
         }
 
+        /// <summary>
+        /// Loads backup automatic-email records from XML storage.
+        /// </summary>
+        /// <returns>The persisted backup records.</returns>
         public List<AutoSendEmailBak> GetAutoSendEmailBakList()
         {
             return XmlDataContext.GetXmlList<AutoSendEmailBak>();

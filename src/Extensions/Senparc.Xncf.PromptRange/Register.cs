@@ -81,6 +81,7 @@ namespace Senparc.Xncf.PromptRange
 
         public override string Description => RegisterText.Description;
 
+        /// <inheritdoc />
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider,
             InstallOrUpdate installOrUpdate)
         {
@@ -106,6 +107,7 @@ namespace Senparc.Xncf.PromptRange
             }
         }
 
+        /// <inheritdoc />
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             #region Legacy section
@@ -128,6 +130,7 @@ namespace Senparc.Xncf.PromptRange
         #endregion
 
 
+        /// <inheritdoc />
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             app.UseStaticFiles(new StaticFileOptions
@@ -137,6 +140,7 @@ namespace Senparc.Xncf.PromptRange
             return base.UseXncfModule(app, registerService);
         }
 
+        /// <inheritdoc />
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration,
             IHostEnvironment env)
         {

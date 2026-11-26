@@ -24,6 +24,7 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
 {
+    /// <summary>Returns a prompt item and its generated result history.</summary>
     public class PromptItem_GetResponse : BaseResponse
     {
         /// <summary>
@@ -33,6 +34,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
 
         #region model config
 
+        /// <summary>Gets or sets the language-model identifier.</summary>
         public int ModelId { get; set; }
 
         /// <summary>
@@ -55,20 +57,18 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         /// </summary>
         public float FrequencyPenalty { get; set; }
 
+        /// <summary>Gets the presence penalty used during generation.</summary>
         public float PresencePenalty { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets serialized stop sequences.</summary>
         public string StopSequences { get; set; }
 
         #endregion
 
+        /// <summary>Gets or sets the prompt content.</summary>
         public string PromptContent { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the full tactic/aiming version string.</summary>
         public string FullVersion { get; set; }
 
         /// <summary>
@@ -76,30 +76,24 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         /// </summary>
         public string Note { get; set; }
 
+        /// <summary>Gets or sets the last execution timestamp.</summary>
         public new DateTime LastRunTime { get; set; } = DateTime.Now;
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether the prompt is shared.</summary>
         public bool IsShare { get; set; } = false;
 
+        /// <summary>Gets or sets generated prompt results.</summary>
         public List<PromptResult> PromptResultList { get; set; } = new();
 
         #region Legacy section
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the average evaluation score.</summary>
         public decimal EvalAvgScore { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the maximum evaluation score.</summary>
         public decimal EvalMaxScore { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets serialized expected evaluation results.</summary>
         public string ExpectedResultsJson { get; set; }
 
         #endregion
@@ -107,19 +101,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
 
         #region Legacy section
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the variable prefix.</summary>
         public string Prefix { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the variable suffix.</summary>
         public string Suffix { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets serialized variable definitions.</summary>
         public string VariableDictJson { get; set; }
 
         #endregion

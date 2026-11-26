@@ -70,7 +70,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.DTOs.Request
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Marks the template EventBus round-trip Function request.
     /// </summary>
     public class EventBusRoundTripRequest : FunctionAppRequestBase
     {

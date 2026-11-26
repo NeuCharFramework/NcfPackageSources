@@ -9,6 +9,7 @@ namespace Senparc.Areas.Admin.Models
     [XncfAutoConfigurationMapping]
     public class AdminUserInfoConfigurationMapping : ConfigurationMappingWithIdBase<AdminUserInfo, int>
     {
+        /// <inheritdoc/>
         public override void Configure(EntityTypeBuilder<AdminUserInfo> builder)
         {
             builder.Property(e => e.LastLoginIp)

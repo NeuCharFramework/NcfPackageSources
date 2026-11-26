@@ -32,10 +32,23 @@ namespace Senparc.Mvc.Controllers
     {
         private readonly SenparcWeixinSetting _senparcWeixinSetting;
         private readonly Func<string> _getRandomFileName = () => DateTime.Now.ToString("yyyyMMdd-HHmmss") + Guid.NewGuid().ToString("n").Substring(0, 6);
+        /// <summary>
+        /// Initializes the legacy Weixin endpoint controller.
+        /// </summary>
+        /// <param name="options">The configured Weixin settings.</param>
         public WeixinController(IOptions<SenparcWeixinSetting> options)
         {
             _senparcWeixinSetting = options.Value;
         }
+        /// <summary>
+        /// Validates the Weixin server signature and echoes the challenge string
+        /// when the request is authentic.
+        /// </summary>
+        /// <param name="signature">The signature supplied by Weixin.</param>
+        /// <param name="timestamp">The request timestamp.</param>
+        /// <param name="nonce">The request nonce.</param>
+        /// <param name="echostr">The challenge string to echo on success.</param>
+        /// <returns>The challenge response or a failure diagnostic.</returns>
         [HttpGet]
         [ActionName("Index")]
         public ActionResult Get(string signature, string timestamp, string nonce, string echostr)

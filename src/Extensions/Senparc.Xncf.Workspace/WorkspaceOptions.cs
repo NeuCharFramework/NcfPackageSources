@@ -23,6 +23,10 @@
 
 namespace Senparc.Xncf.Workspace;
 
+/// <summary>
+/// Configures Workspace storage quotas, search limits, command execution policy,
+/// and the selected local or containerized runtime provider.
+/// </summary>
 public sealed class WorkspaceOptions
 {
     public const string SectionName = "SenparcXncfWorkspace";

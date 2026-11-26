@@ -38,11 +38,19 @@ using System.Security.Claims;
 
 namespace Senparc.Xncf.Accounts.Domain.Services
 {
+    /// <summary>
+    /// Provides account lookup, password, authentication, and profile operations
+    /// for the Accounts module.
+    /// </summary>
     public class AccountService : BaseClientService<Account> /*, UserService*/
     {
         private readonly Lazy<IHttpContextAccessor> _httpContextAccessor;
         private string GetSalt => DateTime.Now.Ticks.ToString();
 
+        /// <summary>Initializes the account service.</summary>
+        /// <param name="accountRepo">The account repository.</param>
+        /// <param name="httpContextAccessor">Lazy access to the current HTTP context.</param>
+        /// <param name="serviceProvider">The dependency-injection service provider.</param>
         public AccountService(AccountRepository accountRepo, Lazy<IHttpContextAccessor> httpContextAccessor, IServiceProvider serviceProvider)
             : base(accountRepo, serviceProvider)
         {
@@ -50,11 +58,11 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Checks whether another account uses a user name.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="userName"></param>
-        /// <returns></returns>
+        /// <param name="id">The current account identifier excluded from the check.</param>
+        /// <param name="userName">The user name to compare.</param>
+        /// <returns><see langword="true"/> when another account uses the name.</returns>
         public bool CheckUserNameExisted(long id, string userName)
         {
             userName = userName.Trim().ToUpper();
@@ -64,11 +72,11 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Checks whether credentials match an account.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="userName"></param>
-        /// <returns></returns>
+        /// <param name="userName">The account user name.</param>
+        /// <param name="password">The plaintext password.</param>
+        /// <returns><see langword="true"/> when the credentials match.</returns>
         public bool CheckPassword(string userName, string password)
         {
             var user = GetAccount(userName, password);
@@ -76,11 +84,11 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Changes an account password and generates a new salt.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="userName"></param>
-        /// <returns></returns>
+        /// <param name="id">The account identifier.</param>
+        /// <param name="password">The replacement plaintext password.</param>
+        /// <returns><see langword="true"/> after persistence completes.</returns>
         public bool ChangePassword(int id, string password)
         {
             var user = GetObject(z => z.Id == id);
@@ -91,13 +99,13 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             return true;
         }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Updates the supplied basic profile fields and preserves null values.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="realName"></param>
-        /// <param name="email"></param>
-        /// <param name="headImg"></param>
-        /// <returns></returns>
+        /// <param name="id">The account identifier.</param>
+        /// <param name="realName">The replacement real name, or null to preserve it.</param>
+        /// <param name="email">The replacement email, or null to preserve it.</param>
+        /// <param name="headImg">The replacement avatar path, or null to preserve it.</param>
+        /// <returns><see langword="true"/> after persistence completes.</returns>
         public bool ChangeBasic(int id, string realName, string email, string headImg = null)
         {
             var user = GetObject(z => z.Id == id);
@@ -109,11 +117,11 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Checks whether another account uses a phone number.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="phone"></param>
-        /// <returns></returns>
+        /// <param name="id">The current account identifier excluded from the check.</param>
+        /// <param name="phone">The phone number to compare.</param>
+        /// <returns><see langword="true"/> when another account uses the number.</returns>
         public bool CheckPhoneExisted(long id, string phone)
         {
             phone = phone.Trim();
@@ -121,6 +129,10 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             this.GetObject(
                 z => z.Id != id && phone.Equals(z.Phone, StringComparison.CurrentCultureIgnoreCase)) != null;
         }
+        /// <summary>Checks whether another account uses an email address.</summary>
+        /// <param name="id">The current account identifier excluded from the check.</param>
+        /// <param name="email">The email address to compare.</param>
+        /// <returns><see langword="true"/> when another account uses the address.</returns>
         public bool CheckEmailExisted(long id, string email)
         {
             email = email.Trim();
@@ -129,6 +141,9 @@ namespace Senparc.Xncf.Accounts.Domain.Services
                 z => z.Id != id && email.Equals(z.Email, StringComparison.CurrentCultureIgnoreCase)) != null;
         }
 
+        /// <summary>Gets an account represented by a full-account projection.</summary>
+        /// <param name="fullUser">The projection to resolve, or null.</param>
+        /// <returns>The matching account, or null.</returns>
         public Account GetAccount(FullAccount fullUser)
         {
             if (fullUser == null)
@@ -139,10 +154,10 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets an account by user name.
         /// </summary>
-        /// <param name="userName"></param>
-        /// <returns></returns>
+        /// <param name="userName">The account user name.</param>
+        /// <returns>The matching account, or null.</returns>
         [ApiBind]
         public Account GetAccount(string userName)
         {
@@ -150,6 +165,11 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             return this.GetObject(z => z.UserName.Equals(userName, StringComparison.CurrentCultureIgnoreCase));
         }
 
+        /// <summary>Hashes a password with the module's legacy MD5 and salt process.</summary>
+        /// <param name="password">The password or pre-hashed value.</param>
+        /// <param name="salt">The account salt.</param>
+        /// <param name="isMD5Password">Whether the input is already MD5-formatted.</param>
+        /// <returns>The salted password hash.</returns>
         public string GetPassword(string password, string salt, bool isMD5Password = true)
         {
             string md5 = password.ToUpper().Replace("-", "");
@@ -160,6 +180,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             return MD5.GetMD5Code(md5, salt).Replace("-", ""); //encrypt again
         }
 
+        /// <summary>Signs out the current user and clears the cached account session.</summary>
         public virtual void Logout()
         {
             try
@@ -179,6 +200,11 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             }
         }
 
+        /// <summary>Signs in the user using the configured authentication scheme.</summary>
+        /// <param name="userName">The account user name.</param>
+        /// <param name="rememberMe">Whether the caller requests persistence.</param>
+        /// <param name="roles">Optional role values retained for compatibility.</param>
+        /// <param name="recordLoginInfo">Whether login information should be saved.</param>
         public virtual void Login(string userName, bool rememberMe, IEnumerable<string> roles, bool recordLoginInfo)
         {
             try
@@ -246,6 +272,15 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             }
         }
 
+        /// <summary>Creates and persists a new account.</summary>
+        /// <param name="userName">The account user name.</param>
+        /// <param name="email">The account email.</param>
+        /// <param name="phone">The account phone number.</param>
+        /// <param name="password">The initial plaintext password.</param>
+        /// <param name="openId">The Weixin open identifier.</param>
+        /// <param name="weixinUnionId">The Weixin union identifier.</param>
+        /// <param name="nickname">The display nickname.</param>
+        /// <returns>The persisted account.</returns>
         public Account CreateAccount(string userName, string email, string phone, string password, string openId, string weixinUnionId, string nickname)
         {
             var salt = GetSalt;
@@ -273,9 +308,9 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        /// automaticgeneratenewuser name
+        /// Generates a unique user name with the <c>NCF_</c> prefix.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A user name not currently used by an account.</returns>
         public string GetNewUserName()
         {
             string userName;
@@ -291,13 +326,13 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Authenticates by user name, email, or phone and starts a session on success.
         /// </summary>
-        /// <param name="userNameOrEmailOrPhone"></param>
-        /// <param name="password"></param>
-        /// <param name="rememberMe"></param>
-        /// <param name="recordLoginInfo"></param>
-        /// <returns></returns>
+        /// <param name="userNameOrEmailOrPhone">The account identifier.</param>
+        /// <param name="password">The plaintext password.</param>
+        /// <param name="rememberMe">Whether the caller requests persistence.</param>
+        /// <param name="recordLoginInfo">Whether login information should be recorded.</param>
+        /// <returns>The authenticated account, or null.</returns>
         public Account TryLogin(string userNameOrEmailOrPhone, string password, bool rememberMe, bool recordLoginInfo)
         {
             var user = this.GetAccount(userNameOrEmailOrPhone, password);
@@ -312,6 +347,10 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             }
         }
 
+        /// <summary>Gets an account when a user identifier and password match.</summary>
+        /// <param name="userName">A user name, email, or phone identifier.</param>
+        /// <param name="password">The plaintext password.</param>
+        /// <returns>The matching account, or null.</returns>
         public Account GetAccount(string userName, string password)
         {
             userName = userName.Trim();
@@ -474,14 +513,12 @@ namespace Senparc.Xncf.Accounts.Domain.Services
 
 
         /// <summary>
-
-        Legacy comment translated to English.
-
+        /// Downloads a remote avatar image and stores it under the requested local file name.
         /// </summary>
-
-        /// <param name="picUrl"></param>
-
-        /// <param name="fileName"></param>
+        /// <param name="serviceProvider">The provider used by the shared download helper.</param>
+        /// <param name="picUrl">The remote image URL.</param>
+        /// <param name="fileName">The local file name used by the account record.</param>
+        /// <exception cref="InvalidOperationException">Propagated when the download helper cannot retrieve the image.</exception>
 
         private void DownLoadPic(IServiceProvider serviceProvider, string picUrl, string fileName)
 
@@ -637,6 +674,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
 
         */
 
+        /// <inheritdoc />
         public override void SaveObject(Account obj)
         {
             var isInsert = base.IsInsert(obj);
@@ -658,6 +696,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
 
         //TODO:provideasynchronous methods
 
+        /// <inheritdoc />
         public override void DeleteObject(Account obj)
         {
             obj.Flag = true;

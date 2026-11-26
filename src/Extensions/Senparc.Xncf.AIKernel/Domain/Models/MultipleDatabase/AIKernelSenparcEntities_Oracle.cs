@@ -13,6 +13,10 @@ namespace Senparc.Xncf.AIKernel.Models
     [MultipleMigrationDbContext(MultipleDatabaseType.Oracle, typeof(Register))]
     public class AIKernelSenparcEntities_Oracle : AIKernelSenparcEntities
     {
+        /// <summary>
+        /// Initializes the Oracle-specific AIKernel DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for Oracle.</param>
         public AIKernelSenparcEntities_Oracle(DbContextOptions<AIKernelSenparcEntities_Oracle> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -32,6 +36,9 @@ namespace Senparc.Xncf.AIKernel.Models
             app.UseNcfDatabase("Senparc.Ncf.Database.Oracle", "Senparc.Ncf.Database.Oracle", "OracleDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the Oracle design-time DbContext factory.
+        /// </summary>
         public SenparcDbContextFactory_Oracle() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)
         {
 

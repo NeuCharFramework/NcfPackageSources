@@ -24,7 +24,7 @@ using Senparc.Xncf.XncfBuilder.Abstractions.Events;
 namespace Senparc.Xncf.XncfBuilder.Abstractions
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Coordinates request/response correlation for asynchronous XNCF module inventory queries.
     /// </summary>
     public interface IXncfModulesInventoryRequestWaiter
     {

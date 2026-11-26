@@ -69,6 +69,19 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
     private readonly AgentsManagerNeuBellProvider _neuBellProvider;
     private readonly AIModelService _aiModelService;
 
+    /// <summary>
+    /// Initializes the AgentsManager workflow object provider and its Agent, Group,
+    /// remote-A2A, model, notification, and Human-in-the-Loop collaborators.
+    /// </summary>
+    /// <param name="agentService">The Agent template service.</param>
+    /// <param name="groupService">The ChatGroup service.</param>
+    /// <param name="agentTemplateRunner">The local Agent execution runner.</param>
+    /// <param name="moduleService">The XNCF module service.</param>
+    /// <param name="remoteAgentService">The remote Agent service.</param>
+    /// <param name="remoteA2AAgentFactory">The remote A2A factory.</param>
+    /// <param name="humanInTheLoopRequestStore">The pending approval/request store.</param>
+    /// <param name="neuBellProvider">The notification provider.</param>
+    /// <param name="aiModelService">The AI model service.</param>
     public AgentsWorkflowObjectProvider(
         AgentsTemplateService agentService,
         ChatGroupService groupService,
@@ -579,6 +592,15 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 : fallback;
     }
 
+    /// <summary>
+    /// Reads a numeric execution parameter and converts it to a defined enum value.
+    /// Invalid, missing, or undefined values return the supplied fallback.
+    /// </summary>
+    /// <typeparam name="TEnum">The enum type to parse.</typeparam>
+    /// <param name="request">The Workflow execution request.</param>
+    /// <param name="name">The parameter name.</param>
+    /// <param name="fallback">The fallback enum value.</param>
+    /// <returns>The parsed enum value or <paramref name="fallback"/>.</returns>
     private static TEnum GetEnumParameter<TEnum>(
         WorkflowObjectExecutionRequest request,
         string name,

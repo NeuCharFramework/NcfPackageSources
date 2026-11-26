@@ -35,6 +35,14 @@ namespace Senparc.Ncf.Core.AppServices
 
         public string HelpResourceKey { get; }
 
+        /// <summary>
+        /// Initializes a localized description attribute.
+        /// </summary>
+        /// <param name="resourceType">The resource type containing the description.</param>
+        /// <param name="resourceKey">The description resource key.</param>
+        /// <param name="fallback">Fallback description text.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="resourceType"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="resourceKey"/> is blank.</exception>
         public LocalizedDescriptionAttribute(
             Type resourceType,
             string resourceKey,
@@ -47,6 +55,14 @@ namespace Senparc.Ncf.Core.AppServices
                 : resourceKey;
         }
 
+        /// <summary>
+        /// Initializes a localized description with a separate help-text resource key.
+        /// </summary>
+        /// <param name="resourceType">The resource type containing the description.</param>
+        /// <param name="resourceKey">The description resource key.</param>
+        /// <param name="helpResourceKey">The help-text resource key.</param>
+        /// <param name="fallback">Fallback description text.</param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="helpResourceKey"/> is blank.</exception>
         public LocalizedDescriptionAttribute(
             Type resourceType,
             string resourceKey,
@@ -59,6 +75,9 @@ namespace Senparc.Ncf.Core.AppServices
                 : helpResourceKey;
         }
 
+        /// <summary>
+        /// Resolves the description and optional help text for the current culture.
+        /// </summary>
         public override string Description =>
             string.IsNullOrWhiteSpace(HelpResourceKey)
                 ? ResourceStringLocalizer.Get(ResourceType, ResourceKey, base.Description)

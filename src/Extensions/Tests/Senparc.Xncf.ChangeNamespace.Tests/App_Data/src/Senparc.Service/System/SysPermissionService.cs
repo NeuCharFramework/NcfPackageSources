@@ -12,6 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Senparc.Service
 {
+    /// <summary>
+    /// Resolves, caches, and updates administrator menu and button permissions.
+    /// </summary>
     public class SysPermissionService : ClientServiceBase<SysPermission>
     {
         private readonly IDistributedCache _distributedCache;
@@ -22,6 +25,11 @@ namespace Senparc.Service
         private readonly SysRoleService _sysRoleService;
         private const string PermissionKey = "Permission";
 
+        /// <summary>
+        /// Initializes the permission service and related menu/role dependencies.
+        /// </summary>
+        /// <param name="repo">The permission repository.</param>
+        /// <param name="serviceProvider">The service provider for related services.</param>
         public SysPermissionService(ClientRepositoryBase<SysPermission> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             this._distributedCache = _serviceProvider.GetService<IDistributedCache>();
@@ -30,6 +38,9 @@ namespace Senparc.Service
             this._sysRoleService = _serviceProvider.GetService<SysRoleService>();
         }
 
+        /// <summary>Determines whether the current administrator can access a menu URL.</summary>
+        /// <param name="url">The menu URL to check.</param>
+        /// <returns><see langword="true"/> when a role permission matches the URL.</returns>
         public async Task<bool> HasPermissionAsync(string url)
         {
             IEnumerable<string> roleIds = _adminWorkContextProvider.GetAdminWorkContext().RoleCodes;
@@ -75,6 +86,8 @@ namespace Senparc.Service
         //    return urls;
         //}
 
+        /// <summary>Loads all persisted permissions and refreshes the distributed permission cache.</summary>
+        /// <returns>The mapped permission DTOs stored in cache.</returns>
         public async Task<IEnumerable<SysPermissionDto>> DbToCacheAsync()
         {
             IEnumerable<SysPermission> permissions = await GetFullListAsync(_ => true);
@@ -84,17 +97,16 @@ namespace Senparc.Service
             return permissionDtos;
         }
 
+        /// <summary>Refreshes permission and menu cache projections.</summary>
         public async Task InitPermissionCache()
         {
             await DbToCacheAsync();
             await _sysMenuService.GetMenuDtoByCacheAsync(true);
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="sysMenuDto"></param>
-        /// <returns></returns>
+        /// <summary>Replaces all permission assignments for the role in the supplied DTOs.</summary>
+        /// <param name="sysMenuDto">The permission DTOs containing the target role.</param>
+        /// <returns>A task that completes after the transaction and cache refresh.</returns>
         public async Task AddAsync(IEnumerable<SysPermissionDto> sysMenuDto)
         {
             List<SysPermission> sysRoleMenus = new List<SysPermission>();
@@ -117,10 +129,8 @@ namespace Senparc.Service
             });
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <returns></returns>
+        /// <summary>Gets permission DTOs belonging to the current administrator's roles.</summary>
+        /// <returns>The current administrator's effective permissions.</returns>
         public async Task<IEnumerable<SysPermissionDto>> GetUserSysPermissionDtosAsync()
         {
             IEnumerable<string> roleIds = _adminWorkContextProvider.GetAdminWorkContext().RoleCodes;
@@ -137,6 +147,10 @@ namespace Senparc.Service
             return permissions.Where(_ => roleIds.Contains(_.RoleCode));
         }
 
+        /// <summary>Determines whether a button resource code is allowed for a menu URL.</summary>
+        /// <param name="code">The button resource code.</param>
+        /// <param name="url">The parent menu URL.</param>
+        /// <returns><see langword="true"/> when the current roles grant the button.</returns>
         public async Task<bool> HasPermissionByButtonCodeAsync(string code, string url)
         {
             if (string.IsNullOrEmpty(code))
@@ -177,11 +191,8 @@ namespace Senparc.Service
             return has && isInUrl;
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="isRefresh"></param>
-        /// <returns></returns>
+        /// <summary>Builds the visible menu tree allowed for the current administrator.</summary>
+        /// <returns>The effective visible menu tree.</returns>
         public async Task<IEnumerable<SysMenuTreeItemDto>> GetMenuTreeDtoByCacheAsync()
         {
             //IEnumerable<SysMenuTreeItemDto> sysMenuTreeItems = null;//

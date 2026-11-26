@@ -42,6 +42,18 @@ namespace Senparc.Areas.Admin.Domain.Services
 {
     public class InstallerService(IServiceProvider serviceProvider, TenantInfoService tenantInfoService, XncfModuleServiceExtension xncfModuleServiceExtension)
     {
+        /// <summary>
+        /// Initializes the core NCF modules, tenant-aware services, menu data,
+        /// permissions, and module-manager state for a new system installation.
+        /// The operation is intentionally ordered because later registrations
+        /// depend on the earlier module and menu records.
+        /// </summary>
+        /// <param name="systemName">The configured system display name.</param>
+        /// <param name="adminUserInfoId">The administrator receiving initial permissions.</param>
+        /// <param name="tenantInfo">The tenant context used during initialization.</param>
+        /// <exception cref="Exception">
+        /// Propagated when a required module, menu, or initialization operation fails.
+        /// </exception>
         public async Task InitSystemAsync(string systemName,int adminUserInfoId, TenantInfo tenantInfo)
         {
             Senparc.Xncf.Tenant.Register tenantRegister = new Senparc.Xncf.Tenant.Register();
@@ -186,12 +198,16 @@ namespace Senparc.Areas.Admin.Domain.Services
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Installs or updates a registered module, optionally adds its menu, and opens it
+        /// for administration under the requested tenant context.
         /// </summary>
-        /// <param name="register"></param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="register">The registered module to install or update.</param>
+        /// <param name="serviceProvider">The service provider used by module installation.</param>
+        /// <param name="tenantInfo">The tenant context receiving the module state.</param>
+        /// <param name="installNow">Whether installation should be performed immediately.</param>
+        /// <param name="addMenu">Whether the module menu should be created or updated.</param>
+        /// <returns>The persisted module entity after installation and opening.</returns>
+        /// <exception cref="Exception">Propagated when module installation or persistence fails.</exception>
         private async Task<XncfModule> InstallAndOpenModuleAsync(IXncfRegister register, IServiceProvider serviceProvider, TenantInfo tenantInfo, bool installNow = true, bool addMenu = true)
         {
             try

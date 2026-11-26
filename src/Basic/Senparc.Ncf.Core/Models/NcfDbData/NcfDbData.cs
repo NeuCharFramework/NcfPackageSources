@@ -25,24 +25,28 @@ namespace Senparc.Ncf.Core.Models
     public interface INcfDbData
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether change detection is controlled manually by the caller.
         /// </summary>
         bool ManualDetectChangeObject { get; set; }
+        /// Gets the underlying EF Core context.
         DbContext BaseDataContext { get; }
+        /// Closes the underlying database connection.
         void CloseConnection();
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Base implementation of the database-data access wrapper.
     /// </summary>
     public abstract class NcfDbData : INcfDbData
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether change detection is controlled manually.
         /// </summary>
         public virtual bool ManualDetectChangeObject { get; set; }
+        /// Gets the underlying EF Core context.
         public abstract DbContext BaseDataContext { get; }
 
+        /// Closes the underlying database connection.
         public abstract void CloseConnection();
     }
 }

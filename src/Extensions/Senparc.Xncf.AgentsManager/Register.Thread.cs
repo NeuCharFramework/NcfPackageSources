@@ -35,10 +35,14 @@ namespace Senparc.Xncf.AgentsManager
 {
     public partial class Register : IXncfThread
     {
+        /// <summary>
+        /// Registers the AgentsManager background task that periodically closes orphaned
+        /// chat tasks when the application is running in single-tenant mode.
+        /// </summary>
+        /// <param name="xncfThreadBuilder">The thread builder receiving the scheduled task definition.</param>
+        /// <exception cref="ArgumentNullException">Thrown by the builder when the supplied builder is <see langword="null"/>.</exception>
         public void ThreadConfig(XncfThreadBuilder xncfThreadBuilder)
         {
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
             xncfThreadBuilder.AddThreadInfo(new ThreadInfo(
                 name: "Agents 定时清理未完成任务",
                 intervalTime: TimeSpan.FromMinutes(10),
@@ -46,7 +50,6 @@ namespace Senparc.Xncf.AgentsManager
                 {
                     try
                     {
-                        //Legacy comment translated to English.
                         if (Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.EnableMultiTenant)
                         {
                             threadInfo.RecordStory("多租户模式，跳过孤儿任务检测");

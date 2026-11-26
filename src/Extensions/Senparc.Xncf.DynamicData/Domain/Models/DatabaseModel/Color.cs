@@ -23,7 +23,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.DynamicData
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores an RGB color used by the DynamicData sample and configuration surfaces.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(Color))]//a prefix is required to prevent system-wide conflicts
     [Serializable]

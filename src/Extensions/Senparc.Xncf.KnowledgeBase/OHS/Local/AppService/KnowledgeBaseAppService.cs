@@ -55,6 +55,13 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         private readonly KnowledgeBaseItemService knowledgeBasesDetailService;
         private readonly Domain.Services.KnowledgeBaseService knowledgeBaseService;
 
+        /// <summary>
+        /// Initializes the knowledge-base management application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="knowledgeBasesService">The persistence service for knowledge-base records.</param>
+        /// <param name="knowledgeBasesDetailService">The persistence service for knowledge-base chunks.</param>
+        /// <param name="knowledgeBaseService">The domain service for content, file, and embedding operations.</param>
         public KnowledgeBaseAppService(IServiceProvider serviceProvider,
             KnowledgeBaseService knowledgeBasesService,
             KnowledgeBaseItemService knowledgeBasesDetailService,
@@ -66,10 +73,11 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates or updates a knowledge base, including its retrieval configuration and source selections.
         /// </summary>
-        /// <param name="request">requestrecordDtomodel</param>
-        /// <returns></returns>
+        /// <param name="request">The knowledge-base definition, inline content, and selected FileManager IDs.</param>
+        /// <returns>A response indicating whether persistence completed.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when names, model/vector configuration, or source data is invalid.</exception>
         [ApiBind("AutoMate", ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<bool>> CreateOrUpdateAsync(KnowledgeBaseRequest request)
         {
@@ -96,11 +104,12 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// createorsettings KnowledgeBaseDetail
+        /// Replaces the manual text content associated with a knowledge base.
+        /// File-backed content must be synchronized through the file import endpoint.
         /// </summary>
-        /// <param name="chatGroupDto">ChatGroup information></param>
-        /// <param name="memberAgentTemplateIds">members AgentTemplate ID</param>
-        /// <returns></returns>
+        /// <param name="request">The knowledge-base identifier, content type, and text content.</param>
+        /// <returns>A response indicating whether content synchronization completed.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the request is not manual text content.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<bool>> SetKnowledgeBaseDetail(KnowledgeBaseItemRequest request)
         {
@@ -124,8 +133,11 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Embeds all valid text chunks for the selected knowledge base into its configured vector store.
         /// </summary>
+        /// <param name="request">The knowledge-base identifier to embed.</param>
+        /// <returns>A response containing the embedding summary.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the knowledge base is missing or embedding configuration is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> EmbeddingKnowledgeBase(plRequest.KnowledgeBasesRequest request)
         {
@@ -152,10 +164,11 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Imports selected FileManager files into a knowledge base and reports the generated chunk count.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The knowledge-base identifier and file identifiers.</param>
+        /// <returns>A response indicating whether at least one file was imported.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when a file or knowledge base is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<bool>> ImportFilesToKnowledgeBase(plRequest.ImportFilesRequest request)
         {
@@ -191,8 +204,11 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces the file associations for a knowledge base without re-importing unchanged files.
         /// </summary>
+        /// <param name="request">The knowledge-base identifier and selected file identifiers.</param>
+        /// <returns>A response indicating whether associations were synchronized.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the knowledge base or selected files are invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<bool>> SyncFilesToKnowledgeBase(plRequest.ImportFilesRequest request)
         {

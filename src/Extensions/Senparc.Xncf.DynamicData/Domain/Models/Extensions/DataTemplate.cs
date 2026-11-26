@@ -32,6 +32,12 @@ namespace Senparc.Xncf.DynamicData.Domain.Models
 
         public List<TableDataDto> TableDataDtos { get; set; }
 
+        /// <summary>
+        /// Initializes a data template with optional column definitions and row data.
+        /// </summary>
+        /// <param name="tableId">The table identifier.</param>
+        /// <param name="columnTemplate">Optional column metadata template.</param>
+        /// <param name="tableDataDtos">Optional table rows.</param>
         public DataTemplate(int tableId, ColumnTemplate columnTemplate = null, List<TableDataDto> tableDataDtos = null)
         {
             TableId = tableId;

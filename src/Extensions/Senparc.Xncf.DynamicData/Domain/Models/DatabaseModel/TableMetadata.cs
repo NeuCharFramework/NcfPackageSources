@@ -24,38 +24,43 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.DynamicData
 {
     /// <summary>  
-    ///Legacy comment translated to English.
+    /// Describes a DynamicData database table and its discovered columns and cells.
     /// </summary>  
     [Table(Register.DATABASE_PREFIX + nameof(TableMetadata))]
     [Serializable]
     public class TableMetadata : EntityBase<int>
     {
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets the database table name.
         /// </summary>  
         [Required]
         [MaxLength(255)]
         public string TableName { get; private set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets the table description shown to administrators.
         /// </summary>  
         public string Description { get; private set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the columns discovered for the table.
         /// </summary>  
         //[InverseProperty(nameof(ColumnMetadata.TableMetadata))]
         public ICollection<ColumnMetadata> ColumnMetadatas { get; set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the cell records associated with the table.
         /// </summary>  
         //[InverseProperty(nameof(TableData.TableMetadata))]
         public ICollection<TableData> TableDatas { get; set; }
 
         private TableMetadata() { }
 
+        /// <summary>
+        /// Initializes table metadata from its display name and description.
+        /// </summary>
+        /// <param name="tableName">The database table name.</param>
+        /// <param name="description">The administrator-facing table description.</param>
         public TableMetadata(string tableName, string description)
         {
             TableName = tableName;

@@ -33,11 +33,19 @@ namespace Senparc.Xncf.SystemPermission
 
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Registers SystemPermission database services used by permission persistence.
+        /// </summary>
+        /// <param name="services">The application service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
 
         }
 
+        /// <summary>
+        /// Applies SystemPermission Entity Framework Core model configuration.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework Core model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
 

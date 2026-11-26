@@ -14,7 +14,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Senparc.Service
 {
     /// <summary>
-    /// 
+    /// Provides menu and button persistence plus distributed-cache projections
+    /// used by administrator navigation.
     /// </summary>
     public class SysMenuService : ClientServiceBase<SysMenu>
     {
@@ -26,6 +27,11 @@ namespace Senparc.Service
 
         private readonly Core.Models.SenparcEntities _senparcEntities;
 
+        /// <summary>
+        /// Initializes the menu service and resolves button/cache dependencies.
+        /// </summary>
+        /// <param name="repo">The menu repository.</param>
+        /// <param name="serviceProvider">The service provider for related services.</param>
         public SysMenuService(ClientRepositoryBase<SysMenu> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             _sysButtonService = _serviceProvider.GetService<SysButtonService>();
@@ -33,12 +39,9 @@ namespace Senparc.Service
             _senparcEntities = _serviceProvider.GetService<Core.Models.SenparcEntities>();
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="sysMenuDto"></param>
-        /// <param name="buttons"></param>
-        /// <returns></returns>
+        /// <summary>Creates or updates a menu and refreshes menu caches.</summary>
+        /// <param name="sysMenuDto">The menu DTO to persist.</param>
+        /// <returns>The persisted menu entity.</returns>
         public async Task<SysMenu> CreateOrUpdateAsync(SysMenuDto sysMenuDto)
         {
             SysMenu menu;
@@ -58,11 +61,10 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates or updates a menu and its non-empty button definitions in one transaction.
         /// </summary>
-        /// <param name="sysMenuDto"></param>
-        /// <param name="buttons"></param>
-        /// <returns></returns>
+        /// <param name="sysMenuDto">The menu DTO to persist.</param>
+        /// <param name="buttons">The button definitions associated with the menu.</param>
         public async Task CreateOrUpdateAsync(SysMenuDto sysMenuDto, IEnumerable<SysButtonDto> buttons)
         {
             SysMenu menu;
@@ -117,21 +119,18 @@ namespace Senparc.Service
             await GetMenuDtoByCacheAsync(true);
         }
 
-        /// <summary>
-        /// get data from the cache
-        /// </summary>
-        /// <param name="isRefresh"></param>
-        /// <returns></returns>
+        /// <summary>Removes the cached menu projection.</summary>
         public async Task RemoveMenuAsync()
         {
             await _distributedCache.RemoveAsync(MenuCacheKey);
         }
 
         /// <summary>
-        /// get data from the cache
+        /// Gets menu and button DTOs from distributed cache, rebuilding the projection
+        /// when missing or explicitly refreshed.
         /// </summary>
-        /// <param name="isRefresh"></param>
-        /// <returns></returns>
+        /// <param name="isRefresh">Whether the cache must be rebuilt.</param>
+        /// <returns>The flattened menu and button DTO sequence.</returns>
         public async Task<IEnumerable<SysMenuDto>> GetMenuDtoByCacheAsync(bool isRefresh = false)
         {
             List<SysMenuDto> selectListItems = null;
@@ -156,6 +155,9 @@ namespace Senparc.Service
             return selectListItems;
         }
 
+        /// <summary>Builds a hierarchical menu tree from flattened menu DTOs.</summary>
+        /// <param name="sysMenuTreeItems">The flattened menu and button DTOs.</param>
+        /// <returns>The top-level menu tree.</returns>
         public IEnumerable<SysMenuTreeItemDto> GetSysMenuTreesMainRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems)
         {
             List<SysMenuTreeItemDto> sysMenuTrees = new List<SysMenuTreeItemDto>();
@@ -164,6 +166,7 @@ namespace Senparc.Service
         }
 
 
+        /// <summary>Recursively appends visible menu children below a parent identifier.</summary>
         private void getSysMenuTreesRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems, IList<SysMenuTreeItemDto> sysMenuTrees, string parentId)
         {
             foreach (var item in sysMenuTreeItems.Where(_ => _.ParentId == parentId && _.IsMenu))
@@ -174,11 +177,8 @@ namespace Senparc.Service
             }
         }
 
-        /// <summary>
-        /// get data from the cache
-        /// </summary>
-        /// <param name="isRefresh"></param>
-        /// <returns></returns>
+        /// <summary>Gets the cached hierarchical menu tree, rebuilding it when absent.</summary>
+        /// <returns>The hierarchical menu tree.</returns>
         public async Task<IEnumerable<SysMenuTreeItemDto>> GetMenuTreeDtoByCacheAsync()
         {
             IEnumerable<SysMenuTreeItemDto> sysMenuTreeItems = null;//
@@ -192,9 +192,7 @@ namespace Senparc.Service
             return sysMenuTreeItems;
         }
 
-        /// <summary>
-        /// initialize
-        /// </summary>
+        /// <summary>Initializes the legacy sample menu, button, and permission records.</summary>
         public void Init()
         {
 

@@ -29,12 +29,19 @@ public sealed class SandboxImageResolver : ISandboxImageResolver
 {
     private readonly SandboxImageOptions _options;
 
+    /// <summary>
+    /// Initializes an image resolver from bound options.
+    /// </summary>
+    /// <param name="options">The configured sandbox image options.</param>
     public SandboxImageResolver(IOptions<SandboxImageOptions> options)
     {
         _options = options?.Value ?? new SandboxImageOptions();
     }
 
-    ///Legacy comment translated to English.
+    /// <summary>
+    /// Initializes an image resolver from direct options.
+    /// </summary>
+    /// <param name="options">The sandbox image options.</param>
     public SandboxImageResolver(SandboxImageOptions options)
     {
         _options = options ?? new SandboxImageOptions();
@@ -46,6 +53,13 @@ public sealed class SandboxImageResolver : ISandboxImageResolver
         ? null
         : _options.RegistryPrefix.Trim().TrimEnd('/');
 
+    /// <summary>
+    /// Resolves a template image override and applies an optional registry prefix.
+    /// </summary>
+    /// <param name="templateKey">The sandbox template key.</param>
+    /// <param name="defaultImage">The default image name.</param>
+    /// <returns>The final image reference.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="defaultImage"/> is blank.</exception>
     public string Resolve(string templateKey, string defaultImage)
     {
         if (string.IsNullOrWhiteSpace(defaultImage))

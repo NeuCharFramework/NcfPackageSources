@@ -95,18 +95,24 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public List<string> XncfModuleUpdateLog { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the registered worker-thread information exposed by the page model.
         /// </summary>
         public IEnumerable<KeyValuePair<ThreadInfo, Thread>> RegisteredThreadInfo { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets whether the module detail view encountered a function metadata
+        /// loading failure and should request a module update.
         /// </summary>
         public bool MustUpdate { get; set; }
 
         public string Msg { get; set; }
         public object Obj { get; set; }
 
+        /// <summary>
+        /// Handles the module start-page request. The current implementation
+        /// intentionally performs no data loading because the page obtains its
+        /// module data through the dedicated AJAX handlers.
+        /// </summary>
         public async Task OnGetAsync()
         {
             await Task.CompletedTask;
@@ -159,11 +165,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// updatestatus
+        /// Returns the registered module capabilities, including exposed functions,
+        /// registered threads, and database metadata.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="toState"></param>
-        /// <returns></returns>
+        /// <param name="uid">The registered module UID.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing the capability snapshot.</returns>
         public async Task<IActionResult> OnGetCapabilitiesAsync(string uid)
         {
             var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == uid);
@@ -185,6 +191,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             });
         }
 
+        /// <summary>
+        /// Verifies the administrator password and returns entity/table and migration metadata
+        /// for a registered module database.
+        /// </summary>
+        /// <param name="request">The module UID and administrator password used for verification.</param>
+        /// <returns>An action result containing entity metadata or a localized authorization failure.</returns>
         public async Task<IActionResult> OnPostEntitiesAsync([FromBody] EntityInsightRequest request)
         {
             if (request == null || string.IsNullOrWhiteSpace(request.Uid) || string.IsNullOrEmpty(request.Password))
@@ -219,6 +231,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             return Ok(new { entityCount = entities.Count, entities, databasePrefix = database.DatabaseUniquePrefix, appliedMigrations = applied, pendingMigrations = pending });
         }
 
+        /// <summary>
+        /// Determines whether a reflected type derives from the NCF entity base
+        /// used by module database models.
+        /// </summary>
+        /// <param name="type">The reflected CLR type to inspect.</param>
+        /// <returns><see langword="true"/> when an entity-base ancestor is found.</returns>
         private static bool IsEntityType(Type type)
         {
             var current = type.BaseType;
@@ -236,6 +254,13 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             public string Password { get; set; }
         }
 
+        /// <summary>
+        /// Changes the persisted module state and redirects to the module start page.
+        /// </summary>
+        /// <param name="id">The persisted module identifier.</param>
+        /// <param name="toState">The target module state.</param>
+        /// <returns>A redirect to the changed module's start page.</returns>
+        /// <exception cref="Exception">Thrown when the module identifier does not exist.</exception>
         public async Task<IActionResult> OnGetChangeStateAsync(int id, XncfModules_State toState)
         {
             var module = await _xncfModuleService.GetObjectAsync(z => z.Id == id).ConfigureAwait(false);
@@ -252,12 +277,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Executes a registered module function with the supplied serialized parameters
+        /// and returns HTML-safe result data for the administration page.
         /// </summary>
-        /// <param name="xncfUid"></param>
-        /// <param name="xncfFunctionName"></param>
-        /// <param name="xncfFunctionParams"></param>
-        /// <returns></returns>
+        /// <param name="executeFuncParamDto2">The module UID, function name, and serialized parameters.</param>
+        /// <returns>A JSON result containing success, output, error, and temporary request identifiers.</returns>
         public async Task<IActionResult> OnPostRunFunctionAsync([FromBody] ExecuteFuncParamDto2 executeFuncParamDto2)
         {
             var result = await _neuCharFunctionService.ExecuteAsync(
@@ -280,6 +304,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             return new JsonResult(data);
         }
 
+        /// <summary>
+        /// Loads the NeuCharPivot snapshot for a module and returns workflow options,
+        /// loop-task execution state, and the UI projection used by the module page.
+        /// </summary>
+        /// <param name="uid">The module UID whose pivot snapshot is requested.</param>
+        /// <returns>The pivot response, or JSON null when no snapshot exists.</returns>
         public async Task<IActionResult> OnGetNeuCharPivotAsync(string uid)
         {
             var snapshot = await _neuCharPivotService.GetSnapshotAsync(uid, HttpContext.RequestAborted)
@@ -296,6 +326,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             return Ok(ToPivotResponse(snapshot, workflowOptions, runningTaskIds));
         }
 
+        /// <summary>
+        /// Sends a natural-language pivot generation/refinement request through the
+        /// event-bus ChatAgent and returns the refreshed module snapshot.
+        /// </summary>
+        /// <param name="request">The module UID, optional requirement, and AI model identifier.</param>
+        /// <returns>The refreshed pivot response or an HTTP validation/provider error.</returns>
         public async Task<IActionResult> OnPostGenerateNeuCharPivotAsync(
             [FromBody] GenerateNeuCharPivotRequest request)
         {
@@ -351,6 +387,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             return Ok(ToPivotResponse(snapshot, workflowOptions, runningTaskIds));
         }
 
+        /// <summary>
+        /// Validates, protects, and persists the schedule and parameters for one
+        /// visible NeuCharPivot function loop task.
+        /// </summary>
+        /// <param name="request">The function, schedule, protected-parameter, and workflow settings.</param>
+        /// <returns>The saved loop-task summary or an HTTP 400 validation response.</returns>
         public async Task<IActionResult> OnPostSaveLoopTaskAsync([FromBody] SaveLoopTaskRequest request)
         {
             if (request == null || request.FunctionId <= 0 || request.ParametersJson?.Length > 1_000_000)
@@ -444,6 +486,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             });
         }
 
+        /// <summary>
+        /// Executes one visible NeuCharPivot function and records its result as a
+        /// pivot execution log entry.
+        /// </summary>
+        /// <param name="request">The function identifier and serialized parameters.</param>
+        /// <returns>The function result or an HTTP 400 validation response.</returns>
         public async Task<IActionResult> OnPostRunPivotFunctionAsync([FromBody] RunPivotFunctionRequest request)
         {
             if (request == null || request.FunctionId <= 0)
@@ -475,6 +523,14 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             return Ok(result);
         }
 
+        /// <summary>
+        /// Projects a module pivot snapshot into the JSON model consumed by the
+        /// module start page, including function availability and summary counts.
+        /// </summary>
+        /// <param name="snapshot">The current module pivot snapshot.</param>
+        /// <param name="workflowOptions">The workflows available to the administrator.</param>
+        /// <param name="runningTaskIds">The loop-task function IDs currently executing.</param>
+        /// <returns>The page-facing pivot response object.</returns>
         private object ToPivotResponse(
             NeuCharPivotSnapshot snapshot,
             IReadOnlyList<NeuCharPivotWorkflowOption> workflowOptions,
@@ -553,6 +609,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             };
         }
 
+        /// <summary>
+        /// Loads workflow descriptors visible to the current administrator and maps
+        /// them to loop-task configuration options.
+        /// </summary>
+        /// <param name="cancellationToken">Token used while querying the workflow provider.</param>
+        /// <returns>Available workflow options, or an empty list when unavailable.</returns>
         private async Task<IReadOnlyList<NeuCharPivotWorkflowOption>> GetWorkflowOptionsAsync(
             CancellationToken cancellationToken)
         {
@@ -574,6 +636,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 .ToList();
         }
 
+        /// <summary>
+        /// Finds unfinished loop-task execution logs for functions in the supplied snapshot.
+        /// </summary>
+        /// <param name="snapshot">The snapshot whose function IDs are inspected.</param>
+        /// <returns>The set of function IDs with active loop-task executions.</returns>
         private async Task<IReadOnlySet<int>> GetRunningLoopTaskIdsAsync(
             NeuCharPivotSnapshot snapshot)
         {
@@ -591,10 +658,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Downloads a cached module execution log and removes it from the cache afterward.
         /// </summary>
-        /// <param name="tempId"></param>
-        /// <returns></returns>
+        /// <param name="tempId">The temporary cache identifier of the log.</param>
+        /// <returns>A plain-text file response or a not-found message.</returns>
         public async Task<IActionResult> OnGetLogAsync(string tempId)
         {
             var cache = _serviceProvider.GetObjectCacheStrategyInstance();
@@ -610,10 +677,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Uninstalls the selected module, removes its menu and permissions, and returns success.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The persisted module identifier.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing <see langword="true"/> after uninstallation.</returns>
+        /// <exception cref="Exception">Thrown when the module identifier does not exist.</exception>
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             var module = await _xncfModuleService.GetObjectAsync(z => z.Id == id).ConfigureAwait(false);
@@ -660,10 +728,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
 
         /// <summary>
-        /// handler=Detail
+        /// Loads detailed persisted and registered metadata for one module.
         /// </summary>
-        /// <param name="uid"></param>
-        /// <returns></returns>
+        /// <param name="uid">The registered module UID.</param>
+        /// <returns>An action result containing the module detail payload.</returns>
         public async Task<IActionResult> OnGetDetailAsync(string uid)
         {
             bool mustUpdate = false;
@@ -786,11 +854,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// handler=ChangeStateAjax
+        /// Changes the persisted module state for an AJAX caller.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="toState"></param>
-        /// <returns></returns>
+        /// <param name="id">The persisted module identifier.</param>
+        /// <param name="toState">The target module state.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing <see langword="true"/> after persistence.</returns>
         public async Task<IActionResult> OnGetChangeStateAjaxAsync(int id, XncfModules_State toState)
         {
             var module = await _xncfModuleService.GetObjectAsync(z => z.Id == id).ConfigureAwait(false);

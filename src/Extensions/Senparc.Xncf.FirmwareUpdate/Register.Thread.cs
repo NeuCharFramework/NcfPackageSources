@@ -29,6 +29,10 @@ namespace Senparc.Xncf.FirmwareUpdate;
 
 public partial class Register : IXncfThread
 {
+    /// <summary>
+    /// Registers the periodic package-mirror background task and its cancellation/error behavior.
+    /// </summary>
+    /// <param name="xncfThreadBuilder">The NCF thread builder.</param>
     public void ThreadConfig(XncfThreadBuilder xncfThreadBuilder)
     {
         xncfThreadBuilder.AddThreadInfo(new Ncf.XncfBase.Threads.ThreadInfo(

@@ -28,6 +28,12 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 {
     public static class SenMapicUtility
     {
+        /// <summary>
+        /// Returns a response stream, transparently decompressing gzip content.
+        /// </summary>
+        /// <param name="contentEncoding">The response content-encoding value.</param>
+        /// <param name="response">The HTTP response containing the body stream.</param>
+        /// <returns>The decompressed or original response stream.</returns>
         public static Stream GetReceiveStream(string contentEncoding, HttpResponseMessage response)
         {
             var responseStream = response.Content.ReadAsStream();

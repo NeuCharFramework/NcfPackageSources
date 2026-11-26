@@ -23,19 +23,21 @@ using System.Collections.Generic;
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Aggregates persisted AI token records into model-level usage summaries.
     /// </summary>
     public static class TokenUsageAggregator
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the alias used when a usage record has no model alias.
         /// </summary>
         public const string UnknownAlias = "(unknown)";
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Aggregates calls and token totals by model alias, tracking the latest usage time.
+        /// Null or blank aliases use <see cref="UnknownAlias"/>.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <param name="records">The token usage records to aggregate.</param>
+        /// <returns>A case-insensitive map keyed by model alias.</returns>
         public static Dictionary<string, AITokenModelUsage> BuildModelUsageMap(IEnumerable<AITokenUsage> records)
         {
             var map = new Dictionary<string, AITokenModelUsage>(StringComparer.OrdinalIgnoreCase);

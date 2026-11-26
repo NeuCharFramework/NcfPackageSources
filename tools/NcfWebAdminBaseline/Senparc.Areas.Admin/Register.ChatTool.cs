@@ -17,6 +17,11 @@ namespace Senparc.Areas.Admin;
 
 public partial class Register : IChatTool
 {
+    /// <summary>
+    /// Returns the command definition that exposes the bounded system-log analysis workflow
+    /// and associates its three analysis functions with AdminChat.
+    /// </summary>
+    /// <returns>The registered AdminChat command definitions for this module.</returns>
     public IReadOnlyCollection<ChatToolDefinition> GetChatTools()
     {
         return new[]

@@ -26,44 +26,34 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the database integration contract implemented by an XNCF module.
     /// </summary>
     public interface IXncfDatabase
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the table-name prefix used by the module's database objects.
         /// </summary>
         string DatabaseUniquePrefix { get; }
         /// <summary>
-        /// createdatabasemodel
+        /// Applies the module's Entity Framework Core entity and relationship mappings.
         /// </summary>
         void OnModelCreating(ModelBuilder modelBuilder);
 
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        ///// <param name="dbContextOptionsAction"></param>
-        ///Legacy comment translated to English.
-        //void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction,
-        //                            string assemblyName = null);
-
-        ///// <summary>
-        ///// XncfDatabaseDbContext type
-        ///// </summary>
-        //Type XncfDatabaseDbContextType { get; }
+        // The former direct DbContext-options callback members were removed from
+        // the public contract; provider configuration now flows through AddXncfModule.
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Registers additional module database services.
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="services">The application dependency-injection service collection.</param>
         void AddXncfDatabaseModule(IServiceCollection services);
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves the provider-specific DbContext type used by this module.
         /// </summary>
-        /// <exception cref="NcfDatabaseException"></exception>
-        /// <returns></returns>
+        /// <exception cref="NcfDatabaseException">Thrown when no compatible module DbContext is registered.</exception>
+        /// <returns>The provider-specific module DbContext type.</returns>
         Type TryGetXncfDatabaseDbContextType { get; }
     }
 }

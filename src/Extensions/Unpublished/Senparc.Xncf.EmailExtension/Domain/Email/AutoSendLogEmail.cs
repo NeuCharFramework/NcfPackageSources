@@ -24,6 +24,11 @@ namespace Senparc.Ncf.Core.Email
 
     public static class AutoSendLogEmail
     {
+        /// <summary>
+        /// Serializes an exception into the legacy XML error format and sends it
+        /// through the configured custom-email account.
+        /// </summary>
+        /// <param name="e">The exception to report.</param>
         public static void SendLogEmail(Exception e)
         {
             XDocument doc = new XDocument();

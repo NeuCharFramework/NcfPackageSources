@@ -27,6 +27,10 @@ public static class SenparcDbContextFactoryConfig
 
     public static string RootDirectoryPath => _rootDirectoryPath ??= ResolveRootDirectoryPath();
 
+    /// <summary>
+    /// Searches the application base and current directory ancestry for the host web root.
+    /// </summary>
+    /// <returns>The discovered host directory, or the current directory as fallback.</returns>
     private static string ResolveRootDirectoryPath()
     {
         foreach (var start in new[] { AppContext.BaseDirectory, Directory.GetCurrentDirectory() })

@@ -23,6 +23,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 {
     internal static class TenantMonitorScope
     {
+        /// <summary>
+        /// Resolves the current request tenant identifier for token monitoring.
+        /// Single-tenant deployments use tenant identifier zero.
+        /// </summary>
+        /// <param name="serviceProvider">The request service provider.</param>
+        /// <returns>The current tenant identifier, or zero when multi-tenancy is disabled.</returns>
         public static int GetTenantId(IServiceProvider serviceProvider)
         {
             return SiteConfig.SenparcCoreSetting.EnableMultiTenant

@@ -34,6 +34,9 @@ namespace Senparc.IntegrationSample.Pages
             _logger = logger;
         }
 
+        /// <summary>
+        /// Handles the privacy page GET request.
+        /// </summary>
         public void OnGet()
         {
         }

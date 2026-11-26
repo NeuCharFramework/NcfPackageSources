@@ -55,9 +55,7 @@ namespace Senparc.Xncf.Application
         public override string Icon => "fa fa-pencil";
         public override string Description => RegisterText.Description;
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <inheritdoc />
         public override IList<Type> Functions => new[] {
             typeof(Functions.LaunchApp),
         };

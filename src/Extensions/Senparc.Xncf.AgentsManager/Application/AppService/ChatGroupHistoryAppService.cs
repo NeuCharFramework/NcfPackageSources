@@ -42,11 +42,25 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
     {
         private readonly ChatGroupHistoryService _chatGroupHistoryService;
 
+        /// <summary>
+        /// Initializes the chat-history application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="chatGroupHistoryService">The service used to query stored chat histories.</param>
         public ChatGroupHistoryAppService(IServiceProvider serviceProvider, ChatGroupHistoryService chatGroupHistoryService) : base(serviceProvider)
         {
             this._chatGroupHistoryService = chatGroupHistoryService;
         }
 
+        /// <summary>
+        /// Loads chat-history records after a caller's continuation identifier and enriches
+        /// each record with decoded message and token-usage fields.
+        /// </summary>
+        /// <param name="chatTaskId">The chat-task identifier.</param>
+        /// <param name="nextHistoryId">The last history identifier already returned to the caller.</param>
+        /// <param name="pageIndex">The one-based page index.</param>
+        /// <param name="pageSize">The maximum number of histories to return.</param>
+        /// <returns>A response containing the ordered history DTO page.</returns>
         [ApiBind]
         public async Task<AppResponseBase<ChatGroupHistory_GetListResponse>> GetList(int chatTaskId, int nextHistoryId, int pageIndex, int pageSize)
         {
@@ -73,6 +87,15 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind]
+        /// <summary>
+        /// Aggregates token and response-time usage for one chat task, with optional
+        /// Agent and date filters, round statistics, Agent statistics, and hourly timeline data.
+        /// </summary>
+        /// <param name="chatTaskId">The chat-task identifier to analyze.</param>
+        /// <param name="agentTemplateId">Optional Agent template filter.</param>
+        /// <param name="startTime">Optional inclusive start time.</param>
+        /// <param name="endTime">Optional inclusive end time.</param>
+        /// <returns>A response containing overview, round, Agent, and timeline analytics.</returns>
         public async Task<AppResponseBase<ChatGroupHistory_GetUsageAnalyticsResponse>> GetUsageAnalytics(
             int chatTaskId,
             int? agentTemplateId = null,
@@ -229,6 +252,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Decodes usage metadata from a history remark and copies it into the DTO fields.
+        /// </summary>
+        /// <param name="historyDto">The history DTO to enrich.</param>
         private static void PopulateUsageFields(ChatGroupHistoryDto historyDto)
         {
             if (historyDto == null || string.IsNullOrWhiteSpace(historyDto.AdminRemark))
@@ -247,6 +274,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             }
         }
 
+        /// <summary>
+        /// Parses supported local and ISO date-time formats used by analytics filters.
+        /// </summary>
+        /// <param name="text">The date-time filter text.</param>
+        /// <param name="dateTime">Receives the parsed date-time value.</param>
+        /// <returns><see langword="true"/> when the text can be parsed.</returns>
         private static bool TryParseDateTime(string text, out DateTime dateTime)
         {
             dateTime = default;
@@ -270,6 +303,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                    || DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out dateTime);
         }
 
+        /// <summary>
+        /// Selects a bounded percentile value from an already sorted integer list.
+        /// </summary>
+        /// <param name="sortedValues">The ascending sorted values.</param>
+        /// <param name="percentile">The requested percentile from 0 through 100.</param>
+        /// <returns>The selected percentile value, or zero for an empty list.</returns>
         private static int CalculatePercentile(List<int> sortedValues, int percentile)
         {
             if (sortedValues == null || sortedValues.Count == 0)

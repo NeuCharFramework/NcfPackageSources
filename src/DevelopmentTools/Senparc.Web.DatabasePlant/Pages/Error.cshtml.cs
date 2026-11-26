@@ -36,6 +36,9 @@ namespace Senparc.Web.DatabasePlant.Pages
             _logger = logger;
         }
 
+        /// <summary>
+        /// Loads the request error metadata used by the database-plant error page.
+        /// </summary>
         public void OnGet()
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;

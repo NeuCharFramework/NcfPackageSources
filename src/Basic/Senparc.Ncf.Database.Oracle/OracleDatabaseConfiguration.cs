@@ -32,18 +32,23 @@ using Senparc.CO2NET.Extensions;
 namespace Senparc.Ncf.Database.Oracle
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Configures Oracle EF Core options used by NCF multi-database contexts.
+    /// The selected Oracle SQL compatibility level is applied when the provider
+    /// options callback is executed.
     /// </summary>
     public class OracleDatabaseConfiguration : DatabaseConfigurationBase<OracleDbContextOptionsBuilder, OracleOptionsExtension>
     {
         private static string _useOracleSQLCompatibility = null;
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Stores the legacy text representation of an Oracle SQL compatibility level.
         /// </summary>
-        /// <param name="useOracleSQLCompatibility"></param>
+        /// <param name="useOracleSQLCompatibility">
+        /// The compatibility value accepted by the Oracle provider, such as
+        /// <c>11</c> or <c>12</c>. The value is retained for compatibility with
+        /// older callers; the current net10 implementation configures EF Core from
+        /// the enum overload instead.
+        /// </param>
         public static void SetUseOracleSQLCompatibility(string useOracleSQLCompatibility)
         {
             _useOracleSQLCompatibility = useOracleSQLCompatibility;
@@ -53,15 +58,20 @@ namespace Senparc.Ncf.Database.Oracle
 
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Selects the Oracle SQL compatibility level used by the EF Core provider.
         /// </summary>
-        /// <param name="oracleSQLCompatibility"></param>
+        /// <param name="oracleSQLCompatibility">
+        /// The Oracle provider compatibility level to pass to
+        /// <see cref="OracleDbContextOptionsBuilder.UseOracleSQLCompatibility(OracleSQLCompatibility)"/>.
+        /// </param>
         public static void SetUseOracleSQLCompatibility(OracleSQLCompatibility oracleSQLCompatibility)
         {
             _oracleSQLCompatibility = oracleSQLCompatibility;
         }
 
+        /// <summary>
+        /// Initializes the Oracle database configuration using the default compatibility level.
+        /// </summary>
         public OracleDatabaseConfiguration() { }
 
         public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.Oracle;
@@ -70,16 +80,8 @@ namespace Senparc.Ncf.Database.Oracle
         {
             var typedBuilder = optionsBuilder as OracleDbContextOptionsBuilder;
 
-            //This method accepts either a value of "11" or "12" (default). By default, generated SQL is compatible with database version 12 and higher. Customers using Oracle Database version 11.2 should set UseOracleSQLCompatibility("11").
-            //https://docs.oracle.com/en/database/oracle/oracle-data-access-components/19.3/odpnt/EFCoreAPI.html#GUID-66247629-2670-44AA-AC55-849C367852AF
-//#if NETSTANDARD
-//            if (!_useOracleSQLCompatibility.IsNullOrEmpty())
-//            {
-//                typedBuilder.UseOracleSQLCompatibility(_useOracleSQLCompatibility);
-//            }
-//#else
+            // Oracle 19c defaults to the provider's current compatibility mode.
             typedBuilder.UseOracleSQLCompatibility(_oracleSQLCompatibility);
-//#endif
         };
 
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
@@ -88,15 +90,15 @@ namespace Senparc.Ncf.Database.Oracle
                 optionsBuilder.UseOracle(connectionString, actionBase);//beta6
             };
 
+        /// <inheritdoc />
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
             return $@"Backup Database {dbConnection.Database} To disk='{backupFilePath}'";
         }
 
+        /// <inheritdoc />
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
-            //var schma = dbContext.Model.FindEntityType(type).GetSchema();
-            //Legacy comment translated to English.
             return $"DROP TABLE {tableName}";
         }
 

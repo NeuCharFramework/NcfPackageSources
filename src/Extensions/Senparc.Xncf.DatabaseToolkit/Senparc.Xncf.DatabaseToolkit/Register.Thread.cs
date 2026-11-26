@@ -33,6 +33,10 @@ namespace Senparc.Xncf.DatabaseToolkit
 {
     public partial class Register : IXncfThread
     {
+        /// <summary>
+        /// Registers the periodic database-backup task and its module-availability checks.
+        /// </summary>
+        /// <param name="xncfThreadBuilder">The NCF background-thread builder.</param>
         public void ThreadConfig(XncfThreadBuilder xncfThreadBuilder)
         {
             //Legacy comment translated to English.

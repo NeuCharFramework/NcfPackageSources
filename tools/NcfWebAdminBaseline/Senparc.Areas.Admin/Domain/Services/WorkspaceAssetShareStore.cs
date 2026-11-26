@@ -52,6 +52,14 @@ public sealed class WorkspaceAssetShareStore : IDisposable
             PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0, AutoReplenishment = true
         }));
 
+    /// <summary>
+    /// Initializes protected on-disk workspace-share storage outside the public web root.
+    /// </summary>
+    /// <param name="environment">The host environment used to locate application data.</param>
+    /// <param name="protection">The Data Protection provider used to encrypt share descriptors.</param>
+    /// <param name="logger">The share-storage diagnostic logger.</param>
+    /// <param name="timeProvider">Optional clock used for expiration checks and tests.</param>
+    /// <exception cref="InvalidOperationException">Thrown when the selected storage path is inside <c>wwwroot</c>.</exception>
     public WorkspaceAssetShareStore(
         IWebHostEnvironment environment, IDataProtectionProvider protection,
         ILogger<WorkspaceAssetShareStore> logger, TimeProvider timeProvider = null)
@@ -70,12 +78,30 @@ public sealed class WorkspaceAssetShareStore : IDisposable
         _time = timeProvider ?? TimeProvider.System;
     }
 
+    /// <summary>
+    /// Attempts to acquire one public-share request from the caller's fixed-window rate limiter.
+    /// </summary>
+    /// <param name="remoteAddress">The remote address used as the limiter partition key.</param>
+    /// <returns><see langword="true"/> when the request is within the current allowance.</returns>
     public bool TryAcquirePublicRequest(string remoteAddress)
     {
         using var lease = _publicLimiter.AttemptAcquire(remoteAddress);
         return lease.IsAcquired;
     }
 
+    /// <summary>
+    /// Encrypts and atomically persists an expiring HTML workspace snapshot for its owner.
+    /// </summary>
+    /// <param name="ownerId">The administrator who owns the share.</param>
+    /// <param name="sessionId">The chat session associated with the share.</param>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="path">The workspace-relative path represented by the snapshot.</param>
+    /// <param name="html">The already-rendered HTML snapshot.</param>
+    /// <param name="expiresInHours">The allowed lifetime: 1, 24, or 168 hours.</param>
+    /// <param name="cancellationToken">Token used to cancel persistence.</param>
+    /// <returns>The persisted share descriptor containing its public token.</returns>
+    /// <exception cref="ArgumentException">Thrown when ownership, lifetime, path, or size validation fails.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the owner has reached the active-share limit.</exception>
     public async Task<WorkspaceAssetShare> CreateAsync(
         int ownerId, int sessionId, string workspaceId, string path, string html,
         int expiresInHours, CancellationToken cancellationToken = default)
@@ -117,6 +143,14 @@ public sealed class WorkspaceAssetShareStore : IDisposable
         finally { _gate.Release(); }
     }
 
+    /// <summary>
+    /// Lists non-expired shares for one owner/session/workspace boundary without returning HTML bodies.
+    /// </summary>
+    /// <param name="ownerId">The administrator who owns the shares.</param>
+    /// <param name="sessionId">The associated chat session.</param>
+    /// <param name="workspaceId">The associated workspace.</param>
+    /// <param name="cancellationToken">Token used to cancel the read.</param>
+    /// <returns>Share metadata ordered newest first.</returns>
     public async Task<IReadOnlyList<WorkspaceAssetShare>> ListAsync(
         int ownerId, int sessionId, string workspaceId, CancellationToken cancellationToken = default)
     {
@@ -131,6 +165,15 @@ public sealed class WorkspaceAssetShareStore : IDisposable
         finally { _gate.Release(); }
     }
 
+    /// <summary>
+    /// Deletes a matching persisted share descriptor.
+    /// </summary>
+    /// <param name="ownerId">The administrator who owns the share.</param>
+    /// <param name="sessionId">The associated chat session.</param>
+    /// <param name="workspaceId">The associated workspace.</param>
+    /// <param name="shareId">The share identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns><see langword="true"/> when a matching share was removed.</returns>
     public async Task<bool> RevokeAsync(
         int ownerId, int sessionId, string workspaceId, string shareId, CancellationToken cancellationToken = default)
     {
@@ -147,6 +190,14 @@ public sealed class WorkspaceAssetShareStore : IDisposable
         finally { _gate.Release(); }
     }
 
+    /// <summary>
+    /// Reads and decrypts a public share after validating its identifier/token format,
+    /// checking expiration, and comparing the token in constant time.
+    /// </summary>
+    /// <param name="id">The public share identifier.</param>
+    /// <param name="token">The public share token.</param>
+    /// <param name="cancellationToken">Token used to cancel storage access.</param>
+    /// <returns>The share descriptor, or <see langword="null"/> for invalid, missing, expired, or mismatched shares.</returns>
     public async Task<WorkspaceAssetShare?> ReadPublicAsync(
         string id, string token, CancellationToken cancellationToken = default)
     {
@@ -170,6 +221,12 @@ public sealed class WorkspaceAssetShareStore : IDisposable
         finally { _gate.Release(); }
     }
 
+    /// <summary>
+    /// Reads all non-expired protected share files for an owner and removes expired files.
+    /// </summary>
+    /// <param name="ownerId">The owner whose share directory is scanned.</param>
+    /// <param name="cancellationToken">Token used to cancel protected-file reads.</param>
+    /// <returns>The valid shares belonging to the owner.</returns>
     private async Task<List<WorkspaceAssetShare>> ListCoreAsync(int ownerId, CancellationToken cancellationToken)
     {
         var result = new List<WorkspaceAssetShare>();
@@ -186,6 +243,14 @@ public sealed class WorkspaceAssetShareStore : IDisposable
         return result;
     }
 
+    /// <summary>
+    /// Reads, decrypts, and deserializes one protected share file while enforcing
+    /// the maximum persisted payload size.
+    /// </summary>
+    /// <param name="path">The protected share file path.</param>
+    /// <param name="cancellationToken">Token used to cancel file reads.</param>
+    /// <returns>The decrypted share descriptor.</returns>
+    /// <exception cref="IOException">Thrown when the file is oversized, invalid, or cannot be decrypted.</exception>
     private async Task<WorkspaceAssetShare> ReadCoreAsync(string path, CancellationToken cancellationToken)
     {
         if (new FileInfo(path).Length > WorkspaceAssetPreviewBuilder.MaxHtmlBytes * 6 + 4096)
@@ -203,12 +268,25 @@ public sealed class WorkspaceAssetShareStore : IDisposable
         }
     }
 
+    /// <summary>
+    /// Resolves the private owner directory used for protected share files.
+    /// </summary>
+    /// <param name="ownerId">The positive administrator identifier.</param>
+    /// <returns>The owner-specific storage directory.</returns>
+    /// <exception cref="ArgumentException">Thrown when the owner identifier is not positive.</exception>
     private string GetOwnerDirectory(int ownerId)
     {
         if (ownerId <= 0) throw new ArgumentException("无效的分享所有者。");
         return System.IO.Path.Combine(_root, ownerId.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }
 
+    /// <summary>
+    /// Derives the deterministic protected-file path from a validated share ID and token.
+    /// </summary>
+    /// <param name="id">The share identifier containing the owner prefix.</param>
+    /// <param name="token">The share token used to derive the file name.</param>
+    /// <returns>The private protected-file path.</returns>
+    /// <exception cref="ArgumentException">Thrown when the share ID format is invalid.</exception>
     private string GetFilePath(string id, string token)
     {
         if (!ShareId.IsMatch(id) || !int.TryParse(id.Split('-')[0], out var ownerId))
@@ -217,6 +295,7 @@ public sealed class WorkspaceAssetShareStore : IDisposable
         return System.IO.Path.Combine(GetOwnerDirectory(ownerId), $"{id}-{hash}.protected");
     }
 
+    /// <inheritdoc/>
     public void Dispose()
     {
         _publicLimiter.Dispose();

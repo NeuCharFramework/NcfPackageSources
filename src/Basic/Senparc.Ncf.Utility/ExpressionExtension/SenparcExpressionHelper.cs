@@ -23,16 +23,14 @@ using System.Linq.Expressions;
 namespace Senparc.Ncf.Utility
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    /// 
-    ///Legacy comment translated to English.
+    /// Provides fluent construction of conditional LINQ predicates.
+    ///
     ///   var seh = new SenparcExpressionHelper<T>();
     ///   seh.ValueCompare
     ///       .AndAlso(true, i => !i.IsDeleted && i.MPAccountId == MPAccount.Id)
     ///       .AndAlso(!string.IsNullOrEmpty(SearchText), i => i.MPKeywordList.Count(c => c.Content.Contains(SearchText)) > 0);
     ///   var where = seh.BuildWhereExpression();
-    ///   
-    ///Legacy comment translated to English.
+    ///
     /// </summary>
     /// <typeparam name="TEntity">The entity type represented by the composed predicates.</typeparam>
     public class SenparcExpressionHelper<TEntity> where TEntity : class

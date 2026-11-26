@@ -116,6 +116,15 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         private readonly IAgentWorkflowReferenceValidator _agentWorkflowReferenceValidator;
         private readonly IWorkflowFunctionCallingProvider _workflowFunctionCallingProvider;
 
+        /// <summary>
+        /// Initializes the AgentTemplate application service and optional Workflow integration providers.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="agentsTemplateService">The Agent template service.</param>
+        /// <param name="promptItemService">The PromptRange item service.</param>
+        /// <param name="promptRangeService">The PromptRange service.</param>
+        /// <param name="agentWorkflowReferenceValidators">Optional workflow-cycle validators.</param>
+        /// <param name="workflowFunctionCallingProviders">Optional workflow function providers.</param>
         public AgentTemplateAppService(
             IServiceProvider serviceProvider,
             AgentsTemplateService agentsTemplateService,
@@ -421,7 +430,8 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Normalizes an optional PromptRange reference and returns the prompt-range tree
+        /// used by Agent selection and binding screens.
         /// </summary>
         private async Task<string> NormalizePromptCodeAsync(string promptCode)
         {
@@ -445,11 +455,13 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns a paged AgentTemplate list and enriches each DTO with group/task usage,
+        /// PromptRange score, published A2A status, and related metadata.
         /// </summary>
-        /// <param name="pageSize"></param>
-        /// <param name="pageIndex"></param>
-        /// <returns></returns>
+        /// <param name="pageIndex">The zero-based page index; non-positive values use the service default.</param>
+        /// <param name="pageSize">The page size; non-positive values request the service default.</param>
+        /// <param name="filter">Optional name filter applied to AgentTemplate records.</param>
+        /// <returns>A response containing the paged AgentTemplate DTOs and usage metadata.</returns>
         [ApiBind]
         public async Task<AppResponseBase<AgentTemplate_GetListResponse>> GetList(int pageIndex = 0, int pageSize = 0, string filter = "")
         {
@@ -566,9 +578,9 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads the PromptRange tree with the data needed by Agent configuration screens.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A response containing the hierarchical prompt-item tree.</returns>
         [ApiBind]
         public async Task<AppResponseBase<PromptItemTreeList>> GetPromptRangeTree()
         {
@@ -580,9 +592,12 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        /// createorupdate AgentTemplate
+        /// Creates or updates an AgentTemplate, validates its model and knowledge-base bindings,
+        /// normalizes function/workflow bindings, and returns the enriched saved DTO.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="agentTemplateDto">The AgentTemplate values to create or update.</param>
+        /// <returns>A response containing the persisted and enriched AgentTemplate DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the template, model, workflow, or knowledge-base binding is invalid.</exception>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AgentTemplateDto>> SetItem([FromBody] AgentTemplateDto_UpdateOrCreate agentTemplateDto)
         {
@@ -658,10 +673,11 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads one AgentTemplate and enriches its DTO with usage and binding metadata.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The AgentTemplate identifier.</param>
+        /// <returns>A response containing the requested AgentTemplate DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the identifier does not refer to an existing AgentTemplate.</exception>
         [ApiBind]
         public async Task<AppResponseBase<AgentTemplate_GetItemResponse>> GetItem(int id)
         {
@@ -681,10 +697,12 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads an AgentTemplate together with the effective PromptRange and AI model status
+        /// used by its current model-binding mode.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The AgentTemplate identifier.</param>
+        /// <returns>A response containing the template, prompt, range, and model status.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the identifier does not refer to an existing AgentTemplate or its PromptRange is invalid.</exception>
         [ApiBind]
         public async Task<AppResponseBase<AgentTemplate_GetItemStatusResponse>> GetItemStatus(int id)
         {
@@ -821,12 +839,20 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Enables or disables an AgentTemplate while preserving the reserved Human participant.
         /// </summary>
-        /// <param name="id">AgentTemplate ID</param>
-        /// <param name="enable">whether enabled</param>
-        /// <returns></returns>
+        /// <param name="id">The AgentTemplate identifier.</param>
+        /// <param name="enable">Whether the template should be enabled.</param>
+        /// <returns>A response containing the operation status message.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the template does not exist or represents the reserved Human participant.</exception>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
+        /// <summary>
+        /// Enables or disables one agent template and persists the availability state.
+        /// Human, system-reserved templates are rejected by the service layer.
+        /// </summary>
+        /// <param name="id">The agent-template identifier.</param>
+        /// <param name="enable">Whether the template should be available for selection.</param>
+        /// <returns>A response containing the state-transition message.</returns>
         public async Task<AppResponseBase<string>> Enable(int id, bool enable)
         {
             return await this.GetResponseAsync<string>(async (response, logger) =>
@@ -884,10 +910,10 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
 /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns all AgentTemplates whose PromptCode starts with the supplied value.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="promptCode">The PromptCode prefix to search for.</param>
+        /// <returns>A response containing matching template status DTOs.</returns>
         [ApiBind]
         public async Task<AppResponseBase<List<AgentTemplateSimpleStatusDto>>> GetListByPromptCode(string promptCode)
         {
@@ -972,8 +998,8 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         /// <summary>
         /// Validates the AgentTemplate model-binding mode and referenced AI model.
         /// </summary>
-        /// <param name="modelBinding">The selected binding mode.</param>
-        /// <param name="aiModelId">The optional AI model identifier.</param>
+        /// <param name="agentTemplateDto">The template values containing binding mode and model ID.</param>
+        /// <param name="isHumanParticipant">Whether the reserved Human participant rules apply.</param>
         /// <exception cref="NcfExceptionBase">Thrown when the binding configuration is invalid.</exception>
         private async Task ValidateAgentModelBindingAsync(
             AgentTemplateDto agentTemplateDto,
@@ -1044,6 +1070,12 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             }
         }
 
+        /// <summary>
+        /// Enriches AgentTemplate DTOs with parsed bindings, usage statistics, conversation
+        /// counts, response timing, and optional knowledge-base names.
+        /// </summary>
+        /// <typeparam name="TAgentDto">The AgentTemplate DTO subtype.</typeparam>
+        /// <param name="agentDtos">The DTO sequence to enrich in place.</param>
         public async Task PopulateAgentMetadataAsync<TAgentDto>(IEnumerable<TAgentDto> agentDtos)
             where TAgentDto : AgentTemplateDto
         {
@@ -1163,9 +1195,9 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 };
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Queries enabled MCP endpoints through the EventBus request contract.
+        /// When the MCP module is unavailable or times out, the response describes
+        /// the fallback manual-entry path instead of throwing.
         /// </summary>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<McpEndpointOptionsResponse>> GetMcpEndpointOptions()
@@ -1215,9 +1247,9 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the names of legacy AI plugin types currently registered in the process.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A response containing registered plugin names.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<List<string>>> GetPluginTypes()
         {
@@ -1229,11 +1261,13 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a temporary MCP tool client for the supplied endpoint and returns its
+        /// discoverable tool catalog. Connection and URI failures are represented in the response.
         /// </summary>
-        /// <param name="endpointName">Endpointname</param>
-        /// <param name="endpointUrl">Endpoint URL</param>
-        ///Legacy comment translated to English.
+        /// <param name="endpointName">The display name assigned to the endpoint.</param>
+        /// <param name="endpointUrl">The absolute HTTP or HTTPS MCP endpoint URL.</param>
+        /// <returns>A response containing connection status and discovered tools.</returns>
+        /// <exception cref="UriFormatException">Thrown when the endpoint URL is not an absolute URI.</exception>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<McpConnectionTestResult>> TestMcpConnection(string endpointName, string endpointUrl)
         {
@@ -1402,54 +1436,54 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Contains the outcome of an MCP endpoint connection test.
     /// </summary>
     public class McpConnectionTestResult
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the endpoint connection succeeded.
         /// </summary>
         public bool Success { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the HTTP or protocol status code.
         /// </summary>
         public int Status { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the diagnostic status message.
         /// </summary>
         public string StatusMessage { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the tools discovered from the endpoint.
         /// </summary>
         public List<McpTool> Tools { get; set; } = new List<McpTool>();
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Describes one tool exposed by an MCP endpoint.
     /// </summary>
     public class McpTool
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the tool name.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the tool description.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the tool parameters.
         /// </summary>
         public List<McpToolParameter> Parameters { get; set; } = new List<McpToolParameter>();
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Describes one MCP tool parameter.
     /// </summary>
     public class McpToolParameter
     {
@@ -1465,17 +1499,17 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Contains MCP module availability and endpoint options.
     /// </summary>
     public class McpEndpointOptionsResponse
     {
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the MCP module is available.
         public bool McpModuleAvailable { get; set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the diagnostic or user-facing message.
         public string Message { get; set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the configured endpoint options.
         public List<McpEndpointInfo> Options { get; set; }
     }
 }

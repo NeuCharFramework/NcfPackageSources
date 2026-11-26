@@ -40,6 +40,12 @@ public sealed class PromptShottingService : IPromptShottingService
     private readonly PromptItemService _items;
     private readonly PromptResultService _results;
 
+    /// <summary>
+    /// Initializes PromptShotting range, item, and result dependencies.
+    /// </summary>
+    /// <param name="ranges">The prompt-range service.</param>
+    /// <param name="items">The prompt-item service.</param>
+    /// <param name="results">The prompt-result service.</param>
     public PromptShottingService(
         PromptRangeService ranges,
         PromptItemService items,
@@ -50,6 +56,10 @@ public sealed class PromptShottingService : IPromptShottingService
         _results = results;
     }
 
+    /// <summary>
+    /// Lists prompt ranges with their prompt-item counts.
+    /// </summary>
+    /// <returns>Ranges ordered by display name.</returns>
     public async Task<IReadOnlyList<PromptShottingRange>> GetRangesAsync()
     {
         var ranges = await _ranges.GetListAsync().ConfigureAwait(false);
@@ -67,6 +77,12 @@ public sealed class PromptShottingService : IPromptShottingService
             .ToList();
     }
 
+    /// <summary>
+    /// Saves a prompt-shotting request into a selected or newly created range.
+    /// </summary>
+    /// <param name="request">The target range and prompt content.</param>
+    /// <returns>The created/updated prompt-shotting result.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when request or range/prompt values are invalid.</exception>
     public async Task<PromptShottingResult> SaveAsync(PromptShottingRequest request)
     {
         if (request == null)

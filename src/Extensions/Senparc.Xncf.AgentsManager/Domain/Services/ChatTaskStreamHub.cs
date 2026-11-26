@@ -68,6 +68,14 @@ public sealed class ChatTaskStreamHub
 
     private readonly ConcurrentDictionary<int, StreamGroup> _streams = new();
 
+    /// <summary>
+    /// Subscribes to one chat-task stream, optionally replaying buffered events before
+    /// waiting for live events. The subscription is removed when enumeration ends.
+    /// </summary>
+    /// <param name="chatTaskId">The chat-task identifier to observe.</param>
+    /// <param name="replayBuffered">Whether buffered events should be replayed.</param>
+    /// <param name="cancellationToken">The subscription cancellation token.</param>
+    /// <returns>An asynchronous sequence of task stream events.</returns>
     public async IAsyncEnumerable<ChatTaskStreamEvent> Subscribe(
         int chatTaskId,
         bool replayBuffered = true,
@@ -128,6 +136,11 @@ public sealed class ChatTaskStreamHub
         }
     }
 
+    /// <summary>
+    /// Publishes one event to the task buffer and current subscribers.
+    /// Final status events complete the stream and trigger cleanup after subscribers drain.
+    /// </summary>
+    /// <param name="item">The event to buffer and publish.</param>
     public void Publish(ChatTaskStreamEvent item)
     {
         if (item == null)
@@ -179,6 +192,11 @@ public sealed class ChatTaskStreamHub
         }
     }
 
+    /// <summary>
+    /// Determines whether an event represents the final status of a stream.
+    /// </summary>
+    /// <param name="item">The event to inspect.</param>
+    /// <returns><see langword="true"/> for a final status event.</returns>
     private static bool IsTerminalStatusEvent(ChatTaskStreamEvent item)
     {
         return item != null
@@ -186,6 +204,12 @@ public sealed class ChatTaskStreamHub
             && item.IsFinal;
     }
 
+    /// <summary>
+    /// Calculates a bounded delay that approximates the original cadence between replayed chunks.
+    /// </summary>
+    /// <param name="currentItem">The event currently being replayed.</param>
+    /// <param name="previousTimestamp">The timestamp of the preceding buffered event.</param>
+    /// <returns>The replay delay in milliseconds.</returns>
     private static int GetBufferedReplayDelayMilliseconds(
         ChatTaskStreamEvent currentItem,
         DateTimeOffset? previousTimestamp)
@@ -221,6 +245,11 @@ public sealed class ChatTaskStreamHub
         return normalizedGap;
     }
 
+    /// <summary>
+    /// Removes a completed stream group once all subscribers have detached.
+    /// </summary>
+    /// <param name="chatTaskId">The task identifier associated with the group.</param>
+    /// <param name="group">The stream group to evaluate.</param>
     private void CleanupStreamIfFinished(int chatTaskId, StreamGroup group)
     {
         if (!group.IsComplete || !group.Subscribers.IsEmpty)
@@ -231,6 +260,9 @@ public sealed class ChatTaskStreamHub
         _streams.TryRemove(chatTaskId, out _);
     }
 
+    /// <summary>
+    /// Removes inactive groups that have no subscribers and have exceeded the stale-group lifetime.
+    /// </summary>
     private void SweepStaleGroups()
     {
         var now = DateTimeOffset.Now;

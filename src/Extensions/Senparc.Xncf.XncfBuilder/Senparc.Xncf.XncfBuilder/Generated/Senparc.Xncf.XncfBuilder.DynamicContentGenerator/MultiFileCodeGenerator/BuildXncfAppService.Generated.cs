@@ -210,9 +210,7 @@ using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 
 namespace Template_OrgName.Xncf.Template_XncfName
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Stores the template sample RGB color entity.</summary>
     [Table(Register.DATABASE_PREFIX + nameof(Color))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class Color : EntityBase<int>
@@ -236,13 +234,18 @@ namespace Template_OrgName.Xncf.Template_XncfName
         /// </summary>
         public string AdditionNote { get; private set; }
 
+        /// <summary>Initializes an empty color for ORM materialization.</summary>
         private Color() { }
 
+        /// <summary>Initializes a color from RGB values, generating random values for negative components.</summary>
+        /// <param name=""red"">The red component.</param>
+        /// <param name=""green"">The green component.</param>
+        /// <param name=""blue"">The blue component.</param>
         public Color(int red, int green, int blue)
         {
             if (red < 0 || green < 0 || blue < 0)
             {
-                Random();//Legacy comment translated to English.
+                Random();
             }
             else
             {
@@ -252,11 +255,18 @@ namespace Template_OrgName.Xncf.Template_XncfName
             }
         }
 
+        /// <summary>Initializes a color and its additional note.</summary>
+        /// <param name=""red"">The red component.</param>
+        /// <param name=""green"">The green component.</param>
+        /// <param name=""blue"">The blue component.</param>
+        /// <param name=""additionNote"">The optional additional note.</param>
         public Color(int red, int green, int blue, string additionNote) : this(red, green, blue)
         {
             AdditionNote = additionNote;
         }
 
+        /// <summary>Initializes a color from a DTO.</summary>
+        /// <param name=""colorDto"">The source color DTO.</param>
         public Color(ColorDto colorDto)
         {
             Red = colorDto.Red;
@@ -264,6 +274,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
             Blue = colorDto.Blue;
         }
 
+        /// <summary>Replaces all components with generated color values.</summary>
         public void Random()
         {
             //generate a random color code
@@ -274,6 +285,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
             Blue = getRadomColorCode();
         }
 
+        /// <summary>Increases each component by ten, capped at 255.</summary>
         public void Brighten()
         {
             Red = Math.Min(255, Red + 10);
@@ -281,6 +293,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
             Blue = Math.Min(255, Blue + 10);
         }
 
+        /// <summary>Decreases each component by ten, floored at zero.</summary>
         public void Darken()
         {
             Red = Math.Max(0, Red - 10);
@@ -288,6 +301,8 @@ namespace Template_OrgName.Xncf.Template_XncfName
             Blue = Math.Max(0, Blue - 10);
         }
 
+        /// <summary>Copies editable color values from a request DTO.</summary>
+        /// <param name=""dto"">The update request.</param>
         public void Update(UpdateColorRequestDto dto)
         {
             Red = dto.Red;
@@ -373,11 +388,16 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 {
     public class ColorService : ServiceBase<Color>
     {
+        /// <summary>Initializes color persistence.</summary>
+        /// <param name=""repo"">The color repository.</param>
+        /// <param name=""serviceProvider"">The dependency provider.</param>
         public ColorService(IRepositoryBase<Color> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {
         }
 
+        /// <summary>Creates and persists a random color.</summary>
+        /// <returns>The created color DTO.</returns>
         public async Task<ColorDto> CreateNewColor()
         {
             Color color = new Color(-1, -1, -1);
@@ -386,6 +406,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
             return colorDto;
         }
 
+        /// <summary>Loads the newest color or creates the initial color.</summary>
+        /// <returns>The existing or newly created color DTO.</returns>
         public async Task<ColorDto> GetOrInitColor()
         {
             var color = await base.GetObjectAsync(z => true);
@@ -399,6 +421,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
             return base.Mapper.Map<ColorDto>(color);
         }
 
+        /// <summary>Brightens the newest persisted color.</summary>
+        /// <returns>The updated color DTO.</returns>
         public async Task<ColorDto> Brighten()
         {
             //TODO: add sorting to the asynchronous method
@@ -408,6 +432,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
             return base.Mapper.Map<ColorDto>(obj);
         }
 
+        /// <summary>Darkens the newest persisted color.</summary>
+        /// <returns>The updated color DTO.</returns>
         public async Task<ColorDto> Darken()
         {
             //TODO: add sorting to the asynchronous method
@@ -417,6 +443,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
             return base.Mapper.Map<ColorDto>(obj);
         }
 
+        /// <summary>Replaces the newest persisted color with a random color.</summary>
+        /// <returns>The updated color DTO.</returns>
         public async Task<ColorDto> Random()
         {
             //TODO: add sorting to the asynchronous method
@@ -662,23 +690,27 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
     {
         private readonly ColorService _colorService;
 
+        /// <summary>Initializes the template database sample page.</summary>
+        /// <param name=""xncfModuleService"">The lazy XNCF module service.</param>
+        /// <param name=""colorService"">The sample color service.</param>
         public DatabaseSampleIndex(Lazy<XncfModuleService> xncfModuleService, ColorService colorService) : base(xncfModuleService)
         {
             _colorService = colorService;
         }
 
+        /// <summary>Initializes the database sample index request.</summary>
         public void OnGet()
         {
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns a paged color list for the template sample grid.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name=""keyword"">Optional search keyword.</param>
+        /// <param name=""orderField"">The textual order expression.</param>
+        /// <param name=""pageIndex"">The page index.</param>
+        /// <param name=""pageSize"">The page size.</param>
+        /// <returns>An HTTP JSON result containing the color page.</returns>
         public async Task<IActionResult> OnGetColorListAsync(string keyword, string orderField, int pageIndex, int pageSize)
         {
             try
@@ -735,10 +767,11 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a color from the submitted RGB values and returns the persisted color data.
+        /// Validation and persistence failures are converted into an unsuccessful JSON result.
         /// </summary>
-        /// <param name=""request"">createcolorrequest</param>
-        /// <returns></returns>
+        /// <param name=""request"">The RGB values and optional note to persist.</param>
+        /// <returns>An HTTP 200 JSON result describing the creation outcome.</returns>
         public async Task<IActionResult> OnPostCreateColorAsync([FromBody] CreateColorRequestDto request)
         {
             try
@@ -764,10 +797,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// updatecolor
+        /// Updates an existing color's RGB values and note, returning the updated record.
         /// </summary>
-        /// <param name=""request"">updatecolorrequest</param>
-        /// <returns></returns>
+        /// <param name=""request"">The color identifier and replacement values.</param>
+        /// <returns>An HTTP 200 JSON result describing the update outcome.</returns>
         public async Task<IActionResult> OnPostUpdateColorAsync([FromBody] UpdateColorRequestDto request)
         {
             try
@@ -801,10 +834,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// deletecolor
+        /// Permanently deletes an existing color record.
         /// </summary>
-        /// <param name=""request"">deletecolorrequest</param>
-        /// <returns></returns>
+        /// <param name=""request"">The identifier of the color to delete.</param>
+        /// <returns>An HTTP 200 JSON result describing the deletion outcome.</returns>
         public async Task<IActionResult> OnPostDeleteColorAsync([FromBody] DeleteColorRequestDto request)
         {
             try
@@ -834,10 +867,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces an existing color with newly generated RGB values and persists the change.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name=""request"">The identifier of the color to randomize.</param>
+        /// <returns>An HTTP 200 JSON result describing the randomization outcome.</returns>
         public async Task<IActionResult> OnPostRandomizeColorAsync([FromBody] RandomizeColorRequestDto request)
         {
             try
@@ -869,10 +902,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads one color record and returns its persisted values and metadata.
         /// </summary>
-        /// <param name=""id"">colorID</param>
-        /// <returns></returns>
+        /// <param name=""id"">The color identifier.</param>
+        /// <returns>An HTTP 200 JSON result containing the color details or an error message.</returns>
         public async Task<IActionResult> OnGetColorDetailAsync(int id)
         {
             try

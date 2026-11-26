@@ -28,7 +28,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
     using System.Threading;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores one crawled URL, source HTML, extracted Markdown, and crawl metrics.
     /// </summary>
     public class UrlData
     {
@@ -223,9 +223,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             }
         }
         
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the extracted Markdown content.</summary>
         public string MarkDownHtmlContent { get; private set; }
         public int Result { get; set; }
         public double SizeKB { get; set; }
@@ -258,6 +256,18 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             }
         }
 
+        /// <summary>
+        /// Initializes one crawled URL result and its response metadata.
+        /// </summary>
+        /// <param name="url">The crawled URL.</param>
+        /// <param name="deep">The crawl depth.</param>
+        /// <param name="html">The source HTML.</param>
+        /// <param name="titleHtml">The title HTML fragment.</param>
+        /// <param name="result">The crawl result code.</param>
+        /// <param name="sizeKB">The response size in kilobytes.</param>
+        /// <param name="parentUrl">The parent URL.</param>
+        /// <param name="responseMillionSeconds">The response duration in milliseconds.</param>
+        /// <param name="linkText">The source link text.</param>
         public UrlData(string url, int deep, string html, string titleHtml, int result, double sizeKB, string parentUrl, int responseMillionSeconds,string linkText)
         {
             Url = url;
@@ -272,9 +282,25 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //CreateTime = DateTime.Now;
         }
 
+        /// <summary>
+        /// Initializes a URL result without an explicit response-duration value.
+        /// </summary>
+        /// <param name="url">The crawled URL.</param>
+        /// <param name="deep">The crawl depth.</param>
+        /// <param name="html">The source HTML.</param>
+        /// <param name="titleHtml">The title HTML fragment.</param>
+        /// <param name="result">The crawl result code.</param>
+        /// <param name="sizeKB">The response size in kilobytes.</param>
+        /// <param name="parentUrl">The parent URL.</param>
+        /// <param name="linkText">The source link text.</param>
         public UrlData(string url, int deep, string html, string titleHtml, int result, double sizeKB, string parentUrl,string linkText)
             : this(url, deep, html, titleHtml, result, sizeKB, parentUrl, 0, linkText) { }
 
+        /// <summary>
+        /// Resolves a relative link against the crawled URL, preserving invalid values unchanged.
+        /// </summary>
+        /// <param name="relativeUrl">The link value extracted from HTML.</param>
+        /// <returns>An absolute URL when resolution succeeds.</returns>
         private string ResolveUrl(string relativeUrl)
         {
             if (string.IsNullOrEmpty(relativeUrl))
@@ -297,14 +323,18 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Groups a current URL and its already-searched path history.</summary>
     public class UrlPathCollection
     {
         public string Url { get; set; }
         public int Deep { get; set; }
         public List<string> SearchedUrl { get; set; }
+        /// <summary>
+        /// Initializes a URL traversal path and its already-searched URL list.
+        /// </summary>
+        /// <param name="url">The current URL.</param>
+        /// <param name="deep">The current crawl depth.</param>
+        /// <param name="searchedUrl">The URLs already visited in this path.</param>
         public UrlPathCollection(string url, int deep, List<string> searchedUrl)
         {
             Url = url;
@@ -314,31 +344,23 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
     }
 
     /// <summary>
-    /// Urlstatus
+    /// Describes the lifecycle state of a URL in the crawler queue.
     /// </summary>
     public enum AvailableUrlStatus
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>The URL has not started crawling.</summary>
         UnStart,
         /// <summary>
         /// in progress
         /// </summary>
         Started,
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>The URL has completed crawling.</summary>
         Finished,
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>The URL has been fully traversed for discovered links.</summary>
         Digged
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Represents one URL pending or active in the crawl queue.</summary>
     public class AvailableUrl
     {
         public string Url { get; set; }
@@ -349,6 +371,14 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         public DateTime CreateTime { get; set; }
         public DateTime StartBuildTime { get; set; }
 
+        /// <summary>
+        /// Initializes a queued URL with its source page, crawl depth, link text, and initial status.
+        /// </summary>
+        /// <param name="url">The URL to crawl.</param>
+        /// <param name="parentUrl">The page that produced the URL.</param>
+        /// <param name="deep">The crawl depth.</param>
+        /// <param name="linkText">The source anchor text.</param>
+        /// <param name="status">The initial queue status.</param>
         public AvailableUrl(string url, string parentUrl, int deep,string linkText, AvailableUrlStatus status)
         {
             Url = url;
@@ -360,15 +390,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Defines URL omission rules for crawler filtering.</summary>
     public class FilterOmitWord
     {
         public static readonly string[] OperatorKinds = new[] { "Unknown", "URL contains keyword", "URL parameters contain keyword", "Starts with keyword", "Ends with keyword", "Exact URL" };
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Identifies how an omission rule matches URLs.</summary>
         public enum OperatorKind
         {
             None,
@@ -381,6 +407,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
         public string Keyword { get; set; }
         public OperatorKind Operatorkind { get; set; }
+        /// <summary>
+        /// Initializes an omission rule using a normalized uppercase keyword and operator.
+        /// </summary>
+        /// <param name="keyword">The keyword or URL fragment to match.</param>
+        /// <param name="operatorkind">The matching mode.</param>
         public FilterOmitWord(string keyword, OperatorKind operatorkind)
         {
             Keyword = keyword.ToUpper().Trim();
@@ -388,9 +419,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Provides synchronized access to currently crawling URLs.</summary>
     public class CurrentCrawlingUrlList : Dictionary<string, AvailableUrl>, IDictionary<string, AvailableUrl>
     {
         private object syncLockCurrentCrawlingUrlList = new object();
@@ -413,11 +442,9 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             }
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <summary>Checks whether a URL is currently tracked.</summary>
+        /// <param name="key">The URL key.</param>
+        /// <returns><see langword="true"/> when the key exists.</returns>
         new public bool ContainsKey(string key)
         {
             lock (syncLockCurrentCrawlingUrlList)
@@ -426,10 +453,8 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             }
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="key"></param>
+        /// <summary>Removes a URL from the synchronized crawl set.</summary>
+        /// <param name="key">The URL key.</param>
         new public void Remove(string key)
         {
             if (this.ContainsKey(key))

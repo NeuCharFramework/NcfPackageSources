@@ -19,16 +19,25 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
         public IEnumerable<SysRoleAdminUserInfoDto> RoleAdminUserInfoDtos { get; set; }
 
+        /// <summary>
+        /// Handles the initial role-assignment page request.
+        /// </summary>
+        /// <param name="accountId">The administrator account identifier represented by the page.</param>
         public async Task OnGetAsync(int accountId)
         {
             await Task.CompletedTask;
         }
 
         /// <summary>
-        /// 获取用户的角色
+        /// Retrieves all role assignments currently associated with an administrator account.
         /// </summary>
-        /// <param name="accountId"></param>
-        /// <returns></returns>
+        /// <param name="accountId">The administrator account identifier whose assignments are requested.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing the matching role assignments.</returns>
+        /// <summary>
+        /// Applies the submitted role assignments to an administrator account.
+        /// </summary>
+        /// <param name="grantRoleDto">The target account and role identifiers.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing <see langword="true"/> after persistence.</returns>
         [Ncf.AreaBase.Admin.Filters.CustomerResource("admin-grant")]
         public async Task<IActionResult> OnGetDetailAsync(int accountId)
         {

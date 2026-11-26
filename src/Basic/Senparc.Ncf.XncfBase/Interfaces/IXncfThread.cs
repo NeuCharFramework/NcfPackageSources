@@ -23,14 +23,14 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the optional background-thread registration contract for an XNCF module.
     /// </summary>
     public interface IXncfThread
     {
         /// <summary>
-        /// threadconfiguration
+        /// Adds the module's background tasks to the shared XNCF thread builder.
         /// </summary>
-        /// <param name="xncfThreadBuilder"></param>
+        /// <param name="xncfThreadBuilder">The builder receiving the module thread definitions.</param>
         void ThreadConfig(XncfThreadBuilder xncfThreadBuilder);
     }
 }

@@ -29,7 +29,7 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores one PromptRange language-model provider configuration.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(LlModel))] //a prefix is required to prevent system-wide conflicts
     [Serializable]
@@ -53,28 +53,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         [Required, MaxLength(250)]
         public string Endpoint { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the AI provider platform.</summary>
         [Required, MaxLength(20)]
         public AiPlatform ModelType { get; private set; }
-        //Legacy comment translated to English.
-
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the provider organization identifier.</summary>
         [MaxLength(200)]
         public string OrganizationId { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the provider API key.</summary>
         [MaxLength(200)]
         public string ApiKey { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the provider API version.</summary>
         [MaxLength(100)]
         public string ApiVersion { get; private set; }
 
@@ -84,9 +74,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         [MaxLength(1000)]
         public string Note { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the maximum token limit.</summary>
         [Required, DefaultValue(0)]
         public int MaxToken { get; private set; }
 
@@ -121,6 +109,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 
         #region CTOR
 
+        /// <summary>Initializes an LLM model from a textual AI platform value.</summary>
+        /// <param name="deploymentName">The deployment/model name.</param>
+        /// <param name="endpoint">The provider endpoint.</param>
+        /// <param name="modelType">The AI platform name.</param>
+        /// <param name="organizationId">The optional organization identifier.</param>
+        /// <param name="apiKey">The provider API key.</param>
+        /// <param name="apiVersion">The provider API version.</param>
+        /// <param name="note">The model note.</param>
+        /// <param name="maxToken">The maximum token setting.</param>
+        /// <param name="alias">The model alias.</param>
+        /// <param name="show">Whether the model is displayed.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when <paramref name="modelType"/> is unsupported.</exception>
         public LlModel(string deploymentName, string endpoint, string modelType, string organizationId, string apiKey,
             string apiVersion, string note, int maxToken, string alias, bool show)
         {
@@ -139,6 +139,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
             Show = show;
         }
 
+        /// <summary>Initializes an LLM model from a typed AI platform value.</summary>
+        /// <param name="deploymentName">The deployment/model name.</param>
+        /// <param name="endpoint">The provider endpoint.</param>
+        /// <param name="modelType">The AI platform.</param>
+        /// <param name="organizationId">The optional organization identifier.</param>
+        /// <param name="apiKey">The provider API key.</param>
+        /// <param name="apiVersion">The provider API version.</param>
+        /// <param name="note">The model note.</param>
+        /// <param name="maxToken">The maximum token setting.</param>
+        /// <param name="alias">The model alias.</param>
+        /// <param name="show">Whether the model is displayed.</param>
         public LlModel(string deploymentName, string endpoint, AiPlatform modelType, string organizationId, string apiKey,
             string apiVersion, string note, int maxToken, string alias, bool show)
         {
@@ -154,11 +165,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
             Show = show;
         }
 
+        /// <summary>Initializes an LLM model from an add request.</summary>
+        /// <param name="request">The model add request.</param>
         public LlModel(LlModel_AddRequest request) : this(request.DeploymentName, request.Endpoint, request.ModelType,
             request.OrganizationId, request.ApiKey, request.ApiVersion, request.Note, 0, request.Alias, request.IsShared)
         {
         }
 
+        /// <summary>Initializes an LLM model from a DTO.</summary>
+        /// <param name="llModelDto">The source DTO.</param>
         public LlModel(LlModelDto llModelDto)
         {
             Show = llModelDto.IsShared;
@@ -178,12 +193,20 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         #endregion
 
 
+        /// <summary>Sets whether the model is displayed.</summary>
+        /// <param name="show">The desired display state.</param>
+        /// <returns>This model entity.</returns>
         public LlModel Switch(bool show)
         {
             Show = show;
             return this;
         }
 
+        /// <summary>Updates the alias, display state, and deployment name.</summary>
+        /// <param name="alias">The model alias.</param>
+        /// <param name="show">The display state.</param>
+        /// <param name="deploymentName">The deployment/model name.</param>
+        /// <returns>This model entity.</returns>
         public LlModel Update(string alias, bool show, string deploymentName)
         {
             this.Alias = alias;
@@ -192,6 +215,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
             return this;
         }
 
+        /// <summary>Returns the effective model identifier used for provider calls.</summary>
+        /// <returns>The deployment-derived model identifier or the default text model.</returns>
         public string GetModelId()
         {
             if (string.IsNullOrWhiteSpace(this.DeploymentName))

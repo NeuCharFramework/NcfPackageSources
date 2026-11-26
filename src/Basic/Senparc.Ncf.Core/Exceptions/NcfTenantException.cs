@@ -23,10 +23,21 @@ namespace Senparc.Ncf.Core.Exceptions
 {
     public class NcfTenantException : NcfExceptionBase
     {
+        /// <summary>
+        /// Initializes a tenant-scope exception.
+        /// </summary>
+        /// <param name="message">The exception message.</param>
+        /// <param name="logged">Whether the exception has already been logged.</param>
         public NcfTenantException(string message, bool logged = false) : base(message, logged)
         {
         }
 
+        /// <summary>
+        /// Initializes a tenant-scope exception with an inner exception.
+        /// </summary>
+        /// <param name="message">The exception message.</param>
+        /// <param name="inner">The underlying exception.</param>
+        /// <param name="logged">Whether the exception has already been logged.</param>
         public NcfTenantException(string message, Exception inner, bool logged = false) : base(message, inner, logged)
         {
         }

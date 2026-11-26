@@ -130,9 +130,23 @@ public static class AdminChatFunctionToolFactory
             return base.InvokeCoreAsync(arguments, cancellationToken);
         }
 
+        /// <summary>
+        /// Determines whether an AI argument collection contains a named argument
+        /// using case-insensitive matching.
+        /// </summary>
+        /// <param name="arguments">The AI function arguments.</param>
+        /// <param name="name">The argument name to find.</param>
+        /// <returns><see langword="true"/> when the name exists.</returns>
         private static bool ContainsArgument(AIFunctionArguments arguments, string name) =>
             arguments.Keys.Any(key => string.Equals(key, name, StringComparison.OrdinalIgnoreCase));
 
+        /// <summary>
+        /// Flattens a single request-object parameter schema so its properties are
+        /// presented directly to AdminChat while invocation can still rebuild the request object.
+        /// </summary>
+        /// <param name="schema">The original function JSON Schema.</param>
+        /// <param name="method">The reflected function method.</param>
+        /// <returns>The flattened schema, or a clone of the original when flattening is not applicable.</returns>
         private static JsonElement FlattenRequestSchema(JsonElement schema, MethodInfo method)
         {
             var parameters = method.GetParameters();
@@ -151,6 +165,13 @@ public static class AdminChatFunctionToolFactory
             return document.RootElement.Clone();
         }
 
+        /// <summary>
+        /// Gets a JSON object property using case-insensitive matching.
+        /// </summary>
+        /// <param name="parent">The JSON object to inspect.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="value">Receives the nested object value.</param>
+        /// <returns><see langword="true"/> when a matching object property exists.</returns>
         private static bool TryGetObjectProperty(
             JsonObject parent,
             string propertyName,

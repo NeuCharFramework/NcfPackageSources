@@ -10,7 +10,7 @@ using System;
 namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// MySQL-specific XNCF Builder database context used by runtime registration and migrations.
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.MySql, typeof(Register))]
     public class XncfBuilderSenparcEntities_MySql : XncfBuilderSenparcEntities, IMultipleMigrationDbContext
@@ -29,7 +29,7 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
     {
         protected override Action<IApplicationBuilder> AppAction => app =>
         {
-            //Legacy comment translated to English.
+            // Configure the MySQL provider for design-time migration discovery.
             app.UseNcfDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDesignTimeDatabaseConfiguration");
         };
 

@@ -19,6 +19,11 @@ namespace Senparc.Ncf.Core.Extensions
 {
     public static class IntegerExtensions
     {
+        /// <summary>
+        /// Formats values above 999 as truncated thousands with a <c>K</c> suffix.
+        /// </summary>
+        /// <param name="num">The integer value to format.</param>
+        /// <returns>The compact display string.</returns>
         public static string ThousandChange(this int num)
         {
             if (num > 999)

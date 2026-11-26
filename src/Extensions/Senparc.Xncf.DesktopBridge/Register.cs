@@ -66,17 +66,20 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Description => RegisterText.Description;
 
-    public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+        /// <inheritdoc />
+        public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {
         return Task.CompletedTask;
     }
 
-    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+        /// <inheritdoc />
+        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
     {
         await unsinstallFunc().ConfigureAwait(false);
     }
 
-    public override IServiceCollection AddXncfModule(
+        /// <inheritdoc />
+        public override IServiceCollection AddXncfModule(
         IServiceCollection services,
         IConfiguration configuration,
         IHostEnvironment env)
@@ -109,6 +112,10 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
         return base.AddXncfModule(services, configuration, env);
     }
 
+    /// <summary>
+    /// Discovers concrete integration-event types from loaded Senparc assemblies.
+    /// </summary>
+    /// <returns>The distinct event types eligible for handler registration.</returns>
     private static IEnumerable<Type> GetIntegrationEventTypes()
     {
         return AppDomain.CurrentDomain.GetAssemblies()
@@ -130,6 +137,11 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
             .Distinct();
     }
 
+    /// <summary>
+    /// Returns loadable types from an assembly while tolerating partial type-load failures.
+    /// </summary>
+    /// <param name="assembly">The assembly to inspect.</param>
+    /// <returns>Types that could be loaded successfully.</returns>
     private static IEnumerable<Type> GetLoadableTypes(Assembly assembly)
     {
         try

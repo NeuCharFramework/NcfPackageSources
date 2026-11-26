@@ -36,6 +36,10 @@ namespace Senparc.Xncf.AIKernel.Models
 {
     public class AIKernelSenparcEntities : XncfDatabaseDbContext
     {
+        /// <summary>
+        /// Initializes the AIKernel database context.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core context options.</param>
         public AIKernelSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
         }

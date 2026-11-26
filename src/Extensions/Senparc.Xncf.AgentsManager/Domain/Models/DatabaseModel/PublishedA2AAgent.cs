@@ -25,8 +25,7 @@ using System.Text.RegularExpressions;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Stores the public A2A publication settings for an agent template.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(PublishedA2AAgent))]
     [Serializable]
@@ -38,21 +37,21 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         public int AgentTemplateId { get; private set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the public identifier used in the A2A route.
         /// </summary>
         [Required]
         [MaxLength(64)]
         public string PublicAgentKey { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the published agent is enabled.
         [Required]
         public bool Enable { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the public agent card name.
         [MaxLength(120)]
         public string CardName { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the public agent card description.
         [MaxLength(1000)]
         public string CardDescription { get; private set; }
 
@@ -66,34 +65,47 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         public string SkillDescription { get; private set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether function calls are permitted.
         /// </summary>
         [Required]
         public bool AllowFunctionCalls { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the maximum accepted input character count.
         [Required]
         public int MaxInputCharacters { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the authentication mode used by the published endpoint.
         [Required]
         public RemoteAgentAuthenticationMode AuthenticationMode { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets the authentication header name.</summary>
         [MaxLength(100)]
         public string AuthHeaderName { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets the protected authentication secret.</summary>
         [MaxLength(100)]
         public string AuthSecretKey { get; private set; }
 
+        /// <summary>
+        /// Reserved for EF Core materialization.
+        /// </summary>
         private PublishedA2AAgent() { }
 
+        /// <summary>
+        /// Initializes publication settings from a DTO.
+        /// </summary>
+        /// <param name="dto">The publication settings to copy.</param>
         public PublishedA2AAgent(PublishedA2AAgentDto dto)
         {
             Update(dto);
         }
 
+        /// <summary>
+        /// Replaces publication settings and validates the public key and input limits.
+        /// </summary>
+        /// <param name="dto">The replacement publication settings.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="dto"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when the public agent key is invalid.</exception>
         public void Update(PublishedA2AAgentDto dto)
         {
             if (dto == null)
@@ -116,10 +128,18 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             AuthSecretKey = dto.AuthSecretKey?.Trim();
         }
 
+        /// <summary>Enables this published agent.</summary>
         public void EnableAgent() => Enable = true;
 
+        /// <summary>Disables this published agent without deleting its publication settings.</summary>
         public void DisableAgent() => Enable = false;
 
+        /// <summary>
+        /// Normalizes and validates a public A2A agent key.
+        /// </summary>
+        /// <param name="publicAgentKey">The key to normalize.</param>
+        /// <returns>The lower-case validated key.</returns>
+        /// <exception cref="ArgumentException">Thrown when the key contains unsupported characters or length.</exception>
         public static string NormalizePublicAgentKey(string publicAgentKey)
         {
             var normalized = publicAgentKey?.Trim().ToLowerInvariant();

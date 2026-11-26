@@ -24,33 +24,36 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.Functions
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Describes a rendered selection control and its available/selected values.
     /// </summary>
     public class SelectionList
     {
         private string[] selectedValues;
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the rendered selection control type.</summary>
         public SelectionType SelectionType { get; set; }
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
+        /// <summary>Gets or sets the currently selected values.</summary>
         public string[] SelectedValues { get => selectedValues ?? new string[0]; set => selectedValues = value; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the available selection items.</summary>
         public IList<SelectionItem> Items { get; set; }
 
         //public SelectionList() { }
 
 
+        /// <summary>
+        /// Initializes an empty selection list of the requested control type.
+        /// </summary>
+        /// <param name="selectionType">The UI selection control type.</param>
         public SelectionList(SelectionType selectionType) : this(selectionType, null)
         {
         }
 
+        /// <summary>
+        /// Initializes a selection list with optional items.
+        /// </summary>
+        /// <param name="selectionType">The UI selection control type.</param>
+        /// <param name="items">The available selection items.</param>
         public SelectionList(SelectionType selectionType, IList<SelectionItem> items)
         {
             SelectionType = selectionType;
@@ -58,10 +61,11 @@ namespace Senparc.Ncf.XncfBase.Functions
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether the item at an index is selected.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="itemIndex">The item index.</param>
+        /// <returns><see langword="true"/> when the item's value is selected.</returns>
+        /// <exception cref="IndexOutOfRangeException">Thrown when the index exceeds the item collection.</exception>
         public bool IsSelected(int itemIndex)
         {
             if (itemIndex > Items.Count - 1)
@@ -73,10 +77,10 @@ namespace Senparc.Ncf.XncfBase.Functions
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a value appears in the selected-value collection.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">The selection value to check.</param>
+        /// <returns><see langword="true"/> when the value is selected.</returns>
         public bool IsSelected(string value)
         {
             return SelectedValues.Contains(value);
@@ -84,31 +88,34 @@ namespace Senparc.Ncf.XncfBase.Functions
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents one selectable value in a Function parameter control.
     /// </summary>
     public class SelectionItem
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the display text.</summary>
         public string Text { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the submitted value.</summary>
         public string Value { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether the item is selected by default.</summary>
         public bool DefaultSelected { get; set; }
         /// <summary>
         /// description
         /// </summary>
         public string Note { get; set; }
 
+        /// <summary>Gets or sets provider-specific data attached to the item.</summary>
         public object BindData  { get; set; }
 
+        /// <summary>Initializes an empty selection item.</summary>
         public SelectionItem() { }
 
+        /// <summary>
+        /// Initializes a selection item with display text and optional default-selection state.
+        /// </summary>
+        /// <param name="value">The submitted value.</param>
+        /// <param name="text">The display text.</param>
+        /// <param name="note">Optional helper text.</param>
+        /// <param name="defaultSelected">Whether the item is selected by default.</param>
         public SelectionItem(string value, string text, string note = "", bool defaultSelected = false)
         {
             Text = text;
@@ -119,25 +126,17 @@ namespace Senparc.Ncf.XncfBase.Functions
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies the supported selection control types.
     /// </summary>
     public enum SelectionType
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>No specific selection control has been assigned.</summary>
         Unknown,
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>A single-value dropdown control.</summary>
         DropDownList,
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>A multi-value checkbox list.</summary>
         CheckBoxList,
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
+        // RadioButtonList was removed from the supported selection controls.
         //RadioButtonList
     }
 }

@@ -28,7 +28,13 @@ namespace Senparc.Ncf.XncfBase
 {
     internal interface IxncfMcp
     {
-
+        /// <summary>
+        /// Registers MCP services for the module.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="env">The host environment.</param>
+        /// <returns>The configured service collection.</returns>
         public IServiceCollection AddMcp(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
 

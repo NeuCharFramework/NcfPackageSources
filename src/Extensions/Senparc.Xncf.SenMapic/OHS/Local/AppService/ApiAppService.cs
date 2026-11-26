@@ -30,6 +30,10 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
     [ApiAuthorize]
     public class ApiAppService : AppServiceBase
     {
+        /// <summary>
+        /// Initializes the SenMapic sample API application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public ApiAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
@@ -45,9 +49,9 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
          */
 
         /// <summary>
-        /// expose AppService as a Web API
+        /// Returns the fixed sample status value through the API response pipeline.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An application response containing <c>200</c>.</returns>
         [ApiBind]
         public async Task<AppResponseBase<int>> MyApi()
         {
@@ -59,9 +63,11 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
         }
 
         /// <summary>
-        /// custom Post types and complex parameters while testing exception throwing and custom status codes
+        /// Exercises complex POST binding and custom exception/status handling.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="request">The request values included in the diagnostic exception.</param>
+        /// <returns>A string application response produced by the response pipeline.</returns>
+        /// <exception cref="NcfExceptionBase">Intentionally thrown to exercise exception handling.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> MyCustomApi(Api_MyCustomApiRequest request)
         {

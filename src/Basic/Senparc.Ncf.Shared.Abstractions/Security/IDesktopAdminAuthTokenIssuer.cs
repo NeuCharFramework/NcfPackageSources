@@ -22,11 +22,17 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Shared.Abstractions.Security;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Issues short-lived administrator tokens for an approved DesktopBridge handoff.
 /// </summary>
 public interface IDesktopAdminAuthTokenIssuer
 {
+    /// <summary>
+    /// Issues an access token constrained by the source authentication expiry.
+    /// </summary>
+    /// <param name="adminUserId">The administrator account receiving the token.</param>
+    /// <param name="sourceAuthenticationExpiresUtc">The expiry of the source authenticated session.</param>
+    /// <param name="cancellationToken">Token used to cancel issuance.</param>
+    /// <returns>The token issue result and expiry metadata.</returns>
     Task<DesktopAdminAuthTokenIssueResult> IssueAsync(
         int adminUserId,
         DateTimeOffset sourceAuthenticationExpiresUtc,
@@ -34,8 +40,13 @@ public interface IDesktopAdminAuthTokenIssuer
 }
 
 /// <summary>
-///Legacy comment translated to English.
+/// Represents the result of issuing a DesktopBridge administrator token.
 /// </summary>
+/// <param name="Succeeded">Whether a token was issued.</param>
+/// <param name="UserName">The administrator name associated with the token.</param>
+/// <param name="AccessToken">The short-lived access token.</param>
+/// <param name="ExpiresUtc">The UTC expiry timestamp.</param>
+/// <param name="ErrorMessage">The failure message when issuance fails.</param>
 public sealed record DesktopAdminAuthTokenIssueResult(
     bool Succeeded,
     string? UserName = null,

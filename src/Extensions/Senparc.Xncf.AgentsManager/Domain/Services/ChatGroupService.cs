@@ -947,6 +947,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 }
             }
 
+            // Persist the buffered response for the active executor before the
+            // group advances to another participant or completes the turn.
             async Task FlushActiveResponseAsync()
             {
                 if (state.ActiveResponseText.Length == 0 || string.IsNullOrWhiteSpace(state.ActiveExecutorId))

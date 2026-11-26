@@ -63,6 +63,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         private NetworkCounterSnapshot? _previousNetwork;
         private ProcessCounterSnapshot? _previousProcess;
 
+        /// <summary>
+        /// Collects a synchronized snapshot of host CPU, physical memory, network,
+        /// and current-process metrics. Rate-based values are populated only after
+        /// a previous sample has established a valid counter baseline.
+        /// </summary>
+        /// <returns>A snapshot containing supported metrics and non-fatal sampling warnings.</returns>
         public HostMetricsSnapshot Collect()
         {
             lock (_syncRoot)
@@ -83,6 +89,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Adds host CPU utilization calculated from the platform counter delta.
+        /// Unsupported platforms, counter resets, and sampling failures are reported
+        /// as warnings on the supplied snapshot instead of escaping to the caller.
+        /// </summary>
+        /// <param name="snapshot">The snapshot receiving CPU values and warnings.</param>
         private void CollectCpu(HostMetricsSnapshot snapshot)
         {
             try
@@ -116,6 +128,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Adds physical-memory totals and utilization to a snapshot using the
+        /// platform-specific memory reader selected by <see cref="TryReadMemory"/>.
+        /// </summary>
+        /// <param name="snapshot">The snapshot receiving memory values and warnings.</param>
         private static void CollectMemory(HostMetricsSnapshot snapshot)
         {
             try
@@ -138,6 +155,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Adds aggregate network-interface counters and calculates receive/send
+        /// rates from the preceding sample when counters are monotonic.
+        /// </summary>
+        /// <param name="snapshot">The snapshot receiving network values and warnings.</param>
         private void CollectNetwork(HostMetricsSnapshot snapshot)
         {
             try
@@ -170,6 +192,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Adds current-process CPU utilization, working-set size, and uptime.
+        /// Process sampling failures are retained as warnings on the snapshot.
+        /// </summary>
+        /// <param name="snapshot">The snapshot receiving process values and warnings.</param>
         private void CollectProcess(HostMetricsSnapshot snapshot)
         {
             try
@@ -205,6 +232,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Selects and invokes the CPU counter reader for the current operating system.
+        /// </summary>
+        /// <param name="snapshot">Receives the total and idle counter values when supported.</param>
+        /// <returns><see langword="true"/> when a usable counter sample was read.</returns>
         private static bool TryReadCpuCounters(out CpuCounterSnapshot snapshot)
         {
             if (OperatingSystem.IsWindows())
@@ -226,6 +258,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             return false;
         }
 
+        /// <summary>
+        /// Reads Windows system CPU times and converts them to aggregate total/idle counters.
+        /// </summary>
+        /// <param name="snapshot">Receives the Windows counter values.</param>
+        /// <returns><see langword="true"/> when the native call succeeds.</returns>
         private static bool TryReadWindowsCpuCounters(out CpuCounterSnapshot snapshot)
         {
             if (!GetSystemTimes(out var idle, out var kernel, out var user))
@@ -241,6 +278,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             return true;
         }
 
+        /// <summary>
+        /// Parses the aggregate CPU line from Linux <c>/proc/stat</c>.
+        /// </summary>
+        /// <param name="snapshot">Receives the parsed total and idle jiffy counters.</param>
+        /// <returns><see langword="true"/> when the expected line and numeric fields exist.</returns>
         private static bool TryReadLinuxCpuCounters(out CpuCounterSnapshot snapshot)
         {
             var line = File.ReadLines("/proc/stat").FirstOrDefault();
@@ -270,6 +312,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             return true;
         }
 
+        /// <summary>
+        /// Reads the aggregate CPU load structure from macOS Mach host statistics.
+        /// </summary>
+        /// <param name="snapshot">Receives the converted total and idle counters.</param>
+        /// <returns><see langword="true"/> when the native Mach call succeeds.</returns>
         private static bool TryReadMacCpuCounters(out CpuCounterSnapshot snapshot)
         {
             var info = new MacHostCpuLoadInfo();
@@ -287,6 +334,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             return true;
         }
 
+        /// <summary>
+        /// Selects the operating-system-specific physical-memory reader.
+        /// </summary>
+        /// <param name="totalBytes">Receives total physical memory in bytes.</param>
+        /// <param name="availableBytes">Receives available physical memory in bytes.</param>
+        /// <returns><see langword="true"/> when the platform provides a valid sample.</returns>
         private static bool TryReadMemory(out long totalBytes, out long availableBytes)
         {
             if (OperatingSystem.IsWindows())
@@ -309,6 +362,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             return false;
         }
 
+        /// <summary>
+        /// Reads Windows physical-memory values through <c>GlobalMemoryStatusEx</c>.
+        /// </summary>
+        /// <param name="totalBytes">Receives total physical memory in bytes.</param>
+        /// <param name="availableBytes">Receives available physical memory in bytes.</param>
+        /// <returns><see langword="true"/> when the native API reports memory values.</returns>
         private static bool TryReadWindowsMemory(out long totalBytes, out long availableBytes)
         {
             var status = new WindowsMemoryStatus
@@ -328,6 +387,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             return true;
         }
 
+        /// <summary>
+        /// Reads <c>MemTotal</c> and <c>MemAvailable</c> from Linux <c>/proc/meminfo</c>.
+        /// </summary>
+        /// <param name="totalBytes">Receives total physical memory in bytes.</param>
+        /// <param name="availableBytes">Receives available physical memory in bytes.</param>
+        /// <returns><see langword="true"/> when a positive total is parsed.</returns>
         private static bool TryReadLinuxMemory(out long totalBytes, out long availableBytes)
         {
             long totalKb = 0;
@@ -355,6 +420,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             return totalBytes > 0;
         }
 
+        /// <summary>
+        /// Extracts the invariant-culture numeric kilobyte value from one Linux
+        /// memory-information line.
+        /// </summary>
+        /// <param name="line">A line such as <c>MemTotal: 123 kB</c>.</param>
+        /// <returns>The parsed kilobyte count, or zero for malformed input.</returns>
         private static long ParseLinuxMemoryKb(string line)
         {
             var parts = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
@@ -364,6 +435,13 @@ namespace Senparc.Areas.Admin.Domain.Services
                 : 0;
         }
 
+        /// <summary>
+        /// Reads macOS physical-memory size and derives available memory from
+        /// Mach virtual-memory page counters.
+        /// </summary>
+        /// <param name="totalBytes">Receives total physical memory in bytes.</param>
+        /// <param name="availableBytes">Receives estimated available memory in bytes.</param>
+        /// <returns><see langword="true"/> when all required native calls succeed.</returns>
         private static bool TryReadMacMemory(out long totalBytes, out long availableBytes)
         {
             nuint length = (nuint)sizeof(ulong);
@@ -395,6 +473,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             return totalBytes > 0;
         }
 
+        /// <summary>
+        /// Aggregates byte counters from active non-loopback, non-tunnel interfaces.
+        /// Interfaces that reject statistics queries are skipped.
+        /// </summary>
+        /// <returns>A timestamped aggregate network-counter snapshot.</returns>
         private static NetworkCounterSnapshot ReadNetworkCounters()
         {
             long receivedBytes = 0;
@@ -430,16 +513,33 @@ namespace Senparc.Areas.Admin.Domain.Services
                 interfaceCount);
         }
 
+        /// <summary>
+        /// Adds two non-negative counters while saturating at <see cref="long.MaxValue"/>.
+        /// </summary>
+        /// <param name="left">The accumulated counter value.</param>
+        /// <param name="right">The next counter value.</param>
+        /// <returns>The exact sum when representable, otherwise <see cref="long.MaxValue"/>.</returns>
         private static long SafeAdd(long left, long right)
         {
             return left > long.MaxValue - right ? long.MaxValue : left + right;
         }
 
+        /// <summary>
+        /// Converts an unsigned native byte count to a signed value without overflow.
+        /// </summary>
+        /// <param name="value">The native unsigned value.</param>
+        /// <returns>The signed value, saturated at <see cref="long.MaxValue"/>.</returns>
         private static long ToInt64(ulong value)
         {
             return value > long.MaxValue ? long.MaxValue : (long)value;
         }
 
+        /// <summary>
+        /// Restricts a percentage to the inclusive range 0-100 and rounds it to
+        /// two decimal places for stable API output.
+        /// </summary>
+        /// <param name="value">The calculated percentage.</param>
+        /// <returns>The normalized percentage.</returns>
         private static double ClampPercentage(double value)
         {
             return Math.Round(Math.Clamp(value, 0d, 100d), 2);
@@ -463,6 +563,10 @@ namespace Senparc.Areas.Admin.Domain.Services
             public uint Low;
             public uint High;
 
+            /// <summary>
+            /// Combines the native high and low 32-bit fields into one counter value.
+            /// </summary>
+            /// <returns>The unsigned 64-bit representation of the native time value.</returns>
             public readonly ulong ToUInt64()
             {
                 return ((ulong)High << 32) | Low;

@@ -136,21 +136,35 @@ namespace Senparc.Ncf.Core.Models.VD
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Checks whether the current HTTP context authenticated successfully with a scheme.
         /// </summary>
-        /// <param name="authenticationScheme">Scheme name</param>
-        /// <returns></returns>
+        /// <param name="authenticationScheme">The authentication scheme name.</param>
+        /// <returns><see langword="true"/> when authentication succeeds.</returns>
         public async Task<bool> CheckLoginedAsync(string authenticationScheme)
         {
             var authenticate = await HttpContext.AuthenticateAsync(authenticationScheme);
             return authenticate.Succeeded;
         }
 
+        /// <summary>
+        /// Stores a serialized UI message in TempData for the next page response.
+        /// </summary>
+        /// <param name="messageType">The UI message type.</param>
+        /// <param name="messageText">The message text.</param>
+        /// <param name="showClose">Whether the UI should expose a close action.</param>
         public void SetMessager(MessageType messageType, string messageText, bool showClose = true)
         {
             TempData["Messager"] = new Messager(messageType, messageText).ToJson();
         }
 
+        /// <summary>
+        /// Creates a JSON AJAX response carrying a typed payload and success state.
+        /// </summary>
+        /// <typeparam name="T">The payload type.</typeparam>
+        /// <param name="data">The response payload.</param>
+        /// <param name="succed">Whether the operation succeeded.</param>
+        /// <param name="msg">The response message.</param>
+        /// <returns>A JSON action result.</returns>
         public IActionResult Ok<T>(T data, bool succed, string msg = "操作成功!")
         {
             AjaxReturnModel<T> returnModel = new AjaxReturnModel<T>(data);
@@ -159,6 +173,12 @@ namespace Senparc.Ncf.Core.Models.VD
             return new JsonResult(returnModel);
         }
 
+        /// <summary>
+        /// Creates a JSON AJAX response containing only success state and message.
+        /// </summary>
+        /// <param name="isSuccess">Whether the operation succeeded.</param>
+        /// <param name="message">The response message.</param>
+        /// <returns>A JSON action result.</returns>
         public IActionResult Ok(bool isSuccess, string message)
         {
             if (!isSuccess)
@@ -168,6 +188,11 @@ namespace Senparc.Ncf.Core.Models.VD
             return new OkObjectResult(new AjaxReturnModel() { Success = isSuccess, Msg = message });
         }
 
+        /// <summary>
+        /// Creates a successful JSON AJAX response carrying an object payload.
+        /// </summary>
+        /// <param name="data">The response payload.</param>
+        /// <returns>A JSON action result.</returns>
         public IActionResult Ok(object data)
         {
             return new OkObjectResult(new AjaxReturnModel<object>(data) { Success = true });

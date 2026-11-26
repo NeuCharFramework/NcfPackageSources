@@ -25,6 +25,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Mapping
     [XncfAutoConfigurationMapping]
     public class PublishedA2AAgentConfigurationMapping : ConfigurationMappingWithIdBase<PublishedA2AAgent, int>
     {
+        /// <inheritdoc/>
         public override void Configure(EntityTypeBuilder<PublishedA2AAgent> builder)
         {
             base.Configure(builder);

@@ -30,13 +30,13 @@ namespace Senparc.Ncf.Core.WebApi
     public static class NcfWebApiHelper
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds the public client path for an XNCF application-service method.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="xncfName">The registered XNCF name.</param>
+        /// <param name="appServiceName">The application-service name.</param>
+        /// <param name="methodName">The method name.</param>
+        /// <param name="showStaticApiState">Optional static API-state suffix.</param>
+        /// <returns>The resolved client API path.</returns>
         public static string GetNcfApiClientPath(string xncfName, string appServiceName, string methodName, string showStaticApiState = null)
         {
             var globalName = ApiBindAttribute.GetGlobalName(xncfName, $"{appServiceName}.{methodName}");
@@ -50,11 +50,11 @@ namespace Senparc.Ncf.Core.WebApi
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Converts a module name into a filesystem/project-safe XNCF project name.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="uniqueCode"></param>
-        /// <returns></returns>
+        /// <param name="name">The logical project name.</param>
+        /// <param name="uniqueCode">Optional uniqueness suffix.</param>
+        /// <returns>The normalized project name.</returns>
         public static string GetXncfProjectName(string name, string uniqueCode = null)
         {
             name = name.Replace(".", "-").Replace("_", "-");
@@ -66,11 +66,11 @@ namespace Senparc.Ncf.Core.WebApi
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Converts a project type name into a filesystem/project-safe XNCF project name.
         /// </summary>
-        /// <param name="projectType"></param>
-        /// <param name="uniqueCode"></param>
-        /// <returns></returns>
+        /// <param name="projectType">The type whose name supplies the project name.</param>
+        /// <param name="uniqueCode">Optional uniqueness suffix.</param>
+        /// <returns>The normalized project name.</returns>
         public static string GetXncfProjectName(Type projectType, string uniqueCode = null)
         {
             var name = projectType.Name;
@@ -79,10 +79,11 @@ namespace Senparc.Ncf.Core.WebApi
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Converts a generic type name into a filesystem/project-safe XNCF project name.
         /// </summary>
-        /// <param name="uniqueCode"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type whose name supplies the project name.</typeparam>
+        /// <param name="uniqueCode">Optional uniqueness suffix.</param>
+        /// <returns>The normalized project name.</returns>
         public static string GetXncfProjectName<T>(string uniqueCode = null)
         {
             var name = typeof(T).Name;

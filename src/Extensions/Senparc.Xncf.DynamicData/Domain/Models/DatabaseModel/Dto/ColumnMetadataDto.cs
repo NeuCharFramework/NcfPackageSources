@@ -28,44 +28,44 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
     public class ColumnMetadataDto : DtoBase<ColumnMetadata,int>
     {
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the parent table metadata identifier.
         /// </summary>  
         //[ForeignKey(nameof(TableMetadata))]
         public int TableMetadataId { get;  set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the database column name.
         /// </summary>  
         [Required]
         [MaxLength(255)]
         public string ColumnName { get;  set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the database/provider column type name.
         /// </summary>  
         [Required]
         [MaxLength(50)]
         public string ColumnType { get;  set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the column permits null values.
         /// </summary>  
         [Required]
         public bool IsNullable { get;  set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the configured database default value.
         /// </summary>  
         public string DefaultValue { get;  set; }
 
         /// <summary>  
-        /// associated table metadata。  
+        /// Gets or sets the associated table metadata.
         /// </summary>  
         //[InverseProperty(nameof(TableMetadata.ColumnMetadatas))]
         public TableMetadataDto TableMetadata { get; set; }
 
         /// <summary>  
-        /// associated table metadata。  
+        /// Gets or sets the data cells associated with this column.
         /// </summary>  
         //[InverseProperty(nameof(TableData.ColumnMetadata))]
         public ICollection<TableDataDto> TableDatas { get; set; }

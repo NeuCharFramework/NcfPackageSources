@@ -62,6 +62,10 @@ namespace Senparc.Xncf.Tenant
 {
     [XncfRegister]
     [XncfOrder(5990)]
+    /// <summary>
+    /// Registers the system tenant module, its tenant-aware database context,
+    /// repository services, and request middleware.
+    /// </summary>
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<TenantResource>(
@@ -69,21 +73,29 @@ namespace Senparc.Xncf.Tenant
             "多租户",
             "系统多租户核心模块，请勿删除；操作前请备份数据。");
 
-        #region Legacy section
+        #region Module metadata
 
+        /// <inheritdoc />
         public override string Name => "Senparc.Xncf.Tenant";
 
+        /// <inheritdoc />
         public override string Uid => SiteConfig.SYSTEM_XNCF_TANENT_UID;// "00000000-0000-0000-0000-000000000006";
 
+        /// <inheritdoc />
         public override string Version => "0.1";//the version number is required
 
+        /// <inheritdoc />
         public override string MenuName => RegisterText.MenuName;
 
+        /// <inheritdoc />
         public override string Icon => "fa fa-university";//fa fa-cog
 
+        /// <inheritdoc />
         public override string Description => RegisterText.Description;
 
-        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+        /// <inheritdoc />
+    /// <inheritdoc/>
+    public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //install or upgrade the database
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
@@ -91,37 +103,40 @@ namespace Senparc.Xncf.Tenant
             await base.InstallOrUpdateAsync(serviceProvider, installOrUpdate);
         }
 
+        /// <inheritdoc />
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            //Legacy comment translated to English.
-
             await base.UninstallAsync(serviceProvider, unsinstallFunc);
         }
         #endregion
 
+        /// <inheritdoc />
+        /// <remarks>
+        /// Registers tenant repositories, the background tenant provider, and the
+        /// AutoMapper profile before allowing the base register to add shared XNCF services.
+        /// </remarks>
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            AddMultiTenant(services);//Legacy comment translated to English.
-            EntitySetKeys.TryLoadSetInfo(typeof(SenparcEntitiesMultiTenant));//Legacy comment translated to English.
-            //Legacy comment translated to English.
+            AddMultiTenant(services);
+            EntitySetKeys.TryLoadSetInfo(typeof(SenparcEntitiesMultiTenant));
             services.AddScoped<ITenantInfoDbData, TenantInfoDbData>();
             services.AddScoped<TenantInfoRepository>();
             services.AddScoped<IClientRepositoryBase<TenantInfo>, TenantInfoRepository>();
             services.AddScoped<IBackgroundTenantProvider, BackgroundTenantProvider>();
 
-            //Legacy comment translated to English.
             services.AddAutoMapper(z => z.AddProfile<TenantInfoProfile>());
 
             return base.AddXncfModule(services, configuration, env);
         }
 
+        /// <inheritdoc />
+        /// <remarks>
+        /// Inserts <see cref="TenantMiddleware"/> into the request pipeline before
+        /// delegating to the shared module pipeline.
+        /// </remarks>
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
-            #region Legacy section
-
-            app.UseMiddleware<TenantMiddleware>();//Legacy comment translated to English.
-
-            #endregion
+            app.UseMiddleware<TenantMiddleware>();
             return base.UseXncfModule(app, registerService);
         }
 
@@ -200,22 +215,22 @@ namespace Senparc.Xncf.Tenant
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Registers tenant-scoped services and creates the multi-tenant database
+        /// context through <see cref="MultipleDatabasePool"/>.
         /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
+        /// <param name="services">The service collection receiving tenant registrations.</param>
+        /// <returns>The same service collection for fluent registration.</returns>
         public IServiceCollection AddMultiTenant(IServiceCollection services)
         {
             services.AddScoped<TenantInfoDto>();
             services.AddScoped<TenantInfoDbData>();
 
-            //Legacy comment translated to English.
             Func<IServiceProvider, SenparcEntitiesMultiTenant> multiTenantImplementationFactory = s =>
             {
                 var multipleDatabasePool = MultipleDatabasePool.Instance;
                 return multipleDatabasePool.GetDbContext<SenparcEntitiesMultiTenant>(serviceProvider: s);
             };
-            services.AddScoped<SenparcEntitiesMultiTenant>(multiTenantImplementationFactory);//Legacy comment translated to English.
+            services.AddScoped<SenparcEntitiesMultiTenant>(multiTenantImplementationFactory);
 
             return services;
         }

@@ -21,6 +21,12 @@ public sealed record DatabaseUpgradeCommandLineOptions(bool Enabled, string[] Ho
 {
     public const string SwitchName = "--database-upgrade";
 
+    /// <summary>
+    /// Separates the database-upgrade switch from arguments that must continue
+    /// to be passed to the host.
+    /// </summary>
+    /// <param name="arguments">The process arguments.</param>
+    /// <returns>Parsed upgrade enablement and remaining host arguments.</returns>
     public static DatabaseUpgradeCommandLineOptions Parse(IEnumerable<string> arguments)
     {
         var enabled = false;

@@ -11,7 +11,7 @@ using System.IO;
 namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// MySQL-specific DatabaseToolkit context used by runtime registration and migrations.
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.MySql, typeof(Register))]
     public class DatabaseToolkitSenparcEntities_MySql : DatabaseToolkitSenparcEntities, IMultipleMigrationDbContext

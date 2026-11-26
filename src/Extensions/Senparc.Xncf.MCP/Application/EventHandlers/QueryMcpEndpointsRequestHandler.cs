@@ -37,8 +37,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.MCP.Application.EventHandlers
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Handles EventBus requests for the currently configured MCP endpoint catalog.
     /// </summary>
     public sealed class QueryMcpEndpointsRequestHandler
         : IIntegrationEventHandler<QueryMcpEndpointsRequest>
@@ -46,6 +45,11 @@ namespace Senparc.Xncf.MCP.Application.EventHandlers
         private readonly MCPEndpointService _mcpEndpointService;
         private readonly IEventBus _eventBus;
 
+        /// <summary>
+        /// Initializes the MCP endpoint query handler.
+        /// </summary>
+        /// <param name="mcpEndpointService">The endpoint persistence service.</param>
+        /// <param name="eventBus">The bus used to publish the derived response event.</param>
         public QueryMcpEndpointsRequestHandler(
             MCPEndpointService mcpEndpointService,
             IEventBus eventBus)
@@ -54,6 +58,13 @@ namespace Senparc.Xncf.MCP.Application.EventHandlers
             _eventBus = eventBus;
         }
 
+        /// <summary>
+        /// Loads endpoint metadata, optionally filters to enabled endpoints, and publishes
+        /// a response event. Service failures are represented as an unsuccessful response.
+        /// </summary>
+        /// <param name="event">The endpoint query request.</param>
+        /// <param name="cancellationToken">Token used to cancel response publication.</param>
+        /// <returns>A task that completes after the response event is published.</returns>
         public async Task Handle(QueryMcpEndpointsRequest @event, CancellationToken cancellationToken)
         {
             QueryMcpEndpointsResponse response;
@@ -91,6 +102,11 @@ namespace Senparc.Xncf.MCP.Application.EventHandlers
             await _eventBus.PublishDerivedAsync(response, @event, cancellationToken);
         }
 
+        /// <summary>
+        /// Maps a persisted endpoint entity into the EventBus response contract.
+        /// </summary>
+        /// <param name="entity">The persisted endpoint entity.</param>
+        /// <returns>The response DTO, or <see langword="null"/> for a null entity.</returns>
         private static McpEndpointInfo MapToInfo(MCPEndpoint entity)
         {
             if (entity == null)

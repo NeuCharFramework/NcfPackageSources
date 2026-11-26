@@ -19,9 +19,7 @@ using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 
 namespace Template_OrgName.Xncf.Template_XncfName
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Stores the template sample RGB color entity.</summary>
     [Table(Register.DATABASE_PREFIX + nameof(Color))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class Color : EntityBase<int>
@@ -45,13 +43,18 @@ namespace Template_OrgName.Xncf.Template_XncfName
         /// </summary>
         public string AdditionNote { get; private set; }
 
+        /// <summary>Initializes an empty color for ORM materialization.</summary>
         private Color() { }
 
+        /// <summary>Initializes a color from RGB values, generating random values for negative components.</summary>
+        /// <param name="red">The red component.</param>
+        /// <param name="green">The green component.</param>
+        /// <param name="blue">The blue component.</param>
         public Color(int red, int green, int blue)
         {
             if (red < 0 || green < 0 || blue < 0)
             {
-                Random();//Legacy comment translated to English.
+                Random();
             }
             else
             {
@@ -61,11 +64,18 @@ namespace Template_OrgName.Xncf.Template_XncfName
             }
         }
 
+        /// <summary>Initializes a color and its additional note.</summary>
+        /// <param name="red">The red component.</param>
+        /// <param name="green">The green component.</param>
+        /// <param name="blue">The blue component.</param>
+        /// <param name="additionNote">The optional additional note.</param>
         public Color(int red, int green, int blue, string additionNote) : this(red, green, blue)
         {
             AdditionNote = additionNote;
         }
 
+        /// <summary>Initializes a color from a DTO.</summary>
+        /// <param name="colorDto">The source color DTO.</param>
         public Color(ColorDto colorDto)
         {
             Red = colorDto.Red;
@@ -73,6 +83,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
             Blue = colorDto.Blue;
         }
 
+        /// <summary>Replaces all components with generated color values.</summary>
         public void Random()
         {
             //generate a random color code
@@ -83,6 +94,11 @@ namespace Template_OrgName.Xncf.Template_XncfName
             Blue = getRadomColorCode();
         }
 
+        /// <summary>Increases each component by ten, capped at 255.</summary>
+        /// <summary>
+        /// Increases each color channel by ten while clamping the result to the
+        /// valid byte-channel upper bound.
+        /// </summary>
         public void Brighten()
         {
             Red = Math.Min(255, Red + 10);
@@ -90,6 +106,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
             Blue = Math.Min(255, Blue + 10);
         }
 
+        /// <summary>Decreases each component by ten, floored at zero.</summary>
         public void Darken()
         {
             Red = Math.Max(0, Red - 10);
@@ -97,6 +114,8 @@ namespace Template_OrgName.Xncf.Template_XncfName
             Blue = Math.Max(0, Blue - 10);
         }
 
+        /// <summary>Copies editable color values from a request DTO.</summary>
+        /// <param name="dto">The update request.</param>
         public void Update(UpdateColorRequestDto dto)
         {
             Red = dto.Red;

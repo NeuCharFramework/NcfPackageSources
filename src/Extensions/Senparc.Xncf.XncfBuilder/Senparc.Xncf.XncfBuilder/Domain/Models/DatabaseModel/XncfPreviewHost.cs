@@ -65,16 +65,27 @@ namespace Senparc.Xncf.XncfBuilder
         [Required]
         public DateTime UpdatedAtUtc { get; private set; }
 
+        /// <summary>
+        /// Initializes an empty preview-host entity for ORM materialization.
+        /// </summary>
         private XncfPreviewHost()
         {
         }
 
+        /// <summary>
+        /// Initializes a preview-host entity from a persistence snapshot.
+        /// </summary>
+        /// <param name="snapshot">The source persistence snapshot.</param>
         internal XncfPreviewHost(XncfPreviewPersistenceSnapshot snapshot)
         {
             SessionId = snapshot.SessionId;
             Apply(snapshot);
         }
 
+        /// <summary>
+        /// Applies snapshot state to the persisted host entity.
+        /// </summary>
+        /// <param name="snapshot">The source persistence snapshot.</param>
         internal void Apply(XncfPreviewPersistenceSnapshot snapshot)
         {
             ModuleProjectName = snapshot.ModuleProjectName;
@@ -91,6 +102,11 @@ namespace Senparc.Xncf.XncfBuilder
             UpdatedAtUtc = snapshot.UpdatedAt.UtcDateTime;
         }
 
+        /// <summary>
+        /// Marks the host as interrupted after an application restart or recovery boundary.
+        /// </summary>
+        /// <param name="interruptedAt">The interruption timestamp.</param>
+        /// <param name="message">The interruption status message.</param>
         internal void MarkInterrupted(DateTimeOffset interruptedAt, string message)
         {
             Status = XncfPreviewHostStatus.Interrupted;

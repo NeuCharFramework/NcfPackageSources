@@ -31,8 +31,14 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
+/// <summary>
+/// Represents a human approval decision and optional input/reason text.
+/// </summary>
 public sealed record WorkflowHumanInputDecision(bool Approved, string? Input = null, string? Reason = null);
 
+/// <summary>
+/// Represents the result of resolving a pending Workflow human-input request.
+/// </summary>
 public sealed record WorkflowHumanInputResolution(
     bool Handled,
     bool Success,

@@ -108,8 +108,8 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Provides administrator-scoped chat session, memory, workflow, and workspace
+    /// operations for the AdminChat experience.
     /// </summary>
     [AdminOrJwtAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class AdminChatAppService : LocalAppServiceBase
@@ -127,6 +127,20 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly IEventBus _eventBus;
         private readonly IWorkspaceStorage _workspaceStorage;
 
+        /// <summary>
+        /// Initializes the AdminChat application service and its session, message,
+        /// AI, event, and workspace dependencies.
+        /// </summary>
+        /// <param name="serviceProvider">The request service provider.</param>
+        /// <param name="sessionService">The chat-session persistence service.</param>
+        /// <param name="messageService">The chat-message persistence service.</param>
+        /// <param name="sessionModuleService">The service linking modules to sessions.</param>
+        /// <param name="sessionWorkflowService">The service linking workflows to sessions.</param>
+        /// <param name="trajectoryService">The trajectory and execution-history service.</param>
+        /// <param name="chatAiService">The AI service used by chat operations.</param>
+        /// <param name="adminUserInfoService">The administrator account service.</param>
+        /// <param name="localizer">The localized AdminChat message provider.</param>
+        /// <param name="workspaceStorage">Optional workspace storage.</param>
         public AdminChatAppService(
             IServiceProvider serviceProvider,
             AdminChatSessionService sessionService,
@@ -151,6 +165,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             _workspaceStorage = workspaceStorage;
         }
 
+        /// <summary>
+        /// Returns dynamic option values for a registered chat-tool parameter.
+        /// </summary>
+        /// <param name="command">The chat command whose parameter is being queried.</param>
+        /// <param name="parameter">The parameter name.</param>
+        /// <param name="query">Optional text used to filter option labels.</param>
+        /// <param name="limit">The maximum number of options to return.</param>
+        /// <returns>A response containing the tool parameter options.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<ChatToolParameterOptionsResult>> GetChatToolParameterOptionsAsync(
             string command,
@@ -172,6 +194,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     }).ConfigureAwait(false));
         }
 
+        /// <summary>
+        /// Gets the current administrator's AdminChat memory profile for a session.
+        /// </summary>
+        /// <param name="sessionId">The session identifier, or zero for the default profile.</param>
+        /// <returns>A response containing memory content, mode, and revision.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AdminChatMemoryView>> GetMemoryAsync(int sessionId = 0)
         {
@@ -180,6 +207,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     .GetAsync(GetCurrentAdminUserInfoId(), sessionId));
         }
 
+        /// <summary>
+        /// Saves a revised AdminChat memory profile after validating its revision.
+        /// </summary>
+        /// <param name="request">The session, revision, Markdown, and system-message values.</param>
+        /// <returns>A response containing the saved memory profile.</returns>
+        /// <exception cref="NcfExceptionBase">Converted into an error response when the request is missing.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AdminChatMemoryView>> SaveMemoryAsync([FromBody] SaveAdminChatMemoryRequest request)
         {
@@ -192,6 +225,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 });
         }
 
+        /// <summary>
+        /// Changes the current administrator's memory mode for a session.
+        /// </summary>
+        /// <param name="request">The session, revision, and requested memory mode.</param>
+        /// <returns>A response containing the updated memory profile.</returns>
+        /// <exception cref="NcfExceptionBase">Converted into an error response when the request is missing.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AdminChatMemoryView>> SetMemoryEnabledAsync([FromBody] SetAdminChatMemoryRequest request)
         {
@@ -205,6 +244,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 });
         }
 
+        /// <summary>
+        /// Edits one structured memory entry for the current administrator.
+        /// </summary>
+        /// <param name="request">The session, revision, and replacement entry data.</param>
+        /// <returns>A response containing the updated memory profile.</returns>
+        /// <exception cref="NcfExceptionBase">Converted into an error response when the request is missing.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AdminChatMemoryView>> EditMemoryEntryAsync([FromBody] EditAdminChatMemoryRequest request)
         {
@@ -217,6 +262,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 });
         }
 
+        /// <summary>
+        /// Returns the tenant-wide AdminChat system message when the caller is a
+        /// super administrator.
+        /// </summary>
+        /// <returns>A response containing the current global revision and message.</returns>
+        /// <exception cref="NcfExceptionBase">
+        /// Converted into an error response when the caller is not a super administrator.
+        /// </exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AdminChatSystemMessageView>> GetGlobalChatSystemMessageAsync()
         {
@@ -229,6 +282,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 });
         }
 
+        /// <summary>
+        /// Saves the tenant-wide AdminChat system message for a super administrator
+        /// using optimistic revision control.
+        /// </summary>
+        /// <param name="request">The expected revision and replacement system message.</param>
+        /// <returns>The updated system-message view.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AdminChatSystemMessageView>> SaveGlobalChatSystemMessageAsync(
             [FromBody] AdminChatSystemMessageView request)
@@ -245,6 +304,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 });
         }
 
+        /// <summary>
+        /// Ensures the default AdminChat system-message PromptRange prompt exists
+        /// and returns its prompt code.
+        /// </summary>
+        /// <returns>The initialized prompt descriptor.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AdminChatSystemMessagePromptView>> EnsureAdminChatSystemMessagePromptAsync()
         {
@@ -259,6 +323,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 });
         }
 
+        /// <summary>
+        /// Lists available PromptRange shotting ranges for AdminChat scoring tools.
+        /// </summary>
+        /// <returns>The available shotting ranges.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<IReadOnlyList<PromptShottingRange>>> GetPromptShottingRangesAsync()
         {
@@ -271,6 +339,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 });
         }
 
+        /// <summary>
+        /// Saves a PromptRange shotting result and optionally attaches its reference
+        /// to the originating AdminChat message.
+        /// </summary>
+        /// <param name="request">The shotting payload and optional message/reference data.</param>
+        /// <returns>The saved shotting response and optional updated message.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptShottingSaveResponse>> SavePromptShotAsync(
             [FromBody] AdminChatPromptShottingRequest request)
@@ -301,6 +375,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 });
         }
 
+        /// <summary>
+        /// Lists workspaces owned by the current super administrator.
+        /// </summary>
+        /// <returns>The owner-scoped workspace options.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetWorkspaceOptionsResponse>> GetWorkspaceOptionsAsync()
         {
@@ -328,6 +406,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Creates a workspace owned by the current super administrator.
+        /// </summary>
+        /// <param name="request">The non-empty workspace name.</param>
+        /// <returns>The created workspace option.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<WorkspaceOptionDto>> CreateWorkspaceAsync([FromBody] CreateWorkspaceRequest request)
         {
@@ -349,6 +432,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Lists entries at an owner-authorized session workspace path.
+        /// </summary>
+        /// <param name="sessionId">The owner-scoped chat session.</param>
+        /// <param name="relativePath">The workspace-relative directory path.</param>
+        /// <returns>Workspace entries and the current path.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<WorkspaceEntriesResponse>> GetWorkspaceEntriesAsync(
             int sessionId,
@@ -368,6 +457,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Suggests owner-authorized workspace paths matching a bounded safe query.
+        /// </summary>
+        /// <param name="sessionId">Optional session used to resolve its workspace.</param>
+        /// <param name="workspaceId">Optional owner-authorized workspace identifier.</param>
+        /// <param name="query">The relative path query.</param>
+        /// <returns>Matching path suggestions.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<WorkspacePathSuggestionsResponse>> SuggestWorkspacePathsAsync(
             int sessionId = 0,
@@ -405,6 +501,19 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Resolves the workspace identifier used by path suggestions and enforces
+        /// the super-administrator and ownership requirements for the selected source.
+        /// A positive session identifier takes precedence over the explicit workspace
+        /// identifier so that suggestions cannot switch a session to another workspace.
+        /// </summary>
+        /// <param name="sessionId">The session whose workspace should be used, or zero to use <paramref name="workspaceId"/>.</param>
+        /// <param name="workspaceId">An explicitly selected workspace identifier when no session is supplied.</param>
+        /// <returns>The owner-authorized workspace identifier.</returns>
+        /// <exception cref="NcfExceptionBase">
+        /// Thrown when Workspace is unavailable, the session has no workspace, the
+        /// explicit identifier is missing, or the workspace belongs to another owner.
+        /// </exception>
         private async Task<string> ResolveSuggestionWorkspaceIdAsync(int sessionId, string workspaceId)
         {
             if (!IsCurrentAdminSuperAdmin() || _workspaceStorage == null)
@@ -439,6 +548,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return descriptor.Id;
         }
 
+        /// <summary>
+        /// Reads a bounded preview of one owner-authorized workspace file.
+        /// </summary>
+        /// <param name="sessionId">The owner-scoped chat session.</param>
+        /// <param name="relativePath">The workspace-relative file path.</param>
+        /// <returns>A file preview DTO or a standard application error.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<WorkspaceFilePreviewDto>> GetWorkspaceFilePreviewAsync(
             int sessionId,
@@ -489,6 +604,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Reads a bounded line window from one owner-authorized workspace text file.
+        /// </summary>
+        /// <param name="sessionId">The owner-scoped chat session.</param>
+        /// <param name="relativePath">The workspace-relative text file path.</param>
+        /// <param name="startLine">The one-based starting line.</param>
+        /// <returns>A text-window preview DTO.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<WorkspaceFilePreviewDto>> GetWorkspaceTextWindowAsync(
             int sessionId,
@@ -515,6 +637,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Validates and saves an owner-authorized workspace text edit, returning
+        /// the resulting preview and change metadata.
+        /// </summary>
+        /// <param name="request">The relative path and replacement content.</param>
+        /// <returns>The saved file preview DTO.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<WorkspaceFilePreviewDto>> SaveWorkspaceFileAsync(
             [FromBody] SaveWorkspaceFileRequest request)
@@ -557,6 +685,15 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Creates the non-windowed preview representation for bytes read from a
+        /// workspace file. Text bytes are decoded as UTF-8 while all bytes remain
+        /// available through the Base64 representation for binary consumers.
+        /// </summary>
+        /// <param name="path">The workspace-relative path represented by the preview.</param>
+        /// <param name="content">The complete content returned by the storage provider.</param>
+        /// <param name="etag">The storage version token associated with the content.</param>
+        /// <returns>A preview DTO containing content, size, type, and version metadata.</returns>
         private static WorkspaceFilePreviewDto CreateWorkspaceFilePreview(string path, byte[] content, string etag)
         {
             var contentType = WorkspaceTextFiles.ResolveContentType(path);
@@ -578,6 +715,18 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             };
         }
 
+        /// <summary>
+        /// Reads a bounded text window from Workspace and maps storage-specific
+        /// failures to the application errors exposed by the AdminChat API.
+        /// </summary>
+        /// <param name="workspaceId">The owner-authorized workspace identifier.</param>
+        /// <param name="relativePath">The workspace-relative text-file path.</param>
+        /// <param name="contentType">The already-resolved media type for the file.</param>
+        /// <param name="startLine">The one-based first line requested by the caller.</param>
+        /// <returns>A windowed text preview with truncation and continuation metadata.</returns>
+        /// <exception cref="NcfExceptionBase">
+        /// Thrown when the path is not a readable previewable text file or no longer exists.
+        /// </exception>
         private async Task<WorkspaceFilePreviewDto> CreateTextWindowPreviewAsync(
             string workspaceId,
             string relativePath,
@@ -625,6 +774,15 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             };
         }
 
+        /// <summary>
+        /// Loads an AdminChat session through the Workspace asset service so that
+        /// the current HTTP user is applied to the service's ownership checks.
+        /// </summary>
+        /// <param name="sessionId">The session identifier to resolve.</param>
+        /// <returns>The owner-authorized session and its workspace association.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the request has no registered HTTP context accessor.
+        /// </exception>
         private async Task<AdminChatSession> GetWorkspaceSessionAsync(int sessionId)
         {
             var user = ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Http.IHttpContextAccessor>().HttpContext.User;
@@ -635,8 +793,15 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         #region Legacy section
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates an administrator-owned chat session and optionally links selected
+        /// modules, workflows, memory mode, and Workspace access.
         /// </summary>
+        /// <param name="request">The session title, initial message, and selected capabilities.</param>
+        /// <returns>A response containing the new session identifier and effective settings.</returns>
+        /// <exception cref="NcfExceptionBase">
+        /// Converted into an error response when the administrator is not authenticated,
+        /// Workspace ownership is invalid, or a requested capability cannot be linked.
+        /// </exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<CreateSessionResponse>> CreateSessionAsync([FromBody] CreateChatSessionInputDto request)
         {
@@ -749,8 +914,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the current administrator's active chat sessions in a paged result.
         /// </summary>
+        /// <param name="pageIndex">The one-based page index.</param>
+        /// <param name="pageSize">The maximum number of sessions per page.</param>
+        /// <returns>A response containing session DTOs and the total count.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetSessionListResponse>> GetSessionListAsync(int pageIndex = 1, int pageSize = 20)
         {
@@ -775,8 +943,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reorders one administrator-owned session relative to another session.
         /// </summary>
+        /// <param name="request">The source session, target session, and insertion direction.</param>
+        /// <returns>A response containing the reordered session list.</returns>
+        /// <exception cref="NcfExceptionBase">Converted into an error response when the request is missing.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<AdminChatSessionDto>>> ReorderSessionAsync(
             [FromBody] ReorderSessionRequest request)
@@ -795,8 +966,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Generates a title from the first user message in an administrator-owned session.
         /// </summary>
+        /// <param name="request">The session identifier and optional AI model identifier.</param>
+        /// <returns>A response containing the generated or existing session title.</returns>
+        /// <exception cref="NcfExceptionBase">
+        /// Converted into an error response when the administrator is unauthenticated
+        /// or the session is missing or inaccessible.
+        /// </exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<GenerateSessionTitleResponse>> GenerateSessionTitleAsync(
             [FromBody] GenerateSessionTitleRequest request)
@@ -842,8 +1019,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets one administrator-owned session with its messages, linked modules,
+        /// and linked workflows.
         /// </summary>
+        /// <param name="sessionId">The session identifier.</param>
+        /// <returns>A response containing the complete session detail.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetSessionDetailResponse>> GetSessionDetailAsync(int sessionId)
         {
@@ -881,8 +1061,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Permanently deletes an administrator-owned chat session.
         /// </summary>
+        /// <param name="sessionId">The session identifier to delete.</param>
+        /// <returns>A localized success message.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> DeleteSessionAsync(int sessionId)
         {
@@ -907,8 +1089,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Archives an administrator-owned session without deleting its messages.
         /// </summary>
+        /// <param name="request">The session identifier to archive.</param>
+        /// <returns>A localized success message.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> ArchiveSessionAsync([FromBody] ArchiveSessionRequest request)
         {
@@ -934,8 +1118,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Restores an archived administrator-owned session to the active list.
         /// </summary>
+        /// <param name="request">The session identifier to restore.</param>
+        /// <returns>A localized success message.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> RestoreSessionAsync([FromBody] ArchiveSessionRequest request)
         {
@@ -961,8 +1147,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Sets or clears the unread marker for an administrator-owned session.
         /// </summary>
+        /// <param name="request">The session identifier and desired unread state.</param>
+        /// <returns>A string response indicating that the state was saved.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> SetSessionUnreadAsync([FromBody] SetSessionUnreadRequest request)
         {
@@ -987,8 +1175,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the current administrator's archived sessions in a paged result.
         /// </summary>
+        /// <param name="pageIndex">The one-based page index.</param>
+        /// <param name="pageSize">The maximum number of sessions per page.</param>
+        /// <returns>A response containing archived session DTOs and total count.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetSessionListResponse>> GetArchivedSessionListAsync(int pageIndex = 1, int pageSize = 20)
         {
@@ -1013,9 +1204,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Returns session and message statistics for all users.
         /// </summary>
+        /// <returns>A response containing per-user AdminChat statistics.</returns>
+        /// <exception cref="NcfExceptionBase">
+        /// Converted into an error response when the caller is not a super administrator.
+        /// </exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetUserSessionStatsResponse>> GetUserSessionStatsAsync()
         {
@@ -1071,6 +1265,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
         #endregion
 
+        /// <summary>
+        /// Enriches owner-visible session DTOs with names resolved from the current
+        /// super administrator's owned Workspace descriptors.
+        /// </summary>
+        /// <param name="sessions">The session DTOs to enrich in place.</param>
         private async Task AttachWorkspaceNamesAsync(IEnumerable<AdminChatSessionDto> sessions)
         {
             if (_workspaceStorage == null || !IsCurrentAdminSuperAdmin())
@@ -1101,8 +1300,17 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         #region Legacy section
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Sends a user message, invokes the selected chat mode, and persists the
+        /// assistant response and any generated trajectory artifacts.
         /// </summary>
+        /// <param name="request">
+        /// The session, message, model, mode, attachments, and harness options.
+        /// </param>
+        /// <returns>A response containing the persisted user and assistant messages.</returns>
+        /// <exception cref="NcfExceptionBase">
+        /// Converted into an error response when the administrator is unauthenticated,
+        /// the session is inaccessible, or no content/attachment is supplied.
+        /// </exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<SendMessageResponse>> SendMessageAsync([FromBody] ChatMessageInputDto request)
         {
@@ -1195,8 +1403,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Searches active conversation history or tool calls for the current administrator.
         /// </summary>
+        /// <param name="keyword">The text to search for.</param>
+        /// <param name="limit">The maximum number of hits.</param>
+        /// <param name="scope">The search scope, typically <c>chat</c> or <c>tool</c>.</param>
+        /// <returns>A response containing matching history hits.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SearchHistoryResponse>> SearchHistoryAsync(
             string keyword,
@@ -1224,8 +1436,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns one page of messages from an administrator-owned session.
         /// </summary>
+        /// <param name="sessionId">The session identifier.</param>
+        /// <param name="pageIndex">The zero-based message page index.</param>
+        /// <param name="pageSize">The maximum number of messages per page.</param>
+        /// <returns>A response containing message DTOs and total count.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetMessagesResponse>> GetMessagesAsync(int sessionId, int pageIndex = 0, int pageSize = 50)
         {
@@ -1254,8 +1470,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns trajectory metadata and a collapsed event stream for an owned trajectory.
         /// </summary>
+        /// <param name="trajectoryId">The trajectory identifier.</param>
+        /// <param name="query">Optional event-text filter.</param>
+        /// <param name="beforeSequence">Optional exclusive sequence boundary.</param>
+        /// <param name="pageSize">The maximum number of trajectory events.</param>
+        /// <returns>A response containing trajectory metadata and events.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetTrajectoryResponse>> GetTrajectoryAsync(
             int trajectoryId,
@@ -1294,8 +1515,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Searches owned trajectories by text and returns matching trajectory metadata.
         /// </summary>
+        /// <param name="query">The text or identifier to search for.</param>
+        /// <param name="pageSize">The maximum number of results.</param>
+        /// <returns>A response containing matching trajectories.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SearchTrajectoriesResponse>> SearchTrajectoriesAsync(
             string query,
@@ -1318,8 +1542,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Lists trajectories belonging to an administrator-owned session.
         /// </summary>
+        /// <param name="sessionId">The session identifier.</param>
+        /// <returns>A response containing the session trajectories.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SearchTrajectoriesResponse>> GetSessionTrajectoriesAsync(int sessionId)
         {
@@ -1345,8 +1571,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// Resume a stored native MAF Harness Trajectory.
+        /// Resumes a stored native harness trajectory with a new user instruction.
         /// </summary>
+        /// <param name="request">The trajectory, instruction, and optional model identifier.</param>
+        /// <returns>A response containing the new user/assistant messages and harness state.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<SendTrajectoryResponse>> ResumeTrajectoryAsync(
             [FromBody] ResumeTrajectoryRequest request)
@@ -1394,8 +1622,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// Fork a new native MAF Harness Trajectory from an existing event sequence.
+        /// Creates a new session and forks a native harness trajectory from an existing
+        /// trajectory sequence.
         /// </summary>
+        /// <param name="request">The source trajectory, branch sequence, instruction, and model.</param>
+        /// <returns>A response containing the branch session messages and harness state.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<SendTrajectoryResponse>> ForkTrajectoryAsync(
             [FromBody] ForkTrajectoryRequest request)
@@ -1466,8 +1697,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// Approve or reject a tool call waiting in a native MAF Harness Trajectory.
+        /// Approves or rejects a pending tool call and resumes the native harness trajectory.
         /// </summary>
+        /// <param name="request">The trajectory, approval, tool-call, and optional reason data.</param>
+        /// <returns>A response containing the resumed assistant message and harness state.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<SendTrajectoryResponse>> RespondTrajectoryApprovalAsync(
             [FromBody] TrajectoryApprovalRequest request)
@@ -1515,8 +1748,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Sets feedback for one administrator-owned chat message.
         /// </summary>
+        /// <param name="messageId">The message identifier.</param>
+        /// <param name="feedback">The feedback value to persist.</param>
+        /// <returns>A localized success message.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Put)]
         public async Task<StringAppResponse> SetMessageFeedbackAsync(int messageId, MessageFeedbackType feedback)
         {
@@ -1541,8 +1777,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deletes selected messages after verifying that the session belongs to the caller.
         /// </summary>
+        /// <param name="sessionId">The session identifier.</param>
+        /// <param name="messageIds">A comma-separated list of message identifiers.</param>
+        /// <returns>A localized message containing the deleted count.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> DeleteMessagesAsync(int sessionId, string messageIds)
         {
@@ -1584,8 +1823,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         #region Legacy section
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Adds one or more modules to an administrator-owned session.
         /// </summary>
+        /// <param name="request">The session identifier and module descriptors.</param>
+        /// <returns>A localized success message.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> AddModulesToSessionAsync([FromBody] AddModulesRequest request)
         {
@@ -1623,8 +1864,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces the module associations for a session while retaining required modules.
         /// </summary>
+        /// <param name="request">The session identifier and desired module list.</param>
+        /// <returns>A localized success message.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> SetSessionModulesAsync([FromBody] AddModulesRequest request)
         {
@@ -1693,8 +1936,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the available modules linked to an administrator-owned session.
         /// </summary>
+        /// <param name="sessionId">The session identifier.</param>
+        /// <returns>A response containing mapped session-module DTOs.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetSessionModulesResponse>> GetSessionModulesAsync(int sessionId)
         {
@@ -1722,8 +1967,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces the Workflow associations for an administrator-owned session.
         /// </summary>
+        /// <param name="request">The session identifier and desired Workflow identifiers.</param>
+        /// <returns>A localized success message.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> SetSessionWorkflowsAsync([FromBody] SetWorkflowsRequest request)
         {
@@ -1764,8 +2011,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Lists registered modules that are open and available for AdminChat sessions.
         /// </summary>
+        /// <returns>A response containing available module metadata.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetAvailableModulesResponse>> GetAvailableModulesAsync()
         {
@@ -1805,8 +2053,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Lists Workflows available to the current administrator.
         /// </summary>
+        /// <returns>A response containing available Workflow descriptors.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetAvailableWorkflowsResponse>> GetAvailableWorkflowsAsync()
         {
@@ -1831,8 +2080,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Lists the fallback and configured AI chat models available to AdminChat.
         /// </summary>
+        /// <returns>A response containing model options and AIKernel availability.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetAiModelOptionsResponse>> GetAiModelOptionsAsync()
         {
@@ -1892,6 +2142,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Enriches a session-module DTO with the current registered module metadata
+        /// and fills its display name when the persisted value is empty.
+        /// </summary>
+        /// <param name="dto">The persisted session-module DTO, or <see langword="null"/>.</param>
+        /// <returns>The same DTO instance after enrichment, or <see langword="null"/>.</returns>
         private static AdminChatSessionModuleDto MapModuleDtoWithRegisterInfo(AdminChatSessionModuleDto dto)
         {
             if (dto == null)
@@ -1917,6 +2173,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return dto;
         }
 
+        /// <summary>
+        /// Links the registered AgentsManager module to a session when the module is
+        /// present and currently available through the NeuBell module catalog.
+        /// </summary>
+        /// <param name="sessionId">The session that should receive the module link.</param>
+        /// <returns>A task that completes after the conditional link operation.</returns>
         private async Task EnsureAgentsManagerModuleLinkedAsync(int sessionId)
         {
             var register = XncfRegisterManager.RegisterList.FirstOrDefault(module =>
@@ -1938,6 +2200,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             }
         }
 
+        /// <summary>
+        /// Maps persisted session-workflow links to DTOs and enriches them with
+        /// user-authorized function-calling descriptors when the provider is available.
+        /// </summary>
+        /// <param name="workflows">The persisted workflow links to map.</param>
+        /// <param name="userId">The administrator whose available workflows must be used.</param>
+        /// <returns>The mapped workflow DTO list, preserving the input order.</returns>
         private async Task<List<AdminChatSessionWorkflowDto>> MapWorkflowDtosAsync(
             IReadOnlyList<AdminChatSessionWorkflow> workflows,
             int userId)
@@ -1967,6 +2236,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             }).ToList();
         }
 
+        /// <summary>
+        /// Converts a workflow function-calling descriptor into the DTO used by
+        /// the AdminChat available-workflows endpoint.
+        /// </summary>
+        /// <param name="workflow">The descriptor exposed by the workflow provider.</param>
+        /// <returns>A DTO containing identity, display text, and parameter descriptions.</returns>
         private static AvailableWorkflowDto MapAvailableWorkflowDto(
             WorkflowFunctionCallingDescriptor workflow) =>
             new()
@@ -1989,6 +2264,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
         #endregion
 
+        /// <summary>
+        /// Publishes a lightweight AdminChat synchronization event when an event bus
+        /// is configured; otherwise completes synchronously without side effects.
+        /// </summary>
+        /// <param name="userId">The administrator whose client views should be synchronized.</param>
+        /// <param name="sessionId">The affected session identifier.</param>
+        /// <param name="action">The client synchronization action name.</param>
+        /// <returns>A value task representing the optional event publication.</returns>
         private ValueTask PublishSyncEventAsync(int userId, int sessionId, string action)
         {
             return _eventBus?.PublishAsync(new AdminChatSyncEvent(userId, sessionId, action))
@@ -1998,70 +2281,95 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
     #region Legacy section
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Contains the result of creating an AdminChat session.</summary>
     public class CreateSessionResponse
     {
+        /// <summary>Gets or sets the new session identifier.</summary>
         public int SessionId { get; set; }
+        /// <summary>Gets or sets the effective session title.</summary>
         public string Title { get; set; }
+        /// <summary>Gets or sets the initial user message, when supplied.</summary>
         public string InitialMessage { get; set; }
+        /// <summary>Gets or sets the selected chat mode.</summary>
         public AdminChatMode Mode { get; set; }
+        /// <summary>Gets or sets the linked Workspace identifier.</summary>
         public string WorkspaceId { get; set; }
+        /// <summary>Gets or sets whether Workspace writes are enabled.</summary>
         public bool WorkspaceWriteEnabled { get; set; }
+        /// <summary>Gets or sets whether Workspace CLI access is enabled.</summary>
         public bool WorkspaceCliEnabled { get; set; }
     }
 
+    /// <summary>Identifies a system-message prompt and its PromptRange alias.</summary>
     public sealed record AdminChatSystemMessagePromptView(string PromptCode, string RangeAlias);
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Describes a relative reorder operation between two sessions.</summary>
     public class ReorderSessionRequest
     {
+        /// <summary>Gets or sets the session being moved.</summary>
         public int SessionId { get; set; }
+        /// <summary>Gets or sets the session used as the insertion reference.</summary>
         public int TargetSessionId { get; set; }
+        /// <summary>Gets or sets whether the source is inserted after the target.</summary>
         public bool InsertAfter { get; set; }
     }
 
+    /// <summary>Identifies a session to archive or restore.</summary>
     public class ArchiveSessionRequest
     {
+        /// <summary>Gets or sets the session identifier.</summary>
         public int SessionId { get; set; }
     }
 
+    /// <summary>Identifies a session and its unread state.</summary>
     public class SetSessionUnreadRequest
     {
+        /// <summary>Gets or sets the session identifier.</summary>
         public int SessionId { get; set; }
+        /// <summary>Gets or sets whether the session should be marked unread.</summary>
         public bool Unread { get; set; }
     }
 
+    /// <summary>Contains a paged collection of AdminChat sessions.</summary>
     public class GetSessionListResponse
     {
+        /// <summary>Gets or sets the returned session DTOs.</summary>
         public List<AdminChatSessionDto> Sessions { get; set; }
+        /// <summary>Gets or sets the total number of matching sessions.</summary>
         public int TotalCount { get; set; }
     }
 
+    /// <summary>Contains Workspace choices available to the caller.</summary>
     public class GetWorkspaceOptionsResponse
     {
+        /// <summary>Gets or sets the available Workspaces.</summary>
         public IReadOnlyList<WorkspaceOptionDto> Workspaces { get; set; } = Array.Empty<WorkspaceOptionDto>();
     }
 
+    /// <summary>Requests creation of a Workspace with a display name.</summary>
     public class CreateWorkspaceRequest
     {
+        /// <summary>Gets or sets the requested Workspace name.</summary>
         public string Name { get; set; }
     }
 
+    /// <summary>Requests AI title generation for a session.</summary>
     public class GenerateSessionTitleRequest
     {
+        /// <summary>Gets or sets the session identifier.</summary>
         public int SessionId { get; set; }
+        /// <summary>Gets or sets the optional AI model identifier.</summary>
         public int AiModelId { get; set; }
     }
 
+    /// <summary>Contains a generated or existing session title.</summary>
     public class GenerateSessionTitleResponse
     {
+        /// <summary>Gets or sets the title.</summary>
         public string Title { get; set; }
     }
 
+    /// <summary>Describes a Workspace exposed to the administrator UI.</summary>
     public class WorkspaceOptionDto
     {
         public string Id { get; set; }
@@ -2070,6 +2378,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public DateTime CreatedUtc { get; set; }
         public DateTime LastAccessedUtc { get; set; }
 
+        /// <summary>Creates a DTO from a Workspace storage descriptor.</summary>
+        /// <param name="descriptor">The source Workspace descriptor.</param>
+        /// <returns>The mapped Workspace option DTO.</returns>
         public static WorkspaceOptionDto CreateFromDescriptor(WorkspaceDescriptor descriptor)
         {
             return new WorkspaceOptionDto
@@ -2125,9 +2436,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public string ExpectedEtag { get; set; } = string.Empty;
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Contains per-user AdminChat session statistics.</summary>
     public class AdminChatUserStatDto
     {
         public int UserId { get; set; }
@@ -2141,25 +2450,19 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public DateTime LastActiveTime { get; set; }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Contains the user-statistics response collection.</summary>
     public class GetUserSessionStatsResponse
     {
         public List<AdminChatUserStatDto> Stats { get; set; } = new List<AdminChatUserStatDto>();
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Contains detailed session information.</summary>
     public class GetSessionDetailResponse
     {
         public AdminChatSessionDto Session { get; set; }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Contains messages and execution metadata returned by SendMessage.</summary>
     public class SendMessageResponse
     {
         public string MemoryUpdateStatus { get; set; }
@@ -2168,16 +2471,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public AdminChatMessageDto UserMessage { get; set; }
         public AdminChatMessageDto AssistantMessage { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the chat mode used for the response.</summary>
         public AdminChatMode Mode { get; set; } = AdminChatMode.Simple;
         public int MaxOutputTokens { get; set; } = 2000;
         public AdminChatHarnessOptions HarnessOptions { get; set; } = new();
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the harness steps produced for the request.</summary>
         public IReadOnlyList<AdminChatHarnessStep> HarnessSteps { get; set; }
 
         /// <summary>
@@ -2203,29 +2502,27 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public IReadOnlyList<AdminChatApprovalRequestDto> PendingApprovals { get; set; }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Contains history-search hits.</summary>
     public class SearchHistoryResponse
     {
         public List<AdminChatHistorySearchHit> Hits { get; set; } = new();
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Contains a page of chat messages and its total count.</summary>
     public class GetMessagesResponse
     {
         public List<AdminChatMessageDto> Messages { get; set; }
         public int TotalCount { get; set; }
     }
 
+    /// <summary>Contains trajectory metadata and its event page.</summary>
     public class GetTrajectoryResponse
     {
         public AdminChatTrajectoryDto Trajectory { get; set; }
         public List<AdminChatTrajectoryEventDto> Events { get; set; }
     }
 
+    /// <summary>Contains trajectory search results.</summary>
     public class SearchTrajectoriesResponse
     {
         public List<AdminChatTrajectoryDto> Trajectories { get; set; }
@@ -2275,9 +2572,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public AdminChatHarnessResult Harness { get; set; }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Requests messages/modules for a trajectory branch.</summary>
     public class AddModulesRequest
     {
         public int SessionId { get; set; }
@@ -2290,9 +2585,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public List<int> WorkflowIds { get; set; } = new();
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Describes one XNCF module linked to an AdminChat session.</summary>
     public class ModuleInfo
     {
         public string Uid { get; set; }
@@ -2300,17 +2593,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public string Version { get; set; }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Contains the modules linked to a session.</summary>
     public class GetSessionModulesResponse
     {
         public List<AdminChatSessionModuleDto> Modules { get; set; }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Contains modules available for session linking.</summary>
     public class GetAvailableModulesResponse
     {
         public List<AvailableModuleDto> Modules { get; set; }
@@ -2335,9 +2624,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public string Description { get; set; }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Describes one module available for session linking.</summary>
     public class AvailableModuleDto
     {
         public string Uid { get; set; }
@@ -2349,18 +2636,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public bool IsRequired { get; set; }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Contains modules available for AI model selection.</summary>
     public class GetAiModelOptionsResponse
     {
         public bool AiKernelAvailable { get; set; }
         public List<AiModelOptionDto> Models { get; set; }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Describes one selectable AI model option.</summary>
     public class AiModelOptionDto
     {
         public int Id { get; set; }

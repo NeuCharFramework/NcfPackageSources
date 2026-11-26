@@ -31,25 +31,37 @@ public interface INeuCharExecutionLogRepository : IClientRepositoryBase<NeuCharE
 
 public sealed class NeuCharPivotConfigurationRepository : ClientRepositoryBase<NeuCharPivotConfiguration>, INeuCharPivotConfigurationRepository
 {
+    /// <summary>Reserved parameterless constructor for repository infrastructure.</summary>
     private NeuCharPivotConfigurationRepository() : base(null) { }
+    /// <summary>Initializes the repository with the NCF database provider.</summary>
+    /// <param name="ncfDbData">The database data provider used by the base repository.</param>
     public NeuCharPivotConfigurationRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }
 
 public sealed class NeuCharPivotFunctionRepository : ClientRepositoryBase<NeuCharPivotFunction>, INeuCharPivotFunctionRepository
 {
+    /// <summary>Reserved parameterless constructor for repository infrastructure.</summary>
     private NeuCharPivotFunctionRepository() : base(null) { }
+    /// <summary>Initializes the repository with the NCF database provider.</summary>
+    /// <param name="ncfDbData">The database data provider used by the base repository.</param>
     public NeuCharPivotFunctionRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }
 
 public sealed class NeuCharPivotLoopTaskRepository : ClientRepositoryBase<NeuCharPivotLoopTask>, INeuCharPivotLoopTaskRepository
 {
+    /// <summary>Reserved parameterless constructor for repository infrastructure.</summary>
     private NeuCharPivotLoopTaskRepository() : base(null) { }
+    /// <summary>Initializes the repository with the NCF database provider.</summary>
+    /// <param name="ncfDbData">The database data provider used by the base repository.</param>
     public NeuCharPivotLoopTaskRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }
 
 public sealed class NeuCharExecutionLogRepository : ClientRepositoryBase<NeuCharExecutionLog>, INeuCharExecutionLogRepository
 {
+    /// <summary>Reserved parameterless constructor for repository infrastructure.</summary>
     private NeuCharExecutionLogRepository() : base(null) { }
+    /// <summary>Initializes the repository with the NCF database provider.</summary>
+    /// <param name="ncfDbData">The database data provider used by the base repository.</param>
     public NeuCharExecutionLogRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }
 
@@ -57,6 +69,9 @@ public interface INeuCharPivotBoardRepository : IClientRepositoryBase<NeuCharPiv
 
 public sealed class NeuCharPivotBoardRepository : ClientRepositoryBase<NeuCharPivotBoard>, INeuCharPivotBoardRepository
 {
+    /// <summary>Reserved parameterless constructor for repository infrastructure.</summary>
     private NeuCharPivotBoardRepository() : base(null) { }
+    /// <summary>Initializes the repository with the NCF database provider.</summary>
+    /// <param name="ncfDbData">The database data provider used by the base repository.</param>
     public NeuCharPivotBoardRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }

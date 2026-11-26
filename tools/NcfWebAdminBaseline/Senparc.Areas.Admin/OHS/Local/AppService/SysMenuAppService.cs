@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides super-administrator APIs for maintaining and querying system menus.
     /// </summary>
     [BackendJwtAuthorize(BackendJwtAuthorizeAttribute.SuperAdminPolicyName)]
     public class SysMenuAppService : AppServiceBase
@@ -38,6 +38,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly Domain.Services.SysMenuService _domainService;
         private readonly AutoMapper.IMapper _mapper;
 
+        /// <summary>
+        /// Initializes the menu-management application service.
+        /// </summary>
+        /// <param name="serviceProvider">The request service provider.</param>
+        /// <param name="sysMenuService">The persistence service used for writes.</param>
+        /// <param name="mapper">The DTO/entity mapper.</param>
+        /// <param name="domainService">The domain menu query service.</param>
         public SysMenuAppService(IServiceProvider serviceProvider, SysMenuService sysMenuService, AutoMapper.IMapper mapper, Domain.Services.SysMenuService domainService) : base(serviceProvider)
         {
             _sysMenuService = sysMenuService;
@@ -46,10 +53,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates or updates a system menu and returns its persisted identifier.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The menu fields to persist.</param>
+        /// <returns>A response containing the menu identifier.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         [Ncf.Core.Authorization.Permission("role.add,role.update")]
         public async Task<AppResponseBase<SysMenu_CreateOrUpdateResponse>> CreateOrUpdateAsync(SysMenu_CreateOrUpdateRequest request)
@@ -67,10 +74,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the complete menu tree, optionally including button permissions.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="hasButton">Whether button nodes should be included.</param>
+        /// <returns>A response containing the menu tree.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SysMenu_MenuTreeResponse>> GetAllMenusTreeAsync(bool hasButton)
         {
@@ -86,10 +93,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the direct child menus of a parent identifier.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="parentId">The parent identifier; empty selects root menus.</param>
+        /// <returns>A response containing the matching menu DTOs.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SysMenu_MenusResponse>> GetMenusAsync(string parentId)
         {
@@ -112,10 +119,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets one menu by its identifier.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="id">The menu identifier.</param>
+        /// <returns>A response containing the mapped menu DTO.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SysMenu_GetMenuResponse>> GetMenuAsync(string id)
         {
@@ -131,10 +138,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns all menus, optionally including button permissions.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="hasButton">Whether button data should be included.</param>
+        /// <returns>A response containing the complete menu list.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<List<SysMenuDto>>> GetAllMenuListAsync(bool hasButton)
         {
@@ -148,10 +155,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// delete the menu
+        /// Deletes a menu and returns the deleted menu representation.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="id">The menu identifier to delete.</param>
+        /// <returns>A response containing the deleted menu DTO.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Delete)]
         public async Task<AppResponseBase<SysMenu_GetMenuResponse>> DeleteMenuAsync(string id)
         {

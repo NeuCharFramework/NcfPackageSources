@@ -23,11 +23,17 @@ namespace Senparc.Mvc
     {
         private CheckCodeKind _checkCodeKind;
 
+        /// <summary>
+        /// Initializes a captcha action result for the requested code kind.
+        /// </summary>
+        /// <param name="checkCodeKind">The captcha generation mode.</param>
         public CheckCodeResult(CheckCodeKind checkCodeKind)
         {
             _checkCodeKind = checkCodeKind;
         }
 
+        /// <inheritdoc/>
+        /// <remarks>Generates a captcha code and writes its image to the response context.</remarks>
         public override void ExecuteResult(ActionContext context)
         {
             CheckCodeHandle checkcode = new CheckCodeHandle(_checkCodeKind, context.HttpContext);
@@ -35,6 +41,11 @@ namespace Senparc.Mvc
         }
 
 
+        /// <summary>
+        /// Renders the generated code as an image using the legacy verifier.
+        /// </summary>
+        /// <param name="checkcode">The generated captcha text.</param>
+        /// <param name="context">The current action context.</param>
         private void createcheckcodeimage(string checkcode, ActionContext context)
         {
             VerifyCode v = new VerifyCode();
@@ -115,13 +126,13 @@ namespace Senparc.Mvc
         private const double PI2 = 6.283185307179586476925286766559;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Applies a sinusoidal image displacement to generate a distorted captcha bitmap.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="srcBmp">The source captcha bitmap.</param>
+        /// <param name="bXDir">Whether displacement is applied along the horizontal axis.</param>
+        /// <param name="dMultValue">The displacement amplitude in pixels.</param>
+        /// <param name="dPhase">The phase offset used by the sine function.</param>
+        /// <returns>A newly allocated distorted bitmap.</returns>
         public System.Drawing.Bitmap TwistImage(Bitmap srcBmp, bool bXDir, double dMultValue, double dPhase)
         {
             Bitmap destBmp = new Bitmap(srcBmp.Width, srcBmp.Height);
@@ -164,6 +175,12 @@ namespace Senparc.Mvc
         #endregion
 
         #region Legacy section
+        /// <summary>
+        /// Creates a bitmap containing the configured captcha text, optional noise,
+        /// colored glyphs, and distortion.
+        /// </summary>
+        /// <param name="code">The captcha text to render.</param>
+        /// <returns>A newly allocated captcha bitmap.</returns>
         public Bitmap CreateImageCode(string code)
         {
             int fSize = FontSize;
@@ -243,6 +260,11 @@ namespace Senparc.Mvc
         #endregion
 
         #region Legacy section
+        /// <summary>
+        /// Creates a captcha bitmap and writes it to the HTTP response as a PNG.
+        /// </summary>
+        /// <param name="code">The captcha text to render.</param>
+        /// <param name="context">The current action context.</param>
         public void CreateImageOnPage(string code, ActionContext context)
         {
             System.IO.MemoryStream ms = new System.IO.MemoryStream();

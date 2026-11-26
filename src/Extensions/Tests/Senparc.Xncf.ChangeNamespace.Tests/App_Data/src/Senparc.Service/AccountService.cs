@@ -31,23 +31,31 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Senparc.Service
 {
+    /// <summary>
+    /// Provides account lookup, credential, profile, login, and Weixin-account
+    /// synchronization operations for the sample service layer.
+    /// </summary>
     public class AccountService : ClientServiceBase<Account> /*, UserService*/
     {
         private readonly Lazy<IHttpContextAccessor> _httpContextAccessor;
         private string GetSalt => DateTime.Now.Ticks.ToString();
 
+        /// <summary>
+        /// Initializes the account service.
+        /// </summary>
+        /// <param name="accountRepo">The account repository.</param>
+        /// <param name="httpContextAccessor">Lazy access to the current HTTP context.</param>
+        /// <param name="serviceProvider">The service provider used by the base service.</param>
         public AccountService(AccountRepository accountRepo, Lazy<IHttpContextAccessor> httpContextAccessor, IServiceProvider serviceProvider)
             : base(accountRepo, serviceProvider)
         {
             _httpContextAccessor = httpContextAccessor;
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="userName"></param>
-        /// <returns></returns>
+        /// <summary>Checks whether another account already uses a user name.</summary>
+        /// <param name="id">The current account identifier excluded from the check.</param>
+        /// <param name="userName">The user name to compare case-insensitively.</param>
+        /// <returns><see langword="true"/> when another account uses the name.</returns>
         public bool CheckUserNameExisted(long id, string userName)
         {
             userName = userName.Trim();
@@ -57,24 +65,20 @@ namespace Senparc.Service
                 z => z.Id != id && z.UserName.Equals(userName, StringComparison.CurrentCultureIgnoreCase)) != null;
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="userName"></param>
-        /// <returns></returns>
+        /// <summary>Checks whether credentials resolve to an account.</summary>
+        /// <param name="userName">The user name, email, or phone identifier.</param>
+        /// <param name="password">The plaintext password to verify.</param>
+        /// <returns><see langword="true"/> when the credentials match.</returns>
         public bool CheckPassword(string userName, string password)
         {
             var user = GetAccount(userName, password);
             return user != null;
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="userName"></param>
-        /// <returns></returns>
+        /// <summary>Changes an account password and persists a new password salt.</summary>
+        /// <param name="id">The account identifier.</param>
+        /// <param name="password">The new plaintext password.</param>
+        /// <returns><see langword="true"/> after persistence completes.</returns>
         public bool ChangePassword(int id, string password)
         {
             var user = GetObject(z => z.Id == id);
@@ -84,14 +88,12 @@ namespace Senparc.Service
             SaveObject(user);
             return true;
         }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="realName"></param>
-        /// <param name="email"></param>
-        /// <param name="headImg"></param>
-        /// <returns></returns>
+        /// <summary>Updates supplied basic account profile fields.</summary>
+        /// <param name="id">The account identifier.</param>
+        /// <param name="realName">The replacement real name, or null to preserve it.</param>
+        /// <param name="email">The replacement email, or null to preserve it.</param>
+        /// <param name="headImg">The replacement avatar path, or null to preserve it.</param>
+        /// <returns><see langword="true"/> after persistence completes.</returns>
         public bool ChangeBasic(int id, string realName, string email, string headImg = null)
         {
             var user = GetObject(z => z.Id == id);
@@ -102,12 +104,10 @@ namespace Senparc.Service
             return true;
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="phone"></param>
-        /// <returns></returns>
+        /// <summary>Checks whether another account already uses a phone number.</summary>
+        /// <param name="id">The current account identifier excluded from the check.</param>
+        /// <param name="phone">The phone number to compare.</param>
+        /// <returns><see langword="true"/> when another account uses the number.</returns>
         public bool CheckPhoneExisted(long id, string phone)
         {
             phone = phone.Trim();
@@ -115,6 +115,10 @@ namespace Senparc.Service
             this.GetObject(
                 z => z.Id != id && phone.Equals(z.Phone, StringComparison.CurrentCultureIgnoreCase)) != null;
         }
+        /// <summary>Checks whether another account already uses an email address.</summary>
+        /// <param name="id">The current account identifier excluded from the check.</param>
+        /// <param name="email">The email address to compare.</param>
+        /// <returns><see langword="true"/> when another account uses the address.</returns>
         public bool CheckEmailExisted(long id, string email)
         {
             email = email.Trim();
@@ -123,6 +127,9 @@ namespace Senparc.Service
                 z => z.Id != id && email.Equals(z.Email, StringComparison.CurrentCultureIgnoreCase)) != null;
         }
 
+        /// <summary>Gets the account represented by a full-account object.</summary>
+        /// <param name="fullUser">The source account projection.</param>
+        /// <returns>The matching account, or <see langword="null"/> when the input is null.</returns>
         public Account GetAccount(FullAccount fullUser)
         {
             if (fullUser == null)
@@ -132,17 +139,20 @@ namespace Senparc.Service
             return GetAccount(fullUser.UserName);
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="userName"></param>
-        /// <returns></returns>
+        /// <summary>Gets an account by user name using case-insensitive comparison.</summary>
+        /// <param name="userName">The account user name.</param>
+        /// <returns>The matching account, or <see langword="null"/>.</returns>
         public Account GetAccount(string userName)
         {
             userName = userName.Trim();
             return this.GetObject(z => z.UserName.Equals(userName, StringComparison.CurrentCultureIgnoreCase));
         }
 
+        /// <summary>Hashes a password using the legacy two-stage MD5 and salt scheme.</summary>
+        /// <param name="password">The password or pre-hashed password.</param>
+        /// <param name="salt">The account salt.</param>
+        /// <param name="isMD5Password">Whether the input is already an MD5-style value.</param>
+        /// <returns>The normalized salted password hash.</returns>
         public string GetPassword(string password, string salt, bool isMD5Password = true)
         {
             string md5 = password.ToUpper().Replace("-", "");
@@ -153,6 +163,7 @@ namespace Senparc.Service
             return MD5.GetMD5Code(md5, salt).Replace("-", ""); //encrypt again
         }
 
+        /// <summary>Signs out the current HTTP user and clears the account cache session.</summary>
         public virtual void Logout()
         {
             try
@@ -172,6 +183,14 @@ namespace Senparc.Service
             }
         }
 
+        /// <summary>
+        /// Signs in a user through the configured authentication scheme and optionally
+        /// records the login timestamp.
+        /// </summary>
+        /// <param name="userName">The account user name.</param>
+        /// <param name="rememberMe">Whether the caller requests a persistent login.</param>
+        /// <param name="roles">Optional role values retained for compatibility.</param>
+        /// <param name="recordLoginInfo">Whether login information should be recorded.</param>
         public virtual void Login(string userName, bool rememberMe, IEnumerable<string> roles, bool recordLoginInfo)
         {
             try
@@ -239,6 +258,15 @@ namespace Senparc.Service
             }
         }
 
+        /// <summary>Creates and persists a new account with the supplied credentials and profile values.</summary>
+        /// <param name="userName">The account user name.</param>
+        /// <param name="email">The account email.</param>
+        /// <param name="phone">The account phone number.</param>
+        /// <param name="password">The initial password.</param>
+        /// <param name="openId">The Weixin open identifier.</param>
+        /// <param name="weixinUnionId">The Weixin union identifier.</param>
+        /// <param name="nickname">The display nickname.</param>
+        /// <returns>The persisted account.</returns>
         public Account CreateAccount(string userName, string email, string phone, string password, string openId, string weixinUnionId, string nickname)
         {
             var salt = GetSalt;
@@ -265,10 +293,8 @@ namespace Senparc.Service
             return model;
         }
 
-        /// <summary>
-        /// automaticgeneratenewuser name
-        /// </summary>
-        /// <returns></returns>
+        /// <summary>Generates a unique sample user name with the <c>NCF_</c> prefix.</summary>
+        /// <returns>A user name not currently used by an account.</returns>
         public string GetNewUserName()
         {
             string userName;
@@ -283,14 +309,12 @@ namespace Senparc.Service
             return userName;
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="userNameOrEmailOrPhone"></param>
-        /// <param name="password"></param>
-        /// <param name="rememberMe"></param>
-        /// <param name="recordLoginInfo"></param>
-        /// <returns></returns>
+        /// <summary>Authenticates by user name, email, or phone and starts a login session.</summary>
+        /// <param name="userNameOrEmailOrPhone">The account identifier.</param>
+        /// <param name="password">The plaintext password.</param>
+        /// <param name="rememberMe">Whether the login should be remembered.</param>
+        /// <param name="recordLoginInfo">Whether login information should be recorded.</param>
+        /// <returns>The authenticated account, or <see langword="null"/>.</returns>
         public Account TryLogin(string userNameOrEmailOrPhone, string password, bool rememberMe, bool recordLoginInfo)
         {
             var user = this.GetAccount(userNameOrEmailOrPhone, password);
@@ -305,6 +329,10 @@ namespace Senparc.Service
             }
         }
 
+        /// <summary>Gets an account when the identifier and password hash match.</summary>
+        /// <param name="userName">A user name, email, or phone identifier.</param>
+        /// <param name="password">The plaintext password to verify.</param>
+        /// <returns>The matching account, or <see langword="null"/>.</returns>
         public Account GetAccount(string userName, string password)
         {
             userName = userName.Trim();
@@ -321,11 +349,12 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates or updates an account from Weixin user information and queues
+        /// avatar synchronization.
         /// </summary>
-        /// <param name="userInfo"></param>
-        /// <param name="account"></param>
-        /// <returns></returns>
+        /// <param name="userInfo">The Weixin user profile and optional P2P account data.</param>
+        /// <param name="account">An existing account to update, or null to resolve/create one.</param>
+        /// <returns>The synchronized account.</returns>
         public Account CreateOrUpdateBySenparcWeixin(UserInfoJson userInfo, Account account = null)
         {
             var openid = userInfo.openid;
@@ -382,7 +411,6 @@ namespace Senparc.Service
 
                 var fileName = $@"/Upload/Account/headimgurl.{DateTime.Now.Ticks + Guid.NewGuid().ToString("n").Substring(0, 8)}.jpg";
 
-                //Legacy comment translated to English.
                 DownLoadPic(userInfo.headimgurl, fileName);
 
                 account.PicUrl = fileName;
@@ -391,11 +419,10 @@ namespace Senparc.Service
             return account;
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="picUrl"></param>
-        /// <param name="fileName"></param>
+        /// <summary>Downloads an avatar image to the web application's upload path.</summary>
+        /// <param name="picUrl">The remote image URL.</param>
+        /// <param name="fileName">The application-relative destination path.</param>
+        /// <exception cref="IOException">Thrown when the destination file cannot be created.</exception>
         private void DownLoadPic(string picUrl, string fileName)
         {
             using (MemoryStream stream = new MemoryStream())
@@ -411,6 +438,9 @@ namespace Senparc.Service
             }
         }
 
+        /// <summary>Creates an account from OAuth user data and queues avatar synchronization.</summary>
+        /// <param name="userInfo">The OAuth user profile.</param>
+        /// <returns>The newly created account.</returns>
         public Account CreateAccountByUserInfo(OAuthUserInfo userInfo)
         {
             using (var wrap = this.InstanceAutoDetectChangeContextWrap())
@@ -426,12 +456,11 @@ namespace Senparc.Service
                 account.HeadImgUrl = url;
                 account.NickName = nickname;
                 account.Sex = (byte)userInfo.sex;
-                account.PicUrl = url; //Legacy comment translated to English.
+                account.PicUrl = url;
                 SaveObject(account);
 
                 LogUtility.SystemLogger.Debug($"进行异步头像更新：{userInfo.headimgurl}");
 
-                //Legacy comment translated to English.
                 var operationQueue = new OperationQueue.OperationQueue();
                 operationQueue.Add($"{account.Id}-{DateTime.Now.Ticks.ToString()}", OperationQueueType.更新用户头像, new List<object>() { account.Id, userInfo.headimgurl });
 
@@ -439,6 +468,9 @@ namespace Senparc.Service
             }
         }
 
+        /// <summary>Creates or updates an account using OAuth user identity data.</summary>
+        /// <param name="userInfo">The OAuth user profile.</param>
+        /// <returns>The created or updated account.</returns>
         public Account CreateOrUpdateByUserInfo(OAuthUserInfo userInfo)
         {
             var account = GetObject(z => z.WeixinOpenId == userInfo.openid) ??
@@ -448,21 +480,22 @@ namespace Senparc.Service
             account.HeadImgUrl = url;
             account.NickName = userInfo.nickname;
             account.Sex = (byte)userInfo.sex;
-            account.PicUrl = url; //Legacy comment translated to English.
+            account.PicUrl = url;
             SaveObject(account);
 
             LogUtility.SystemLogger.Debug($"进行异步头像更新：{userInfo.headimgurl}");
 
-            //Legacy comment translated to English.
             var operationQueue = new OperationQueue.OperationQueue();
             operationQueue.Add($"{account.Id}-{DateTime.Now.Ticks.ToString()}", OperationQueueType.更新用户头像, new List<object>() { account.Id, userInfo.headimgurl });
 
             return account;
         }
 
+        /// <summary>Updates an existing account's OAuth profile and removes its old local avatar.</summary>
+        /// <param name="userInfo">The replacement OAuth profile.</param>
+        /// <param name="account">The account to update.</param>
         public void UpdateAccountByUserInfo(OAuthUserInfo userInfo, Account account)
         {
-            //Legacy comment translated to English.
             if (!account.PicUrl.IsNullOrEmpty())
             {
                 File.Delete(Server.GetMapPath("~" + account.PicUrl));
@@ -472,6 +505,7 @@ namespace Senparc.Service
             SaveObject(account);
         }
 
+        /// <inheritdoc />
         public override void SaveObject(Account obj)
         {
             var isInsert = base.IsInsert(obj);
@@ -484,13 +518,13 @@ namespace Senparc.Service
 
             //clear the cache
             var fullUserCache = _serviceProvider.GetService<FullAccountCache>();
-            //Legacy comment translated to English.
             using (fullUserCache.Cache.BeginCacheLock(FullAccountCache.CACHE_KEY, obj.Id.ToString()))
             {
                 fullUserCache.RemoveObject(obj.UserName);
             }
         }
 
+        /// <inheritdoc />
         public override void DeleteObject(Account obj)
         {
             obj.Flag = true;

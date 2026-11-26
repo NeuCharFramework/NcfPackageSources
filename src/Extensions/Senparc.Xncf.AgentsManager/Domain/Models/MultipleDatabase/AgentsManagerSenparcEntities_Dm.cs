@@ -15,6 +15,10 @@ namespace Senparc.Xncf.AgentsManager.Models
     [MultipleMigrationDbContext(MultipleDatabaseType.Dm, typeof(Register))]
     public class AgentsManagerSenparcEntities_Dm : AgentsManagerSenparcEntities
     {
+        /// <summary>
+        /// Initializes the DM-specific AgentsManager DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for the DM provider.</param>
         public AgentsManagerSenparcEntities_Dm(DbContextOptions<AgentsManagerSenparcEntities_Dm> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -34,6 +38,9 @@ namespace Senparc.Xncf.AgentsManager.Models
             app.UseNcfDatabase("Senparc.Ncf.Database.Dm", "Senparc.Ncf.Database.Dm", "DmDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the DM design-time DbContext factory using the configured root directory.
+        /// </summary>
         public SenparcDbContextFactory_Dm() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)
         {
 

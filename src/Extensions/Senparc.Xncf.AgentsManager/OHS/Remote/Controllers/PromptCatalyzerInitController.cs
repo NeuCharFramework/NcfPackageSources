@@ -46,6 +46,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
         private readonly AIModelService _aiModelService;
         private readonly ILogger<PromptCatalyzerInitController> _logger;
 
+        /// <summary>
+        /// Initializes the PromptCatalyzer status and initialization controller.
+        /// </summary>
+        /// <param name="promptOptimizationService">The initialization/optimization service.</param>
+        /// <param name="agentsTemplateService">The AgentTemplate persistence service.</param>
+        /// <param name="aiModelService">The AI model persistence service.</param>
+        /// <param name="logger">The controller logger.</param>
         public PromptCatalyzerInitController(
             PromptOptimizationService promptOptimizationService,
             AgentsTemplateService agentsTemplateService,
@@ -59,8 +66,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns whether the PromptCatalyzer AgentTemplate has been initialized.
         /// </summary>
+        /// <returns>An HTTP 200 response containing initialization state or a diagnostic failure.</returns>
         [HttpGet("CheckStatus")]
         public IActionResult CheckStatus()
         {
@@ -93,8 +101,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Lists configured Chat-capable AI models that may initialize PromptCatalyzer.
         /// </summary>
+        /// <returns>An HTTP 200 response containing available model metadata.</returns>
         [HttpGet("GetAvailableModels")]
         public IActionResult GetAvailableModels()
         {
@@ -162,8 +171,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Initializes PromptCatalyzer against a selected Chat AI model.
         /// </summary>
+        /// <param name="request">The model identifier request.</param>
+        /// <returns>An HTTP 200 response containing the initialization result.</returns>
         [HttpPost("Initialize")]
         public async Task<IActionResult> Initialize([FromBody] InitializeRequestDto request)
         {
@@ -241,7 +252,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Describes the Chat models available for PromptCatalyzer initialization.
     /// </summary>
     public class AvailableModelsDto
     {

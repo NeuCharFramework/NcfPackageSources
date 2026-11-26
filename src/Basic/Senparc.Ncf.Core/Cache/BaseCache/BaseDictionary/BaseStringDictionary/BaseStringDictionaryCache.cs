@@ -32,11 +32,11 @@ namespace Senparc.Ncf.Core.Cache
         where TValue : class, new()
     {
         /// <summary>
-        /// 
+        /// Initializes a string-keyed cache backed by the supplied database wrapper.
         /// </summary>
-        /// <param name="CACHE_KEY"></param>
-        /// <param name="db"></param>
-        ///Legacy comment translated to English.
+        /// <param name="CACHE_KEY">The cache key prefix.</param>
+        /// <param name="db">The database wrapper used for persistence.</param>
+        /// <param name="timeOut">The cache timeout.</param>
         public BaseStringDictionaryCache(string CACHE_KEY, INcfDbData db, int timeOut)
             : base(CACHE_KEY, db, timeOut)
         {
@@ -49,11 +49,11 @@ namespace Senparc.Ncf.Core.Cache
         where TEntity : class/*, new()*/
     {
         /// <summary>
-        /// 
+        /// Initializes a string-keyed cache with a distinct entity persistence type.
         /// </summary>
-        /// <param name="CACHE_KEY"></param>
-        /// <param name="db"></param>
-        ///Legacy comment translated to English.
+        /// <param name="CACHE_KEY">The cache key prefix.</param>
+        /// <param name="db">The database wrapper used for persistence.</param>
+        /// <param name="timeOut">The cache timeout.</param>
         public BaseStringDictionaryCache(string CACHE_KEY, INcfDbData db, int timeOut)
             : base(CACHE_KEY, db, timeOut)
         {

@@ -49,6 +49,11 @@ public class PromptRangeAppService : AppServiceBase
 {
     private readonly PromptRangeService _promptRangeService;
 
+    /// <summary>
+    /// Initializes PromptRange management operations.
+    /// </summary>
+    /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+    /// <param name="promptRangeService">The PromptRange domain service.</param>
     public PromptRangeAppService(
         IServiceProvider serviceProvider,
         PromptRangeService promptRangeService) : base(serviceProvider)
@@ -73,10 +78,11 @@ public class PromptRangeAppService : AppServiceBase
     // }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Creates a PromptRange with the supplied alias.
     /// </summary>
-    /// <param name="alias"></param>
-    /// <returns></returns>
+    /// <param name="alias">The range alias.</param>
+    /// <returns>A response containing the created range DTO.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the alias is invalid or already exists.</exception>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public async Task<AppResponseBase<PromptRangeDto>> AddAsync(string alias)
     {
@@ -87,9 +93,9 @@ public class PromptRangeAppService : AppServiceBase
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Returns all PromptRange records available to the administrator.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A response containing PromptRange DTOs.</returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public async Task<AppResponseBase<List<PromptRangeDto>>> GetListAsync()
     {
@@ -101,9 +107,9 @@ public class PromptRangeAppService : AppServiceBase
 
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Returns the hierarchical PromptItem tree used by the PromptRange UI.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A response containing the prompt-item tree.</returns>
     [ApiBind]
     public async Task<AppResponseBase<PromptItemTreeList>> GetPromptRangeTree()
     {
@@ -116,11 +122,12 @@ public class PromptRangeAppService : AppServiceBase
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Changes the alias of an existing PromptRange.
     /// </summary>
-    /// <param name="rangeId"></param>
-    /// <param name="alias"></param>
-    /// <returns></returns>
+    /// <param name="rangeId">The PromptRange identifier.</param>
+    /// <param name="alias">The replacement alias.</param>
+    /// <returns>A response containing the updated range DTO.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the range or alias is invalid.</exception>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public async Task<AppResponseBase<PromptRangeDto>> ChangeAliasAsync(int rangeId, string alias)
     {
@@ -131,10 +138,11 @@ public class PromptRangeAppService : AppServiceBase
     }
 
     /// <summary>
-    /// according to　ID deleterange
+    /// Deletes a PromptRange and its associated prompt data through the domain service.
     /// </summary>
-    /// <param name="rangeId"></param>
-    /// <returns></returns>
+    /// <param name="rangeId">The PromptRange identifier.</param>
+    /// <returns>A string response indicating whether deletion completed.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when deletion fails.</exception>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
     public async Task<StringAppResponse> DeleteAsync(int rangeId)
     {
@@ -154,8 +162,11 @@ public class PromptRangeAppService : AppServiceBase
 
     //[ApiBind]
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Lists PromptCode values from the prompt tree, optionally filtered by range name,
+    /// for use when configuring AgentsManager integrations.
     /// </summary>
+    /// <param name="request">The optional range-name filter.</param>
+    /// <returns>A formatted function response containing PromptCode entries.</returns>
     [FunctionRender(typeof(PromptRangeResource), "Function.PromptRange.ViewCodes.Name", "Function.PromptRange.ViewCodes.Description", typeof(Register))]
     public async Task<StringAppResponse> ViewPromptCodeList(PromptRange_ViewPromptCodeRequest request)
     {

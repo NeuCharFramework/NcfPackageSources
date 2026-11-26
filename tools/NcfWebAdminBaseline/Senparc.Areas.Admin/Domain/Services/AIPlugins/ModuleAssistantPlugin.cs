@@ -227,6 +227,12 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
             return LimitToolResult(sb.ToString());
         }
 
+        /// <summary>
+        /// Limits module-catalog text to the provider tool-result budget and adds
+        /// a marker when the tail is omitted.
+        /// </summary>
+        /// <param name="value">The generated tool result.</param>
+        /// <returns>The original or bounded result text.</returns>
         private static string LimitToolResult(string value)
         {
             if (value.Length <= MaxToolResultCharacters)

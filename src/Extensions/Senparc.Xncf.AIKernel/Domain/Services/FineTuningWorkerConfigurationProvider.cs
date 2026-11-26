@@ -48,6 +48,12 @@ public sealed class FineTuningWorkerConfigurationProvider : IFineTuningWorkerCon
     private readonly FineTuningSecretStore _secrets;
     private readonly FineTuningWorkerOptions _options;
 
+    /// <summary>
+    /// Initializes Worker configuration resolution from persistence, secrets, and options.
+    /// </summary>
+    /// <param name="workerService">The Worker persistence service.</param>
+    /// <param name="secrets">The secret store.</param>
+    /// <param name="options">The Worker options.</param>
     public FineTuningWorkerConfigurationProvider(AIFineTuningWorkerService workerService,
         FineTuningSecretStore secrets, IOptions<FineTuningWorkerOptions> options)
     {
@@ -56,6 +62,10 @@ public sealed class FineTuningWorkerConfigurationProvider : IFineTuningWorkerCon
         _options = options.Value;
     }
 
+    /// <summary>Resolves one enabled Worker endpoint, secret, and timeout configuration.</summary>
+    /// <param name="workerAlias">The Worker alias.</param>
+    /// <param name="cancellationToken">Token used to cancel lookup.</param>
+    /// <returns>The validated Worker configuration.</returns>
     public async Task<FineTuningWorkerConfiguration> GetAsync(string workerAlias, CancellationToken cancellationToken = default)
     {
         var worker = await _workerService.GetEnabledAsync(workerAlias, cancellationToken).ConfigureAwait(false);
@@ -64,6 +74,9 @@ public sealed class FineTuningWorkerConfigurationProvider : IFineTuningWorkerCon
             worker.RequestTimeoutSeconds);
     }
 
+    /// <summary>Lists persisted Workers and annotates configured-secret availability.</summary>
+    /// <param name="cancellationToken">Token used to cancel lookup.</param>
+    /// <returns>Worker DTOs with secret-path metadata.</returns>
     public async Task<List<AIFineTuningWorkerDto>> GetWorkersAsync(CancellationToken cancellationToken = default)
     {
         var aliases = _options.ConfiguredWorkerAliases.Concat(_secrets.ListConfiguredAliases());

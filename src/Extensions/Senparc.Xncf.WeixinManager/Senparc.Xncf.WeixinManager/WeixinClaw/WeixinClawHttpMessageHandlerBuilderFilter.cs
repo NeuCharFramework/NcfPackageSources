@@ -33,6 +33,14 @@ internal sealed class WeixinClawHttpMessageHandlerBuilderFilter : IHttpMessageHa
     private const string ResilienceHandlerTypeName =
         "Microsoft.Extensions.Http.Resilience.ResilienceHandler";
 
+    /// <summary>
+    /// Removes the generic resilience handler from the named Weixin Claw HTTP pipeline.
+    /// The returned callback first invokes the remaining builder chain and then removes
+    /// matching handlers from the protocol-specific client.
+    /// </summary>
+    /// <param name="next">The next handler-builder filter in the pipeline.</param>
+    /// <returns>A builder callback that applies the Weixin Claw handler policy.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="next"/> is <see langword="null"/>.</exception>
     public Action<HttpMessageHandlerBuilder> Configure(Action<HttpMessageHandlerBuilder> next)
     {
         ArgumentNullException.ThrowIfNull(next);

@@ -40,11 +40,21 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 {
     public class AIVectorService : ServiceBase<AIVector>
     {
+        /// <summary>
+        /// Initializes AI vector persistence.
+        /// </summary>
+        /// <param name="repo">The vector repository.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public AIVectorService(IRepositoryBase<AIVector> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {
         }
 
+        /// <summary>
+        /// Creates and persists an AI vector configuration.
+        /// </summary>
+        /// <param name="orEditRequest">The vector creation request.</param>
+        /// <returns>The created vector DTO.</returns>
         public async Task<AIVectorDto> AddAsync(AIVector_CreateOrEditRequest orEditRequest)
         {
             AIVector aiVector = new AIVector(orEditRequest);
@@ -59,6 +69,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return aiVectorDto;
         }
 
+        /// <summary>
+        /// Updates an existing AI vector configuration.
+        /// </summary>
+        /// <param name="request">The vector update request.</param>
+        /// <returns>The updated vector DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the requested vector does not exist.</exception>
         public async Task<AIVectorDto> EditAsync(AIVector_CreateOrEditRequest request)
         {
             AIVector aiVector = await this.GetObjectAsync(z => z.Id == request.Id)

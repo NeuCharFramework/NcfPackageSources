@@ -41,6 +41,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
     {
         // This legacy preview starts a child process from the supplied host source tree. It is
         // intentionally excluded from AI; development jobs preview only their isolated snapshot.
+        /// <summary>
+        /// Starts a legacy host-tree preview and returns its session information.
+        /// </summary>
+        /// <param name="request">The solution, module, port, timeout, and environment request.</param>
+        /// <returns>A string response containing preview status or an error.</returns>
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Preview.Name", "Function.XncfBuilder.Preview.Description", typeof(Register), AllowAiInvocation = false)]
         public async Task<StringAppResponse> Preview(BuildXncf_PreviewRequest request)
         {
@@ -89,6 +94,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Returns formatted status for active and recent preview sessions.
+        /// </summary>
+        /// <param name="request">The optional request controlling recent-output inclusion.</param>
+        /// <returns>A string response containing HTML-safe preview status.</returns>
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.PreviewStatus.Name", "Function.XncfBuilder.PreviewStatus.Description", typeof(Register))]
         public async Task<StringAppResponse> PreviewStatus(BuildXncf_PreviewStatusRequest request)
         {
@@ -201,6 +211,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Stops a preview session by identifier.
+        /// </summary>
+        /// <param name="request">The preview session identifier.</param>
+        /// <returns>A string response indicating whether the session was stopped.</returns>
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.StopPreview.Name", "Function.XncfBuilder.StopPreview.Description", typeof(Register), AllowAiInvocation = false)]
         public async Task<StringAppResponse> StopPreview(BuildXncf_StopPreviewRequest request)
         {
@@ -226,6 +241,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Builds an HTML-safe success summary for a newly started preview.
+        /// </summary>
+        /// <param name="session">The preview session information.</param>
+        /// <param name="persistenceStatus">The persistence availability status.</param>
+        /// <returns>The rendered summary.</returns>
         private static string BuildPreviewStartedHtml(
             XncfPreviewSessionInfo session,
             XncfPreviewPersistenceInfo persistenceStatus)
@@ -245,6 +266,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return html.ToString();
         }
 
+        /// <summary>
+        /// Adds a warning when preview persistence is unavailable.
+        /// </summary>
+        /// <param name="html">The output builder.</param>
+        /// <param name="persistenceStatus">The persistence status.</param>
         private static void AppendPersistenceWarning(
             StringBuilder html,
             XncfPreviewPersistenceInfo persistenceStatus)

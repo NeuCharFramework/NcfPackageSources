@@ -48,10 +48,25 @@ public sealed class WeixinClawBindingProfile : EntityBase<int>
     [Required, MaxLength(128)]
     public string BindingCodeHash { get; private set; }
 
+    /// <summary>
+    /// Reserved for EF Core materialization.
+    /// </summary>
     private WeixinClawBindingProfile()
     {
     }
 
+    /// <summary>
+    /// Initializes a user-owned Weixin Claw binding profile.
+    /// </summary>
+    /// <param name="accountId">The Weixin Claw account identifier.</param>
+    /// <param name="name">The profile display name.</param>
+    /// <param name="adminUserId">The owning administrator identifier.</param>
+    /// <param name="bindingCodeHash">The hash of the binding code.</param>
+    /// <param name="workflowId">Optional workflow identifier.</param>
+    /// <param name="aiModelId">The selected AI model identifier.</param>
+    /// <param name="mode">The profile operation mode.</param>
+    /// <param name="enableNeuBell">Whether NeuBell notifications are enabled.</param>
+    /// <param name="enableWorkflow">Whether workflow execution is enabled.</param>
     public WeixinClawBindingProfile(
         int accountId,
         string name,
@@ -76,6 +91,18 @@ public sealed class WeixinClawBindingProfile : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Updates profile settings while preserving the existing binding hash when no new hash is supplied.
+    /// </summary>
+    /// <param name="name">The profile display name.</param>
+    /// <param name="adminUserId">The owning administrator identifier.</param>
+    /// <param name="bindingCodeHash">The replacement binding-code hash, when changed.</param>
+    /// <param name="workflowId">Optional workflow identifier.</param>
+    /// <param name="aiModelId">The selected AI model identifier.</param>
+    /// <param name="mode">The profile operation mode.</param>
+    /// <param name="enableNeuBell">Whether NeuBell notifications are enabled.</param>
+    /// <param name="enableWorkflow">Whether workflow execution is enabled.</param>
+    /// <param name="enabled">Whether this profile is active.</param>
     public void Update(
         string name,
         int adminUserId,
@@ -102,6 +129,12 @@ public sealed class WeixinClawBindingProfile : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Trims a profile name, supplies the default display name for blank input,
+    /// and caps the value at the entity's 150-character persistence limit.
+    /// </summary>
+    /// <param name="name">The caller-supplied profile name.</param>
+    /// <returns>A non-empty, trimmed name no longer than 150 characters.</returns>
     private static string NormalizeName(string name)
     {
         return string.IsNullOrWhiteSpace(name)

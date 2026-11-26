@@ -30,6 +30,11 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
         private readonly PromptOptimizationService _optimizationService;
         private readonly ILogger<PromptInitResponseHandler> _logger;
 
+        /// <summary>
+        /// Initializes the PromptRange initialization-response handler.
+        /// </summary>
+        /// <param name="optimizationService">The service completing pending initialization requests.</param>
+        /// <param name="logger">The event-handler logger.</param>
         public PromptInitResponseHandler(
             PromptOptimizationService optimizationService,
             ILogger<PromptInitResponseHandler> logger)
@@ -38,6 +43,12 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Completes the pending PromptRange initialization request represented by the event.
+        /// </summary>
+        /// <param name="event">The initialization response event.</param>
+        /// <param name="cancellationToken">The handler cancellation token.</param>
+        /// <returns>A completed task after the pending request is completed.</returns>
         public Task Handle(PromptInitResponseEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Prompt Init Response: {@event.PromptCode}, RequestId: {@event.RequestId}");

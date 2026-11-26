@@ -41,28 +41,24 @@ namespace Senparc.Xncf.WeixinManager
         internal static ConcurrentDictionary<string, IWantToRun> IWantoRunDic = new ConcurrentDictionary<string, IWantToRun>();
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Builds the cache key used to reuse an AgentKernel runner for one account,
+        /// participant, and PromptRange configuration.
         /// </summary>
-        /// <param name="openId"></param>
-        /// <param name="mpAccountDto"></param>
-        /// <returns></returns>
+        /// <param name="openId">The Weixin participant identifier.</param>
+        /// <param name="mpAccountDto">The account and PromptRange configuration.</param>
+        /// <returns>A stable runner-cache key.</returns>
         private static string GetKey(string openId, MpAccountDto mpAccountDto)
         {
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
             return $"{mpAccountDto.Id}:{openId}-{mpAccountDto.PromptRangeCode}";
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or creates the AgentKernel runner configured for a Weixin account and participant.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="mpAccountDto"></param>
-        /// <param name="promptConfigParameter"></param>
-        /// <param name="modelName"></param>
-        /// <param name="openId"></param>
-        /// <returns></returns>
+        /// <param name="services">The provider used to resolve AI and PromptRange services.</param>
+        /// <param name="mpAccountDto">The account configuration and optional PromptRange code.</param>
+        /// <param name="openId">The Weixin participant identifier.</param>
+        /// <returns>The cached or newly initialized AI runner.</returns>
         public static async Task<IWantToRun> GetIWantToRunAsync(IServiceProvider services, MpAccountDto mpAccountDto, string openId)
         {
             var key = GetKey(openId, mpAccountDto);
@@ -81,7 +77,6 @@ namespace Senparc.Xncf.WeixinManager
 
                     if (!mpAccountDto.PromptRangeCode.IsNullOrEmpty())
                     {
-                        //Legacy comment translated to English.
                         //var isAverage = mpAccountDto.PromptRangeCode.Contains("Average", StringComparison.OrdinalIgnoreCase);
 
                         var promptResult = await promptItemService.GetWithVersionAsync(mpAccountDto.PromptRangeCode, isAvg: true);

@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides persistence operations for the XNCF modules attached to administrator chat sessions.
     /// </summary>
     public class AdminChatSessionModuleService : BaseClientService<AdminChatSessionModule>
     {
@@ -34,9 +34,10 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the modules attached to a session in attachment order.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <param name="sessionId">The chat session identifier to query.</param>
+        /// <returns>A materialized list of session-module associations.</returns>
         public async Task<List<AdminChatSessionModule>> GetSessionModulesAsync(int sessionId)
         {
             var modules = await base.GetFullListAsync(m => m.SessionId == sessionId, "AddedTime ASC");
@@ -44,12 +45,14 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Adds a module association when the same module is not already attached to the session.
+        /// Existing associations are returned unchanged, making the operation idempotent.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="sessionId">The target chat session identifier.</param>
+        /// <param name="xncfModuleUid">The stable XNCF module UID.</param>
+        /// <param name="moduleName">The module name stored with the association.</param>
+        /// <param name="moduleVersion">The module version stored with the association.</param>
+        /// <returns>The existing or newly persisted session-module association.</returns>
         public async Task<AdminChatSessionModule> AddModuleToSessionAsync(int sessionId, string xncfModuleUid, string moduleName, string moduleVersion)
         {
             //Legacy comment translated to English.
@@ -67,8 +70,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Adds each supplied module to a session through the idempotent single-module operation.
         /// </summary>
+        /// <param name="sessionId">The target chat session identifier.</param>
+        /// <param name="modules">The module UID, name, and version tuples to attach.</param>
+        /// <returns>The existing or newly created associations in input order.</returns>
         public async Task<List<AdminChatSessionModule>> AddModulesToSessionAsync(
             int sessionId, 
             List<(string uid, string name, string version)> modules)
@@ -85,8 +91,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Removes one module association from a session when it exists.
         /// </summary>
+        /// <param name="sessionId">The chat session identifier.</param>
+        /// <param name="xncfModuleUid">The XNCF module UID to remove.</param>
+        /// <returns><see langword="true"/> when an association was deleted; otherwise <see langword="false"/>.</returns>
         public async Task<bool> RemoveModuleFromSessionAsync(int sessionId, string xncfModuleUid)
         {
             var module = await base.GetObjectAsync(m => 
@@ -99,8 +108,10 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deletes every module association belonging to a session.
         /// </summary>
+        /// <param name="sessionId">The chat session identifier to clear.</param>
+        /// <returns>The number of associations found and deleted.</returns>
         public async Task<int> ClearSessionModulesAsync(int sessionId)
         {
             var modules = await base.GetFullListAsync(m => m.SessionId == sessionId);
@@ -114,8 +125,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a specific module is attached to a session.
         /// </summary>
+        /// <param name="sessionId">The chat session identifier.</param>
+        /// <param name="xncfModuleUid">The XNCF module UID to find.</param>
+        /// <returns><see langword="true"/> when the association exists.</returns>
         public async Task<bool> IsModuleInSessionAsync(int sessionId, string xncfModuleUid)
         {
             var module = await base.GetObjectAsync(m => m.SessionId == sessionId && m.XncfModuleUid == xncfModuleUid);
@@ -123,8 +137,10 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Counts the module associations attached to a session.
         /// </summary>
+        /// <param name="sessionId">The chat session identifier.</param>
+        /// <returns>The number of attached module associations.</returns>
         public async Task<int> GetSessionModuleCountAsync(int sessionId)
         {
             var modules = await base.GetFullListAsync(m => m.SessionId == sessionId);
@@ -132,8 +148,10 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Counts distinct chat sessions that use a module UID.
         /// </summary>
+        /// <param name="xncfModuleUid">The XNCF module UID to count.</param>
+        /// <returns>The number of distinct sessions containing the module.</returns>
         public async Task<int> GetModuleUsageCountAsync(string xncfModuleUid)
         {
             var modules = await base.GetFullListAsync(m => m.XncfModuleUid == xncfModuleUid);

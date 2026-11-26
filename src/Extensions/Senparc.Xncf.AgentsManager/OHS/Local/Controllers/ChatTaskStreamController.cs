@@ -46,12 +46,24 @@ public class ChatTaskStreamController : ControllerBase
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly ChatTaskStreamHub _chatTaskStreamHub;
 
+    /// <summary>
+    /// Initializes the server-sent-event controller with the task stream hub.
+    /// </summary>
+    /// <param name="chatTaskStreamHub">The hub that buffers and publishes task events.</param>
     public ChatTaskStreamController(ChatTaskStreamHub chatTaskStreamHub)
     {
         _chatTaskStreamHub = chatTaskStreamHub;
     }
 
     [HttpGet]
+    /// <summary>
+    /// Streams buffered and newly published task events as server-sent events until the
+    /// client disconnects, the task stream ends, or cancellation is requested.
+    /// </summary>
+    /// <param name="chatTaskId">The chat-task identifier whose events should be streamed.</param>
+    /// <param name="replayBuffered">Whether events already buffered for the task should be sent first.</param>
+    /// <param name="cancellationToken">The request-abort token used to stop the stream.</param>
+    /// <exception cref="OperationCanceledException">Thrown when the request is cancelled while writing the response.</exception>
     public async Task Subscribe(int chatTaskId, bool replayBuffered = true, CancellationToken cancellationToken = default)
     {
         Response.Headers.CacheControl = "no-cache";

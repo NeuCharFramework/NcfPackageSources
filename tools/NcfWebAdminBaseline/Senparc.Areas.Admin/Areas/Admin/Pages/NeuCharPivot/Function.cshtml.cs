@@ -44,6 +44,13 @@ public class FunctionModel(
     private readonly NeuCharPivotGlobalFunctionService _globalFunctionService = globalFunctionService;
     private readonly NeuCharFunctionProvitAccessService _accessPolicyService = accessPolicyService;
 
+    /// <summary>
+    /// Resolves a globally exposed function and returns its descriptor together
+    /// with the effective access-policy information visible to the caller.
+    /// </summary>
+    /// <param name="moduleUid">The module UID owning the function.</param>
+    /// <param name="functionKey">The stable function key.</param>
+    /// <returns>The descriptor and access data, or HTTP 403 when resolution is denied.</returns>
     public async Task<IActionResult> OnGetDescribeAsync(
         [FromQuery] string moduleUid,
         [FromQuery] string functionKey)
@@ -97,6 +104,12 @@ public class FunctionModel(
         });
     }
 
+    /// <summary>
+    /// Executes a globally exposed function after validating its identity and
+    /// serialized parameter size.
+    /// </summary>
+    /// <param name="request">The module UID, function key, and JSON parameters.</param>
+    /// <returns>The function execution result or an HTTP 400 validation response.</returns>
     public async Task<IActionResult> OnPostRunAsync([FromBody] GlobalFunctionRunRequest request)
     {
         if (request == null ||

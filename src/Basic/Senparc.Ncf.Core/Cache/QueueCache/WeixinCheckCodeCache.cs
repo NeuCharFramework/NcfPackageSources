@@ -28,6 +28,9 @@ namespace Senparc.Ncf.Core.Cache.QueueCache
     {
         private const string cacheKey = "WeixinCheckCodeCache";
         private const int timeoutSeconds = 3 * 60;
+        /// <summary>
+        /// Initializes the Weixin verification-code queue cache with a three-minute timeout.
+        /// </summary>
         public WeixinCheckCodeCache()
             : base(cacheKey, timeoutSeconds)
         {

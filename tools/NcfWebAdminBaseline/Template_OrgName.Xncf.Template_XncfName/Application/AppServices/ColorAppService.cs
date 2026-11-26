@@ -40,9 +40,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
 
 
         /// <summary>
-        /// get or initialize a ColorDto object
+        /// Retrieves the persisted sample color or initializes one through the domain service,
+        /// then returns its RGB values and elapsed lookup time.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A response containing the initialized color and operation duration.</returns>
         public async Task<AppResponseBase<Color_GetOrInitColorResponse>> GetOrInitColorAsync()
         {
             return await this.GetResponseAsync<Color_GetOrInitColorResponse>(async (response, logger) =>

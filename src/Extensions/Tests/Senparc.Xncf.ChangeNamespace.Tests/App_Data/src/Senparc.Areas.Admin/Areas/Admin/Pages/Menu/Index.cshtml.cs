@@ -29,9 +29,9 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public PagedList<SysMenu> SysMenus { get; set; }
 
         /// <summary>
-        /// 
+        /// Loads the newest menu records for the requested page.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A completed task after the page model menu list is populated.</returns>
         public async Task OnGetAsync()
         {
             SysMenus = await _sysMenuService.GetObjectListAsync(PageIndex, 10, _ => true, _ => _.AddTime, Ncf.Core.Enums.OrderingType.Descending);

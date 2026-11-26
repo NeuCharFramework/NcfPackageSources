@@ -36,12 +36,22 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
     public class MyFuctionAppService: AppServiceBase
     {
         private ColorService _colorService;
+        /// <summary>
+        /// Initializes the sample FileManager function service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="colorService">The color service dependency.</param>
         public MyFuctionAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
         {
             _colorService = colorService;
         }
 
         [FunctionRender(typeof(FileManagerResource), "Function.Sample.Name", "Function.Sample.Description", typeof(Register))]
+        /// <summary>
+        /// Evaluates the requested arithmetic operation and optional power transformations.
+        /// </summary>
+        /// <param name="request">The operands, operator, display name, and optional powers.</param>
+        /// <returns>A string response containing the calculated result and operation log.</returns>
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

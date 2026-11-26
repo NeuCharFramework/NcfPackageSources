@@ -46,6 +46,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         private readonly AdminUserInfoService _adminUserInfoService = adminUserInfoService;
         private readonly IStringLocalizer<AdminResource> _localizer = localizer;
 
+        /// <summary>
+        /// Returns the current administrator authentication type, server time, and
+        /// effective cookie/JWT expiration values.
+        /// </summary>
+        /// <returns>An authentication status response or HTTP 401.</returns>
         public async Task<IActionResult> OnGetStatusAsync()
         {
             var now = DateTimeOffset.UtcNow;
@@ -82,6 +87,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             return Unauthorized();
         }
 
+        /// <summary>
+        /// Renews the authenticated cookie or issues a refreshed backend JWT and
+        /// returns the resulting expiration metadata.
+        /// </summary>
+        /// <returns>The refreshed authentication status or HTTP 401/validation failure.</returns>
         public async Task<IActionResult> OnGetKeepAliveAsync()
         {
             var now = DateTimeOffset.UtcNow;

@@ -84,6 +84,15 @@ User requirement:
 If you omit modelId, the server will use defaultModelId {{$defaultModelId}}.
 Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$defMaxTokens}}, frequencyPenalty {{$defFreq}}, presencePenalty {{$defPres}}.";
 
+        /// <summary>
+        /// Initializes the Kernel fallback service with prompt, model, bridge, logging,
+        /// and lazy model-service dependencies.
+        /// </summary>
+        /// <param name="promptItemService">The PromptRange item service.</param>
+        /// <param name="llModelService">The language-model configuration service.</param>
+        /// <param name="bridge">The bridge used to correlate fallback responses.</param>
+        /// <param name="logger">The fallback logger.</param>
+        /// <param name="aiModelService">The lazily resolved AI model service.</param>
         public PromptOptimizationKernelFallbackService(
             PromptItemService promptItemService,
             LlModelService llModelService,

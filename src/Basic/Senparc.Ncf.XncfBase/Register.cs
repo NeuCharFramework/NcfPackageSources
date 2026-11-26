@@ -69,25 +69,29 @@ using Senparc.Ncf.XncfBase.Threads;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides global XNCF registration state, function metadata, thread startup,
+    /// and automatic Entity Framework configuration mapping services.
     /// </summary>
     public static class Register
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the background threads registered by XNCF modules.
         /// </summary>
         public static ConcurrentDictionary<ThreadInfo, Thread> ThreadCollection { get; set; } = new ConcurrentDictionary<ThreadInfo, Thread>();
 
+        /// <summary>
+        /// Gets or sets the FunctionRender metadata registry discovered during assembly scanning.
+        /// </summary>
         public static FunctionRenderCollection FunctionRenderCollection { get; set; } = new FunctionRenderCollection();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the entity-configuration objects discovered from XNCF mappings.
         /// </summary>
         public static List<object> XncfAutoConfigurationMappingList { get; set; } = new List<object>();
         //public static List<IEntityTypeConfiguration<EntityBase>> XncfAutoConfigurationMappingList = new List<IEntityTypeConfiguration<EntityBase>>();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Identifies the kinds of types discovered during XNCF assembly scanning.
         /// </summary>
         enum ScanTypeKind
         {
@@ -96,6 +100,12 @@ namespace Senparc.Ncf.XncfBase
             XncfAutoConfigurationMappingAttribute
         }
 
+        /// <summary>
+        /// Appends a timestamped or indented diagnostic line to a registration log.
+        /// </summary>
+        /// <param name="sb">The log builder receiving the line.</param>
+        /// <param name="log">The message text.</param>
+        /// <param name="addTime">Whether to prefix the message with the current system time.</param>
         private static void SetLog(StringBuilder sb, string log, bool addTime = true)
         {
             var msg = addTime ? $"[{SystemTime.Now}] {log}" : $"\t{log}";
@@ -105,19 +115,19 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Resolves the current database provider from the active configuration,
+        /// falling back to SiteConfig and raw configuration values when necessary.
         /// </summary>
+        /// <param name="configuration">The application configuration fallback source.</param>
+        /// <returns>The resolved database provider, or <see langword="null"/> when unavailable.</returns>
         private static MultipleDatabaseType? ResolveCurrentDatabaseTypeForScanLog(IConfiguration configuration)
         {
             try
             {
-                //Legacy comment translated to English.
                 return DatabaseConfigurationFactory.Instance.Current.MultipleDatabaseType;
             }
             catch
             {
-                //Legacy comment translated to English.
             }
 
             var fromSiteConfig = SiteConfig.SenparcCoreSetting?.DatabaseType;
@@ -137,24 +147,22 @@ namespace Senparc.Ncf.XncfBase
         }
 
 
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        ///// <returns></returns>
-        //Legacy comment translated to English.
+        // The former StartEngine overload was superseded by StartNcfEngine and
+        // is retained only in source history for compatibility reference.
         //public static string StartEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         //{
         //    return StartNcfEngine(services, configuration, env, null);
         //}
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Scans assemblies for XNCF registrations, configures discovered services,
+        /// and prepares the application for module startup.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
-        /// <param name="env"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="services">The application service collection.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="env">The hosting environment.</param>
+        /// <param name="dllFilePatterns">Optional assembly-name filters used during scanning.</param>
+        /// <returns>A diagnostic startup log.</returns>
         public static string StartNcfEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env, string[] dllFilePatterns)
         {
             StringBuilder sb = new StringBuilder();
@@ -500,14 +508,14 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Scans registered modules, compares their persisted versions with the current
+        /// registrations, and executes installation or upgrade callbacks for changes.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <param name="serviceProvider">IServiceProvider</param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="xncfModuleDtos">The persisted module records used for version comparison.</param>
+        /// <param name="serviceProvider">The application service provider used by module callbacks.</param>
+        /// <param name="afterInstalledOrUpdated">An optional callback invoked after each changed module.</param>
+        /// <param name="justScanThisUid">An optional UID restricting the scan to one module.</param>
+        /// <returns>A diagnostic log describing the scan and lifecycle decisions.</returns>
         public static async Task<string> ScanAndInstall(IList<CreateOrUpdate_XncfModuleDto> xncfModuleDtos,
             IServiceProvider serviceProvider,
             Func<IXncfRegister, InstallOrUpdate, Task> afterInstalledOrUpdated = null,
@@ -564,13 +572,8 @@ namespace Senparc.Ncf.XncfBase
             return sb.ToString();
         }
 
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        ///// <param name="app"></param>
-        ///Legacy comment translated to English.
-        ///// <param name="senparcCoreSetting">SenparcCoreSetting</param>
-        ///// <returns></returns>
+        // The generic UseXncfModules overload was superseded by the provider-neutral
+        // overload above and is retained only as historical reference.
         //public static IApplicationBuilder UseXncfModules<TDatabaseConfiguration>(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting = null, bool autoRunInstall = false)
         //where TDatabaseConfiguration : IDatabaseConfiguration, new()
         //{
@@ -579,12 +582,15 @@ namespace Senparc.Ncf.XncfBase
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Configures the XNCF module middleware, optionally runs installation checks,
+        /// and optionally starts registered background threads.
         /// </summary>
-        /// <param name="app"></param>
-        ///Legacy comment translated to English.
-        /// <param name="senparcCoreSetting">SenparcCoreSetting</param>
-        /// <returns></returns>
+        /// <param name="app">The ASP.NET Core application builder.</param>
+        /// <param name="registerService">The shared NCF registration service.</param>
+        /// <param name="senparcCoreSetting">Optional core settings; loaded from DI when omitted.</param>
+        /// <param name="autoRunInstall">Whether module installation/update checks should run immediately.</param>
+        /// <param name="startBackgroundThreads">Whether registered module threads should start.</param>
+        /// <returns>The same application builder after module initialization.</returns>
         public static IApplicationBuilder UseXncfModules(
             this IApplicationBuilder app,
             IRegisterService registerService,
@@ -681,7 +687,8 @@ namespace Senparc.Ncf.XncfBase
         private static readonly object XncfThreadStartLock = new object();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Starts registered XNCF background threads once for the application.
+        /// Repeated calls return without starting duplicate threads.
         /// </summary>
         public static IApplicationBuilder StartXncfThreads(this IApplicationBuilder app)
         {
@@ -703,6 +710,12 @@ namespace Senparc.Ncf.XncfBase
             return app;
         }
 
+        /// <summary>
+        /// Configures and starts one module's background thread collection.
+        /// Thread-configuration failures are logged and isolated from other modules.
+        /// </summary>
+        /// <param name="app">The application builder used by the thread runtime.</param>
+        /// <param name="register">The module registration to inspect.</param>
         private static void StartXncfThread(IApplicationBuilder app, IXncfRegister register)
         {
             if (register is not IXncfThread threadRegister)
@@ -724,13 +737,15 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Stores the entity types whose automatic configuration mappings have been applied.
         /// </summary>
         public static List<Type> ApplyedAutoConfigurationMappingTypes { get; set; } = new List<Type>();
         private static List<Type> AddedApplyedAutoConfigurationMappingEntityTypes { get; set; } = new List<Type>();
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Discovers database entity sets across registered providers and adds blank
+        /// configuration mappings once for each entity type.
         /// </summary>
+        /// <param name="modelBuilder">The model builder receiving discovered mappings.</param>
         public static void ApplyAllAutoConfigurationMapping(ModelBuilder modelBuilder)
         {
             var entityTypeConfigurationMethod = typeof(ModelBuilder).GetMethods()

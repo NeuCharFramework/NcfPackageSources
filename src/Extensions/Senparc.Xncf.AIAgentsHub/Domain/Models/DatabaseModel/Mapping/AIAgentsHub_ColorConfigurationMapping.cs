@@ -24,7 +24,9 @@ namespace Senparc.Xncf.AIAgentsHub.Models
     [XncfAutoConfigurationMapping]
     public class AIAgentsHub_ColorConfigurationMapping : ConfigurationMappingWithIdBase<Color, int>
     {
-        public override void Configure(EntityTypeBuilder<Color> builder)
+        /// <inheritdoc />
+    /// <inheritdoc/>
+    public override void Configure(EntityTypeBuilder<Color> builder)
         {
             builder.Property(e => e.Red).IsRequired();
             builder.Property(e => e.Green).IsRequired();

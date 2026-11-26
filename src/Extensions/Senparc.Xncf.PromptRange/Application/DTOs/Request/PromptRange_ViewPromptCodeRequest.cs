@@ -23,11 +23,10 @@ using System.ComponentModel;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 
-/// <summary>
-///Legacy comment translated to English.
-/// </summary>
+/// <summary>Filters the PromptRange prompt-code view by range name.</summary>
 public class PromptRange_ViewPromptCodeRequest : FunctionAppRequestBase
 {
+    /// <summary>Gets or sets the optional range-name filter.</summary>
     [LocalizedDescription(typeof(PromptRangeResource), "Parameter.PromptRange.FilterRange")]
     public string FilterRangeName { get; set; }
 }

@@ -39,12 +39,22 @@ namespace Senparc.Xncf.Accounts
         /// </summary>
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Applies Accounts database model configuration. The sample currently
+        /// relies on automatic mapping attributes.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             //after implementing the [XncfAutoConfigurationMapping] attribute, this runs automatically and no manual registration is needed
             //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
         }
 
+        /// <summary>
+        /// Registers additional Accounts database services. No explicit registrations
+        /// are required by the current module implementation.
+        /// </summary>
+        /// <param name="services">The dependency-injection collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             //DOT REMOVE OR MODIFY THIS LINE - Entities Point

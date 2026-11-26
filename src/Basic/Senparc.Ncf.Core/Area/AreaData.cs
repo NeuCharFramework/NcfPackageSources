@@ -35,6 +35,13 @@ namespace Senparc.Ncf.Core.Area
         private const string CITIES_XML_PATH = "~/App_Data/AreaData/Cities.xml";
         private const string DISTRICTS_XML_PATH = "~/App_Data/AreaData/Districts.xml";
 
+        /// <summary>
+        /// Loads an XML document from an application-relative path after mapping that path
+        /// through the current NCF HTTP context.
+        /// </summary>
+        /// <param name="xmlApplicationPath">The application-relative XML path, such as <c>~/App_Data/...</c>.</param>
+        /// <returns>The loaded XML root element.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the current HTTP context cannot map the path.</exception>
         private XElement GetXmlElement(string xmlApplicationPath)
         {
             return XElement.Load(SenparcHttpContext.MapPath(xmlApplicationPath));
@@ -43,9 +50,9 @@ namespace Senparc.Ncf.Core.Area
         #region State
 
         /// <summary>
-        /// getallprovince data (get from cache)
+        /// Loads all provinces from the configured XML source and caches the result.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>All province records.</returns>
         public List<AreaXML_Provinces> GetProvincesData()
         {
             //Check cache
@@ -68,29 +75,29 @@ namespace Senparc.Ncf.Core.Area
         }
 
         /// <summary>
-        /// getsingleprovince information
+        /// Finds a province by its display name.
         /// </summary>
-        /// <param name="provinceName"></param>
-        /// <returns></returns>
+        /// <param name="provinceName">The province name.</param>
+        /// <returns>The matching province, or <see langword="null"/>.</returns>
         public AreaXML_Provinces GetProvinceData(string provinceName)
         {
             return GetProvincesData().FirstOrDefault(z => z.ProvinceName == provinceName);
         }
         /// <summary>
-        /// getsingleprovince information
+        /// Finds a province by its numeric identifier.
         /// </summary>
-        /// <param name="provinceID"></param>
-        /// <returns></returns>
+        /// <param name="provinceID">The province identifier.</param>
+        /// <returns>The matching province, or <see langword="null"/>.</returns>
         public AreaXML_Provinces GetProvinceData(int provinceID)
         {
             return GetProvincesData().FirstOrDefault(z => z.ID == provinceID);
         }
 
         /// <summary>
-        /// get the province information to which the specified CityName (city) belongs
+        /// Finds the province containing a city with the supplied name.
         /// </summary>
-        /// <param name="cityName">City cityname</param>
-        /// <returns></returns>
+        /// <param name="cityName">The city name.</param>
+        /// <returns>The matching province, or <see langword="null"/>.</returns>
         public AreaXML_Provinces GetProvinceDataByCityName(string cityName)
         {
             var cityInfo = this.GetCityData(cityName);
@@ -102,9 +109,9 @@ namespace Senparc.Ncf.Core.Area
 
         #region City
         /// <summary>
-        /// getallcitydistrictdata (get from cache)
+        /// Loads all cities from the configured XML source and caches the result.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>All city records.</returns>
         public List<AreaXML_Cities> GetCitiesData()
         {
             //Check cache
@@ -127,10 +134,10 @@ namespace Senparc.Ncf.Core.Area
         }
 
         /// <summary>
-        /// get specified PID citydata
+        /// Gets cities belonging to a province identifier.
         /// </summary>
-        /// <param name="pID"></param>
-        /// <returns></returns>
+        /// <param name="pID">The province identifier; non-positive values return all cities.</param>
+        /// <returns>The matching city records.</returns>
         public List<AreaXML_Cities> GetCitiesData(int pID)
         {
             List<AreaXML_Cities> fullCitiesData = GetCitiesData();
@@ -141,10 +148,10 @@ namespace Senparc.Ncf.Core.Area
         }
 
         /// <summary>
-        /// get to define allcitydistrictname under province
+        /// Gets all cities belonging to a province name.
         /// </summary>
-        /// <param name="provinceName"></param>
-        /// <returns></returns>
+        /// <param name="provinceName">The province name.</param>
+        /// <returns>The matching city records, or an empty list when the province is unknown.</returns>
         public List<AreaXML_Cities> GetCitiesData(string provinceName)
         {
             if (!string.IsNullOrEmpty(provinceName))
@@ -164,6 +171,12 @@ namespace Senparc.Ncf.Core.Area
         }
 
 
+        /// <summary>
+        /// Finds a city by reflecting over a named area-data property.
+        /// </summary>
+        /// <param name="attributeName">The public property name to inspect.</param>
+        /// <param name="value">The string value to compare.</param>
+        /// <returns>The first matching city, or <see langword="null"/>.</returns>
         private AreaXML_Cities GetCityData(string attributeName, string value)
         {
             List<AreaXML_Cities> fullCitiesData = GetCitiesData();
@@ -174,16 +187,31 @@ namespace Senparc.Ncf.Core.Area
             return city;
         }
 
+        /// <summary>
+        /// Finds a city by its display name.
+        /// </summary>
+        /// <param name="cityName">The city name stored in the area data.</param>
+        /// <returns>The matching city, or <see langword="null"/> when no city matches.</returns>
         public AreaXML_Cities GetCityData(string cityName)
         {
             return this.GetCityData("CityName", cityName);
         }
 
+        /// <summary>
+        /// Finds a city by its configured city code.
+        /// </summary>
+        /// <param name="cityCode">The numeric city code.</param>
+        /// <returns>The matching city, or <see langword="null"/> when no city matches.</returns>
         public AreaXML_Cities GetCityData(int cityCode)
         {
             return this.GetCityData("CityCode", cityCode.ToString());
         }
 
+        /// <summary>
+        /// Finds a city by its area-data identifier.
+        /// </summary>
+        /// <param name="id">The city identifier.</param>
+        /// <returns>The matching city, or <see langword="null"/> when no city matches.</returns>
         public AreaXML_Cities GetCityDataById(int id)
         {
             return this.GetCityData("ID", id.ToString());
@@ -196,12 +224,13 @@ namespace Senparc.Ncf.Core.Area
 
 
         /// <summary>
-        /// Update the district number and postal code of the city
+        /// Updates a city's stored city code and postal code, writes a timestamped
+        /// backup file, and refreshes the city cache.
         /// </summary>
-        /// <param name="cityName">City cityname</param>
-        /// <param name="cityCode">District No.</param>
-        /// <param name="zipCode">Postal Code</param>
-        /// <returns></returns>
+        /// <param name="cityName">The city name to update.</param>
+        /// <param name="cityCode">The replacement city code.</param>
+        /// <param name="zipCode">The replacement postal code.</param>
+        /// <returns><see langword="true"/> when the XML update succeeds; otherwise <see langword="false"/>.</returns>
         public bool UpdateCityCodeAndZipCode(string cityName, int cityCode, int zipCode)
         {
             try
@@ -235,9 +264,9 @@ namespace Senparc.Ncf.Core.Area
         }
 
         /// <summary>
-        /// View cities with undefined ZIP codes
+        /// Finds cities whose stored city code cannot be parsed as an integer.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The cities with invalid or missing numeric city codes.</returns>
         public List<AreaXML_Cities> GetWrongCityCode()
         {
             var cities = this.GetCitiesData();
@@ -258,6 +287,10 @@ namespace Senparc.Ncf.Core.Area
 
 
         #region Area
+        /// <summary>
+        /// Loads all district records from the configured XML source and caches them.
+        /// </summary>
+        /// <returns>All district records.</returns>
         public List<AreaXML_Districts> GetDistrictsData()
         {
             //Check cache
@@ -279,10 +312,11 @@ namespace Senparc.Ncf.Core.Area
         }
 
         /// <summary>
-        /// get all district data under city CID
+        /// Returns districts belonging to a city identifier and appends an “Other” option
+        /// when matching districts exist.
         /// </summary>
-        /// <param name="cID"></param>
-        /// <returns></returns>
+        /// <param name="cID">The city identifier; non-positive values return all districts.</param>
+        /// <returns>The matching district records.</returns>
         public List<AreaXML_Districts> GetDistrictsData(int cID)
         {
             List<AreaXML_Districts> fullDictrictsData = GetDistrictsData();
@@ -300,10 +334,10 @@ namespace Senparc.Ncf.Core.Area
         }
 
         /// <summary>
-        /// get the district data for all districts under the city citynameCityName
+        /// Returns districts belonging to a city name.
         /// </summary>
-        /// <param name="cityName"></param>
-        /// <returns></returns>
+        /// <param name="cityName">The city name stored in the area data.</param>
+        /// <returns>The matching district records, or an empty list when the city is unknown.</returns>
         public List<AreaXML_Districts> GetDistrictsData(string cityName)
         {
             if (!string.IsNullOrEmpty(cityName))
@@ -322,6 +356,12 @@ namespace Senparc.Ncf.Core.Area
             }
         }
 
+        /// <summary>
+        /// Finds one district by city name and district name.
+        /// </summary>
+        /// <param name="cityName">The parent city name.</param>
+        /// <param name="districtName">The district name.</param>
+        /// <returns>The matching district, or <see langword="null"/> when not found.</returns>
         public AreaXML_Districts GetDistrictData(string cityName, string districtName)
         {
             return this.GetDistrictsData(cityName).FirstOrDefault(z => z.DistrictName == districtName);
@@ -330,11 +370,13 @@ namespace Senparc.Ncf.Core.Area
         #endregion
 
         /// <summary>
-        /// getdefault, or the list of districts where the user is located, not the first default item in settings
+        /// Builds an area view model for the selected province, city, and district,
+        /// using the module's default prompt entries.
         /// </summary>
-        /// <param name="provinceName"></param>
-        /// <param name="cityName"></param>
-        /// <returns></returns>
+        /// <param name="provinceName">The selected province name.</param>
+        /// <param name="cityName">The selected city name.</param>
+        /// <param name="districtName">The selected district name.</param>
+        /// <returns>The populated area view model.</returns>
         public Base_AreaXmlVD GetAreaDataByProvinceAndCity(string provinceName, string cityName, string districtName)
         {
             return GetAreaDataByProvinceAndCity(provinceName, cityName, districtName, null, null, null);
@@ -342,14 +384,16 @@ namespace Senparc.Ncf.Core.Area
 
 
         /// <summary>
-        /// getdefault, or a table listing the districts where the user is located
+        /// Builds an area view model and optionally inserts caller-supplied prompt entries
+        /// at the beginning of the province, city, and district lists.
         /// </summary>
-        /// <param name="provinceName"></param>
-        /// <param name="cityName"></param>
-        /// <param name="TopProvince">Province First Item</param>
-        /// <param name="TopCities">Cities First Item</param>
-        /// <param name="TopDistricts">Districts First Item</param>
-        /// <returns></returns>
+        /// <param name="provinceName">The selected province name.</param>
+        /// <param name="cityName">The selected city name.</param>
+        /// <param name="districtName">The selected district name.</param>
+        /// <param name="TopProvince">Optional first province item.</param>
+        /// <param name="TopCities">Optional first city item.</param>
+        /// <param name="TopDistricts">Optional first district item.</param>
+        /// <returns>The populated area view model.</returns>
         public Base_AreaXmlVD GetAreaDataByProvinceAndCity(string provinceName, string cityName, string districtName, AreaXML_Provinces TopProvince, AreaXML_Cities TopCities, AreaXML_Districts TopDistricts)
         {
             var vd = new Base_AreaXmlVD()
@@ -431,11 +475,11 @@ namespace Senparc.Ncf.Core.Area
 
 
         /// <summary>
-        /// get city/district number
+        /// Returns the stored city code and optionally prefixes it with zero for legacy formatting.
         /// </summary>
-        /// <param name="cityName"></param>
-        /// <param name="format">whether formatting (preceded by 0)</param>
-        /// <returns></returns>
+        /// <param name="cityName">The city name.</param>
+        /// <param name="format">Whether to apply the legacy leading-zero format.</param>
+        /// <returns>The city code string.</returns>
         public string GetCityCode(/*string provinceName,*/ string cityName, bool format)
         {
             string cityCode = this.GetCityData(cityName).CityCode;
@@ -531,12 +575,12 @@ namespace Senparc.Ncf.Core.Area
 
 
         /// <summary>
-        /// Split province, city, and district information for querying using Country (province, city, districtname) from IPdata
+        /// Splits an IP database country/region string into province, city, and district components.
         /// </summary>
-        /// <param name="ipCountry"></param>
-        /// <param name="provinceName"></param>
-        /// <param name="cityName">When fornull is used together with notget,</param>
-        /// <param name="districtName">districtNamenotget</param>
+        /// <param name="ipCountry">The region text returned by the IP database.</param>
+        /// <param name="provinceName">A reference that receives the province, or remains unchanged when null.</param>
+        /// <param name="cityName">A reference that receives the city, or remains unchanged when null.</param>
+        /// <param name="districtName">A reference that receives the district, or remains unchanged when null.</param>
         public static void GetProvinceCityNameFromIPCountry(string ipCountry, ref string provinceName, ref string cityName, ref string districtName)
         {
             int areaStartIndex = 0;
@@ -569,10 +613,10 @@ namespace Senparc.Ncf.Core.Area
         /// <summary>
         /// Country (province, city, district name) via IP data
         /// </summary>
-        /// <param name="ipCountry">ipCountry string for "to" from the IP database</param>
-        /// <param name="areaNameList">District-level designations, such as "province," "city," "district"</param>
-        /// <param name="areaStartIndex">startsearch string position cursor</param>
-        /// <returns></returns>
+        /// <param name="ipCountry">The region text returned by the IP database.</param>
+        /// <param name="areaNameList">Suffixes identifying the next area level.</param>
+        /// <param name="areaStartIndex">The parsing cursor, updated after a match.</param>
+        /// <returns>The extracted area segment, or an empty string when no suffix matches.</returns>
         private static string GetProvinceAreaNameFromIPCountry(string ipCountry, string[] areaNameList, ref int areaStartIndex)
         {
             string areaNameResult = string.Empty;

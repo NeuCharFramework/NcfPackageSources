@@ -26,6 +26,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Mapping
     [XncfAutoConfigurationMapping]
     public class RemoteAgentConfigurationMapping : ConfigurationMappingWithIdBase<RemoteAgent, int>
     {
+        /// <inheritdoc/>
         public override void Configure(EntityTypeBuilder<RemoteAgent> builder)
         {
             base.Configure(builder);

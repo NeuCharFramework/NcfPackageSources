@@ -139,6 +139,13 @@ public sealed class DesktopAuthorizedSyncHub
         }
     }
 
+    /// <summary>
+    /// Determines whether a buffered sync entry is visible to a subscriber.
+    /// </summary>
+    /// <param name="entry">The buffered entry.</param>
+    /// <param name="ownerId">The subscriber owner identifier.</param>
+    /// <param name="requiredPolicy">The subscriber policy.</param>
+    /// <returns><see langword="true"/> when both owner and policy match exactly.</returns>
     private static bool CanRead(AuthorizedSyncEntry entry, string ownerId, string requiredPolicy)
     {
         return string.Equals(entry.OwnerId, ownerId, StringComparison.Ordinal) &&

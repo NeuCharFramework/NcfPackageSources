@@ -27,7 +27,7 @@ using System.Text;
 namespace Senparc.Ncf.Database
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Maps XNCF database registration types to provider-specific DbContext types.
     /// </summary>
     public class XncfDatabaseDbContextPool :
         /*Concurrent*/Dictionary<Type/* IXncfDatabase Register type */, Dictionary<MultipleDatabaseType, Type/* database XncfDatabaseDbContext type */>>
@@ -36,9 +36,7 @@ namespace Senparc.Ncf.Database
 
         XncfDatabaseDbContextPool() { }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the process-wide XNCF database-context pool.</summary>
         public static XncfDatabaseDbContextPool Instance
         {
             get
@@ -56,20 +54,15 @@ namespace Senparc.Ncf.Database
 
         #endregion
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="multiDbContextAttr"></param>
-        /// <param name="xncfDatabaseDbContextType"></param>
+        /// <summary>Registers a provider-specific DbContext type.</summary>
+        /// <param name="multiDbContextAttr">The provider and registration metadata.</param>
+        /// <param name="xncfDatabaseDbContextType">The concrete DbContext type.</param>
         public void TryAdd(MultipleMigrationDbContextAttribute multiDbContextAttr, Type xncfDatabaseDbContextType)
         {
-            //Legacy comment translated to English.
             if (!this.ContainsKey(multiDbContextAttr.XncfDatabaseRegisterType))
             {
-                //Legacy comment translated to English.
                 this[multiDbContextAttr.XncfDatabaseRegisterType] = new Dictionary<MultipleDatabaseType, Type>();
             }
-            //Legacy comment translated to English.
             this[multiDbContextAttr.XncfDatabaseRegisterType][multiDbContextAttr.MultipleDatabaseType] = xncfDatabaseDbContextType;
         }
     }

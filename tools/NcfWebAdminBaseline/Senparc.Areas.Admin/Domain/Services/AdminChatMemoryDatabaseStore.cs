@@ -33,6 +33,12 @@ public sealed class AdminChatMemoryDatabaseStore : IAdminChatMemoryStore
     private readonly AdminChatMemoryStore _legacy;
     private readonly IDataProtectionProvider _protection;
 
+    /// <summary>
+    /// Initializes the database-backed memory store and its legacy-file fallback.
+    /// </summary>
+    /// <param name="db">The database context containing memory state rows.</param>
+    /// <param name="legacy">The legacy memory store used during migration.</param>
+    /// <param name="protection">The data-protection provider for memory payloads.</param>
     public AdminChatMemoryDatabaseStore(DbContext db, AdminChatMemoryStore legacy, IDataProtectionProvider protection)
     {
         _db = db;
@@ -40,15 +46,36 @@ public sealed class AdminChatMemoryDatabaseStore : IAdminChatMemoryStore
         _protection = protection;
     }
 
+    /// <summary>
+    /// Builds a tenant- and user-scoped query for the memory row.
+    /// </summary>
+    /// <param name="tenantId">The tenant identifier.</param>
+    /// <param name="userId">The administrator identifier.</param>
+    /// <returns>The unmaterialized memory-state query.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when either identifier is negative.</exception>
     private IQueryable<AdminChatMemoryState> Query(int tenantId, int userId)
     {
         if (tenantId < 0 || userId < 0) throw new ArgumentOutOfRangeException(nameof(userId));
         return _db.Set<AdminChatMemoryState>().Where(row => row.TenantId == tenantId && row.UserId == userId);
     }
 
+    /// <summary>
+    /// Creates the versioned data protector scoped to one tenant and administrator.
+    /// </summary>
+    /// <param name="tenantId">The tenant identifier.</param>
+    /// <param name="userId">The administrator identifier.</param>
+    /// <returns>The scoped data protector.</returns>
     private IDataProtector Protector(int tenantId, int userId) =>
         _protection.CreateProtector("NCF.AdminChat.Memory.Database.v1", tenantId.ToString(), userId.ToString());
 
+    /// <summary>
+    /// Reads protected database memory, migrating the legacy profile when no row exists.
+    /// </summary>
+    /// <param name="tenantId">The tenant identifier.</param>
+    /// <param name="userId">The administrator identifier.</param>
+    /// <param name="cancellationToken">The database-operation cancellation token.</param>
+    /// <returns>The current memory profile.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when stored memory payload data is invalid.</exception>
     public async Task<AdminChatMemoryProfile> ReadAsync(int tenantId, int userId, CancellationToken cancellationToken = default)
     {
         var row = await Query(tenantId, userId).AsNoTracking().SingleOrDefaultAsync(cancellationToken);
@@ -62,6 +89,17 @@ public sealed class AdminChatMemoryDatabaseStore : IAdminChatMemoryStore
         return await ReadAsync(tenantId, userId, cancellationToken);
     }
 
+    /// <summary>
+    /// Applies an optimistic-concurrency update to one memory profile and persists a new revision.
+    /// </summary>
+    /// <param name="tenantId">The tenant identifier.</param>
+    /// <param name="userId">The administrator identifier.</param>
+    /// <param name="revision">The revision read by the caller.</param>
+    /// <param name="update">The mutation applied to the current profile.</param>
+    /// <param name="cancellationToken">The database-operation cancellation token.</param>
+    /// <returns>The updated memory profile.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the profile exceeds the payload limit.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the revision no longer matches the stored profile.</exception>
     public async Task<AdminChatMemoryProfile> UpdateAsync(int tenantId, int userId, string revision,
         Action<AdminChatMemoryProfile> update, CancellationToken cancellationToken = default)
     {
@@ -80,6 +118,14 @@ public sealed class AdminChatMemoryDatabaseStore : IAdminChatMemoryStore
         return profile;
     }
 
+    /// <summary>
+    /// Serializes and protects a memory profile, enforcing the one-megabyte payload limit.
+    /// </summary>
+    /// <param name="tenantId">The tenant identifier.</param>
+    /// <param name="userId">The administrator identifier.</param>
+    /// <param name="profile">The profile to serialize.</param>
+    /// <returns>The protected payload bytes.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the serialized profile exceeds one MiB.</exception>
     private byte[] Protect(int tenantId, int userId, AdminChatMemoryProfile profile)
     {
         var json = JsonSerializer.SerializeToUtf8Bytes(profile);
@@ -87,6 +133,14 @@ public sealed class AdminChatMemoryDatabaseStore : IAdminChatMemoryStore
         return Protector(tenantId, userId).Protect(json);
     }
 
+    /// <summary>
+    /// Inserts a new protected memory row and reports whether the insert won a concurrent race.
+    /// </summary>
+    /// <param name="tenantId">The tenant identifier.</param>
+    /// <param name="userId">The administrator identifier.</param>
+    /// <param name="profile">The profile to insert.</param>
+    /// <param name="ct">The database-operation cancellation token.</param>
+    /// <returns><see langword="true"/> when the row is inserted; otherwise <see langword="false"/> when it already exists.</returns>
     private async Task<bool> InsertAsync(int tenantId, int userId, AdminChatMemoryProfile profile, CancellationToken ct)
     {
         var row = new AdminChatMemoryState
@@ -104,6 +158,10 @@ public sealed class AdminChatMemoryDatabaseStore : IAdminChatMemoryStore
         finally { _db.Entry(row).State = EntityState.Detached; }
     }
 
+    /// <summary>
+    /// Creates the standardized optimistic-concurrency conflict exception.
+    /// </summary>
+    /// <returns>The conflict exception describing the required reload.</returns>
     private static NcfExceptionBase Conflict() =>
         new("Memory changed. Reload before saving; the newer version was preserved.");
 }

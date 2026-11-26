@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AIKernel.Domain.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies the capability or modality provided by an AI model configuration.
     /// </summary>
     public enum ConfigModelType
     {

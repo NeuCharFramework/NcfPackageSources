@@ -61,6 +61,11 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
             _weixinUserService = weixinUserService;
         }
 
+        /// <summary>
+        /// Loads all public-account configurations, access-token state, and user counters
+        /// needed by the Weixin-manager dashboard.
+        /// </summary>
+        /// <returns>A task that completes after the dashboard properties are populated.</returns>
         public async Task OnGetAsync()
         {
             var allMpAccounts = await _mpAccountService.GetObjectListAsync(0, 0, z => true, z => z.Id, OrderingType.Descending);
@@ -87,9 +92,10 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
         }
 
         /// <summary>
-        /// Handler=Ajax
+        /// Returns the current public-account dashboard data, including access-token bags
+        /// and total/today user counts, for asynchronous refresh.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An <see cref="OkObjectResult"/> containing the dashboard snapshot.</returns>
         public async Task<IActionResult> OnGetAjaxAsync()
         {
             var allMpAccounts = await _mpAccountService.GetObjectListAsync(0, 0, z => true, z => z.Id, OrderingType.Descending);
@@ -123,6 +129,12 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
             });
         }
 
+        /// <summary>
+        /// Calculates access-token status and remaining-lifetime percentages for the requested accounts.
+        /// </summary>
+        /// <param name="ids">The public-account identifiers whose token state is requested.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing one status record per known identifier.</returns>
+        /// <exception cref="NullReferenceException">Thrown when the request body does not bind an identifier array.</exception>
         public async Task<IActionResult> OnPostAccessTokenStatusAsync([FromBody]int[] ids)
         {
             var data = new List<AccessTokenData>();

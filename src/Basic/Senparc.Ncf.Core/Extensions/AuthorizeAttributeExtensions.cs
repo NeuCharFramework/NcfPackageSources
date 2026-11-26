@@ -25,10 +25,17 @@ namespace Senparc.Ncf.Core.Extensions
     public class UserAuthorizeAttribute : AuthorizeAttribute
     {
         public const string AuthenticationScheme = "NcfUserAuthorizeScheme";
+        /// <summary>
+        /// Initializes the user authorization attribute with a policy.
+        /// </summary>
+        /// <param name="policy">The required policy name.</param>
         public UserAuthorizeAttribute(string policy) : this()
         {
             this.Policy = policy;
         }
+        /// <summary>
+        /// Initializes the user authorization attribute with the NCF user scheme.
+        /// </summary>
         public UserAuthorizeAttribute()
         {
             base.AuthenticationSchemes = AuthenticationScheme;

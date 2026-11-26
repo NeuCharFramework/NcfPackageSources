@@ -25,17 +25,21 @@ using Senparc.Xncf.Tenant.Domain.DataBaseModel;
 namespace Senparc.Xncf.Tenant.Domain.DatabaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// EF Core context for persisted tenant records.
     /// </summary>
     public class TenantSenparcEntities : XncfDatabaseDbContext
     {
+        /// <summary>
+        /// Initializes the tenant database context.
+        /// </summary>
+        /// <param name="dbContextOptions">The provider-specific EF Core options.</param>
         public TenantSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
         }
 
-        #region Legacy section
+        /// <summary>
+        /// Gets or sets the persisted tenant records.
+        /// </summary>
         public DbSet<TenantInfo> TenantInfos { get; set; }
-
-        #endregion
     }
 }

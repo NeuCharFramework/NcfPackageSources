@@ -15,6 +15,12 @@ namespace Microsoft.Extensions.Hosting
     // To learn more about using this project, see https://aka.ms/dotnet/aspire/service-defaults
     public static class Extensions
     {
+        /// <summary>
+        /// Adds the shared service defaults: telemetry, liveness health checks,
+        /// service discovery, HTTP resilience, and HTTP service discovery.
+        /// </summary>
+        /// <param name="builder">The host application builder.</param>
+        /// <returns>The same builder for fluent configuration.</returns>
         public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
         {
             builder.ConfigureOpenTelemetry();
@@ -41,6 +47,12 @@ namespace Microsoft.Extensions.Hosting
             return builder;
         }
 
+        /// <summary>
+        /// Configures OpenTelemetry logging, metrics, tracing, and exporters using
+        /// the host configuration.
+        /// </summary>
+        /// <param name="builder">The host application builder.</param>
+        /// <returns>The same builder for fluent configuration.</returns>
         public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder)
         {
             builder.Logging.AddOpenTelemetry(logging =>
@@ -69,6 +81,11 @@ namespace Microsoft.Extensions.Hosting
             return builder;
         }
 
+        /// <summary>
+        /// Enables the OTLP exporter when an OTLP endpoint is configured.
+        /// </summary>
+        /// <param name="builder">The host application builder.</param>
+        /// <returns>The same builder.</returns>
         private static IHostApplicationBuilder AddOpenTelemetryExporters(this IHostApplicationBuilder builder)
         {
             var useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
@@ -88,6 +105,11 @@ namespace Microsoft.Extensions.Hosting
             return builder;
         }
 
+        /// <summary>
+        /// Registers the default self/liveness health check.
+        /// </summary>
+        /// <param name="builder">The host application builder.</param>
+        /// <returns>The same builder for fluent configuration.</returns>
         public static IHostApplicationBuilder AddDefaultHealthChecks(this IHostApplicationBuilder builder)
         {
             builder.Services.AddHealthChecks()
@@ -97,6 +119,11 @@ namespace Microsoft.Extensions.Hosting
             return builder;
         }
 
+        /// <summary>
+        /// Maps development-only readiness and liveness endpoints.
+        /// </summary>
+        /// <param name="app">The web application.</param>
+        /// <returns>The same application for fluent endpoint configuration.</returns>
         public static WebApplication MapDefaultEndpoints(this WebApplication app)
         {
             // Adding health checks endpoints to applications in non-development environments has security implications.

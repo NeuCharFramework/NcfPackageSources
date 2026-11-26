@@ -22,22 +22,23 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Shared.Abstractions.Events
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Sends request/response messages through the integration event bus.
     /// </summary>
     /// <remarks>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Implementations correlate the response by <see cref="IIntegrationRequest{TResponse}.RequestId"/>
+    /// and stop waiting when the timeout or cancellation token is reached.
     /// </remarks>
     public interface IEventBusRequestClient
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Sends a request and waits for its correlated response.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <typeparam name="TResponse">The expected integration response type.</typeparam>
+        /// <param name="request">The request event to publish.</param>
+        /// <param name="timeout">The maximum duration to wait for the response.</param>
+        /// <param name="cancellationToken">Token used to cancel publishing or waiting.</param>
+        /// <returns>The correlated response.</returns>
+        /// <exception cref="TimeoutException">Thrown when no response arrives before <paramref name="timeout"/>.</exception>
         Task<TResponse> RequestAsync<TResponse>(
             IIntegrationRequest<TResponse> request,
             TimeSpan timeout,

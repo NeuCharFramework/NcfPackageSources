@@ -24,10 +24,13 @@ namespace Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange
 {
     public class ModelModel : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
+        /// <summary>Initializes the PromptRange model page.</summary>
+        /// <param name="xncfModuleService">The lazy XNCF module service.</param>
         public ModelModel(Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
         {
         }
 
+        /// <summary>Initializes the model page request.</summary>
         public void OnGet()
         {
         }

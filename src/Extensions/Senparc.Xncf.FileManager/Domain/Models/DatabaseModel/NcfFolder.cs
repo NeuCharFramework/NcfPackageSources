@@ -26,23 +26,27 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
 {
 
-    //Legacy comment translated to English.
+    /// Represents a logical folder used to organize uploaded files.
     [Table(Register.DATABASE_PREFIX + nameof(NcfFolder))]//a prefix is required to prevent system-wide conflicts
     public class NcfFolder : EntityBase<int>
     {
         [Required]
         [MaxLength(200)]
+        /// Gets or sets the folder name.
         public string Name { get; set; }
 
-        public int? ParentId { get; set; } //Legacy comment translated to English.
+        /// Gets or sets the parent folder identifier, or <see langword="null"/> for a root folder.
+        public int? ParentId { get; set; }
 
+        /// Gets or sets the administrator-facing folder description.
         [MaxLength(500)]
         public string Description { get; set; }
 
+        /// Gets or sets the UTC creation time.
         public DateTime CreateTime { get; set; } = DateTime.UtcNow;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the resource scope governing files in this folder.
         /// </summary>
         public NcfFileResourceScope ResourceScope { get; set; } = NcfFileResourceScope.KnowledgeBase;
     }

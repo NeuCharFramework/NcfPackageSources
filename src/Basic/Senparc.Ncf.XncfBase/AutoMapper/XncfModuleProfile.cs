@@ -24,20 +24,25 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.AutoMapper
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Builds an AutoMapper profile from mapping actions contributed by all
+    /// currently registered XNCF modules.
     /// </summary>
     public class XncfModuleProfile : Profile
     {
 
+        /// <summary>
+        /// Initializes the profile and invokes each registered module's mapping
+        /// configuration action against this profile.
+        /// </summary>
+        /// <exception cref="Exception">
+        /// Propagated when a module mapping action fails while the profile is built.
+        /// </exception>
         public XncfModuleProfile()
         {
-            //Console.WriteLine("XncfModuleProfile, XncfRegisterManager.RegisterList Count:" + XncfRegisterManager.RegisterList.Count);
             foreach (var register in XncfRegisterManager.RegisterList)
             {
-                //Console.WriteLine("register:" + register.Name);
                 if (register.AutoMapMappingConfigs != null)
                 {
-                    //Console.WriteLine("register.AutoMapMappingConfigs:" + register.Name + "/" + register.AutoMapMappingConfigs.Count);
                     foreach (var config in register.AutoMapMappingConfigs)
                     {
                         config(this);

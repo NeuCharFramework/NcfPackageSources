@@ -40,6 +40,12 @@ namespace System.Web.Mvc
         //}
 
 
+        /// <summary>
+        /// Determines whether a name collection contains a key using trimmed, case-insensitive comparison.
+        /// </summary>
+        /// <param name="coll">The collection to inspect.</param>
+        /// <param name="keyToFind">The key to locate.</param>
+        /// <returns><see langword="true"/> when a matching key exists.</returns>
         public static bool ContainsKey(this NameValueCollection coll, string keyToFind)
         {
             bool bResult = false;
@@ -55,18 +61,22 @@ namespace System.Web.Mvc
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Renders move-up and move-down controls for an item in an ordered list.
+        /// The returned markup uses the supplied JavaScript handlers and CSS classes.
         /// </summary>
-        /// <param name="helper"></param>
-        /// <param name="listCount"></param>
-        /// <param name="currentIndex"></param>
-        /// <param name="upFunction"></param>
-        /// <param name="upClassEnable"></param>
-        /// <param name="upClassDisable"></param>
-        /// <param name="downFunction"></param>
-        /// <param name="downClassEnable"></param>
-        /// <param name="downClassDisable"></param>
-        /// <returns></returns>
+        /// <param name="helper">The MVC HTML helper associated with the current view.</param>
+        /// <param name="listCount">The total number of items in the ordered list.</param>
+        /// <param name="currentIndex">The one-based position of the current item.</param>
+        /// <param name="upFunction">The JavaScript expression invoked when moving up is allowed.</param>
+        /// <param name="upClassEnable">The CSS class used for an enabled up control.</param>
+        /// <param name="upClassDisable">The CSS class used for a disabled up control.</param>
+        /// <param name="downFunction">The JavaScript expression invoked when moving down is allowed.</param>
+        /// <param name="downClassEnable">The CSS class used for an enabled down control.</param>
+        /// <param name="downClassDisable">The CSS class used for a disabled down control.</param>
+        /// <returns>
+        /// HTML containing localized move-up and move-down labels and the corresponding
+        /// enabled or disabled image controls.
+        /// </returns>
         public static string UpAndDown(this HtmlHelper helper, int listCount, int currentIndex,
                                     string upFunction, string upClassEnable, string upClassDisable,
                                     string downFunction, string downClassEnable, string downClassDisable)

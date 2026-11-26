@@ -44,6 +44,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         private readonly ChatTaskCancellationRegistry _cancellationRegistry;
         private readonly HumanInTheLoopRequestStore _humanInTheLoopRequestStore;
 
+        /// <summary>
+        /// Initializes the ChatTask persistence service and cancellation/Human-in-the-Loop collaborators.
+        /// </summary>
+        /// <param name="repo">The ChatTask repository.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="cancellationRegistry">The running-task cancellation registry.</param>
+        /// <param name="humanInTheLoopRequestStore">The pending human-request store.</param>
         public ChatTaskService(
             IRepositoryBase<ChatTask> repo,
             IServiceProvider serviceProvider,
@@ -55,20 +62,23 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds the cache key used to track a running chat task.
         /// </summary>
-        /// <param name="taskId"></param>
-        /// <returns></returns>
+        /// <param name="taskId">The chat-task identifier.</param>
+        /// <returns>The stable running-task cache key.</returns>
         public string GetChatTaskRunCacheKey(int taskId)
         {
             return $"ChatTask-Running:{taskId}";
         }
 
+        /// <summary>
+        /// Creates and persists a chat task from a DTO.
+        /// </summary>
+        /// <param name="chatTaskDto">The task values to persist.</param>
+        /// <returns>The persisted chat task.</returns>
         public async Task<ChatTask> CreateTask(ChatTaskDto chatTaskDto)
         {
             var chatTask = new ChatTask(chatTaskDto);
-
-            //Legacy comment translated to English.
 
             await base.SaveObjectAsync(chatTask);
 
@@ -76,6 +86,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             //return base.Mapping<ChatTaskDto>(chatTask);
         }
 
+        /// <summary>
+        /// Changes a task status, persists it, and closes its group when all group tasks settle.
+        /// </summary>
+        /// <param name="status">The new task status.</param>
+        /// <param name="chatTask">The task to update.</param>
         public async Task SetStatus(ChatTask_Status status, ChatTask chatTask)
         {
             chatTask.ChangeStatus(status);
@@ -85,9 +100,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Finishes the owning group when the changed task is terminal and no sibling task remains active.
         /// </summary>
         private async Task TryFinishChatGroupIfAllTasksSettledAsync(ChatTask chatTask)
         {
@@ -128,6 +141,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Changes the archive state of a task and persists the result.
+        /// </summary>
+        /// <param name="chatTask">The task to update.</param>
+        /// <param name="isArchived">Whether the task should be archived.</param>
         public async Task SetArchiveStatus(ChatTask chatTask, bool isArchived)
         {
             if (chatTask == null)
@@ -140,12 +158,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Cancels unfinished chatting or paused tasks that began before a cutoff,
+        /// excluding tasks currently registered for active cancellation.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="beforeStartDateTime">The start-time cutoff.</param>
+        /// <returns>A task that completes after all eligible tasks are cancelled.</returns>
         public async Task CloseUnfinishedTasksAsync(DateTime beforeStartDateTime)
         {
             var unfinishTasks = await base.GetObjectListAsync(0, 0,
@@ -156,7 +173,6 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             {
                 if (_cancellationRegistry.IsRegistered(unfinishedTask.Id))
                 {
-                    //Legacy comment translated to English.
                     continue;
                 }
 
@@ -168,6 +184,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Merges one usage snapshot into the compact aggregate stored in the task's admin remark.
+        /// </summary>
+        /// <param name="chatTask">The task whose aggregate should be updated.</param>
+        /// <param name="usageSnapshot">The usage snapshot to merge.</param>
         public async Task UpdateUsageAggregateAsync(ChatTask chatTask, ChatUsageSnapshot usageSnapshot)
         {
             if (chatTask == null || usageSnapshot == null)

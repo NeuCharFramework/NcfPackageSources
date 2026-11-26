@@ -63,10 +63,17 @@ public class AIModel_GetDetailResponse
 
     public bool Show { get; set; }
 
+    /// <summary>
+    /// Initializes an empty response for model binding.
+    /// </summary>
     public AIModel_GetDetailResponse()
     {
     }
 
+    /// <summary>
+    /// Initializes the response from an AI model entity.
+    /// </summary>
+    /// <param name="model">The source AI model.</param>
     public AIModel_GetDetailResponse(AIModel model)
     {
         Id = model.Id;
@@ -81,6 +88,10 @@ public class AIModel_GetDetailResponse
         Show = model.Show;
     }
 
+    /// <summary>
+    /// Initializes the response from an AI model DTO.
+    /// </summary>
+    /// <param name="dto">The source AI model DTO.</param>
     public AIModel_GetDetailResponse(AIModelDto dto)
     {
         Id = dto.Id;

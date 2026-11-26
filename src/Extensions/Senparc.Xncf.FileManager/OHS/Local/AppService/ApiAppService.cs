@@ -36,16 +36,6 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
         {
         }
 
-        /*
-
-         * Legacy comment translated to English.
-
-         * Legacy comment translated to English.
-
-         * Legacy comment translated to English.
-
-         */
-
         /// <summary>
         /// Returns the fixed sample status value through the standard API response pipeline.
         /// </summary>
@@ -69,7 +59,7 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> MyCustomApi(Api_MyCustomApiRequest request)
         {
-            //StringAppResponse is a shorthand for AppResponseBase<string>
+            // StringAppResponse is the string-payload form of AppResponseBase.
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 throw new NcfExceptionBase($"Exception test; parameters: {request.FirstName} {request.LastName}");

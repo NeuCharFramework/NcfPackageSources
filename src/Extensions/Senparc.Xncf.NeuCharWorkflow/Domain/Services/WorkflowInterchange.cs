@@ -160,6 +160,9 @@ public sealed class WorkflowSecretRequirement
     public bool RequiredOnImport { get; set; } = true;
 }
 
+/// <summary>
+/// Represents a parsed Workflow interchange definition together with its source format.
+/// </summary>
 public sealed record WorkflowInterchangeDocument(
     NeuCharWorkflowDefinition Definition,
     WorkflowInterchangeFormat Format);
@@ -572,12 +575,19 @@ public sealed class WorkflowInterchangeException : InvalidOperationException
         : base(message, innerException) { }
 }
 
+/// <summary>
+/// Describes one validation issue discovered while previewing a Workflow import.
+/// </summary>
 public sealed record WorkflowImportIssue(
     string Severity,
     string Code,
     string Message,
     string? Path = null);
 
+/// <summary>
+/// Contains the validation outcome, normalized definition, dependencies, and warnings
+/// shown before a Workflow import is committed.
+/// </summary>
 public sealed record WorkflowImportPreview(
     bool Valid,
     string Name,

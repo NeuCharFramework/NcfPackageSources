@@ -72,6 +72,9 @@ public class WeixinClawAccount : EntityBase<int>
 
     public DateTime? LastConnectedAt { get; private set; }
 
+    /// <summary>
+    /// Reserved for EF Core materialization.
+    /// </summary>
     private WeixinClawAccount()
     {
     }

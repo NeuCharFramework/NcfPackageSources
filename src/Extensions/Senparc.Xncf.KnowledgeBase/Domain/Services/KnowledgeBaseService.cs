@@ -77,6 +77,14 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         private readonly NcfFileService _ncfFileService;
         private readonly AIModelService _aIModelService;
 
+        /// <summary>
+        /// Initializes knowledge-base persistence, file extraction, item, and AI model services.
+        /// </summary>
+        /// <param name="repo">The knowledge-base repository.</param>
+        /// <param name="knowledgeBasesDetailService">The chunk/item service.</param>
+        /// <param name="ncfFileService">The FileManager service used for source extraction.</param>
+        /// <param name="aIModelService">The AI model service used to validate embedding configuration.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public KnowledgeBaseService(
             RepositoryBase<KnowledgeBase.Models.DatabaseModel.KnowledgeBase> repo,
             KnowledgeBaseItemService knowledgeBasesDetailService,
@@ -109,7 +117,6 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             return this.Mapper.Map<List<KnowledgeBaseDto>>(knowledgeBases);
         }
 
-        /// <summary>
         /// <summary>
         /// Resolves current embedding status for knowledge bases, including legacy embedded-item detection.
         /// </summary>

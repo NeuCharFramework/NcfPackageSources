@@ -38,8 +38,10 @@ public sealed class WeixinClawLoginService
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ConcurrentDictionary<string, LoginSession> _sessions = new();
 
-    //Legacy comment translated to English.
-    //Legacy comment translated to English.
+    /// <summary>
+    /// Resolves a scoped protocol API instance for QR-code and login-status requests.
+    /// </summary>
+    /// <returns>A scoped API client; the scope is disposed after the client is returned.</returns>
     private WeixinClawApi CreateApi()
     {
         using var scope = _scopeFactory.CreateScope();
@@ -215,6 +217,11 @@ public sealed class WeixinClawLoginService
         }
     }
 
+    /// <summary>
+    /// Projects internal session state into the public login-status contract.
+    /// </summary>
+    /// <param name="session">The internal login session.</param>
+    /// <returns>The status visible to the administration client.</returns>
     private static WeixinClawLoginStatus ToStatus(LoginSession session)
     {
         return new WeixinClawLoginStatus(
@@ -229,6 +236,11 @@ public sealed class WeixinClawLoginService
             session.QrcodeUrl);
     }
 
+    /// <summary>
+    /// Projects and removes a terminal login session from the in-memory store.
+    /// </summary>
+    /// <param name="session">The terminal session.</param>
+    /// <returns>The final login status.</returns>
     private WeixinClawLoginStatus CompleteSession(LoginSession session)
     {
         var status = ToStatus(session);

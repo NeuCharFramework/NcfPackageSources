@@ -23,38 +23,45 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.FileManager
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents an RGB color persisted by the FileManager sample data model.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(Color))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class Color : EntityBase<int>
     {
         /// <summary>
-        /// color code, 0-255
+        /// Gets the red component, normally in the range 0 through 255.
         /// </summary>
         public int Red { get; private set; }
         /// <summary>
-        /// color code, 0-255
+        /// Gets the green component, normally in the range 0 through 255.
         /// </summary>
         public int Green { get; private set; }
 
         /// <summary>
-        /// color code, 0-255
+        /// Gets the blue component, normally in the range 0 through 255.
         /// </summary>
         public int Blue { get; private set; }
 
         /// <summary>
-        /// additional columns; test multiple database migrations
+        /// Gets the auxiliary note retained for multi-database migration tests.
         /// </summary>
         public string AdditionNote { get; private set; }
 
         private Color() { }
 
+        /// <summary>
+        /// Initializes a color from RGB components. If any component is negative, the entity
+        /// generates a random color instead of preserving the supplied values.
+        /// </summary>
+        /// <param name="red">The red component, normally from 0 through 255.</param>
+        /// <param name="green">The green component, normally from 0 through 255.</param>
+        /// <param name="blue">The blue component, normally from 0 through 255.</param>
         public Color(int red, int green, int blue)
         {
             if (red < 0 || green < 0 || blue < 0)
             {
-                Random();//Legacy comment translated to English.
+                Random();
             }
             else
             {
@@ -64,6 +71,10 @@ namespace Senparc.Xncf.FileManager
             }
         }
 
+        /// <summary>
+        /// Initializes a color from the RGB values in a DTO.
+        /// </summary>
+        /// <param name="colorDto">The DTO containing the source RGB values.</param>
         public Color(ColorDto colorDto)
         {
             Red = colorDto.Red;
@@ -71,9 +82,13 @@ namespace Senparc.Xncf.FileManager
             Blue = colorDto.Blue;
         }
 
+        /// <summary>
+        /// Replaces all RGB components with independently generated values.
+        /// </summary>
         public void Random()
         {
-            //generate a random color code
+            // Generate each component independently so the fallback color is not biased
+            // toward a single channel.
             var radom = new Random();
             Func<int> getRadomColorCode = () => radom.Next(0, 255);
             Red = getRadomColorCode();
@@ -81,6 +96,9 @@ namespace Senparc.Xncf.FileManager
             Blue = getRadomColorCode();
         }
 
+        /// <summary>
+        /// Increases every RGB component by ten, capped at 255.
+        /// </summary>
         public void Brighten()
         {
             Red = Math.Min(255, Red + 10);
@@ -88,6 +106,9 @@ namespace Senparc.Xncf.FileManager
             Blue = Math.Min(255, Blue + 10);
         }
 
+        /// <summary>
+        /// Decreases every RGB component by ten, floored at zero.
+        /// </summary>
         public void Darken()
         {
             Red = Math.Max(0, Red - 10);

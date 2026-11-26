@@ -14,25 +14,19 @@ namespace Senparc.Service
 {
     public interface IProjectPayLogService : IBaseClientService<ProjectPayLog>
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="orderNumber"></param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
+        /// <summary>Gets a payment log by order number.</summary>
+        /// <param name="orderNumber">The payment order number.</param>
+        /// <param name="includes">Optional related-navigation paths.</param>
+        /// <returns>The matching payment log, or <see langword="null"/>.</returns>
         ProjectPayLog GetBuyOrderNumber(string orderNumber, string[] includes = null);
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="projectDemand"></param>
-        /// <param name="description"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// <summary>Creates and persists an unpaid payment order for a project demand.</summary>
+        /// <param name="projectDemand">The demand associated with the order.</param>
+        /// <param name="description">The order description.</param>
+        /// <param name="type">The payment order type.</param>
+        /// <returns>The persisted payment log.</returns>
         ProjectPayLog CreateOrder(ProjectDemand projectDemand, string description, int type);
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="projectPayLog"></param>
+        /// <summary>Marks a payment order as cancelled and closed.</summary>
+        /// <param name="projectPayLog">The order to cancel.</param>
         void CancelOrder(ProjectPayLog projectPayLog);
     }
 
@@ -68,7 +62,7 @@ namespace Senparc.Service
 
             var projectPayLog = new ProjectPayLog()
             {
-                OrderNumber = null,//Legacy comment translated to English.
+            OrderNumber = null,
                 AddTime = DateTime.Now,
                 CompleteTime = DateTime.Now,
                 ProjectDemandId = projectDemand.Id,
@@ -100,7 +94,6 @@ namespace Senparc.Service
             projectPayLog.Type = (int)ProjectPay_Type.交易关闭;
             SaveObject(projectPayLog);
 
-            ///Legacy comment translated to English.
             //var account = ProjectPayLog.Account;
             //if (account.EmailChecked)
             //{

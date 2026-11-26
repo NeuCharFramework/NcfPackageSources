@@ -29,39 +29,48 @@ namespace Senparc.Xncf.DatabaseToolkit
     public class DbConfig : EntityBase<int>
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the configured automatic backup interval in minutes.
         /// </summary>
         [Required]
         public int BackupCycleMinutes { get; private set; }
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether automatic backup is enabled.
         /// </summary>
-        /// <returns></returns>
+        /// <returns><see langword="true"/> when the backup interval is positive.</returns>
         internal bool IsAutoBackup()
         {
             return this.BackupCycleMinutes > 0;
         }
 
+        /// <summary>
+        /// Changes the automatic backup interval without recording a backup event.
+        /// </summary>
+        /// <param name="bakupCycleMinutes">The new interval in minutes.</param>
         internal void ChangeBackupCycleMinutes(int bakupCycleMinutes) {
 
             this.BackupCycleMinutes = bakupCycleMinutes;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the directory used for database backup files.
         /// </summary>
         [MaxLength(300)]
         public string BackupPath { get; private set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the time of the most recent recorded backup.
         /// </summary>
         public DateTime LastBackupTime { get; private set; }
 
         private DbConfig() { }
 
+        /// <summary>
+        /// Initializes database backup settings.
+        /// </summary>
+        /// <param name="backupCycleMinutes">The automatic backup interval in minutes.</param>
+        /// <param name="backupPath">The backup directory.</param>
         public DbConfig(int backupCycleMinutes, string backupPath)
         {
             BackupCycleMinutes = backupCycleMinutes;
@@ -69,6 +78,11 @@ namespace Senparc.Xncf.DatabaseToolkit
             LastBackupTime = SystemTime.Now.AddDays(-1).DateTime;
         }
 
+        /// <summary>
+        /// Updates backup settings and records the current time.
+        /// </summary>
+        /// <param name="backupCycleMinutes">The automatic backup interval in minutes.</param>
+        /// <param name="backupPath">The backup directory.</param>
         public void SetConfig(int backupCycleMinutes, string backupPath)
         {
             BackupCycleMinutes = backupCycleMinutes;
@@ -76,6 +90,9 @@ namespace Senparc.Xncf.DatabaseToolkit
             RecordBackupTime();
         }
 
+        /// <summary>
+        /// Records the current system time as the most recent backup time.
+        /// </summary>
         public void RecordBackupTime()
         {
             LastBackupTime = SystemTime.Now.DateTime;

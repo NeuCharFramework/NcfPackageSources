@@ -24,21 +24,35 @@ using System.Text;
 
 namespace System.Web.Mvc
 {
+    /// <summary>
+    /// Provides simple HTML repeater rendering helpers for table, div, and list layouts.
+    /// </summary>
     public static class RepeaterExtension
     {
+        /// <summary>
+        /// Accumulates the opening tag, item markup, and closing tag for one repeater.
+        /// </summary>
         public class SingleRepeater : IDisposable
         {
             protected HttpContext _context;
 
             //bool wroteStartTag = false, wroteEndTag = false;
 
-            string startTag, endTag;//Legacy comment translated to English.
-            public string itemStartTag, itemEndTag;//Legacy comment translated to English.
+            string startTag, endTag;
+            /// <summary>Gets or sets the markup placed before each item.</summary>
+            public string itemStartTag, itemEndTag;
+            /// <summary>Gets the mutable buffer containing the generated markup.</summary>
             public StringBuilder body = new StringBuilder();
 
+            /// <summary>
+            /// Initializes a repeater writer and emits its opening markup.
+            /// </summary>
+            /// <param name="context">The HTTP context used by the repeater.</param>
+            /// <param name="repeaterMode">The HTML container mode.</param>
+            /// <param name="htmlAttributes">The attributes applied to the container.</param>
             public SingleRepeater(HttpContext context, RepeaterMode repeaterMode, object htmlAttributes)
             {
-                this._context = context;//Legacy comment translated to English.
+                this._context = context;
                 switch (repeaterMode)
                 {
                     case RepeaterMode.None:
@@ -79,16 +93,27 @@ namespace System.Web.Mvc
                 WriteStartTag();
             }
 
+            /// <summary>
+            /// Appends the configured container opening tag to the repeater body.
+            /// </summary>
             public void WriteStartTag()
             {
                 body.Append(startTag);
             }
 
+            /// <summary>
+            /// Appends the configured container closing tag to the repeater body.
+            /// </summary>
             public void WriteEndTag()
             {
                 body.Append(endTag);
             }
 
+            /// <summary>
+            /// Returns the complete repeater markup accumulated so far, including any
+            /// opening and closing tags emitted by the repeater scope.
+            /// </summary>
+            /// <returns>The generated HTML markup.</returns>
             public override string ToString()
             {
                 return body.ToString();
@@ -96,6 +121,9 @@ namespace System.Web.Mvc
 
             #region Legacy section
 
+            /// <summary>
+            /// Appends the closing tag when the repeater scope is disposed.
+            /// </summary>
             public void Dispose()
             {
                 WriteEndTag();
@@ -105,19 +133,23 @@ namespace System.Web.Mvc
         }
 
         /// <summary>
-        /// Repeater
+        /// Renders a sequence using the selected repeater container and item templates.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="helper"></param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <typeparam name="T">The source item type.</typeparam>
+        /// <param name="helper">The MVC HTML helper supplying the current HTTP context.</param>
+        /// <param name="dataSource">The items to render; a null source produces an empty string.</param>
+        /// <param name="header">Markup emitted before the first item.</param>
+        /// <param name="itemTempletes">The item renderer receiving an item and zero-based index.</param>
+        /// <param name="separatorTemplate">The separator renderer used between items.</param>
+        /// <param name="footer">Markup emitted after the final item.</param>
+        /// <param name="repeaterMode">The container and item tag layout.</param>
+        /// <param name="colCount">The number of columns per table row in table mode.</param>
+        /// <param name="htmlAttributes">Attributes applied to the outer container.</param>
+        /// <returns>The generated repeater markup.</returns>
+        /// <exception cref="DivideByZeroException">
+        /// Thrown when table mode is selected with a zero
+        /// <paramref name="colCount"/>.
+        /// </exception>
         public static string Repeater<T>(this HtmlHelper helper, IEnumerable<T> dataSource,
             string header, Expression<Func<T, int, string>> itemTempletes, Expression<Func<T, string>> separatorTemplate, string footer,
             RepeaterMode repeaterMode, int colCount, object htmlAttributes)
@@ -217,11 +249,20 @@ namespace System.Web.Mvc
         public enum RepeaterMode
         {
             /// <summary>
-            ///Legacy comment translated to English.
+            /// Emits no container or item tags.
             /// </summary>
             None = 0,
+            /// <summary>
+            /// Emits a table body with table-cell item wrappers.
+            /// </summary>
             Table,
+            /// <summary>
+            /// Emits a div container with div item wrappers.
+            /// </summary>
             Div,
+            /// <summary>
+            /// Emits an unordered list with list-item wrappers.
+            /// </summary>
             Ul
         }
 

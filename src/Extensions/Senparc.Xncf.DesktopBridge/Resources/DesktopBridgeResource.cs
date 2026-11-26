@@ -21,6 +21,12 @@ namespace Senparc.Xncf.DesktopBridge;
 
 public sealed class DesktopBridgeResource
 {
+    /// <summary>
+    /// Resolves a DesktopBridge localization key with an optional fallback.
+    /// </summary>
+    /// <param name="key">The resource key.</param>
+    /// <param name="fallback">The fallback text.</param>
+    /// <returns>The localized or fallback text.</returns>
     public static string Get(string key, string? fallback = null) =>
         ResourceStringLocalizer.Get(typeof(DesktopBridgeResource), key, fallback);
 }

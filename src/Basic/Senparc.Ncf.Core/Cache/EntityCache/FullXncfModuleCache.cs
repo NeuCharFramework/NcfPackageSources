@@ -31,11 +31,21 @@ namespace Senparc.Ncf.Core.Cache
         public const string CACHE_KEY = "FullXncfModuleCache";
         private INcfDbData _dataContext => base._db as INcfDbData;
 
+        /// <summary>
+        /// Initializes the default full-module cache using the standard cache key and timeout.
+        /// </summary>
+        /// <param name="db">The NCF database data provider.</param>
         public FullXncfModuleCache(INcfDbData db)
             : this(CACHE_KEY, db, 1440)
         {
         }
 
+        /// <summary>
+        /// Initializes a full-module cache with custom key and timeout settings.
+        /// </summary>
+        /// <param name="CACHE_KEY">The logical cache key.</param>
+        /// <param name="db">The NCF database data provider.</param>
+        /// <param name="timeOut">The cache timeout in minutes.</param>
         public FullXncfModuleCache(string CACHE_KEY, INcfDbData db, int timeOut) : base(CACHE_KEY, db, timeOut)
         {
         }

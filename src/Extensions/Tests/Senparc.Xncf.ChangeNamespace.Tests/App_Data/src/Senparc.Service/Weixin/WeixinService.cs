@@ -18,8 +18,17 @@ using System.Linq;
 
 namespace Senparc.Service
 {
+    /// <summary>
+    /// Provides Weixin face replacement, media download, template-message,
+    /// and OAuth helper operations for the sample service layer.
+    /// </summary>
     public class WeixinService /*: IWeixinService*/
     {
+        /// <summary>
+        /// Replaces recognized Weixin face codes with image markup.
+        /// </summary>
+        /// <param name="content">The source content containing face codes.</param>
+        /// <returns>The content with recognized codes replaced by image elements.</returns>
         public string ReplaceWeixinFace(string content)
         {
             var weixinFaceCahce = SenparcDI.GetService<WeixinFaceCache>();
@@ -37,6 +46,12 @@ namespace Senparc.Service
             return content;
         }
 
+        /// <summary>
+        /// Normalizes a pipe-delimited keyword string and optionally limits its entries.
+        /// </summary>
+        /// <param name="keyword">The source keyword string.</param>
+        /// <param name="maxKeywordCount">The maximum entries, or zero for no limit.</param>
+        /// <returns>A pipe-delimited normalized value, or <see langword="null"/> for empty input.</returns>
         public string GetStandardKeyword(string keyword, int maxKeywordCount = 0)
         {
             //Legacy comment translated to English.
@@ -55,11 +70,13 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 
+        /// Downloads a Weixin media resource, retrying once with a refreshed token
+        /// when the first attempt fails.
         /// </summary>
-        /// <param name="serverId"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="serverId">The Weixin media server identifier.</param>
+        /// <param name="filePath">The destination file path.</param>
+        /// <returns><see langword="true"/> when the resource is saved successfully.</returns>
+        /// <remarks>Download failures are logged and converted to <see langword="false"/>.</remarks>
         public bool DownloadTemplate(string serverId, string filePath)
         {
             try
@@ -88,13 +105,12 @@ namespace Senparc.Service
 
 
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="serverId"></param>
-        /// <param name="fileName"></param>
-        /// <param name="getNewToken"></param>
-        /// <returns></returns>
+        /// <summary>Downloads a Weixin media resource to a file.</summary>
+        /// <param name="serverId">The Weixin media server identifier.</param>
+        /// <param name="fileName">The destination file path.</param>
+        /// <param name="getNewToken">Whether the provider should refresh its access token.</param>
+        /// <returns><see langword="true"/> when the response is media and the file is written.</returns>
+        /// <exception cref="IOException">Thrown when the destination file cannot be created or written.</exception>
         public bool DownloadTemplate(string serverId, string fileName, bool getNewToken = false)
         {
             using (MemoryStream ms = new MemoryStream())
@@ -134,6 +150,11 @@ namespace Senparc.Service
         }
 
 
+        /// <summary> Sends a Weixin template message using the configured application credentials.</summary>
+        /// <param name="data">The template payload and template identifier.</param>
+        /// <param name="openId">The recipient's Weixin open identifier.</param>
+        /// <param name="url">Optional detail URL included in the message.</param>
+        /// <returns>The provider response, or <see langword="null"/> when sending fails.</returns>
         public SendTemplateMessageResult SendTemplateMessage(IWeixinTemplateBase data, string openId, string url = null)
         {
             try
@@ -157,6 +178,12 @@ namespace Senparc.Service
             }
             return null;
         }
+        /// <summary>Exchanges an OAuth code for a token and loads the Weixin user profile.</summary>
+        /// <param name="appId">The Weixin application identifier.</param>
+        /// <param name="appSecret">The Weixin application secret.</param>
+        /// <param name="code">The OAuth authorization code.</param>
+        /// <returns>The OAuth user profile.</returns>
+        /// <exception cref="Exception">Thrown when the OAuth provider reports an error code.</exception>
         public OAuthUserInfo GetOAuthResult(string appId, string appSecret, string code)
         {
             OAuthAccessTokenResult result = null;

@@ -22,11 +22,18 @@ namespace Senparc.Xncf.AgentsManager.Areas.AgentsManager.Pages
 {
     public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
+        /// <summary>
+        /// Initializes the AgentsManager administration page model.
+        /// </summary>
+        /// <param name="xncfModuleService">The lazily resolved XNCF module service.</param>
         public Index(Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
         {
 
         }
 
+        /// <summary>
+        /// Handles the initial GET request for the AgentsManager administration page.
+        /// </summary>
         public void OnGet()
         {
         }

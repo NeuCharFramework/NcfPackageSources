@@ -26,6 +26,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 
         public int TotalCount { get; set; }
 
+        /// <summary>Initializes a daily tactic-count response.</summary>
+        /// <param name="totalCount">The count included in the response.</param>
         public Statistics_TodayTacticResponse(int totalCount)
         {
             TotalCount = totalCount;

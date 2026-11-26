@@ -11,11 +11,15 @@ using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 namespace Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// MySQL-specific WeixinManager database context used by runtime registration and migrations.
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.MySql, typeof(Register))]
     public class WeixinSenparcEntities_MySql : WeixinSenparcEntities, IMultipleMigrationDbContext
     {
+        /// <summary>
+        /// Initializes the MySQL-specific WeixinManager DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for MySQL.</param>
         public WeixinSenparcEntities_MySql(DbContextOptions<WeixinSenparcEntities_MySql> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -34,6 +38,9 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase
             app.UseNcfDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDesignTimeDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the MySQL design-time DbContext factory.
+        /// </summary>
         public SenparcDbContextFactory_MySql()
             : base(SenparcDbContextFactoryConfig.RootDictionaryPath)
         {

@@ -25,11 +25,26 @@ namespace Senparc.Xncf.ChangeNamespace
     /// </summary>
     public sealed class ChangeNamespaceResource
     {
+        /// <summary>
+        /// Resolves a ChangeNamespace localization key and returns the supplied fallback when
+        /// the key is not available in the module resource catalog.
+        /// </summary>
+        /// <param name="key">The resource key to resolve.</param>
+        /// <param name="fallback">The text to return when the key cannot be localized.</param>
+        /// <returns>The localized text or <paramref name="fallback"/>.</returns>
         public static string Get(string key, string? fallback = null)
         {
             return ResourceStringLocalizer.Get(typeof(ChangeNamespaceResource), key, fallback);
         }
 
+        /// <summary>
+        /// Resolves a ChangeNamespace localization key and formats the resulting template
+        /// with the supplied arguments.
+        /// </summary>
+        /// <param name="key">The resource key to resolve.</param>
+        /// <param name="fallback">The fallback composite format string.</param>
+        /// <param name="arguments">Values used to format the resolved or fallback template.</param>
+        /// <returns>The localized, formatted text.</returns>
         public static string Format(string key, string fallback, params object[] arguments)
         {
             return ResourceStringLocalizer.Format(typeof(ChangeNamespaceResource), key, fallback, arguments);

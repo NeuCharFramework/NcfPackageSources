@@ -29,6 +29,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     public class ChatGroupMemberService : ServiceBase<ChatGroupMember>
     {
+        /// <summary>
+        /// Initializes the local ChatGroup member persistence service.
+        /// </summary>
+        /// <param name="repo">The repository for member entities.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public ChatGroupMemberService(IRepositoryBase<ChatGroupMember> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
         }

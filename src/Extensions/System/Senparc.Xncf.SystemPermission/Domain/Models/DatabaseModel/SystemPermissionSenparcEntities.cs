@@ -23,6 +23,7 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 
 namespace Senparc.Xncf.SystemPermission.Models
 {
+    /// <summary>EF Core context for role, role-assignment, and permission entities.</summary>
     public class SystemPermissionSenparcEntities : XncfDatabaseDbContext
     {
         public SystemPermissionSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
@@ -30,19 +31,13 @@ namespace Senparc.Xncf.SystemPermission.Models
         }
 
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets role-permission associations.</summary>
         public DbSet<SysRolePermission> SysRolePermissions { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets system roles.</summary>
         public DbSet<SysRole> SysRoles { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets role-to-administrator associations.</summary>
         public DbSet<SysRoleAdminUserInfo> SysRoleAdminUserInfos { get; set; }
 
         //DOT REMOVE OR MODIFY THIS LINE - Entities Point

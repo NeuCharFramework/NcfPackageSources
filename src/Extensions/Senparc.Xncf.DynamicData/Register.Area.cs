@@ -43,8 +43,14 @@ namespace Senparc.Xncf.DynamicData
 			 		//Legacy comment translated to English.
 			 		//};
 
+        /// <summary>
+        /// Gets the DynamicData administration root URL.
+        /// </summary>
         public string HomeUrl => "/Admin/DynamicData/";
 
+        /// <summary>
+        /// Gets the administration menu entries for page and table settings.
+        /// </summary>
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
                          new AreaPageMenuItem(GetAreaUrl(HomeUrl+"PageSet"), DynamicDataResource.Get("Area.DynamicData.PageSettings", "界面设置"),"fa fa-laptop"),
                            new AreaPageMenuItem(GetAreaUrl(HomeUrl+"DataSheetSet"), DynamicDataResource.Get("Area.DynamicData.TableSettings", "数据库表设置"),"fa fa-laptop")
@@ -71,6 +77,9 @@ namespace Senparc.Xncf.DynamicData
         #endregion
 
         #region Legacy section
+        /// <summary>
+        /// Gets the absolute path to the DynamicData assembly used for runtime compilation.
+        /// </summary>
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.DynamicData"));
         #endregion
     }

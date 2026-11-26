@@ -26,8 +26,11 @@ public interface IAdminChatTrajectoryRepository : IClientRepositoryBase<AdminCha
 
 public class AdminChatTrajectoryRepository : ClientRepositoryBase<AdminChatTrajectory>, IAdminChatTrajectoryRepository
 {
+    /// <summary>Reserved parameterless constructor for repository infrastructure.</summary>
     private AdminChatTrajectoryRepository() : base(null) { }
 
+    /// <summary>Initializes the trajectory repository with the NCF database provider.</summary>
+    /// <param name="ncfDbData">The database data provider used by the base repository.</param>
     public AdminChatTrajectoryRepository(INcfDbData ncfDbData) : base(ncfDbData)
     {
     }
@@ -39,8 +42,11 @@ public interface IAdminChatTrajectoryEventRepository : IClientRepositoryBase<Adm
 
 public class AdminChatTrajectoryEventRepository : ClientRepositoryBase<AdminChatTrajectoryEvent>, IAdminChatTrajectoryEventRepository
 {
+    /// <summary>Reserved parameterless constructor for repository infrastructure.</summary>
     private AdminChatTrajectoryEventRepository() : base(null) { }
 
+    /// <summary>Initializes the trajectory-event repository with the NCF database provider.</summary>
+    /// <param name="ncfDbData">The database data provider used by the base repository.</param>
     public AdminChatTrajectoryEventRepository(INcfDbData ncfDbData) : base(ncfDbData)
     {
     }

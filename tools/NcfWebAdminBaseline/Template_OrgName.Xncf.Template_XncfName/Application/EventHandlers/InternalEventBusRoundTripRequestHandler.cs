@@ -31,11 +31,20 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.EventHandlers
     {
         private readonly IEventBus _eventBus;
 
+        /// <summary>
+        /// Initializes the handler that publishes the derived round-trip response event.
+        /// </summary>
+        /// <param name="eventBus">The integration event bus.</param>
         public InternalEventBusRoundTripRequestHandler(IEventBus eventBus)
         {
             _eventBus = eventBus;
         }
 
+        /// <inheritdoc/>
+        /// <remarks>
+        /// The response records the original request timestamp and the UTC time
+        /// at which the handler processes the request.
+        /// </remarks>
         public async Task Handle(
             InternalEventBusRoundTripRequest @event,
             CancellationToken cancellationToken)

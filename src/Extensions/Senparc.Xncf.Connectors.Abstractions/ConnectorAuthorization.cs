@@ -18,7 +18,7 @@
 namespace Senparc.Xncf.Connectors.Abstractions;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Provides the authorization predicate shared by connector invocation surfaces.
 /// </summary>
 public static class ConnectorAuthorization
 {

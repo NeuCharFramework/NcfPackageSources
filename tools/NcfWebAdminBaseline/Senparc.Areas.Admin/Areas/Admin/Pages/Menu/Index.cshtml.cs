@@ -41,19 +41,26 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public int PageIndex { get; set; } = 1;
 
         /// <summary>
-        /// 
+        /// Gets or sets the one-based page number used when loading the menu list.
         /// </summary>
         public PagedList<SysMenu> SysMenus { get; set; }
 
         /// <summary>
-        /// 
+        /// Loads the newest menu records for the requested page.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A completed task after <see cref="SysMenus"/> has been populated.</returns>
         public async Task OnGetAsync()
         {
             SysMenus = await _sysMenuService.GetObjectListAsync(PageIndex, 10, _ => true, _ => _.AddTime, Ncf.Core.Enums.OrderingType.Descending);
         }
 
+        /// <summary>
+        /// Deletes the menu records identified by the submitted identifiers and redirects
+        /// back to the menu list.
+        /// </summary>
+        /// <param name="ids">The menu identifiers to delete.</param>
+        /// <returns>A redirect to the menu index page.</returns>
+        /// <exception cref="NullReferenceException">Thrown when the request body does not provide an identifier array.</exception>
         public IActionResult OnPostDelete(string[] ids)
         {
             foreach (var id in ids)
@@ -65,10 +72,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reorders menus within each parent group according to the submitted identifier order,
+        /// persists changed sort values, and refreshes the cached menu DTOs.
+        /// Invalid, empty, or unknown identifier lists are returned as a failed response.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="request">The ordered menu identifier list supplied by the client.</param>
+        /// <returns>An <see cref="OkObjectResult"/> indicating whether the reorder request was accepted.</returns>
         public async Task<IActionResult> OnPostReorderAsync([FromBody] MenuReorderRequest request)
         {
             if (request?.Ids == null || request.Ids.Count == 0)
@@ -142,10 +151,13 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents the ordered menu identifiers submitted by the drag-and-drop menu editor.
     /// </summary>
     public class MenuReorderRequest
     {
+        /// <summary>
+        /// Gets or sets menu identifiers in their desired display order.
+        /// </summary>
         public List<string> Ids { get; set; }
     }
 }

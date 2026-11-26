@@ -25,11 +25,14 @@ namespace Senparc.Xncf.PromptRange.Areas.PromptRange.Pages;
 
 public class SkillModel : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
 {
+    /// <summary>Initializes the PromptRange skill page.</summary>
+    /// <param name="xncfModuleService">The lazy XNCF module service.</param>
     public SkillModel(Lazy<XncfModuleService> xncfModuleService)
         : base(xncfModuleService)
     {
     }
 
+    /// <summary>Initializes the skill page request.</summary>
     public void OnGet()
     {
     }

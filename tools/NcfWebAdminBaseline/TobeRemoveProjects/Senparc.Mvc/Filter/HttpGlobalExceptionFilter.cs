@@ -10,6 +10,11 @@ namespace Senparc.Mvc.Filter
 {
     public class HttpGlobalExceptionFilter : IExceptionFilter
     {
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Converts an unhandled MVC exception into the legacy HTML error view
+        /// and marks the exception as handled by the filter.
+        /// </remarks>
         public void OnException(ExceptionContext context)
         {
             //context.Result = new ObjectResult(context.Exception);

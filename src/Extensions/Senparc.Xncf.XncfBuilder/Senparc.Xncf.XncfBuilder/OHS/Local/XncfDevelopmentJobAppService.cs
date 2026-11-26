@@ -45,6 +45,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
     {
         private readonly IAdminWorkContextProvider _adminWorkContextProvider;
 
+        /// <summary>
+        /// Initializes the application-service facade for isolated development jobs.
+        /// Administrator identity is resolved from the current admin work context
+        /// when a job is created.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="adminWorkContextProvider">The provider for the current administrator context.</param>
         public XncfDevelopmentJobAppService(
             IServiceProvider serviceProvider,
             IAdminWorkContextProvider adminWorkContextProvider) : base(serviceProvider)
@@ -52,6 +59,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             _adminWorkContextProvider = adminWorkContextProvider;
         }
 
+        /// <summary>
+        /// Creates an isolated development job whose source snapshot is detached
+        /// from the target checkout.
+        /// </summary>
+        /// <param name="request">The solution, module, generation mode, and template options.</param>
+        /// <returns>A serialized response containing the created job or an error.</returns>
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Create.Name", "Function.XncfBuilder.Development.Create.Description",
             typeof(Register), "Create isolated XNCF development job", "Create a source snapshot in an isolated workspace. Target source is never written.")]
         public Task<StringAppResponse> CreateIsolatedDevelopmentJob(XncfDevelopmentStartRequest request) =>
@@ -81,11 +94,15 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 return result;
             });
 
+        /// <summary>Reads an isolated development file and returns its content and hash.</summary>
+        /// <param name="request">The job identifier and relative file path.</param>
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Read.Name", "Function.XncfBuilder.Development.Read.Description",
             typeof(Register), "Read isolated XNCF file", "Read a text file and SHA-256 from an isolated workspace module.")]
         public Task<StringAppResponse> ReadIsolatedDevelopmentFile(XncfDevelopmentReadFileRequest request) =>
             ExecuteAsync((service, tenant) => service.ReadFileAsync(request.JobId, request.RelativeFilePath, CancellationToken, tenant));
 
+        /// <summary>Atomically writes one isolated development file with optional hash concurrency checking.</summary>
+        /// <param name="request">The job identifier, relative path, content, and expected hash.</param>
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Write.Name", "Function.XncfBuilder.Development.Write.Description",
             typeof(Register), "Write isolated XNCF file", "Atomically write a code file inside the isolated workspace.")]
         public Task<StringAppResponse> WriteIsolatedDevelopmentFile(XncfDevelopmentWriteFileRequest request) =>
@@ -97,38 +114,54 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 CancellationToken,
                 tenant));
 
+        /// <summary>Validates the isolated development job and its direct source-project reference.</summary>
+        /// <param name="request">The development job identifier.</param>
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Validate.Name", "Function.XncfBuilder.Development.Validate.Description",
             typeof(Register), "Validate isolated XNCF development job", "Validate the isolated module path and direct source-project reference.")]
         public Task<StringAppResponse> ValidateIsolatedDevelopmentJob(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync((service, tenant) => service.ValidateAsync(request.JobId, CancellationToken, tenant));
 
+        /// <summary>Builds and starts the isolated development preview through Sandbox.</summary>
+        /// <param name="request">The development job identifier.</param>
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.StartPreview.Name", "Function.XncfBuilder.Development.StartPreview.Description",
             typeof(Register), "Start Sandbox XNCF preview", "Build and run the cleaned isolated workspace through Sandbox.")]
         public Task<StringAppResponse> StartSandboxDevelopmentPreview(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync((service, tenant) => service.StartSandboxPreviewAsync(request.JobId, CancellationToken, tenant));
 
+        /// <summary>Returns isolated workspace, validation, preview, diff, and approval status.</summary>
+        /// <param name="request">The development job identifier.</param>
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Status.Name", "Function.XncfBuilder.Development.Status.Description",
             typeof(Register), "Get isolated XNCF development job", "Return isolated workspace, diff, validation, preview, and approval status.")]
         public Task<StringAppResponse> GetIsolatedDevelopmentJob(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync((service, tenant) => service.GetAsync(request.JobId, CancellationToken, tenant));
 
+        /// <summary>Freezes the isolated diff and requests administrator merge approval.</summary>
+        /// <param name="request">The development job identifier.</param>
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.RequestMerge.Name", "Function.XncfBuilder.Development.RequestMerge.Description",
             typeof(Register), "Request human merge approval", "Freeze the isolated workspace diff and request administrator approval.")]
         public Task<StringAppResponse> RequestIsolatedDevelopmentMergeApproval(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync((service, tenant) => service.RequestMergeApprovalAsync(request.JobId, CancellationToken, tenant));
 
+        /// <summary>Discards the isolated development job and reclaims its preview resources.</summary>
+        /// <param name="request">The development job identifier.</param>
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Discard.Name", "Function.XncfBuilder.Development.Discard.Description",
             typeof(Register), "Discard isolated XNCF development job", "Stop the related Sandbox preview and reclaim the isolated workspace.")]
         public Task<StringAppResponse> DiscardIsolatedDevelopmentJob(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync((service, tenant) => service.DiscardAsync(request.JobId, CancellationToken, tenant));
 
+        /// <summary>
+        /// Executes one development-job operation inside the standard response/error pipeline.
+        /// </summary>
+        /// <typeparam name="T">The operation result type.</typeparam>
+        /// <param name="operation">The service operation to invoke.</param>
+        /// <returns>A string response containing serialized result or error state.</returns>
         private async Task<StringAppResponse> ExecuteAsync<T>(Func<IXncfDevelopmentJobService, RequestTenantInfo?, Task<T>> operation)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 try
                 {
-                    //Legacy comment translated to English.
+                    // Preserve the ambient tenant while invoking the isolated job service.
                     var ambientTenant = ServiceProvider.GetService<RequestTenantInfo>();
                     var service = ServiceProvider.GetRequiredService<IXncfDevelopmentJobService>();
                     var result = await operation(service, ambientTenant).ConfigureAwait(false);

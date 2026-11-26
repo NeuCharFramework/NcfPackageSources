@@ -35,35 +35,32 @@ using System.Globalization;
 
 namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Represents an LLM reranking result and whether fallback order was used.</summary>
     public sealed class LlmRerankOutcome
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the zero-based candidate order returned by the reranker or fallback.</summary>
         public int[] Order { get; init; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets a value indicating whether original retrieval order was used.</summary>
         public bool Fallback { get; init; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the fallback reason, when <see cref="Fallback"/> is <see langword="true"/>.</summary>
         public string FallbackReason { get; init; }
 
+        /// <summary>Creates a successful reranking outcome.</summary>
+        /// <param name="order">The zero-based candidate order.</param>
+        /// <returns>A non-fallback outcome.</returns>
         public static LlmRerankOutcome Succeeded(int[] order) => new() { Order = order, Fallback = false };
 
+        /// <summary>Creates a fallback outcome preserving the original candidate order.</summary>
+        /// <param name="reason">The fallback reason.</param>
+        /// <param name="originalOrder">The original zero-based candidate order.</param>
+        /// <returns>A fallback outcome.</returns>
         public static LlmRerankOutcome Failed(string reason, int[] originalOrder) =>
             new() { Order = originalOrder, Fallback = true, FallbackReason = reason };
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Uses a configured chat model to rerank retrieval candidates.</summary>
     public sealed class LlmReranker
     {
         private static readonly TimeSpan RerankTimeout = TimeSpan.FromSeconds(45);
@@ -76,18 +73,24 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
 
         private readonly AIModelService _aiModelService;
 
+        /// <summary>
+        /// Initializes the LLM reranker.
+        /// </summary>
+        /// <param name="aiModelService">The service used to resolve the configured chat model.</param>
         public LlmReranker(AIModelService aiModelService)
         {
             _aiModelService = aiModelService;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Asks the configured chat model to order candidates by relevance and falls back
+        /// to the original order for missing configuration, timeout, or model failures.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="query">The user query.</param>
+        /// <param name="candidates">Candidate text fragments.</param>
+        /// <param name="modelId">The configured chat model identifier.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        /// <returns>The model order or a fallback outcome.</returns>
         public async Task<LlmRerankOutcome> RankAsync(
             string query,
             IReadOnlyList<string> candidates,
@@ -161,8 +164,13 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Parses a one-based integer order array from model output and appends omitted
+        /// candidate indexes in their original order.
         /// </summary>
+        /// <param name="output">The raw model output.</param>
+        /// <param name="candidateCount">The number of candidates.</param>
+        /// <param name="originalOrder">The original zero-based order.</param>
+        /// <returns>A successful or fallback outcome.</returns>
         public static LlmRerankOutcome ParseOrder(string output, int candidateCount, int[] originalOrder)
         {
             var match = OrderArrayRegex.Match(output ?? string.Empty);
@@ -193,7 +201,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
                 return LlmRerankOutcome.Failed("排序数组为空或编号全部越界。", originalOrder);
             }
 
-            //Legacy comment translated to English.
+            // Append candidates omitted by the model so the result remains a complete
+            // permutation of the original candidate set.
             foreach (var index in originalOrder)
             {
                 if (!seen.Contains(index))
@@ -205,6 +214,12 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
             return LlmRerankOutcome.Succeeded(order.ToArray());
         }
 
+        /// <summary>
+        /// Builds the bounded prompt instructing the model to return only a candidate order.
+        /// </summary>
+        /// <param name="query">The user query.</param>
+        /// <param name="candidates">The candidate snippets.</param>
+        /// <returns>The reranking prompt.</returns>
         private static string BuildPrompt(string query, IReadOnlyList<string> candidates)
         {
             var builder = new StringBuilder();

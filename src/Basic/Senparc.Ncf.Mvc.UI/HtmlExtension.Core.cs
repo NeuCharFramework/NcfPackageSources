@@ -46,33 +46,61 @@ namespace Senparc.Ncf.Mvc.UI
         #region DropDownList
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Renders a strongly typed dropdown whose options come from an enum type.
         /// </summary>
+        /// <typeparam name="TModel">The view-model type.</typeparam>
+        /// <typeparam name="TProperty">The selected enum-property type.</typeparam>
+        /// <param name="htmlHelper">The MVC HTML helper.</param>
+        /// <param name="expression">The selected-value expression.</param>
+        /// <param name="enumType">The enum type used to build options.</param>
+        /// <param name="selectedValue">The initially selected value.</param>
+        /// <param name="optionLabel">Optional placeholder label.</param>
+        /// <param name="htmlAttributes">Optional HTML attributes.</param>
+        /// <param name="useDescription">Whether enum descriptions are used as labels.</param>
+        /// <param name="addBlankOption">Whether to add a blank option.</param>
+        /// <returns>The generated dropdown HTML.</returns>
         public static IHtmlContent DropDownListFormEnumFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, Type enumType, object selectedValue = null, string optionLabel = null, object htmlAttributes = null, bool useDescription = false, bool addBlankOption = false)
         {
             var selectedList = GetSelectListFromEnum(enumType, selectedValue, useDescription, addBlankOption);
             return htmlHelper.DropDownListFor(expression, selectedList, optionLabel, htmlAttributes);
         }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Renders a named dropdown whose options come from an enum type.
         /// </summary>
+        /// <param name="htmlHelper">The MVC HTML helper.</param>
+        /// <param name="name">The generated form field name.</param>
+        /// <param name="enumType">The enum type used to build options.</param>
+        /// <param name="selectedValue">The initially selected value.</param>
+        /// <param name="optionLabel">Optional placeholder label.</param>
+        /// <param name="htmlAttributes">Optional HTML attributes.</param>
+        /// <param name="useDescription">Whether enum descriptions are used as labels.</param>
+        /// <param name="addBlankOption">Whether to add a blank option.</param>
+        /// <param name="blankOptionText">Optional text for the blank option.</param>
+        /// <returns>The generated dropdown HTML.</returns>
         public static IHtmlContent DropDownListFormEnum(this HtmlHelper htmlHelper, string name, Type enumType, object selectedValue = null, string optionLabel = null, object htmlAttributes = null, bool useDescription = false, bool addBlankOption = false, string blankOptionText = null)
         {
             var selectedList = GetSelectListFromEnum(enumType, selectedValue, useDescription, addBlankOption, blankOptionText);
             return htmlHelper.DropDownList(name, selectedList, optionLabel, htmlAttributes);
         }
 
+        /// <summary>Gets an enum description and wraps it as HTML.</summary>
+        /// <param name="htmlHelper">The MVC HTML helper.</param>
+        /// <param name="enumType">The enum type.</param>
+        /// <param name="item">The numeric enum value.</param>
+        /// <returns>The description as an HTML string.</returns>
         public static HtmlString GetDescriptionForEnum(this HtmlHelper htmlHelper, Type enumType, int item)
         {
             return new HtmlString(enumType.GetDescriptionForEnum(item));
         }
 
+        /// <summary>Builds a select list from enum values and optional descriptions.</summary>
         private static SelectList GetSelectListFromEnum(Type enumType, object selectedValue, bool useDescription = false, bool addBlankOption = false, string blankOptionText = null)
         {
             var dic = Extensions.GetDictionaryForEnums(enumType, useDescription, addBlankOption, blankOptionText);
             return GetSelectListFromDictionary(dic, selectedValue);
         }
 
+        /// <summary>Converts option dictionary entries into an MVC select list.</summary>
         private static SelectList GetSelectListFromDictionary(Dictionary<string, string> dic, object selectedValue)
         {
             return new SelectList(dic, "Key", "Value", selectedValue);

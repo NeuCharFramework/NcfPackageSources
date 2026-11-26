@@ -79,10 +79,8 @@ namespace Senparc.Ncf.XncfBase
         public abstract string Icon { get; }
         /// <summary>Gets the module description shown to administrators.</summary>
         public abstract string Description { get; }
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        ///public abstract IList<Type> Functions { get; }
+        // The former Functions contract was removed from the public register API.
+        // MCP and function discovery now use the module assembly and registered metadata.
 
         /// <summary>
         /// Gets or sets deferred AutoMapper profile registration actions.
@@ -94,95 +92,9 @@ namespace Senparc.Ncf.XncfBase
         public IEnumerable<KeyValuePair<ThreadInfo, Thread>> RegisteredThreadInfo => Register.ThreadCollection.Where(z => z.Value.Name.StartsWith(Uid));
 
 
-        #region Legacy section
-        /*
-
-        /// <summary>
-
-        /// execute Migrate updatedata
-
-        /// </summary>
-
-        /// <param name="serviceProvider"></param>
-
-        /// <param name="dbContextType"></param>
-
-        Legacy comment translated to English.
-
-        /// <returns></returns>
-
-        protected virtual async Task MigrateDatabaseAsync(IServiceProvider serviceProvider, Type dbContextType, bool checkdbContextType = true)
-
-        {
-
-            if (checkdbContextType && !dbContextType.IsSubclassOf(typeof(DbContext)))
-
-            {
-
-                Legacy comment translated to English.
-
-            }
-
-
-
-            var mySenparcEntities = serviceProvider.GetService(dbContextType) as DbContext;
-
-            await mySenparcEntities.Database.MigrateAsync().ConfigureAwait(false);//updatedatabase
-
-        }
-
-
-
-
-
-        /// <summary>
-
-        /// execute Migrate updatedata
-
-        /// </summary>
-
-        /// <param name="serviceProvider"></param>
-
-        /// <returns></returns>
-
-        protected virtual async Task MigrateDatabaseAsync(IServiceProvider serviceProvider)
-
-        {
-
-            Legacy comment translated to English.
-
-            var dbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
-
-            await MigrateDatabaseAsync(serviceProvider, dbContextType, false);
-
-        }
-
-
-
-        /// <summary>
-
-        /// execute Migrate updatedata
-
-        /// </summary>
-
-        /// <typeparam name="TSenparcEntities"></typeparam>
-
-        /// <param name="serviceProvider"></param>
-
-        /// <returns></returns>
-
-        protected virtual async Task MigrateDatabaseAsync<TSenparcEntities>(IServiceProvider serviceProvider)
-
-            where TSenparcEntities : DbContext
-
-        {
-
-            await MigrateDatabaseAsync(serviceProvider, typeof(TSenparcEntities));
-
-        }
-
-        */
-        #endregion
+        // Historical migration helpers were removed from the public register contract.
+        // Database migration now runs through XncfDatabaseDbContext and module-specific
+        // registration services.
 
         /// <summary>
         /// Provides the default no-op installation/update lifecycle hook.
@@ -331,18 +243,18 @@ namespace Senparc.Ncf.XncfBase
         {
             if (this is IXncfDatabase databaseRegister)
             {
-                //Legacy comment translated to English.
+                // Resolve and register every database context previously associated with this module.
                 if (XncfDatabaseDbContextPool.Instance.ContainsKey(this.GetType()))
                 {
                     var dbContextTypes = XncfDatabaseDbContextPool.Instance[this.GetType()];
                     foreach (var dbContextType in dbContextTypes.Values)
                     {
-                        //Legacy comment translated to English.
+                        // Build the context through the configured database provider so the
+                        // module receives the same connection and retry settings as the host.
                         Func<IServiceProvider, DbContext> implementationFactory = s =>
                         {
-                            //Legacy comment translated to English.
-                            //Legacy comment translated to English.
-                            // DbContextOptions<TContext> constructor。
+                            // DbContextOptions<TContext> is constructed reflectively because the
+                            // registered context type is discovered at runtime.
                             var dbOptionBuilderType = typeof(DbContextOptionsBuilder<>).MakeGenericType(dbContextType);
                             var dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder
                                 ?? throw new InvalidOperationException($"无法创建数据库配置：{dbContextType.FullName}");
@@ -353,10 +265,9 @@ namespace Senparc.Ncf.XncfBase
                             //usedatabase
                             currentDatabaseConfiguration.UseDatabase(dbOptionBuilder, Ncf.Core.Config.SenparcDatabaseConnectionConfigs.GetClientConnectionString(), new XncfDatabaseData(databaseRegister, null /*Legacy comment translated to English.*/), (b, xncfDatabaseData) =>
                                 {
-                                    //Legacy comment translated to English.
-                                    //this.DbContextOptionsAction?.Invoke(b);
+                                    // Module-specific options are applied by the database
+                                    // configuration abstraction used by the host.
 
-                                    //Legacy comment translated to English.
                                     currentDatabaseConfiguration.DbContextOptionsActionBase(b, xncfDatabaseData);
 
                                     //Legacy comment translated to English.
@@ -366,18 +277,15 @@ namespace Senparc.Ncf.XncfBase
                                     //    errorNumbersToAdd: new int[] { 2 });
                                 });
 
-                            //Legacy comment translated to English.
-                            //Legacy comment translated to English.
-                            //Legacy comment translated to English.
+                            // The helper supplies the correctly typed options instance to the
+                            // dependency-injection container.
                             return CreateXncfDbContext(s, dbContextType, dbOptionBuilder.Options);
                         };
-                        //Legacy comment translated to English.
                         services.AddScoped(dbContextType, implementationFactory);
 
-                        //Legacy comment translated to English.
+                        // Cache entity-set metadata used by repository and database helpers.
                         EntitySetKeys.TryLoadSetInfo(dbContextType);
 
-                        //Legacy comment translated to English.
                         if (!Ncf.Core.Config.SiteConfig.NcfCoreState.AynDatabaseXncfLoaded)
                         {
                             Ncf.Core.Config.SiteConfig.NcfCoreState.AynDatabaseXncfLoaded = true;
@@ -392,12 +300,10 @@ namespace Senparc.Ncf.XncfBase
                     Console.WriteLine(errMsg);
                 }
 
-                //Legacy comment translated to English.
                 databaseRegister.AddXncfDatabaseModule(services);
 
                 if (!Ncf.Core.Config.SiteConfig.NcfCoreState.AnyAddXncfDatabaseModuleApplied)
                 {
-                    //Legacy comment translated to English.
                     Ncf.Core.Config.SiteConfig.NcfCoreState.AnyAddXncfDatabaseModuleApplied = true;
                 }
             }
@@ -493,7 +399,7 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="configuration">The application configuration.</param>
         public virtual void OnAutoMapMapping(IServiceCollection services, IConfiguration configuration)
         {
-            //Legacy comment translated to English.
+            // Derived registers may add profiles or mapping conventions after service registration.
         }
 
         #region MCP
@@ -600,10 +506,8 @@ namespace Senparc.Ncf.XncfBase
                     return;
                 }
 
-                //Legacy comment translated to English.
+                // Store the resolved route so diagnostics and later consumers can discover it.
                 mcpServerInfo.McpRoute = routePattern;
-
-                //Legacy comment translated to English.
 
                 Console.WriteLine($"启用 MCP 服务（{this.Name}）：{routePattern}");
 
@@ -613,11 +517,8 @@ namespace Senparc.Ncf.XncfBase
         #endregion
 
 
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///// </summary>
+        // The former public DbContextOptionsAction member was superseded by
+        // DbContextOptionsActionBase and provider-specific configuration hooks.
         ///public Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsAction => (builder, xncfDatabaseData) =>
         ///{
         ///    if (xncfDatabaseData!=null && !xncfDatabaseData.AssemblyName.IsNullOrEmpty())

@@ -271,6 +271,13 @@ public class SandboxSession : EntityBase<int>
         };
     }
 
+    /// <summary>
+    /// Truncates a persisted status value to the requested maximum length while
+    /// preserving <see langword="null"/> and already-short values.
+    /// </summary>
+    /// <param name="value">The value to bound.</param>
+    /// <param name="max">The maximum character count.</param>
+    /// <returns>The bounded value.</returns>
     private static string Truncate(string value, int max)
     {
         if (string.IsNullOrEmpty(value) || value.Length <= max)

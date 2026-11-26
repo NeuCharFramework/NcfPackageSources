@@ -32,6 +32,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services;
 
 public partial class PromptItemService
 {
+    /// <summary>
+    /// Builds the tenant/soft-delete-aware prompt selector query.
+    /// </summary>
+    /// <returns>An EF-translatable selector query.</returns>
     private IQueryable<PromptSelectorItem> SelectorQuery()
     {
         var db = RepositoryBase.BaseDB.BaseDataContext;
@@ -57,6 +61,10 @@ public partial class PromptItemService
                };
     }
 
+    /// <summary>
+    /// Lists distinct prompt-range/tactic selector options.
+    /// </summary>
+    /// <returns>Ordered selector options.</returns>
     public Task<List<PromptSelectorOption>> GetSelectorOptionsAsync()
     {
         return SelectorQuery().Select(item => new PromptSelectorOption
@@ -68,6 +76,16 @@ public partial class PromptItemService
         }).Distinct().OrderBy(item => item.RangeName).ThenBy(item => item.Tactic).ToListAsync();
     }
 
+    /// <summary>
+    /// Searches published/draft prompt selector items with bounded filters and paging.
+    /// </summary>
+    /// <param name="rangeId">Optional prompt-range identifier.</param>
+    /// <param name="tactic">Optional tactic filter.</param>
+    /// <param name="keyword">Optional content/name keyword.</param>
+    /// <param name="pageIndex">The one-based page index.</param>
+    /// <param name="pageSize">The page size, limited to 50.</param>
+    /// <param name="sortBy">Either <c>score</c> or <c>promptCode</c>.</param>
+    /// <returns>The bounded selector search response.</returns>
     public async Task<PromptSelectorSearchResponse> SearchSelectorAsync(
         int rangeId, string tactic, string keyword, int pageIndex, int pageSize, string sortBy = "score")
     {
@@ -126,12 +144,24 @@ public partial class PromptItemService
         return new PromptSelectorSearchResponse { Items = items, TotalCount = totalCount };
     }
 
+    /// <summary>
+    /// Loads one prompt selector item by identifier.
+    /// </summary>
+    /// <param name="id">The prompt item identifier.</param>
+    /// <returns>The selector item.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the prompt is unavailable.</exception>
     public async Task<PromptSelectorItem> GetSelectorPromptAsync(int id)
     {
         return await SelectorQuery().SingleOrDefaultAsync(item => item.Id == id)
             ?? throw new NcfExceptionBase("The selected prompt is no longer available.");
     }
 
+    /// <summary>
+    /// Loads score summaries for all prompts in the selected prompt range.
+    /// </summary>
+    /// <param name="id">A prompt item identifier used to resolve the range.</param>
+    /// <returns>Ordered score summaries.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the selected prompt is unavailable.</exception>
     public async Task<List<PromptSelectorScoreItem>> GetSelectorRangeScoresAsync(int id)
     {
         var rangeId = await SelectorQuery().Where(item => item.Id == id)

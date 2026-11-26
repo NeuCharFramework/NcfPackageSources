@@ -95,6 +95,13 @@ namespace Senparc.Mvc.CustomActionResults
             {
             }
 
+            /// <summary>
+            /// Applies file-result headers and invokes the ZIP response callback
+            /// against the current response body.
+            /// </summary>
+            /// <param name="context">The MVC action context.</param>
+            /// <param name="result">The ZIP result being executed.</param>
+            /// <returns>A task that completes after the callback is invoked.</returns>
             public Task ExecuteAsync(ActionContext context, ZipResult result)
             {
                 SetHeadersAndLog(context, result,

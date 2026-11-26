@@ -45,6 +45,13 @@ namespace Senparc.Web.Pages
             _localizer = localizer;
         }
 
+        /// <summary>
+        /// Replaces the default installation redirect with the localized transition
+        /// page rendered by this model when the base page detects first-run installation.
+        /// </summary>
+        /// <param name="context">The page-handler execution context.</param>
+        /// <param name="next">The continuation delegate for page execution.</param>
+        /// <returns>A task representing page-handler execution.</returns>
         public override async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context,
             PageHandlerExecutionDelegate next)
         {
@@ -61,6 +68,12 @@ namespace Senparc.Web.Pages
             }
         }
 
+        /// <summary>
+        /// Renders the home page when system configuration exists, or the localized
+        /// installation transition page when initialization is still required.
+        /// </summary>
+        /// <param name="forceUpdateModule">Optional module update hint retained for compatibility.</param>
+        /// <returns>The home page or installation transition result.</returns>
         public Task<IActionResult> OnGetAsync(string forceUpdateModule)
         {
             //Legacy comment translated to English.
@@ -71,6 +84,10 @@ namespace Senparc.Web.Pages
             return Task.FromResult<IActionResult>(Page());
         }
 
+        /// <summary>
+        /// Builds the localized HTML transition page that links and redirects to the installer.
+        /// </summary>
+        /// <returns>An HTML content result with no-cache-friendly installation guidance.</returns>
         private ContentResult BuildInstallRedirectPage()
         {
             var title = _localizer["Home.InstallRequired.Title"].Value;

@@ -83,32 +83,50 @@ internal static class WeixinClawMessageContent
 
 public sealed class WeixinClawStoredMessage
 {
+    /// <summary>
+    /// Gets or sets the textual part of the stored message.
+    /// </summary>
     public string Text { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Gets or sets media records associated with the message.
+    /// </summary>
     public List<WeixinClawStoredMedia> MediaItems { get; set; } = new();
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the persisted envelope could not be parsed.
+    /// </summary>
     [JsonIgnore]
     public bool ParseError { get; set; }
 }
 
 public sealed class WeixinClawStoredMedia
 {
+    /// <summary>Gets or sets the provider media kind.</summary>
     public string Kind { get; set; }
 
+    /// <summary>Gets or sets the original media name.</summary>
     public string Name { get; set; }
 
+    /// <summary>Gets or sets the media content type.</summary>
     public string ContentType { get; set; }
 
+    /// <summary>Gets or sets the media size in bytes.</summary>
     public long Size { get; set; }
 
+    /// <summary>Gets or sets the FileManager or local storage key.</summary>
     public string StorageKey { get; set; }
 
+    /// <summary>Gets or sets the managed FileManager file identifier.</summary>
     public int? FileManagerFileId { get; set; }
 
+    /// <summary>Gets or sets the FileManager error, when import failed.</summary>
     public string FileManagerError { get; set; }
 
+    /// <summary>Gets or sets a media-processing error.</summary>
     public string Error { get; set; }
 
+    /// <summary>Gets or sets the temporary or resolved media URL used by the UI.</summary>
     [JsonIgnore]
     public string Url { get; set; }
 }

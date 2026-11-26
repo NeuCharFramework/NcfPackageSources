@@ -50,6 +50,13 @@ public sealed class AdminMenuLocalizationService
         _localizer = localizer;
     }
 
+    /// <summary>
+    /// Resolves a menu label from an XNCF register or built-in localization key,
+    /// preserving the DTO label when no known mapping exists.
+    /// </summary>
+    /// <param name="menu">The menu DTO to resolve.</param>
+    /// <returns>The localized or existing menu label.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="menu"/> is <see langword="null"/>.</exception>
     public string Resolve(SysMenuDto menu)
     {
         ArgumentNullException.ThrowIfNull(menu);
@@ -70,12 +77,22 @@ public sealed class AdminMenuLocalizationService
         return menu.MenuName;
     }
 
+    /// <summary>
+    /// Resolves a menu label and writes the result back into the supplied DTO.
+    /// </summary>
+    /// <param name="menu">The menu DTO to update.</param>
+    /// <returns>The same DTO instance after label resolution.</returns>
     public SysMenuDto ResolveInPlace(SysMenuDto menu)
     {
         menu.MenuName = Resolve(menu);
         return menu;
     }
 
+    /// <summary>
+    /// Finds the registered XNCF module whose UID appears in a menu URL.
+    /// </summary>
+    /// <param name="url">The menu URL to inspect.</param>
+    /// <returns>The matching register, or <see langword="null"/> when no UID is present.</returns>
     private static IXncfRegister? FindRegister(string? url)
     {
         if (string.IsNullOrWhiteSpace(url))
@@ -87,6 +104,12 @@ public sealed class AdminMenuLocalizationService
             url.Contains($"uid={register.Uid}", StringComparison.OrdinalIgnoreCase));
     }
 
+    /// <summary>
+    /// Normalizes a built-in menu identifier and returns it only when it is in
+    /// the known localization-key map.
+    /// </summary>
+    /// <param name="id">The raw menu identifier.</param>
+    /// <returns>The normalized known identifier, or <see langword="null"/>.</returns>
     private static string? NormalizeBuiltInId(string? id)
     {
         if (string.IsNullOrWhiteSpace(id))

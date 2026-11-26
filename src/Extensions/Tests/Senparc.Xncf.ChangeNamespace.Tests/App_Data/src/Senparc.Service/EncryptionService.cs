@@ -29,15 +29,15 @@ namespace Senparc.Service
     {
         public const string BASE_ENCRYPT_ENCODING_KEY = "3Eddo*8jp";
 
-
+        /// <summary>Initializes the sample encryption service.</summary>
         public EncryptionService()//(IBaseData baseData): base(baseData)
         { }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Encrypts text after appending the service's fixed encoding marker.
         /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
+        /// <param name="str">The plaintext value to protect.</param>
+        /// <returns>The DES-encrypted marker-bearing value.</returns>
         public string CommonEncrypt(string str)
         {
             var content = $"{str}|{BASE_ENCRYPT_ENCODING_KEY}";
@@ -45,10 +45,11 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Decrypts a value using the sample encoding key and returns its first
+        /// pipe-delimited component.
         /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
+        /// <param name="str">The encrypted value.</param>
+        /// <returns>The first component of the decrypted value.</returns>
         public string CommonDecrypt(string str)
         {
             var content = DesUtility.EncryptDES(str, BASE_ENCRYPT_ENCODING_KEY);
@@ -57,12 +58,23 @@ namespace Senparc.Service
 
         #region UserAvatar
 
+        /// <summary>Creates a short-lived encoded avatar token for an account.</summary>
+        /// <param name="accountId">The account identifier embedded in the token.</param>
+        /// <param name="encodeKey">The DES key used for encoding.</param>
+        /// <returns>The encoded timestamp/account token.</returns>
         public string GetEncodedUserAvatar(int accountId, string encodeKey)
         {
             var content = $"{DateTime.Now.Ticks}|{accountId}";
             return DesUtility.EncryptDES(content, encodeKey);
         }
 
+        /// <summary>
+        /// Decodes an avatar token and returns the account identifier when it is
+        /// valid and no older than fifteen seconds.
+        /// </summary>
+        /// <param name="code">The encoded avatar token.</param>
+        /// <param name="encodeKey">The DES key used for decoding.</param>
+        /// <returns>The account identifier, or <c>-1</c> for invalid or expired tokens.</returns>
         public int GetDecodedUserAvatar(string code, string encodeKey)
         {
             try

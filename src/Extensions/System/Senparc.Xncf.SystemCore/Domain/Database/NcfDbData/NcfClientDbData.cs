@@ -23,8 +23,10 @@ using Senparc.Ncf.Utility;
 
 namespace Senparc.Xncf.SystemCore.Domain.Database
 {
+    /// <summary>Provides access to the shared client database context.</summary>
     public interface INcfClientDbData : INcfDbData
     {
+        /// <summary>Gets the shared client database context.</summary>
         BasePoolEntities DataContext { get; }
     }
 
@@ -49,12 +51,9 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
             }
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <inheritdoc />
         public override void CloseConnection()
         {
-            //Legacy comment translated to English.
             //BaseDataContext.Database.Connection.Close();
             dataContext = null;
         }
@@ -65,13 +64,9 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
             {
                 if (dataContext == null)
                 {
-                    //var connectionString = Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString;
-
-                    //dataContext = SenparcDI.GetService<SenparcEntities>();
-                    //Legacy comment translated to English.
+                    // A closed wrapper intentionally remains disconnected; the scoped
+                    // client context is recreated by dependency injection at the next boundary.
                 }
-                //var hashCode = dataContext.GetHashCode();
-                //Legacy comment translated to English.
                 return dataContext;
             }
 

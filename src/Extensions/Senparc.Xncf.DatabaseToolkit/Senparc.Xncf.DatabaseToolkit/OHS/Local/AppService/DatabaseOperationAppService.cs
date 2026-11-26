@@ -35,8 +35,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Provides FunctionRender endpoints for querying approved module tables and their statistics.
     /// </summary>
     public class DatabaseOperationAppService : AppServiceBase
     {
@@ -53,9 +52,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Queries a bounded page of records from a resolved module entity.
         /// </summary>
+        /// <param name="request">The module, table, filter, and paging request.</param>
+        /// <returns>A response containing serialized records or a localized error message.</returns>
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.QueryRecords.Name", "Function.Database.QueryRecords.Description", typeof(Register))]
         public async Task<AppResponseBase<string>> QueryRecords(QueryRecordsRequest request)
         {
@@ -63,13 +63,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             {
                 try
                 {
-                    //Legacy comment translated to English.
                     if (string.IsNullOrWhiteSpace(request.ModuleName) || string.IsNullOrWhiteSpace(request.TableName))
                     {
                         return DatabaseToolkitResource.Get("Database.ModuleAndTableRequired");
                     }
 
-                    //Legacy comment translated to English.
                     var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
                     if (resolvedModule == null)
                     {
@@ -77,7 +75,6 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         return DatabaseToolkitResource.Format("Database.ModuleNotFound", "找不到模块“{0}”。可用模块：{1}", request.ModuleName, string.Join(", ", available));
                     }
 
-                    //Legacy comment translated to English.
                     var resolvedTable = _metadataProvider.ResolveEntityName(resolvedModule, request.TableName);
                     if (resolvedTable == null)
                     {
@@ -93,7 +90,6 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
                     logger.Append(DatabaseToolkitResource.Format("Database.Query.Log", "查询表 {0}.{1}（原始输入：{2}.{3}）", resolvedModule, resolvedTable, request.ModuleName, request.TableName));
 
-                    //Legacy comment translated to English.
                     var result = await _databaseExecutor.QueryRecordsAsync(
                         resolvedModule,
                         resolvedTable,
@@ -116,9 +112,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// getdatabasestatisticsinformation
-        ///Legacy comment translated to English.
+        /// Returns row-count and storage statistics for a resolved module entity.
         /// </summary>
+        /// <param name="request">The module and table request.</param>
+        /// <returns>A response containing serialized statistics or a localized error message.</returns>
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.Statistics.Name", "Function.Database.Statistics.Description", typeof(Register))]
         public async Task<AppResponseBase<string>> GetStatistics(GetStatisticsRequest request)
         {
@@ -131,7 +128,6 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         return DatabaseToolkitResource.Get("Database.ModuleAndTableRequired");
                     }
 
-                    //Legacy comment translated to English.
                     var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
                     if (resolvedModule == null)
                     {
@@ -139,7 +135,6 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         return DatabaseToolkitResource.Format("Database.ModuleNotFound", "找不到模块“{0}”。可用模块：{1}", request.ModuleName, string.Join(", ", available));
                     }
 
-                    //Legacy comment translated to English.
                     var resolvedTable = _metadataProvider.ResolveEntityName(resolvedModule, request.TableName);
                     if (resolvedTable == null)
                     {
@@ -172,7 +167,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Carries module, table, filter, and paging values for a record query.
         /// </summary>
         public class QueryRecordsRequest : FunctionAppRequestBase
         {
@@ -205,7 +200,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// getstatisticsinformationrequest
+        /// Carries the module and table values for a statistics query.
         /// </summary>
         public class GetStatisticsRequest : FunctionAppRequestBase
         {

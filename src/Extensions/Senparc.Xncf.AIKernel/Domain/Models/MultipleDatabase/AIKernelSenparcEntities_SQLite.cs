@@ -13,6 +13,7 @@ namespace Senparc.Xncf.AIKernel.Models
     [MultipleMigrationDbContext(MultipleDatabaseType.Sqlite, typeof(Register))]
     public class AIKernelSenparcEntities_Sqlite : AIKernelSenparcEntities
     {
+        /// <inheritdoc />
         public AIKernelSenparcEntities_Sqlite(DbContextOptions<AIKernelSenparcEntities_Sqlite> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -32,6 +33,9 @@ namespace Senparc.Xncf.AIKernel.Models
             app.UseNcfDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the SQLite design-time AIKernel context factory.
+        /// </summary>
         public SenparcDbContextFactory_Sqlite() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)
         {
 

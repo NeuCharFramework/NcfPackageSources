@@ -29,7 +29,7 @@ using Senparc.Xncf.XncfModuleManager.Domain.Services;
 namespace Senparc.Xncf.XncfBuilder.Application.EventHandlers
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Handles inventory requests by comparing registered module versions with persisted module records.
     /// </summary>
     public class XncfModulesInventoryRequestHandler : IIntegrationEventHandler<XncfModulesInventoryRequestEvent>
     {
@@ -47,6 +47,7 @@ namespace Senparc.Xncf.XncfBuilder.Application.EventHandlers
             _logger = logger;
         }
 
+        /// <inheritdoc />
         public async Task Handle(XncfModulesInventoryRequestEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation("XncfModulesInventoryRequestHandler: RequestId={RequestId}", @event.RequestId);

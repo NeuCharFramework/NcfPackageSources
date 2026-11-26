@@ -463,9 +463,9 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         // }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Legacy alert-check implementation retained as disabled historical reference.
         /// </summary>
-        /// <param name="order"></param>
+        /// <param name="order">The sitemap order that would have been inspected.</param>
         // private void CheckLoginAndAlert(SiteMapOrder order)
         // {
           // DateTime currentLoginTime = order.UserInfo.CurrentLoginTime;

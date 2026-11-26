@@ -21,13 +21,12 @@ using System;
 namespace Senparc.Ncf.Core.Models.VD
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// View model containing province, city, and district lists plus the user's current
+    /// selections and optional “all”/placeholder controls.
     /// </summary>
     public class Common_AreaListVD : Base_AreaXmlVD
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the prefix used when rendering the area controls.</summary>
         public string Prefixes { get; set; }
 
         public string UserProvince { get; set; }
@@ -50,12 +49,35 @@ namespace Senparc.Ncf.Core.Models.VD
 
         public bool ShowDistrictAllButton { get; set; }
 
+        /// <summary>Initializes an empty area-list view model.</summary>
         public Common_AreaListVD() { }
 
+        /// <summary>
+        /// Initializes an area-list view model from existing area data and current selections.
+        /// </summary>
+        /// <param name="areaInfo">The source province/city/district lists.</param>
+        /// <param name="userProvince">The selected province.</param>
+        /// <param name="userCity">The selected city.</param>
+        /// <param name="userDistrict">The selected district.</param>
         public Common_AreaListVD(Base_AreaXmlVD areaInfo, string userProvince, string userCity, string userDistrict)
             : this(null, areaInfo, userProvince, userCity, userDistrict)
         { }
 
+        /// <summary>
+        /// Initializes an area-list view model with optional display prefix, placeholder entries,
+        /// district visibility, and province/city “all” buttons.
+        /// </summary>
+        /// <param name="prefixes">Optional field-name or rendering prefix.</param>
+        /// <param name="areaInfo">The source province/city/district lists.</param>
+        /// <param name="userProvince">The selected province.</param>
+        /// <param name="userCity">The selected city.</param>
+        /// <param name="userDistrict">The selected district.</param>
+        /// <param name="topProvince">Optional first province item.</param>
+        /// <param name="topCity">Optional first city item.</param>
+        /// <param name="topDistrict">Optional first district item.</param>
+        /// <param name="hideDistrict">Whether district selection should be hidden.</param>
+        /// <param name="showProvinceAllButton">Whether to show a province-wide option.</param>
+        /// <param name="showCityAllButton">Whether to show a city-wide option.</param>
         public Common_AreaListVD(string prefixes, Base_AreaXmlVD areaInfo, string userProvince, string userCity, string userDistrict, AreaXML_Provinces topProvince = null, AreaXML_Cities topCity = null, AreaXML_Districts topDistrict = null, bool hideDistrict = false, bool showProvinceAllButton = false, bool showCityAllButton = false)
         {
             Prefixes = prefixes;

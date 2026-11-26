@@ -24,9 +24,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///
-    ///Legacy comment translated to English.
+    /// Associates a ChatGroup with a configured remote agent and its context-sharing policy.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(ChatGroupRemoteMember))]
     [Serializable]
@@ -47,11 +45,18 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         [Required]
         public bool Enable { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the optional context-sharing mode for this remote member.
         public ChatGroupContextSharingMode? ContextSharingMode { get; private set; }
 
+        /// <summary>
+        /// Reserved for EF Core materialization.
+        /// </summary>
         private ChatGroupRemoteMember() { }
 
+        /// <summary>
+        /// Initializes a remote ChatGroup member from a DTO.
+        /// </summary>
+        /// <param name="dto">The group, agent, and sharing settings.</param>
         public ChatGroupRemoteMember(ChatGroupRemoteMemberDto dto)
         {
             UID = string.IsNullOrWhiteSpace(dto.UID) ? Guid.NewGuid().ToString("N") : dto.UID;
@@ -61,6 +66,10 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             ContextSharingMode = dto.ContextSharingMode;
         }
 
+        /// <summary>
+        /// Updates the enabled state and context-sharing mode.
+        /// </summary>
+        /// <param name="dto">The replacement member settings.</param>
         public void Update(ChatGroupRemoteMemberDto dto)
         {
             Enable = dto.Enable;

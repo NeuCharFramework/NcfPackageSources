@@ -834,6 +834,15 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
+        /// <summary>
+        /// Serializes one job operation, loads its owned snapshot, and releases the per-job lock.
+        /// </summary>
+        /// <typeparam name="T">The operation result type.</typeparam>
+        /// <param name="jobId">The development job identifier.</param>
+        /// <param name="ambientTenant">The ambient tenant context.</param>
+        /// <param name="operation">The operation executed under the lock.</param>
+        /// <param name="cancellationToken">Token used to cancel waiting or operation.</param>
+        /// <returns>The operation result.</returns>
         private async Task<T> RunLockedAsync<T>(
             string jobId,
             RequestTenantInfo? ambientTenant,
@@ -929,6 +938,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
+        /// <summary>
+        /// Validates and normalizes an existing .sln solution path.
+        /// </summary>
+        /// <param name="solutionFilePath">The candidate solution path.</param>
+        /// <returns>The absolute solution path.</returns>
+        /// <exception cref="FileNotFoundException">Thrown when the path is blank, not an .sln, or missing.</exception>
         private static string ValidateSolutionPath(string solutionFilePath)
         {
             if (string.IsNullOrWhiteSpace(solutionFilePath)
@@ -940,6 +955,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             return Path.GetFullPath(solutionFilePath);
         }
 
+        /// <summary>
+        /// Resolves and validates the module project name for a development job.
+        /// </summary>
+        /// <param name="options">The development creation options.</param>
+        /// <returns>The validated module project name.</returns>
+        /// <exception cref="ArgumentException">Thrown when the derived name contains invalid path/name characters.</exception>
         private static string ResolveModuleProjectName(XncfDevelopmentCreateOptions options)
         {
             var name = options.Mode == XncfDevelopmentJobMode.CreateNew
@@ -956,6 +977,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             return name;
         }
 
+        /// <summary>
+        /// Splits a module name into organization and XNCF name components.
+        /// </summary>
+        /// <param name="moduleName">The complete module project name.</param>
+        /// <param name="options">The creation options that may already contain components.</param>
+        /// <returns>The organization and XNCF name.</returns>
         private static (string Organization, string XncfName) SplitModuleName(
             string moduleName,
             XncfDevelopmentCreateOptions options)
@@ -974,6 +1001,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             return (moduleName[..markerIndex], moduleName[(markerIndex + marker.Length)..]);
         }
 
+        /// <summary>
+        /// Verifies that the isolated workspace and solution still exist.
+        /// </summary>
+        /// <param name="snapshot">The development job snapshot.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the workspace was removed or is incomplete.</exception>
         private static void EnsureWorkspaceAvailable(XncfDevelopmentJobSnapshot snapshot)
         {
             if (string.IsNullOrWhiteSpace(snapshot.WorkspaceRootPath)
@@ -985,6 +1017,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
+        /// <summary>
+        /// Verifies that the preview host opts into the Sandbox path-base contract.
+        /// </summary>
+        /// <param name="webProjectFilePath">The web project file path.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the opt-in marker is absent.</exception>
         private static void EnsureSandboxPathBaseSupport(string webProjectFilePath)
         {
             var hostDirectory = Path.GetDirectoryName(webProjectFilePath)
@@ -998,6 +1035,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
+        /// <summary>
+        /// Projects an internal development snapshot into the public job-information contract.
+        /// </summary>
+        /// <param name="snapshot">The internal snapshot.</param>
+        /// <returns>The public job information.</returns>
         private static XncfDevelopmentJobInfo ToInfo(XncfDevelopmentJobSnapshot snapshot)
         {
             return new XncfDevelopmentJobInfo
@@ -1028,6 +1070,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             };
         }
 
+        /// <summary>
+        /// Bounds diagnostic text to a maximum length.
+        /// </summary>
+        /// <param name="value">The text to bound.</param>
+        /// <param name="maxLength">The maximum retained length.</param>
+        /// <returns>The original or truncated text.</returns>
         private static string Truncate(string value, int maxLength)
         {
             if (string.IsNullOrEmpty(value) || value.Length <= maxLength) return value;

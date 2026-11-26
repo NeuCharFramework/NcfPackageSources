@@ -27,14 +27,16 @@ using System.Text;
 namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores one Weixin public-account configuration and its PromptRange binding.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(MpAccount))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class MpAccount : EntityBase<int>
     {
+        /// <summary>Gets the account logo URL.</summary>
         [MaxLength(200)]
         public string Logo { get; private set; }
+        /// <summary>Gets the administrator-facing account name.</summary>
         [Required]
         [MaxLength(100)]
         public string Name { get; private set; }
@@ -52,8 +54,15 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
         [MaxLength(100)]
         public string PromptRangeCode { get; private set; }
 
+        /// <summary>
+        /// Reserved for EF Core materialization.
+        /// </summary>
         private MpAccount() { }
 
+        /// <summary>
+        /// Initializes an account from the administrative DTO.
+        /// </summary>
+        /// <param name="dto">The account values to persist.</param>
         public MpAccount(MpAccountDto dto)
         {
             Logo = dto.Logo;
@@ -68,7 +77,14 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
             SetUpdateTime(SystemTime.Now.UtcDateTime);
         }
 
+        /// <summary>Gets the users associated with the account.</summary>
         public IList<WeixinUser> WeixinUsers { get; private set; }
+        /// <summary>Gets the tags associated with the account.</summary>
         public IList<UserTag> UserTags { get; private set; }
     }
 }
+        /// <summary>Gets the Weixin application ID.</summary>
+        /// <summary>Gets the Weixin application secret.</summary>
+        /// <summary>Gets the message verification token.</summary>
+        /// <summary>Gets the message encryption key.</summary>
+        /// <summary>Gets the optional PromptRange code used for AI replies.</summary>

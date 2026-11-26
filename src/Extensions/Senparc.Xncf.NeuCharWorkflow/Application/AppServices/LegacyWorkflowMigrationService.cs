@@ -45,6 +45,10 @@ public sealed class LegacyWorkflowMigrationService
     private const string LegacyFunctionTable = "ADMIN_NeuCharPivotFunction";
     private readonly IServiceScopeFactory _scopeFactory;
 
+    /// <summary>
+    /// Initializes the legacy Workflow migration service.
+    /// </summary>
+    /// <param name="scopeFactory">The scope factory used to resolve the legacy and target DbContexts.</param>
     public LegacyWorkflowMigrationService(IServiceScopeFactory scopeFactory)
     {
         _scopeFactory = scopeFactory;

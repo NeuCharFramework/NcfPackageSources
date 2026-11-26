@@ -23,15 +23,15 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the optional middleware registration contract for an XNCF module.
     /// </summary>
     public interface IXncfMiddleware
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Adds module middleware to the ASP.NET Core application pipeline.
         /// </summary>
-        /// <param name="app"></param>
-        /// <returns></returns>
+        /// <param name="app">The application builder being configured.</param>
+        /// <returns>The same builder after module middleware has been registered.</returns>
         IApplicationBuilder UseMiddleware(IApplicationBuilder app);
     }
 }

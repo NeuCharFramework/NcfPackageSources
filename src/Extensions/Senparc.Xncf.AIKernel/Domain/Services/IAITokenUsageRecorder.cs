@@ -23,11 +23,14 @@ using Senparc.Xncf.AIKernel.Domain.Models.Usage;
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Accepts normalized AI token-usage records for live monitoring and asynchronous persistence.
     /// </summary>
     public interface IAITokenUsageRecorder
     {
+        /// <summary>
+        /// Queues one token-usage record for monitoring and persistence.
+        /// </summary>
+        /// <param name="record">The normalized usage record.</param>
         void Record(AITokenUsageRecord record);
     }
 }

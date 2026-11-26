@@ -29,6 +29,7 @@ namespace Senparc.Areas.Admin.TagHelpers
             //_httpContextAccessor = _serviceProvider.GetService<Microsoft.AspNetCore.Http.IHttpContextAccessor>();
         }
 
+        /// <inheritdoc/>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             bool hasPageRoute = _actionContextAccessor.ActionContext.RouteData.Values.TryGetValue("page", out object page);

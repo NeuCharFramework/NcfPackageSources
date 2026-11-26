@@ -13,7 +13,7 @@ using System.Text;
 namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// SQL Server-specific DatabaseToolkit context used by runtime registration and migrations.
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.SqlServer, typeof(Register))]
     public class DatabaseToolkitSenparcEntities_SqlServer : DatabaseToolkitSenparcEntities, IMultipleMigrationDbContext

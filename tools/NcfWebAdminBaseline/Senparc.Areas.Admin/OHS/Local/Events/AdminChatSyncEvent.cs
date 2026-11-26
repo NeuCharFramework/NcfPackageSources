@@ -25,21 +25,36 @@ using Senparc.Ncf.Shared.Abstractions.Events;
 namespace Senparc.Areas.Admin.OHS.Local.Events;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Describes an authorized synchronization event for a changed administrator chat session.
+/// The event carries the administrator owner and session resource identifiers used by
+/// downstream authorization checks.
 /// </summary>
 public sealed record AdminChatSyncEvent(
     int AdminUserId,
     int SessionId,
     string Action) : IntegrationEvent, IAuthorizedIntegrationSyncEvent
 {
+    /// <summary>
+    /// Gets the synchronization channel used for administrator chat events.
+    /// </summary>
     public string Channel => "admin-chat";
 
+    /// <summary>
+    /// Gets the administrator identifier used as the event owner.
+    /// </summary>
     public string OwnerId => AdminUserId.ToString(CultureInfo.InvariantCulture);
 
+    /// <summary>
+    /// Gets the chat session identifier used as the protected resource.
+    /// </summary>
     public string ResourceId => SessionId.ToString(CultureInfo.InvariantCulture);
 
+    /// <summary>
+    /// Gets the authorization policy required to consume the event.
+    /// </summary>
     public string RequiredPolicy => NcfAuthorizationPolicyNames.AdminOnly;
 
+    /// <inheritdoc/>
     public override string GetEventSummary()
     {
         return $"Admin Chat resource changed: SessionId={SessionId}, Action={Action}";

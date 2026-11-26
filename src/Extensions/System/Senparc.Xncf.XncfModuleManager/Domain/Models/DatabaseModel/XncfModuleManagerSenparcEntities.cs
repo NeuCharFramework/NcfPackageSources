@@ -31,7 +31,7 @@ namespace Senparc.Xncf.XncfModuleManager.Models
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the persisted XNCF module records managed by this context.
         /// </summary>
         public DbSet<XncfModule> XncfModules { get; set; }
 

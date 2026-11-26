@@ -117,6 +117,12 @@ public sealed class WeixinClawMediaStorageService
         }
     }
 
+    /// <summary>
+    /// Resolves a relative media storage key under the configured root and rejects traversal.
+    /// </summary>
+    /// <param name="storageKey">The normalized relative storage key.</param>
+    /// <returns>The absolute file path.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the key escapes the storage root.</exception>
     private string GetFullPath(string storageKey)
     {
         var normalized = storageKey.Replace('\\', '/').TrimStart('/');
@@ -130,6 +136,11 @@ public sealed class WeixinClawMediaStorageService
         return fullPath;
     }
 
+    /// <summary>
+    /// Converts a storage-path segment into a safe alphanumeric, dash, or underscore name.
+    /// </summary>
+    /// <param name="value">The requested segment.</param>
+    /// <returns>The sanitized segment, or a generated identifier for blank input.</returns>
     private static string SanitizeSegment(string value)
     {
         var text = string.IsNullOrWhiteSpace(value) ? Guid.NewGuid().ToString("N") : value.Trim();

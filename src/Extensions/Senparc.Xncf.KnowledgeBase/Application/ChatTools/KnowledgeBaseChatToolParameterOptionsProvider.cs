@@ -24,6 +24,13 @@ namespace Senparc.Xncf.KnowledgeBase.Application.ChatTools;
 public sealed class KnowledgeBaseChatToolParameterOptionsProvider(
     KnowledgeBaseService knowledgeBaseService) : IChatToolParameterOptionsProvider
 {
+    /// <summary>
+    /// Lists indexed KnowledgeBase definitions matching the optional query and
+    /// converts them into bounded chat-tool parameter options.
+    /// </summary>
+    /// <param name="request">The query text and requested option limit.</param>
+    /// <param name="cancellationToken">Token reserved for cancellation-aware callers.</param>
+    /// <returns>Options ordered by recent update time and then name.</returns>
     public async Task<IReadOnlyCollection<ChatToolParameterOption>> GetOptionsAsync(
         ChatToolParameterOptionsRequest request,
         CancellationToken cancellationToken = default)

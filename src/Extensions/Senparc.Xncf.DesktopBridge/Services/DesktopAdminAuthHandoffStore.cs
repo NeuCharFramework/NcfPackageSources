@@ -233,6 +233,10 @@ public sealed class DesktopAdminAuthHandoffStore
         }
     }
 
+    /// <summary>
+    /// Removes expired handoff requests while the store lock is held.
+    /// </summary>
+    /// <param name="now">The current UTC timestamp used for expiry comparison.</param>
     private void CleanupExpiredLocked(DateTimeOffset now)
     {
         foreach (var requestId in _handoffs
@@ -244,6 +248,12 @@ public sealed class DesktopAdminAuthHandoffStore
         }
     }
 
+    /// <summary>
+    /// Decodes and validates a base64url PKCE code challenge.
+    /// </summary>
+    /// <param name="value">The encoded challenge.</param>
+    /// <param name="bytes">Receives the 32-byte challenge.</param>
+    /// <returns><see langword="true"/> when the challenge is valid.</returns>
     private static bool TryDecodeCodeChallenge(string? value, out byte[] bytes)
     {
         bytes = Array.Empty<byte>();
@@ -263,6 +273,11 @@ public sealed class DesktopAdminAuthHandoffStore
         }
     }
 
+    /// <summary>
+    /// Restricts a requested return path to local Admin routes and bounds its length.
+    /// </summary>
+    /// <param name="returnPath">The requested return path.</param>
+    /// <returns>A safe local Admin path.</returns>
     private static string NormalizeReturnPath(string? returnPath)
     {
         if (string.IsNullOrWhiteSpace(returnPath) ||
@@ -280,6 +295,11 @@ public sealed class DesktopAdminAuthHandoffStore
             : normalized;
     }
 
+    /// <summary>
+    /// Hashes a desktop/session value for comparison without retaining plaintext.
+    /// </summary>
+    /// <param name="value">The value to hash.</param>
+    /// <returns>The SHA-256 digest.</returns>
     private static byte[] Hash(string value) => SHA256.HashData(Encoding.UTF8.GetBytes(value));
 
     private enum HandoffStatus
@@ -291,6 +311,14 @@ public sealed class DesktopAdminAuthHandoffStore
 
     private sealed class PendingHandoff
     {
+        /// <summary>
+        /// Initializes a pending administrator-authentication handoff.
+        /// </summary>
+        /// <param name="requestId">The handoff request identifier.</param>
+        /// <param name="desktopSessionTokenHash">The desktop session token digest.</param>
+        /// <param name="codeChallenge">The PKCE code challenge.</param>
+        /// <param name="returnPath">The normalized return path.</param>
+        /// <param name="expiresAt">The expiration timestamp.</param>
         public PendingHandoff(
             Guid requestId,
             byte[] desktopSessionTokenHash,
@@ -331,6 +359,10 @@ public sealed record DesktopAdminAuthHandoffRedeemResult(
 
 public class DesktopAdminAuthHandoffException : Exception
 {
+    /// <summary>
+    /// Initializes an administrator-authentication handoff exception.
+    /// </summary>
+    /// <param name="message">The error message.</param>
     public DesktopAdminAuthHandoffException(string message) : base(message)
     {
     }
@@ -338,6 +370,9 @@ public class DesktopAdminAuthHandoffException : Exception
 
 public sealed class DesktopAdminAuthHandoffRateLimitException : DesktopAdminAuthHandoffException
 {
+    /// <summary>
+    /// Initializes the standard handoff rate-limit exception.
+    /// </summary>
     public DesktopAdminAuthHandoffRateLimitException()
         : base("Desktop login authorization requests are being sent too frequently. Try again later.")
     {

@@ -61,6 +61,11 @@ public static class SandboxTtlPolicy
         return utcNow.Add(ttl);
     }
 
+    /// <summary>
+    /// Determines whether a Sandbox expiration timestamp represents unlimited retention.
+    /// </summary>
+    /// <param name="expiresAtUtc">The expiration timestamp.</param>
+    /// <returns><see langword="true"/> when the timestamp is <see cref="DateTime.MaxValue"/>.</returns>
     public static bool IsUnlimited(DateTime expiresAtUtc)
     {
         return expiresAtUtc.Ticks == DateTime.MaxValue.Ticks;

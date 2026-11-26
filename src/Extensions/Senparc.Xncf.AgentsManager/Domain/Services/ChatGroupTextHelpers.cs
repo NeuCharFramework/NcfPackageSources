@@ -28,15 +28,19 @@ using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Converts AgentKernel responses and streaming content to normalized text and
+/// applies bounded chunking and user-facing failure messages for ChatGroup execution.
 /// </summary>
 internal static class ChatGroupTextHelpers
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Gets the default maximum stream chunk length.
     /// </summary>
     private const int DefaultStreamChunkLength = 24;
 
+    /// <summary>Clamps a long token/count value to the non-negative Int32 range.</summary>
+    /// <param name="value">The value to clamp.</param>
+    /// <returns>The clamped integer.</returns>
     public static int ClampToInt(long value)
     {
         if (value <= 0)
@@ -48,6 +52,9 @@ internal static class ChatGroupTextHelpers
     }
 
 
+    /// <summary>Extracts readable text from an AgentKernel response.</summary>
+    /// <param name="response">The response to inspect.</param>
+    /// <returns>Combined response text, or an empty string when no text is available.</returns>
     public static string ExtractAgentResponseText(AgentResponse response)
     {
         if (response == null)
@@ -76,6 +83,9 @@ internal static class ChatGroupTextHelpers
     }
 
 
+    /// <summary>Extracts text content from one chat message.</summary>
+    /// <param name="chatMessage">The message to inspect.</param>
+    /// <returns>The message text, or an empty string when no content exists.</returns>
     public static string ExtractChatMessageText(ChatMessage chatMessage)
     {
         if (chatMessage == null)
@@ -98,6 +108,9 @@ internal static class ChatGroupTextHelpers
     }
 
 
+    /// <summary>Extracts text content from one streaming response update.</summary>
+    /// <param name="update">The response update to inspect.</param>
+    /// <returns>The update text, or an empty string when no text exists.</returns>
     public static string ExtractAgentResponseUpdateText(AgentResponseUpdate update)
     {
         if (update == null)
@@ -127,6 +140,9 @@ internal static class ChatGroupTextHelpers
     }
 
 
+    /// <summary>Determines whether text represents a supported user exit command.</summary>
+    /// <param name="text">The candidate exit text.</param>
+    /// <returns><see langword="true"/> for supported English or Chinese exit commands.</returns>
     public static bool IsExitSignal(string text)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -144,6 +160,10 @@ internal static class ChatGroupTextHelpers
     }
 
 
+    /// <summary>Splits response text at punctuation/newlines and a maximum chunk length.</summary>
+    /// <param name="text">The text to split.</param>
+    /// <param name="maxChunkLength">The maximum chunk length.</param>
+    /// <returns>The ordered stream chunks.</returns>
     public static IEnumerable<string> SplitStreamText(string text, int maxChunkLength = DefaultStreamChunkLength)
     {
         if (string.IsNullOrEmpty(text))
@@ -169,6 +189,11 @@ internal static class ChatGroupTextHelpers
     }
 
 
+    /// <summary>Determines whether a streaming chunk should be emitted.</summary>
+    /// <param name="ch">The most recently appended character.</param>
+    /// <param name="currentLength">The current chunk length.</param>
+    /// <param name="maxChunkLength">The configured maximum length.</param>
+    /// <returns><see langword="true"/> when punctuation or length requires a break.</returns>
     public static bool ShouldBreakStreamChunk(char ch, int currentLength, int maxChunkLength)
     {
         if (currentLength >= maxChunkLength)
@@ -180,6 +205,9 @@ internal static class ChatGroupTextHelpers
     }
 
 
+    /// <summary>Builds a bounded, user-facing message for an agent execution failure.</summary>
+    /// <param name="ex">The failure exception.</param>
+    /// <returns>A normalized actionable failure message.</returns>
     public static string BuildAgentExecutionFailureMessage(Exception ex)
     {
         var raw = ex?.Message ?? "未知错误";

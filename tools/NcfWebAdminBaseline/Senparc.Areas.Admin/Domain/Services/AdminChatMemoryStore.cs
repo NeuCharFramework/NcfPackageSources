@@ -50,9 +50,28 @@ public sealed class AdminChatMemoryStore : IAdminChatMemoryStore
         _protection = protection;
     }
 
+    /// <summary>
+    /// Reads and decrypts the tenant/user memory profile, returning an empty profile
+    /// when no legacy file exists.
+    /// </summary>
+    /// <param name="tenantId">The tenant scope.</param>
+    /// <param name="userId">The administrator scope.</param>
+    /// <param name="cancellationToken">Token used to cancel file access.</param>
+    /// <returns>The memory profile.</returns>
     public Task<AdminChatMemoryProfile> ReadAsync(int tenantId, int userId, CancellationToken cancellationToken = default) =>
         AccessAsync(tenantId, userId, null, null, cancellationToken);
 
+    /// <summary>
+    /// Applies an owner-scoped memory mutation using optimistic revision checking
+    /// and atomically rewrites the protected profile.
+    /// </summary>
+    /// <param name="tenantId">The tenant scope.</param>
+    /// <param name="userId">The administrator scope.</param>
+    /// <param name="revision">The revision read by the caller.</param>
+    /// <param name="update">The mutation applied to the loaded profile.</param>
+    /// <param name="cancellationToken">Token used to cancel locking or persistence.</param>
+    /// <returns>The updated memory profile.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when storage is invalid, oversized, or stale.</exception>
     public Task<AdminChatMemoryProfile> UpdateAsync(int tenantId, int userId, string revision,
         Action<AdminChatMemoryProfile> update, CancellationToken cancellationToken = default) =>
         AccessAsync(tenantId, userId, revision, update, cancellationToken);
@@ -97,6 +116,13 @@ public sealed class AdminChatMemoryStore : IAdminChatMemoryStore
         return profile;
     }
 
+    /// <summary>
+    /// Acquires an exclusive lock file, retrying transient sharing failures with
+    /// bounded cancellation-aware delays.
+    /// </summary>
+    /// <param name="path">The lock-file path.</param>
+    /// <param name="cancellationToken">Token used to cancel retries.</param>
+    /// <returns>The open exclusive lock stream.</returns>
     private static async Task<FileStream> AcquireAsync(string path, CancellationToken cancellationToken)
     {
         for (var attempt = 0; ; attempt++)

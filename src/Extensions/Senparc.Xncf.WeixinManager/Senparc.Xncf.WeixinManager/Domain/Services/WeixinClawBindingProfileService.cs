@@ -39,6 +39,11 @@ public sealed class WeixinClawBindingProfileService
       IServiceBase<WeixinClawBindingProfile>,
       IWeixinClawBindingProfileResolver
 {
+    /// <summary>
+    /// Initializes the WeixinClaw binding-profile persistence service.
+    /// </summary>
+    /// <param name="repo">The binding-profile repository.</param>
+    /// <param name="serviceProvider">The dependency provider used by the base service.</param>
     public WeixinClawBindingProfileService(
         IRepositoryBase<WeixinClawBindingProfile> repo,
         IServiceProvider serviceProvider)
@@ -46,6 +51,11 @@ public sealed class WeixinClawBindingProfileService
     {
     }
 
+    /// <summary>
+    /// Loads binding-profile DTOs for one WeixinClaw account.
+    /// </summary>
+    /// <param name="accountId">The WeixinClaw account identifier.</param>
+    /// <returns>Binding profiles ordered by identifier.</returns>
     public async Task<List<WeixinClawBindingProfileDto>> GetDtosAsync(int accountId)
     {
         var list = await GetFullListAsync(
@@ -54,12 +64,23 @@ public sealed class WeixinClawBindingProfileService
         return list.Select(ToDto).ToList();
     }
 
+    /// <summary>
+    /// Loads all binding-profile DTOs ordered by identifier.
+    /// </summary>
+    /// <returns>All binding profiles.</returns>
     public async Task<List<WeixinClawBindingProfileDto>> GetAllDtosAsync()
     {
         var list = await GetFullListAsync(item => true, "Id ASC").ConfigureAwait(false);
         return list.Select(ToDto).ToList();
     }
 
+    /// <summary>
+    /// Creates or updates a binding profile after validating account, administrator, and binding-code inputs.
+    /// </summary>
+    /// <param name="dto">The binding-profile values to persist.</param>
+    /// <returns>The persisted binding-profile DTO.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="dto"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when required identifiers or a new binding code are invalid.</exception>
     public async Task<WeixinClawBindingProfileDto> SaveAsync(
         WeixinClawBindingProfileDto dto)
     {
@@ -121,6 +142,13 @@ public sealed class WeixinClawBindingProfileService
         return ToDto(profile);
     }
 
+    /// <summary>
+    /// Resolves an enabled binding profile by account and hashed binding code.
+    /// </summary>
+    /// <param name="accountId">The WeixinClaw account identifier.</param>
+    /// <param name="bindingCode">The plain binding code supplied by the user.</param>
+    /// <param name="cancellationToken">The lookup cancellation token.</param>
+    /// <returns>The resolver DTO, or <see langword="null"/> when no enabled match exists.</returns>
     public async Task<WeixinClawBindingProfileResolution> ResolveAsync(
         int accountId,
         string bindingCode,
@@ -139,6 +167,11 @@ public sealed class WeixinClawBindingProfileService
         return profile == null ? null : ToResolverDto(profile);
     }
 
+    /// <summary>
+    /// Hashes a trimmed binding code using SHA-256 for storage/comparison.
+    /// </summary>
+    /// <param name="code">The plain binding code.</param>
+    /// <returns>The hexadecimal hash, or <see langword="null"/> for blank input.</returns>
     private static string HashCode(string code)
     {
         if (string.IsNullOrWhiteSpace(code))
@@ -150,6 +183,11 @@ public sealed class WeixinClawBindingProfileService
         return Convert.ToHexString(bytes);
     }
 
+    /// <summary>
+    /// Projects a persisted binding profile into an administration DTO.
+    /// </summary>
+    /// <param name="profile">The persisted profile.</param>
+    /// <returns>The administration DTO.</returns>
     private static WeixinClawBindingProfileDto ToDto(WeixinClawBindingProfile profile)
     {
         return new WeixinClawBindingProfileDto
@@ -168,6 +206,11 @@ public sealed class WeixinClawBindingProfileService
         };
     }
 
+    /// <summary>
+    /// Projects a persisted binding profile into the runtime resolver contract.
+    /// </summary>
+    /// <param name="profile">The persisted profile.</param>
+    /// <returns>The runtime resolver DTO.</returns>
     private static WeixinClawBindingProfileResolution ToResolverDto(WeixinClawBindingProfile profile)
     {
         return new WeixinClawBindingProfileResolution

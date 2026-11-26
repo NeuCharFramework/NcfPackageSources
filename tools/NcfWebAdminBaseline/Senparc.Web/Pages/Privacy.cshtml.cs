@@ -10,6 +10,9 @@ namespace Senparc.Web.Pages
 {
     public class PrivacyModel : BasePageModel
     {
+        /// <summary>
+        /// Handles the privacy page GET request; the Razor view supplies static content.
+        /// </summary>
         public void OnGet()
         {
         }

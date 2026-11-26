@@ -58,6 +58,10 @@ namespace Senparc.IntegrationSample.Pages
             this._serviceProvider = serviceProvider;
         }
 
+        /// <summary>
+        /// Loads the registered XNCF modules and their function-render metadata
+        /// for the integration sample page.
+        /// </summary>
         public async Task OnGetAsync()
         {
             XncfRegisterList = new List<XncfRegisterItem>();

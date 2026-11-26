@@ -25,7 +25,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies the protocol used to communicate with a remote agent.
     /// </summary>
     public enum RemoteAgentProtocol
     {
@@ -33,7 +33,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies how credentials are supplied to a remote agent.
     /// </summary>
     public enum RemoteAgentAuthenticationMode
     {
@@ -43,20 +43,20 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Controls how much conversation context is shared with a group member.
     /// </summary>
     public enum ChatGroupContextSharingMode
     {
-        ///Legacy comment translated to English.
+        /// Reuses the complete prior conversation history.
         LegacyFullHistory = 0,
-        ///Legacy comment translated to English.
+        /// Shares instructions and selected key replies.
         InstructionAndKeyReplies = 1,
-        ///Legacy comment translated to English.
+        /// Shares only the configured instructions.
         InstructionOnly = 2
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Indicates the most recent health-check state of a remote agent.
     /// </summary>
     public enum RemoteAgentConnectionStatus
     {
@@ -66,7 +66,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores a persisted remote agent configuration and health status.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(RemoteAgent))]
     [Serializable]
@@ -83,18 +83,16 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         [Required]
         public RemoteAgentProtocol Protocol { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the remote Agent card URL used for discovery.</summary>
         [Required]
         public string AgentCardUrl { get; private set; }
 
         public RemoteAgentAuthenticationMode AuthenticationMode { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets the custom authentication header name.</summary>
         public string AuthHeaderName { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets the protected authentication secret.</summary>
         public string AuthSecretKey { get; private set; }
 
         public int TimeoutSeconds { get; private set; }
@@ -107,13 +105,24 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 
         public ICollection<ChatGroupRemoteMember> ChatGroupRemoteMembers { get; private set; }
 
+        /// <summary>
+        /// Reserved for EF Core materialization.
+        /// </summary>
         private RemoteAgent() { }
 
+        /// <summary>
+        /// Initializes a remote agent from a configuration DTO.
+        /// </summary>
+        /// <param name="dto">The remote-agent configuration.</param>
         public RemoteAgent(RemoteAgentDto dto)
         {
             Update(dto);
         }
 
+        /// <summary>
+        /// Updates connection settings and clamps the configured request timeout.
+        /// </summary>
+        /// <param name="dto">The replacement remote-agent configuration.</param>
         public void Update(RemoteAgentDto dto)
         {
             Name = dto.Name?.Trim();
@@ -127,6 +136,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             TimeoutSeconds = dto.TimeoutSeconds <= 0 ? 60 : Math.Min(dto.TimeoutSeconds, 600);
         }
 
+        /// <summary>
+        /// Records the latest health-check status and diagnostic message.
+        /// </summary>
+        /// <param name="status">The health-check result.</param>
+        /// <param name="message">The provider diagnostic message.</param>
         public void SetConnectionStatus(RemoteAgentConnectionStatus status, string message)
         {
             ConnectionStatus = status;
@@ -134,8 +148,10 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             LastHealthCheckMessage = message;
         }
 
+        /// Enables this remote agent for selection and invocation.
         public void EnableAgent() => Enable = true;
 
+        /// Disables this remote agent without deleting its configuration.
         public void DisableAgent() => Enable = false;
     }
 }

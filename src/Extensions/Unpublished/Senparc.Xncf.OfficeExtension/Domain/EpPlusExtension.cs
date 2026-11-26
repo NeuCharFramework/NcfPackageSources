@@ -27,16 +27,16 @@ namespace Senparc.Xncf.OfficeExtension
 {
 
     /// <summary>
-    ///
-    ///<example>https://github.com/JanKallman/EPPlus</example> 
+    /// Provides helpers for reading EPPlus workbooks and converting worksheet content to text.
     /// </summary>
     public static class EpPlusExtension
     {
         /// <summary>
-        /// 
+        /// Opens an Excel workbook and returns its first worksheet.
         /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
+        /// <param name="fileName">The path to the workbook file.</param>
+        /// <returns>The first worksheet in the workbook.</returns>
+        /// <exception cref="ArgumentException">Thrown when the file does not exist.</exception>
         public static ExcelWorksheet GetWorksheet(string fileName)
         {
             if (!File.Exists(fileName))
@@ -57,10 +57,10 @@ namespace Senparc.Xncf.OfficeExtension
         }
 
         /// <summary>
-        /// 
+        /// Reads the first worksheet from an in-memory workbook stream.
         /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
+        /// <param name="stream">The workbook stream.</param>
+        /// <returns>The first worksheet in the workbook.</returns>
         public static ExcelWorksheet GetWorksheet(MemoryStream stream)
         {
             var excelPackage = new ExcelPackage(stream);
@@ -72,10 +72,11 @@ namespace Senparc.Xncf.OfficeExtension
         }
 
         /// <summary>
-        /// 
+        /// Copies an uploaded workbook into memory and returns its first worksheet.
         /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
+        /// <param name="file">The uploaded workbook.</param>
+        /// <returns>The first worksheet in the workbook.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="file"/> is <see langword="null"/>.</exception>
         public static async Task<ExcelWorksheet> GetWorksheetAsync(IFormFile file)
         {
             var memoryStream = new MemoryStream();
@@ -83,6 +84,11 @@ namespace Senparc.Xncf.OfficeExtension
             return GetWorksheet(memoryStream);
         }
 
+        /// <summary>
+        /// Converts the populated worksheet range to tab-delimited text.
+        /// </summary>
+        /// <param name="worksheet">The worksheet to read.</param>
+        /// <returns>The worksheet content as rows separated by new lines.</returns>
         public static string ReadToString(ExcelWorksheet worksheet)
         {
             var rowCount = worksheet.Dimension?.Rows;

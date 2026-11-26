@@ -50,11 +50,11 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
         {
             return await this.GetResponseAsync<Color_GetOrInitColorResponse>(async (response, logger) =>
             {
-                var dt1 = SystemTime.Now;//Legacy comment translated to English.
+                var dt1 = SystemTime.Now;
 
-                var colorDto = await _colorService.GetOrInitColor();//getorinitializecolorparameters
+                var colorDto = await _colorService.GetOrInitColor();
 
-                var costMs = SystemTime.DiffTotalMS(dt1);//Legacy comment translated to English.
+                var costMs = SystemTime.DiffTotalMS(dt1);
 
                 Color_GetOrInitColorResponse result = new(colorDto.Red, colorDto.Green, colorDto.Blue, costMs);
 

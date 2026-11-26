@@ -26,26 +26,22 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
 {
+    /// <summary>
+    /// Exposes small diagnostic KnowledgeBase endpoints through the local API binding.
+    /// </summary>
     public class ApiAppService : AppServiceBase
     {
         public ApiAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        /*
-
-         * Legacy comment translated to English.
-
-         * Legacy comment translated to English.
-
-         * Legacy comment translated to English.
-
-         */
-
         /// <summary>
-        /// expose AppService as a Web API
+        /// Executes the basic diagnostic endpoint and returns a successful integer payload.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// A response envelope containing the fixed diagnostic value
+        /// <c>200</c>, unless the response pipeline itself fails.
+        /// </returns>
         [ApiBind]
         public async Task<AppResponseBase<int>> MyApi()
         {
@@ -57,9 +53,18 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// custom Post types and complex parameters while testing exception throwing and custom status codes
+        /// Exercises POST binding with a complex request and demonstrates custom
+        /// exception handling and response status assignment.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="request">The request containing the values included in the diagnostic exception message.</param>
+        /// <returns>
+        /// A string response envelope whose error state is adjusted by the configured
+        /// exception and finalization callbacks.
+        /// </returns>
+        /// <remarks>
+        /// This endpoint intentionally raises an <see cref="NcfExceptionBase"/> to
+        /// demonstrate the standard application-service error path.
+        /// </remarks>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> MyCustomApi(Api_MyCustomApiRequest request)
         {

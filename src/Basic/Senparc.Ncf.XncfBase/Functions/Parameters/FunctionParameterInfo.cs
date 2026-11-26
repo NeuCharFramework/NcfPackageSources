@@ -32,8 +32,7 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// parameterstype
-    ///Legacy comment translated to English.
+    /// Identifies the UI control used to collect a Function parameter value.
     /// </summary>
     public enum ParameterType
     {
@@ -41,22 +40,16 @@ namespace Senparc.Ncf.XncfBase
         DropDownList = 1,
         CheckBoxList = 2,
         Password = 3,
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Renders a boolean checkbox.</summary>
         CheckBox = 4,
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Renders a multi-line text editor.</summary>
         TextArea = 5,
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Renders a file-upload control.</summary>
         File = 6,
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Describes one reflected function parameter for UI rendering and request binding.
     /// </summary>
     public class FunctionParameterInfo
     {
@@ -64,24 +57,18 @@ namespace Senparc.Ncf.XncfBase
         /// parametersname
         /// </summary>
         public string Name { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the localized display title.</summary>
         public string Title { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the localized helper description.</summary>
         public string Description { get; set; }
         /// <summary>
         /// whethermust
         /// </summary>
         public bool IsRequired { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the CLR type name used by binding.</summary>
         public string SystemType { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets the maximum accepted text length.
+        /// </summary>
         public int MaxLength { get; set; }
 
         /// <summary>
@@ -89,45 +76,46 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         public ParameterType ParameterType { get; set; } = ParameterType.Text;
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the default or current value.</summary>
         public object Value { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the available values for selection controls.</summary>
         public SelectionList SelectionList { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether selection values may be filtered.</summary>
         public bool Filterable { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether a new selection value may be created.</summary>
         public bool AllowCreate { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether multiple values may be selected.</summary>
         public bool AllowMultiple { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the maximum number of uploaded files.</summary>
         public int MaxFiles { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the accepted file extension or MIME filter.</summary>
         public string Accept { get; set; }
 
+        /// <summary>Initializes an empty parameter metadata object.</summary>
         public FunctionParameterInfo()
         {
         }
 
+        /// <summary>
+        /// Initializes parameter metadata used by function renderers and callers.
+        /// </summary>
+        /// <param name="name">The property/parameter name.</param>
+        /// <param name="title">The localized display title.</param>
+        /// <param name="description">The localized helper description.</param>
+        /// <param name="isRequired">Whether a value is required.</param>
+        /// <param name="systemType">The CLR type name.</param>
+        /// <param name="parameterType">The rendered control type.</param>
+        /// <param name="selectionList">Optional selection values.</param>
+        /// <param name="value">The default/current value.</param>
+        /// <param name="maxLength">The maximum text length.</param>
+        /// <param name="filterable">Whether selection filtering is allowed.</param>
+        /// <param name="allowCreate">Whether a new selection value may be created.</param>
         public FunctionParameterInfo(string name, string title, string description,
             bool isRequired, string systemType, ParameterType parameterType, SelectionList selectionList, object value, int maxLength,
             bool filterable = false, bool allowCreate = false)

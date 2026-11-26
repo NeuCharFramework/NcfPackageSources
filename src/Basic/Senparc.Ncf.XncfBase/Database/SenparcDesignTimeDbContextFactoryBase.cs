@@ -82,6 +82,13 @@ namespace Senparc.Ncf.XncfBase.Database
         private readonly TXncfDatabaseRegister _register;
 
 
+        /// <summary>
+        /// Initializes design-time database metadata for the target XNCF registration.
+        /// </summary>
+        /// <param name="rootDirectoryPath">The project root used to resolve configuration files.</param>
+        /// <param name="databaseName">The logical database name used by the design-time factory.</param>
+        /// <param name="note">Optional descriptive note stored with database metadata.</param>
+        /// <param name="dbMigrationAssemblyName">Optional assembly containing migrations.</param>
         protected SenparcDesignTimeDbContextFactoryBase(string rootDirectoryPath, string databaseName = "Local", string note = null, string dbMigrationAssemblyName = null)
             : base(StartupHelper.GetXncfVersion<TXncfDatabaseRegister>(), rootDirectoryPath, databaseName, note)
         {
@@ -90,6 +97,7 @@ namespace Senparc.Ncf.XncfBase.Database
             base.XncfDatabaseData = new XncfDatabaseData(_register, dbMigrationAssemblyName);
         }
 
+        /// <inheritdoc />
         public override void CreateDbContextAction()
         {
             var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
@@ -151,15 +159,9 @@ namespace Senparc.Ncf.XncfBase.Database
         private readonly string _note;
 
         /// <summary>
-        /// XncfDatabaseData
+        /// Gets or sets the module database metadata passed to provider option callbacks.
         /// </summary>
         protected XncfDatabaseData XncfDatabaseData { get; set; }
-
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        //protected Type SpecificSenparcEntites { get; } = null;
-
 
         /// <summary>
         /// Initializes design-time NCF settings, root paths, and the minimal NCF service registration.
@@ -171,7 +173,6 @@ namespace Senparc.Ncf.XncfBase.Database
         public SenparcDesignTimeDbContextFactoryBase(string ncfVersion, string rootDirectoryPath, /*XncfDatabaseData xncfDatabaseData = null,*/
             string databaseName = "Local", string note = null)
         {
-            //Legacy comment translated to English.
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Console.InputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.UTF8;

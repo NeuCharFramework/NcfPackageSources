@@ -21,16 +21,22 @@ using Senparc.Ncf.Shared.Abstractions.Events;
 namespace Senparc.Xncf.PromptRange.Abstractions.Events
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Requests initialization of the default PromptCatalyzer PromptRange data.
     /// </summary>
+    /// <param name="RequestId">The EventBus correlation identifier.</param>
+    /// <param name="ModelId">Optional AI model identifier to use for the initial prompt.</param>
     public record PromptInitRequestEvent(
         string RequestId,
-        int? ModelId = null  //Legacy comment translated to English.
+        int? ModelId = null
     ) : IntegrationEvent;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Reports the result of PromptRange initialization.
     /// </summary>
+    /// <param name="RequestId">The correlation identifier from the request.</param>
+    /// <param name="PromptCode">The initialized PromptCode, when successful.</param>
+    /// <param name="Success">Whether initialization completed successfully.</param>
+    /// <param name="ErrorMessage">The failure message when initialization fails.</param>
     public record PromptInitResponseEvent(
         string RequestId,
         string PromptCode,

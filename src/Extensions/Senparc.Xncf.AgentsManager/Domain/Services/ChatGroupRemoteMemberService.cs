@@ -24,6 +24,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     public class ChatGroupRemoteMemberService : ServiceBase<ChatGroupRemoteMember>
     {
+        /// <summary>
+        /// Initializes the remote ChatGroup member persistence service.
+        /// </summary>
+        /// <param name="repo">The repository for remote-member entities.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public ChatGroupRemoteMemberService(IRepositoryBase<ChatGroupRemoteMember> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {

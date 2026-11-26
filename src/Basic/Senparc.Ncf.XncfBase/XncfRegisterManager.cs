@@ -28,36 +28,39 @@ using Senparc.Ncf.XncfBase.MCP;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Maintains discovered XNCF registrations and checks whether modules are installed and open.
     /// </summary>
     public class XncfRegisterManager
     {
         #region Legacy section
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the discovered XNCF module registrations.
         /// </summary>
         public static List<IXncfRegister> RegisterList { get; set; } = new List<IXncfRegister>();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the registered database-capable XNCF modules.
         /// </summary>
         public static List<IXncfDatabase> XncfDatabaseList => RegisterList.Where(z => z is IXncfDatabase).Select(z => z as IXncfDatabase).ToList();
 
+        /// <summary>
+        /// Gets the MCP server metadata indexed by server name.
+        /// </summary>
         public static McpServerInfoCollection McpServerInfoCollection =new McpServerInfoCollection();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a registration with the supplied name is present.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The registration name.</param>
+        /// <returns><see langword="true"/> when a matching registration exists.</returns>
         public static bool IsRegistered(string name) => RegisterList.Exists(z => z.Name == name);
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a registration with the same UID is present.
         /// </summary>
-        /// <param name="xncfRegister">XncfRegister</param>
-        /// <returns></returns>
+        /// <param name="xncfRegister">The registration to compare.</param>
+        /// <returns><see langword="true"/> when a registration with the same UID exists.</returns>
         public static bool IsRegistered(IXncfRegister xncfRegister) => RegisterList.Exists(z => z.Uid == xncfRegister.Uid);
 
 
@@ -65,45 +68,46 @@ namespace Senparc.Ncf.XncfBase
 
         private readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// Initializes the manager with the provider used to resolve module-state caches.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider.</param>
         public XncfRegisterManager(IServiceProvider serviceProvider)
         {
             this._serviceProvider = serviceProvider; 
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Checks whether the persisted module record with the supplied name is open.
         /// </summary>
-        /// <param name="xncfName"></param>
-        /// <returns></returns>
+        /// <param name="xncfName">The registered module name.</param>
+        /// <returns><see langword="true"/> when the persisted module exists and is open.</returns>
         private async Task<bool> CheckOpenStateAsync(string xncfName)
         {
-            //Legacy comment translated to English.
             var fullXncfModuleCache = this._serviceProvider.GetService<FullXncfModuleCache>();
             var fullXncfModule = await fullXncfModuleCache.GetObjectAsync(xncfName);
             return fullXncfModule != null && fullXncfModule.State == Core.Enums.XncfModules_State.开放;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a registered module is installed and currently open.
         /// </summary>
-        /// <param name="xncfRegister"></param>
-        /// <returns></returns>
+        /// <param name="xncfRegister">The module registration to inspect.</param>
+        /// <returns><see langword="true"/> when the registration exists and its persisted state is open.</returns>
         public async Task<bool> CheckXncfAvailable(IXncfRegister xncfRegister)
         {
-            //Legacy comment translated to English.
             return xncfRegister!=null && IsRegistered(xncfRegister)
                 ? await CheckOpenStateAsync(xncfRegister.Name).ConfigureAwait(false)
                 : false;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a registered module name is installed and currently open.
         /// </summary>
-        /// <param name="xncfName"></param>
-        /// <returns></returns>
+        /// <param name="xncfName">The module registration name.</param>
+        /// <returns><see langword="true"/> when the name is registered and open.</returns>
         public async Task<bool> CheckXncfAvailable(string xncfName)
         {
-            //Legacy comment translated to English.
             return IsRegistered(xncfName)
                 ? await CheckOpenStateAsync(xncfName).ConfigureAwait(false)
                 : false;

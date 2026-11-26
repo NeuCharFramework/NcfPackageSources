@@ -30,11 +30,22 @@ namespace Senparc.Web.DatabasePlant.Pages
             _logger = logger;
         }
 
+        /// <summary>
+        /// Handles the database-plant page GET request.
+        /// </summary>
         public void OnGet()
         {
 
         }
 
+        /// <summary>
+        /// Generates Entity Framework migration commands for selected projects and
+        /// exposes the resulting command text to the page.
+        /// </summary>
+        /// <param name="srcRootDir">The repository source-root directory.</param>
+        /// <param name="projects">Newline-separated project paths.</param>
+        /// <param name="note">The migration name passed to the EF CLI.</param>
+        /// <param name="databaseName">The database provider suffix used for the context and output path.</param>
         public void OnPostGenerateCode(string srcRootDir, string projects, string note, string databaseName)
         {
             StringBuilder sb = new StringBuilder();

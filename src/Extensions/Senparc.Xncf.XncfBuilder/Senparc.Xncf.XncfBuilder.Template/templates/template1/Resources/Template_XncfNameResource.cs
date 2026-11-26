@@ -31,11 +31,24 @@ namespace Template_OrgName.Xncf.Template_XncfName
     /// </summary>
     public sealed class Template_XncfNameResource
     {
+        /// <summary>
+        /// Resolves a localized string for the template resource catalog.
+        /// </summary>
+        /// <param name="key">The resource key.</param>
+        /// <param name="fallback">The value returned when the key is unavailable.</param>
+        /// <returns>The localized value or the fallback value.</returns>
         public static string Get(string key, string? fallback = null)
         {
             return ResourceStringLocalizer.Get(typeof(Template_XncfNameResource), key, fallback);
         }
 
+        /// <summary>
+        /// Resolves and formats a localized template string with the supplied arguments.
+        /// </summary>
+        /// <param name="key">The resource key.</param>
+        /// <param name="fallback">The format string used when the key is unavailable.</param>
+        /// <param name="arguments">Values substituted into the resolved format string.</param>
+        /// <returns>The formatted localized string.</returns>
         public static string Format(string key, string fallback, params object[] arguments)
         {
             return ResourceStringLocalizer.Format(typeof(Template_XncfNameResource), key, fallback, arguments);

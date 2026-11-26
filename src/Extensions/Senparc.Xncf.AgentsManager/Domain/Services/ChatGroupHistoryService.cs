@@ -34,11 +34,22 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     public class ChatGroupHistoryService : ServiceBase<ChatGroupHistory>
     {
+        /// <summary>
+        /// Initializes the ChatGroup history persistence service.
+        /// </summary>
+        /// <param name="repo">The repository for history entities.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public ChatGroupHistoryService(IRepositoryBase<ChatGroupHistory> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
         }
 
         //[ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
+        /// <summary>
+        /// Creates and persists one chat-history record from a DTO.
+        /// </summary>
+        /// <param name="chatGroupHistoryDto">The history values to persist.</param>
+        /// <returns>The persisted history entity.</returns>
+        /// <exception cref="AgentsManagerException">Thrown when persistence fails after diagnostics are recorded.</exception>
         public async Task<ChatGroupHistory> CreateHistory(ChatGroupHistoryDto chatGroupHistoryDto)
         {
             try
@@ -55,10 +66,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Extracts the raw message from a stored history payload by removing the
+        /// diagnostic prefix used by the chat pipeline.
         /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
+        /// <param name="message">The stored message text.</param>
+        /// <returns>The extracted message, or the original text when no separator exists.</returns>
         public string GetRawMessage(string message)
         {
             var arr = message.Split(new[] { $"{Environment.NewLine}--------------------{Environment.NewLine}" }, StringSplitOptions.RemoveEmptyEntries);

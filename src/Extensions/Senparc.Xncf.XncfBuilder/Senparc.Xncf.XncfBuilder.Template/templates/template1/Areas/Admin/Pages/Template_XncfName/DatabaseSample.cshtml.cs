@@ -17,6 +17,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
 
         private readonly ColorService _colorService;
         private readonly IServiceProvider _serviceProvider;
+        /// <summary>Initializes the sample database page.</summary>
+        /// <param name="serviceProvider">The request service provider.</param>
+        /// <param name="colorService">The color service.</param>
+        /// <param name="xncfModuleService">The lazy XNCF module service.</param>
         public DatabaseSample(IServiceProvider serviceProvider, ColorService colorService, Lazy<XncfModuleService> xncfModuleService)
             : base(xncfModuleService)
         {
@@ -28,6 +32,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             MultipleDatabaseType = currentDatabaseConfiguration.MultipleDatabaseType;
         }
 
+        /// <summary>Loads the newest color, creating one when absent.</summary>
+        /// <returns>A task that completes after page state is loaded.</returns>
         public async Task OnGetAsync()
         {
             var color = _colorService.GetObject(z => true, z => z.Id, OrderingType.Descending);
@@ -36,6 +42,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                         : _colorService.Mapper.Map<ColorDto>(color);
         }
 
+        /// <summary>Returns current color and module metadata as JSON.</summary>
+        /// <returns>An HTTP 200 JSON result.</returns>
         public IActionResult OnGetDetail()
         {
             var color = _colorService.GetObject(z => true, z => z.Id, OrderingType.Descending);
@@ -43,17 +51,23 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             return Ok(new { colorDto, XncfModuleDto });
         }
 
+        /// <summary>Brightens the stored color.</summary>
+        /// <returns>An HTTP 200 result with the updated color.</returns>
         public async Task<IActionResult> OnGetBrightenAsync()
         {
             var colorDto = await _colorService.Brighten().ConfigureAwait(false);
             return Ok(colorDto);
         }
 
+        /// <summary>Darkens the stored color.</summary>
+        /// <returns>An HTTP 200 result with the updated color.</returns>
         public async Task<IActionResult> OnGetDarkenAsync()
         {
             var colorDto = await _colorService.Darken().ConfigureAwait(false);
             return Ok(colorDto);
         }
+        /// <summary>Generates and persists a random color.</summary>
+        /// <returns>An HTTP 200 result with the updated color.</returns>
         public async Task<IActionResult> OnGetRandomAsync()
         {
             var colorDto = await _colorService.Random().ConfigureAwait(false);

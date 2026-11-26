@@ -22,12 +22,12 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the optional source-path contract used by Razor runtime compilation.
     /// </summary>
     public interface IXncfRazorRuntimeCompilation
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the physical library path whose Razor views should be available for runtime compilation.
         /// </summary>
         string LibraryPath { get; }
     }

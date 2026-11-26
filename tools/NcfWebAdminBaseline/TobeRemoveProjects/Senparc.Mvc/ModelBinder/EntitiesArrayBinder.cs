@@ -22,11 +22,23 @@ namespace Senparc.Mvc
     public class EntitiesArrayBinder : IModelBinder
     {
         public string Profix { get; set; }
+        /// <summary>
+        /// Initializes the legacy form-array model binder.
+        /// </summary>
         public EntitiesArrayBinder()
         {
         }
 
         //public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+        /// <summary>
+        /// Binds repeated prefixed form fields into a strongly typed
+        /// <see cref="List{T}"/> instance.
+        /// </summary>
+        /// <param name="bindingContext">The MVC model-binding context.</param>
+        /// <returns>A task that completes with the constructed model.</returns>
+        /// <exception cref="Exception">
+        /// Thrown when the target type is not generic or property value counts differ.
+        /// </exception>
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             return Task.Factory.StartNew(() => { 

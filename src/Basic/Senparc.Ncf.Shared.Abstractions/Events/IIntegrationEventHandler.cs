@@ -21,12 +21,17 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Shared.Abstractions.Events
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Handles one integration-event type.
     /// </summary>
-    ///Legacy comment translated to English.
+    /// <typeparam name="TIntegrationEvent">The event type accepted by the handler.</typeparam>
     public interface IIntegrationEventHandler<in TIntegrationEvent>
         where TIntegrationEvent : IIntegrationEvent
     {
+        /// <summary>
+        /// Processes an event and returns when handling has completed.
+        /// </summary>
+        /// <param name="event">The event to handle.</param>
+        /// <param name="cancellationToken">Token used to cancel handling.</param>
         Task Handle(TIntegrationEvent @event, CancellationToken cancellationToken);
     }
 }

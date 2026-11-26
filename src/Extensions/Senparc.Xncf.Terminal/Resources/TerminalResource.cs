@@ -25,11 +25,24 @@ namespace Senparc.Xncf.Terminal
     /// </summary>
     public sealed class TerminalResource
     {
+        /// <summary>
+        /// Resolves a Terminal localization key and returns the fallback when the key is unavailable.
+        /// </summary>
+        /// <param name="key">The resource key to resolve.</param>
+        /// <param name="fallback">The text returned when the key has no localized value.</param>
+        /// <returns>The localized text or the fallback text.</returns>
         public static string Get(string key, string? fallback = null)
         {
             return ResourceStringLocalizer.Get(typeof(TerminalResource), key, fallback);
         }
 
+        /// <summary>
+        /// Resolves a Terminal localization key and formats the localized or fallback template.
+        /// </summary>
+        /// <param name="key">The resource key to resolve.</param>
+        /// <param name="fallback">The fallback composite format string.</param>
+        /// <param name="arguments">The values supplied to the format template.</param>
+        /// <returns>The localized formatted text.</returns>
         public static string Format(string key, string fallback, params object[] arguments)
         {
             return ResourceStringLocalizer.Format(typeof(TerminalResource), key, fallback, arguments);

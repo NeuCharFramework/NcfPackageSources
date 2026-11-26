@@ -18,7 +18,7 @@
 namespace Senparc.Ncf.Core.Enums
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies the message severity rendered by NCF UI responses.
     /// </summary>
     public enum MessageType
     {
@@ -30,7 +30,7 @@ namespace Senparc.Ncf.Core.Enums
 
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies the configured SMTP account used for email delivery.
     /// </summary>
     public enum EmailAccountType
     {
@@ -40,7 +40,7 @@ namespace Senparc.Ncf.Core.Enums
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Specifies the direction used by ordering helpers.
     /// </summary>
     public enum OrderingType
     {
@@ -49,7 +49,7 @@ namespace Senparc.Ncf.Core.Enums
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies whether a module lifecycle operation installs or updates a module.
     /// </summary>
     public enum InstallOrUpdate
     {

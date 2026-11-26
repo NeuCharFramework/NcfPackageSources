@@ -19,87 +19,93 @@ using StructureMap;
 
 namespace Senparc.Service
 {
+    /// <summary>
+    /// Defines project-demand lifecycle, payment, bidding, and completion operations.
+    /// </summary>
     public interface IProjectDemandService : IBaseClientService<ProjectDemand>
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Assigns a winning developer and marks the demand in progress.
         /// </summary>
-        /// <param name="developerId"></param>
-        /// <param name="projectDemand"></param>
+        /// <param name="developerId">The winning developer identifier.</param>
+        /// <param name="projectDemand">The demand being assigned.</param>
         void Choose(int developerId, ProjectDemand projectDemand);
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Increments the account's published-demand count.
         /// </summary>
-        /// <param name="accountId"></param>
+        /// <param name="accountId">The account identifier.</param>
         void AddDemandCount(int accountId);
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Decrements the account's published-demand count.
         /// </summary>
-        /// <param name="accountId"></param>
+        /// <param name="accountId">The account identifier.</param>
         void ReduceDemandCount(int accountId);
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Increments the account's successful-demand count.
         /// </summary>
-        /// <param name="accountId"></param>
+        /// <param name="accountId">The account identifier.</param>
         void AddSuccessDemandCount(int accountId);
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Revokes a demand and its associated bids.
         /// </summary>
-        /// <param name="projectDemand"></param>
+        /// <param name="projectDemand">The demand to revoke.</param>
         void Revoke(ProjectDemand projectDemand);
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Advances a demand when its current step matches the requested step.
         /// </summary>
-        /// <param name="projectDemand"></param>
-        ///Legacy comment translated to English.
+        /// <param name="projectDemand">The demand being advanced.</param>
+        /// <param name="step">The expected current step.</param>
         void Step(ProjectDemand projectDemand, int step);
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Marks expired demands as revoked.
         /// </summary>
-        /// <param name="id">AccountId</param>
+        /// <param name="id">Optional account identifier used to limit the scan.</param>
         void Expired(int? id = null);
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Records a successful Alipay trade for a demand.
         /// </summary>
-        /// <param name="projectPayLog"></param>
-        /// <param name="tradeNo"></param>
-        /// <returns>ProjectDemand</returns>
+        /// <param name="projectPayLog">The payment log associated with the demand.</param>
+        /// <param name="tradeNo">The provider trade number.</param>
+        /// <returns>The associated project demand.</returns>
         ProjectDemand RecordAlipayTrade(ProjectPayLog projectPayLog, string tradeNo);
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the demand mortgage to its account.
         /// </summary>
-        /// <param name="projectDemand"></param>
+        /// <param name="projectDemand">The demand whose mortgage is returned.</param>
         void BackMortgage(ProjectDemand projectDemand);
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Transfers the demand payment to the winning developer.
         /// </summary>
-        /// <param name="projectDemand"></param>
+        /// <param name="projectDemand">The paid demand.</param>
         void AgreePay(ProjectDemand projectDemand);
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Completes a demand and updates account/developer success counters.
         /// </summary>
-        /// <param name="projectDemand"></param>
-        /// <param name="account"></param>
+        /// <param name="projectDemand">The demand being completed.</param>
+        /// <param name="account">The account receiving completion credit.</param>
         void SuccessDemand(ProjectDemand projectDemand, Account account);
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Records the commitment timestamp for a demand.
         /// </summary>
-        /// <param name="projectDemandId"></param>
+        /// <param name="projectDemandId">The demand identifier.</param>
         void CommintTime(int projectDemandId);
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deducts the demand mortgage and moves it into bidding.
         /// </summary>
-        /// <param name="projectDemand"></param>
-        /// <param name="account"></param>
+        /// <param name="projectDemand">The demand being funded.</param>
+        /// <param name="account">The account paying the mortgage.</param>
         void DeductPoints(ProjectDemand projectDemand, Account account);
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the hottest demands ordered by bidding activity.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The top matching demand page.</returns>
         List<ProjectDemand> GetHotProjectDemandList();
 
     }
 
+    /// <summary>
+    /// Implements the project-demand bidding, payment, completion, and credit workflow.
+    /// </summary>
     public class ProjectDemandService : BaseClientService<ProjectDemand>, IProjectDemandService
     {
         private IProjectBiddingService _projectBiddingService;
@@ -108,6 +114,7 @@ namespace Senparc.Service
         private IPointsLogService _pointsLogService;
         private IDeveloperPointsLogService _developerPointsLogService;
         private IMessageBoxService _messageBoxService;
+        /// <summary>Initializes the project-demand workflow service.</summary>
         public ProjectDemandService(IProjectDemandRepository projectDemandRepo, IMessageBoxService messageBoxService, IDeveloperPointsLogService developerPointsLogService, IPointsLogService pointsLogService, IProjectBiddingService projectBiddingService, AccountService accountService, IProjectPayLogService projectPayLogService)
             : base(projectDemandRepo)
         {
@@ -119,11 +126,12 @@ namespace Senparc.Service
             this._messageBoxService = messageBoxService;
         }
 
+        /// <inheritdoc />
         public void Choose(int developerId, ProjectDemand projectDemand)
         {
             BiddingStateChange(projectDemand, (int)ProjectBidding_State.未中标);
 
-            var projectBidding = _projectBiddingService.GetObject(z => z.ProjectDemandId == projectDemand.Id && z.DeveloperId == developerId);//Legacy comment translated to English.
+            var projectBidding = _projectBiddingService.GetObject(z => z.ProjectDemandId == projectDemand.Id && z.DeveloperId == developerId);
             projectBidding.State = (int)ProjectBidding_State.已中标;
             _projectBiddingService.SaveObject(projectBidding);
 
@@ -133,6 +141,7 @@ namespace Senparc.Service
             SaveObject(projectDemand);
         }
 
+        /// <inheritdoc />
         public void AddDemandCount(int accountId)
         {
             var account = _accountService.GetObject(accountId);
@@ -140,6 +149,7 @@ namespace Senparc.Service
             _accountService.SaveObject(account);
         }
 
+        /// <inheritdoc />
         public void ReduceDemandCount(int accountId)
         {
             var account = _accountService.GetObject(accountId);
@@ -147,6 +157,7 @@ namespace Senparc.Service
             _accountService.SaveObject(account);
         }
 
+        /// <inheritdoc />
         public void AddSuccessDemandCount(int accountId)
         {
             var account = _accountService.GetObject(accountId);
@@ -154,11 +165,9 @@ namespace Senparc.Service
             _accountService.SaveObject(account);
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="projectDemand">task</param>
-        ///Legacy comment translated to English.
+        /// <summary>Updates every bid for a demand to the supplied state.</summary>
+        /// <param name="projectDemand">The demand whose bids are updated.</param>
+        /// <param name="projectBiddingState">The target bidding state.</param>
         protected void BiddingStateChange(ProjectDemand projectDemand, int projectBiddingState)
         {
             var projectBiddingList = _projectBiddingService.GetFullList(z => z.ProjectDemandId == projectDemand.Id, z => z.Id,
@@ -170,6 +179,7 @@ namespace Senparc.Service
             }
         }
 
+        /// <inheritdoc />
         public void Revoke(ProjectDemand projectDemand)
         {
             BiddingStateChange(projectDemand, (int) ProjectBidding_State.竞标撤销);
@@ -177,6 +187,7 @@ namespace Senparc.Service
             SaveObject(projectDemand);
         }
 
+        /// <inheritdoc />
         public void BackMortgage(ProjectDemand projectDemand)
         {
             projectDemand.FinishTime = DateTime.Now;
@@ -188,7 +199,6 @@ namespace Senparc.Service
             if (projectPayLog != null)
             {
                 _pointsLogService.ChangePoint(account, projectPayLog.PayMoney, "{0}任务押金返还".With(projectDemand.Title));
-                //Legacy comment translated to English.
                 projectPayLog.Type = (int) ProjectPay_Type.已退还;
                 projectPayLog.CompleteTime = DateTime.Now;
                 _projectPayLogService.SaveObject(projectPayLog);
@@ -199,15 +209,17 @@ namespace Senparc.Service
             }
         }
 
+        /// <inheritdoc />
         public void Step(ProjectDemand projectDemand, int step)
         {
-            if (projectDemand.Step == step)//Legacy comment translated to English.
+            if (projectDemand.Step == step)
             {
                 projectDemand.Step++;
                 SaveObject(projectDemand);
             }
         }
 
+        /// <inheritdoc />
         public void Expired(int? id = null)
         {
             List<ProjectDemand> projectDemandList = null;
@@ -220,7 +232,7 @@ namespace Senparc.Service
             {
                 projectDemandList = GetFullList(z => true, z => z.Id, OrderingType.Descending);
             }
-            for (int i = 0; i < projectDemandList.Count; i++)//Legacy comment translated to English.
+            for (int i = 0; i < projectDemandList.Count; i++)
             {
                 if (projectDemandList[i].EndTime < DateTime.Now)
                 {
@@ -230,6 +242,7 @@ namespace Senparc.Service
             }
         }
 
+        /// <inheritdoc />
         public ProjectDemand RecordAlipayTrade(ProjectPayLog projectPayLog, string tradeNo)
         {
             var projectPayLogService = ObjectFactory.GetInstance<IProjectPayLogService>();
@@ -241,29 +254,18 @@ namespace Senparc.Service
             projectPayLog.Status = (int)ProjectPay_Status.已支付;
             projectPayLogService.SaveObject(projectPayLog);
             JudgePay(projectDemand);
-            ////sendEmail
-            //if (account.EmailChecked)
-            //{
-            //    SendEmail sendEmail = new SendEmail(SendEmailType.OrderPaySuccess);
-            //    var sendEmailPara = new SendEmailParameter_OrderPaySuccess(account.Email, account.UserName,
-            //        projectPayLog.OrderNumber,
-            //        projectPayLog.PayMoney,
-            //        projectPayLog.Description);
-            //    sendEmail.Send(sendEmailPara, true);
-
-            //Legacy comment translated to English.
-            //    _messageBoxService.SendMessage(sendEmail.SentSubject, sendEmail.SentBody, account.Id);
-            //}
             return projectDemand;
         }
 
-        private void JudgePay(ProjectDemand projectDemand)//Legacy comment translated to English.
+        /// <summary>Marks the demand as mortgaged and ready for bidding.</summary>
+        private void JudgePay(ProjectDemand projectDemand)
         {
             projectDemand.Mortgaged = true;
             projectDemand.State = (int)ProjectDemand_State.竞标中;
             SaveObject(projectDemand);
         }
 
+        /// <inheritdoc />
         public void AgreePay(ProjectDemand projectDemand)
         {
             var projectBidding = projectDemand.ProjectBidding;
@@ -273,7 +275,7 @@ namespace Senparc.Service
 
             if (!projectDemand.HasPaid)
             {
-                if (projectDemand.Price > 0)//Legacy comment translated to English.
+                if (projectDemand.Price > 0)
                 {
                     _developerPointsLogService.AddPoint(developer, projectDemand.Price, "{0}任务支付".With(projectDemand.Title));
                     Haspaid(projectDemand);
@@ -281,14 +283,14 @@ namespace Senparc.Service
                 }
                 else
                 {
-                    if (projectBidding.Price < SiteConfig.PROJECTDMANDDEPOSIT)//Legacy comment translated to English.
+                    if (projectBidding.Price < SiteConfig.PROJECTDMANDDEPOSIT)
                     {
                         _pointsLogService.ChangePoint(account, SiteConfig.PROJECTDMANDDEPOSIT - projectBidding.Price, "{0}任务多余押金返还".With(projectDemand.Title));
                         _developerPointsLogService.AddPoint(developer, projectBidding.Price, "{0}任务支付".With(projectDemand.Title));
 
                         Haspaid(projectDemand);
                     }
-                    else//Legacy comment translated to English.
+                    else
                     {
                         if (projectBidding.Price - SiteConfig.PROJECTDMANDDEPOSIT < account.Points)
                         {
@@ -318,36 +320,37 @@ namespace Senparc.Service
                 _projectPayLogService.SaveObject(projectPayLog);
             }
             SuccessDemand(projectDemand, account);
-            //Legacy comment translated to English.
             SendEmail sendEmail = new SendEmail(SendEmailType.ProjectDemandAgreePay);
             var sendEmailPara = new SendEmailParameter_ProjectDemandAgreePay(developer.Account.Email, developer.Account.UserName,
                 payMoney,
                 projectDemand.Title);
             sendEmail.Send(sendEmailPara, true);
 
-            //Legacy comment translated to English.
             _messageBoxService.SendMessage(sendEmail.SentSubject, sendEmail.SentBody, developer.Id);
         }
 
-        private void Haspaid(ProjectDemand projectDemand)//Legacy comment translated to English.
+        /// <summary>Marks the demand as paid and persists the change.</summary>
+        private void Haspaid(ProjectDemand projectDemand)
         {
             projectDemand.HasPaid = true;
             SaveObject(projectDemand);
         }
 
+        /// <inheritdoc />
         public void SuccessDemand(ProjectDemand projectDemand, Account account)
         {
             AddSuccessDemandCount(projectDemand.AccountId);
             projectDemand.State = (int)ProjectDemand_State.已完成;
             projectDemand.FinishTime = DateTime.Now;
             SaveObject(projectDemand);
-            CreditRating(account);//Legacy comment translated to English.
+            CreditRating(account);
 
             var projectBidding = _projectBiddingService.GetObject(z => z.Id == projectDemand.WinBiddingId, new string[] { "Developer" });
             var developer = projectBidding.Developer;
             _projectBiddingService.AddSuccessBiddingCount(developer, developer.Account.UserName);
         }
 
+        /// <inheritdoc />
         public void CommintTime(int projectDemandId)
         {
             var projectDemand = GetObject(projectDemandId);
@@ -356,10 +359,7 @@ namespace Senparc.Service
             SaveObject(projectDemand);
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        ///Legacy comment translated to English.
+        /// <summary>Raises the account credit rating when its success threshold is met.</summary>
         protected void CreditRating(Account account)
         {
             var count = account.SuccessProjectDemandCount;
@@ -377,6 +377,7 @@ namespace Senparc.Service
             }
         }
 
+        /// <inheritdoc />
         public void DeductPoints(ProjectDemand projectDemand, Account account)
         {
             var price = projectDemand.Price == 0 ? SiteConfig.PROJECTDMANDDEPOSIT : projectDemand.Price;
@@ -389,6 +390,7 @@ namespace Senparc.Service
 
       
 
+        /// <inheritdoc />
         public override void SaveObject(ProjectDemand obj)
         {
             var isInsert = base.IsInsert(obj);
@@ -396,12 +398,14 @@ namespace Senparc.Service
             LogUtility.WebLogger.InfoFormat("ProjectDemand{2}：{0}（ID：{1}）", obj.AccountId, obj.Id, isInsert ? "新增" : "编辑");
         }
 
+        /// <inheritdoc />
         public override void DeleteObject(ProjectDemand obj)
         {
             LogUtility.WebLogger.InfoFormat("ProjectDemand被删除：{0}（ID：{1}）", obj.AccountId, obj.Id);
             base.DeleteObject(obj);
         }
 
+        /// <inheritdoc />
         public List<ProjectDemand> GetHotProjectDemandList()
         {
             return this.GetObjectList(1, 6, z => z.ProjectBidding == null, z => z.ProjectBiddings.Count, OrderingType.Descending, new string[] { "ProjectBiddings" });

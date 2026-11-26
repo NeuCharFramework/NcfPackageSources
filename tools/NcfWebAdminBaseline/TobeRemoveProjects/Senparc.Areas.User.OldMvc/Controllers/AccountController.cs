@@ -44,11 +44,18 @@ namespace Senparc.Areas.User.Controllers
         private readonly AccountService _accountService;
         private readonly AccountPayLogService _accountPayLogService;
 
+        /// <summary>
+        /// Initializes the legacy user account controller.
+        /// </summary>
+        /// <param name="accountService">The account service.</param>
+        /// <param name="accountPayLogService">The payment-log service.</param>
         public AccountController(AccountService accountService, AccountPayLogService accountPayLogService)
         {
             _accountService = accountService;
             _accountPayLogService = accountPayLogService;
         }
+        /// <summary>Renders the current user's account overview.</summary>
+        /// <returns>The account overview view.</returns>
         [MenuFilter("Account.Account_Index")]
         public IActionResult Index()
         {
@@ -58,11 +65,11 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Updates the current account's basic profile and optionally uploads a new avatar.
         /// </summary>
-        /// <param name="from"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="from">The submitted display name and contact values.</param>
+        /// <param name="file">The optional avatar file.</param>
+        /// <returns>A redirect to the account index page.</returns>
         [HttpPost]
         public async Task<IActionResult> Basic(BasicEdit from, IFormFile file)
         {
@@ -91,10 +98,10 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Verifies the old password and changes the current account password.
         /// </summary>
-        /// <param name="from"></param>
-        /// <returns></returns>
+        /// <param name="from">The old and new password values.</param>
+        /// <returns>A JSON success or failure envelope.</returns>
         [HttpPost]
         public IActionResult PasswordEdit([FromBody] PasswordEdit from)
         {
@@ -132,9 +139,9 @@ namespace Senparc.Areas.User.Controllers
 
         [MenuFilter("Account.Account_Buy")]
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Renders the account purchase page.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The purchase view.</returns>
         public IActionResult Buy()
         {
             var vd = new Account_BuyVD();
@@ -142,10 +149,11 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Requests a payment QR code for the specified account recharge amount and records
+        /// the returned payment order.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="totalFee">The recharge amount used by the payment service.</param>
+        /// <returns>A JSON envelope containing the QR code URL and order number, or an error.</returns>
         public IActionResult GetPayQr(decimal totalFee)
         {
             try
@@ -179,9 +187,10 @@ namespace Senparc.Areas.User.Controllers
 
         [MenuFilter("Account.Account_PayLog")]
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Renders the current account's descending payment-log page.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="pageIndex">The one-based page number.</param>
+        /// <returns>The payment-log view.</returns>
         public IActionResult PayLog(int pageIndex = 1)
         {
             var pageSize = 20;

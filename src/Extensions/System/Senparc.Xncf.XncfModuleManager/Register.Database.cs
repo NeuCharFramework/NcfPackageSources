@@ -34,6 +34,11 @@ namespace Senparc.Xncf.XncfModuleManager
 
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Registers XncfModuleManager database services.
+        /// The module currently relies on shared registrations and its EF Core mappings.
+        /// </summary>
+        /// <param name="services">The application dependency-injection service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
 

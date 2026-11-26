@@ -18,6 +18,13 @@ namespace Senparc.Xncf.Installer
     {
         private static readonly ResourceManager AreaResourceManager = new("Senparc.Xncf.Installer.InstallerResource", typeof(InstallerResource).Assembly);
 
+        /// <summary>
+        /// Resolves an installer area resource in the current UI culture and
+        /// returns the supplied fallback when the key is unavailable.
+        /// </summary>
+        /// <param name="key">The resource key.</param>
+        /// <param name="fallback">The fallback text.</param>
+        /// <returns>The localized or fallback area text.</returns>
         private static string AreaT(string key, string fallback)
         {
             return AreaResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? fallback;
@@ -31,6 +38,12 @@ namespace Senparc.Xncf.Installer
                          new AreaPageMenuItem(GetAreaHomeUrl(), AreaT("Installer.Area.Home", "首页"),"fa fa-laptop"),
 			 		};
 
+        /// <summary>
+        /// Registers the installer Razor Pages and records area startup diagnostics.
+        /// </summary>
+        /// <param name="builder">The MVC builder being configured.</param>
+        /// <param name="env">The host environment used by the area contract.</param>
+        /// <returns>The configured MVC builder.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>

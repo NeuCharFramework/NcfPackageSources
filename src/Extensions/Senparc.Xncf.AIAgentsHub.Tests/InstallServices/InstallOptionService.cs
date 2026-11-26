@@ -15,41 +15,45 @@ using Senparc.Ncf.Log;
 
 namespace Senparc.Xncf.AIAgentsHub.Domain.Services
 {
+    /// <summary>
+    /// Provides default installation values and persists database-connection overrides.
+    /// </summary>
     public class InstallOptionsService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly SenparcCoreSetting _senparcCoreSetting;
+        /// <summary>Initializes the installation-options service.</summary>
+        /// <param name="serviceProvider">The dependency-injection service provider.</param>
+        /// <param name="senparcCoreSetting">The configured core settings.</param>
         public InstallOptionsService(IServiceProvider serviceProvider, IOptions<SenparcCoreSetting> senparcCoreSetting)
         {
             this._serviceProvider = serviceProvider;
             this._senparcCoreSetting = senparcCoreSetting.Value;
 
-            //Legacy comment translated to English.
-
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Generates a default administrator user name with a short random suffix.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The generated administrator user name.</returns>
         public string GetDefaultAdminUserName()
         {
             return $"SenparcCoreAdmin{new Random().Next(100).ToString("00")}";
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the default system display name.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The default system name.</returns>
         public string GetDefaultSystemName()
         {
             return "NCF - Template Project";
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the current client database connection string.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The configured connection string.</returns>
         public string GetDbConnectionString()
         {
             //string dbConfigName = SenparcDatabaseConnectionConfigs.GetFullDatabaseName(_senparcCoreSetting.DatabaseName);
@@ -57,8 +61,9 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Persists a changed database connection string and clears cached configuration.
         /// </summary>
+        /// <param name="dbConnectionString">The replacement connection string.</param>
         public void ResetDbConnectionString(string dbConnectionString)
         {
             if (dbConnectionString == GetDbConnectionString())

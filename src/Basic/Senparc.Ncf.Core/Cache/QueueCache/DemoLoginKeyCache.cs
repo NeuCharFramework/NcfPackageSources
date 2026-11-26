@@ -26,6 +26,11 @@ namespace Senparc.Ncf.Core.Cache
         public string OpenId { get; set; }
         public DateTime AddTime { get; set; }
         public QrCodeLoginDataType QrCodeLoginDataType { get; set; }
+        /// <summary>
+        /// Initializes login-key data with the associated OpenID and QR login type.
+        /// </summary>
+        /// <param name="openId">The user OpenID associated with the login attempt.</param>
+        /// <param name="qrCodeLoginDataType">The QR login flow type.</param>
         public DemoLoginKeyCacheData(string openId, QrCodeLoginDataType qrCodeLoginDataType)
         {
             OpenId = openId;
@@ -34,9 +39,7 @@ namespace Senparc.Ncf.Core.Cache
         }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Provides queue-cache storage for demo login-key entries.</summary>
     public interface IDemoLoginKeyCache : IQueueCache<DemoLoginKeyCacheData>
     {
 
@@ -47,37 +50,50 @@ namespace Senparc.Ncf.Core.Cache
     {
         private const string cacheKey = "DemoLoginKeyCache";
         private const int timeoutSeconds = 5 * 60;
+        /// <summary>
+        /// Initializes the demo login-key queue cache.
+        /// </summary>
         private DemoLoginKeyCache()
          : base(cacheKey, timeoutSeconds)
         {
         }
 
+        /// <summary>
+        /// Creates and asynchronously initializes the singleton-style queue cache instance.
+        /// </summary>
+        /// <returns>The initialized demo login-key cache.</returns>
         public static async Task<DemoLoginKeyCache> CreateAsync()
         {
             var instance = new DemoLoginKeyCache();
 
-            //Legacy comment translated to English.
             await instance.InitializeAsync();
 
             return instance;
         }
 
+        /// <summary>
+        /// Connects this cache instance to the shared queue and message collections.
+        /// </summary>
         private async Task InitializeAsync()
         {
-            //Legacy comment translated to English.
             var queueCache = await QueueCache<DemoLoginKeyCacheData>.CreateAsync(cacheKey, timeoutSeconds);
 
-            //Legacy comment translated to English.
             this.MessageQueue = queueCache.MessageQueue;
             this.MessageCollection = queueCache.MessageCollection;
         }
 
+        /// <summary>
+        /// Gets a demo login entry and removes it when present, enforcing single-use retrieval.
+        /// </summary>
+        /// <param name="key">The cache key.</param>
+        /// <param name="removeDataWhenExist">Whether the base cache should remove expired data during lookup.</param>
+        /// <returns>The matching entry, or <see langword="null"/> when absent.</returns>
         public override QueueCacheData<DemoLoginKeyCacheData> Get(string key, bool removeDataWhenExist = true)
         {
             var value = base.Get(key,removeDataWhenExist);
             if (value != null)
             {
-                base.Remove(key);//Legacy comment translated to English.
+                base.Remove(key);
             }
             return value;
         }

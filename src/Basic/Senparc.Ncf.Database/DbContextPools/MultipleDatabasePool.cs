@@ -96,17 +96,13 @@ namespace Senparc.Ncf.Database
         /// <param name="xncfDatabaseDbContextType">The runtime DbContext type to associate with the metadata.</param>
         public void TryAdd(MultipleMigrationDbContextAttribute multiDbContextAttr, Type xncfDatabaseDbContextType)
         {
-            //Legacy comment translated to English.
             if (!this.ContainsKey(multiDbContextAttr.MultipleDatabaseType))
             {
-                //Legacy comment translated to English.
                 this[multiDbContextAttr.MultipleDatabaseType] = new Dictionary<Type, Type>();
             }
 
-            //Legacy comment translated to English.
             this[multiDbContextAttr.MultipleDatabaseType][multiDbContextAttr.XncfDatabaseRegisterType] = xncfDatabaseDbContextType;
 
-            //Legacy comment translated to English.
             XncfDatabaseDbContextPool.Instance.TryAdd(multiDbContextAttr, xncfDatabaseDbContextType);
         }
 
@@ -139,7 +135,6 @@ namespace Senparc.Ncf.Database
                 return sb.ToString().TrimEnd();
             }
 
-            //Legacy comment translated to English.
             var dbColumns = registerDbMap.Values
                 .SelectMany(z => z.Keys)
                 .Concat(currentDatabaseType.HasValue ? new[] { currentDatabaseType.Value } : Array.Empty<MultipleDatabaseType>())

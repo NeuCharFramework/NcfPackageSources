@@ -41,6 +41,12 @@ namespace Senparc.Xncf.Swagger
              new AreaPageMenuItem(GetAreaHomeUrl(), SwaggerResource.Get("Area.Home", "首页"),"fa fa-laptop"),
                      };
 
+        /// <summary>
+        /// Registers the Swagger area's cookie authentication scheme and Razor Pages configuration.
+        /// </summary>
+        /// <param name="builder">The MVC builder being configured.</param>
+        /// <param name="env">The host environment used by area configuration.</param>
+        /// <returns>The same MVC builder after Swagger authentication configuration.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.Services

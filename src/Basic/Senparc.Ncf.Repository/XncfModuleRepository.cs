@@ -25,6 +25,10 @@ namespace Senparc.Ncf.Repository
 {
     public class XncfModuleRepository : ClientRepositoryBase<XncfModule>
     {
+        /// <summary>
+        /// Initializes the repository for <see cref="XncfModule"/> records.
+        /// </summary>
+        /// <param name="db">The NCF database abstraction used for persistence.</param>
         public XncfModuleRepository(INcfDbData db) : base(db)
         {
         }

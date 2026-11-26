@@ -29,6 +29,11 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
     private readonly DockerIsolatedRuntimeOptions _options;
     private readonly ILogger<DockerIsolatedRuntimeProvider> _logger;
 
+    /// <summary>
+    /// Initializes the Docker isolated-runtime provider.
+    /// </summary>
+    /// <param name="options">The Docker runtime options.</param>
+    /// <param name="logger">The provider logger.</param>
     public DockerIsolatedRuntimeProvider(
         IOptions<DockerIsolatedRuntimeOptions> options,
         ILogger<DockerIsolatedRuntimeProvider> logger)

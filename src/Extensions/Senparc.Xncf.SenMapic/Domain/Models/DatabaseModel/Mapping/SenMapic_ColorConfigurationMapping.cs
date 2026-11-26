@@ -24,6 +24,7 @@ namespace Senparc.Xncf.SenMapic.Models
     [XncfAutoConfigurationMapping]
     public class SenMapic_ColorConfigurationMapping : ConfigurationMappingWithIdBase<Color, int>
     {
+        /// <inheritdoc />
         public override void Configure(EntityTypeBuilder<Color> builder)
         {
             builder.Property(e => e.Red).IsRequired();

@@ -27,7 +27,7 @@
 namespace Senparc.Xncf.Sandbox.Abstractions;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Stable template keys accepted by Sandbox creation and execution requests.
 /// </summary>
 public static class SandboxTemplateKeys
 {

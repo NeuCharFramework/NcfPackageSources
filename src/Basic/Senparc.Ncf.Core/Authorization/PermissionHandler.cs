@@ -23,12 +23,17 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Core.Authorization
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Authorization handler that evaluates permission requirements through the configured
+    /// application permission checker.
     /// </summary>
     public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
     {
         private readonly ICheckPermission _checkPermission;
 
+        /// <summary>
+        /// Initializes the permission handler.
+        /// </summary>
+        /// <param name="checkPermission">The service used to evaluate resource permissions.</param>
         public PermissionHandler(ICheckPermission checkPermission)
         {
             _checkPermission = checkPermission;
@@ -55,10 +60,10 @@ namespace Senparc.Ncf.Core.Authorization
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Extracts the administrator identifier from the authorization principal.
         /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
+        /// <param name="context">The authorization context.</param>
+        /// <returns>The parsed administrator identifier, or zero when no valid claim exists.</returns>
         public virtual int GetCurrentAdminUserInfoId(AuthorizationHandlerContext context)
         {
             var user = context.User;

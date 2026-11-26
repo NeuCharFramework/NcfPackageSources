@@ -36,6 +36,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
     {
         private readonly DbConfigQueryService _dbConfigQueryService;
 
+        /// <summary>
+        /// Initializes database backup operations.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="dbConfigQueryService">The service used to read backup configuration.</param>
         public DatabaseBackupAppService(IServiceProvider serviceProvider, DbConfigQueryService dbConfigQueryService) : base(serviceProvider)
         {
             this._dbConfigQueryService = dbConfigQueryService;
@@ -43,6 +48,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
         //[ApiBind("A","B",ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.CheckBackup.Name", "Function.Database.CheckBackup.Description", typeof(Register))]
+        /// <summary>
+        /// Returns whether automatic database backup is enabled.
+        /// </summary>
+        /// <returns>An application response containing the enabled state.</returns>
         public async Task<DatabaseAutoBackup_IsAutoBackupResponse> IsAutoBackup()
         {
             return await this.GetResponseAsync<DatabaseAutoBackup_IsAutoBackupResponse, bool>(async (response, logger) =>
@@ -54,6 +63,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         #region Legacy section
 
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.Backup.Name", "Function.Database.Backup.Description", typeof(Register))]
+        /// <summary>
+        /// Creates a database backup, optionally preserving or validating an existing file.
+        /// </summary>
+        /// <param name="request">The backup path and requested backup options.</param>
+        /// <returns>A string response containing backup progress and result.</returns>
         public async Task<StringAppResponse> Backup(DatabaseBackup_BackupRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -139,6 +153,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
 
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.ExportSql.Name", "Function.Database.ExportSql.Description", typeof(Register))]
+        /// <summary>
+        /// Generates the database creation SQL and records it in the response log.
+        /// </summary>
+        /// <returns>A string response directing the caller to the generated SQL log.</returns>
         public async Task<StringAppResponse> ExportSQL()
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

@@ -54,6 +54,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         private readonly PromptResultChatService _promptResultChatService;
         private readonly PromptResultStreamHub _promptResultStreamHub;
 
+        /// <summary>
+        /// Initializes the application service used to score, generate, inspect, and continue prompt results.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency-injection provider used by the base application service.</param>
+        /// <param name="promptResultService">Service for prompt-result persistence and AI execution.</param>
+        /// <param name="promptItemService">Service for resolving prompt definitions.</param>
+        /// <param name="promptResultChatService">Service for chat-history persistence and feedback.</param>
+        /// <param name="promptResultStreamHub">Hub used to publish optional generation stream events.</param>
         public PromptResultAppService(
             IServiceProvider serviceProvider,
             PromptResultService promptResultService,
@@ -68,10 +76,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// manualscoring
+        /// Stores a human score for a generated result and recalculates the parent prompt item's aggregate score.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The result identifier and human score.</param>
+        /// <returns>A string response indicating whether scoring completed.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the result does not exist or the score is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> HumanScore(PromptResult_HumanScoreRequest request)
         {
@@ -96,13 +105,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// automaticscoring
-        ///Legacy comment translated to English.
+        /// Calculates an automated score for a generated result using the supplied expected-result values.
         /// </summary>
-        /// <param name="promptResultId"></param>
-        /// <param name="expectedResultList"></param>
-        /// <param name="isRefresh"></param>
-        /// <returns></returns>
+        /// <param name="promptResultId">The generated-result identifier.</param>
+        /// <param name="expectedResultList">The expected-result values used by the evaluator.</param>
+        /// <param name="isRefresh">Whether an existing automated score may be recalculated.</param>
+        /// <returns>A string response indicating whether scoring completed.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the result, expected values, or scoring state is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> RobotScore(int promptResultId, List<string> expectedResultList, bool isRefresh = false)
         {
@@ -127,10 +136,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the generated results and prompt metadata for one prompt item.
         /// </summary>
-        /// <param name="promptItemId"></param>
-        /// <returns></returns>
+        /// <param name="promptItemId">The prompt-item identifier.</param>
+        /// <returns>A response containing the prompt item and its generated results.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the prompt item cannot be found.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<PromptResult_ListResponse>> GetByItemId(int promptItemId)
         {
@@ -146,12 +156,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// generateresult
+        /// Generates one or more results for a prompt item and optionally publishes stream events.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="promptItemId">The prompt-item identifier.</param>
+        /// <param name="numsOfResults">The number of results to generate.</param>
+        /// <param name="userMessage">Optional user input for the generation.</param>
+        /// <param name="streamId">Optional stream identifier used to receive progress events.</param>
+        /// <returns>A response containing the generated result list.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the prompt item or generation configuration is invalid.</exception>
         /// <exception cref="NcfExceptionBase"></exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<PromptResult_ListResponse>> GenerateWithItemId(int promptItemId, int numsOfResults, string userMessage = null, string streamId = null)
@@ -160,8 +172,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// generateresult（POST version，supportextensionexecuteparameters）
+        /// Generates prompt results from a request object, including optional execution options.
         /// </summary>
+        /// <param name="request">The prompt identifier, result count, user message, stream identifier, and options.</param>
+        /// <returns>A response containing the generated result list.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the prompt item or generation configuration is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptResult_ListResponse>> GenerateWithItemIdPost(PromptResult_GenerateRequest request)
         {
@@ -295,6 +310,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
 
+        /// <summary>
+        /// Recalculates the aggregate evaluation score for a prompt item from its scored results.
+        /// </summary>
+        /// <param name="promptItemId">The prompt-item identifier to recalculate.</param>
+        /// <returns>A string response indicating whether recalculation completed.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the prompt item cannot be found.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<StringAppResponse> ReCalculateItemScore(int promptItemId)
         {
@@ -307,10 +328,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads the persisted chat messages associated with a generated result.
         /// </summary>
-        /// <param name="promptResultId">PromptResult ID</param>
-        /// <returns></returns>
+        /// <param name="promptResultId">The generated-result identifier.</param>
+        /// <returns>A response containing the stored chat history.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<List<PromptResultChatDto>>> GetChatHistory(int promptResultId)
         {
@@ -322,10 +343,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads a generated result's chat history together with the prompt content used to produce it.
         /// </summary>
-        /// <param name="promptResultId">PromptResult ID</param>
-        /// <returns></returns>
+        /// <param name="promptResultId">The generated-result identifier.</param>
+        /// <returns>A response containing chat history and prompt content.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the generated result cannot be found.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<PromptResult_ChatHistoryWithPromptResponse>> GetChatHistoryWithPrompt(int promptResultId)
         {
@@ -362,10 +384,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Continues an existing chat result with a new user message and optionally publishes stream events.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="request">The result identifier, user message, and optional stream identifier.</param>
+        /// <returns>A response containing the updated chat messages.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the source result or continuation configuration is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<PromptResultChatDto>>> ContinueChat(PromptResult_ContinueChatRequest request)
         {
@@ -406,8 +429,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Searches the vector index associated with a prompt result using the supplied query and result limit.
         /// </summary>
+        /// <param name="request">The prompt result identifier, query text, and optional top-k limit.</param>
+        /// <returns>A response containing matching embedding-search entries.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the result, query, or vector configuration is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptResult_TextEmbeddingSearchResponse>> TextEmbeddingSearch(PromptResult_TextEmbeddingSearchRequest request)
         {
@@ -423,10 +449,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Stores user feedback for one chat message and returns the updated message DTO.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="request">The chat-message identifier and feedback value.</param>
+        /// <returns>A response containing the updated chat message.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the chat message cannot be found or feedback is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptResultChatDto>> UpdateChatFeedback(PromptResult_UpdateChatFeedbackRequest request)
         {

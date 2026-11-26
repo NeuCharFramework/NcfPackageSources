@@ -39,6 +39,9 @@ namespace Senparc.Xncf.XncfModuleManager
 {
     [XncfRegister]
     [XncfOrder(5950)]
+    /// <summary>
+    /// Registers the core services used to install, update, and manage XNCF modules.
+    /// </summary>
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<XncfModuleManagerResource>(
@@ -46,26 +49,32 @@ namespace Senparc.Xncf.XncfModuleManager
             "XNCF 模块管理核心",
             "安装、更新和管理 XNCF 模块的核心组件");
 
-        #region Legacy section
+        #region Module metadata
 
+        /// <inheritdoc />
         public override string Name => "Senparc.Xncf.XncfModuleManager";
 
+        /// <inheritdoc />
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_XNCF_MODULE_MANAGER_UID;// "00000000-0000-0000-0000-000000000004";
 
+        /// <inheritdoc />
         public override string Version => "0.1.2";//the version number is required
 
+        /// <inheritdoc />
         public override string MenuName => RegisterText.MenuName;
 
+        /// <inheritdoc />
         public override string Icon => "fa fa-user-secret";//fa fa-cog
 
+        /// <inheritdoc />
         public override string Description => RegisterText.Description;
 
+        /// <inheritdoc />
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             try
             {
                 Console.WriteLine($"执行 Xncf.XncfModuleManager.InstallOrUpdateAsync");
-                //install or upgrade the database
                 await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
                 Console.WriteLine($"执行 Xncf.XncfModuleManager.InstallOrUpdateAsync 完毕");
@@ -79,57 +88,23 @@ namespace Senparc.Xncf.XncfModuleManager
             }
           
 
-            //await InstallModulesAndMenusAsync(serviceProvider);
-
-            //Legacy comment translated to English.
-
-            //XncfModuleServiceExtension xncfModuleServiceExtension = serviceProvider.GetService<XncfModuleServiceExtension>();
-            ////SenparcEntities senparcEntities = (SenparcEntities)xncfModuleServiceExtension.BaseData.BaseDB.BaseDataContext;
-
-            ///Legacy comment translated to English.
-            ////await base.MigrateDatabaseAsync<BasePoolEntities>(serviceProvider);
-
-            //var systemModule = xncfModuleServiceExtension.GetObject(z => z.Uid == this.Uid);
-            //if (systemModule == null)
-            //{
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
-            //    await xncfModuleServiceExtension.InstallModuleAsync(this.Uid).ConfigureAwait(false);
-            //}
-
             await base.InstallOrUpdateAsync(serviceProvider, installOrUpdate);
         }
 
+        /// <inheritdoc />
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             await unsinstallFunc().ConfigureAwait(false);
         }
         #endregion
 
+        /// <inheritdoc />
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<XncfModuleServiceExtension>();
 
             return base.AddXncfModule(services, configuration, env);
         }
-
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        ///// <param name="serviceProvider"></param>
-        ///// <returns></returns>
-        //public async Task InstallModulesAndMenusAsync(IServiceProvider serviceProvider)
-        //{
-        //    XncfModuleServiceExtension xncfModuleServiceExtension = serviceProvider.GetService<XncfModuleServiceExtension>();
-        //    var systemModule = xncfModuleServiceExtension.GetObject(z => z.Uid == this.Uid);
-        //    if (systemModule == null)
-        //    {
-        //Legacy comment translated to English.
-        //Legacy comment translated to English.
-        //        await xncfModuleServiceExtension.InstallModuleAsync(this.Uid).ConfigureAwait(false);
-        //    }
-
-        //}
 
     }
 }

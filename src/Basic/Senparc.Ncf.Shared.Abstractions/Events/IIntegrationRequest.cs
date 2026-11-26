@@ -20,42 +20,45 @@ using System;
 namespace Senparc.Ncf.Shared.Abstractions.Events
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines an event-bus request that expects a strongly typed integration response.
     /// </summary>
-    ///Legacy comment translated to English.
+    /// <typeparam name="TResponse">The response type associated with the request.</typeparam>
     public interface IIntegrationRequest<out TResponse> : IIntegrationEvent
         where TResponse : class, IIntegrationResponse
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the identifier used to correlate the request with its response.
         /// </summary>
         Guid RequestId { get; }
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines an integration response correlated with one request.
     /// </summary>
     public interface IIntegrationResponse : IIntegrationEvent
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the request identifier that produced this response.
         /// </summary>
         Guid RequestId { get; }
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Base implementation for request events with generated correlation identity.
     /// </summary>
-    ///Legacy comment translated to English.
+    /// <typeparam name="TResponse">The response type associated with the request.</typeparam>
     public abstract record IntegrationRequest<TResponse> : IntegrationEvent, IIntegrationRequest<TResponse>
         where TResponse : class, IIntegrationResponse
     {
+        /// <summary>
+        /// Gets or initializes the request correlation identifier.
+        /// </summary>
         public Guid RequestId { get; init; } = Guid.NewGuid();
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Base implementation for responses carrying the originating request identifier.
     /// </summary>
-    ///Legacy comment translated to English.
+    /// <param name="RequestId">The request correlation identifier.</param>
     public abstract record IntegrationResponse(Guid RequestId) : IntegrationEvent, IIntegrationResponse;
 }

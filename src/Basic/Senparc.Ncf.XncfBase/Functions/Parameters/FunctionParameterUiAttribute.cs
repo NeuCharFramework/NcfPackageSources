@@ -42,6 +42,11 @@ namespace Senparc.Ncf.XncfBase
 
         public string Accept { get; set; }
 
+        /// <summary>
+        /// Initializes UI metadata for a Function request property.
+        /// </summary>
+        /// <param name="parameterType">The control/parameter type to render.</param>
+        /// <param name="selectionListPropertyName">The optional property supplying selection items.</param>
         public FunctionParameterUiAttribute(ParameterType parameterType, string selectionListPropertyName = null)
         {
             ParameterType = parameterType;

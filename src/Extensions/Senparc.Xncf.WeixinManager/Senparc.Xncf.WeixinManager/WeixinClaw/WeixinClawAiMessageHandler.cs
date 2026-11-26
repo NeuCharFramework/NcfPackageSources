@@ -118,6 +118,12 @@ public sealed class WeixinClawAiMessageHandler : IWeixinClawMessageHandler
         }
     }
 
+    /// <summary>
+    /// Resolves or creates the cached AI execution kernel for one account/user/prompt combination.
+    /// </summary>
+    /// <param name="account">The WeixinClaw account configuration.</param>
+    /// <param name="context">The inbound message context.</param>
+    /// <returns>The configured AI execution kernel.</returns>
     private async Task<IWantToRun> GetOrCreateIWantToRunAsync(WeixinClawAccount account, WeixinClawMessageReceivedContext context)
     {
         //Legacy comment translated to English.

@@ -48,6 +48,10 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.PL
         [LocalizedDescription(typeof(SenMapicResource), "Parameter.SenMapic.PageCount")]
         public int PageNumber { get; set; } = DefaultPageCount;
 
+        /// <summary>
+        /// Clamps the requested page count to the configured default and maximum bounds.
+        /// </summary>
+        /// <returns>The effective page count used by crawling.</returns>
         public int GetEffectivePageCount()
         {
             return PageNumber <= 0

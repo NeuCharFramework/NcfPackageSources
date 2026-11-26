@@ -20,33 +20,33 @@ using System;
 namespace Senparc.Xncf.AIKernel.Domain.Models.Usage
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Aggregates token usage and call count for one model.
     /// </summary>
     [Serializable]
     public class AITokenModelUsage
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the number of recorded calls.
         /// </summary>
         public long Calls { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the total input-token count.
         /// </summary>
         public long InputTokens { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the total output-token count.
         /// </summary>
         public long OutputTokens { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the total token count.
         /// </summary>
         public long TotalTokens { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the most recent usage timestamp.
         /// </summary>
         public DateTime? LastUseTime { get; set; }
     }

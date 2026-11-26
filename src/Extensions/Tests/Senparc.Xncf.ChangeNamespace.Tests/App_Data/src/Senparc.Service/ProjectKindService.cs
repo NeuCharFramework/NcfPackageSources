@@ -11,31 +11,22 @@ namespace Senparc.Service
 {
     public interface IProjectKindService : IBaseClientService<ProjectKind>
     {
+        /// <summary>Builds a parent-to-children project-kind tree.</summary>
         Dictionary<ProjectKind, List<ProjectKind>> GetKindTree();
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        ///Legacy comment translated to English.
+        /// <summary>Increments the demand count for a project kind.</summary>
+        /// <param name="kindId">The project-kind identifier.</param>
         void ProjectDemandCount(int kindId);
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        ///Legacy comment translated to English.
+        /// <summary>Decrements the demand count for a project kind.</summary>
+        /// <param name="kindId">The project-kind identifier.</param>
         void ReduceProjectDemandCount(int kindId);
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Creates missing first-level kinds from the ProjectKind_List enum.</summary>
         void CreateOneLevelKind();
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <summary>Creates missing second-level kinds under a named parent.</summary>
+        /// <param name="names">The child kind names.</param>
+        /// <param name="parentName">The parent enum value.</param>
         void CreateTwoLevelKind(string[] names, ProjectKind_List parentName);
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <returns></returns>
+        /// <summary>Returns visible first-level project kinds in descending identifier order.</summary>
+        /// <returns>The visible parent kinds.</returns>
         List<ProjectKind> GetParentProjectKindList();
     }
 
@@ -47,13 +38,13 @@ namespace Senparc.Service
 
         }
 
+        /// <inheritdoc />
         public Dictionary<ProjectKind, List<ProjectKind>> GetKindTree()
         {
             Dictionary<ProjectKind, List<ProjectKind>> result =
                 new Dictionary<ProjectKind, List<ProjectKind>>();
             var fullList = base.GetFullList(z => true, z => z.Id, OrderingType.Ascending);
 
-            //Legacy comment translated to English.
             foreach (var topKind in fullList.Where(z => z.Level == 0).OrderBy(z => z.DisplayOrder))
             {
                 var subKinds = fullList.Where(z => z.ParentId == topKind.Id).OrderBy(z => z.DisplayOrder).ToList();
@@ -63,6 +54,12 @@ namespace Senparc.Service
             return result;
         }
 
+        /// <summary>
+        /// Gets child kinds for a parent identifier, or top-level kinds when no
+        /// parent identifier is supplied.
+        /// </summary>
+        /// <param name="id">Optional parent kind identifier.</param>
+        /// <returns>The matching project kinds.</returns>
         public List<ProjectKind> GetKindList(int? id)
         {
             var KindList = new List<ProjectKind>();
@@ -79,6 +76,7 @@ namespace Senparc.Service
             return KindList;
         }
 
+        /// <inheritdoc />
         public void ProjectDemandCount(int kindId)
         {
             var projectKind = GetObject(kindId);
@@ -86,6 +84,7 @@ namespace Senparc.Service
             SaveObject(projectKind);
         }
 
+        /// <inheritdoc />
         public void ReduceProjectDemandCount(int kindId)
         {
             var projectKind = GetObject(kindId);
@@ -93,6 +92,7 @@ namespace Senparc.Service
             SaveObject(projectKind);
         }
 
+        /// <inheritdoc />
         public void CreateOneLevelKind()
         {
             string[] names = Enum.GetNames(typeof(ProjectKind_List));
@@ -117,6 +117,7 @@ namespace Senparc.Service
             }
         }
 
+        /// <inheritdoc />
         public void CreateTwoLevelKind(string[] names, ProjectKind_List parentName)
         {
             var parent = parentName.ToString();
@@ -157,6 +158,7 @@ namespace Senparc.Service
             base.DeleteObject(obj);
         }
 
+        /// <inheritdoc />
         public List<ProjectKind> GetParentProjectKindList()
         {
             return GetFullList(z => z.Level == 0 && z.Show, z => z.Id, OrderingType.Descending);

@@ -37,7 +37,14 @@ public sealed class HumanParticipantAgent : AIAgent
 {
     private sealed class HumanAgentSession : AgentSession
     {
+        /// <summary>
+        /// Initializes an empty human-agent session.
+        /// </summary>
         public HumanAgentSession() : base() { }
+        /// <summary>
+        /// Restores a human-agent session from serialized state.
+        /// </summary>
+        /// <param name="stateBag">The persisted Agent session state.</param>
         public HumanAgentSession(AgentSessionStateBag stateBag) : base(stateBag) { }
     }
 
@@ -49,6 +56,17 @@ public sealed class HumanParticipantAgent : AIAgent
     private readonly Func<PendingHumanRequest, Task> _onRequestCreated;
     private readonly Func<PendingHumanRequest, HumanInTheLoopDecision, Task> _onRequestResolved;
 
+    /// <summary>
+    /// Initializes the Human-in-the-Loop participant with request storage and lifecycle callbacks.
+    /// </summary>
+    /// <param name="requestStore">The store used to register and resolve human requests.</param>
+    /// <param name="chatTaskId">The owning chat-task identifier.</param>
+    /// <param name="participantKey">The participant key, or the default human key when blank.</param>
+    /// <param name="onRequestCreated">The callback invoked after a request is created.</param>
+    /// <param name="onRequestResolved">The callback invoked after a decision is received.</param>
+    /// <param name="correlationId">Optional run correlation identifier.</param>
+    /// <param name="recipientUserId">Optional notification recipient.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="requestStore"/> is null.</exception>
     public HumanParticipantAgent(
         HumanInTheLoopRequestStore requestStore,
         int chatTaskId,
@@ -73,21 +91,25 @@ public sealed class HumanParticipantAgent : AIAgent
 
     public override string Description => "等待当前用户输入文本的 Human-in-the-Loop 参与者。";
 
+    /// <inheritdoc/>
     protected override ValueTask<AgentSession> CreateSessionCoreAsync(CancellationToken cancellationToken = default)
         => ValueTask.FromResult<AgentSession>(new HumanAgentSession());
 
+    /// <inheritdoc/>
     protected override ValueTask<JsonElement> SerializeSessionCoreAsync(
         AgentSession session,
         JsonSerializerOptions serializerOptions,
         CancellationToken cancellationToken = default)
         => ValueTask.FromResult(JsonSerializer.SerializeToElement(new { }, serializerOptions));
 
+    /// <inheritdoc/>
     protected override ValueTask<AgentSession> DeserializeSessionCoreAsync(
         JsonElement serializedState,
         JsonSerializerOptions serializerOptions,
         CancellationToken cancellationToken = default)
         => ValueTask.FromResult<AgentSession>(new HumanAgentSession());
 
+    /// <inheritdoc/>
     protected override async Task<AgentResponse> RunCoreAsync(
         IEnumerable<ChatMessage> messages,
         AgentSession session,
@@ -98,6 +120,7 @@ public sealed class HumanParticipantAgent : AIAgent
         return new AgentResponse(new ChatMessage(ChatRole.Assistant, input));
     }
 
+    /// <inheritdoc/>
     protected override async IAsyncEnumerable<AgentResponseUpdate> RunCoreStreamingAsync(
         IEnumerable<ChatMessage> messages,
         AgentSession session,
@@ -108,6 +131,13 @@ public sealed class HumanParticipantAgent : AIAgent
         yield return new AgentResponseUpdate(ChatRole.Assistant, input);
     }
 
+    /// <summary>
+    /// Registers a human-turn request, waits for its decision, and returns approved input.
+    /// </summary>
+    /// <param name="messages">The preceding conversation messages used to build the prompt.</param>
+    /// <param name="cancellationToken">The wait cancellation token.</param>
+    /// <returns>The trimmed approved human input.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the decision is rejected or input is blank.</exception>
     private async Task<string> WaitForHumanInputAsync(
         IEnumerable<ChatMessage> messages,
         CancellationToken cancellationToken)
@@ -140,6 +170,11 @@ public sealed class HumanParticipantAgent : AIAgent
         return decision.Input.Trim();
     }
 
+    /// <summary>
+    /// Builds the human-facing prompt from the latest non-empty message.
+    /// </summary>
+    /// <param name="messages">The preceding conversation messages.</param>
+    /// <returns>The prompt displayed to the human participant.</returns>
     private static string BuildPrompt(IEnumerable<ChatMessage> messages)
     {
         var latest = messages?
@@ -152,6 +187,11 @@ public sealed class HumanParticipantAgent : AIAgent
             : $"当前轮次等待 Human 输入文本。上一位参与者的消息：\n{latest}";
     }
 
+    /// <summary>
+    /// Extracts trimmed text from one chat message.
+    /// </summary>
+    /// <param name="message">The message to inspect.</param>
+    /// <returns>The trimmed message text or an empty string.</returns>
     private static string ExtractText(ChatMessage message)
         => message?.Text?.Trim() ?? string.Empty;
 }

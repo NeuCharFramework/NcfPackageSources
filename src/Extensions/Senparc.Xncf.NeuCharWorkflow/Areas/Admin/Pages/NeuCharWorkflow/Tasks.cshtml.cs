@@ -40,8 +40,21 @@ public class TasksModel(
     NeuCharWorkflowAppService workflowAppService,
     IAdminWorkContextProvider adminWorkContextProvider) : AdminXncfModulePageModelBase(xncfModuleService)
 {
+    /// <summary>
+    /// Handles the initial workflow-task page request; task data is loaded by the list endpoint.
+    /// </summary>
+    /// <returns>A completed task.</returns>
     public Task OnGetAsync() => Task.CompletedTask;
 
+    /// <summary>
+    /// Returns owner-scoped workflow tasks with optional cursor, workflow, status, and date filters.
+    /// </summary>
+    /// <param name="beforeExecutionLogId">Optional cursor for records before an execution-log identifier.</param>
+    /// <param name="workflowId">Optional workflow identifier filter.</param>
+    /// <param name="status">Optional task status filter.</param>
+    /// <param name="from">Optional lower date-bound text.</param>
+    /// <param name="to">Optional upper date-bound text.</param>
+    /// <returns>An <see cref="OkObjectResult"/> containing the task list.</returns>
     public async Task<IActionResult> OnGetListAsync(
         int? beforeExecutionLogId = null,
         int? workflowId = null,
@@ -57,10 +70,19 @@ public class TasksModel(
             to,
             HttpContext.RequestAborted).ConfigureAwait(false));
 
+    /// <summary>
+    /// Returns the count and metadata of completed tasks eligible for cleanup.
+    /// </summary>
+    /// <returns>An <see cref="OkObjectResult"/> containing the cleanup preview.</returns>
     public async Task<IActionResult> OnGetCleanupPreviewAsync() =>
         Ok(await workflowAppService.PreviewTaskCleanupAsync(CurrentAdminUserId, HttpContext.RequestAborted)
             .ConfigureAwait(false));
 
+    /// <summary>
+    /// Deletes completed workflow tasks older than the requested cutoff for the current administrator.
+    /// </summary>
+    /// <param name="request">The optional cleanup cutoff.</param>
+    /// <returns>An action result containing cleanup details or a bad-request message.</returns>
     public async Task<IActionResult> OnPostCleanupAsync([FromBody] TaskCleanupRequest request)
     {
         try
@@ -76,6 +98,11 @@ public class TasksModel(
         }
     }
 
+    /// <summary>
+    /// Requests cancellation of an active workflow run or execution log.
+    /// </summary>
+    /// <param name="request">The run or execution-log identifier to abort.</param>
+    /// <returns>A success result or a conflict/bad-request response.</returns>
     public async Task<IActionResult> OnPostAbortAsync([FromBody] AbortWorkflowRunRequest request)
     {
         try

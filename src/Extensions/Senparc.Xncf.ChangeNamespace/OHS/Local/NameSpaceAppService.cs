@@ -31,20 +31,45 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
 {
     public class NameSpaceAppService : AppServiceBase
     {
+        /// <summary>
+        /// Initializes the namespace transformation application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public NameSpaceAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
         #region Change
 
+        /// <summary>
+        /// Describes one namespace replacement discovered while scanning a source file.
+        /// </summary>
         public class MatchNamespace
         {
+            /// <summary>
+            /// Gets or sets the source syntax prefix associated with the match.
+            /// </summary>
             public string Prefix { get; set; }
+
+            /// <summary>
+            /// Gets or sets the complete matched text before replacement.
+            /// </summary>
             public string OldNamespace { get; set; }
+
+            /// <summary>
+            /// Gets or sets the complete replacement text.
+            /// </summary>
             public string NewNamespace { get; set; }
         }
 
 
+        /// <summary>
+        /// Recursively scans supported source files below a directory and replaces matching
+        /// namespace, Razor model, and tag-helper references with the requested namespace.
+        /// </summary>
+        /// <param name="request">The source path, old namespace keyword, and replacement namespace.</param>
+        /// <returns>A response containing the scan and replacement log.</returns>
+        /// <exception cref="DirectoryNotFoundException">Reported as an unsuccessful response when the path does not exist.</exception>
         [FunctionRender(typeof(ChangeNamespaceResource), "Function.ChangeNamespace.Change.Name", "Function.ChangeNamespace.Change.Description", typeof(Register))]
         public async Task<StringAppResponse> Change(NameSpace_ChangeRequest request)
         {
@@ -178,6 +203,11 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
 
         #endregion
 
+        /// <summary>
+        /// Restores a previously transformed namespace by applying the inverse namespace operation.
+        /// </summary>
+        /// <param name="request">The source path and module namespace to restore.</param>
+        /// <returns>A response containing the restore operation result.</returns>
         [FunctionRender(typeof(ChangeNamespaceResource), "Function.ChangeNamespace.Restore.Name", "Function.ChangeNamespace.Restore.Description", typeof(Register))]
         public async Task<StringAppResponse> Restore(NameSpace_RestoreRequest request)
         {
@@ -200,6 +230,11 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
         }
 
 
+        /// <summary>
+        /// Returns the official archive URL for the selected source hosting site.
+        /// </summary>
+        /// <param name="request">The requested source hosting site.</param>
+        /// <returns>A response containing the archive URL or an unsuccessful diagnostic.</returns>
         [FunctionRender(typeof(ChangeNamespaceResource), "Function.ChangeNamespace.Download.Name", "Function.ChangeNamespace.Download.Description", typeof(Register))]
         public async Task<StringAppResponse> DownloadSourceCode(NameSpace_DownloadSourceCodeRequest request)
         {

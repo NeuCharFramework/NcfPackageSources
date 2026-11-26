@@ -22,12 +22,12 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the soft-delete flag used by global entity filters.
     /// </summary>
     public interface ISoftDelete
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the entity is excluded as deleted.
         /// </summary>
         bool Flag { get; set; }
     }

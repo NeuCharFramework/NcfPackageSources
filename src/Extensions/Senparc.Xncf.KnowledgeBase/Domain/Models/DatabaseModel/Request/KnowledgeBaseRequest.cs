@@ -31,20 +31,18 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
 {
+    /// <summary>
+    /// Carries editable knowledge-base configuration and source-file selections.
+    /// </summary>
     public class KnowledgeBaseRequest
     {
+        /// <summary>Gets or sets the knowledge-base identifier.</summary>
         public int Id { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the embedding model identifier.</summary>
         public int EmbeddingModelId { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the vector database configuration identifier.</summary>
         public int VectorDBId { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the chat model identifier used for retrieval answers.</summary>
         public int ChatModelId { get; set; }
         /// <summary>
         /// name
@@ -53,14 +51,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
 
         public string Content { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets chunking and reranking configuration.</summary>
         public KnowledgeBaseRetrievalConfig RetrievalConfig { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets managed FileManager file identifiers to attach.</summary>
         public List<int> NcfFileIds { get; set; }
     }
 }

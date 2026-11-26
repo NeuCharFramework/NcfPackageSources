@@ -32,6 +32,9 @@ namespace Senparc.IntegrationSample.Pages
 
         public List<Assembly> XncfAssemblies { get; set; }
 
+        /// <summary>
+        /// Handles the sample settings page GET request.
+        /// </summary>
         public void OnGet()
         {
             SenparcCoreSetting = SiteConfig.SenparcCoreSetting with { };

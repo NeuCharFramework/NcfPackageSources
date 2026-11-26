@@ -21,38 +21,37 @@ using System.Collections.Generic;
 namespace Senparc.Web.Infrastructure.Security
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Configures Cloudflare-aware request protection and its fixed-window limits.
     /// </summary>
     public sealed class CloudflareProtectOptions
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// The configuration section name used to bind these options.
         /// </summary>
         public const string SectionName = "CloudflareProtect";
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether Cloudflare protection is enabled.
         /// </summary>
         public bool Enabled { get; set; } = false;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the rate-limit window length in seconds.
         /// </summary>
         public int WindowSeconds { get; set; } = 60;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the maximum requests allowed per window.
         /// </summary>
         public int MaxRequestsPerWindow { get; set; } = 120;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether response security headers are added.
         /// </summary>
         public bool AddSecurityHeaders { get; set; } = true;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the path prefixes to which protection applies.
         /// </summary>
         public List<string> ProtectedPathPrefixes { get; set; } = new List<string>();
     }

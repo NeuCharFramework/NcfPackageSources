@@ -44,6 +44,12 @@ namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
             }
         }
 
+        /// <summary>
+        /// Determines whether a candidate application root contains the expected
+        /// <c>SenparcConfig.config</c> database configuration file.
+        /// </summary>
+        /// <param name="rootDirectoryPath">The candidate application root.</param>
+        /// <returns><see langword="true"/> when the configuration file exists.</returns>
         private static bool HasDatabaseConfiguration(string rootDirectoryPath)
         {
             return File.Exists(Path.Combine(

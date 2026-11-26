@@ -22,9 +22,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Senparc.Xncf.SenMapic
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Stores the sample RGB color used by SenMapic migration demonstrations.</summary>
     [Table(Register.DATABASE_PREFIX + nameof(Color))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class Color : EntityBase<int>
@@ -54,7 +52,7 @@ namespace Senparc.Xncf.SenMapic
         {
             if (red < 0 || green < 0 || blue < 0)
             {
-                Random();//Legacy comment translated to English.
+                Random();
             }
             else
             {
@@ -71,6 +69,7 @@ namespace Senparc.Xncf.SenMapic
             Blue = colorDto.Blue;
         }
 
+        /// <summary>Replaces all color channels with random values.</summary>
         public void Random()
         {
             //generate a random color code
@@ -81,6 +80,7 @@ namespace Senparc.Xncf.SenMapic
             Blue = getRadomColorCode();
         }
 
+        /// <summary>Raises each channel by ten, capped at 255.</summary>
         public void Brighten()
         {
             Red = Math.Min(255, Red + 10);
@@ -88,6 +88,7 @@ namespace Senparc.Xncf.SenMapic
             Blue = Math.Min(255, Blue + 10);
         }
 
+        /// <summary>Lowers each channel by ten, floored at zero.</summary>
         public void Darken()
         {
             Red = Math.Max(0, Red - 10);

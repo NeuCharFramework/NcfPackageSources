@@ -21,14 +21,24 @@ using Senparc.Ncf.Core.Models.VD;
 
 namespace System.Web.Mvc
 {
+    /// <summary>
+    /// Provides Bootstrap-style current-menu state helpers for NCF view models.
+    /// </summary>
     public static class CurrentBsMenuExtensions
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the Bootstrap <c>active</c> class when the current menu matches
+        /// the requested menu or its top-level parent.
         /// </summary>
-        /// <param name="htmlHelper"></param>
-        /// <param name="menuName"></param>
-        /// <returns></returns>
+        /// <param name="htmlHelper">The HTML helper whose view model is inspected.</param>
+        /// <param name="menuName">The menu name or top-level menu segment to compare.</param>
+        /// <returns>
+        /// <c>active</c> for a match; otherwise an empty string.
+        /// </returns>
+        /// <remarks>
+        /// Only models implementing <see cref="IBaseUiVD"/> participate. The helper
+        /// does not mutate the model or view data.
+        /// </remarks>
         public static string CurrentBsMenu(this IHtmlHelper htmlHelper, string menuName)
         {
             if (htmlHelper.ViewData.Model is IBaseUiVD)

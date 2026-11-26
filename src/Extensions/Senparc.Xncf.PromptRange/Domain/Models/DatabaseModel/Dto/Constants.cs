@@ -24,12 +24,10 @@ using Senparc.AI;
 
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Provides provider names and supported API-version constants for PromptRange.</summary>
     public static class Constants
     {
-        //Legacy comment translated to English.
+        // Ordered from legacy-compatible versions to newer preview versions.
         public static readonly List<string> ApiVersionList = new()
         {
             "2022-12-01", "2023-03-15-preview", "2023-05-15",

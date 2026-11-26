@@ -32,6 +32,10 @@ public sealed class WeixinClawMessageDispatcher
     /// Initializes the ordered message-handler dispatcher.
     /// </summary>
     /// <param name="handlers">Handlers invoked sequentially for each received message.</param>
+    /// <summary>
+    /// Initializes a dispatcher with the ordered inbound message handlers.
+    /// </summary>
+    /// <param name="handlers">Handlers considered for each received message.</param>
     public WeixinClawMessageDispatcher(IEnumerable<IWeixinClawMessageHandler> handlers)
     {
         _handlers = handlers;

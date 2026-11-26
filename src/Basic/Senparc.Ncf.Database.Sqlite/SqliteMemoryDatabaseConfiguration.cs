@@ -65,6 +65,7 @@ namespace Senparc.Ncf.Database.Sqlite
         };
 
 
+        /// <inheritdoc />
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
             dbConnection.Open();
@@ -73,6 +74,7 @@ namespace Senparc.Ncf.Database.Sqlite
             return null;
         }
 
+        /// <inheritdoc />
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
             return $"DROP TABLE IF EXISTS {tableName}";

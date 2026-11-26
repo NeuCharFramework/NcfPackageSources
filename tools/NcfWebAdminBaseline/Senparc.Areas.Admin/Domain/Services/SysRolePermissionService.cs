@@ -28,17 +28,24 @@ namespace Senparc.Areas.Admin.Domain.Services
     {
         private readonly ISysRolePermissionRepository _repo;
 
+        /// <summary>
+        /// Initializes the role-permission service with its repository and service provider.
+        /// </summary>
+        /// <param name="repo">The repository used for permission persistence and queries.</param>
+        /// <param name="serviceProvider">The request service provider used for caching services.</param>
         public SysRolePermissionService(ISysRolePermissionRepository repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             _repo = repo;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether an administrator has at least one of the requested resource codes,
+        /// using the distributed cache when available and refreshing it from the repository otherwise.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <param name="adminUserInfoId">currentuserId</param>
-        /// <returns></returns>
+        /// <param name="resourceCodes">The resource codes to test.</param>
+        /// <param name="adminUserInfoId">The administrator identifier whose permissions are checked.</param>
+        /// <returns><see langword="true"/> when any requested code is granted.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="resourceCodes"/> is null.</exception>
         internal async Task<bool> HasPermissionAsync(IEnumerable<string> resourceCodes, int adminUserInfoId)
         {
             if (!resourceCodes.Any())

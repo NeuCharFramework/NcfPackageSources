@@ -23,11 +23,12 @@ using Senparc.Xncf.Sandbox.Domain.Services;
 namespace Senparc.Xncf.Sandbox.OHS.Local.Middleware;
 
 /// <summary>
-/// /sandbox-jupyter/{sessionId}/... → http://127.0.0.1:{port}/sandbox-jupyter/{sessionId}/...
-///Legacy comment translated to English.
+/// Proxies authenticated Jupyter requests from the public sandbox route to the
+/// loopback port owned by an interactive sandbox session.
 /// </summary>
 public sealed class SandboxJupyterProxyMiddleware
 {
+    /// <summary>Gets the named HTTP client used for Jupyter proxy requests.</summary>
     public const string HttpClientName = "Senparc.Xncf.Sandbox.JupyterProxy";
 
     private static readonly HashSet<string> HopByHopHeaders = new(StringComparer.OrdinalIgnoreCase)
@@ -41,6 +42,13 @@ public sealed class SandboxJupyterProxyMiddleware
     private readonly SandboxOrchestrator _orchestrator;
     private readonly ILogger<SandboxJupyterProxyMiddleware> _logger;
 
+    /// <summary>
+    /// Initializes the Jupyter proxy middleware.
+    /// </summary>
+    /// <param name="next">The next middleware in the request pipeline.</param>
+    /// <param name="httpClientFactory">The factory for outbound proxy clients.</param>
+    /// <param name="orchestrator">The sandbox orchestrator resolving session targets.</param>
+    /// <param name="logger">The proxy diagnostic logger.</param>
     public SandboxJupyterProxyMiddleware(
         RequestDelegate next,
         IHttpClientFactory httpClientFactory,
@@ -53,6 +61,10 @@ public sealed class SandboxJupyterProxyMiddleware
         _logger = logger;
     }
 
+    /// <summary>
+    /// Authenticates and proxies one Jupyter HTTP or WebSocket request to the sandbox session.
+    /// </summary>
+    /// <param name="context">The current HTTP request context.</param>
     public async Task InvokeAsync(HttpContext context)
     {
         if (!SandboxJupyterPaths.TryParse(context.Request.Path.Value ?? string.Empty, out var sessionId, out var remaining))
@@ -113,6 +125,12 @@ public sealed class SandboxJupyterProxyMiddleware
         await ProxyHttpAsync(context, target, backendPath).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Proxies an HTTP request to the authenticated Jupyter backend while filtering hop-by-hop headers.
+    /// </summary>
+    /// <param name="context">The incoming HTTP context.</param>
+    /// <param name="target">The resolved sandbox target and access token.</param>
+    /// <param name="backendPath">The backend path including the Jupyter base path.</param>
     private async Task ProxyHttpAsync(HttpContext context, SandboxJupyterProxyTarget target, string backendPath)
     {
         var client = _httpClientFactory.CreateClient(HttpClientName);
@@ -166,6 +184,12 @@ public sealed class SandboxJupyterProxyMiddleware
         await response.Content.CopyToAsync(context.Response.Body, context.RequestAborted).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Bridges a client WebSocket to the Jupyter backend WebSocket.
+    /// </summary>
+    /// <param name="context">The incoming WebSocket context.</param>
+    /// <param name="target">The resolved sandbox target and access token.</param>
+    /// <param name="backendPath">The backend WebSocket path.</param>
     private async Task ProxyWebSocketAsync(HttpContext context, SandboxJupyterProxyTarget target, string backendPath)
     {
         var query = AppendTokenQuery(context.Request.QueryString.Value, target.AccessToken);
@@ -196,6 +220,12 @@ public sealed class SandboxJupyterProxyMiddleware
         await Task.WhenAny(toUpstream, toClient).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Copies WebSocket frames until either side closes or cancellation is requested.
+    /// </summary>
+    /// <param name="source">The source socket.</param>
+    /// <param name="destination">The destination socket.</param>
+    /// <param name="cancellationToken">Token used to stop frame pumping.</param>
     private static async Task PumpAsync(WebSocket source, WebSocket destination, CancellationToken cancellationToken)
     {
         var buffer = new byte[1024 * 16];
@@ -225,6 +255,11 @@ public sealed class SandboxJupyterProxyMiddleware
         }
     }
 
+    /// <summary>
+    /// Copies safe request headers while excluding hop-by-hop, authorization, and cookie headers.
+    /// </summary>
+    /// <param name="source">The incoming request.</param>
+    /// <param name="destination">The upstream request.</param>
     private static void CopyRequestHeaders(HttpRequest source, HttpRequestMessage destination)
     {
         foreach (var header in source.Headers)
@@ -244,6 +279,12 @@ public sealed class SandboxJupyterProxyMiddleware
         }
     }
 
+    /// <summary>
+    /// Adds the Jupyter token query parameter when one is not already present.
+    /// </summary>
+    /// <param name="query">The existing query string.</param>
+    /// <param name="token">The access token.</param>
+    /// <returns>The query string containing a token.</returns>
     private static string AppendTokenQuery(string? query, string token)
     {
         var q = (query ?? string.Empty).TrimStart('?');

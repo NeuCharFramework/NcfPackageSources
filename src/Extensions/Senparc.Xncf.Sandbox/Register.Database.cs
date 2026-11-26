@@ -38,13 +38,23 @@ namespace Senparc.Xncf.Sandbox
         /// </summary>
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
-        public void OnModelCreating(ModelBuilder modelBuilder)
+    /// <summary>
+    /// Applies Sandbox entity mappings to the module database model.
+    /// The current module relies on convention-based and automatic mappings.
+    /// </summary>
+    /// <param name="modelBuilder">The Entity Framework Core model builder.</param>
+    public void OnModelCreating(ModelBuilder modelBuilder)
         {
             //after implementing the [XncfAutoConfigurationMapping] attribute, this runs automatically and no manual registration is needed
             //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
         }
 
-        public void AddXncfDatabaseModule(IServiceCollection services)
+    /// <summary>
+    /// Registers Sandbox database services.
+    /// The current module has no additional registrations beyond shared infrastructure.
+    /// </summary>
+    /// <param name="services">The application dependency-injection service collection.</param>
+    public void AddXncfDatabaseModule(IServiceCollection services)
         {
             //DOT REMOVE OR MODIFY THIS LINE - Entities Point
             //ex. services.AddScoped(typeof(Color));

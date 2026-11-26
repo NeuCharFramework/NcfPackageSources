@@ -51,6 +51,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         private string _userId = "XncfBuilder"; //Legacy comment translated to English.
 
+        /// <summary>
+        /// Initializes prompt execution with range/item persistence and AI settings.
+        /// </summary>
+        /// <param name="promptRangeService">The prompt-range service.</param>
+        /// <param name="promptItemService">The prompt-item service.</param>
+        /// <param name="senparcAiSetting">Optional AI settings; global settings are used when absent.</param>
+        /// <param name="aiModelService">Optional AI model service.</param>
         public PromptService(PromptRangeService promptRangeService, PromptItemService promptItemService, ISenparcAiSetting senparcAiSetting = null, AIModelService aiModelService = null)
         {
             this._promptRangeService = promptRangeService;
@@ -61,6 +68,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             _aiModelService = aiModelService;
         }
 
+        /// <summary>
+        /// Rebuilds the text-completion kernel using supplied or global AI settings.
+        /// </summary>
+        /// <param name="senparcAiSetting">Optional AI settings.</param>
+        /// <param name="userId">Optional execution user identifier.</param>
+        /// <param name="modelName">Optional model name retained for compatibility.</param>
+        /// <returns>The rebuilt agent runner.</returns>
         public IWantToRun ReBuildKernel(ISenparcAiSetting senparcAiSetting = null, string userId = null, string modelName = null)
         {
             senparcAiSetting ??= Senparc.AI.Config.SenparcAiSetting;
@@ -72,12 +86,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         /* Legacy comment translated to English. */
 
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///// </summary>
+        // The former generic prompt-result helper is retained only as historical
+        // reference; current execution uses the active PromptResultService pipeline.
         ///// <typeparam name="T"></typeparam>
         ///// <param name="senparcAiSetting"></param>
         ///// <param name="input"></param>
@@ -312,11 +322,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         //}
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Converts a function name into a safe identifier for PromptRange function registration.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The source function name.</param>
+        /// <returns>The name with dots, dashes, and spaces replaced by underscores.</returns>
         public string GetAvaliableFunctionName(string name)
         {
             return name.Replace(".", "_").Replace("-", "_").Replace(" ", "_");

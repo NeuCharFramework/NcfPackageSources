@@ -47,6 +47,11 @@ public sealed class IndexModel(
 
     public WeixinClawIntegrationPageDto PageData { get; private set; } = new();
 
+    /// <summary>
+    /// Loads WeixinClaw integration settings, current binding counts, and
+    /// workflows available to the current administrator.
+    /// </summary>
+    /// <returns>The populated integration page.</returns>
     public async Task<IActionResult> OnGetAsync()
     {
         var currentAdminUserId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;

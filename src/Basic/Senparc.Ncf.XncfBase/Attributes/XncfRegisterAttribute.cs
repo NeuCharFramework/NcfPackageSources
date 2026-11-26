@@ -20,7 +20,7 @@ using System;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Marks a type as the registration entry point for an XNCF module.
     /// </summary>
     public class XncfRegisterAttribute : Attribute
     {

@@ -21,14 +21,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Senparc.Xncf.SenMapic
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Identifies the lifecycle state of a SenMapic crawl task.</summary>
     public enum SenMapicTaskStatus
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>The crawl failed.</summary>
         Error = -1,
         /// <summary>
         /// waitstart
@@ -38,15 +34,11 @@ namespace Senparc.Xncf.SenMapic
         /// in progress
         /// </summary>
         Running = 1,
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>The task is waiting to start.</summary>
         Completed = 2
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Stores bounded crawl settings, progress, lifecycle state, and errors.</summary>
     [Table(Register.DATABASE_PREFIX + nameof(SenMapicTask))]
     [Serializable]
     public class SenMapicTask : EntityBase<int>
@@ -56,29 +48,19 @@ namespace Senparc.Xncf.SenMapic
         /// </summary>
         public string Name { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the initial URL to crawl.</summary>
         public string StartUrl { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the maximum crawler concurrency.</summary>
         public int MaxThread { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the maximum build duration in minutes.</summary>
         public int MaxBuildMinutes { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the maximum crawl depth.</summary>
         public int MaxDeep { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the maximum page count.</summary>
         public int MaxPageCount { get; private set; }
 
         /// <summary>
@@ -86,19 +68,13 @@ namespace Senparc.Xncf.SenMapic
         /// </summary>
         public SenMapicTaskStatus Status { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the task start timestamp.</summary>
         public DateTime? StartTime { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the task end timestamp.</summary>
         public DateTime? EndTime { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the number of crawled pages.</summary>
         public int CrawledPages { get; private set; }
 
         /// <summary>
@@ -106,8 +82,20 @@ namespace Senparc.Xncf.SenMapic
         /// </summary>
         public string ErrorMessage { get; private set; }
 
+        /// <summary>
+        /// Initializes an empty task for ORM materialization.
+        /// </summary>
         private SenMapicTask() { }
 
+        /// <summary>
+        /// Creates a waiting crawl task with bounded execution settings supplied by the caller.
+        /// </summary>
+        /// <param name="name">The task display name.</param>
+        /// <param name="startUrl">The initial crawl URL.</param>
+        /// <param name="maxThread">The maximum crawler concurrency.</param>
+        /// <param name="maxBuildMinutes">The maximum build duration.</param>
+        /// <param name="maxDeep">The maximum crawl depth.</param>
+        /// <param name="maxPageCount">The maximum pages to crawl.</param>
         public SenMapicTask(string name, string startUrl, int maxThread = 4, int maxBuildMinutes = 10, 
             int maxDeep = 5, int maxPageCount = 500)
         {
@@ -121,18 +109,28 @@ namespace Senparc.Xncf.SenMapic
             CrawledPages = 0;
         }
 
+        /// <summary>
+        /// Marks the crawl task as running and records its start time.
+        /// </summary>
         public void Start()
         {
             Status = SenMapicTaskStatus.Running;
             StartTime = DateTime.Now;
         }
 
+        /// <summary>
+        /// Marks the crawl task as completed and records its end time.
+        /// </summary>
         public void Complete()
         {
             Status = SenMapicTaskStatus.Completed;
             EndTime = DateTime.Now;
         }
 
+        /// <summary>
+        /// Marks the crawl task as failed and stores its error message.
+        /// </summary>
+        /// <param name="message">The failure message.</param>
         public void Error(string message)
         {
             Status = SenMapicTaskStatus.Error;
@@ -140,9 +138,12 @@ namespace Senparc.Xncf.SenMapic
             ErrorMessage = message;
         }
 
+        /// <summary>
+        /// Increments the count of pages successfully processed by the crawler.
+        /// </summary>
         public void IncrementCrawledPages()
         {
             CrawledPages++;
         }
     }
-} 
+}

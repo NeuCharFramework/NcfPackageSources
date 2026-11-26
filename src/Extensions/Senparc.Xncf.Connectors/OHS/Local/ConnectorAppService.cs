@@ -162,6 +162,10 @@ public sealed class InvokeConnectorRequest : FunctionAppRequestBase
     /// In addition to base data, this loads enabled connector instances and distinct action choices
     /// into the non-serialized selection lists used by the function UI.
     /// </remarks>
+    /// <inheritdoc />
+    /// <remarks>
+    /// Populates connector-instance and action selections from the current gateway catalog.
+    /// </remarks>
     public override async Task LoadData(IServiceProvider serviceProvider)
     {
         await base.LoadData(serviceProvider).ConfigureAwait(false);

@@ -31,6 +31,11 @@ namespace Senparc.Xncf.WeixinManager.WeixinTemplate
 
         public string TemplateName { get; set; }
 
+        /// <summary>
+        /// Initializes the base values required by a Weixin template message.
+        /// </summary>
+        /// <param name="templateId">The Weixin template identifier.</param>
+        /// <param name="templateName">The template display name used for diagnostics.</param>
         public WeixinTemplateBase(string templateId, string templateName)
         {
             TemplateId = templateId;

@@ -31,6 +31,13 @@ namespace Senparc.Xncf.Swagger.Builder
 {
     public static class CustomSwaggerServiceCollectionExtensions
     {
+        /// <summary>
+        /// Registers the custom Swagger generator, dynamic API documents, XML comments,
+        /// annotations, and module-specific operation filters.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="docXmlPath">The directory used to locate generated XML documentation files.</param>
+        /// <returns>The same service collection after Swagger registration.</returns>
         public static IServiceCollection AddSwaggerCustom(this IServiceCollection services, string docXmlPath)
         {
             var options = ConfigurationHelper.CustsomSwaggerOptions;

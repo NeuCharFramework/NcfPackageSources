@@ -22,9 +22,8 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.Attributes
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Marks an Entity Framework Core configuration class for automatic discovery
+    /// by the XNCF database registration pipeline.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class XncfAutoConfigurationMappingAttribute : Attribute

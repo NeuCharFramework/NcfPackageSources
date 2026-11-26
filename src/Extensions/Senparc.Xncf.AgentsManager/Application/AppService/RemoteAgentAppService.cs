@@ -38,7 +38,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides authenticated APIs for configuring and testing remote A2A Agents.
     /// </summary>
     [ApiAuthorize]
     public class RemoteAgentAppService : AppServiceBase
@@ -47,6 +47,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         private readonly ChatGroupRemoteMemberService _chatGroupRemoteMemberService;
         private readonly RemoteA2AAgentFactory _remoteA2AAgentFactory;
 
+        /// <summary>
+        /// Initializes remote A2A agent management and ChatGroup membership services.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base application service.</param>
+        /// <param name="remoteAgentService">The remote-agent persistence service.</param>
+        /// <param name="chatGroupRemoteMemberService">The service used to verify group references before deletion.</param>
+        /// <param name="remoteA2AAgentFactory">The factory used to test remote A2A connections.</param>
         public RemoteAgentAppService(
             IServiceProvider serviceProvider,
             RemoteAgentService remoteAgentService,
@@ -59,6 +66,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             _remoteA2AAgentFactory = remoteA2AAgentFactory;
         }
 
+        /// <summary>
+        /// Returns a paged list of configured remote A2A agents filtered by name.
+        /// </summary>
+        /// <param name="pageIndex">The zero-based page index.</param>
+        /// <param name="pageSize">The page size; zero requests the service default.</param>
+        /// <param name="filter">Optional name filter.</param>
+        /// <returns>A response containing the paged remote-agent DTO list.</returns>
         [ApiBind]
         public async Task<AppResponseBase<RemoteAgent_GetListResponse>> GetList(int pageIndex = 0, int pageSize = 0, string filter = "")
         {
@@ -81,6 +95,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Loads one remote A2A agent configuration.
+        /// </summary>
+        /// <param name="id">The remote-agent identifier.</param>
+        /// <returns>A response containing the remote-agent DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the identifier does not exist.</exception>
         [ApiBind]
         public async Task<AppResponseBase<RemoteAgent_GetItemResponse>> GetItem(int id)
         {
@@ -92,6 +112,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Creates or updates a remote A2A agent after validating its URL and authentication settings.
+        /// </summary>
+        /// <param name="remoteAgentDto">The remote-agent configuration.</param>
+        /// <returns>A response containing the persisted remote-agent DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the configuration is invalid or the target does not exist.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<RemoteAgent_SetResponse>> SetRemoteAgent(RemoteAgentDto remoteAgentDto)
         {
@@ -115,6 +141,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Tests connectivity to one configured remote A2A agent and persists its availability state.
+        /// </summary>
+        /// <param name="id">The remote-agent identifier.</param>
+        /// <returns>A response containing the connection-test message.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the agent is missing or the connection test fails.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> TestConnection(int id)
         {
@@ -132,8 +164,18 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Tests either the selected remote agents or every configured remote agent and returns
+        /// an individual result for each requested identifier.
         /// </summary>
+        /// <param name="request">Optional remote-agent identifiers; an empty selection tests all agents.</param>
+        /// <returns>A response containing one connection result per requested agent.</returns>
+        /// <summary>
+        /// Enables or disables a remote A2A agent configuration.
+        /// </summary>
+        /// <param name="id">The remote-agent identifier.</param>
+        /// <param name="enable">Whether the agent should be enabled.</param>
+        /// <returns>A response containing the operation message.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the remote agent does not exist.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<RemoteAgent_TestConnectionsResponse>> TestConnections(
             [FromBody] RemoteAgent_TestConnectionsRequest request)
@@ -177,6 +219,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Enables or disables one remote A2A agent and persists the new availability state.
+        /// </summary>
+        /// <param name="id">The remote-agent identifier.</param>
+        /// <param name="enable">Whether the agent should be available for selection.</param>
+        /// <returns>A response containing the state-transition message.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the remote agent does not exist.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> Enable(int id, bool enable)
         {
@@ -198,6 +247,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Deletes a remote A2A agent that is not referenced by any ChatGroup.
+        /// </summary>
+        /// <param name="id">The remote-agent identifier.</param>
+        /// <returns>A response containing the deletion message.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the agent is missing or still belongs to a ChatGroup.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> Delete(int id)
         {
@@ -216,6 +271,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Validates the remote agent URL and authentication-mode requirements.
+        /// </summary>
+        /// <param name="dto">The configuration to validate.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when required values or authentication settings are invalid.</exception>
         private static void Validate(RemoteAgentDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto?.Name))
@@ -242,6 +302,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             }
         }
 
+        /// <summary>
+        /// Tests a remote A2A connection, persists the resulting availability state,
+        /// and converts success or failure into the application response DTO.
+        /// </summary>
+        /// <param name="remoteAgent">The remote Agent configuration to test.</param>
+        /// <returns>The connection test result and updated remote-agent DTO.</returns>
         private async Task<RemoteAgent_ConnectionTestResult> TestRemoteAgentConnectionAsync(RemoteAgent remoteAgent)
         {
             try

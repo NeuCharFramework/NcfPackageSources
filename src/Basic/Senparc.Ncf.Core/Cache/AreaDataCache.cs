@@ -24,59 +24,59 @@ using Senparc.Ncf.Core.Models;
 
 namespace Senparc.Ncf.Core.Cache
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Singleton cache for province area records.</summary>
     [AutoDIType(DILifecycleType.Singleton)]
     public class AreaDataCache_Province : BaseCache<List<AreaXML_Provinces>>
     {
         public const string CACHE_KEY = "AreaDataCache:Province";
 
 
+        /// <summary>Initializes the province cache with the module cache key.</summary>
         public AreaDataCache_Province()
             : base(CACHE_KEY, null)
         {
             base.TimeOut = 9999;
         }
 
+        /// <inheritdoc />
         public override List<AreaXML_Provinces> Update()
         {
             return null;
         }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Cache for city area records.</summary>
     public class AreaDataCache_City : BaseCache<List<AreaXML_Cities>>
     {
         public const string CACHE_KEY = "AreaDataCache:City";
 
+        /// <summary>Initializes the city cache with the module cache key.</summary>
         public AreaDataCache_City()
             : base(CACHE_KEY, null)
         {
             base.TimeOut = 9999;
         }
 
+        /// <inheritdoc />
         public override List<AreaXML_Cities> Update()
         {
             return null;
         }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Cache for district area records.</summary>
     public class AreaDataCache_District : BaseCache<List<AreaXML_Districts>>
     {
         public const string CACHE_KEY = "AreaDataCache:District";
 
+        /// <summary>Initializes the district cache with the module cache key.</summary>
         public AreaDataCache_District()
             : base(CACHE_KEY, null)
         {
             base.TimeOut = 9999;
         }
 
+        /// <inheritdoc />
         public override List<AreaXML_Districts> Update()
         {
             return null;

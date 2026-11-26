@@ -46,6 +46,10 @@ public sealed class NeuCharWorkflowWebhookController : ControllerBase
 
     private readonly NeuCharWorkflowAppService _workflowAppService;
 
+    /// <summary>
+    /// Initializes the anonymous workflow Webhook controller.
+    /// </summary>
+    /// <param name="workflowAppService">The service that validates and starts workflow runs.</param>
     public NeuCharWorkflowWebhookController(
         NeuCharWorkflowAppService workflowAppService)
     {
@@ -54,6 +58,13 @@ public sealed class NeuCharWorkflowWebhookController : ControllerBase
 
     // Do not declare an HTTP verb constraint here. The route accepts any verb when
     // configured as any; GET/POST restrictions return 405 from the validation below.
+    /// <summary>
+    /// Accepts a configured Webhook request, normalizes its query/form/JSON values,
+    /// validates the access token and method, and starts the workflow asynchronously.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier in the route.</param>
+    /// <param name="cancellationToken">Token used to cancel request parsing or dispatch.</param>
+    /// <returns>An HTTP result representing acceptance, validation failure, authorization failure, or conflict.</returns>
     [Route("{workflowId:int}")]
     [RequestSizeLimit(MaxRequestBytes)]
     public async Task<IActionResult> TriggerAsync(int workflowId, CancellationToken cancellationToken)
@@ -86,6 +97,12 @@ public sealed class NeuCharWorkflowWebhookController : ControllerBase
             : new { success = false, errorMessage = result.ErrorMessage, missingParameters = result.MissingParameters });
     }
 
+    /// <summary>
+    /// Reads query, form, JSON, or raw-body values while excluding the access token.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel body reading.</param>
+    /// <returns>The normalized request values.</returns>
+    /// <exception cref="InvalidDataException">Thrown when the body exceeds limits or contains invalid JSON.</exception>
     private async Task<Dictionary<string, object>> ReadValuesAsync(CancellationToken cancellationToken)
     {
         var values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
@@ -151,6 +168,12 @@ public sealed class NeuCharWorkflowWebhookController : ControllerBase
         return values;
     }
 
+    /// <summary>
+    /// Adds a non-blank Webhook parameter key to the normalized value dictionary.
+    /// </summary>
+    /// <param name="values">The mutable value dictionary.</param>
+    /// <param name="key">The parameter key.</param>
+    /// <param name="value">The parameter value.</param>
     private static void SetValue(Dictionary<string, object> values, string key, object value)
     {
         if (!string.IsNullOrWhiteSpace(key))

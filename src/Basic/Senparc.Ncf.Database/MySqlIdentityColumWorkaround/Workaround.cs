@@ -24,15 +24,17 @@ using System.Text;
 namespace Microsoft.EntityFrameworkCore.Metadata
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides a reflection-based compatibility lookup for the Pomelo MySQL
+    /// identity-column strategy enum.
     /// </summary>
     public class MySqlHelper
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves a MySQL value-generation strategy enum member from the provider assembly.
         /// </summary>
-        /// <param name="enumName"></param>
-        /// <returns></returns>
+        /// <param name="enumName">The enum member name, defaulting to <c>IdentityColumn</c>.</param>
+        /// <returns>The reflected enum value.</returns>
+        /// <exception cref="Senparc.Ncf.Core.Exceptions.NcfDatabaseException">Thrown when the provider enum member cannot be found.</exception>
         public static object GetMySqlValueGenerationStrategy(string enumName = "IdentityColumn")
         {
             var field = Type.GetType("Microsoft.EntityFrameworkCore.Metadata.MySqlValueGenerationStrategy,Pomelo.EntityFrameworkCore.MySql").GetFields().FirstOrDefault(z => z.Name == enumName);

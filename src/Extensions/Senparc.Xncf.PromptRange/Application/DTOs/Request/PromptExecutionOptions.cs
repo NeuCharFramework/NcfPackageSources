@@ -25,29 +25,33 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
     public class PromptExecutionOptions
     {
+        /// <summary>Gets or sets whether the generated result is persisted.</summary>
         public bool PersistResult { get; set; } = true;
 
+        /// <summary>Gets or sets text-to-speech execution options.</summary>
         public PromptTextToSpeechExecutionOptions TextToSpeech { get; set; }
 
+        /// <summary>Gets or sets speech-to-text execution options.</summary>
         public PromptSpeechToTextExecutionOptions SpeechToText { get; set; }
 
+        /// <summary>Gets or sets text-embedding search options.</summary>
         public PromptTextEmbeddingExecutionOptions TextEmbedding { get; set; }
     }
 
     public class PromptTextToSpeechExecutionOptions
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the requested voice identifier.
         /// </summary>
         public string Voice { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the output audio format.
         /// </summary>
         public string Format { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the playback speed multiplier.
         /// </summary>
         public float? SpeedRatio { get; set; }
     }
@@ -55,22 +59,22 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
     public class PromptSpeechToTextExecutionOptions
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the uploaded audio file name.
         /// </summary>
         public string AudioFileName { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the base64-encoded audio content.
         /// </summary>
         public string AudioBase64 { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets a server-local relative audio path.
         /// </summary>
         public string AudioLocalRelativePath { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the language hint for speech recognition.
         /// </summary>
         public string Language { get; set; }
     }
@@ -78,22 +82,22 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
     public class PromptTextEmbeddingExecutionOptions
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the vector database identifier.
         /// </summary>
         public int? VectorDbId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the vector collection name.
         /// </summary>
         public string CollectionName { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the semantic-search query.
         /// </summary>
         public string SearchQuery { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the maximum number of vector results.
         /// </summary>
         public int? SearchTopK { get; set; }
     }

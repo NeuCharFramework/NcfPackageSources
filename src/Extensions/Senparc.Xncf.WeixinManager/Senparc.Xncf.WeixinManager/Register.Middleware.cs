@@ -46,14 +46,14 @@ namespace Senparc.Xncf.WeixinManager
         public static ConcurrentDictionary<string, Type> MpMessageHandlerNames = new ConcurrentDictionary<string, Type>();
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Builds a message-handler factory that creates the requested Weixin message handler
+        /// inside a scoped service provider and applies the account's runtime settings.
         /// </summary>
-        /// <typeparam name="TMC"></typeparam>
-        /// <param name="mpAccountDtoFunc"></param>
-        /// <param name="mpMessageHandlerType"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <typeparam name="TMC">The message-context implementation.</typeparam>
+        /// <param name="mpAccountDtoFunc">Resolves the account configuration for the current scope.</param>
+        /// <param name="mpMessageHandlerType">The handler type requiring the standard constructor.</param>
+        /// <returns>A factory that creates a typed Weixin message handler.</returns>
+        /// <exception cref="Exception">Thrown when the handler cannot be constructed with the required signature.</exception>
         public static Func<Stream, PostModel, int, IServiceProvider, MessageHandler<TMC, IRequestMessageBase, IResponseMessageBase>>
             BuildMessageHandlerFunc<TMC>(Func<IServiceProvider, MpAccountDto> mpAccountDtoFunc, Type mpMessageHandlerType)
                 where TMC : class, IMessageContext<IRequestMessageBase, IResponseMessageBase>, new()
@@ -95,6 +95,12 @@ namespace Senparc.Xncf.WeixinManager
 
         #region Legacy section
 
+        /// <summary>
+        /// Discovers attributed Weixin message handlers and registers the module middleware
+        /// that dispatches inbound messages to the matching handler.
+        /// </summary>
+        /// <param name="app">The application builder.</param>
+        /// <returns>The configured application builder.</returns>
         public IApplicationBuilder UseMiddleware(IApplicationBuilder app)
         {
             try

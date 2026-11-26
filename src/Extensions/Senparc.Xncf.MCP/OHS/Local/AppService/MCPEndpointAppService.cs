@@ -155,7 +155,8 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 MCPEndpoint endpoint;
                 if (request.Id > 0)
                 {
-                    //Legacy comment translated to English.
+                    // Load the existing entity only for updates so a missing ID
+                    // can be reported as a validation error.
                     endpoint = await _mcpEndpointService.GetObjectAsync(x => x.Id == request.Id);
                     if (endpoint == null)
                     {
@@ -164,7 +165,8 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 }
                 else
                 {
-                    //Legacy comment translated to English.
+                    // New endpoints start with an empty persistence model and receive
+                    // all public values from the validated request below.
                     endpoint = new MCPEndpoint();
                 }
 
@@ -404,7 +406,8 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Carries the endpoint address and optional authentication/configuration values
+    /// used by an unsaved MCP connection test.
     /// </summary>
     public class MCPEndpointTestConnectionRequest
     {

@@ -28,6 +28,10 @@ namespace Senparc.Ncf.Core.Cache
 
         public T Data { get; set; }
 
+        /// <summary>
+        /// Initializes queue-cache metadata for a key and records the current activity time.
+        /// </summary>
+        /// <param name="key">The queue-cache key.</param>
         public QueueCacheData(string key)
         {
             Key = key;

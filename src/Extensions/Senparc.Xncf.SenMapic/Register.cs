@@ -68,6 +68,7 @@ namespace Senparc.Xncf.SenMapic
 
         public override string Description => RegisterText.Description;
 
+        /// <inheritdoc />
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //update the database when installing or upgrading a version
@@ -91,6 +92,7 @@ namespace Senparc.Xncf.SenMapic
             }
         }
 
+        /// <inheritdoc />
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             #region Legacy section
@@ -109,6 +111,7 @@ namespace Senparc.Xncf.SenMapic
         }
         #endregion
 
+        /// <inheritdoc />
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
@@ -128,6 +131,7 @@ namespace Senparc.Xncf.SenMapic
             return base.AddXncfModule(services, configuration, env);
         }
 
+        /// <inheritdoc />
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             app.UseStaticFiles(new StaticFileOptions

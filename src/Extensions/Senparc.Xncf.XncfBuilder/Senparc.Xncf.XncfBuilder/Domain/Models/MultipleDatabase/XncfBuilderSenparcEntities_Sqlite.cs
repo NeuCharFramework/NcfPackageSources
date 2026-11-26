@@ -11,7 +11,7 @@ using System.IO;
 namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// SQLite-specific XNCF Builder database context used by runtime registration and migrations.
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.Sqlite, typeof(Register))]
     public class XncfBuilderSenparcEntities_Sqlite : XncfBuilderSenparcEntities, IMultipleMigrationDbContext

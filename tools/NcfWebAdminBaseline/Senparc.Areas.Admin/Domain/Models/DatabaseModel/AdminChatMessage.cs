@@ -62,22 +62,42 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         public string AttachmentsJson { get; private set; }
         public string PromptReferencesJson { get; private set; }
 
+        /// <summary>
+        /// Deserializes the stored prompt-reference payload and validates that it is well formed.
+        /// </summary>
+        /// <returns>The stored prompt references, or an empty list when none are stored.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the stored JSON does not deserialize to references.</exception>
         public IReadOnlyList<PromptReference> GetPromptReferences() =>
             string.IsNullOrEmpty(PromptReferencesJson) ? Array.Empty<PromptReference>()
                 : JsonSerializer.Deserialize<List<PromptReference>>(PromptReferencesJson)
                     ?? throw new InvalidOperationException("Invalid prompt references.");
 
+        /// <summary>
+        /// Validates and serializes prompt references against the current message content.
+        /// </summary>
+        /// <param name="references">The references to store; null or empty input clears the payload.</param>
+        /// <exception cref="ArgumentException">Thrown when a reference range is invalid for <see cref="Content"/>.</exception>
         public void SetPromptReferences(IReadOnlyList<PromptReference> references)
         {
             PromptReference.ValidateRanges(Content, references);
             PromptReferencesJson = references?.Count > 0 ? JsonSerializer.Serialize(references) : null;
         }
 
+        /// <summary>
+        /// Deserializes the stored attachment payload.
+        /// </summary>
+        /// <returns>The stored attachments, or an empty list when none are stored.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the stored JSON cannot be deserialized.</exception>
         public IReadOnlyList<AdminChatAttachment> GetAttachments() =>
             string.IsNullOrEmpty(AttachmentsJson) ? Array.Empty<AdminChatAttachment>()
                 : JsonSerializer.Deserialize<List<AdminChatAttachment>>(AttachmentsJson)
                     ?? throw new InvalidOperationException("消息附件记录无效。");
 
+        /// <summary>
+        /// Serializes the message attachments and clears the payload for empty input.
+        /// </summary>
+        /// <param name="attachments">The attachments or operation results to store.</param>
+        /// <exception cref="ArgumentException">Thrown when more than 100 attachments are supplied.</exception>
         public void SetAttachments(IReadOnlyList<AdminChatAttachment> attachments)
         {
             if (attachments?.Count > 100) throw new ArgumentException("每条消息最多关联 100 个附件或操作结果。");
@@ -123,13 +143,15 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         private AdminChatMessage() { }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Initializes a chat message with session, role, content, sequence, and optional model/trajectory metadata.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <param name="roleType">roletype</param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="sessionId">The owning session identifier.</param>
+        /// <param name="roleType">The role that produced the message.</param>
+        /// <param name="content">The message content; null becomes an empty string.</param>
+        /// <param name="sequence">The message sequence within the session.</param>
+        /// <param name="modelIdentifier">The optional model identifier.</param>
+        /// <param name="trajectoryId">The optional Harness trajectory identifier.</param>
+        /// <param name="trajectorySequence">The optional trajectory-event sequence.</param>
         public AdminChatMessage(
             int sessionId,
             ChatMessageRoleType roleType,
@@ -150,8 +172,9 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces the administrator feedback state and records the entity update time.
         /// </summary>
+        /// <param name="feedback">The new feedback value.</param>
         public void SetFeedback(MessageFeedbackType feedback)
         {
             UserFeedback = feedback;
@@ -159,8 +182,9 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces message content and clears prompt references when the text changes.
         /// </summary>
+        /// <param name="newContent">The replacement content; null leaves the current content unchanged.</param>
         public void UpdateContent(string newContent)
         {
             if (newContent != null)
@@ -171,6 +195,11 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
             }
         }
 
+        /// <summary>
+        /// Associates the message with a Harness trajectory event and records the update time.
+        /// </summary>
+        /// <param name="trajectoryId">The optional trajectory identifier.</param>
+        /// <param name="trajectorySequence">The optional trajectory-event sequence.</param>
         public void SetTrajectory(int? trajectoryId, int? trajectorySequence)
         {
             TrajectoryId = trajectoryId;

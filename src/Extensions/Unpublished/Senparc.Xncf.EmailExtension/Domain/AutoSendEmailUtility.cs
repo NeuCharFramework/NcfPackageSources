@@ -30,38 +30,63 @@ namespace Senparc.Xncf.EmailExtension
     using Senparc.Xncf.EmailExtension.Domain.Cache;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Coordinates the legacy background loop that drains queued email messages
+    /// and retries delivery through configured accounts.
     /// </summary>
     public class AutoSendEmailThreadUtility
     {
-        public static bool OpenAutoSendEmail = true;//settingsautomaticsendstatus
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether automatic queued-email processing is enabled.
+        /// </summary>
+        public static bool OpenAutoSendEmail = true;
+
+        /// <summary>
+        /// Gets whether the background sender has entered its processing loop.
         /// </summary>
         public static bool AutoSendEmailStarted { get; private set; }
-        public static int AutoSendCount = 0;//Legacy comment translated to English.
-        public static int SendSuccessCount = 0;//Legacy comment translated to English.
+
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the number of queued email records examined by the sender.
+        /// </summary>
+        public static int AutoSendCount = 0;
+
+        /// <summary>
+        /// Gets the number of queued email records sent successfully.
+        /// </summary>
+        public static int SendSuccessCount = 0;
+
+        /// <summary>
+        /// Gets or sets the next time at which the sender is expected to resume processing.
         /// </summary>
         public static DateTime NextSendTime { get; set; }
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Records the next wake-up time and blocks the current thread for the
+        /// requested delay.
         /// </summary>
-        /// <param name="seconds"></param>
+        /// <param name="seconds">The delay in seconds.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Propagated by <see cref="Thread.Sleep(int)"/> when the calculated
+        /// millisecond delay is invalid.
+        /// </exception>
         public void SetSleep(int seconds)
         {
             NextSendTime = DateTime.Now.AddSeconds(seconds);
             Thread.Sleep(seconds * 1000);
         }
 
+        /// <summary>
+        /// Processes queued email records when automatic sending is enabled.
+        /// Delivery failures are recorded in the cache and logged; they do not
+        /// abort processing of the remaining records.
+        /// </summary>
+        /// <param name="state">The timer callback state, retained for compatibility.</param>
+        /// <param name="timeout">Whether the timer callback was triggered by a timeout.</param>
         public void SendEventHandler(object state, bool timeout)
         {
             try
             {
-                //Legacy comment translated to English.
                 if (!OpenAutoSendEmail)
                 {
                     AutoSendEmailStarted = false;
@@ -75,7 +100,7 @@ namespace Senparc.Xncf.EmailExtension
 
                 SendEmailCache emailCache = new SendEmailCache();
                 SendEmail sendEmail = new SendEmail(null);
-                var emails = emailCache.Data.ToList();//Legacy comment translated to English.
+                var emails = emailCache.Data.ToList();
                 foreach (var email in emails)
                 {
                     if (!OpenAutoSendEmail)
@@ -88,7 +113,7 @@ namespace Senparc.Xncf.EmailExtension
                     {
                         continue;
                     }
-                    bool useBackEmail = email.SendCount >= 3;//Legacy comment translated to English.
+                    bool useBackEmail = email.SendCount >= 3;
                     var accountType = useBackEmail ? EmailAccountType._163 : EmailAccountType.Default;
 
                     //if (accountType == EmailUserType.Default && email.SendCount == 5 && email.Address.Contains("@163"))

@@ -43,10 +43,9 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Recursively converts flat menu DTOs into localized hierarchical menu items.
+        /// Children are ordered by descending stored sort value.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
         private IList<SysMenuTreeItemDto> BuildTreeItems(IEnumerable<SysMenuDto> iteration, IEnumerable<SysMenuDto> source)
         {
             var items = new List<SysMenuTreeItemDto>();
@@ -73,10 +72,10 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Loads all menus, localizes their display metadata, and builds the root menu hierarchy.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="hasButton">Whether button definitions should be included in the source query.</param>
+        /// <returns>The localized hierarchical menu items.</returns>
         public async Task<IEnumerable<SysMenuTreeItemDto>> GetAllMenusTreeAsync(bool hasButton)
         {
             var allMenus = (await _repo.GetAllMenuDtosAsync(hasButton))
@@ -90,10 +89,10 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads all menu DTOs and applies current localization metadata without building a hierarchy.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="hasButton">Whether button definitions should be included in the source query.</param>
+        /// <returns>The localized flat menu DTO collection.</returns>
         public async Task<IEnumerable<SysMenuDto>> GetAllMenuListAsync(bool hasButton)
         {
             return (await _repo.GetAllMenuDtosAsync(hasButton))

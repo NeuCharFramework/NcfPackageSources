@@ -25,18 +25,23 @@ using System;
 namespace Senparc.Ncf.Core.MultiTenant
 {
     /// <summary>
-    /// MultiTenantHelper
+    /// Validates and retrieves the tenant context associated with the current request.
+    /// </summary>
+    /// <remarks>
+    /// Installation mode bypasses the normal match-success requirement because tenant
+    /// services may not yet be fully initialized while the application is being set up.
     /// </summary>
     public static class MultiTenantHelper
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves the current request tenant and validates that matching succeeded
+        /// outside installation mode.
         /// </summary>
-        /// <param name="serviceProvider"></param>
-        ///Legacy comment translated to English.
-        /// <param name="dbContext"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="serviceProvider">The provider used to resolve request tenant state.</param>
+        /// <param name="referenceMethod">The caller name included in diagnostics.</param>
+        /// <param name="dbContext">Optional context associated with the validation.</param>
+        /// <returns>The resolved request tenant information.</returns>
+        /// <exception cref="NcfTenantException">Thrown when tenant matching failed outside installation.</exception>
         public static RequestTenantInfo TryGetAndCheckRequestTenantInfo(IServiceProvider serviceProvider, string referenceMethod, DbContext dbContext = null)
         {
             var requestTenantInfo = serviceProvider.GetRequiredService<RequestTenantInfo>();
@@ -44,12 +49,6 @@ namespace Senparc.Ncf.Core.MultiTenant
 
             if (!SiteConfig.IsInstalling)
             {
-                //Legacy comment translated to English.
-               //if (!requestTenantInfo.TriedMatching)
-               // {
-               //Legacy comment translated to English.
-               // }
-
                 if (!requestTenantInfo.MatchSuccess)
                 {
                     var errorMsg = SiteConfig.SenparcCoreSetting.EnableMultiTenant ? $"当前多租户状态已经启用，但在 {referenceMethod} 调用过程中发现未捕捉到正确的 RequestTenantInfo.TenantId" : "当前多租户状态未开启";

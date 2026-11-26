@@ -23,6 +23,7 @@ using System.Text;
 
 namespace Senparc.Xncf.XncfBuilder
 {
+    /// <summary>Transfers XNCF Builder solution and generated-module settings.</summary>
     public class ConfigDto : DtoBase
     {
         /// <summary>
@@ -30,21 +31,15 @@ namespace Senparc.Xncf.XncfBuilder
         /// </summary>
         [MaxLength(300)]
         public string SlnPath { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the organization name.</summary>
         [MaxLength(300)]
         public string OrgName { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the generated module name.</summary>
         [MaxLength(50)]
         public string ModuleName { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the module version.</summary>
         [MaxLength(100)]
         public string Version { get; set; }
 

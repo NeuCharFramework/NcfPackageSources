@@ -31,6 +31,9 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.ChangeNamespace
 {
     [XncfRegister]
+    /// <summary>
+    /// Registers the source-wide namespace transformation module.
+    /// </summary>
     public class Register : XncfRegisterBase, IXncfRegister
     {
         private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<ChangeNamespaceResource>(
@@ -38,33 +41,35 @@ namespace Senparc.Xncf.ChangeNamespace
             "修改命名空间",
             "在 NCF 安装后、产品发布前全局修改源码命名空间。此操作不可逆，请提前备份，且不要在已运行的生产环境中使用。");
 
+        /// <summary>
+        /// Initializes the ChangeNamespace module registration metadata.
+        /// </summary>
         public Register()
         { }
 
-        #region Legacy section
+        #region Module metadata
 
+        /// <inheritdoc />
         public override string Name => "Senparc.Xncf.ChangeNamespace";
-        public override string Uid => "476A8F12-860D-4B18-B703-393BBDEFBD85";//Legacy comment translated to English.
+        /// <inheritdoc />
+        public override string Uid => "476A8F12-860D-4B18-B703-393BBDEFBD85";
+        /// <inheritdoc />
         public override string Version => "0.3.9";//the version number is required
 
+        /// <inheritdoc />
         public override string MenuName => RegisterText.MenuName;
+        /// <inheritdoc />
         public override string Icon => "fa fa-space-shuttle";//Legacy comment translated to English.
+        /// <inheritdoc />
         public override string Description => RegisterText.Description;
 
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        //public override IList<Type> Functions => new[] { 
-        //    typeof(Functions.ChangeNamespace),
-        //    typeof(Functions.RestoreNameSpace),
-        //    typeof(Functions.DownloadSourceCode),
-        //};
-
+        /// <inheritdoc />
         public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             return Task.CompletedTask;
         }
 
+        /// <inheritdoc />
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             await unsinstallFunc().ConfigureAwait(false);

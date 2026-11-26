@@ -63,7 +63,7 @@ namespace Senparc.Xncf.Swagger
             "浏览系统 API 接口说明");
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the function used to resolve generated API XML documentation paths.
         /// </summary>
         public static Func<IWebHostEnvironment, string> ApiDocXmlPathFunc = (env) => Path.Combine(env.ContentRootPath, "App_Data", "ApiDocXml");
 
@@ -221,6 +221,7 @@ namespace Senparc.Xncf.Swagger
             return base.AddXncfModule(services, configuration, env);
         }
 
+        /// <inheritdoc />
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             // Add authentication middleware for Swagger UI

@@ -44,6 +44,13 @@ public sealed class NeuCharPivotNeuBellProvider : INeuBellProvider
     public string ProviderId => ProviderName;
     public string ModuleUid => Register.ModuleUid;
 
+    /// <summary>
+    /// Adds a bounded success/failure notification for a completed loop task.
+    /// </summary>
+    /// <param name="taskId">The loop-task identifier.</param>
+    /// <param name="functionName">The executed Function name.</param>
+    /// <param name="succeeded">Whether execution succeeded.</param>
+    /// <param name="completedAt">The completion timestamp.</param>
     public void AddResult(int taskId, string functionName, bool succeeded, DateTimeOffset completedAt)
     {
         _items.Enqueue(new NeuBellItem(
@@ -57,6 +64,10 @@ public sealed class NeuCharPivotNeuBellProvider : INeuBellProvider
         while (_items.Count > Capacity && _items.TryDequeue(out _)) { }
     }
 
+    /// <summary>
+    /// Removes all queued loop-task notifications.
+    /// </summary>
+    /// <returns>The number of notifications removed.</returns>
     public int ConsumeAll()
     {
         var count = 0;
@@ -67,6 +78,12 @@ public sealed class NeuCharPivotNeuBellProvider : INeuBellProvider
         return count;
     }
 
+    /// <summary>
+    /// Returns the current loop-task notifications newest first.
+    /// </summary>
+    /// <param name="context">The NeuBell request context.</param>
+    /// <param name="cancellationToken">Token checked before snapshot creation.</param>
+    /// <returns>The provider snapshot.</returns>
     public ValueTask<NeuBellSnapshot> GetSnapshotAsync(
         NeuBellRequestContext context,
         CancellationToken cancellationToken = default)
@@ -97,6 +114,11 @@ public sealed class NeuCharPivotLoopTaskHostedService : BackgroundService
         _logger = logger;
     }
 
+    /// <inheritdoc/>
+    /// <remarks>
+    /// Polls due tasks every fifteen seconds and isolates each polling-cycle failure
+    /// so a transient task error does not terminate the hosted service.
+    /// </remarks>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         using var timer = new PeriodicTimer(PollInterval);
@@ -117,6 +139,11 @@ public sealed class NeuCharPivotLoopTaskHostedService : BackgroundService
         }
     }
 
+    /// <summary>
+    /// Loads up to twenty due loop tasks, executes their protected Function parameters,
+    /// persists execution logs/status, and optionally publishes NeuBell/workflow results.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel the polling cycle.</param>
     private async Task RunDueTasksAsync(CancellationToken cancellationToken)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -245,6 +272,18 @@ public sealed class NeuCharPivotLoopTaskHostedService : BackgroundService
         }
     }
 
+    /// <summary>
+    /// Sends a completed loop-task result to its configured workflow and persists
+    /// a separate workflow execution log.
+    /// </summary>
+    /// <param name="task">The completed loop task.</param>
+    /// <param name="function">The executed pivot function.</param>
+    /// <param name="succeeded">Whether the Function succeeded.</param>
+    /// <param name="result">The Function result text.</param>
+    /// <param name="error">The Function error text.</param>
+    /// <param name="logService">The execution log service.</param>
+    /// <param name="workflowProvider">The optional workflow provider.</param>
+    /// <param name="cancellationToken">Token used to cancel workflow execution.</param>
     private static async Task TriggerWorkflowAsync(
         NeuCharPivotLoopTask task,
         NeuCharPivotFunction function,

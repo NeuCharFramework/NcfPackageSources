@@ -19,10 +19,18 @@ using System;
 
 namespace Senparc.Ncf.Core.Exceptions
 {
+    /// <summary>
+    /// Indicates that an account is temporarily locked and exposes the next retry time.
+    /// </summary>
     public class LoginLockException : NcfExceptionBase
     {
         public DateTime LockEndTime { get; private set; }
 
+        /// <summary>
+        /// Initializes a login-lock exception with its retry time.
+        /// </summary>
+        /// <param name="lockEndTime">The time at which another login may be attempted.</param>
+        /// <param name="showWrongLoginMessage">Whether the message should include a credential-error hint.</param>
         public LoginLockException(DateTime lockEndTime, bool showWrongLoginMessage=false)
             : base($"{(showWrongLoginMessage?"账号或密码错误！":"")}账号已被锁定，请在 {lockEndTime:yyyy-MM-dd HH:mm:ss} 后重试")
         {

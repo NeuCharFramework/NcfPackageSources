@@ -34,9 +34,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Extensions
 {
     public static class PromptRangeItemHelper
     {
+        /// <summary>
+        /// Adds a manual-entry option and the currently available PromptRange items to a selection list.
+        /// </summary>
+        /// <param name="serviceProvider">The provider used to resolve <see cref="PromptItemService"/>.</param>
+        /// <param name="SystemMessagePromptCodeSelection">The selection list receiving prompt-code options.</param>
+        /// <returns>A task that completes after the prompt tree has been loaded.</returns>
         public static async Task LoadPromptRangeItemSelection(IServiceProvider serviceProvider, SelectionList SystemMessagePromptCodeSelection)
         {
-            //Legacy comment translated to English.
             SystemMessagePromptCodeSelection.Items.Add(new SelectionItem()
             {
                 Value = "0",

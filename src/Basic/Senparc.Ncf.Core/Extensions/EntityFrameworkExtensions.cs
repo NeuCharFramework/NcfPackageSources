@@ -24,6 +24,15 @@ namespace Senparc.Ncf.Core.Extensions
 {
     public class EntityFrameworkExtensions
     {
+        /// <summary>
+        /// Builds a predicate that compares a selected property against any supplied value.
+        /// </summary>
+        /// <typeparam name="TElement">The queried element type.</typeparam>
+        /// <typeparam name="TValue">The selected property and comparison value type.</typeparam>
+        /// <param name="valueSelector">The property selector.</param>
+        /// <param name="values">The accepted values.</param>
+        /// <returns>An OR-composed equality predicate, or an always-false predicate for no values.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the selector or values sequence is null.</exception>
         public static Expression<Func<TElement, bool>> BuildContainsExpression<TElement, TValue>(Expression<Func<TElement, TValue>> valueSelector, IEnumerable<TValue> values)
         {
             if (null == valueSelector)

@@ -13,13 +13,17 @@ using Senparc.Ncf.Service;
 
 namespace Senparc.Service.OperationQueue
 {
+    /// <summary>
+    /// Implements deferred account-image download and update operations.
+    /// </summary>
     public class OperationQueueService
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Downloads a remote image and writes it below the application content root.
         /// </summary>
-        /// <param name="picUrl"></param>
-        /// <param name="fileName"></param>
+        /// <param name="picUrl">The remote image URL.</param>
+        /// <param name="fileName">The application-relative destination path.</param>
+        /// <exception cref="IOException">Thrown when the destination cannot be created or written.</exception>
         public async Task DownLoadPicAsync(string picUrl, string fileName)
         {
             using (MemoryStream stream = new MemoryStream())
@@ -35,10 +39,15 @@ namespace Senparc.Service.OperationQueue
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Downloads a new avatar image, updates the account picture path, and persists
+        /// the account change.
         /// </summary>
-        /// <param name="accountId"></param>
-        /// <returns></returns>
+        /// <param name="accountId">The account identifier to update.</param>
+        /// <param name="headImgUrl">The remote avatar image URL.</param>
+        /// <returns>The updated account entity.</returns>
+        /// <exception cref="Exception">
+        /// Thrown when the image URL is empty or the account cannot be found.
+        /// </exception>
         public async Task<Account> UpdateAccountHeadImgAsync(int accountId, string headImgUrl)
         {
             if (headImgUrl.IsNullOrEmpty())
@@ -57,13 +66,12 @@ namespace Senparc.Service.OperationQueue
 
                 var fileName = $@"/Upload/User/headimgurl.{DateTime.Now.Ticks + Guid.NewGuid().ToString("n").Substring(0, 8)}.jpg";
 
-                //Legacy comment translated to English.
                 var t3 = DateTime.Now;
                 await DownLoadPicAsync(headImgUrl, fileName);
                 var t4 = DateTime.Now;
-                LogUtility.Account.Debug($"更新用户头像（ID：{accountId}，UserName：{account.UserName}），下载图片耗时：{(t4 - t3).TotalMilliseconds}ms");//Legacy comment translated to English.
+                LogUtility.Account.Debug($"更新用户头像（ID：{accountId}，UserName：{account.UserName}），下载图片耗时：{(t4 - t3).TotalMilliseconds}ms");
 
-                account.PicUrl = fileName;//Legacy comment translated to English.
+                account.PicUrl = fileName;
                 accountService.SaveObject(account);
                 return account;
             }

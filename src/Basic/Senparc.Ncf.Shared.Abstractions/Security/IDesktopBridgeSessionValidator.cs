@@ -20,13 +20,25 @@ using System.Threading;
 namespace Senparc.Ncf.Shared.Abstractions.Security;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Validates the session token used by DesktopBridge connections.
 /// </summary>
 public interface IDesktopBridgeSessionValidator
 {
+    /// <summary>
+    /// Gets the HTTP header name from which the session token is read.
+    /// </summary>
     string HeaderName { get; }
 
+    /// <summary>
+    /// Gets a value indicating whether DesktopBridge token validation is configured.
+    /// </summary>
     bool IsConfigured { get; }
 
+    /// <summary>
+    /// Validates a supplied token and returns the revocation signal for the session.
+    /// </summary>
+    /// <param name="suppliedToken">The token supplied by the desktop client.</param>
+    /// <param name="sessionRevoked">Receives a token that is cancelled when the session is revoked.</param>
+    /// <returns><see langword="true"/> when the token is authorized.</returns>
     bool TryAuthorize(string? suppliedToken, out CancellationToken sessionRevoked);
 }

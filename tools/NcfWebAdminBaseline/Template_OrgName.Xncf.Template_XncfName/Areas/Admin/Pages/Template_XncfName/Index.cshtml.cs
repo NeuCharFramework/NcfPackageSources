@@ -10,6 +10,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
 
         }
 
+        /// <summary>
+        /// Handles the template module administration page GET request.
+        /// </summary>
         public void OnGet()
         {
         }

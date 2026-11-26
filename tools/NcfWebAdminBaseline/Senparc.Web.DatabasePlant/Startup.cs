@@ -14,11 +14,22 @@ namespace Senparc.Web.DatabasePlant
     {
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        /// <summary>
+        /// Registers services for the minimal database-plant host.
+        /// The current sample does not add application services.
+        /// </summary>
+        /// <param name="services">The dependency-injection collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// Configures development error handling, routing, and the minimal
+        /// root endpoint used by the database-plant host.
+        /// </summary>
+        /// <param name="app">The application pipeline builder.</param>
+        /// <param name="env">The host environment.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

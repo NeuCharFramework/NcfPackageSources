@@ -31,6 +31,13 @@ namespace Senparc.Areas.Admin.Domain.Services;
 /// </summary>
 public static class AdminChatWorkflowToolFactory
 {
+    /// <summary>
+    /// Creates an AI function that invokes the selected owner-scoped workflow.
+    /// </summary>
+    /// <param name="provider">The workflow function-calling provider.</param>
+    /// <param name="adminUserId">The administrator owner used for authorization.</param>
+    /// <param name="workflow">The workflow descriptor and parameter contract.</param>
+    /// <returns>The invocable workflow AI function.</returns>
     public static AIFunction Create(
         IWorkflowFunctionCallingProvider provider,
         int adminUserId,
@@ -99,6 +106,12 @@ public static class AdminChatWorkflowToolFactory
                 : $"Workflow 调用失败：{result.ErrorMessage ?? "未知错误"}";
         }
 
+        /// <summary>
+        /// Builds a closed JSON object schema with required input and optional
+        /// string workflow parameters.
+        /// </summary>
+        /// <param name="workflow">The workflow descriptor.</param>
+        /// <returns>The serialized AI tool input schema.</returns>
         private static JsonElement BuildJsonSchema(WorkflowFunctionCallingDescriptor workflow)
         {
             var properties = new Dictionary<string, object?>
@@ -139,6 +152,11 @@ public static class AdminChatWorkflowToolFactory
             return document.RootElement.Clone();
         }
 
+        /// <summary>
+        /// Converts AI argument values, including JSON elements, to workflow input text.
+        /// </summary>
+        /// <param name="value">The argument value.</param>
+        /// <returns>A string representation, or an empty string for null.</returns>
         private static string ConvertToString(object value) =>
             value switch
             {

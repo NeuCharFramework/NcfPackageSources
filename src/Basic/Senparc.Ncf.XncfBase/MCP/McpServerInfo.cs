@@ -62,9 +62,13 @@ namespace Senparc.Ncf.XncfBase.MCP
 
     public class McpServerInfo
     {
+        /// <summary>Gets or sets the owning XNCF module UID.</summary>
         public string XncfUid { get; set; }
+        /// <summary>Gets or sets the owning XNCF module name.</summary>
         public string XncfName { get; set; }
+        /// <summary>Gets or sets the stable MCP server name.</summary>
         public string ServerName { get; set; }
+        /// <summary>Gets or sets the mapped MCP route.</summary>
         public string McpRoute { get; set; }
     }
 }

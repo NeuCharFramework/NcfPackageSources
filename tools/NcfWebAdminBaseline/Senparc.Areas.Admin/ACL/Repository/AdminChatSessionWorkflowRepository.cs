@@ -28,8 +28,11 @@ public interface IAdminChatSessionWorkflowRepository : IClientRepositoryBase<Adm
 public sealed class AdminChatSessionWorkflowRepository
     : ClientRepositoryBase<AdminChatSessionWorkflow>, IAdminChatSessionWorkflowRepository
 {
+    /// <summary>Reserved parameterless constructor for repository infrastructure.</summary>
     private AdminChatSessionWorkflowRepository() : base(null!) { }
 
+    /// <summary>Initializes the session-workflow repository with the NCF database provider.</summary>
+    /// <param name="ncfDbData">The database data provider used by the base repository.</param>
     public AdminChatSessionWorkflowRepository(INcfDbData ncfDbData) : base(ncfDbData)
     {
     }

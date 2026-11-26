@@ -24,6 +24,9 @@ namespace Senparc.Web.Pages.Maintenance;
 
 public sealed class DatabaseUpgradeModel : PageModel
 {
+    /// <summary>
+    /// Marks the maintenance response as unavailable to caches and search engines.
+    /// </summary>
     public void OnGet()
     {
         Response.StatusCode = StatusCodes.Status503ServiceUnavailable;

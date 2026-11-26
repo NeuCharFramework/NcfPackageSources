@@ -98,12 +98,14 @@ namespace Senparc.Xncf.XncfBuilder
         //    typeof(AddMigration),
         //};
 
+        /// <inheritdoc/>
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //updatedatabase
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 
+        /// <inheritdoc/>
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
@@ -118,6 +120,7 @@ namespace Senparc.Xncf.XncfBuilder
             await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
         }
 
+        /// <inheritdoc/>
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             if (!services.Any(d => d.ServiceType == typeof(IXncfModulesInventoryRequestWaiter)))
@@ -170,6 +173,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         #endregion
 
+        /// <inheritdoc/>
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             return base.UseXncfModule(app, registerService);

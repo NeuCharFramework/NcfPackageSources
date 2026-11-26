@@ -47,6 +47,12 @@ public sealed class NeuBellController : ControllerBase
     private readonly NeuBellProviderCatalog _providerCatalog;
     private readonly NeuBellChangeNotifier _changeNotifier;
 
+    /// <summary>
+    /// Initializes the authenticated NeuBell state and event-stream controller.
+    /// </summary>
+    /// <param name="snapshotService">The provider snapshot service.</param>
+    /// <param name="providerCatalog">The available provider catalog.</param>
+    /// <param name="changeNotifier">The provider-change notifier.</param>
     public NeuBellController(
         NeuBellSnapshotService snapshotService,
         NeuBellProviderCatalog providerCatalog,
@@ -57,6 +63,12 @@ public sealed class NeuBellController : ControllerBase
         _changeNotifier = changeNotifier;
     }
 
+    /// <summary>
+    /// Returns owner/tenant-scoped NeuBell snapshots and indicates which providers
+    /// support direct consumption.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel provider reads.</param>
+    /// <returns>JSON provider snapshots and current server time.</returns>
     [HttpGet("state")]
     public async Task<IActionResult> GetState(CancellationToken cancellationToken)
     {
@@ -83,9 +95,12 @@ public sealed class NeuBellController : ControllerBase
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Consumes all or one item from an available consumable NeuBell provider and
+    /// publishes a change notification when consumption succeeds.
     /// </summary>
+    /// <param name="request">The provider/item selection and consume-all flag.</param>
+    /// <param name="cancellationToken">Token used to cancel provider access.</param>
+    /// <returns>The consumed count or a validation/provider capability error.</returns>
     [HttpPost("consume")]
     public async Task<IActionResult> Consume(
         [FromBody] NeuBellConsumeRequest request,
@@ -119,6 +134,11 @@ public sealed class NeuBellController : ControllerBase
         return Ok(new { consumedCount });
     }
 
+    /// <summary>
+    /// Streams provider-change notifications as Server-Sent Events until cancellation.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to close the stream.</param>
+    /// <returns>A task representing the SSE response lifetime.</returns>
     [HttpGet("events")]
     public async Task GetEvents(CancellationToken cancellationToken)
     {
@@ -153,6 +173,10 @@ public sealed class NeuBellController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Creates a NeuBell request context from the authenticated principal identity.
+    /// </summary>
+    /// <returns>The provider request context.</returns>
     private NeuBellRequestContext CreateContext()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)

@@ -43,6 +43,11 @@ public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
 {
     private readonly SandboxOrchestrator _orchestrator;
 
+    /// <summary>
+    /// Initializes the Sandbox administration page.
+    /// </summary>
+    /// <param name="xncfModuleService">The lazy XNCF module service.</param>
+    /// <param name="orchestrator">The Sandbox session orchestrator.</param>
     public Index(Lazy<XncfModuleService> xncfModuleService, SandboxOrchestrator orchestrator)
         : base(xncfModuleService)
     {
@@ -53,12 +58,20 @@ public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
 
     public string DocsUrl { get; private set; } = SandboxDocsLinks.EnvironmentSetupZh;
 
+    /// <summary>
+    /// Loads localized documentation URL and current sessions.
+    /// </summary>
+    /// <returns>A task that completes after page state is loaded.</returns>
     public async Task OnGetAsync()
     {
         DocsUrl = SandboxDocsLinks.GetEnvironmentSetupUrl(CultureInfo.CurrentUICulture.Name);
         Sessions = await _orchestrator.ListAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Returns templates and sessions for asynchronous administration updates.
+    /// </summary>
+    /// <returns>An HTTP 200 JSON state result.</returns>
     public async Task<IActionResult> OnGetStateAsync()
     {
         var sessions = await _orchestrator.ListAsync().ConfigureAwait(false);
@@ -78,6 +91,11 @@ public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
         });
     }
 
+    /// <summary>
+    /// Stops a Sandbox session when an identifier is supplied.
+    /// </summary>
+    /// <param name="sessionId">The session identifier.</param>
+    /// <returns>An HTTP 200 JSON result.</returns>
     public async Task<IActionResult> OnPostDestroyAsync([FromForm] string sessionId)
     {
         if (!string.IsNullOrWhiteSpace(sessionId))
@@ -88,6 +106,11 @@ public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
         return new JsonResult(new { success = true });
     }
 
+    /// <summary>
+    /// Deletes a terminal Sandbox session record when an identifier is supplied.
+    /// </summary>
+    /// <param name="sessionId">The session identifier.</param>
+    /// <returns>An HTTP 200 JSON result.</returns>
     public async Task<IActionResult> OnPostDeleteAsync([FromForm] string sessionId)
     {
         if (!string.IsNullOrWhiteSpace(sessionId))
@@ -98,6 +121,11 @@ public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
         return new JsonResult(new { success = true });
     }
 
+    /// <summary>
+    /// Deletes multiple Sandbox session records and reports deleted/skipped counts.
+    /// </summary>
+    /// <param name="sessionIds">The session identifiers to process.</param>
+    /// <returns>An HTTP 200 JSON result.</returns>
     public async Task<IActionResult> OnPostBulkDeleteAsync([FromForm] string[] sessionIds)
     {
         var result = await _orchestrator.DeleteRecordsAsync(sessionIds).ConfigureAwait(false);
@@ -109,6 +137,11 @@ public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
         });
     }
 
+    /// <summary>
+    /// Updates one session's retention or keep-alive settings.
+    /// </summary>
+    /// <param name="request">The session TTL request.</param>
+    /// <returns>An HTTP 200 JSON result containing the updated session.</returns>
     public async Task<IActionResult> OnPostUpdateTtlAsync([FromForm] Sandbox_UpdateTtlRequest request)
     {
         var session = await _orchestrator.UpdateTtlAsync(
@@ -120,6 +153,12 @@ public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
         return new JsonResult(new { success = true, session });
     }
 
+    /// <summary>
+    /// Updates one session's display alias.
+    /// </summary>
+    /// <param name="sessionId">The session identifier.</param>
+    /// <param name="alias">The new display alias.</param>
+    /// <returns>An HTTP 200 JSON result containing the updated session.</returns>
     public async Task<IActionResult> OnPostUpdateAliasAsync([FromForm] string sessionId, [FromForm] string alias)
     {
         var session = await _orchestrator.UpdateAliasAsync(sessionId.Trim(), alias).ConfigureAwait(false);

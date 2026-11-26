@@ -35,8 +35,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Provides FunctionRender access to discovered module, table, and column metadata.
     /// </summary>
     public class DatabaseSchemaQueryAppService : AppServiceBase
     {
@@ -49,9 +48,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Returns schema metadata for all modules, one module, or one table.
         /// </summary>
+        /// <param name="request">Optional module and table filters.</param>
+        /// <returns>A response containing serialized schema metadata or a localized error.</returns>
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.Schema.Name", "Function.Database.Schema.Description", typeof(Register))]
         public async Task<AppResponseBase<string>> QueryDatabaseSchema(QuerySchemaRequest request)
         {
@@ -59,12 +59,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             {
                 try
                 {
-                    //Legacy comment translated to English.
                     if (!string.IsNullOrWhiteSpace(request.ModuleName) && !string.IsNullOrWhiteSpace(request.TableName))
                     {
                         logger.Append(DatabaseToolkitResource.Format("Database.Schema.TableDetailLog", "获取表详情：{0}.{1}", request.ModuleName, request.TableName));
 
-                        //Legacy comment translated to English.
                         var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
                         if (resolvedModule == null)
                         {
@@ -115,7 +113,6 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         });
                     }
 
-                    //Legacy comment translated to English.
                     if (!string.IsNullOrWhiteSpace(request.ModuleName))
                     {
                         logger.Append(DatabaseToolkitResource.Format("Database.Schema.ModuleTablesLog", "获取模块 {0} 的所有表", request.ModuleName));
@@ -159,7 +156,6 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         });
                     }
 
-                    //Legacy comment translated to English.
                     logger.Append(DatabaseToolkitResource.Get("Database.Schema.OverviewLog"));
                     
                     var allSchemas = _metadataProvider.GetAllSchemas();
@@ -201,7 +197,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Carries optional module and table filters for a schema query.
         /// </summary>
         public class QuerySchemaRequest : FunctionAppRequestBase
         {
@@ -215,7 +211,6 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
             public override async Task LoadData(IServiceProvider serviceProvider)
             {
-                //Legacy comment translated to English.
                 await base.LoadData(serviceProvider);
             }
         }

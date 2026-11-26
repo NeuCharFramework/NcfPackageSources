@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Areas.Admin.Domain.Dto
 {
+    /// <summary>Base role DTO marker retained for mapping compatibility.</summary>
     public class SysRoleDto
     {
     }
@@ -27,45 +28,47 @@ namespace Senparc.Areas.Admin.Domain.Dto
     public class PermissionRequestDto
     {
         /// <summary>
-        /// roleId
+        /// Gets or sets the role identifier receiving the permission.
         /// </summary>
         [Required]
         [MaxLength]
         public string RoleId { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the menu or button permission identifier.
         /// </summary>
         [Required]
         [MaxLength]
         public string PermissionId { get; set; }
 
+        /// <summary>Gets or sets whether the permission represents a menu.</summary>
         public bool IsMenu { get; set; }
 
         /// <summary>
-        /// role code
+        /// Gets or sets the stable role code.
         /// </summary>
         //[Required]
         [MaxLength]
         public string RoleCode { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the optional resource code for a button permission.
         /// </summary>
         //[Required]
         [MaxLength]
         public string ResourceCode { get; set; }
     }
 
+    /// <summary>Contains full role details for edit and detail views.</summary>
     public class SysRoleDetailDto
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the role is enabled.
         /// </summary>
         public bool Enabled { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the role identifier.
         /// </summary>
         public string Id { get; set; }
 
@@ -80,28 +83,31 @@ namespace Senparc.Areas.Admin.Domain.Dto
         public string RoleCode { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the creation timestamp.
         /// </summary>
         public DateTime AddTime { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the last-update timestamp.
         /// </summary>
         public DateTime LastUpdateTime { get; set; }
 
+        /// <summary>Gets or sets the administrator-facing remark.</summary>
         public string AdminRemark { get; set; }
+        /// <summary>Gets or sets the internal remark.</summary>
         public string Remark { get; set; }
     }
 
+    /// <summary>Contains the role fields displayed in a paged list.</summary>
     public class SysRoleListDto
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the role is enabled.
         /// </summary>
         public bool Enabled { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the role identifier.
         /// </summary>
         public string Id { get; set; }
 
@@ -116,12 +122,12 @@ namespace Senparc.Areas.Admin.Domain.Dto
         public string RoleCode { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the creation timestamp.
         /// </summary>
         public DateTime AddTime { get; set; }
         
         /// <summary>
-        /// 
+        /// Gets or sets the last-update timestamp.
         /// </summary>
         public DateTime LastUpdateTime { get; set; }
     }

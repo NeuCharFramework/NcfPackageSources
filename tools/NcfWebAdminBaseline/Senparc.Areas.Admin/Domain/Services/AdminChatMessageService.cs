@@ -145,6 +145,13 @@ namespace Senparc.Areas.Admin.Domain.Services
             return message;
         }
 
+        /// <summary>
+        /// Associates a message with an optional trajectory and sequence position.
+        /// </summary>
+        /// <param name="messageId">The message identifier.</param>
+        /// <param name="trajectoryId">The trajectory identifier, or <see langword="null"/> to clear it.</param>
+        /// <param name="trajectorySequence">The trajectory sequence, or <see langword="null"/> to clear it.</param>
+        /// <returns><see langword="true"/> when the message was found and updated.</returns>
         public async Task<bool> SetTrajectoryAsync(int messageId, int? trajectoryId, int? trajectorySequence)
         {
             var message = await base.GetObjectAsync(m => m.Id == messageId);
@@ -158,6 +165,15 @@ namespace Senparc.Areas.Admin.Domain.Services
             return true;
         }
 
+        /// <summary>
+        /// Scores a prompt reference with the next completed assistant response,
+        /// after verifying user ownership and reference membership.
+        /// </summary>
+        /// <param name="userId">The administrator requesting the score.</param>
+        /// <param name="messageId">The user message containing the reference.</param>
+        /// <param name="promptItemId">The referenced prompt-item identifier.</param>
+        /// <returns>The AI-generated prompt reference score.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when authorization, message, reference, reply, or PromptRange validation fails.</exception>
         public async Task<PromptReferenceInfo> ScorePromptReferenceWithAIAsync(int userId, int messageId, int promptItemId)
         {
             if (userId <= 0) throw new NcfExceptionBase("Sign in to score a prompt.");
@@ -179,6 +195,15 @@ namespace Senparc.Areas.Admin.Domain.Services
             return await provider.ScoreWithAIAsync(promptItemId, message.Content, result.Content);
         }
 
+        /// <summary>
+        /// Replaces overlapping prompt references on an owner-scoped user message,
+        /// validates the resulting ranges, and persists the updated reference list.
+        /// </summary>
+        /// <param name="userId">The administrator requesting the update.</param>
+        /// <param name="messageId">The user message identifier.</param>
+        /// <param name="reference">The reference to add.</param>
+        /// <returns>The updated message DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when access or PromptRange validation fails.</exception>
         public async Task<AdminChatMessageDto> AttachPromptReferenceAsync(
             int userId, int messageId, PromptReference reference)
         {
@@ -203,6 +228,13 @@ namespace Senparc.Areas.Admin.Domain.Services
             return AdminChatMessageDto.CreateFromEntity(message);
         }
 
+        /// <summary>
+        /// Converts workspace-change and agent-task trajectory events into bounded
+        /// attachment metadata for the completed chat response.
+        /// </summary>
+        /// <param name="sessionId">The chat session whose workspace was used.</param>
+        /// <param name="harness">The harness result containing trajectory events.</param>
+        /// <returns>Distinct task/action and workspace artifact attachments.</returns>
         public async Task<IReadOnlyList<AdminChatAttachment>> CollectWorkspaceArtifactsAsync(
             int sessionId, AdminChatHarnessResult harness)
         {
@@ -312,6 +344,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             return result;
         }
 
+        /// <summary>
+        /// Recursively extracts agent-task action descriptors from arbitrary JSON payloads.
+        /// </summary>
+        /// <param name="element">The JSON element to inspect.</param>
+        /// <param name="actions">The output action attachment list.</param>
         private static void CollectChatTaskActions(
             JsonElement element,
             List<AdminChatAttachment> actions)
@@ -384,6 +421,13 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Reads an integer property from an object using case-insensitive property matching.
+        /// </summary>
+        /// <param name="element">The JSON object to inspect.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="value">Receives the parsed integer.</param>
+        /// <returns><see langword="true"/> when the property exists and is an integer.</returns>
         private static bool TryGetInt32(JsonElement element, string name, out int value)
         {
             value = 0;
@@ -396,6 +440,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             return false;
         }
 
+        /// <summary>
+        /// Reads a string-like property from an object using case-insensitive matching.
+        /// </summary>
+        /// <param name="element">The JSON object to inspect.</param>
+        /// <param name="name">The property name.</param>
+        /// <returns>The string value, serialized value, or <see langword="null"/>.</returns>
         private static string TryGetString(JsonElement element, string name)
         {
             foreach (var property in element.EnumerateObject())
@@ -413,6 +463,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Sets feedback on a message without applying an owner check.
+        /// </summary>
+        /// <param name="messageId">The message identifier.</param>
+        /// <param name="feedback">The feedback value.</param>
+        /// <returns><see langword="true"/> when the message was found and updated.</returns>
         public async Task<bool> SetMessageFeedbackAsync(int messageId, MessageFeedbackType feedback)
         {
             var message = await base.GetObjectAsync(m => m.Id == messageId);
@@ -426,6 +482,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Replaces the persisted message content.
+        /// </summary>
+        /// <param name="messageId">The message identifier.</param>
+        /// <param name="newContent">The replacement content.</param>
+        /// <returns><see langword="true"/> when the message was found and updated.</returns>
         public async Task<bool> UpdateMessageContentAsync(int messageId, string newContent)
         {
             var message = await base.GetObjectAsync(m => m.Id == messageId);
@@ -439,6 +501,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Deletes every message associated with a chat session.
+        /// </summary>
+        /// <param name="sessionId">The chat session identifier.</param>
+        /// <returns>The number of messages deleted.</returns>
         public async Task<int> DeleteSessionMessagesAsync(int sessionId)
         {
             var messages = await base.GetFullListAsync(m => m.SessionId == sessionId);
@@ -454,6 +521,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Deletes the distinct message identifiers that belong to a session.
+        /// </summary>
+        /// <param name="sessionId">The chat session identifier.</param>
+        /// <param name="messageIds">The candidate message identifiers.</param>
+        /// <returns>The number of existing messages deleted.</returns>
         public async Task<int> DeleteMessagesAsync(int sessionId, IEnumerable<int> messageIds)
         {
             var ids = (messageIds ?? Enumerable.Empty<int>()).Distinct().ToList();
@@ -477,6 +550,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Returns the highest-sequence message in a session.
+        /// </summary>
+        /// <param name="sessionId">The chat session identifier.</param>
+        /// <returns>The last message, or <see langword="null"/> when no messages exist.</returns>
         public async Task<AdminChatMessage> GetLastMessageAsync(int sessionId)
         {
             var messages = await base.GetFullListAsync(m => m.SessionId == sessionId, "Sequence DESC");
@@ -486,6 +564,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Counts messages belonging to a session.
+        /// </summary>
+        /// <param name="sessionId">The chat session identifier.</param>
+        /// <returns>The number of persisted messages.</returns>
         public async Task<int> GetMessageCountAsync(int sessionId)
         {
             var messages = await base.GetFullListAsync(m => m.SessionId == sessionId);
@@ -496,6 +579,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         ///Legacy comment translated to English.
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Loads a message only when its session belongs to the requested administrator.
+        /// </summary>
+        /// <param name="messageId">The message identifier.</param>
+        /// <param name="userId">The owning administrator identifier.</param>
+        /// <returns>The owned message, or <see langword="null"/> when inaccessible.</returns>
         public async Task<AdminChatMessage> GetOwnedMessageAsync(int messageId, int userId)
         {
             if (messageId <= 0 || userId <= 0)
@@ -509,6 +598,13 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Sets feedback on a message after verifying that its session belongs to the user.
+        /// </summary>
+        /// <param name="messageId">The message identifier.</param>
+        /// <param name="userId">The owning administrator identifier.</param>
+        /// <param name="feedback">The feedback value.</param>
+        /// <returns><see langword="true"/> when the owned message was updated.</returns>
         public async Task<bool> SetMessageFeedbackAsync(int messageId, int userId, MessageFeedbackType feedback)
         {
             var message = await GetOwnedMessageAsync(messageId, userId);
@@ -522,6 +618,14 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Searches messages across the administrator's active sessions using the
+        /// shared history search and bounded result limit.
+        /// </summary>
+        /// <param name="userId">The administrator identifier.</param>
+        /// <param name="keyword">The search keyword.</param>
+        /// <param name="limit">The maximum result count.</param>
+        /// <returns>Matching history hits.</returns>
         public async Task<IReadOnlyList<AdminChatHistorySearchHit>> SearchActiveHistoryAsync(
             int userId,
             string keyword,
@@ -553,6 +657,14 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Searches tool-call trajectory events belonging to the administrator's
+        /// active sessions and returns bounded history hits.
+        /// </summary>
+        /// <param name="userId">The administrator identifier.</param>
+        /// <param name="keyword">The search keyword.</param>
+        /// <param name="limit">The maximum result count.</param>
+        /// <returns>Matching tool-call history hits.</returns>
         public async Task<IReadOnlyList<AdminChatHistorySearchHit>> SearchActiveToolCallsAsync(
             int userId,
             string keyword,

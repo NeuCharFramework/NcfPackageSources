@@ -30,6 +30,12 @@ internal static class AgentModelRequestDiagnostics
 {
     private const int MaxProviderErrorLength = 1200;
 
+    /// <summary>
+    /// Summarizes an Agent build without including prompt or credential content.
+    /// </summary>
+    /// <param name="template">The Agent template, when available.</param>
+    /// <param name="build">The prepared Agent build result.</param>
+    /// <returns>A bounded diagnostic summary.</returns>
     public static string DescribeBuild(
         AgentTemplate template,
         AgentTemplateRunnerBuildResult build)
@@ -51,6 +57,13 @@ internal static class AgentModelRequestDiagnostics
                $"Parameters={diagnostics?.ExecutionParameters}";
     }
 
+    /// <summary>
+    /// Builds a provider-failure diagnostic including status, redacted provider error,
+    /// and prepared-Agent summaries.
+    /// </summary>
+    /// <param name="exception">The exception raised during model execution.</param>
+    /// <param name="builds">Optional prepared Agent builds.</param>
+    /// <returns>A diagnostic string suitable for logs.</returns>
     public static async Task<string> DescribeFailureAsync(
         Exception exception,
         IEnumerable<AgentTemplateRunnerBuildResult> builds = null)
@@ -71,6 +84,11 @@ internal static class AgentModelRequestDiagnostics
                $"PreparedAgents={(preparedAgents.Length == 0 ? "none" : string.Join(" | ", preparedAgents))}";
     }
 
+    /// <summary>
+    /// Finds the first client-result exception in an inner-exception chain.
+    /// </summary>
+    /// <param name="exception">The exception chain to inspect.</param>
+    /// <returns>The first matching client exception, or <see langword="null"/>.</returns>
     private static ClientResultException FindClientResultException(Exception exception)
     {
         for (var current = exception; current != null; current = current.InnerException)
@@ -84,6 +102,11 @@ internal static class AgentModelRequestDiagnostics
         return null;
     }
 
+    /// <summary>
+    /// Reads and extracts a bounded provider error from a client response.
+    /// </summary>
+    /// <param name="exception">The client exception containing the raw response.</param>
+    /// <returns>A sanitized provider error summary.</returns>
     private static async Task<string> ReadProviderErrorAsync(ClientResultException exception)
     {
         try
@@ -106,6 +129,11 @@ internal static class AgentModelRequestDiagnostics
         }
     }
 
+    /// <summary>
+    /// Extracts a bounded provider error message from raw response text.
+    /// </summary>
+    /// <param name="text">The raw provider response text.</param>
+    /// <returns>The sanitized provider error text.</returns>
     private static string ExtractProviderError(string text)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -148,6 +176,12 @@ internal static class AgentModelRequestDiagnostics
         }
     }
 
+    /// <summary>
+    /// Adds one scalar provider error field to a diagnostic collection after sanitization.
+    /// </summary>
+    /// <param name="fields">The destination diagnostic fields.</param>
+    /// <param name="error">The provider error JSON object.</param>
+    /// <param name="propertyName">The property to read.</param>
     private static void AddField(
         ICollection<string> fields,
         JsonElement error,
@@ -165,6 +199,11 @@ internal static class AgentModelRequestDiagnostics
         fields.Add($"{propertyName}={Sanitize(value.ToString())}");
     }
 
+    /// <summary>
+    /// Removes markup, credential-like values, URLs, and excessive text from provider diagnostics.
+    /// </summary>
+    /// <param name="text">The raw diagnostic text.</param>
+    /// <returns>The sanitized bounded diagnostic text.</returns>
     private static string Sanitize(string text)
     {
         var normalized = Regex.Replace(text ?? string.Empty, "<[^>]+>", " ");

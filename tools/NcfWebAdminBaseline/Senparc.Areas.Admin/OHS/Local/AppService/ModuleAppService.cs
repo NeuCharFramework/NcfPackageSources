@@ -50,6 +50,10 @@ using static Senparc.Areas.Admin.OHS.Local.PL.Module_GetItemResponse.Response_Xn
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     [BackendJwtAuthorize(BackendJwtAuthorizeAttribute.SuperAdminPolicyName)]
+    /// <summary>
+    /// Provides super-administrator operations for inspecting, installing,
+    /// updating, invoking, and removing XNCF modules.
+    /// </summary>
     public class ModuleAppService : LocalAppServiceBase
     {
         private readonly XncfModuleServiceExtension _xncfModuleServiceEx;
@@ -58,6 +62,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
         private readonly IStringLocalizer<AdminResource> _localizer;
 
+        /// <summary>
+        /// Initializes the module-management application service.
+        /// </summary>
+        /// <param name="serviceProvider">The request service provider.</param>
+        /// <param name="xncfModuleServiceEx">The extended module service used for discovery and installation.</param>
+        /// <param name="xncfModuleService">The persisted module service.</param>
+        /// <param name="localizer">The localized message provider.</param>
         public ModuleAppService(IServiceProvider serviceProvider, XncfModuleServiceExtension xncfModuleServiceEx, XncfModuleService xncfModuleService, IStringLocalizer<AdminResource> localizer) : base(serviceProvider)
         {
             _xncfModuleServiceEx = xncfModuleServiceEx;
@@ -66,25 +77,19 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns installation, update, new-module, and missing-module counts.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A response containing the current XNCF module statistics.</returns>
         [ApiBind]
         public async Task<AppResponseBase<Module_StatResponse>> StatAsync()
         {
             var response = await this.GetResponseAsync<AppResponseBase<Module_StatResponse>, Module_StatResponse>(async (response, logger) =>
             {
-                //Legacy comment translated to English.
                 var installedXncfModules = await _xncfModuleServiceEx.GetFullListAsync(z => true);
-                //Legacy comment translated to English.
                 var updateXncfRegisters = _xncfModuleServiceEx.GetUnInstallXncfModule(installedXncfModules);
-                //Legacy comment translated to English.
                 var newVersions = updateXncfRegisters.Select(z => _xncfModuleServiceEx.GetVersionDisplayName(installedXncfModules, z));
-                //Legacy comment translated to English.
                 var newXncfCount = newVersions.Count(z => !z.Contains("->"));
-                //Legacy comment translated to English.
                 var updateVersionXncfCount = newVersions.Count() - newXncfCount;
-                //Legacy comment translated to English.
                 var xncfRegisterManager = new XncfRegisterManager(base.ServiceProvider);
                 var missingXncfCount = installedXncfModules.Count(z => !XncfRegisterManager.RegisterList.Exists(r => r.Uid == z.Uid));
 
@@ -102,15 +107,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets all persisted XNCF modules and maps them to administrator DTOs.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A response containing the installed module DTO list.</returns>
         [ApiBind]
         public async Task<AppResponseBase<List<XncfModuleDto>>> GetInstalledListAsync()
         {
             var response = await this.GetResponseAsync<AppResponseBase<List<XncfModuleDto>>, List<XncfModuleDto>>(async (response, logger) =>
             {
-                //Legacy comment translated to English.
                 var installedXncfModules = await _xncfModuleServiceEx.GetFullListAsync(z => true);
                 var result = installedXncfModules.Select(z => _xncfModuleServiceEx.Mapper.Map<XncfModuleDto>(z)).ToList();
                 return result;
@@ -120,17 +124,16 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets registered modules that are not installed or have a newer version
+        /// available than the persisted module record.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A response containing installable or updateable module DTOs.</returns>
         [ApiBind]
         public async Task<AppResponseBase<List<XncfModuleDto>>> GetUnInstalledListAsync()
         {
             var response = await this.GetResponseAsync<AppResponseBase<List<XncfModuleDto>>, List<XncfModuleDto>>(async (response, logger) =>
             {
-                //Legacy comment translated to English.
                 var installedXncfModules = await _xncfModuleServiceEx.GetFullListAsync(z => true);
-                //Legacy comment translated to English.
                 var updateXncfRegisters = _xncfModuleServiceEx.GetUnInstallXncfModule(installedXncfModules);
 
                 var uninstallOrUpdateXncfModules = updateXncfRegisters
@@ -151,9 +154,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Installs or updates the registered XNCF module identified by its UID.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="uid">The stable XNCF module UID.</param>
+        /// <returns>A response whose payload is zero after the operation succeeds.</returns>
+        /// <exception cref="Exception">
+        /// Converted by the standard response pipeline when installation fails.
+        /// </exception>
         [ApiBind]
         public async Task<AppResponseBase<int>> InstallXncfModuleAsync(string uid)
         {
@@ -170,10 +177,15 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         #region Legacy section
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns detailed metadata for one installed module, including exposed
+        /// functions, area links, interfaces, and registered background threads.
         /// </summary>
-        /// <param name="uid"></param>
-        /// <returns></returns>
+        /// <param name="uid">The stable XNCF module UID.</param>
+        /// <returns>A response containing the module and registration details.</returns>
+        /// <exception cref="Exception">
+        /// Converted by the response pipeline when the UID is missing, the module
+        /// is not persisted, or its registration metadata cannot be loaded.
+        /// </exception>
         [ApiBind]
         public async Task<AppResponseBase<Module_GetItemResponse>> GetItemAsync(string uid)
         {
@@ -214,7 +226,6 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 {
                     if (Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(xncfRegister.GetType(), out var functionGroup))
                     {
-                        //Legacy comment translated to English.
                         foreach (var functionBag in functionGroup.Values)
                         {
                             try
@@ -292,11 +303,15 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Changes the persisted lifecycle state of an XNCF module.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="id">The persisted module identifier.</param>
+        /// <param name="toState">The new lifecycle state.</param>
+        /// <returns>A response containing <c>OK</c> when the state is saved.</returns>
+        /// <exception cref="Exception">
+        /// Converted by the response pipeline when the module cannot be found
+        /// or persistence fails.
+        /// </exception>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Put)]
         public async Task<StringAppResponse> ChangeStateAsync(int id, XncfModules_State toState)
         {
@@ -340,10 +355,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         //}
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Removes a persisted XNCF module and its menu/permission records.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The persisted module identifier.</param>
+        /// <returns>A response containing <c>OK</c> after uninstall processing completes.</returns>
+        /// <exception cref="Exception">
+        /// Converted by the response pipeline when the module is not found or
+        /// its uninstall callback fails.
+        /// </exception>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> DeleteAsync(int id)
         {
@@ -367,19 +386,15 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     {
                         //delete the menu
                         await sysMenuService.DeleteObjectAsync(menu).ConfigureAwait(false);
-                        //Legacy comment translated to English.
                         await sysPermissionService.DeleteAllAsync(z => z.PermissionId == menu.Id);
-                        //Legacy comment translated to English.
                         await sysMenuService.GetMenuDtoByCacheAsync(true).ConfigureAwait(false);
                     }
                     await _xncfModuleService.DeleteObjectAsync(module).ConfigureAwait(false);
                 };
 
-                //Legacy comment translated to English.
                 var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == module.Uid);
                 if (register == null)
                 {
-                    //Legacy comment translated to English.
                     await uninstall().ConfigureAwait(false);
                 }
                 else
@@ -395,10 +410,20 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Invokes a registered module function using the supplied serialized
+        /// request parameters and returns its application response data.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="executeFuncParamDto2">
+        /// The module UID, function display name, and serialized function parameters.
+        /// </param>
+        /// <returns>
+        /// A response containing the function output, log correlation identifier,
+        /// and any application-level error message.
+        /// </returns>
+        /// <exception cref="Exception">
+        /// Converted by the response pipeline when function resolution, parameter
+        /// normalization, invocation, or result extraction fails.
+        /// </exception>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         public async Task<AppResponseBase<Module_RunFunctionResponse>> RunFunctionAsync([FromBody] ExecuteFuncParamDto2 executeFuncParamDto2)
         {
@@ -482,35 +507,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 await taskFunc.ConfigureAwait(false);
 
 
-                //Legacy comment translated to English.
-                //Legacy comment translated to English.
                 var taskResult = (object)((dynamic)taskFunc).Result;
                 var result = taskResult as IAppResponse;
-
-                /* Legacy comment translated to English.
-
-                var obj0 = rightFunctionBag.Value.MethodInfo.Invoke(functionClass, paras);
-
-                var obj1 = taskFunc.GetType().GetMethod("GetAwaiter").Invoke(taskFunc, null);
-
-                var obj2= obj1.GetType().GetMethod("GetResult").Invoke(obj1, null);
-
-                var realResult = obj2 as IAppResponse;
-
-
-
-                Legacy comment translated to English.
-
-                */
-
-                //Legacy comment translated to English.
-                //var tempId = "Xncf-FunctionRun-" + Guid.NewGuid().ToString("n");
-                //Legacy comment translated to English.
-                //if (result.Data != null)
-                //{
-                //    var cache = _serviceProvider.GetObjectCacheStrategyInstance();
-                //Legacy comment translated to English.
-                //}
 
                 var returnData = result.Data is string stringData ? stringData.HtmlEncode() : result.Data?.ToJson().HtmlEncode();
 

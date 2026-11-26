@@ -27,9 +27,7 @@ namespace Senparc.Ncf.Core.Cache
     [Serializable]
     public class MobileLoginCode
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the full user/domain name associated with the code.</summary>
         public string FullDomainUserName { get; set; }
         /// <summary>
         /// user name
@@ -46,9 +44,7 @@ namespace Senparc.Ncf.Core.Cache
             }
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the domain portion of <see cref="FullDomainUserName"/>.</summary>
         public string Domain
         {
             get
@@ -60,9 +56,13 @@ namespace Senparc.Ncf.Core.Cache
                 return FullDomainUserName.Split('@')[1];
             }
         }
+        /// <summary>Gets or sets the plain verification code.</summary>
         public string Code { get; set; }
+        /// <summary>Gets or sets the creation timestamp.</summary>
         public DateTime AddTime { get; set; }
+        /// <summary>Gets or sets the URL associated with the login request.</summary>
         public string Url { get; set; }
+        /// <summary>Gets a value indicating whether the code is within its three-minute validity window.</summary>
         public bool IsValid
         {
             get { return AddTime.AddMinutes(3) > DateTime.Now; }
@@ -77,11 +77,15 @@ namespace Senparc.Ncf.Core.Cache
     [AutoDIType(DILifecycleType.Singleton)]
     public class MobileLoginCodeCache : BaseStringDictionaryCache<MobileLoginCode>, IMobileLoginCodeCache
     {
+        /// <summary>
+        /// Initializes the singleton mobile-login-code cache with a two-hour cache timeout.
+        /// </summary>
         public MobileLoginCodeCache()
             : base("MobileLoginCodeCache", null, 120)
         {
         }
 
+        /// <inheritdoc />
         public override MobileLoginCode InsertObjectToCache(string key)
         {
             var mobileLoginCode = new MobileLoginCode()
@@ -93,6 +97,7 @@ namespace Senparc.Ncf.Core.Cache
             return this.InsertObjectToCache(key, mobileLoginCode);
         }
 
+        /// <inheritdoc />
         public override async Task<MobileLoginCode> InsertObjectToCacheAsync(string key)
         {
             var mobileLoginCode = new MobileLoginCode()

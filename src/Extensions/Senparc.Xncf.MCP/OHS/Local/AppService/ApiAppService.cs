@@ -28,6 +28,10 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 {
     public class ApiAppService : AppServiceBase
     {
+        /// <summary>
+        /// Initializes the sample MCP API application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public ApiAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
@@ -43,9 +47,9 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
          */
 
         /// <summary>
-        /// expose AppService as a Web API
+        /// Demonstrates a minimal asynchronous API endpoint that returns the sample status value.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A response containing the sample integer result.</returns>
         [ApiBind]
         public async Task<AppResponseBase<int>> MyApi()
         {
@@ -57,9 +61,12 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// custom Post types and complex parameters while testing exception throwing and custom status codes
+        /// Demonstrates complex POST binding and application-service exception handling.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="request">The values included in the sample exception message.</param>
+        /// <returns>A string response whose state reflects the handled exception.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="NcfExceptionBase">Thrown by the sample operation before the configured handler handles it.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> MyCustomApi(Api_MyCustomApiRequest request)
         {

@@ -21,16 +21,15 @@ using System.Linq;
 namespace Senparc.Xncf.Swagger.Convention
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    /// 
-    ///Legacy comment translated to English.
-    /// services.AddMvc(c =>
-    ///     c.Conventions.Add(new ApiExplorerGroupPerVersionConvention())
-    /// );
+    /// Groups API Explorer descriptions by the final namespace segment, which is
+    /// conventionally the controller's API version.
     /// </summary>
     public class ApiExplorerGroupPerVersionConvention : IControllerModelConvention
     {
+        /// <summary>
+        /// Assigns the controller's namespace-derived version to its API Explorer group.
+        /// </summary>
+        /// <param name="controller">The controller model being configured.</param>
         public void Apply(ControllerModel controller)
         {
             var controllerNamespace = controller.ControllerType.Namespace; // e.g. "Controllers.V1"

@@ -30,11 +30,21 @@ namespace Senparc.Ncf.Core.Config
     public partial class XmlConfig
     {
 
+        /// <summary>
+        /// Loads an XML document from a path resolved against the application content root.
+        /// </summary>
+        /// <param name="path">The application-relative XML path.</param>
+        /// <returns>The loaded XML root element.</returns>
         public static XElement GetXElement(string path)
         {
             return XElement.Load(ServerUtility.ContentRootMapPath(path));
         }
 
+        /// <summary>
+        /// Resolves an application-relative path against the content root.
+        /// </summary>
+        /// <param name="path">The application-relative path.</param>
+        /// <returns>The physical mapped path.</returns>
         public static string GetMapPath(string path)
         {
             return ServerUtility.ContentRootMapPath(path);

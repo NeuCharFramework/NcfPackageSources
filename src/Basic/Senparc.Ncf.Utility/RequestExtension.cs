@@ -29,68 +29,19 @@ namespace Senparc.Ncf.Utility
     {
         private const string NullIpAddress = "::1";
 
-        //public static bool IsLocal(this HttpRequest req)
-        //{
-        //    var connection = req.HttpContext.Connection;
-        //    if (connection.RemoteIpAddress.IsSet())
-        //    {
-        //        //We have a remote address set up
-        //        return connection.LocalIpAddress.IsSet()
-        //            //Is local is same as remote, then we are local
-        //            ? connection.RemoteIpAddress.Equals(connection.LocalIpAddress)
-        //            //else we are remote if the remote IP address is not a loopback address
-        //            : IPAddress.IsLoopback(connection.RemoteIpAddress);
-        //    }
-
-        //    return true;
-        //}
-
+        /// <summary>
+        /// Determines whether an address is present and is not the IPv6 loopback
+        /// representation treated as an unset address by this legacy helper.
+        /// </summary>
+        /// <param name="address">The address to inspect.</param>
+        /// <returns>
+        /// <see langword="true"/> when the address is non-null and not
+        /// <c>::1</c>; otherwise, <see langword="false"/>.
+        /// </returns>
         private static bool IsSet(this IPAddress address)
         {
             return address != null && address.ToString() != NullIpAddress;
         }
-
-
-        ///// <summary>
-        ///// Determines whether the specified HTTP request is an AJAX request.
-        ///// </summary>
-        ///// 
-        ///// <returns>
-        ///// true if the specified HTTP request is an AJAX request; otherwise, false.
-        ///// </returns>
-        ///// <param name="request">The HTTP request.</param><exception cref="T:System.ArgumentNullException">The <paramref name="request"/> parameter is null (Nothing in Visual Basic).</exception>
-        //public static bool IsAjaxRequest(this HttpRequest request)
-        //{
-        //    if (request == null)
-        //        throw new ArgumentNullException("request");
-
-        //    if (request.Headers != null)
-        //        return request.Headers["X-Requested-With"] == "XMLHttpRequest";
-        //    return false;
-        //}
-
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        ///// <param name="request"></param>
-        ///// <returns></returns>
-        //public static string PathAndQuery(this HttpRequest request)
-        //{
-        //    if (request == null)
-        //        throw new ArgumentNullException("request");
-
-        //    return request.Path + request.QueryString;
-        //}
-
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        ///// <param name="request"></param>
-        ///// <returns></returns>
-        //public static string UrlReferrer(this HttpRequest request)
-        //{
-        //    return request.Headers["Referer"].ToString();
-        //}
 
         /// <summary>
         /// Builds the absolute URI represented by the request scheme, host, path base,
@@ -98,6 +49,9 @@ namespace Senparc.Ncf.Utility
         /// </summary>
         /// <param name="request">The HTTP request to convert.</param>
         /// <returns>The absolute request URI.</returns>
+        /// <exception cref="NullReferenceException">
+        /// Thrown when <paramref name="request"/> is <see langword="null"/>.
+        /// </exception>
         public static string AbsoluteUri(this HttpRequest request)
         {
             var absoluteUri = string.Concat(
@@ -116,6 +70,9 @@ namespace Senparc.Ncf.Utility
         /// </summary>
         /// <param name="request">The HTTP request whose headers are inspected.</param>
         /// <returns>The User-Agent value, or an empty string when the header is absent.</returns>
+        /// <exception cref="NullReferenceException">
+        /// Thrown when <paramref name="request"/> is <see langword="null"/>.
+        /// </exception>
         public static string UserAgent(this HttpRequest request)
         {
             return request.Headers["User-Agent"].ToString();
@@ -128,6 +85,9 @@ namespace Senparc.Ncf.Utility
         /// </summary>
         /// <param name="request">The HTTP request whose User-Agent header is inspected.</param>
         /// <returns>The first matching <see cref="AgentType"/> classification.</returns>
+        /// <exception cref="NullReferenceException">
+        /// Thrown when <paramref name="request"/> is <see langword="null"/>.
+        /// </exception>
         public static AgentType UserAgentType(this HttpRequest request)
         {
             var userAgent = request.Headers["User-Agent"].ToString();
@@ -151,14 +111,25 @@ namespace Senparc.Ncf.Utility
             return AgentType.Android;
         }
 
+        /// <summary>
+        /// The coarse client-platform classifications recognized by
+        /// <see cref="UserAgentType(HttpRequest)"/>.
+        /// </summary>
         public enum AgentType
         {
+            /// <summary>Android or an unrecognized client.</summary>
             Android = 0,
+            /// <summary>Apple iPhone.</summary>
             IPhone = 1,
+            /// <summary>Apple iPad.</summary>
             IPad = 2,
+            /// <summary>Windows Phone.</summary>
             WindowsPhone = 3,
+            /// <summary>Windows desktop.</summary>
             Windows = 4,
+            /// <summary>Weixin embedded browser.</summary>
             Wechat = 6,
+            /// <summary>macOS desktop.</summary>
             MacOS = 7
 
         }
@@ -169,6 +140,9 @@ namespace Senparc.Ncf.Utility
         /// </summary>
         /// <param name="httpContext">The HTTP context whose connection feature is inspected.</param>
         /// <returns>The remote address, or <see langword="null"/> when the feature is unavailable.</returns>
+        /// <exception cref="NullReferenceException">
+        /// Thrown when <paramref name="httpContext"/> is <see langword="null"/>.
+        /// </exception>
         public static IPAddress UserHostAddress(this HttpContext httpContext)
         {
             return httpContext.Features.Get<IHttpConnectionFeature>()?.RemoteIpAddress;

@@ -44,14 +44,32 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 {
     public class AITokenUsageService : ServiceBase<AITokenUsage>
     {
+        /// <summary>
+        /// Initializes token usage persistence.
+        /// </summary>
+        /// <param name="repo">The token usage repository.</param>
+        /// <param name="serviceProvider">The dependency provider.</param>
         public AITokenUsageService(IRepositoryBase<AITokenUsage> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Normalizes and persists one token-usage record.
         /// </summary>
+        /// <param name="modelAlias">The model alias.</param>
+        /// <param name="modelId">The model identifier.</param>
+        /// <param name="deploymentName">The deployment name.</param>
+        /// <param name="aiPlatform">The AI platform.</param>
+        /// <param name="configModelType">The model capability type.</param>
+        /// <param name="snapshot">The token usage snapshot.</param>
+        /// <param name="durationMs">The operation duration.</param>
+        /// <param name="success">Whether the operation succeeded.</param>
+        /// <param name="source">The usage source.</param>
+        /// <param name="errorNote">The optional error note.</param>
+        /// <param name="tenantId">The tenant identifier.</param>
+        /// <param name="occurredAt">The occurrence timestamp.</param>
+        /// <returns>The persisted usage DTO.</returns>
         public async Task<AITokenUsageDto> RecordAsync(
             string modelAlias,
             string modelId,
@@ -93,6 +111,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return new AITokenUsageDto(entity);
         }
 
+        /// <summary>
+        /// Bounds a usage metadata string to the database column limit.
+        /// </summary>
+        /// <param name="value">The source string.</param>
+        /// <param name="maxLength">The maximum retained length.</param>
+        /// <returns>The original or truncated string.</returns>
         private static string Truncate(string value, int maxLength)
         {
             if (string.IsNullOrEmpty(value) || value.Length <= maxLength)
@@ -104,8 +128,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds the optional model/platform/source/time filter for usage queries.
         /// </summary>
+        /// <param name="request">The usage list filter request.</param>
+        /// <returns>An EF-translatable usage predicate.</returns>
         public Expression<Func<AITokenUsage, bool>> GetListWhere(AITokenUsage_GetListRequest request)
         {
             SenparcExpressionHelper<AITokenUsage> helper = new();
@@ -123,9 +149,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Aggregates persisted usage records into overall, per-model, and daily statistics.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <param name="dailyDays">The number of recent daily buckets to produce.</param>
+        /// <returns>Aggregated token monitor statistics.</returns>
         public async Task<AITokenMonitorStats> GetStatsAsync(int dailyDays = 7)
         {
             var all = await this.GetFullListAsync(z => z.Flag == false, "AddTime desc");
@@ -177,9 +204,9 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds a case-insensitive model-alias usage map from non-deleted persisted records.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <returns>Aggregated usage keyed by model alias.</returns>
         public async Task<Dictionary<string, AITokenModelUsage>> GetModelUsageMapAsync()
         {
             var all = await this.GetFullListAsync(z => z.Flag == false);

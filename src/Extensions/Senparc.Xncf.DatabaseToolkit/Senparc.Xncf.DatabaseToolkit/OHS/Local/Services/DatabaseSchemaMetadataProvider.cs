@@ -294,7 +294,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
 
             EnsureInitialized();
 
-            //Legacy comment translated to English.
+            // Reject ambiguous matches rather than silently selecting an arbitrary entity.
             if (_schemaCache.ContainsKey(input))
                 return input;
 
@@ -374,31 +374,26 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Scores a candidate entity name against short and fully qualified input names.
         /// </summary>
         private static int ScoreEntityMatch(DatabaseSchemaMetadata schema, string shortInput, string fullInput)
         {
             var schemaShort = GetShortTypeName(schema.TableName ?? string.Empty);
             var schemaFull = schema.EntityFullName ?? string.Empty;
 
-            //Legacy comment translated to English.
             if (string.Equals(schemaShort, shortInput, StringComparison.OrdinalIgnoreCase))
                 return 100;
 
-            //Legacy comment translated to English.
             if (string.Equals(schemaFull, fullInput, StringComparison.OrdinalIgnoreCase))
                 return 90;
 
-            //Legacy comment translated to English.
             if (schemaShort.StartsWith(shortInput, StringComparison.OrdinalIgnoreCase) ||
                 shortInput.StartsWith(schemaShort, StringComparison.OrdinalIgnoreCase))
                 return 60;
 
-            //Legacy comment translated to English.
             if (schemaShort.Contains(shortInput, StringComparison.OrdinalIgnoreCase))
                 return 40;
 
-            //Legacy comment translated to English.
             if (shortInput.Contains(schemaShort, StringComparison.OrdinalIgnoreCase))
                 return 30;
 
@@ -406,7 +401,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns all visible table schemas grouped by owning module.
         /// </summary>
         public Dictionary<string, List<DatabaseSchemaDto>> GetAllSchemas()
         {
@@ -425,8 +420,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns all visible schemas for one resolved module name.
         /// </summary>
+        /// <param name="moduleName">The canonical module name.</param>
+        /// <returns>The visible schemas, or an empty list when the module is unknown.</returns>
         public List<DatabaseSchemaDto> GetSchemasByModule(string moduleName)
         {
             EnsureInitialized();
@@ -442,7 +439,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns canonical names of modules with discovered schemas.
         /// </summary>
         public IReadOnlyList<string> GetAllModuleNames()
         {
@@ -451,8 +448,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns visible table names for one module.
         /// </summary>
+        /// <param name="moduleName">The canonical module name.</param>
+        /// <returns>The visible table names, or an empty list when the module is unknown.</returns>
         public IReadOnlyList<string> GetTableNames(string moduleName)
         {
             EnsureInitialized();
@@ -467,8 +466,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves one visible table schema by module and table/entity name.
         /// </summary>
+        /// <param name="moduleName">The canonical module name.</param>
+        /// <param name="tableName">The short or fully qualified entity name.</param>
+        /// <returns>The schema DTO, or <see langword="null"/> when no match exists.</returns>
         public DatabaseSchemaDto GetSchemaByTable(string moduleName, string tableName)
         {
             EnsureInitialized();
@@ -483,8 +485,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves the fully qualified entity type name for a module/table pair.
         /// </summary>
+        /// <param name="moduleName">The canonical module name.</param>
+        /// <param name="tableName">The short or fully qualified entity name.</param>
+        /// <returns>The entity type name, or <see langword="null"/> when no match exists.</returns>
         public string GetEntityFullName(string moduleName, string tableName)
         {
             EnsureInitialized();
@@ -498,7 +503,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Projects internal schema metadata into the public schema DTO contract.
         /// </summary>
         private DatabaseSchemaDto ConvertToDto(DatabaseSchemaMetadata metadata)
         {
@@ -528,6 +533,9 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             };
         }
 
+        /// <summary>
+        /// Ensures schema metadata has been initialized before a synchronous lookup.
+        /// </summary>
         private void EnsureInitialized()
         {
             if (_isInitialized)
@@ -538,6 +546,12 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             InitializeAsync().GetAwaiter().GetResult();
         }
 
+        /// <summary>
+        /// Matches a user-supplied entity name against short and fully qualified schema names.
+        /// </summary>
+        /// <param name="schema">The schema metadata to compare.</param>
+        /// <param name="inputName">The user-supplied entity name.</param>
+        /// <returns><see langword="true"/> when either short or full names match.</returns>
         private static bool IsEntityNameMatch(DatabaseSchemaMetadata schema, string inputName)
         {
             if (string.IsNullOrWhiteSpace(inputName))
@@ -554,6 +568,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
                 || string.Equals(schemaFullName, normalizedInput, StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Removes the namespace prefix from a type/table name.
+        /// </summary>
+        /// <param name="typeName">The full or short type name.</param>
+        /// <returns>The final dot-separated segment.</returns>
         private static string GetShortTypeName(string typeName)
         {
             if (string.IsNullOrWhiteSpace(typeName))

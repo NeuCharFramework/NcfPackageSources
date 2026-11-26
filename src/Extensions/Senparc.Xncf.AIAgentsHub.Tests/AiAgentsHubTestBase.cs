@@ -33,6 +33,10 @@ using Senparc.Ncf.Utility.Helpers;
 
 namespace Senparc.Xncf.AIAgentsHub.Tests
 {
+    /// <summary>
+    /// Provides the AIAgentsHub integration-test host and installs the system
+    /// modules required by those tests.
+    /// </summary>
     public class AiAgentsHubTestBase : BaseNcfUnitTest
     {
         //public IServiceCollection ServiceCollection { get; set; }
@@ -47,6 +51,10 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
         private WebApplicationBuilder builder;
 
 
+        /// <summary>
+        /// Builds the test web application, registers NCF services, and initializes
+        /// the AIAgentsHub module.
+        /// </summary>
         public AiAgentsHubTestBase()
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -58,10 +66,9 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             }
 
 
-            //Legacy comment translated to English.
             //builder.AddNcf<SqliteMemoryDatabaseConfiguration>();
             builder.AddNcf<SqlServerDatabaseConfiguration>();
-            builder.Services.AddMemoryCache();//Legacy comment translated to English.
+            builder.Services.AddMemoryCache();
 
             var app = builder.Build();
 
@@ -127,10 +134,8 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
 
              */
 
-            //Legacy comment translated to English.
             var register = new Register();
 
-            //Legacy comment translated to English.
             register.InstallOrUpdateAsync(this._serviceProvider, Ncf.Core.Enums.InstallOrUpdate.Install).GetAwaiter();
         }
     }
@@ -139,6 +144,9 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
     {
         private static DateTimeOffset StartTime = SystemTime.Now;
 
+        /// <summary>Registers test services and starts the NCF web engine.</summary>
+        /// <typeparam name="TDatabaseConfiguration">The test database configuration type.</typeparam>
+        /// <param name="builder">The web application builder.</param>
         public static void AddNcf<TDatabaseConfiguration>(this WebApplicationBuilder builder)
           where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
@@ -146,7 +154,7 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             SenparcDI.GlobalServiceCollection = services;
 
 
-            services.AddMemoryCache();//Legacy comment translated to English.
+            services.AddMemoryCache();
 
             services.AddScoped<InstallOptionsService>();
             services.AddScoped<InstallerService>();
@@ -157,16 +165,17 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
 
             services.AddScoped<ColorService>();
 
-            //Legacy comment translated to English.
             var logMsg = builder.StartWebEngine(null);
             Console.WriteLine("============ logMsg =============");
             Console.WriteLine(logMsg);
             Console.WriteLine("============ logMsg END =============");
         }
 
+        /// <summary>Loads test settings, starts global services, and registers XNCF modules.</summary>
+        /// <param name="app">The test web application.</param>
+        /// <returns>The started global registration service.</returns>
         public static IRegisterService UseNcf(this WebApplication app)
         {
-            //Legacy comment translated to English.
             //var mockEnv = new Mock<IHostEnvironment/*IHostingEnvironment*/>();
             //mockEnv.Setup(z => z.ContentRootPath).Returns(() => UnitTestHelper.RootPath);
             //var env = mockEnv.Object;
@@ -180,7 +189,6 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             var config = configBuilder.Build();
             Console.WriteLine("完成 ServiceCollection 和 ConfigurationBuilder 初始化");
 
-            //Legacy comment translated to English.
             var senparcSetting = new SenparcSetting();
             config.GetSection("SenparcSetting").Bind(senparcSetting);
 
@@ -191,13 +199,11 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             Console.WriteLine(senparcCoreSetting.ToJson(true));
             Console.WriteLine();
 
-            // start CO2NET global registration，must！
-            //Legacy comment translated to English.
+            // CO2NET global registration must precede XNCF module registration.
             var registerService = app
                 //global registration
                 .UseSenparcGlobal(env, senparcSetting, globalRegister =>
                 {
-                    //Legacy comment translated to English.
                     if (UseRedis(senparcSetting, out var redisConfigurationStr))//Legacy comment translated to English.
                     {
                         /* description：
@@ -209,7 +215,6 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
                          */
                         CO2NET.Cache.CsRedis.Register.SetConfigurationOption(redisConfigurationStr);
 
-                        //Legacy comment translated to English.
                         CO2NET.Cache.CsRedis.Register.UseKeyValueRedisNow(); //Legacy comment translated to English.
                         /*Senparc.CO2NET.Cache.CsRedis.Register.UseHashRedisNow();*/ //Legacy comment translated to English.
 
@@ -217,7 +222,6 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
                         //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisObjectCacheStrategy.Instance);//key-value pair
                         //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisHashSetObjectCacheStrategy.Instance);//HashSet
                     }
-                    //Legacy comment translated to English.
                 });
 
 
@@ -228,10 +232,11 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether the configured test settings enable Redis.
         /// </summary>
-        /// <param name="senparcSetting"></param>
-        /// <returns></returns>
+        /// <param name="senparcSetting">The test settings to inspect.</param>
+        /// <param name="redisConfigurationStr">Receives the configured Redis string.</param>
+        /// <returns><see langword="true"/> when a non-placeholder Redis string is configured.</returns>
         internal static bool UseRedis(SenparcSetting senparcSetting, out string redisConfigurationStr)
         {
             redisConfigurationStr = senparcSetting.Cache_Redis_Configuration;
@@ -240,9 +245,9 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
         }
 
         /// <summary>
-        /// output the startup success marker
+        /// Writes the localized test-host startup success marker and elapsed time.
         /// </summary>
-        /// <param name="app"></param>
+        /// <param name="app">The started test web application.</param>
         public static void ShowSuccessTip(this WebApplication app)
         {
             //output the startup success marker

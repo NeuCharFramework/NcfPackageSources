@@ -28,23 +28,24 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Request
 {
     public class RecallTestRequest
     {
+        /// <summary>Gets or sets the knowledge-base identifier to query.</summary>
         public int Id { get; set; }
         /// <summary>
-        /// content
+        /// The query text used for retrieval.
         /// </summary>
         public string Content { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the maximum number of candidates returned before reranking.
         /// </summary>
         public int TopK { get; set; } = 5;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the reranking mode requested by the caller.
         /// </summary>
         public string RerankMode { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the candidate pool size used by the retrieval pipeline.
         /// </summary>
         public int CandidateCount { get; set; }
     }

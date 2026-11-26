@@ -21,22 +21,14 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.MultiTenant
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Identifies the source used to resolve the current tenant.</summary>
     public enum TenantRule
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Resolves tenants from the request domain.</summary>
         DomainName = 0,
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Resolves tenants from a request header.</summary>
         RequestHeader = 1,
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Resolves tenants from login or explicit user input.</summary>
         LoginInput = 2,
         /// <summary>
         /// default

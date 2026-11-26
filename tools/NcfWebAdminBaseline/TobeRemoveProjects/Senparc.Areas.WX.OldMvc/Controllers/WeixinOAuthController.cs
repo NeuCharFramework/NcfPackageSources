@@ -30,6 +30,12 @@ namespace Senparc.Areas.WX.Controllers
         private readonly WeixinService _weixinService;
         private readonly SenparcWeixinSetting _senparcWeixinSetting;
 
+        /// <summary>
+        /// Initializes the legacy Weixin OAuth controller.
+        /// </summary>
+        /// <param name="accountService">The account persistence service.</param>
+        /// <param name="options">The configured Weixin application settings.</param>
+        /// <param name="weixinService">The OAuth exchange service.</param>
         public WeixinOAuthController(AccountService accountService, IOptions<SenparcWeixinSetting> options, WeixinService weixinService)
         {
             _accountService = accountService;
@@ -37,6 +43,14 @@ namespace Senparc.Areas.WX.Controllers
             _senparcWeixinSetting = options.Value;
         }
 
+        /// <summary>
+        /// Validates a public-account OAuth callback, creates or refreshes the account,
+        /// stores the open ID in session, and redirects to the local callback URL.
+        /// </summary>
+        /// <param name="callbackUrl">The local redirect target.</param>
+        /// <param name="code">The OAuth authorization code.</param>
+        /// <param name="state">The configured anti-forgery state value.</param>
+        /// <returns>A redirect or legacy error content result.</returns>
         public IActionResult MpCallback(string callbackUrl, string code, string state)
         {
             if (code == null)
@@ -90,6 +104,8 @@ namespace Senparc.Areas.WX.Controllers
             return Redirect(callbackUrl);
         }
 
+        /// <summary>Removes the Weixin open ID from session.</summary>
+        /// <returns>A success content result.</returns>
         public IActionResult Logout()
         {
             //Session.Abandon();

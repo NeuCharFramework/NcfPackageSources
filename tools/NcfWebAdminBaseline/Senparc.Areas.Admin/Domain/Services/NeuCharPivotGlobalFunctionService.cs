@@ -41,6 +41,9 @@ public sealed record NeuCharGlobalFunctionResolution(
     NeuCharFunctionDescriptor Descriptor,
     string ErrorMessage)
 {
+    /// <summary>
+    /// Gets a value indicating whether a descriptor was resolved without an access or lookup error.
+    /// </summary>
     public bool Success => Descriptor != null && string.IsNullOrWhiteSpace(ErrorMessage);
 }
 
@@ -58,14 +61,18 @@ public sealed class NeuCharPivotGlobalAccessService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    /// <para>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    /// </para>
+    /// Evaluates the current administrator's access to a globally exposed function.
+    /// A persisted policy overrides the code-level role and permission requirements;
+    /// otherwise the descriptor's declared requirements are evaluated.
     /// </summary>
-    ///Legacy comment translated to English.
+    /// <param name="descriptor">The registered function descriptor being authorized.</param>
+    /// <param name="policy">The optional persisted policy overriding code defaults.</param>
+    /// <returns>
+    /// A localized denial reason, or <see langword="null"/> when the current administrator may proceed.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">
+    /// Propagated if the work-context or permission service cannot evaluate the current administrator.
+    /// </exception>
     public async Task<string> GetDenialReasonAsync(
         NeuCharFunctionDescriptor descriptor,
         NeuCharFunctionProvitAccess policy = null)
@@ -112,8 +119,13 @@ public sealed class NeuCharPivotGlobalAccessService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Evaluates the user, role, and permission bindings of a restricted persisted policy.
     /// </summary>
+    /// <param name="policy">The restricted policy to evaluate.</param>
+    /// <param name="context">The current administrator work context.</param>
+    /// <returns>
+    /// A localized denial reason, or <see langword="null"/> when one binding grants access.
+    /// </returns>
     private async Task<string> GetRestrictedDenialReasonAsync(
         NeuCharFunctionProvitAccess policy,
         AdminWorkContext context)
@@ -142,8 +154,12 @@ public sealed class NeuCharPivotGlobalAccessService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Resolves whether a function is exposed to global Pivot access after applying
+    /// a persisted policy over the code-level default.
     /// </summary>
+    /// <param name="codeAllowGlobalPivot">The exposure declaration from the function descriptor.</param>
+    /// <param name="policy">The optional persisted access policy.</param>
+    /// <returns><see langword="true"/> when the function is exposed under the combined policy.</returns>
     public static bool ResolveExposureAllowed(
         bool codeAllowGlobalPivot,
         NeuCharFunctionProvitAccess policy)
@@ -161,6 +177,13 @@ public sealed class NeuCharPivotGlobalAccessService
         };
     }
 
+    /// <summary>
+    /// Determines whether the work context contains at least one required role.
+    /// Comparison is case-insensitive and ignores blank required-role values.
+    /// </summary>
+    /// <param name="context">The administrator context whose role codes are checked.</param>
+    /// <param name="requiredRoles">The role codes required by the function or policy.</param>
+    /// <returns><see langword="true"/> when at least one required role is present.</returns>
     public static bool RoleMatches(
         AdminWorkContext context,
         IEnumerable<string> requiredRoles)
@@ -179,10 +202,10 @@ public sealed class NeuCharPivotGlobalAccessService
     }
 }
 
-/// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-/// </summary>
+    /// <summary>
+    /// Resolves a globally callable function after validating its module registration,
+    /// exposure policy, and current administrator authorization.
+    /// </summary>
 public sealed class NeuCharPivotGlobalFunctionService
 {
     private readonly NeuCharFunctionService _functionService;
@@ -199,6 +222,10 @@ public sealed class NeuCharPivotGlobalFunctionService
         _accessPolicyService = accessPolicyService;
     }
 
+    /// <param name="moduleUid">The registered module UID containing the function.</param>
+    /// <param name="functionKey">The function key, method name, or display name to resolve.</param>
+    /// <param name="cancellationToken">The token used to cancel catalog loading.</param>
+    /// <returns>A resolution containing the descriptor on success or a denial message on failure.</returns>
     public async Task<NeuCharGlobalFunctionResolution> ResolveAsync(
         string moduleUid,
         string functionKey,
@@ -240,6 +267,15 @@ public sealed class NeuCharPivotGlobalFunctionService
             : Denied(accessError);
     }
 
+    /// <summary>
+    /// Resolves and executes a globally callable function using the supplied JSON parameters.
+    /// Execution is skipped when resolution or authorization fails.
+    /// </summary>
+    /// <param name="moduleUid">The registered module UID containing the function.</param>
+    /// <param name="functionKey">The function key, method name, or display name to execute.</param>
+    /// <param name="parametersJson">The JSON object passed to the resolved function.</param>
+    /// <param name="cancellationToken">The token used to cancel resolution or execution.</param>
+    /// <returns>The function execution result, including any resolution or execution error.</returns>
     public async Task<NeuCharFunctionExecutionResult> ExecuteAsync(
         string moduleUid,
         string functionKey,
@@ -268,6 +304,12 @@ public sealed class NeuCharPivotGlobalFunctionService
     private static NeuCharGlobalFunctionResolution Denied(string message) =>
         new(null, message);
 
+    /// <summary>
+    /// Determines whether a descriptor matches a requested key, method name, or display name.
+    /// </summary>
+    /// <param name="descriptor">The descriptor to inspect.</param>
+    /// <param name="functionKey">The requested function identifier.</param>
+    /// <returns><see langword="true"/> when any supported descriptor identifier matches.</returns>
     public static bool MatchesFunctionKey(
         NeuCharFunctionDescriptor descriptor,
         string functionKey)

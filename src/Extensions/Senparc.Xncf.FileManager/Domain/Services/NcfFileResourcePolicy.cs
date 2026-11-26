@@ -105,11 +105,6 @@ public static class NcfFileResourcePolicy
     }
 
     /// <summary>
-    /// Existing installations may already contain legacy formats which are no
-    /// longer accepted for new KnowledgeBase uploads. They remain readable and
-    /// downloadable, but cannot bypass the newer ingestion policy.
-    /// </summary>
-    /// <summary>
     /// Determines whether an existing stored extension remains readable under compatibility rules.
     /// </summary>
     /// <param name="scope">The resource scope.</param>

@@ -56,8 +56,10 @@ namespace Senparc.Xncf.AIKernel
     {
         #region Legacy section
 
+        /// <summary>Gets the AIKernel administration home URL.</summary>
         public string HomeUrl => "/Admin/AIKernel/Index";
 
+        /// <summary>Gets the AIKernel administration menu entries.</summary>
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
 new AreaPageMenuItem(GetAreaHomeUrl(), AIKernelResource.Get("Area.Home", "首页"),"fa fa-laptop"),
 new AreaPageMenuItem(GetAreaUrl($"/Admin/AIVector/Index"), AIKernelResource.Get("Area.AIKernel.VectorDatabase", "向量数据库"),"fa fa-bookmark-o"),
@@ -67,6 +69,12 @@ new AreaPageMenuItem(GetAreaUrl($"/Admin/AIFineTuning/Index"), AIKernelResource.
 //Legacy comment translated to English.
 };
 
+        /// <summary>
+        /// Registers AIKernel Razor page options and startup diagnostics.
+        /// </summary>
+        /// <param name="builder">The MVC builder to configure.</param>
+        /// <param name="env">The hosting environment.</param>
+        /// <returns>The configured MVC builder.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>
@@ -82,6 +90,7 @@ new AreaPageMenuItem(GetAreaUrl($"/Admin/AIFineTuning/Index"), AIKernelResource.
         #endregion
 
         #region Legacy section
+        /// <summary>Gets the absolute AIKernel path used for Razor runtime compilation.</summary>
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.AIKernel"));
         #endregion
     }

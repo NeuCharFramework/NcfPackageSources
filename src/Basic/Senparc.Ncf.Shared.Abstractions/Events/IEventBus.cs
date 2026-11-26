@@ -21,19 +21,27 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Shared.Abstractions.Events
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Publishes integration events to handlers registered in the current application.
     /// </summary>
     public interface IEventBus
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Publishes an event to all compatible handlers.
         /// </summary>
+        /// <typeparam name="TEvent">The concrete integration-event type.</typeparam>
+        /// <param name="event">The event instance to publish.</param>
+        /// <param name="cancellationToken">Token used to cancel handler dispatch.</param>
         ValueTask PublishAsync<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
             where TEvent : IIntegrationEvent;
             
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Publishes an event while preserving the parent event metadata used for
+        /// correlation and circular-dispatch detection.
         /// </summary>
+        /// <typeparam name="TEvent">The concrete derived integration-event type.</typeparam>
+        /// <param name="event">The event instance to publish.</param>
+        /// <param name="parentEvent">The event that caused this derived event.</param>
+        /// <param name="cancellationToken">Token used to cancel handler dispatch.</param>
         ValueTask PublishDerivedAsync<TEvent>(TEvent @event, IIntegrationEvent parentEvent, CancellationToken cancellationToken = default)
             where TEvent : IIntegrationEvent;
     }

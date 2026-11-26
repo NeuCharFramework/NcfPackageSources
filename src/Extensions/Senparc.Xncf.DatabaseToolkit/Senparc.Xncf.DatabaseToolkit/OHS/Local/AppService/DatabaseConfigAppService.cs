@@ -41,6 +41,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
     [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class DatabaseConfigAppService : AppServiceBase
     {
+        /// <summary>
+        /// Initializes the database configuration application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public DatabaseConfigAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
@@ -73,6 +77,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.Settings.Name", "Function.Database.Settings.Description", typeof(Register))]
+        /// <summary>
+        /// Saves database backup cycle and path settings.
+        /// </summary>
+        /// <param name="request">The backup interval and path values.</param>
+        /// <returns>A string response describing the saved values.</returns>
         public async Task<StringAppResponse> SetConfig(SetConfigFunctionAppRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -111,6 +120,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
         [ApiBind]
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.ConfigTypes.Name", "Function.Database.ConfigTypes.Description", typeof(Register))]
+        /// <summary>
+        /// Reports the active database configuration type.
+        /// </summary>
+        /// <returns>A string response containing configuration and database type.</returns>
         public async Task<StringAppResponse> ShowDatabaseConfiguration()
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

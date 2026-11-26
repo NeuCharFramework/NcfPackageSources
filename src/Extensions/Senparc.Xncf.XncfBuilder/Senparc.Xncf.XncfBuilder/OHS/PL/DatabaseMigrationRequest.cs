@@ -104,10 +104,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             });
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads database-migration configuration and populates project selection options.
         /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <returns></returns>
+        /// <param name="serviceProvider">The provider used to resolve builder configuration.</param>
+        /// <returns>A task that completes after options are loaded.</returns>
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
             try
@@ -144,11 +144,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves the selected database project path, requiring a custom path for <c>N/A</c>.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
+        /// <param name="request">The database migration request.</param>
+        /// <returns>The resolved project path.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when a custom path is required but missing.</exception>
         public string GetProjectPath(DatabaseMigrations_MigrationRequest request)
         {
             var projectPath = request.ProjectPath;

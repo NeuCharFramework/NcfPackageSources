@@ -41,6 +41,11 @@ public sealed class FunctionFilesController : ControllerBase
     private readonly IFunctionFileStore _fileStore;
     private readonly FunctionFileStoreOptions _options;
 
+    /// <summary>
+    /// Initializes the function-file controller with its storage service and limits.
+    /// </summary>
+    /// <param name="fileStore">The file store used to persist and retrieve function files.</param>
+    /// <param name="options">The configured file-size and batch limits.</param>
     public FunctionFilesController(
         IFunctionFileStore fileStore,
         IOptions<FunctionFileStoreOptions> options)
@@ -49,6 +54,10 @@ public sealed class FunctionFilesController : ControllerBase
         _options = options?.Value ?? new FunctionFileStoreOptions();
     }
 
+    /// <summary>
+    /// Returns the individual-file, total-batch, and file-count limits exposed to the client.
+    /// </summary>
+    /// <returns>An <see cref="OkObjectResult"/> containing the configured upload capabilities.</returns>
     [HttpGet("capabilities")]
     public IActionResult Capabilities()
     {
@@ -60,6 +69,16 @@ public sealed class FunctionFilesController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Streams a bounded batch of multipart files to the function-file store.
+    /// Each stream is disposed after persistence completes or fails.
+    /// </summary>
+    /// <param name="files">The multipart files to store.</param>
+    /// <param name="cancellationToken">The request cancellation token.</param>
+    /// <returns>
+    /// An <see cref="OkObjectResult"/> containing stored references, or a bad-request result
+    /// when any configured batch or file constraint is violated.
+    /// </returns>
     [HttpPost("upload")]
     [RequestSizeLimit(TransportLimitBytes)]
     [RequestFormLimits(MultipartBodyLengthLimit = TransportLimitBytes)]
@@ -142,6 +161,12 @@ public sealed class FunctionFilesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Retrieves a stored function-file reference by identifier.
+    /// </summary>
+    /// <param name="fileId">The file identifier returned by upload.</param>
+    /// <param name="cancellationToken">The request cancellation token.</param>
+    /// <returns>The file reference, a not-found result, or a bad-request result for invalid identifiers.</returns>
     [HttpGet("{fileId}")]
     public async Task<IActionResult> Get(
         string fileId,
@@ -160,6 +185,12 @@ public sealed class FunctionFilesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Deletes the stored function file identified by the request route.
+    /// </summary>
+    /// <param name="fileId">The file identifier to delete.</param>
+    /// <param name="cancellationToken">The request cancellation token.</param>
+    /// <returns>An empty success response, or a bad-request result when the store rejects the identifier.</returns>
     [HttpDelete("{fileId}")]
     public async Task<IActionResult> Delete(
         string fileId,

@@ -38,6 +38,9 @@ public sealed class AgentsManagerNeuBellProvider : INeuBellProvider, INeuBellCon
     private readonly object _syncRoot = new();
     private readonly List<Notification> _notifications = new();
 
+    /// <summary>
+    /// Stores one in-memory notification and its recipient/detail metadata.
+    /// </summary>
     private sealed record Notification(
         string Id,
         string RecipientUserId,

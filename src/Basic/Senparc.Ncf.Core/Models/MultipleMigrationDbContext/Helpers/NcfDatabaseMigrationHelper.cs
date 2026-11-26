@@ -23,19 +23,20 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides naming helpers for EF Core migration history tables.
     /// </summary>
     public static class NcfDatabaseMigrationHelper
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the reserved prefix used by system-level database objects.
         /// </summary>
         public const string SYSTEM_UNIQUE_PREFIX = "SYSTEM";
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds the migration-history table name for a logical database prefix.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="databaseUniquePrefix">The logical database prefix.</param>
+        /// <returns>The provider-independent migration history table name.</returns>
         public static string GetDatabaseMigrationHistoryTableName(string databaseUniquePrefix)
         {
             if (!databaseUniquePrefix.IsNullOrWhiteSpace())
@@ -54,9 +55,10 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds the migration-history table name from an XNCF database registration.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="xncfDatabaseRegister">The module database registration.</param>
+        /// <returns>The provider-independent migration history table name.</returns>
         public static string GetDatabaseMigrationHistoryTableName(IXncfDatabase xncfDatabaseRegister)
         {
             return GetDatabaseMigrationHistoryTableName(xncfDatabaseRegister.DatabaseUniquePrefix);

@@ -24,16 +24,13 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides an intentionally empty EF Core configuration for an entity type.
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TEntity">The entity type being configured.</typeparam>
     public class BlankEntityTypeConfiguration<TEntity> : IEntityTypeConfiguration<TEntity>
          where TEntity : class
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        ///Legacy comment translated to English.
+        /// <inheritdoc />
         public void Configure(EntityTypeBuilder<TEntity> builder)
         {
             

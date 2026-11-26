@@ -23,8 +23,8 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
     /// <summary>
     /// design-time DbContext creation (used only to create Code-First database migrations during development; not executed in production)
     /// <para>1、switch to Debug mode</para>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// <para>2. Build the host project.</para>
+    /// <para>3. Select the Oracle provider configuration.</para>
     /// <para>4、run：PM> add-migration [updatename] -Context BasePoolEntities_Oracle -o SystemEntities/Migrations/Migrations.Oracle.SystemEntities</para>
     /// </summary> 
     public class SenparcDbContextFactory_Oracle : SenparcDesignTimeDbContextFactoryBase<BasePoolEntities_Oracle, Register>

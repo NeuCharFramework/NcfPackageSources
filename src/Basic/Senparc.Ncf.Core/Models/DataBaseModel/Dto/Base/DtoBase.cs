@@ -21,7 +21,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Base DTO carrying a strongly typed value-type identifier.
     /// </summary>
     public class DtoBase<T> : DtoBase
         where T : struct
@@ -30,7 +30,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Base DTO carrying an entity reference and strongly typed identifier.
     /// </summary>
     public class DtoBase<T, TID> : DtoBase
     where T : EntityBase<TID>
@@ -40,23 +40,23 @@ namespace Senparc.Ncf.Core.Models
 
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Base DTO carrying common audit, soft-delete, and tenant fields.
     /// </summary>
     public class DtoBase : IDtoBase
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the soft-delete flag.
         /// </summary>
         public bool Flag { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets an administrator-only remark.
         /// </summary>
         [MaxLength(150)]
         public string AdminRemark { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets a general remark.
         /// </summary>
         [MaxLength(150)]
         public string Remark { get; set; }
@@ -66,14 +66,12 @@ namespace Senparc.Ncf.Core.Models
         /// </summary>
         public DateTime AddTime { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the most recent update time.
         /// </summary>
         public DateTime LastUpdateTime { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Gets or sets the tenant identifier.
         /// </summary>
         public int TenantId { get; set; }
     }

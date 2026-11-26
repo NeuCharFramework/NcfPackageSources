@@ -22,14 +22,28 @@ using System.Threading.Tasks;
 
 namespace Senparc.Ncf.FileExtension
 {
+    /// <summary>
+    /// Provides simple asynchronous upload helpers that copy an
+    /// <see cref="IFormFile"/> into a server-side file path.
+    /// </summary>
     public static class FileExtension
     {
         /// <summary>
-        /// 
+        /// Writes an uploaded form file to the exact output path, creating its
+        /// parent directory when the implementation can resolve one.
         /// </summary>
-        /// <param name="formFile"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="formFile">The uploaded file to copy.</param>
+        /// <param name="outPath">The complete destination path, including the file name.</param>
+        /// <returns>
+        /// A task that completes with <see langword="true"/> after the destination
+        /// stream has been flushed.
+        /// </returns>
+        /// <exception cref="NullReferenceException">
+        /// Thrown when <paramref name="formFile"/> is <see langword="null"/> or empty.
+        /// </exception>
+        /// <exception cref="IOException">
+        /// Propagated when the destination directory or file cannot be created or written.
+        /// </exception>
         public static async Task<bool> Upload(IFormFile formFile, string outPath)
         {
             if (formFile == null || formFile.Length <= 0)
@@ -52,12 +66,22 @@ namespace Senparc.Ncf.FileExtension
         }
 
         /// <summary>
-        /// 
+        /// Combines a destination directory and file name, then writes the uploaded
+        /// form file to the resulting path.
         /// </summary>
-        /// <param name="formFile"></param>
-        /// <param name="fileName"></param>
-        /// <param name="paths"></param>
-        /// <returns></returns>
+        /// <param name="formFile">The uploaded file to copy.</param>
+        /// <param name="fileName">The file name to create below <paramref name="paths"/>.</param>
+        /// <param name="paths">The destination directory.</param>
+        /// <returns>
+        /// A task that completes with <see langword="true"/> after the destination
+        /// stream has been flushed.
+        /// </returns>
+        /// <exception cref="NullReferenceException">
+        /// Thrown when <paramref name="formFile"/> is <see langword="null"/> or empty.
+        /// </exception>
+        /// <exception cref="IOException">
+        /// Propagated when the destination directory or file cannot be created or written.
+        /// </exception>
         public static async Task<bool> Upload(IFormFile formFile, string fileName, string paths)
         {
             if (formFile == null || formFile.Length <= 0)

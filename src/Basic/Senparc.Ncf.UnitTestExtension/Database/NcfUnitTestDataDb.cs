@@ -26,13 +26,18 @@ using Senparc.Xncf.SystemCore.Domain.Database;
 
 namespace Senparc.Ncf.UnitTestExtension.Database
 {
-
+    /// <summary>
+    /// Supplies the unit-test EF Core context through the NCF database abstraction.
+    /// </summary>
     public class NcfUnitTestDataDb : NcfDbData, INcfDbData, INcfClientDbData
     {
         private NcfUnitTestEntities dataContext;
 
+        /// <summary>Initializes an empty test database wrapper.</summary>
         public NcfUnitTestDataDb() { }
 
+        /// <summary>Initializes the wrapper with an existing test context.</summary>
+        /// <param name="dbContext">The test database context.</param>
         public NcfUnitTestDataDb(NcfUnitTestEntities dbContext)
         {
             dataContext = dbContext;
@@ -45,6 +50,7 @@ namespace Senparc.Ncf.UnitTestExtension.Database
 
 
 
+        /// <summary>Gets the underlying system-core-compatible context.</summary>
         public virtual BasePoolEntities DataContext
         {
             get
@@ -53,13 +59,9 @@ namespace Senparc.Ncf.UnitTestExtension.Database
             }
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Releases the wrapper's context reference.</summary>
         public override void CloseConnection()
         {
-            //Legacy comment translated to English.
-            //BaseDataContext.Database.Connection.Close();
             dataContext = null;
         }
 
@@ -72,10 +74,7 @@ namespace Senparc.Ncf.UnitTestExtension.Database
                     //var connectionString = Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString;
 
                     //dataContext = SenparcDI.GetService<SenparcEntities>();
-                    //Legacy comment translated to English.
                 }
-                //var hashCode = dataContext.GetHashCode();
-                //Legacy comment translated to English.
                 return dataContext;
             }
 

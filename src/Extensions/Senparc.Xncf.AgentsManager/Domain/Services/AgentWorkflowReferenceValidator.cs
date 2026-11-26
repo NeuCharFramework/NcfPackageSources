@@ -39,6 +39,13 @@ public sealed class AgentWorkflowReferenceValidator : IAgentWorkflowReferenceVal
     private readonly ChatGroupMemberService _memberService;
     private readonly IWorkflowDependencyProvider? _workflowProvider;
 
+    /// <summary>
+    /// Initializes the cross-resource reference validator.
+    /// </summary>
+    /// <param name="agentService">The Agent template service.</param>
+    /// <param name="groupService">The ChatGroup service.</param>
+    /// <param name="memberService">The ChatGroup membership service.</param>
+    /// <param name="workflowProvider">The optional Workflow dependency provider.</param>
     public AgentWorkflowReferenceValidator(
         AgentsTemplateService agentService,
         ChatGroupService groupService,
@@ -51,6 +58,15 @@ public sealed class AgentWorkflowReferenceValidator : IAgentWorkflowReferenceVal
         _workflowProvider = workflowProvider;
     }
 
+    /// <summary>
+    /// Validates whether Agent or Group references reachable from a workflow can call
+    /// the same workflow, preventing indirect cycles.
+    /// </summary>
+    /// <param name="workflowId">The workflow being saved.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="references">The Agent/Group references declared by the workflow.</param>
+    /// <param name="cancellationToken">The graph traversal cancellation token.</param>
+    /// <returns>A localized validation error, or <see langword="null"/> when no cycle is found.</returns>
     public async Task<string?> ValidateWorkflowReferencesAsync(
         int workflowId,
         int adminUserId,
@@ -96,6 +112,15 @@ public sealed class AgentWorkflowReferenceValidator : IAgentWorkflowReferenceVal
         return null;
     }
 
+    /// <summary>
+    /// Validates whether workflow bindings attached to an Agent can reach that same Agent
+    /// through nested Workflow, Agent, or Group references.
+    /// </summary>
+    /// <param name="agentId">The Agent being saved.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="workflowIds">The workflow identifiers bound to the Agent.</param>
+    /// <param name="cancellationToken">The graph traversal cancellation token.</param>
+    /// <returns>A localized validation error, or <see langword="null"/> when no cycle is found.</returns>
     public async Task<string?> ValidateAgentBindingsAsync(
         int agentId,
         int adminUserId,
@@ -144,6 +169,15 @@ public sealed class AgentWorkflowReferenceValidator : IAgentWorkflowReferenceVal
         return null;
     }
 
+    /// <summary>
+    /// Traverses workflow bindings reachable from an Agent until the target workflow is found.
+    /// </summary>
+    /// <param name="agentId">The Agent to traverse.</param>
+    /// <param name="targetWorkflowId">The workflow being searched for.</param>
+    /// <param name="adminUserId">The owner identifier used by Workflow lookups.</param>
+    /// <param name="path">The current traversal path used for cycle suppression.</param>
+    /// <param name="cancellationToken">The traversal cancellation token.</param>
+    /// <returns><see langword="true"/> when the target workflow is reachable.</returns>
     private async Task<bool> AgentReachesWorkflowAsync(
         int agentId,
         int targetWorkflowId,
@@ -192,6 +226,15 @@ public sealed class AgentWorkflowReferenceValidator : IAgentWorkflowReferenceVal
         return false;
     }
 
+    /// <summary>
+    /// Traverses a workflow graph until a target Agent is reached.
+    /// </summary>
+    /// <param name="workflowId">The workflow to traverse.</param>
+    /// <param name="targetAgentId">The Agent being searched for.</param>
+    /// <param name="adminUserId">The owner identifier used by Workflow lookups.</param>
+    /// <param name="path">The current traversal path.</param>
+    /// <param name="cancellationToken">The traversal cancellation token.</param>
+    /// <returns><see langword="true"/> when the target Agent is reachable.</returns>
     private async Task<bool> WorkflowReachesAgentAsync(
         int workflowId,
         int targetAgentId,
@@ -208,6 +251,16 @@ public sealed class AgentWorkflowReferenceValidator : IAgentWorkflowReferenceVal
             cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Traverses Workflow dependency edges toward an optional target workflow or Agent.
+    /// </summary>
+    /// <param name="workflowId">The workflow to traverse.</param>
+    /// <param name="targetWorkflowId">The optional workflow target.</param>
+    /// <param name="targetAgentId">The optional Agent target.</param>
+    /// <param name="adminUserId">The owner identifier used by Workflow lookups.</param>
+    /// <param name="path">The current traversal path.</param>
+    /// <param name="cancellationToken">The traversal cancellation token.</param>
+    /// <returns><see langword="true"/> when either target is reachable.</returns>
     private async Task<bool> WorkflowReachesWorkflowOrAgentAsync(
         int workflowId,
         int? targetWorkflowId,
@@ -286,6 +339,16 @@ public sealed class AgentWorkflowReferenceValidator : IAgentWorkflowReferenceVal
         return false;
     }
 
+    /// <summary>
+    /// Traverses workflow bindings reachable from an Agent toward an optional workflow or Agent target.
+    /// </summary>
+    /// <param name="agentId">The Agent to traverse.</param>
+    /// <param name="targetWorkflowId">The optional workflow target.</param>
+    /// <param name="targetAgentId">The optional Agent target.</param>
+    /// <param name="adminUserId">The owner identifier used by Workflow lookups.</param>
+    /// <param name="path">The current traversal path.</param>
+    /// <param name="cancellationToken">The traversal cancellation token.</param>
+    /// <returns><see langword="true"/> when either target is reachable.</returns>
     private async Task<bool> AgentReachesWorkflowOrAgentAsync(
         int agentId,
         int? targetWorkflowId,
@@ -340,6 +403,15 @@ public sealed class AgentWorkflowReferenceValidator : IAgentWorkflowReferenceVal
         return false;
     }
 
+    /// <summary>
+    /// Traverses all agents belonging to a Group toward a target workflow.
+    /// </summary>
+    /// <param name="groupId">The Group to traverse.</param>
+    /// <param name="targetWorkflowId">The workflow being searched for.</param>
+    /// <param name="adminUserId">The owner identifier used by Workflow lookups.</param>
+    /// <param name="path">The current traversal path.</param>
+    /// <param name="cancellationToken">The traversal cancellation token.</param>
+    /// <returns><see langword="true"/> when the target workflow is reachable.</returns>
     private async Task<bool> GroupReachesWorkflowAsync(
         int groupId,
         int targetWorkflowId,
@@ -354,6 +426,16 @@ public sealed class AgentWorkflowReferenceValidator : IAgentWorkflowReferenceVal
             path,
             cancellationToken).ConfigureAwait(false);
 
+    /// <summary>
+    /// Traverses group members and designated Group agents toward an optional workflow or Agent target.
+    /// </summary>
+    /// <param name="groupId">The Group to traverse.</param>
+    /// <param name="targetWorkflowId">The optional workflow target.</param>
+    /// <param name="targetAgentId">The optional Agent target.</param>
+    /// <param name="adminUserId">The owner identifier used by Workflow lookups.</param>
+    /// <param name="path">The current traversal path.</param>
+    /// <param name="cancellationToken">The traversal cancellation token.</param>
+    /// <returns><see langword="true"/> when either target is reachable.</returns>
     private async Task<bool> GroupReachesWorkflowOrAgentAsync(
         int groupId,
         int? targetWorkflowId,
@@ -404,6 +486,11 @@ public sealed class AgentWorkflowReferenceValidator : IAgentWorkflowReferenceVal
         return false;
     }
 
+    /// <summary>
+    /// Resolves a workflow binding identifier from its explicit ID or legacy key field.
+    /// </summary>
+    /// <param name="binding">The binding to inspect.</param>
+    /// <returns>The workflow identifier or zero when no valid identifier exists.</returns>
     private static int ParseWorkflowId(AgentFunctionBindingDto binding)
     {
         if (binding?.WorkflowId > 0)

@@ -26,11 +26,15 @@ namespace Senparc.Log
   public static  class NLogExtension
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Formats the supplied arguments with the Senparc string-format helper
+        /// and writes the resulting message at NLog error level.
         /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="stringFormat"></param>
-        /// <param name="args"></param>
+        /// <param name="logger">The NLog logger that receives the error entry.</param>
+        /// <param name="stringFormat">The composite format string.</param>
+        /// <param name="args">The values used to populate the format string.</param>
+        /// <exception cref="NullReferenceException">
+        /// Thrown when <paramref name="logger"/> is <see langword="null"/>.
+        /// </exception>
         public static void ErrorFormat(this Logger logger, string stringFormat, params object[] args)
         {
             logger.Error(stringFormat.With(args));

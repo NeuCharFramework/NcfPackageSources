@@ -21,22 +21,15 @@
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Configures registry prefixes and per-template image overrides for Sandbox runtimes.
 /// </summary>
 public sealed class SandboxImageOptions
 {
     public const string SectionName = "SenparcXncfSandbox:Images";
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Optional registry prefix applied to default image names.</summary>
     public string? RegistryPrefix { get; set; }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Case-insensitive template-key image overrides.</summary>
     public Dictionary<string, string> Overrides { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }

@@ -30,7 +30,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Transfers one ChatGroup interaction history record and its token/latency usage metrics.
     /// </summary>
     public class ChatGroupHistoryDto : DtoBase
     {
@@ -83,8 +83,10 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 
         public string ResponseId { get; set; }
 
+        /// <summary>Initializes an empty history DTO.</summary>
         public ChatGroupHistoryDto() { }
 
+        /// <summary>Initializes a history DTO from participant and message data.</summary>
         public ChatGroupHistoryDto(int chatGroupId,int chatTaskId, ChatGroup chatGroup, int fromAgentTemplateId, AgentTemplate fromAgentTemplate, int toAgentTemplateId, AgentTemplate toAgentTemplate, /*int fromChatGroupMemberId, ChatGroupMember fromChatGroupMember, int toChatGroupMemberId, ChatGroupMember toChatGroupMember,*/ string message, MessageType messageType, Status status)
         {
             ChatGroupId = chatGroupId;
@@ -113,6 +115,8 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             }
         }
 
+        /// <summary>Maps a persisted history entity and decodes its usage metadata.</summary>
+        /// <param name="chatGroupHistory">The source history entity.</param>
         public ChatGroupHistoryDto(ChatGroupHistory chatGroupHistory)
         {
             ChatGroupId = chatGroupHistory.ChatGroupId;

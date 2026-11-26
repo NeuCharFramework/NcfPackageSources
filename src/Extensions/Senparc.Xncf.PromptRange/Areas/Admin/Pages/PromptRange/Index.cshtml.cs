@@ -22,11 +22,14 @@ namespace Senparc.Xncf.PromptRange.Areas.PromptRange.Pages
 {
     public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
+        /// <summary>Initializes the PromptRange index page.</summary>
+        /// <param name="xncfModuleService">The lazy XNCF module service.</param>
         public Index(Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
         {
 
         }
 
+        /// <summary>Initializes the PromptRange index request.</summary>
         public void OnGet()
         {
         }

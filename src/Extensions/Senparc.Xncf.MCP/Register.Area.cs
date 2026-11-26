@@ -42,12 +42,20 @@ namespace Senparc.Xncf.MCP
     {
         #region Legacy section
 
+        /// <summary>Gets the MCP administration home URL.</summary>
         public string HomeUrl => "/Admin/MCP/Index";
 
+        /// <summary>Gets the MCP administration menu entries.</summary>
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
                          new AreaPageMenuItem(GetAreaHomeUrl(), McpResource.Get("Area.Home", "首页"),"fa fa-plug")
                      };
 
+        /// <summary>
+        /// Configures MCP Razor Pages and records module startup diagnostics.
+        /// </summary>
+        /// <param name="builder">The MVC builder being configured.</param>
+        /// <param name="env">The current host environment.</param>
+        /// <returns>The configured MVC builder.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>
@@ -63,6 +71,7 @@ namespace Senparc.Xncf.MCP
         #endregion
 
         #region Legacy section
+        /// <summary>Gets the absolute MCP module path used for runtime compilation.</summary>
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.MCP"));
         #endregion
     }

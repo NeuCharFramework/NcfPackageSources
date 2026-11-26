@@ -35,17 +35,25 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public PagedList<AdminUserInfo> AdminUserInfoList { get; set; }
 
         /// <summary>
-        /// 属性绑定，支持GET
+        /// Gets or sets the one-based page number used by the administrator list query.
+        /// The value is bound from the query string and defaults to the first page.
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public int PageIndex { get; set; } = 1;
 
         /// <summary>
-        /// 排序方法
+        /// Gets or sets the sort expression passed to the administrator list query.
+        /// The default orders by creation time in descending order and then by identifier.
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public string OrderField { get; set; } = "AddTime Desc,Id";
 
+        /// <summary>
+        /// Handles the initial administrator-list page request.
+        /// The list is loaded by the client-side list handler, so this method completes
+        /// without producing an additional server-side model payload.
+        /// </summary>
+        /// <returns>The Razor Page result for the administrator-list view.</returns>
         public async Task<IActionResult> OnGetAsync()
         {
             await Task.CompletedTask;
@@ -53,12 +61,16 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 
+        /// Queries administrators whose user name contains the supplied search text and
+        /// returns the requested page together with its total-count metadata.
         /// </summary>
-        /// <param name="adminUserInfoName"></param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
+        /// <param name="adminUserInfoName">Optional search text applied to the user name.</param>
+        /// <param name="pageIndex">The one-based page number to retrieve.</param>
+        /// <param name="pageSize">The maximum number of records to include in the page.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing page metadata and administrator records.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Propagated when the underlying service rejects an invalid page index or page size.
+        /// </exception>
         [Ncf.AreaBase.Admin.Filters.CustomerResource("admin-search")]
         public async Task<IActionResult> OnGetListAsync(string adminUserInfoName, int pageIndex, int pageSize)
         {
@@ -70,10 +82,14 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// Handler=Delete
+        /// Deletes the administrators identified by the request body and returns the number
+        /// of identifiers processed. Authorization is enforced by the page resource filter.
         /// </summary>
-        /// <param name="ids"></param>
-        /// <returns></returns>
+        /// <param name="ids">The administrator identifiers to delete.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing the number of supplied identifiers.</returns>
+        /// <exception cref="NullReferenceException">
+        /// Thrown if the request body is null because the handler requires an identifier array.
+        /// </exception>
         [Ncf.AreaBase.Admin.Filters.CustomerResource("admin-delete")]
         public IActionResult OnPostDelete([FromBody]int[] ids)
         {

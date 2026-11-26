@@ -15,16 +15,13 @@
 namespace Senparc.Xncf.Sandbox.Domain.Services;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Provides localized documentation links for Sandbox environment setup.
 /// </summary>
 public static class SandboxDocsLinks
 {
     public const string SiteRoot = "https://doc.ncf.pub";
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Chinese Sandbox environment setup documentation URL.</summary>
     public const string EnvironmentSetupZh = SiteRoot + "/zh/NcfPackageSources/xncf/sandbox-environment.html";
 
     /// <summary>
@@ -32,6 +29,12 @@ public static class SandboxDocsLinks
     /// </summary>
     public const string EnvironmentSetupEn = SiteRoot + "/NcfPackageSources/xncf/sandbox-environment.html";
 
+    /// <summary>
+    /// Selects the environment setup documentation URL from a culture name.
+    /// Chinese cultures use the localized page; all other cultures use the English page.
+    /// </summary>
+    /// <param name="cultureName">The optional culture name.</param>
+    /// <returns>The localized setup documentation URL.</returns>
     public static string GetEnvironmentSetupUrl(string? cultureName = null)
     {
         if (!string.IsNullOrWhiteSpace(cultureName)

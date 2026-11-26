@@ -265,6 +265,12 @@ public class IndexModel(
         };
     }
 
+    /// <summary>
+    /// Projects a webhook delivery log entity into the JSON shape used by the
+    /// NeuBell webhook log table.
+    /// </summary>
+    /// <param name="item">The persisted webhook log entity.</param>
+    /// <returns>The JSON-ready log projection.</returns>
     private static object ToLogDto(NeuBellWebHookLog item)
     {
         return new

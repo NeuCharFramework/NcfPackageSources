@@ -19,9 +19,10 @@
 namespace Senparc.Xncf.AgentsManager.Domain.Models;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Describes an MCP endpoint URL bound to an Agent configuration.
 /// </summary>
 public class McpEndpoint
 {
+    /// <summary>Gets or sets the MCP endpoint URL.</summary>
     public string url { get; set; }
 }

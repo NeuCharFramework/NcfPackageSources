@@ -14,6 +14,10 @@ namespace Senparc.Xncf.AgentsManager.Models
     [MultipleMigrationDbContext(MultipleDatabaseType.PostgreSQL, typeof(Register))]
     public class AgentsManagerSenparcEntities_PostgreSQL : AgentsManagerSenparcEntities
     {
+        /// <summary>
+        /// Initializes the PostgreSQL-specific AgentsManager DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for PostgreSQL.</param>
         public AgentsManagerSenparcEntities_PostgreSQL(DbContextOptions<AgentsManagerSenparcEntities_PostgreSQL> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -33,6 +37,9 @@ namespace Senparc.Xncf.AgentsManager.Models
             app.UseNcfDatabase("Senparc.Ncf.Database.PostgreSQL", "Senparc.Ncf.Database.PostgreSQL", "PostgreSQLDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the PostgreSQL design-time DbContext factory using the configured root directory.
+        /// </summary>
         public SenparcDbContextFactory_PostgreSQL() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)
         {
 

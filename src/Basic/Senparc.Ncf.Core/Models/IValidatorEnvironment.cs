@@ -24,13 +24,11 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Exposes request validation state to services that need to add model errors.
     /// </summary>
     public interface IValidatorEnvironment
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the current MVC model-state dictionary.</summary>
         ModelStateDictionary ModelState { get; }
 
         /// <summary>

@@ -81,6 +81,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return commonParentPath;
         }
 
+        /// <summary>
+        /// Finds the common directory containing a sequence of export paths.
+        /// </summary>
+        /// <param name="paths">The export paths.</param>
+        /// <returns>The common parent directory.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when no paths are supplied.</exception>
         private string FindCommonParentPath(IEnumerable<string> paths)
         {
             var pathList = paths.ToList();
@@ -261,10 +267,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves the sanitized filesystem path used for one PromptRange export.
         /// </summary>
-        /// <param name="range"></param>
-        /// <returns></returns>
+        /// <param name="range">The PromptRange descriptor.</param>
+        /// <returns>The range export directory.</returns>
         private string GetRangePath(PromptRangeDto range)
         {
             #region Legacy section
@@ -717,6 +723,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Extracts a plugin archive under bounded entry/size/path-traversal constraints.
+        /// </summary>
+        /// <param name="zipFilePath">The archive path.</param>
+        /// <param name="extractDir">The extraction directory.</param>
+        /// <returns>A task that completes after extraction.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when archive limits or paths are invalid.</exception>
         private static async Task ExtractPluginArchiveAsync(string zipFilePath, string extractDir)
         {
             using var zip = ZipFile.OpenRead(zipFilePath);
@@ -760,6 +773,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Sanitizes one export path component and bounds its length.
+        /// </summary>
+        /// <param name="value">The component value.</param>
+        /// <param name="componentName">The component label used in errors.</param>
+        /// <returns>A safe filesystem component.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the component is blank or unusable.</exception>
         private static string SanitizePathComponent(string value, string componentName)
         {
             var trimmed = (value ?? string.Empty).Trim();
@@ -782,6 +802,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return sanitized.Length <= 100 ? sanitized : sanitized[..100];
         }
 
+        /// <summary>
+        /// Combines a parent directory and child name while rejecting path escape.
+        /// </summary>
+        /// <param name="parentPath">The trusted parent directory.</param>
+        /// <param name="childName">The sanitized child name.</param>
+        /// <returns>The safe child path.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the child path escapes the parent.</exception>
         private static string GetSafeChildPath(string parentPath, string childName)
         {
             var parent = Path.GetFullPath(parentPath);
@@ -798,6 +825,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return fullPath;
         }
 
+        /// <summary>
+        /// Resolves one archive entry under the extraction root while rejecting traversal.
+        /// </summary>
+        /// <param name="extractDir">The trusted extraction directory.</param>
+        /// <param name="entryName">The archive entry name.</param>
+        /// <returns>The safe extraction target path.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the entry path is invalid or escapes the root.</exception>
         private static string GetSafeArchiveEntryPath(string extractDir, string entryName)
         {
             var normalized = (entryName ?? string.Empty).Replace('\\', '/');

@@ -22,6 +22,7 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
+    /// <summary>Transfers administrative button permission values.</summary>
     public class SysButtonDto : DtoBase
     {
 
@@ -29,28 +30,20 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
 
         public string Id { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the owning menu identifier.</summary>
         [MaxLength(50)]
         public string MenuId { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the button display name.</summary>
         [MaxLength(50)]
         //[Required]
         public string ButtonName { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the operation/resource marker.</summary>
         [MaxLength(50)]
         public string OpearMark { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the button URL or action route.</summary>
         [MaxLength(350)]
         public string Url { get; set; }
     }

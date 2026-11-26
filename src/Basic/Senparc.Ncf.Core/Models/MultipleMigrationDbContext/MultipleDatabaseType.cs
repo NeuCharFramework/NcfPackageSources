@@ -22,7 +22,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies the database providers supported by NCF's multiple-database infrastructure.
     /// </summary>
     public enum MultipleDatabaseType
     {

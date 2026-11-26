@@ -30,20 +30,39 @@ namespace Senparc.Mvc
         private bool forceLogout = false;//Legacy comment translated to English.
 
 
+        /// <summary>
+        /// Initializes authorization with no additional role-module restriction.
+        /// </summary>
         public SenparcAuthorizeAttribute()
             : this(null)
         { }
 
+        /// <summary>
+        /// Initializes authorization with an optional role-module name.
+        /// </summary>
+        /// <param name="roleModuleName">The legacy role/module restriction name.</param>
         public SenparcAuthorizeAttribute(string roleModuleName)
         {
             RoleModuleName = roleModuleName;
         }
 
+        /// <summary>
+        /// Determines whether the HTTP context contains an authenticated principal.
+        /// </summary>
+        /// <param name="httpContext">The HTTP context to inspect.</param>
+        /// <returns><see langword="true"/> when the user is authenticated.</returns>
         protected bool IsLogined(HttpContext httpContext)
         {
             return httpContext != null && httpContext.User.Identity.IsAuthenticated;
         }
 
+        /// <summary>
+        /// Performs the base authentication check used by the authorization filter.
+        /// Subclasses may override this method to add application-specific policy checks.
+        /// </summary>
+        /// <param name="httpContext">The HTTP context to authorize.</param>
+        /// <returns><see langword="true"/> when authorization succeeds.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="httpContext"/> is null.</exception>
         protected virtual bool AuthorizeCore(HttpContext httpContext)
         {
             //return true;
@@ -62,6 +81,12 @@ namespace Senparc.Mvc
 
         }
 
+        /// <summary>
+        /// Applies authorization and returns an unauthorized or AJAX JSON result
+        /// when the base authorization check fails.
+        /// </summary>
+        /// <param name="filterContext">The authorization filter context.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="filterContext"/> is null.</exception>
         public virtual void OnAuthorization(AuthorizationFilterContext filterContext)
         {
 

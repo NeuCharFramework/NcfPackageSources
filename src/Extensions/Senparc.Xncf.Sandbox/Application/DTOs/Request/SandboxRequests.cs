@@ -62,7 +62,7 @@ public class Sandbox_CreateRequest : FunctionAppRequestBase
     public string TemplateKey { get; set; } = string.Empty;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Gets the template choices presented by the sandbox creation Function.
     /// </summary>
     [JsonIgnore]
     [Newtonsoft.Json.JsonIgnore]

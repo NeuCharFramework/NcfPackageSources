@@ -29,7 +29,7 @@ using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores one chunk of source content and its embedding-processing state.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(KnowledgeBaseItem))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
@@ -51,6 +51,11 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             ChunkIndex = knowledgeBaseItemDto.ChunkIndex;
             NcfFileId = knowledgeBaseItemDto.NcfFileId;
         }
+        /// <summary>
+        /// Replaces the persisted chunk metadata and content from a DTO, then clears the
+        /// embedding state because the source text has changed.
+        /// </summary>
+        /// <param name="knowledgeBaseItemDto">The DTO containing the replacement chunk values.</param>
         public void Update(KnowledgeBaseItemDto knowledgeBaseItemDto)
         {
             KnowledgeBasesId = knowledgeBaseItemDto.KnowledgeBasesId;
@@ -61,9 +66,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             NcfFileId = knowledgeBaseItemDto.NcfFileId;
             ResetEmbedding();
         }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the owning knowledge-base identifier.</summary>
         public int KnowledgeBasesId { get; private set; }
         /// <summary>
         /// contenttype
@@ -74,35 +77,25 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
         /// </summary>
         public string Content { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the original source file name, when the chunk came from a file.</summary>
         [MaxLength(500)]
         public string FileName { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the optional managed FileManager file identifier.</summary>
         public int? NcfFileId { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the zero-based chunk index within the source content.</summary>
         public int ChunkIndex { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets a value indicating whether an embedding has been generated.</summary>
         public bool IsEmbedded { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the local timestamp of the last successful embedding.</summary>
         public DateTime? EmbeddedTime { get; private set; }
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Marks the chunk as successfully embedded and records the embedding timestamp.
         /// </summary>
         public void EmbeddingSucceeded()
         {
@@ -110,6 +103,9 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             this.EmbeddedTime = DateTime.Now;
         }
 
+        /// <summary>
+        /// Clears the embedding flag and timestamp so the chunk can be processed again.
+        /// </summary>
         public void ResetEmbedding()
         {
             IsEmbedded = false;
@@ -120,6 +116,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
     }
 
 
+    /// <summary>Identifies the source modality represented by a knowledge-base item.</summary>
     public enum ContentType
     {
         Text = 0,

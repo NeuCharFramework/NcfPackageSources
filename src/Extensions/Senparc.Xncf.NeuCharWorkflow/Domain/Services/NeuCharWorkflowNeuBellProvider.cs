@@ -31,6 +31,11 @@ public static class NeuCharWorkflowNeuBellConsumption
     public const string Item = "item";
     public const string Provider = "provider";
 
+    /// <summary>
+    /// Normalizes an external consumption-mode value to one of the supported constants.
+    /// </summary>
+    /// <param name="value">The requested mode, or <see langword="null"/>.</param>
+    /// <returns><see cref="Item"/>, <see cref="Provider"/>, or <see cref="None"/>.</returns>
     public static string Normalize(string? value) => value?.Trim().ToLowerInvariant() switch
     {
         Item => Item,
@@ -67,6 +72,19 @@ public sealed class NeuCharWorkflowNeuBellProvider : INeuBellProvider, INeuBellC
 
     public string ModuleUid => new Register().Uid;
 
+    /// <summary>
+    /// Stores a workflow notification for the specified administrator and returns its item identifier.
+    /// The in-memory provider keeps only the newest notifications up to its fixed capacity.
+    /// </summary>
+    /// <param name="adminUserId">The administrator receiving the notification.</param>
+    /// <param name="workflowId">The workflow identifier associated with the notification.</param>
+    /// <param name="workflowName">The workflow display name.</param>
+    /// <param name="runId">The optional workflow run identifier.</param>
+    /// <param name="nodeId">The node that emitted the notification.</param>
+    /// <param name="title">The notification title.</param>
+    /// <param name="summary">The notification summary.</param>
+    /// <param name="consumeMode">The requested consumption mode.</param>
+    /// <returns>The generated notification item identifier.</returns>
     public string Send(
         int adminUserId,
         int workflowId,
@@ -99,6 +117,13 @@ public sealed class NeuCharWorkflowNeuBellProvider : INeuBellProvider, INeuBellC
         return notification.Id;
     }
 
+    /// <summary>
+    /// Consumes one notification when it belongs to the requesting administrator.
+    /// </summary>
+    /// <param name="context">The authenticated NeuBell request context.</param>
+    /// <param name="itemId">The notification item identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel consumption.</param>
+    /// <returns>One when an item was removed; otherwise zero.</returns>
     public ValueTask<int> ConsumeItemAsync(
         NeuBellRequestContext context,
         string itemId,
@@ -124,6 +149,12 @@ public sealed class NeuCharWorkflowNeuBellProvider : INeuBellProvider, INeuBellC
         }
     }
 
+    /// <summary>
+    /// Consumes all notifications belonging to the requesting administrator.
+    /// </summary>
+    /// <param name="context">The authenticated NeuBell request context.</param>
+    /// <param name="cancellationToken">Token used to cancel consumption.</param>
+    /// <returns>The number of removed notifications.</returns>
     public ValueTask<int> ConsumeAllAsync(
         NeuBellRequestContext context,
         CancellationToken cancellationToken = default)
@@ -137,6 +168,12 @@ public sealed class NeuCharWorkflowNeuBellProvider : INeuBellProvider, INeuBellC
         }
     }
 
+    /// <summary>
+    /// Returns the current notification snapshot for the requesting administrator.
+    /// </summary>
+    /// <param name="context">The authenticated NeuBell request context.</param>
+    /// <param name="cancellationToken">Token used to cancel snapshot creation.</param>
+    /// <returns>The provider snapshot containing visible workflow notifications.</returns>
     public ValueTask<NeuBellSnapshot> GetSnapshotAsync(
         NeuBellRequestContext context,
         CancellationToken cancellationToken = default)
@@ -168,6 +205,11 @@ public sealed class NeuCharWorkflowNeuBellProvider : INeuBellProvider, INeuBellC
             items));
     }
 
+    /// <summary>
+    /// Builds the administration task URL containing provider, item, run, and consume metadata.
+    /// </summary>
+    /// <param name="item">The notification represented by the URL.</param>
+    /// <returns>The encoded administration task URL.</returns>
     private static string BuildTaskDetailUrl(Notification item)
     {
         var query = new List<string>
@@ -184,10 +226,22 @@ public sealed class NeuCharWorkflowNeuBellProvider : INeuBellProvider, INeuBellC
         return "/Admin/NeuCharWorkflow/Tasks?" + string.Join("&", query);
     }
 
+    /// <summary>
+    /// Normalizes a run identifier to compact GUID text.
+    /// </summary>
+    /// <param name="runId">The candidate run identifier.</param>
+    /// <returns>The compact identifier, or <see langword="null"/> when invalid.</returns>
     private static string? NormalizeRunId(string? runId) => Guid.TryParse(runId, out var parsed)
         ? parsed.ToString("N")
         : null;
 
+    /// <summary>
+    /// Trims notification text and applies a fallback or maximum length.
+    /// </summary>
+    /// <param name="value">The candidate notification text.</param>
+    /// <param name="maxLength">The maximum permitted length.</param>
+    /// <param name="fallback">The value used for blank input.</param>
+    /// <returns>The normalized bounded text.</returns>
     private static string Limit(string? value, int maxLength, string fallback)
     {
         var normalized = value?.Trim();

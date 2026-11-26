@@ -26,6 +26,11 @@ namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 public abstract class WorkflowClientServiceBase<TEntity> : ClientServiceBase<TEntity>
     where TEntity : EntityBase
 {
+    /// <summary>
+    /// Initializes a workflow client service with its repository and dependency provider.
+    /// </summary>
+    /// <param name="repository">The client repository for the entity type.</param>
+    /// <param name="serviceProvider">The dependency provider used by the service.</param>
     protected WorkflowClientServiceBase(IClientRepositoryBase<TEntity> repository, IServiceProvider serviceProvider)
         : base(repository, serviceProvider) { }
 }

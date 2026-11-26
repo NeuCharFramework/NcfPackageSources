@@ -74,13 +74,22 @@ namespace Senparc.Areas.Admin.Domain.Services
         private long _currentMinuteIndex;
         private long _currentFiveMinuteIndex;
 
-        public ResourceMonitorRecorder(ILogger<ResourceMonitorRecorder> logger)
+    /// <summary>
+    /// Initializes the background resource recorder with its cache and host-metrics collector.
+    /// </summary>
+    /// <param name="logger">The sampling diagnostic logger.</param>
+    public ResourceMonitorRecorder(ILogger<ResourceMonitorRecorder> logger)
         {
             _logger = logger;
             _cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    /// <inheritdoc/>
+    /// <remarks>
+    /// Samples host/process metrics every ten seconds and keeps running after
+    /// individual sampling failures.
+    /// </remarks>
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             //Legacy comment translated to English.
             try
@@ -119,7 +128,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
         }
 
-        private async Task RecordTickAsync()
+    /// <summary>
+    /// Captures one host/process snapshot, appends the fine-resolution point,
+    /// and finalizes minute/five-minute windows when their boundaries advance.
+    /// </summary>
+    private async Task RecordTickAsync()
         {
             var snapshot = _collector.Collect();
             var nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -162,7 +175,11 @@ namespace Senparc.Areas.Admin.Domain.Services
                 CacheKeyFine, "fine", 10, point, FineMaxPoints, FineTtl).ConfigureAwait(false);
         }
 
-        private async Task FinalizeMinuteAsync()
+    /// <summary>
+    /// Aggregates pending ten-second points into one minute-resolution point
+    /// and appends it to the medium-resolution cache window.
+    /// </summary>
+    private async Task FinalizeMinuteAsync()
         {
             if (_pendingMinute.Count == 0)
             {
@@ -182,7 +199,11 @@ namespace Senparc.Areas.Admin.Domain.Services
                 CacheKeyMid, "mid", 60, minutePoint, MidMaxPoints, MidTtl).ConfigureAwait(false);
         }
 
-        private async Task FinalizeFiveMinutesAsync()
+    /// <summary>
+    /// Aggregates recent minute points into one five-minute point and appends
+    /// it to the coarse-resolution cache window.
+    /// </summary>
+    private async Task FinalizeFiveMinutesAsync()
         {
             if (_recentMinutes.Count == 0)
             {
@@ -195,7 +216,13 @@ namespace Senparc.Areas.Admin.Domain.Services
                 CacheKeyCoarse, "coarse", 300, fiveMinutePoint, CoarseMaxPoints, CoarseTtl).ConfigureAwait(false);
         }
 
-        private static ResourceMonitorPoint Aggregate(
+    /// <summary>
+    /// Aggregates nullable metric values from a sample list at one timestamp.
+    /// </summary>
+    /// <param name="source">The source metric points.</param>
+    /// <param name="timestamp">The normalized aggregate timestamp.</param>
+    /// <returns>The averaged metric point.</returns>
+    private static ResourceMonitorPoint Aggregate(
             List<ResourceMonitorPoint> source, long timestamp)
         {
             return new ResourceMonitorPoint
@@ -210,7 +237,13 @@ namespace Senparc.Areas.Admin.Domain.Services
             };
         }
 
-        private static double? Average(
+    /// <summary>
+    /// Computes a rounded average while ignoring missing metric values.
+    /// </summary>
+    /// <param name="source">The source metric points.</param>
+    /// <param name="selector">The metric selector.</param>
+    /// <returns>The rounded average, or <see langword="null"/> when no values exist.</returns>
+    private static double? Average(
             List<ResourceMonitorPoint> source,
             Func<ResourceMonitorPoint, double?> selector)
         {

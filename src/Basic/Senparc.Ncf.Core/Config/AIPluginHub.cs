@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Core
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Maintains the process-wide registry of AI plugin types discoverable by NCF.
     /// </summary>
     public class AIPluginHub
     {
@@ -36,7 +36,7 @@ namespace Senparc.Ncf.Core
         AIPluginHub() { }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the singleton plugin registry for the current process.
         /// </summary>
         public static AIPluginHub Instance
         {
@@ -60,10 +60,10 @@ namespace Senparc.Ncf.Core
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Registers a plugin type by its assembly-qualified name.
+        /// Duplicate full names are ignored so repeated discovery passes remain idempotent.
         /// </summary>
-        /// <param name="pluginType"></param>
-
+        /// <param name="pluginType">The plugin type to register.</param>
         public void Add(Type pluginType)
         {
             var key = pluginType.FullName;
@@ -75,11 +75,12 @@ namespace Senparc.Ncf.Core
         }
 
         /// <summary>
-        /// get Plugin type
+        /// Resolves one registered plugin type by exact name or regular-expression pattern.
         /// </summary>
-        /// <param name="fullName"></param>
-        /// <param name="patternSearch"></param>
-        /// <returns></returns>
+        /// <param name="fullName">The full type name or regular-expression pattern.</param>
+        /// <param name="patternSearch">Whether <paramref name="fullName"/> should be treated as a regex.</param>
+        /// <returns>The first matching plugin type, or <see langword="null"/> when none is registered.</returns>
+        /// <exception cref="ArgumentException">Thrown when pattern search receives an invalid regular expression.</exception>
         public Type? GetPluginType(string fullName, bool patternSearch = false)
         {
             if (!patternSearch)
@@ -108,9 +109,9 @@ namespace Senparc.Ncf.Core
         }
 
         /// <summary>
-        /// getall Plugin type
+        /// Returns the full names of all registered plugin types in ordinal order.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A new list containing the registered plugin names.</returns>
         public List<string> GetAllPluginNames()
         {
             return _types.Values.Select(z=>z.FullName).OrderBy(z => z).ToList();

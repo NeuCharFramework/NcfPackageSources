@@ -1150,7 +1150,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //     Content = c.Content
             // }).ToList();
 
-            ///Legacy comment translated to English.
+            // The older inline prompt-parameter construction is retained as historical
+            // reference; current chat continuation uses the persisted item configuration.
             //var promptParameter = new PromptConfigParameter()
             //{
             //    MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 200,

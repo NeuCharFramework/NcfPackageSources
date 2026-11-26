@@ -25,7 +25,7 @@ using Senparc.Xncf.XncfBuilder.Abstractions.Events;
 namespace Senparc.Xncf.XncfBuilder.Application.EventHandlers
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Completes the pending XNCF module inventory waiter when a response event arrives.
     /// </summary>
     public class XncfModulesInventoryResponseHandler : IIntegrationEventHandler<XncfModulesInventoryResponseEvent>
     {
@@ -40,6 +40,7 @@ namespace Senparc.Xncf.XncfBuilder.Application.EventHandlers
             _logger = logger;
         }
 
+        /// <inheritdoc />
         public Task Handle(XncfModulesInventoryResponseEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation(

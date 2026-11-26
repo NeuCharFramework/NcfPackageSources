@@ -44,6 +44,12 @@ namespace Senparc.Xncf.SenMapic
 			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/SenMapic/DatabaseSample"), SenMapicResource.Get("Area.DatabaseSample", "Database operations sample"),"fa fa-bookmark-o")
 			 		};
 
+        /// <summary>
+        /// Registers SenMapic Razor page options and startup diagnostics.
+        /// </summary>
+        /// <param name="builder">The MVC builder to configure.</param>
+        /// <param name="env">The hosting environment.</param>
+        /// <returns>The configured MVC builder.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>

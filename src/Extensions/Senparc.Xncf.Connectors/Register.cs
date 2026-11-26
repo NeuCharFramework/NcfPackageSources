@@ -51,6 +51,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Description => RegisterText.Description;
 
+    /// <inheritdoc />
     public override IServiceCollection AddXncfModule(
         IServiceCollection services,
         IConfiguration configuration,
@@ -67,6 +68,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
         return base.AddXncfModule(services, configuration, env);
     }
 
+    /// <inheritdoc />
     public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         => XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 }

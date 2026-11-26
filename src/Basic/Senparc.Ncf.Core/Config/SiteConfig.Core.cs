@@ -72,13 +72,20 @@ namespace Senparc.Ncf.Core.Config
         public static bool IsTestSite => SenparcCoreSetting.IsTestSite;
 
         public static Dictionary<string, int> _memcachedAddressesDic;
+        /// <summary>Gets the marker used to bypass Weixin message filtering.</summary>
         public const string WEIXIN_FILTER_IGNORE = "senparcnofilter1";
-        public const string WEIXIN_OFFICIAL_AVATAR_KEY = "WXoDOkC8A"; //Legacy comment translated to English.
-        public const string WEIXIN_OFFICIAL_QR_CODE_KEY = "WX631IC8A"; //Legacy comment translated to English.
-        public const string WEIXIN_APP_TOKEN_KEY = "WEIXIN_APP_TOKEN_KEY_FOR_NCF"; //Legacy comment translated to English.
-        public const long MIN_WEIXINUSERINFO_ID = 10000000000000; //Legacy comment translated to English.
-        public const decimal PROJECTDMANDDEPOSIT = 1000; //Legacy comment translated to English.
-        public const string CERT_P12_ADDRESS = @"E:\";//微信支付数字证书存放地址
+        /// <summary>Gets the configured key used for the official Weixin avatar resource.</summary>
+        public const string WEIXIN_OFFICIAL_AVATAR_KEY = "WXoDOkC8A";
+        /// <summary>Gets the configured key used for the official Weixin QR-code resource.</summary>
+        public const string WEIXIN_OFFICIAL_QR_CODE_KEY = "WX631IC8A";
+        /// <summary>Gets the configuration key used for the NCF Weixin application token.</summary>
+        public const string WEIXIN_APP_TOKEN_KEY = "WEIXIN_APP_TOKEN_KEY_FOR_NCF";
+        /// <summary>Gets the lower bound reserved for Weixin user identifiers.</summary>
+        public const long MIN_WEIXINUSERINFO_ID = 10000000000000;
+        /// <summary>Gets the legacy project demand deposit amount.</summary>
+        public const decimal PROJECTDMANDDEPOSIT = 1000;
+        /// <summary>Gets the default drive path for the Weixin Pay PKCS#12 certificate.</summary>
+        public const string CERT_P12_ADDRESS = @"E:\";
 
         /* Suggested UID format: NCF company ID - project type - reserved field (randomized if needed) - internal category 1 - internal category 2*/
         public const string SYSTEM_XNCF_TANENT_UID = "00000000-0000-0000-0000-000000000001";
@@ -120,46 +127,43 @@ namespace Senparc.Ncf.Core.Config
         public const string WEIXIN_USER_AVATAR_KEY = "SENPARC_"; //Use the first 8 characters
         public const string DomainName = "https://ncf.senparc.com";
         public const string DefaultTemplate = "default";
-        public const int SMSSENDWAITSECONDS = 60; //Legacy comment translated to English.
-        public const string DEFAULT_AVATAR = "/Content/Images/userinfonopic.png"; //Legacy comment translated to English.
+        /// <summary>Gets the default wait interval between SMS sends.</summary>
+        public const int SMSSENDWAITSECONDS = 60;
+        /// <summary>Gets the fallback avatar path used when no user avatar exists.</summary>
+        public const string DEFAULT_AVATAR = "/Content/Images/userinfonopic.png";
 
         public const string DEFAULT_MEMCACHED_ADDRESS_1 = "192.168.184.91";
         public const int DEFAULT_MEMCACHED_PORT_1 = 11210;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the zero-padded work-break suffix format.
         /// </summary>
         public static readonly string WBSFormat = "000";
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the inactivity threshold used for online-user tracking.
         /// </summary>
         public static readonly int UserOnlineTimeoutMinutes = 10;
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the maximum number of login attempts allowed by legacy login policy.
         /// </summary>
         public static readonly int TryLoginTimes = 1;
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the maximum number of user-login attempts allowed by legacy login policy.
         /// </summary>
         public static readonly int TryUserLoginTimes = 3;
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the maximum number of retained database backups.
         /// </summary>
         public static readonly int MaxBackupDatabaseCount = 200;
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets whether the process is running under unit-test configuration.
         /// </summary>
         public static readonly bool IsUnitTest = false;
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        //public static readonly AIPlugins AIPlugins = new AIPlugins();
-
         private static bool _isInstalling = false;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether NCF is currently in installation mode.
         /// </summary>
         public static bool IsInstalling
         {

@@ -41,6 +41,10 @@ using System.Text;
 
 namespace Senparc.Ncf.UnitTestExtension
 {
+    /// <summary>
+    /// Provides a reusable NCF test host with dependency injection, in-memory
+    /// database registration, XNCF modules, and optional seed data.
+    /// </summary>
     public class BaseNcfUnitTest
     {
         private IServiceCollection ServiceCollection { get; set; }
@@ -60,11 +64,12 @@ namespace Senparc.Ncf.UnitTestExtension
 
         //}
 
-        /// <summary>  
-        ///Legacy comment translated to English.
-        /// </summary>  
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <summary>
+        /// Initializes the test host, registers NCF services, configures the
+        /// in-memory database, and executes optional seed-data hooks.
+        /// </summary>
+        /// <param name="servicesRegister">Optional additional service registrations.</param>
+        /// <param name="seedDataBuilder">Optional seed-data builder.</param>
         public BaseNcfUnitTest(Action<IServiceCollection> servicesRegister = null, UnitTestSeedDataBuilder seedDataBuilder = null)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -123,6 +128,11 @@ namespace Senparc.Ncf.UnitTestExtension
             #endregion
         }
 
+        /// <summary>
+        /// Reflects registered seed collections into the in-memory test DbContext and saves them.
+        /// </summary>
+        /// <param name="seedDataBuilder">The optional seed builder that supplied the data.</param>
+        /// <param name="dataLists">The entity-type keyed seed collections.</param>
         private void AutoFillSeedData(UnitTestSeedDataBuilder seedDataBuilder, DataList dataLists)
         {
             using (var scope = this._serviceProvider.CreateScope())
@@ -157,20 +167,29 @@ namespace Senparc.Ncf.UnitTestExtension
             }
         }
 
+        /// <summary>
+        /// Extension hook invoked before the base test service collection is built.
+        /// </summary>
+        /// <param name="services">The mutable service collection.</param>
         protected virtual void BeforeRegisterServiceCollection(IServiceCollection services)
         {
             Console.WriteLine("BaseNcfUnitTest.BeforeRegisterServiceCollection");
         }
 
+        /// <summary>
+        /// Extension hook invoked after the base test service collection registration finishes.
+        /// </summary>
+        /// <param name="services">The registered service collection.</param>
         protected virtual void RegisterServiceCollectionFinished(IServiceCollection services)
         {
 
         }
 
-        /// <summary>  
-        ///Legacy comment translated to English.
-        /// </summary>  
-        ///Legacy comment translated to English.
+        /// <summary>
+        /// Ensures seed data for <typeparamref name="T"/> exists in the global
+        /// test data collection.
+        /// </summary>
+        /// <typeparam name="T">The entity type whose seed data is checked.</typeparam>
         public void TryInitSeedData<T>() where T : EntityBase
         {
             if (!GlobalDataList.ContainsKey(typeof(T)))
@@ -181,6 +200,10 @@ namespace Senparc.Ncf.UnitTestExtension
 
 
 
+        /// <summary>
+        /// Builds the test service provider from the supplied or current service collection.
+        /// </summary>
+        /// <param name="services">Optional replacement service collection.</param>
         public void BuildServiceProvider(IServiceCollection services = null)
         {
             if (services != null)
@@ -191,13 +214,17 @@ namespace Senparc.Ncf.UnitTestExtension
 
         }
 
+        /// <summary>
+        /// Extension hook for test setup actions that require the configured service collection.
+        /// </summary>
         protected virtual void ActionInServiceCollection()
         {
 
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Registers global Senparc services, in-memory database services, and
+        /// the test host's scoped data context.
         /// </summary>
         public void RegisterServiceCollection()
         {
@@ -248,8 +275,10 @@ namespace Senparc.Ncf.UnitTestExtension
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Starts the Senparc global registration service and optionally enables
+        /// Redis cache strategy discovery.
         /// </summary>
+        /// <param name="autoScanExtensionCacheStrategies">Whether extension cache strategies are scanned.</param>
         public void RegisterServiceStart(bool autoScanExtensionCacheStrategies = false)
         {
             //Legacy comment translated to English.

@@ -30,6 +30,10 @@ namespace Senparc.Xncf.NeuCharWorkflow.Models;
 
 public class NeuCharWorkflowSenparcEntities : XncfDatabaseDbContext
 {
+    /// <summary>
+    /// Initializes the workflow database context.
+    /// </summary>
+    /// <param name="dbContextOptions">The EF Core context options.</param>
     public NeuCharWorkflowSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions) { }
 
     public DbSet<WorkflowEntity> NeuCharWorkflows { get; set; } = null!;

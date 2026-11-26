@@ -21,9 +21,12 @@ using System;
 namespace Senparc.Xncf.NeuCharWorkflow.Abstractions.Events;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Reports that a Workflow definition or runtime state changed.
 /// </summary>
+/// <param name="WorkflowId">The affected Workflow identifier.</param>
+/// <param name="ChangeType">The operation or state change name.</param>
+/// <param name="AdminUserId">The administrator associated with the change.</param>
+/// <param name="OccurredAt">The UTC timestamp of the change.</param>
 public sealed record WorkflowChangedEvent(
     int WorkflowId,
     string ChangeType,

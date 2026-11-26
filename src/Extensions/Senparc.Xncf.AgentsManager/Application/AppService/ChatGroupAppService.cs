@@ -1006,8 +1006,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Enables or disables a ChatGroup and persists its lifecycle state.
         /// </summary>
+        /// <param name="id">The ChatGroup identifier.</param>
+        /// <param name="enable">Whether the group should be enabled.</param>
+        /// <returns>A response containing the operation message.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the group does not exist.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> Enable(int id, bool enable)
         {
@@ -1034,10 +1038,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// Gets one ChatGroup with local members, role agents, and remote members.
+        /// Returns a paged list of ChatGroups, optionally filtered by member AgentTemplate
+        /// and group name.
         /// </summary>
-        /// <param name="id">The ChatGroup identifier.</param>
-        /// <returns>A task containing the group detail response.</returns>
+        /// <param name="agentTemplateId">Optional local AgentTemplate member filter.</param>
+        /// <param name="pageIndex">The page index.</param>
+        /// <param name="pageSize">The page size.</param>
+        /// <param name="filter">Optional group-name filter.</param>
+        /// <returns>A response containing the paged ChatGroup DTO list.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<ChatGroup_GetListResponse>> GetChatGroupList(int agentTemplateId, int pageIndex, int pageSize, string filter = "")
         {
@@ -1070,9 +1078,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// createorsettings ChatGroup
+        /// Loads one ChatGroup with local members, role agents, and remote members.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="id">The ChatGroup identifier.</param>
+        /// <returns>A response containing group detail and member metadata.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<ChatGroup_GetItemResponse>> GetChatGroupItem(int id)
         {
@@ -1228,9 +1237,6 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <summary>
         /// Converts a Studio run request into the domain chat-group command.
         /// </summary>
         /// <param name="request">The Studio run request.</param>
@@ -1262,8 +1268,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns an Agent collaboration graph filtered by optional agent name.
         /// </summary>
+        /// <param name="filter">Optional local/remote agent name filter.</param>
+        /// <returns>A response containing agents, groups, links, collaborations, and tasks.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AgentGraphSnapshotResponse>> GetAgentGraphSnapshot(string filter = "")
         {
@@ -1518,9 +1526,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Returns dashboard counts for local agents, remote/published A2A agents,
+        /// groups, active tasks, and currently chatting participants.
         /// </summary>
+        /// <returns>A response containing the dashboard overview.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AgentsDashboardOverviewResponse>> GetDashboardOverview()
         {

@@ -28,19 +28,13 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         /// </summary>
         public string RoleName { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the role identifier.</summary>
         public string RoleId { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the administrator account identifier.</summary>
         public int AdminAccountId { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether the administrator currently has the role.</summary>
         public bool HasRole { get; set; }
     }
 }

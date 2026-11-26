@@ -99,6 +99,12 @@ public static class SandboxTemplateCatalog
 
     public static IReadOnlyCollection<SandboxTemplateDefinition> All => Templates.Values.ToArray();
 
+    /// <summary>
+    /// Looks up a sandbox template definition by key.
+    /// </summary>
+    /// <param name="templateKey">The template key.</param>
+    /// <param name="template">Receives the template definition when found.</param>
+    /// <returns><see langword="true"/> when the template is registered.</returns>
     public static bool TryGet(string templateKey, out SandboxTemplateDefinition template)
     {
         return Templates.TryGetValue(templateKey, out template!);

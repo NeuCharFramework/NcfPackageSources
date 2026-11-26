@@ -19,20 +19,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Requests an update to user feedback for a prompt-result chat.</summary>
     public class PromptResult_UpdateChatFeedbackRequest
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the chat message identifier.</summary>
         [Required]
         public int ChatId { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the optional positive/negative feedback value.</summary>
         public bool? Feedback { get; set; }
     }
 }

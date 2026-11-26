@@ -31,19 +31,13 @@ namespace Senparc.Xncf.Swagger.Models.DataBaseModel
     [Serializable]
     public class Config : EntityBase<int>
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether category filtering is enabled.</summary>
         [DefaultValue(true)]
         public bool UseCategoryFilter { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether the Swagger configuration is enabled.</summary>
         [DefaultValue(true)]
         public bool Enabled { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the comma-separated roles allowed to use the Swagger surface.</summary>
         public string AllowUserRoles { get; set; }
     }
 }

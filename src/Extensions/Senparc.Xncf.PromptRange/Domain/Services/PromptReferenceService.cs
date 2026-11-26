@@ -45,6 +45,12 @@ public sealed class PromptReferenceService : IPromptReferenceService
         _results = results;
     }
 
+    /// <summary>
+    /// Loads a prompt item restricted to PromptRange prompt-kind ranges.
+    /// </summary>
+    /// <param name="id">The prompt item identifier.</param>
+    /// <returns>The referenced prompt item.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the prompt is unavailable.</exception>
     private async Task<PromptItem> GetAsync(int id)
     {
         var db = _repository.BaseDB.BaseDataContext;
@@ -55,10 +61,20 @@ public sealed class PromptReferenceService : IPromptReferenceService
             ?? throw new NcfExceptionBase("The referenced PromptCode is not available.");
     }
 
+    /// <summary>
+    /// Projects a prompt item into its reference score contract.
+    /// </summary>
+    /// <param name="item">The prompt item.</param>
+    /// <returns>The reference information.</returns>
     private static PromptReferenceInfo Info(PromptItem item) => new(
         item.Id, item.FullVersion, item.RobotScore ?? -1, item.HumanScore ?? -1,
         item.FinalScore ?? item.EvalAvgScore, HasBenchmark(item));
 
+    /// <summary>
+    /// Determines whether expected-result JSON contains at least one benchmark value.
+    /// </summary>
+    /// <param name="item">The prompt item.</param>
+    /// <returns><see langword="true"/> when a usable benchmark exists.</returns>
     private static bool HasBenchmark(PromptItem item)
     {
         if (string.IsNullOrWhiteSpace(item.ExpectedResultsJson)) return false;
@@ -75,6 +91,13 @@ public sealed class PromptReferenceService : IPromptReferenceService
         }
     }
 
+    /// <summary>
+    /// Applies a reference score and marks score properties modified for persistence.
+    /// </summary>
+    /// <param name="context">The EF Core context.</param>
+    /// <param name="item">The prompt item.</param>
+    /// <param name="score">The validated score.</param>
+    /// <param name="robot">Whether the score is a robot score.</param>
     internal static void ApplyScore(DbContext context, PromptItem item, decimal score, bool robot)
     {
         item.SetReferenceScore(score, robot);

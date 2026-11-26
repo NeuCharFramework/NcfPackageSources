@@ -64,16 +64,21 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// upload
+        /// Uploads a KnowledgeBase source file through the FileManager service.
         /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
+        /// <param name="file">The multipart form file supplied by the administrator.</param>
+        /// <returns>
+        /// A response envelope containing the persisted file identifier as text.
+        /// </returns>
+        /// <remarks>
+        /// File-service failures are converted into a failed application response and
+        /// receive the user-facing message configured by this service.
+        /// </remarks>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> UploadAsync(IFormFile file)
         {
             return await this.GetResponseAsync<AppResponseBase<string>, string>(async (response, logger) =>
             {
-                //Legacy comment translated to English.
                 var result = await ncfFileService.UploadFileAsync(file, NcfFileResourceScope.KnowledgeBase);
                 return result.Id.ToString();
             }, exceptionHandler: (_, response, _) =>

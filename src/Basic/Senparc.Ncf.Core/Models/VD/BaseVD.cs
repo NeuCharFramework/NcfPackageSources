@@ -47,6 +47,12 @@ namespace Senparc.Ncf.Core.Models.VD
 
         public int TotalCount { get; set; }
 
+        /// <summary>
+        /// Initializes paging metadata for a view model.
+        /// </summary>
+        /// <param name="pageIndex">The current page index, when available.</param>
+        /// <param name="pageCount">The page size/count.</param>
+        /// <param name="totalCount">The total matching record count.</param>
         public Base_PagerVD(int? pageIndex, int pageCount, int totalCount)
         {
             PageIndex = pageIndex;

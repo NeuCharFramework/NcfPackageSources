@@ -76,8 +76,8 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Determines whether a database exception indicates that the database or schema
+        /// is not available yet for installation.
         /// </summary>
         public static bool IsSchemaUpgradeRequired(Exception exception)
         {

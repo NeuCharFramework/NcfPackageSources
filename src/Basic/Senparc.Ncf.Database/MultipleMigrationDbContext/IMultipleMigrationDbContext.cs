@@ -22,7 +22,7 @@ using System.Text;
 namespace Senparc.Ncf.Database.MultipleMigrationDbContext
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Marks a DbContext as participating in provider-specific migration registration.
     /// </summary>
     public interface IMultipleMigrationDbContext
     {

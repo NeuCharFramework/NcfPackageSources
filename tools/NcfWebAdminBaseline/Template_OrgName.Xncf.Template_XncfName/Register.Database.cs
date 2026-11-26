@@ -41,12 +41,22 @@ namespace Template_OrgName.Xncf.Template_XncfName
         /// </summary>
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Applies template database model configuration. The sample currently
+        /// relies on automatic mapping attributes and adds no manual configuration.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             //after implementing the [XncfAutoConfigurationMapping] attribute, this runs automatically and no manual registration is needed
             //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
         }
 
+        /// <summary>
+        /// Registers template database services. The generated sample has no
+        /// additional explicit service registrations at this point.
+        /// </summary>
+        /// <param name="services">The application dependency-injection collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             //DOT REMOVE OR MODIFY THIS LINE - Entities Point

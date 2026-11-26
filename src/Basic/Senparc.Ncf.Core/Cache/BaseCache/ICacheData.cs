@@ -19,13 +19,13 @@ using System;
 
 namespace Senparc.Ncf.Core.Cache
 {
+    /// <summary>Defines the identity and timestamp fields required by cache data objects.</summary>
     public interface ICacheData
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the stable cache key.</summary>
         string Key { get; }
 
+        /// <summary>Gets or sets the timestamp of the current cached value.</summary>
         DateTime CacheTime { get; set; }
     }
 }

@@ -23,6 +23,9 @@ namespace Senparc.Ncf.SMS
     {
         public List<IReplyMessage> MsgCollection { get; set; }
 
+        /// <summary>
+        /// Initializes an empty inbound-reply collection.
+        /// </summary>
         public ReplyMessageCollection()
         {
             MsgCollection=new List<IReplyMessage>();

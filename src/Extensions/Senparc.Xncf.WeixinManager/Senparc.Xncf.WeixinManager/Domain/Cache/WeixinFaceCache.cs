@@ -29,24 +29,31 @@ namespace Senparc.Xncf.WeixinManager.Domain.Cache
     //}
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Caches the localized descriptions of available Weixin face values.
     /// </summary>
     public class WeixinFaceCache : BaseCache<List<KeyValuePair<string, WeixinFace>>>/*, IWeixinFaceCache*/
     {
+        /// <summary>Gets the cache key used for face descriptions.</summary>
         public const string CACHE_KEY = "WeixinFaceCache";
         private const int timeout = 1440;
 
+        /// <summary>
+        /// Initializes the Weixin-face description cache with its daily timeout.
+        /// </summary>
         public WeixinFaceCache()
             : base(CACHE_KEY)
         {
             TimeOut = timeout;
         }
 
+        /// <summary>
+        /// Rebuilds the cache from <see cref="WeixinFace"/> enum descriptions.
+        /// </summary>
+        /// <returns>The refreshed face-description pairs.</returns>
         public override List<KeyValuePair<string, WeixinFace>> Update()
         {
             var data = new List<KeyValuePair<string, WeixinFace>>();
 
-            //Legacy comment translated to English.
             var enumType = typeof(WeixinFace);
             var names = enumType.GetEnumNames();
             foreach (var name in names)

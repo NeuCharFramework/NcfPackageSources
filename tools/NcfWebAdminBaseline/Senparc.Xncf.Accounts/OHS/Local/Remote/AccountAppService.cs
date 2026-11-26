@@ -12,6 +12,11 @@ namespace Senparc.Xncf.Accounts.OHS.Local.Remote
         {
         }
 
+        /// <summary>
+        /// Performs a lightweight external HTTP request used by the Accounts
+        /// keep-alive demonstration endpoint.
+        /// </summary>
+        /// <returns>A response containing the remote response body.</returns>
         [ApiBind]
         public async Task<AppResponseBase<string>> KeepAlive()
         {

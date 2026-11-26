@@ -88,7 +88,8 @@ namespace Senparc.Xncf.MCP
 
         public override bool EnableMcpServer => true;
 
-        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+    /// <inheritdoc/>
+    public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
@@ -107,7 +108,8 @@ namespace Senparc.Xncf.MCP
             }
         }
 
-        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+    /// <inheritdoc/>
+    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             #region Legacy section
 
@@ -129,7 +131,8 @@ namespace Senparc.Xncf.MCP
 
         public List<string> McpFunctionMetaInfo { get; set; }
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+    /// <inheritdoc/>
+    public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddHttpContextAccessor();
             services.AddScoped<MCPEndpointAppService>();
@@ -142,7 +145,8 @@ namespace Senparc.Xncf.MCP
         }
 
 
-        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+    /// <inheritdoc/>
+    public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             // var ncfMcpServerService = new McpServerService();
             // ncfMcpServerService.Start();
@@ -158,7 +162,8 @@ namespace Senparc.Xncf.MCP
                 // var routePattern = "mcp";
                 // endpoints.MapMcp(routePattern);
 
-                ///Legacy comment translated to English.
+                // The route-group experiment remains disabled until MCP endpoint
+                // registration is delegated to the shared XncfRegisterBase hook.
                 //var routeGroup = endpoints.MapGroup(routePattern);
                 //var routeEndpoints  = endpoints.DataSources.SelectMany(z=>z.Endpoints)
                 //    .OfType<RouteEndpoint>()

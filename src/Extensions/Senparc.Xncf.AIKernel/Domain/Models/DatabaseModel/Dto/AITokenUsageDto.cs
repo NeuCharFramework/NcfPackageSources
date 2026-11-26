@@ -23,6 +23,9 @@ using System;
 
 namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
 {
+    /// <summary>
+    /// Transfers persisted AI invocation usage to monitoring and administration clients.
+    /// </summary>
     public class AITokenUsageDto : DtoBase
     {
         /// <summary>
@@ -45,9 +48,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         /// </summary>
         public string DeploymentName { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the AI platform used by the invocation.</summary>
         public AiPlatform AiPlatform { get; set; }
 
         /// <summary>
@@ -75,24 +76,16 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         /// </summary>
         public long CachedInputTokens { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the number of reasoning tokens reported by the provider.</summary>
         public long ReasoningTokens { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets invocation duration in milliseconds.</summary>
         public int DurationMs { get; set; }
 
-        /// <summary>
-        /// executestatus：0 success，1 failure
-        /// </summary>
+        /// <summary>Gets or sets the execution status code, where zero represents success.</summary>
         public int Status { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the logical source that initiated the invocation.</summary>
         public string Source { get; set; }
 
         /// <summary>
@@ -100,10 +93,17 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         /// </summary>
         public string ErrorNote { get; set; }
 
+        /// <summary>
+        /// Initializes an empty usage DTO.
+        /// </summary>
         public AITokenUsageDto()
         {
         }
 
+        /// <summary>
+        /// Initializes a usage DTO from a persisted token-usage entity.
+        /// </summary>
+        /// <param name="aiTokenUsage">The entity to map.</param>
         public AITokenUsageDto(AITokenUsage aiTokenUsage)
         {
             Id = aiTokenUsage.Id;

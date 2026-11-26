@@ -42,6 +42,13 @@ internal sealed class DiagnosticAIFunction : DelegatingAIFunction
     private readonly string _agentName;
     private readonly string _correlationId;
 
+    /// <summary>
+    /// Initializes a diagnostic wrapper around an AI function invocation.
+    /// </summary>
+    /// <param name="innerFunction">The underlying function to invoke.</param>
+    /// <param name="agentTemplateId">The Agent template identifier for diagnostics.</param>
+    /// <param name="agentName">The Agent display name.</param>
+    /// <param name="correlationId">The invocation correlation identifier.</param>
     public DiagnosticAIFunction(
         AIFunction innerFunction,
         int agentTemplateId,
@@ -54,6 +61,11 @@ internal sealed class DiagnosticAIFunction : DelegatingAIFunction
         _correlationId = correlationId ?? string.Empty;
     }
 
+    /// <inheritdoc/>
+    /// <remarks>
+    /// Logs redacted arguments and result metadata while allowing invocation exceptions
+    /// to propagate unchanged to the caller.
+    /// </remarks>
     protected override async ValueTask<object> InvokeCoreAsync(
         AIFunctionArguments arguments,
         CancellationToken cancellationToken)
@@ -84,6 +96,11 @@ internal sealed class DiagnosticAIFunction : DelegatingAIFunction
         }
     }
 
+    /// <summary>
+    /// Formats invocation arguments into a bounded diagnostic string.
+    /// </summary>
+    /// <param name="arguments">The function arguments to format.</param>
+    /// <returns>A comma-separated summary or <c>(none)</c>.</returns>
     private static string FormatArguments(IEnumerable<KeyValuePair<string, object>> arguments)
     {
         if (arguments == null)
@@ -97,6 +114,12 @@ internal sealed class DiagnosticAIFunction : DelegatingAIFunction
         return values.Count == 0 ? "(none)" : string.Join(", ", values);
     }
 
+    /// <summary>
+    /// Formats one argument value, redacting sensitive keys and truncating long text.
+    /// </summary>
+    /// <param name="key">The argument key.</param>
+    /// <param name="value">The argument value.</param>
+    /// <returns>A safe diagnostic representation.</returns>
     private static string FormatArgumentValue(string key, object value)
     {
         if (IsSensitiveKey(key))
@@ -109,6 +132,11 @@ internal sealed class DiagnosticAIFunction : DelegatingAIFunction
         return text.Length <= 500 ? text : text[..500] + "...";
     }
 
+    /// <summary>
+    /// Determines whether an argument key indicates credentials or authorization material.
+    /// </summary>
+    /// <param name="key">The argument key.</param>
+    /// <returns><see langword="true"/> when the value must be redacted.</returns>
     private static bool IsSensitiveKey(string key)
     {
         var normalized = key ?? string.Empty;
@@ -119,6 +147,11 @@ internal sealed class DiagnosticAIFunction : DelegatingAIFunction
                || normalized.Contains("authorization", StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Describes a result by type and text length without logging its content.
+    /// </summary>
+    /// <param name="result">The function result.</param>
+    /// <returns>A type-and-length diagnostic description.</returns>
     private static string DescribeResult(object result)
     {
         if (result == null)

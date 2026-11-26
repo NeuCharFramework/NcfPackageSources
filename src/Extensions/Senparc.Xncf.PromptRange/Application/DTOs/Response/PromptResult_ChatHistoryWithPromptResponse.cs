@@ -20,14 +20,10 @@ using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Contains prompt content and the ordered chat history for a result.</summary>
     public class PromptResult_ChatHistoryWithPromptResponse
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the ordered chat history.</summary>
         public List<PromptResultChatDto> ChatHistory { get; set; }
         
         /// <summary>

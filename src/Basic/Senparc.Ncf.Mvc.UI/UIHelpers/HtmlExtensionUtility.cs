@@ -33,6 +33,12 @@ namespace System.Web.Mvc
 
         #region Utility
 
+        /// <summary>
+        /// Compares two values after converting the second value to the first value's type.
+        /// </summary>
+        /// <param name="o1">The first value.</param>
+        /// <param name="o2">The second value.</param>
+        /// <returns><see langword="true"/> when both values are null or equal after conversion.</returns>
         internal static bool AreEqual(object o1, object o2)
         {
             bool result = false;
@@ -62,6 +68,12 @@ namespace System.Web.Mvc
             return result;
         }
 
+        /// <summary>
+        /// Reads a hash setting as text, returning an empty string when it is absent.
+        /// </summary>
+        /// <param name="hash">The settings hash table.</param>
+        /// <param name="key">The setting key.</param>
+        /// <returns>The setting text or an empty string.</returns>
         internal static string EvalHashSetting(Hashtable hash, string key)
         {
             string result = string.Empty;
@@ -100,10 +112,12 @@ namespace System.Web.Mvc
 
 
         /// <summary>
-        /// Creates a formatted list of items based on the passed in format
+        /// Creates a formatted string by applying <paramref name="format"/> to
+        /// every item in an untyped sequence.
         /// </summary>
-        /// <param name="list">The item list</param>
-        /// <param name="format">The single-place format string to use</param>
+        /// <param name="list">The item sequence to enumerate.</param>
+        /// <param name="format">A format string containing one placeholder for each item.</param>
+        /// <returns>The concatenated formatted item strings.</returns>
         public static string ToFormattedList(this IEnumerable list, string format)
         {
             StringBuilder sb = new StringBuilder();
@@ -118,8 +132,11 @@ namespace System.Web.Mvc
         }
 
         /// <summary>
-        /// Finds a PropertyInfo item inside of a PropertyInfo[] Array regardless of case
+        /// Finds a property descriptor by case-insensitive name.
         /// </summary>
+        /// <param name="propName">The property name to locate.</param>
+        /// <param name="props">The property descriptors to inspect.</param>
+        /// <returns>The first matching property, or <see langword="null"/>.</returns>
         internal static PropertyInfo FindProp(string propName, PropertyInfo[] props)
         {
             PropertyInfo result = null;
@@ -135,10 +152,14 @@ namespace System.Web.Mvc
         }
 
         /// <summary>
-        /// Sets the properties of an object based on a HashTable
+        /// Assigns matching public instance properties from a settings table.
         /// </summary>
-        /// <param name="instance"></param>
-        /// <param name="settings"></param>
+        /// <param name="instance">The object whose writable properties are updated.</param>
+        /// <param name="settings">The case-insensitive property-value map.</param>
+        /// <exception cref="ArgumentException">
+        /// Propagated by reflection when a supplied value cannot be assigned to a
+        /// matching property.
+        /// </exception>
         internal static void SetPropsFromHash(object instance, Hashtable settings)
         {
             PropertyInfo pInfo = null;
@@ -162,8 +183,10 @@ namespace System.Web.Mvc
         //}
 
         /// <summary>
-        /// Creates a simple {0}="{1}" list based on current object state.
+        /// Creates an HTML attribute string from the public properties of an object.
         /// </summary>
+        /// <param name="o">The object whose public properties become attributes.</param>
+        /// <returns>A space-prefixed sequence of <c>name="value"</c> attributes.</returns>
         public static string ToAttributeList(this object o)
         {
             StringBuilder sb = new StringBuilder();
@@ -181,8 +204,10 @@ namespace System.Web.Mvc
         }
 
         /// <summary>
-        /// Creates a simple {0}='{1}';{3}={4} list based on current object state.
+        /// Creates JavaScript-style assignments from the public properties of an object.
         /// </summary>
+        /// <param name="o">The object whose public properties become assignments.</param>
+        /// <returns>A semicolon-separated assignment string.</returns>
         public static string ToJsParams(this object o)
         {
             StringBuilder sb = new StringBuilder();
@@ -244,11 +269,11 @@ namespace System.Web.Mvc
         }
 
         /// <summary>
-        /// Creates a simple {0}='{1}' list based on current object state. Ignores the passed-in string[] items
+        /// Creates an HTML attribute string while excluding selected property names.
         /// </summary>
-        /// <param name="o"></param>
-        /// <param name="ignoreList"></param>
-        /// <returns></returns>
+        /// <param name="o">The object whose public properties become attributes.</param>
+        /// <param name="ignoreList">Property names that must not be emitted.</param>
+        /// <returns>A space-separated attribute string.</returns>
         public static string ToAttributeList(this object o, params object[] ignoreList)
         {
             Hashtable attributeHash = GetPropertyHash(o);
@@ -266,6 +291,11 @@ namespace System.Web.Mvc
         }
 
 
+        /// <summary>
+        /// Converts an anonymous object or route-value dictionary into an HTML attribute string.
+        /// </summary>
+        /// <param name="value">The object or dictionary containing attribute values.</param>
+        /// <returns>The normalized attribute string, or an empty string for <see langword="null"/>.</returns>
         public static string ConvertObjectToAttributeList(object value)
         {
             StringBuilder builder = new StringBuilder();
@@ -291,10 +321,13 @@ namespace System.Web.Mvc
         }
 
         /// <summary>
-        /// Creates a HashTable based on current object state
+        /// Copies public property names and values into a case-sensitive hash table.
         /// </summary>
-        /// <param name="properties"></param>
-        /// <returns></returns>
+        /// <param name="properties">The object to inspect.</param>
+        /// <returns>
+        /// A hash table containing the public properties, or <see langword="null"/>
+        /// when <paramref name="properties"/> is <see langword="null"/>.
+        /// </returns>
         public static Hashtable GetPropertyHash(object properties)
         {
 

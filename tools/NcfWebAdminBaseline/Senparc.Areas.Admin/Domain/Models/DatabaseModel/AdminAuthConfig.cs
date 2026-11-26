@@ -26,6 +26,9 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
 {
     [Table(Register.DATABASE_PREFIX + nameof(AdminAuthConfig))]
     [Serializable]
+    /// <summary>
+    /// Stores the expiration windows used by administrator web login and backend JWT authentication.
+    /// </summary>
     public class AdminAuthConfig : EntityBase<int>
     {
         public const int DefaultAdminWebLoginExpireMinutes = 120;
@@ -38,6 +41,11 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         {
         }
 
+        /// <summary>
+        /// Initializes authentication expiration settings, replacing non-positive values with defaults.
+        /// </summary>
+        /// <param name="adminWebLoginExpireMinutes">The web-login lifetime in minutes.</param>
+        /// <param name="backendJwtExpireMinutes">The backend JWT lifetime in minutes.</param>
         public AdminAuthConfig(int adminWebLoginExpireMinutes, int backendJwtExpireMinutes)
         {
             AdminWebLoginExpireMinutes = adminWebLoginExpireMinutes > 0
@@ -48,6 +56,12 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
                 : DefaultBackendJwtExpireMinutes;
         }
 
+        /// <summary>
+        /// Updates both authentication expiration windows and records the entity update time.
+        /// Non-positive values are replaced with the corresponding defaults.
+        /// </summary>
+        /// <param name="adminWebLoginExpireMinutes">The web-login lifetime in minutes.</param>
+        /// <param name="backendJwtExpireMinutes">The backend JWT lifetime in minutes.</param>
         public void Update(int adminWebLoginExpireMinutes, int backendJwtExpireMinutes)
         {
             AdminWebLoginExpireMinutes = adminWebLoginExpireMinutes > 0

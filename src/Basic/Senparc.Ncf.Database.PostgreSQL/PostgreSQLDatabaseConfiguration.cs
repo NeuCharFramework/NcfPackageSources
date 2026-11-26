@@ -33,10 +33,12 @@ using System.Diagnostics;
 namespace Senparc.Ncf.Database.PostgreSQL
 {
     /// <summary>
-    /// PostgreSQL databaseconfiguration
+    /// Configures PostgreSQL EF Core options, retry behavior, backup command
+    /// generation, and table-drop SQL.
     /// </summary>
     public class PostgreSQLDatabaseConfiguration : DatabaseConfigurationBase<NpgsqlDbContextOptionsBuilder, NpgsqlOptionsExtension>
     {
+        /// <summary>Initializes the PostgreSQL database configuration.</summary>
         public PostgreSQLDatabaseConfiguration() { }
 
         public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.PostgreSQL;
@@ -45,7 +47,6 @@ namespace Senparc.Ncf.Database.PostgreSQL
         {
             var typedBuilder = optionsBuilder as NpgsqlDbContextOptionsBuilder;
 
-            //Legacy comment translated to English.
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             typedBuilder.EnableRetryOnFailure(

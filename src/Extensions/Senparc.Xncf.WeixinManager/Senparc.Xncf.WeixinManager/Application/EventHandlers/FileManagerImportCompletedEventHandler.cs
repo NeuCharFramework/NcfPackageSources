@@ -32,6 +32,12 @@ public sealed class FileManagerImportCompletedEventHandler
     private readonly WeixinClawMessageRecordService _recordService;
     private readonly ILogger<FileManagerImportCompletedEventHandler> _logger;
 
+    /// <summary>
+    /// Initializes the handler that correlates FileManager import results with
+    /// persisted Weixin Claw inbound-media records.
+    /// </summary>
+    /// <param name="recordService">The message-record service used for correlation and update.</param>
+    /// <param name="logger">The logger used for ignored, successful, and unmatched events.</param>
     public FileManagerImportCompletedEventHandler(
         WeixinClawMessageRecordService recordService,
         ILogger<FileManagerImportCompletedEventHandler> logger)
@@ -40,6 +46,11 @@ public sealed class FileManagerImportCompletedEventHandler
         _logger = logger;
     }
 
+    /// <inheritdoc/>
+    /// <remarks>
+    /// Invalid identifiers and invalid tenant context are ignored so a malformed
+    /// integration event cannot update an unrelated message record.
+    /// </remarks>
     public async Task Handle(
         FileManagerImportCompletedEvent @event,
         CancellationToken cancellationToken)
@@ -97,6 +108,11 @@ public sealed class FileManagerImportCompletedEventHandler
         }
     }
 
+    /// <summary>
+    /// Creates a matched tenant context for the background event-processing scope.
+    /// </summary>
+    /// <param name="tenantId">The positive tenant identifier from the event.</param>
+    /// <returns>A tenant context marked as successfully matched.</returns>
     private static RequestTenantInfo CreateTenantInfo(int tenantId)
     {
         var tenantInfo = new RequestTenantInfo { Id = tenantId };

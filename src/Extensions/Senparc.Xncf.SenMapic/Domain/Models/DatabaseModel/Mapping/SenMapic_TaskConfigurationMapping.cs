@@ -24,6 +24,7 @@ namespace Senparc.Xncf.SenMapic.Models
     [XncfAutoConfigurationMapping]
     public class SenMapic_TaskConfigurationMapping : ConfigurationMappingWithIdBase<SenMapicTask, int>
     {
+        /// <inheritdoc />
         public override void Configure(EntityTypeBuilder<SenMapicTask> builder)
         {
             builder.Property(e => e.Name).IsRequired().HasMaxLength(100);
@@ -31,4 +32,4 @@ namespace Senparc.Xncf.SenMapic.Models
             builder.Property(e => e.ErrorMessage).HasMaxLength(2000);
         }
     }
-} 
+}

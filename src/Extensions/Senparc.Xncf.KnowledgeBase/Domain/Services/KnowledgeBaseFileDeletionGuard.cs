@@ -32,11 +32,20 @@ public sealed class KnowledgeBaseFileDeletionGuard : INcfFileDeletionGuard
 {
     private readonly KnowledgeBaseItemService _knowledgeBaseItemService;
 
+    /// <summary>
+    /// Initializes the file-deletion guard.
+    /// </summary>
+    /// <param name="knowledgeBaseItemService">The service used to find file references.</param>
     public KnowledgeBaseFileDeletionGuard(KnowledgeBaseItemService knowledgeBaseItemService)
     {
         _knowledgeBaseItemService = knowledgeBaseItemService;
     }
 
+    /// <summary>
+    /// Prevents deletion of a KnowledgeBase-scoped file while any chunk still references it.
+    /// </summary>
+    /// <param name="file">The FileManager file being deleted.</param>
+    /// <exception cref="InvalidOperationException">Thrown when the file is still attached to one or more knowledge bases.</exception>
     public async Task EnsureCanDeleteAsync(NcfFile file)
     {
         if (file.ResourceScope != NcfFileResourceScope.KnowledgeBase)

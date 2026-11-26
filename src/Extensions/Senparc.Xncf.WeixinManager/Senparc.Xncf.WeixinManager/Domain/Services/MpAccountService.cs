@@ -28,21 +28,23 @@ using System.Text;
 
 namespace Senparc.Xncf.WeixinManager.Domain.Services
 {
+    /// <summary>Provides cached lookup of configured Weixin public accounts.</summary>
     public class MpAccountService : ServiceBase<MpAccount>, IServiceBase<MpAccount>
     {
 
         private List<MpAccountDto> _allMpAccounts = null;
 
+        /// <summary>Initializes the public-account service.</summary>
+        /// <param name="repo">The public-account repository.</param>
+        /// <param name="serviceProvider">The dependency-injection service provider.</param>
         public MpAccountService(IRepositoryBase<MpAccount> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <param name="accountId"></param>
-        /// <returns></returns>
+        /// <summary>Gets a configured public account by identifier.</summary>
+        /// <param name="accountId">The public-account identifier.</param>
+        /// <returns>The matching DTO, or an empty DTO when lookup fails.</returns>
         public MpAccountDto GetMpAccount(int accountId)
         {
             try
@@ -56,6 +58,8 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
             }
         }
 
+        /// <summary>Gets all configured public accounts, using the process-local cache.</summary>
+        /// <returns>The configured account DTO list, or an empty list when lookup fails.</returns>
         public List<MpAccountDto> GetAllMpAccounts()
         {
             try

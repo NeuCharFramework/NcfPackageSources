@@ -26,14 +26,10 @@ public class PromptRange_AddRequest
     /// </summary>
     public string Alias { get; set; }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets the required display name of the PromptRange.</summary>
     [Required]
     public string RangeName { get; set; }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets optional serialized expected results for evaluation.</summary>
     public string ExpectedResultsJson { get; set; }
 }

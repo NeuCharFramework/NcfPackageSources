@@ -42,6 +42,10 @@ namespace Senparc.Mvc.Controllers
         protected FullSystemConfig _fullSystemConfig;
         protected DateTime PageStartTime { get; set; }
         protected DateTime PageEndTime { get; set; }
+        /// <summary>
+        /// Initializes the legacy controller and records the request start time
+        /// used by view-model timing metadata.
+        /// </summary>
         public BaseController()
         {
             PageStartTime = DateTime.Now;
@@ -53,6 +57,11 @@ namespace Senparc.Mvc.Controllers
 
         public bool IsAdmin => base.HttpContext.Session.GetString("AdminLogin") as string == "1" && FullAccount != null;
 
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Loads system/account context before the action and converts unexpected
+        /// setup failures into the legacy error view.
+        /// </remarks>
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             try
@@ -89,6 +98,11 @@ namespace Senparc.Mvc.Controllers
 
         }
 
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Copies authenticated account, system configuration, messages, route,
+        /// and page timing data into recognized legacy view-data models.
+        /// </remarks>
         public void OnResultExecuting(ResultExecutingContext context)
         {
             if (ViewData.Model is IBaseVD)
@@ -131,20 +145,22 @@ namespace Senparc.Mvc.Controllers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Redirects the legacy create action to the edit action.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A redirect action to the edit endpoint.</returns>
         public ActionResult Create()
         {
             return RedirectToAction("Edit");
         }
 
         /// <summary>
-        /// displayJsonresult
+        /// Creates the legacy JSON response envelope and optionally wraps it in JSONP.
         /// </summary>
-        /// <param name="success">whethersuccess</param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="success">Whether the operation succeeded.</param>
+        /// <param name="result">The response payload.</param>
+        /// <param name="jsonSerializerSettings">Optional serializer settings.</param>
+        /// <param name="jsonpCallbackFunction">An optional JSONP callback name.</param>
+        /// <returns>A JSON or JSONP action result.</returns>
         [NonAction]
         public ActionResult RenderJsonSuccessResult(bool success, object result,
             Newtonsoft.Json.JsonSerializerSettings jsonSerializerSettings = null,
@@ -183,6 +199,14 @@ namespace Senparc.Mvc.Controllers
         #region Legacy section
 
         [NonAction]
+        /// <summary>
+        /// Creates the legacy success view response with navigation metadata.
+        /// </summary>
+        /// <param name="message">The user-facing success message.</param>
+        /// <param name="backAction">Optional action to use for navigation.</param>
+        /// <param name="backController">Optional controller to use for navigation.</param>
+        /// <param name="backRouteValues">Optional route values for navigation.</param>
+        /// <returns>The legacy success view result.</returns>
         public virtual ActionResult RenderSuccess(string message, string backAction = null,
             string backController = null, RouteValueDictionary backRouteValues = null)
         {
@@ -200,6 +224,13 @@ namespace Senparc.Mvc.Controllers
         }
 
         [NonAction]
+        /// <summary>
+        /// Creates the legacy error view response while preserving the current route
+        /// metadata for diagnostics.
+        /// </summary>
+        /// <param name="message">The user-facing error message.</param>
+        /// <param name="ex">The optional underlying exception.</param>
+        /// <returns>The legacy error view result.</returns>
         public virtual ActionResult RenderError(string message, Exception ex = null)
         {
             //preserve the original controller and action information
@@ -215,6 +246,12 @@ namespace Senparc.Mvc.Controllers
 
         #endregion
 
+        /// <summary>
+        /// Appends a message notification to the request TempData message collection.
+        /// </summary>
+        /// <param name="messageType">The message severity/type.</param>
+        /// <param name="messageText">The message text.</param>
+        /// <param name="showClose">Whether the UI may dismiss the message.</param>
         public void SetMessager(MessageType messageType, string messageText, bool showClose = true)
         {
             if (TempData["Messager"] == null || !(TempData["Messager"] is List<Messager>))
@@ -226,6 +263,7 @@ namespace Senparc.Mvc.Controllers
         }
 
 
+        /// <inheritdoc/>
         public void OnResultExecuted(ResultExecutedContext context)
         {
         }

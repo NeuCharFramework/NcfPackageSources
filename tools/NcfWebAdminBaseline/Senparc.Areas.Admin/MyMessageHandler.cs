@@ -34,16 +34,27 @@ namespace Senparc.Web
     [MpMessageHandler("JeffreyMp")]
     public class MyMessageHandler : XncfMpMessageHandler<WechatAiContext>
     {
+        /// <summary>
+        /// Initializes the message handler with the account, request stream,
+        /// parsed request model, record limit, and request service provider.
+        /// </summary>
+        /// <param name="mpAccountDto">The public-account metadata.</param>
+        /// <param name="stream">The raw request stream.</param>
+        /// <param name="postModel">The parsed Weixin POST model.</param>
+        /// <param name="maxRecordCount">The maximum record count supported by the base handler.</param>
+        /// <param name="services">The request service provider.</param>
         public MyMessageHandler(MpAccountDto mpAccountDto, Stream stream, PostModel postModel, int maxRecordCount, ServiceProvider services) : base(mpAccountDto, stream, postModel, maxRecordCount, services)
         {
 
         }
 
+        /// <inheritdoc/>
         protected override Action RunBot(IServiceProvider services, RequestMessageText requestMessage)
         {
             return base.RunBot(services, requestMessage);
         }
 
+        /// <inheritdoc/>
         public override async Task<IResponseMessageBase> OnVoiceRequestAsync(RequestMessageVoice requestMessage)
         {
             var content = requestMessage.Recognition;
@@ -55,6 +66,7 @@ namespace Senparc.Web
             return responseMessage;
         }
 
+        /// <inheritdoc/>
         protected override async Task AfterRunBotAsync(IServiceProvider serviceProvider, RequestMessageText requestMessage, MpAccountDto mpAccountDto, SenparcAiResult senparcAiResult, DateTimeOffset startTime)
         {
             /* Legacy comment translated to English.*/

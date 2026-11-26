@@ -24,7 +24,7 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// EF Core context for SystemManager configuration and feedback entities.
     /// </summary>
     public class SystemManagerSenparcEntities : XncfDatabaseDbContext
     {
@@ -32,11 +32,10 @@ namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
         {
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets persisted system configuration records.</summary>
         public DbSet<SystemConfig> SystemConfigs { get; set; }
 
+        /// <summary>Gets or sets persisted feedback records.</summary>
         public DbSet<FeedBack> FeedBacks { get; set; }
 
         //DOT REMOVE OR MODIFY THIS LINE - Entities Point

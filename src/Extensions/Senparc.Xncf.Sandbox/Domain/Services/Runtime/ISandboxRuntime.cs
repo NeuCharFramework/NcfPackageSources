@@ -22,7 +22,8 @@ using Senparc.Xncf.Sandbox.Abstractions;
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Defines the runtime-provider contract used by Sandbox orchestration.
+/// Implementations create, execute, inspect, and destroy isolated runtime sessions.
 /// </summary>
 public interface ISandboxRuntime
 {

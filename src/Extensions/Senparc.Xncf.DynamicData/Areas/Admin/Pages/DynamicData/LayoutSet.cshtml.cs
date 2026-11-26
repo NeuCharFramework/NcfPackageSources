@@ -25,11 +25,14 @@ namespace Senparc.Xncf.DynamicData.Areas.Admin.Pages.DynamicData
 {
     public class LayoutSetModel : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
+        /// <summary>Initializes the DynamicData layout settings page.</summary>
+        /// <param name="xncfModuleService">The lazy module service used by the base page model.</param>
         public LayoutSetModel(Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
         {
 
         }
 
+        /// <summary>Initializes the layout settings page request.</summary>
         public void OnGet()
         {
         }

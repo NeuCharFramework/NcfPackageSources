@@ -22,6 +22,7 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
+    /// <summary>Transfers an administrator role identifier, code, and enablement state.</summary>
     public class SysRoleDto : DtoBase
     {
         [MaxLength(50)]
@@ -39,9 +40,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         [MaxLength(50)]
         public string RoleCode { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether the role is enabled.</summary>
         public bool Enabled { get; set; }
     }
 }

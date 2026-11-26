@@ -57,6 +57,12 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
         public string UpFileUrl { get; set; }
         public string BaseUrl { get; set; }
 
+        /// <summary>
+        /// Initializes the KnowledgeBase list page and its retrieval/service dependencies.
+        /// </summary>
+        /// <param name="xncfModuleService">The lazy module service required by the base page.</param>
+        /// <param name="knowledgeBaseService">The KnowledgeBase persistence and retrieval service.</param>
+        /// <param name="serviceProvider">The request service provider.</param>
         public IndexModel(Lazy<XncfModuleService> xncfModuleService, KnowledgeBaseService knowledgeBaseService, IServiceProvider serviceProvider) : base(xncfModuleService)
         {
             CurrentMenu = "KnowledgeBase";
@@ -68,11 +74,24 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
         public int PageIndex { get; set; } = 1;
         public PagedList<Models.DatabaseModel.KnowledgeBase> KnowledgeBase { get; set; }
 
+        /// <summary>
+        /// Handles the initial list-page request. List data is loaded by the AJAX handler.
+        /// </summary>
         public Task OnGetAsync()
         {
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Returns a bounded, optionally filtered page of indexed KnowledgeBase definitions
+        /// together with parsed retrieval configuration metadata.
+        /// </summary>
+        /// <param name="keyword">Optional name substring filter.</param>
+        /// <param name="orderField">The service-supported ordering field.</param>
+        /// <param name="pageIndex">The one-based page number, clamped to at least one.</param>
+        /// <param name="pageSize">The requested page size, clamped to 1 through 200.</param>
+        /// <param name="knowledgeBaseId">Optional exact KnowledgeBase identifier.</param>
+        /// <returns>An HTTP 200 result containing paging data and projected definitions.</returns>
         public async Task<IActionResult> OnGetKnowledgeBasesAsync(string keyword, string orderField, int pageIndex, int pageSize, int? knowledgeBaseId)
         {
             keyword = keyword?.Trim();

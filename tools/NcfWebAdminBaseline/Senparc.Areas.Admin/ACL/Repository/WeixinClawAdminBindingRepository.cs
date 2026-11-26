@@ -31,10 +31,13 @@ public interface IWeixinClawAdminBindingRepository : IClientRepositoryBase<Weixi
 public sealed class WeixinClawAdminBindingRepository
     : ClientRepositoryBase<WeixinClawAdminBinding>, IWeixinClawAdminBindingRepository
 {
+    /// <summary>Reserved parameterless constructor for repository infrastructure.</summary>
     private WeixinClawAdminBindingRepository() : base(null)
     {
     }
 
+    /// <summary>Initializes the binding repository with the NCF database provider.</summary>
+    /// <param name="ncfDbData">The database data provider used by the base repository.</param>
     public WeixinClawAdminBindingRepository(INcfDbData ncfDbData) : base(ncfDbData)
     {
     }

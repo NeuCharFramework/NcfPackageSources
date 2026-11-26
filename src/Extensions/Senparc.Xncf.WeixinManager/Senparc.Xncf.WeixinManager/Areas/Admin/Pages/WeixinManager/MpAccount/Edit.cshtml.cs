@@ -38,6 +38,11 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
         private readonly ServiceBase<MpAccount> _mpAccountService;
         public bool IsEdit { get; set; }
 
+        /// <summary>
+        /// Initializes the public-account editor page model.
+        /// </summary>
+        /// <param name="xncfModuleService">The lazily resolved WeixinManager module service.</param>
+        /// <param name="mpAccountService">The public-account persistence service.</param>
         public MpAccount_EditModel(Lazy<XncfModuleService> xncfModuleService,
                                    ServiceBase<MpAccount> mpAccountService) : base(xncfModuleService)
         {
@@ -45,6 +50,11 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
         }
 
 
+        /// <summary>
+        /// Loads an existing public-account configuration or initializes a new editor model.
+        /// </summary>
+        /// <param name="id">The optional public-account identifier.</param>
+        /// <returns>The editor page or a localized not-found error.</returns>
         public async Task<IActionResult> OnGetAsync(int id = 0)
         {
             IsEdit = id > 0;
@@ -65,6 +75,11 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
             return Page();
         }
 
+        /// <summary>
+        /// Returns a public-account DTO for asynchronous editor loading.
+        /// </summary>
+        /// <param name="id">The optional public-account identifier.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing the DTO.</returns>
         public async Task<IActionResult> OnGetAjaxAsync(int id = 0)
         {
             var mpAccountDto = new MpAccountDto();
@@ -81,6 +96,12 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
             return Ok(mpAccountDto);
         }
 
+        /// <summary>
+        /// Creates or updates a public-account configuration, registers its access token,
+        /// and reports whether credential verification succeeded.
+        /// </summary>
+        /// <param name="id">The optional persisted account identifier.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing the persisted ID and module UID.</returns>
         public async Task<IActionResult> OnPostAsync(int id = 0)
         {
             IsEdit = id > 0;
@@ -118,6 +139,12 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
             return Ok(new { id = mpAccount.Id, uid = Uid });
         }
 
+        /// <summary>
+        /// Creates or updates a public-account configuration through a JSON request,
+        /// then registers and verifies its access token.
+        /// </summary>
+        /// <param name="mpAccountDto">The public-account values submitted by the client.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing the persisted ID and module UID.</returns>
         public async Task<IActionResult> OnPostAjaxAsync([FromBody] MpAccountDto mpAccountDto)
         {
             MpAccount mpAccount = null;

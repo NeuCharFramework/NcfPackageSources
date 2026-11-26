@@ -23,6 +23,14 @@ namespace System.Web.Mvc
 {
     public static class CurrentMenuExtensions
     {
+        /// <summary>
+        /// Returns the active CSS class when the current view model's menu value matches
+        /// the requested menu name or its top-level menu segment.
+        /// </summary>
+        /// <param name="htmlHelper">The HTML helper containing the current view model.</param>
+        /// <param name="menuName">The menu name or top-level segment to compare.</param>
+        /// <param name="currentClassName">The CSS class returned for an active menu.</param>
+        /// <returns>The active class when matched; otherwise an empty string.</returns>
         public static string CurrentMenu(this IHtmlHelper htmlHelper, string menuName, string currentClassName = "current active")
         {
             if (htmlHelper.ViewData.Model is IBaseUiVD)

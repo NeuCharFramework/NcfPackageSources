@@ -46,6 +46,11 @@ namespace Senparc.Xncf.KnowledgeBase
         /// </summary>
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Applies KnowledgeBase entity mappings to the module database model.
+        /// Automatic mapping discovery supplies the current mappings.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework Core model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Legacy comment translated to English.
@@ -53,6 +58,11 @@ namespace Senparc.Xncf.KnowledgeBase
             modelBuilder.ApplyConfiguration(new Admin_KnowledgeBaseItemConfigurationMapping());
         }
 
+        /// <summary>
+        /// Registers KnowledgeBase database services.
+        /// The module currently relies on shared database registrations and automatic entity discovery.
+        /// </summary>
+        /// <param name="services">The application dependency-injection service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             //DOT REMOVE OR MODIFY THIS LINE - Entities Point

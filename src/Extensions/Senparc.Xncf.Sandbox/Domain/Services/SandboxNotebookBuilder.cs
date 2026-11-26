@@ -101,6 +101,11 @@ public static class SandboxNotebookBuilder
         throw new InvalidOperationException($"不支持的 Notebook 语言：{language}（可选 python / csharp）");
     }
 
+    /// <summary>
+    /// Converts an internal cell representation into the JSON shape required by notebook format 4.
+    /// </summary>
+    /// <param name="cell">The normalized notebook cell.</param>
+    /// <returns>An anonymous object suitable for JSON serialization.</returns>
     private static object ToCellPayload(NotebookCell cell)
     {
         if (string.Equals(cell.Type, "markdown", StringComparison.Ordinal))
@@ -125,6 +130,12 @@ public static class SandboxNotebookBuilder
         };
     }
 
+    /// <summary>
+    /// Splits marker-delimited source into normalized code and markdown cells.
+    /// </summary>
+    /// <param name="cellsSource">The source text to parse.</param>
+    /// <returns>The ordered notebook cells.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the source contains no usable cell content.</exception>
     private static List<NotebookCell> ParseCells(string? cellsSource)
     {
         var lines = (cellsSource ?? string.Empty)
@@ -171,6 +182,13 @@ public static class SandboxNotebookBuilder
         return cells;
     }
 
+    /// <summary>
+    /// Converts the buffered lines into a cell and appends it when the buffer contains content
+    /// or a previous cell has already been emitted.
+    /// </summary>
+    /// <param name="cells">The output cell collection.</param>
+    /// <param name="buffer">The source lines accumulated for the current cell.</param>
+    /// <param name="asMarkdown">Whether the cell should be emitted as markdown instead of code.</param>
     private static void FlushCell(List<NotebookCell> cells, List<string> buffer, bool asMarkdown)
     {
         var source = ToSourceLines(buffer);
@@ -182,6 +200,11 @@ public static class SandboxNotebookBuilder
         cells.Add(new NotebookCell(asMarkdown ? "markdown" : "code", source));
     }
 
+    /// <summary>
+    /// Trims trailing blank lines and converts source lines to notebook line fragments.
+    /// </summary>
+    /// <param name="lines">The mutable source-line buffer.</param>
+    /// <returns>Notebook source fragments with newline terminators on all but the last line.</returns>
     private static string[] ToSourceLines(List<string> lines)
     {
         while (lines.Count > 0 && lines[^1].Trim().Length == 0)
@@ -198,14 +221,21 @@ public static class SandboxNotebookBuilder
         return result;
     }
 
+    /// <summary>
+    /// Converts a title into the single markdown source line used for the notebook heading.
+    /// </summary>
+    /// <param name="title">The trimmed notebook title.</param>
+    /// <returns>A one-element markdown source array.</returns>
     private static string[] TitleToLines(string title)
     {
         return new[] { $"# {title}" };
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Recognizes the supported code-cell and markdown-cell marker forms.
     /// </summary>
+    /// <param name="line">A source line that may contain a cell marker.</param>
+    /// <returns><see langword="true"/> for markdown, <see langword="false"/> for code, or <see langword="null"/> when no marker is present.</returns>
     private static bool? TryParseMarker(string line)
     {
         var trimmed = line.Trim();

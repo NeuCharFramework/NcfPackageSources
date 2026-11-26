@@ -69,7 +69,8 @@ namespace Senparc.Xncf.SystemManager
 
         public override string Description => RegisterText.Description;
 
-        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+    /// <inheritdoc/>
+    public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //install or upgrade the database
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
@@ -83,7 +84,8 @@ namespace Senparc.Xncf.SystemManager
             await base.InstallOrUpdateAsync(serviceProvider, installOrUpdate);
         }
 
-        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+    /// <inheritdoc/>
+    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             //Legacy comment translated to English.
 
@@ -91,7 +93,8 @@ namespace Senparc.Xncf.SystemManager
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+    /// <inheritdoc/>
+    public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             return base.AddXncfModule(services, configuration, env);
         }

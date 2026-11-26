@@ -41,6 +41,15 @@ namespace Senparc.Areas.Admin.Domain.Services;
 
 internal static class AdminChatWorkspaceToolFactory
 {
+    /// <summary>
+    /// Creates the read, document, write, delete, and optional Python tools exposed
+    /// to an AdminChat session according to its capabilities.
+    /// </summary>
+    /// <param name="client">The workspace client bound to the current workspace.</param>
+    /// <param name="allowWrite">Whether file and directory mutation tools are allowed.</param>
+    /// <param name="allowCli">Whether Python execution is allowed.</param>
+    /// <param name="documents">Optional document reader enabling document-specific tools.</param>
+    /// <returns>The diagnostic-wrapped AI function collection.</returns>
     public static IReadOnlyList<AIFunction> Create(
         IWorkspaceClient client,
         bool allowWrite,
@@ -89,6 +98,15 @@ internal static class AdminChatWorkspaceToolFactory
             .ToList();
     }
 
+    /// <summary>
+    /// Reflects a public target method into an AI function with the supplied tool metadata.
+    /// </summary>
+    /// <param name="target">The object containing the instance method.</param>
+    /// <param name="methodName">The reflected method name.</param>
+    /// <param name="name">The AI tool name.</param>
+    /// <param name="description">The AI tool description.</param>
+    /// <returns>The constructed AI function.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the target method cannot be found.</exception>
     private static AIFunction Create(object target, string methodName, string name, string description)
     {
         var method = target.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public)
@@ -111,6 +129,14 @@ internal static class AdminChatWorkspaceToolFactory
             _budget = budget;
         }
 
+        /// <summary>
+        /// Lists a paged window of workspace directory entries within the output budget.
+        /// </summary>
+        /// <param name="relativePath">The workspace-relative directory path.</param>
+        /// <param name="offset">The zero-based entry offset.</param>
+        /// <param name="maxEntries">The requested page size, capped at 100.</param>
+        /// <param name="cancellationToken">Token used to cancel the workspace query.</param>
+        /// <returns>Budgeted JSON entries and continuation metadata.</returns>
         public async Task<string> ListAsync(string relativePath = "", int offset = 0, int maxEntries = 30,
             CancellationToken cancellationToken = default)
         {
@@ -121,6 +147,15 @@ internal static class AdminChatWorkspaceToolFactory
                 hasMore = offset + maxEntries < entries.Count });
         }
 
+        /// <summary>
+        /// Reads a bounded UTF-8 text window from a workspace file and returns its ETag
+        /// and continuation position.
+        /// </summary>
+        /// <param name="relativePath">The workspace-relative file path.</param>
+        /// <param name="offset">The zero-based character offset.</param>
+        /// <param name="maxCharacters">The requested character count, capped at 4000.</param>
+        /// <param name="cancellationToken">Token used to cancel the read.</param>
+        /// <returns>Budgeted JSON containing text and continuation metadata.</returns>
         public async Task<string> ReadAsync(string relativePath, int offset = 0, int maxCharacters = 4000,
             CancellationToken cancellationToken = default)
         {
@@ -141,6 +176,18 @@ internal static class AdminChatWorkspaceToolFactory
                 nextOffset = offset + count, hasMore = offset + count < text.Length });
         }
 
+        /// <summary>
+        /// Searches workspace entries using name, path-glob, and optional content criteria;
+        /// with no criteria it returns the requested directory listing.
+        /// </summary>
+        /// <param name="nameQuery">Optional file-name substring.</param>
+        /// <param name="contentQuery">Optional content query.</param>
+        /// <param name="relativePath">The workspace-relative root directory.</param>
+        /// <param name="caseSensitive">Whether text matching is case-sensitive.</param>
+        /// <param name="maxResults">The maximum result count.</param>
+        /// <param name="pathGlob">Optional relative-path glob.</param>
+        /// <param name="contentRegex">Whether the content query is a regular expression.</param>
+        /// <returns>Budgeted JSON search results.</returns>
         public async Task<string> SearchAsync(
             string nameQuery = "",
             string contentQuery = "",
@@ -171,6 +218,13 @@ internal static class AdminChatWorkspaceToolFactory
             return _budget.Json(results);
         }
 
+        /// <summary>
+        /// Writes UTF-8 text to a workspace file after checking write capability and
+        /// returns a structured before/after change summary.
+        /// </summary>
+        /// <param name="relativePath">The workspace-relative file path.</param>
+        /// <param name="content">The replacement text content.</param>
+        /// <returns>JSON describing the write and resulting change.</returns>
         public async Task<string> WriteAsync(string relativePath, string content)
         {
             EnsureWrite();
@@ -194,6 +248,11 @@ internal static class AdminChatWorkspaceToolFactory
             });
         }
 
+        /// <summary>
+        /// Creates a workspace directory after checking write capability.
+        /// </summary>
+        /// <param name="relativePath">The workspace-relative directory path.</param>
+        /// <returns>A success message.</returns>
         public async Task<string> MkdirAsync(string relativePath)
         {
             EnsureWrite();
@@ -202,6 +261,16 @@ internal static class AdminChatWorkspaceToolFactory
             return "目录创建成功。";
         }
 
+        /// <summary>
+        /// Applies an optimistic exact-text patch and returns either the rejection
+        /// result or a structured before/after change summary.
+        /// </summary>
+        /// <param name="relativePath">The workspace-relative file path.</param>
+        /// <param name="oldText">The expected text to replace.</param>
+        /// <param name="newText">The replacement text.</param>
+        /// <param name="expectedReplacements">The exact replacement count required.</param>
+        /// <param name="expectedSha256">Optional expected file fingerprint.</param>
+        /// <returns>JSON describing patch success or failure.</returns>
         public async Task<string> PatchAsync(
             string relativePath,
             string oldText,
@@ -237,6 +306,14 @@ internal static class AdminChatWorkspaceToolFactory
             });
         }
 
+        /// <summary>
+        /// Deletes a workspace file or directory after checking write capability,
+        /// optional recursive behavior, and an optional expected ETag.
+        /// </summary>
+        /// <param name="relativePath">The workspace-relative target path.</param>
+        /// <param name="recursive">Whether a directory may be non-empty.</param>
+        /// <param name="expectedETag">Optional expected target fingerprint.</param>
+        /// <returns>JSON describing the deletion and prior state.</returns>
         public async Task<string> DeleteAsync(
             string relativePath,
             bool recursive = false,
@@ -255,6 +332,13 @@ internal static class AdminChatWorkspaceToolFactory
             });
         }
 
+        /// <summary>
+        /// Executes a workspace Python script only when CLI capability is enabled.
+        /// </summary>
+        /// <param name="scriptPath">The workspace-relative Python script path.</param>
+        /// <param name="arguments">Optional script arguments.</param>
+        /// <param name="workingDirectory">Optional workspace-relative working directory.</param>
+        /// <returns>Serialized execution status, output, and exit information.</returns>
         public async Task<string> ExecutePythonAsync(
             string scriptPath,
             string[] arguments = null,
@@ -272,6 +356,9 @@ internal static class AdminChatWorkspaceToolFactory
             return JsonSerializer.Serialize(result);
         }
 
+        /// <summary>
+        /// Rejects mutation requests when the current session lacks write capability.
+        /// </summary>
         private void EnsureWrite()
         {
             if (!_allowWrite)
@@ -280,6 +367,11 @@ internal static class AdminChatWorkspaceToolFactory
             }
         }
 
+        /// <summary>
+        /// Ensures a file-oriented tool received a non-empty relative path.
+        /// </summary>
+        /// <param name="relativePath">The path supplied to the tool.</param>
+        /// <exception cref="ArgumentException">Thrown when the path is blank.</exception>
         private static void EnsureFilePath(string relativePath)
         {
             if (string.IsNullOrWhiteSpace(relativePath))
@@ -290,6 +382,12 @@ internal static class AdminChatWorkspaceToolFactory
             }
         }
 
+        /// <summary>
+        /// Captures file existence, UTF-8 text, and byte length before or after a mutation.
+        /// Binary, oversized, or undecodable files retain metadata without text content.
+        /// </summary>
+        /// <param name="relativePath">The workspace-relative file path.</param>
+        /// <returns>A snapshot suitable for change reporting.</returns>
         private async Task<WorkspaceFileSnapshot> SnapshotAsync(string relativePath)
         {
             try
@@ -324,6 +422,14 @@ internal static class AdminChatWorkspaceToolFactory
             }
         }
 
+        /// <summary>
+        /// Builds a structured change summary including byte sizes and optional line deltas.
+        /// </summary>
+        /// <param name="relativePath">The changed workspace path.</param>
+        /// <param name="changeType">The change category.</param>
+        /// <param name="before">The pre-operation snapshot.</param>
+        /// <param name="after">The post-operation snapshot.</param>
+        /// <returns>An anonymous change summary object for JSON serialization.</returns>
         private static object CreateChange(
             string relativePath,
             string changeType,
@@ -346,6 +452,13 @@ internal static class AdminChatWorkspaceToolFactory
             };
         }
 
+        /// <summary>
+        /// Estimates added and removed line counts using a bounded longest-common-
+        /// subsequence calculation, falling back to inexact counts for large files.
+        /// </summary>
+        /// <param name="before">The previous text.</param>
+        /// <param name="after">The resulting text.</param>
+        /// <returns>Added lines, removed lines, and whether the counts are exact.</returns>
         private static (int Added, int Removed, bool Exact) CountLineChanges(
             string before,
             string after)
@@ -379,6 +492,11 @@ internal static class AdminChatWorkspaceToolFactory
             return (afterLines.Length - commonLines, beforeLines.Length - commonLines, true);
         }
 
+        /// <summary>
+        /// Splits text into logical lines while normalizing CRLF and CR separators.
+        /// </summary>
+        /// <param name="text">The text to split.</param>
+        /// <returns>Logical lines without a trailing empty line.</returns>
         private static string[] SplitLines(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -410,6 +528,13 @@ internal static class AdminChatWorkspaceToolFactory
             _workspaceId = workspaceId ?? string.Empty;
         }
 
+        /// <summary>
+        /// Normalizes root-capable arguments, invokes the wrapped workspace tool,
+        /// and converts expected argument/authorization failures into structured diagnostics.
+        /// </summary>
+        /// <param name="arguments">The AI tool arguments.</param>
+        /// <param name="cancellationToken">Token used to cancel invocation.</param>
+        /// <returns>The wrapped tool result or serialized diagnostic failure.</returns>
         protected override async ValueTask<object> InvokeCoreAsync(
             AIFunctionArguments arguments,
             CancellationToken cancellationToken)
@@ -423,6 +548,22 @@ internal static class AdminChatWorkspaceToolFactory
             catch (Exception exception)
             {
                 var root = exception.GetBaseException();
+                if (root is ArgumentException or UnauthorizedAccessException)
+                {
+                    var rejected =
+                        $"WorkspaceId={_workspaceId}; Tool={Name}; Arguments={argumentSummary}; " +
+                        $"Rejected={root.GetType().FullName}: {root.Message}";
+                    SenparcTrace.SendCustomLog("AdminChat.WorkspaceTool.Rejected", rejected);
+                    return JsonSerializer.Serialize(new
+                    {
+                        success = false,
+                        error = root.Message,
+                        errorType = root.GetType().Name,
+                        requiredArguments = GetRequiredArgumentNames(),
+                        retryable = false
+                    });
+                }
+
                 var detail =
                     $"WorkspaceId={_workspaceId}; Tool={Name}; Arguments={argumentSummary}; " +
                     $"Error={root.GetType().FullName}: {root.Message}";
@@ -433,6 +574,27 @@ internal static class AdminChatWorkspaceToolFactory
             }
         }
 
+        /// <summary>
+        /// Returns required argument names used when a workspace tool rejects a request.
+        /// </summary>
+        /// <returns>The tool-specific required argument names.</returns>
+        private string[] GetRequiredArgumentNames() => Name switch
+        {
+            "workspace_read" or "workspace_mkdir" or "workspace_delete" => ["relativePath"],
+            "workspace_write" => ["relativePath", "content"],
+            "workspace_patch" => ["relativePath", "oldText", "newText"],
+            "workspace_document_info" => ["relativePath"],
+            "workspace_document_read" or "workspace_document_search" => ["relativePath"],
+            "workspace_execute_python" => ["scriptPath"],
+            _ => []
+        };
+
+        /// <summary>
+        /// Ensures root-capable list/search tools receive an explicit empty root path
+        /// when the caller omitted it.
+        /// </summary>
+        /// <param name="arguments">The original AI function arguments.</param>
+        /// <returns>Normalized arguments, or the original instance when no change is needed.</returns>
         private AIFunctionArguments NormalizeRootPath(AIFunctionArguments arguments)
         {
             if ((Name != "workspace_list" && Name != "workspace_search") || arguments == null)
@@ -456,6 +618,11 @@ internal static class AdminChatWorkspaceToolFactory
             };
         }
 
+        /// <summary>
+        /// Formats tool arguments for diagnostics without dumping full file content.
+        /// </summary>
+        /// <param name="arguments">The argument collection.</param>
+        /// <returns>A bounded diagnostic string.</returns>
         private static string FormatArguments(IEnumerable<KeyValuePair<string, object>> arguments)
         {
             if (arguments == null)
@@ -469,6 +636,12 @@ internal static class AdminChatWorkspaceToolFactory
             return values.Count == 0 ? "(none)" : string.Join(", ", values);
         }
 
+        /// <summary>
+        /// Formats one argument value while redacting large content fields and line breaks.
+        /// </summary>
+        /// <param name="key">The argument name.</param>
+        /// <param name="value">The argument value.</param>
+        /// <returns>A bounded diagnostic representation.</returns>
         private static string FormatArgumentValue(string key, object value)
         {
             if (key.Contains("content", StringComparison.OrdinalIgnoreCase))

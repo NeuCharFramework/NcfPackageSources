@@ -29,11 +29,19 @@ namespace Senparc.Xncf.AIKernel.Areas.AITokenMonitor.Pages
     {
         private readonly AITokenUsageService aITokenUsage;
 
+        /// <summary>
+        /// Initializes the AI token monitor page.
+        /// </summary>
+        /// <param name="xncfModuleService">The lazy XNCF module service.</param>
+        /// <param name="aITokenUsage">The token usage service.</param>
         public Index(Lazy<XncfModuleService> xncfModuleService, AITokenUsageService aITokenUsage) : base(xncfModuleService)
         {
             this.aITokenUsage = aITokenUsage;
         }
 
+        /// <summary>
+        /// Initializes the token monitor page request.
+        /// </summary>
         public void OnGet()
         {
         }

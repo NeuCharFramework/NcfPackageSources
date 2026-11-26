@@ -21,6 +21,9 @@ namespace Senparc.Ncf.Core.Utility
 {
     public class W3wp
     {
+        /// <summary>
+        /// Prevents instantiation of the legacy static-helper container.
+        /// </summary>
         private W3wp() { }
 
         //Legacy comment translated to English.

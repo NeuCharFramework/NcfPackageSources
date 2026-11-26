@@ -33,80 +33,81 @@ using ModelContextProtocol.Client;
 namespace Senparc.Xncf.MCP.Domain.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents the structured result of an MCP endpoint connection test.
     /// </summary>
     public class McpConnectionTestResult
     {
-        ///Legacy comment translated to English.
+        /// Gets or sets whether endpoint connection and tool discovery succeeded.
         public bool Success { get; set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the HTTP or protocol status code observed during testing.
         public int Status { get; set; } = 200;
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the diagnostic status message.
         public string StatusMessage { get; set; } = string.Empty;
 
-        ///Legacy comment translated to English.
+        /// Gets the number of tools discovered from the endpoint.
         public int ToolCount => Tools?.Count ?? 0;
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the discovered tool metadata.
         public List<McpToolInfo> Tools { get; set; } = new List<McpToolInfo>();
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Describes one tool discovered from an MCP endpoint.
     /// </summary>
     public class McpToolInfo
     {
-        ///Legacy comment translated to English.
+        /// Gets or sets the tool name.
         public string Name { get; set; } = string.Empty;
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the optional display title.
         public string? Title { get; set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the optional tool description.
         public string? Description { get; set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the discovered input parameters.
         public List<McpToolParameterInfo> Parameters { get; set; } = new List<McpToolParameterInfo>();
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the serialized JSON input schema.
         public string? InputSchemaJson { get; set; }
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Describes one input parameter exposed by an MCP tool.
     /// </summary>
     public class McpToolParameterInfo
     {
-        ///Legacy comment translated to English.
+        /// Gets or sets the parameter name.
         public string Name { get; set; } = string.Empty;
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the JSON-schema type name.
         public string? Type { get; set; }
 
         /// <summary>parametersdescription。</summary>
         public string? Description { get; set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the parameter is required.
         public bool Required { get; set; }
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Tests an HTTP/SSE or streamable-HTTP MCP endpoint and discovers its tools and input schemas.
     /// </summary>
     public class McpConnectionTestService
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Connects to an MCP endpoint, lists its tools, and converts transport or protocol failures
+        /// into a structured result rather than propagating them.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="name">The display name used by the MCP transport.</param>
+        /// <param name="endpointUrl">The absolute HTTP or HTTPS endpoint URL.</param>
+        /// <param name="bearerToken">Optional bearer token sent in the Authorization header.</param>
+        /// <param name="timeoutSeconds">Connection timeout, clamped to the range 3 through 120 seconds.</param>
+        /// <param name="endpointType">Optional transport type: <c>sse</c>, <c>http</c>, or automatic detection.</param>
+        /// <param name="cancellationToken">Token used to cancel the test.</param>
+        /// <returns>A result containing status, diagnostic message, and discovered tool metadata.</returns>
         public async Task<McpConnectionTestResult> TestAsync(
             string name,
             string endpointUrl,
@@ -175,6 +176,11 @@ namespace Senparc.Xncf.MCP.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Maps an MCP client tool to the module's serializable tool-information contract.
+        /// </summary>
+        /// <param name="tool">The discovered MCP client tool.</param>
+        /// <returns>The mapped tool metadata.</returns>
         private static McpToolInfo MapTool(McpClientTool tool)
         {
             var schema = tool.ProtocolTool?.InputSchema.ValueKind == JsonValueKind.Object
@@ -191,8 +197,10 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reads JSON Schema properties and required names into parameter metadata.
         /// </summary>
+        /// <param name="schema">The tool input JSON Schema.</param>
+        /// <returns>Parameter metadata, or an empty list when the schema has no object properties.</returns>
         private static List<McpToolParameterInfo> ParseParameters(JsonElement schema)
         {
             var parameters = new List<McpToolParameterInfo>();
@@ -236,6 +244,13 @@ namespace Senparc.Xncf.MCP.Domain.Services
             return parameters;
         }
 
+        /// <summary>
+        /// Creates a failed connection-test result without exposing an exception
+        /// object to the endpoint caller.
+        /// </summary>
+        /// <param name="status">The HTTP-style diagnostic status code.</param>
+        /// <param name="message">The user-facing failure message.</param>
+        /// <returns>A failed <see cref="McpConnectionTestResult"/>.</returns>
         private static McpConnectionTestResult Fail(int status, string message)
         {
             return new McpConnectionTestResult

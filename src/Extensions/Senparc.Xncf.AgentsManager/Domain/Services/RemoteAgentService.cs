@@ -24,6 +24,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     public class RemoteAgentService : ServiceBase<RemoteAgent>
     {
+        /// <summary>
+        /// Initializes the remote-agent persistence service.
+        /// </summary>
+        /// <param name="repo">The repository for remote-agent entities.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public RemoteAgentService(IRepositoryBase<RemoteAgent> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {

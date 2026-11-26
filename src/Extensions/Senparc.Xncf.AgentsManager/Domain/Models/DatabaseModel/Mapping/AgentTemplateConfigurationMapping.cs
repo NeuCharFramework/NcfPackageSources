@@ -39,6 +39,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Mapping
     [XncfAutoConfigurationMapping]
     public class AgentTemplateConfigurationMapping : ConfigurationMappingWithIdBase<AgentTemplate, int>
     {
+        /// <inheritdoc/>
         public override void Configure(EntityTypeBuilder<AgentTemplate> builder)
         {
 

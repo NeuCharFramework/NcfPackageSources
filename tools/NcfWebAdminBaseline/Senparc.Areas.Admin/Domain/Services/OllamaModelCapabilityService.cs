@@ -41,6 +41,14 @@ public sealed class OllamaModelCapabilityService
         _logger = logger;
     }
 
+    /// <summary>
+    /// Queries Ollama's model metadata endpoint to determine whether the configured
+    /// model advertises tool support, caching successful capability results.
+    /// Non-Ollama platforms return <see langword="true"/>; unavailable metadata returns <see langword="null"/>.
+    /// </summary>
+    /// <param name="setting">The AI platform and Ollama endpoint/model settings.</param>
+    /// <param name="cancellationToken">Token used to cancel the HTTP request.</param>
+    /// <returns>Tool support, false/true when known, or null when it cannot be determined.</returns>
     public async Task<bool?> SupportsToolsAsync(
         SenparcAiSetting setting,
         CancellationToken cancellationToken = default)
@@ -124,6 +132,13 @@ public sealed class OllamaModelCapabilityService
         }
     }
 
+    /// <summary>
+    /// Converts an Ollama endpoint, including common <c>/api</c> or <c>/v1</c> bases,
+    /// to the model-capability endpoint used by the service.
+    /// </summary>
+    /// <param name="endpoint">The configured absolute Ollama endpoint.</param>
+    /// <returns>The absolute <c>/api/show</c> URI.</returns>
+    /// <exception cref="UriFormatException">Thrown when the endpoint is not an absolute URI.</exception>
     internal static Uri BuildShowModelUri(string endpoint)
     {
         var baseUri = new Uri(endpoint, UriKind.Absolute);

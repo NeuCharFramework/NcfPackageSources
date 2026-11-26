@@ -29,15 +29,31 @@ namespace Senparc.Xncf.AIKernel.Areas.AIVector.Pages
     {
         private readonly AIVectorService aIVector;
 
+        /// <summary>
+        /// Initializes the AI vector administration page.
+        /// </summary>
+        /// <param name="xncfModuleService">The lazy XNCF module service.</param>
+        /// <param name="aIVector">The vector service.</param>
         public Index(Lazy<XncfModuleService> xncfModuleService,AIVectorService aIVector) : base(xncfModuleService)
         {
             this.aIVector = aIVector;
         }
 
+        /// <summary>
+        /// Initializes the vector page request.
+        /// </summary>
         public void OnGet()
         {
         }
 
+        /// <summary>
+        /// Returns a paged list of AI vectors for the administration grid.
+        /// </summary>
+        /// <param name="keyword">The optional search keyword.</param>
+        /// <param name="orderField">The textual order expression.</param>
+        /// <param name="pageIndex">The requested page index.</param>
+        /// <param name="pageSize">The requested page size.</param>
+        /// <returns>An HTTP 200 JSON page.</returns>
         public async Task<IActionResult> OnGetCategoryAsync(string keyword, string orderField, int pageIndex, int pageSize)
         {
             var seh = new SenparcExpressionHelper<Models.AIVector>();

@@ -43,6 +43,12 @@ public sealed class FineTuningControlPlaneSyncService : BackgroundService
     private readonly IOptions<FineTuningWorkerOptions> _options;
     private readonly ConcurrentDictionary<string, long> _eventCursors = new();
 
+    /// <summary>
+    /// Initializes periodic cross-tenant Worker-to-control-plane synchronization.
+    /// </summary>
+    /// <param name="tenantScopeFactory">The enabled-tenant scope factory.</param>
+    /// <param name="logger">The synchronization logger.</param>
+    /// <param name="options">Fine-tuning worker options.</param>
     public FineTuningControlPlaneSyncService(IBackgroundTenantScopeFactory tenantScopeFactory,
         ILogger<FineTuningControlPlaneSyncService> logger,
         IOptions<FineTuningWorkerOptions> options)
@@ -73,6 +79,11 @@ public sealed class FineTuningControlPlaneSyncService : BackgroundService
         }
     }
 
+    /// <summary>
+    /// Synchronizes all enabled Workers across enabled tenants.
+    /// </summary>
+    /// <param name="stoppingToken">Token used to stop synchronization.</param>
+    /// <returns>A task that completes after one synchronization pass.</returns>
     private async Task SynchronizeAsync(CancellationToken stoppingToken)
     {
         if (!_options.Value.Enabled)
@@ -113,6 +124,15 @@ public sealed class FineTuningControlPlaneSyncService : BackgroundService
         }
     }
 
+    /// <summary>
+    /// Synchronizes jobs, artifacts, and incremental events for one Worker.
+    /// </summary>
+    /// <param name="workerAlias">The Worker alias.</param>
+    /// <param name="worker">The Worker API client.</param>
+    /// <param name="controlPlane">The local control plane.</param>
+    /// <param name="eventCursors">The shared per-job event cursors.</param>
+    /// <param name="cancellationToken">Token used to cancel synchronization.</param>
+    /// <returns>A task that completes after the Worker pass.</returns>
     private static async Task SynchronizeWorkerAsync(string workerAlias, FineTuningWorkerClient worker,
         IFineTuningControlPlaneService controlPlane, ConcurrentDictionary<string, long> eventCursors,
         CancellationToken cancellationToken)

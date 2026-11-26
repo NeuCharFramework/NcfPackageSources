@@ -42,6 +42,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
         private readonly PromptOptimizationService _promptOptimizationService;
         private readonly ILogger<PromptOptimizationController> _logger;
 
+        /// <summary>
+        /// Initializes the Prompt optimization remote controller.
+        /// </summary>
+        /// <param name="promptOptimizationService">The optimization service.</param>
+        /// <param name="logger">The controller logger.</param>
         public PromptOptimizationController(
             PromptOptimizationService promptOptimizationService,
             ILogger<PromptOptimizationController> logger)
@@ -51,8 +56,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Validates and executes a Prompt optimization request, returning a structured
+        /// response for validation, timeout, and service failures.
         /// </summary>
+        /// <param name="request">The PromptCode, content, requirement, and model context.</param>
+        /// <returns>An HTTP 200 response containing optimization success or failure details.</returns>
         [HttpPost("OptimizeAsync")]
         public async Task<IActionResult> OptimizeAsync([FromBody] PromptOptimizationRequestDto request)
         {

@@ -65,8 +65,11 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Runs retrieval against a knowledge base and returns ranked candidates with timing metadata.
         /// </summary>
+        /// <param name="request">The knowledge-base identifier, query content, and retrieval options.</param>
+        /// <returns>A response containing ranked recall candidates.</returns>
+        /// <exception cref="ArgumentException">Thrown when the request or knowledge-base identifier is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<RecallTestResponse>>> RecallTest(plRequest.RecallTestRequest request)
         {

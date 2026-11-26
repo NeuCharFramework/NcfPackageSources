@@ -38,6 +38,11 @@ namespace Senparc.Ncf.Repository
 
         //public ClientRepositoryBase() : this(null) { }
 
+        /// <summary>
+        /// Initializes a repository and resolves the entity-set name for its entity type.
+        /// </summary>
+        /// <param name="db">The NCF database abstraction used for persistence.</param>
+        /// <exception cref="KeyNotFoundException">Thrown when the entity type has no registered entity-set metadata.</exception>
         public ClientRepositoryBase(INcfDbData db) : base(db)
         {
             //System.Web.HttpContext.Current.Response.Write("-"+this.GetType().Name + "<br />");

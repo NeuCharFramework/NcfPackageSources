@@ -26,10 +26,13 @@ using System.Text;
 namespace Senparc.Ncf.Core.AutoMapper
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the core AutoMapper projections between system entities, DTOs, and UI models.
     /// </summary>
     public class SystemProfile : Profile
     {
+        /// <summary>
+        /// Initializes the core entity-to-DTO and entity-to-select-list mappings.
+        /// </summary>
         public SystemProfile()
         {
             CreateMap<SysMenu, SelectListItem>().ForMember(_ => _.Text, opt => opt.MapFrom(_ => _.MenuName))

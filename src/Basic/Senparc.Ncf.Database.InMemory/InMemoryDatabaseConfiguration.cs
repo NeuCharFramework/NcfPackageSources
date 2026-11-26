@@ -62,12 +62,14 @@ namespace Senparc.Ncf.Database.InMemory
         };
 
 
+        /// <inheritdoc />
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
             //Legacy comment translated to English.
             return null;
         }
 
+        /// <inheritdoc />
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
             //Legacy comment translated to English.

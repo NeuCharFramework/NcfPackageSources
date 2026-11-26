@@ -49,18 +49,47 @@ public class AIFineTuningDataset : EntityBase<int>
 
     public int? FileId { get; private set; }
 
+    /// <summary>
+    /// Creates a dataset record without a FileManager reference.
+    /// </summary>
+    /// <param name="workerAlias">The fine-tuning Worker alias.</param>
+    /// <param name="externalId">The Worker-side dataset identifier.</param>
+    /// <param name="name">The dataset display name.</param>
+    /// <param name="rows">The dataset row count.</param>
+    /// <param name="sha256">The dataset content hash.</param>
+    /// <param name="createdUtc">The Worker creation timestamp.</param>
     public AIFineTuningDataset(string workerAlias, string externalId, string name, int rows, string sha256,
         DateTime createdUtc)
     {
         Update(workerAlias, externalId, name, rows, sha256, createdUtc);
     }
 
+    /// <summary>
+    /// Creates a dataset record with an optional FileManager file identifier.
+    /// </summary>
+    /// <param name="workerAlias">The fine-tuning Worker alias.</param>
+    /// <param name="externalId">The Worker-side dataset identifier.</param>
+    /// <param name="name">The dataset display name.</param>
+    /// <param name="rows">The dataset row count.</param>
+    /// <param name="sha256">The dataset content hash.</param>
+    /// <param name="createdUtc">The Worker creation timestamp.</param>
+    /// <param name="fileId">The optional FileManager file identifier.</param>
     public AIFineTuningDataset(string workerAlias, string externalId, string name, int rows, string sha256,
         DateTime createdUtc, int? fileId)
     {
         Update(workerAlias, externalId, name, rows, sha256, createdUtc, fileId);
     }
 
+    /// <summary>
+    /// Replaces dataset metadata while preserving the entity identity.
+    /// </summary>
+    /// <param name="workerAlias">The fine-tuning Worker alias.</param>
+    /// <param name="externalId">The Worker-side dataset identifier.</param>
+    /// <param name="name">The dataset display name.</param>
+    /// <param name="rows">The dataset row count.</param>
+    /// <param name="sha256">The dataset content hash.</param>
+    /// <param name="createdUtc">The Worker creation timestamp.</param>
+    /// <returns>This dataset entity.</returns>
     public AIFineTuningDataset Update(string workerAlias, string externalId, string name, int rows, string sha256,
         DateTime createdUtc)
     {
@@ -73,6 +102,17 @@ public class AIFineTuningDataset : EntityBase<int>
         return this;
     }
 
+    /// <summary>
+    /// Replaces dataset metadata and its optional FileManager reference.
+    /// </summary>
+    /// <param name="workerAlias">The fine-tuning Worker alias.</param>
+    /// <param name="externalId">The Worker-side dataset identifier.</param>
+    /// <param name="name">The dataset display name.</param>
+    /// <param name="rows">The dataset row count.</param>
+    /// <param name="sha256">The dataset content hash.</param>
+    /// <param name="createdUtc">The Worker creation timestamp.</param>
+    /// <param name="fileId">The optional FileManager file identifier.</param>
+    /// <returns>This dataset entity.</returns>
     public AIFineTuningDataset Update(string workerAlias, string externalId, string name, int rows, string sha256,
         DateTime createdUtc, int? fileId)
     {

@@ -42,6 +42,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
         private static readonly HttpClient SafeHttpClient = CreateSafeHttpClient();
 
+        /// <summary>
+        /// Creates the SSRF-aware HTTP client used by web crawling.
+        /// </summary>
+        /// <returns>A client with redirect, cookie, proxy, timeout, and public-DNS safeguards.</returns>
         private static HttpClient CreateSafeHttpClient()
         {
             var handler = new SocketsHttpHandler
@@ -60,6 +64,13 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             };
         }
 
+        /// <summary>
+        /// Resolves a host, rejects non-public addresses, and connects to an allowed address.
+        /// </summary>
+        /// <param name="context">The socket connection context.</param>
+        /// <param name="cancellationToken">Token used to cancel DNS/connect operations.</param>
+        /// <returns>A connected network stream.</returns>
+        /// <exception cref="HttpRequestException">Thrown when DNS yields no public address or all connections fail.</exception>
         private static async ValueTask<Stream> ConnectToPublicAddressAsync(
             SocketsHttpConnectionContext context,
             CancellationToken cancellationToken)
@@ -91,12 +102,12 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Fetches a page with SSRF validation, bounded redirects, and transient retries.
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="requestStartTime"></param>
-        /// <param name="webResponse"></param>
-        /// <param name="requestEndTime"></param>
+        /// <param name="url">The initial allowed URL.</param>
+        /// <returns>The final response and request timing values.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the URL or redirect target is not allowed.</exception>
+        /// <exception cref="HttpRequestException">Thrown when retry limits or public-address validation fail.</exception>
         public async Task<(HttpResponseMessage response,DateTime requestStartTime,DateTime requestEndTime)> RequestPage(string url)
         {
             if (!IsAvailableUrl(url))
@@ -161,12 +172,22 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             return (webResponse,requestStartTime,requestEndTime);
         }
 
+        /// <summary>
+        /// Determines whether a response status indicates retryable service throttling/unavailability.
+        /// </summary>
+        /// <param name="statusCode">The HTTP status code.</param>
+        /// <returns><see langword="true"/> for 429 or 503 responses.</returns>
         private static bool IsTransientResponse(HttpStatusCode statusCode)
         {
             return statusCode == HttpStatusCode.TooManyRequests
                 || statusCode == HttpStatusCode.ServiceUnavailable;
         }
 
+        /// <summary>
+        /// Resolves the server-requested retry delay, defaulting to one second.
+        /// </summary>
+        /// <param name="response">The HTTP response containing optional Retry-After metadata.</param>
+        /// <returns>A positive retry delay.</returns>
         private static TimeSpan GetRetryDelay(HttpResponseMessage response)
         {
             var retryAfter = response.Headers.RetryAfter;

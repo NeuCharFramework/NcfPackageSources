@@ -54,18 +54,19 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 获取菜单
+        /// Returns the menu tree from the configured menu cache.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An <see cref="OkObjectResult"/> containing menu DTOs.</returns>
         public async Task<IActionResult> OnGetMenuAsync()
         {
             return Ok(await _sysMenuService.GetMenuDtoByCacheAsync());
         }
 
         /// <summary>
-        /// 获取菜单下的按钮
+        /// Returns the button definitions registered for a menu.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="menuId">The menu identifier whose buttons are requested.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing menu button DTOs.</returns>
         public async Task<IActionResult> OnGetButtonsAsync(string menuId)
         {
             return Ok(await _sysButtonService.GetSysButtonDtosAsync(menuId));
@@ -96,7 +97,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         {
             if (string.IsNullOrEmpty(sysMenu.MenuName))
             {
-                return Ok("菜单名称不能为空", false, "菜单名称不能为空");
+                return Ok("鑿滃崟鍚嶇О涓嶈兘涓虹┖", false, "鑿滃崟鍚嶇О涓嶈兘涓虹┖");
             }
             var entity = await _sysMenuService.CreateOrUpdateAsync(sysMenu);
             return Ok(entity.Id);
@@ -106,7 +107,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         {
             if (!ModelState.IsValid)
             {
-                return Ok("模型验证未通过", false, "模型验证未通过");
+                return Ok("妯″瀷楠岃瘉鏈�氳繃", false, "妯″瀷楠岃瘉鏈�氳繃");
             }
 
             await _sysMenuService.CreateOrUpdateAsync(sysMenuDto, buttons);

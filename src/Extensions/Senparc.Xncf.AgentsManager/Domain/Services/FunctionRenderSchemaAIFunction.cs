@@ -30,6 +30,11 @@ internal sealed class FunctionRenderSchemaAIFunction : DelegatingAIFunction
 {
     private readonly JsonElement _jsonSchema;
 
+    /// <summary>
+    /// Initializes a wrapper that augments a FunctionRender schema with selection metadata.
+    /// </summary>
+    /// <param name="innerFunction">The original FunctionRender AI function.</param>
+    /// <param name="parameterInfos">The parameter metadata used to enrich the schema.</param>
     public FunctionRenderSchemaAIFunction(
         AIFunction innerFunction,
         IReadOnlyList<FunctionParameterInfo> parameterInfos)
@@ -40,5 +45,6 @@ internal sealed class FunctionRenderSchemaAIFunction : DelegatingAIFunction
             parameterInfos);
     }
 
+    /// <inheritdoc/>
     public override JsonElement JsonSchema => _jsonSchema;
 }

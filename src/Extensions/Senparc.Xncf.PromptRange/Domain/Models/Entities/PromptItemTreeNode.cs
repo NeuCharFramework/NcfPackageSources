@@ -25,6 +25,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.Entities
         public int Level { get; set; }
         public int SubNodeCount { get; set; }
 
+        /// <summary>Initializes a prompt-item tree node.</summary>
+        /// <param name="key">The node key.</param>
+        /// <param name="text">The display text.</param>
+        /// <param name="value">The node value.</param>
+        /// <param name="level">The tree level.</param>
+        /// <param name="subNodeCount">The number of child nodes.</param>
         public PromptItemTreeNode(string key, string text, string value, int level, int subNodeCount)
         {
             Key = key;

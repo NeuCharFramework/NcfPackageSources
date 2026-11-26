@@ -129,8 +129,19 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Compares the supplied provider snapshots with the in-memory baselines,
+    /// creates change records for additions/removals, and queues matching enabled
+    /// webhooks for asynchronous delivery. The first observation establishes a
+    /// baseline and does not emit a notification.
     /// </summary>
+    /// <param name="snapshots">The provider snapshots collected for this observation cycle.</param>
+    /// <param name="expectedProviderIds">
+    /// Optional provider identifiers expected to be present. Providers previously
+    /// observed but omitted from this set are treated as removed when appropriate.
+    /// </param>
+    /// <param name="tenantId">Optional tenant identifier copied to generated changes.</param>
+    /// <param name="cancellationToken">Token used while queuing webhook dispatch work.</param>
+    /// <returns>The changes detected during this observation cycle.</returns>
     public async Task<IReadOnlyList<NeuBellWebHookChange>> ObserveAsync(
         IReadOnlyList<NeuBellSnapshot> snapshots,
         IReadOnlyCollection<string> expectedProviderIds = null,
@@ -235,10 +246,13 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Sends a configured webhook's test payload, records the attempt, and returns
+    /// the transport or validation result without modifying provider baselines.
     /// </summary>
+    /// <param name="webHook">The configured webhook to test.</param>
+    /// <param name="adminUserId">The administrator attributed to the request log.</param>
+    /// <param name="cancellationToken">Token used to cancel the outbound request.</param>
+    /// <returns>A success flag and user-facing result message.</returns>
     public async Task<(bool success, string message)> SendTestAsync(
         NeuBellWebHook webHook,
         int adminUserId = 0,
@@ -300,8 +314,13 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Resolves enabled webhooks matching a provider change and schedules bounded
+    /// outbound deliveries, including request logging and completion logging.
+    /// Delivery failures are isolated per webhook and do not abort the remaining
+    /// notifications.
     /// </summary>
+    /// <param name="change">The detected provider change to deliver.</param>
+    /// <param name="cancellationToken">Token used while acquiring dispatch capacity.</param>
     private async Task DispatchAsync(NeuBellWebHookChange change, CancellationToken cancellationToken)
     {
         List<NeuBellWebHook> webHooks;
@@ -396,9 +415,16 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Sends one rendered webhook request and converts HTTP, cancellation, and
+    /// transport failures into a stable result tuple for logging and callers.
     /// </summary>
+    /// <param name="url">The fully rendered destination URL.</param>
+    /// <param name="secret">Optional signing secret for the request body.</param>
+    /// <param name="body">The request body, or <see langword="null"/> for no body.</param>
+    /// <param name="method">The normalized HTTP method.</param>
+    /// <param name="contentType">The body media type when a body is present.</param>
+    /// <param name="cancellationToken">Token used to cancel the HTTP request.</param>
+    /// <returns>Success, message, status code, and elapsed-millisecond information.</returns>
     private async Task<(bool success, string message, int? statusCode, long elapsedMilliseconds)> SendCoreAsync(
         string url,
         string secret,
@@ -446,8 +472,17 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Creates a pending webhook log entry in a scoped service provider. Logging
+    /// failure is intentionally non-fatal and returns no identifier.
     /// </summary>
+    /// <param name="eventKind">The logical webhook event kind.</param>
+    /// <param name="httpMethod">The normalized HTTP method.</param>
+    /// <param name="webHookUrl">The redacted or truncated destination URL.</param>
+    /// <param name="providerId">The provider associated with the event.</param>
+    /// <param name="title">The human-readable log title.</param>
+    /// <param name="payload">The request payload recorded for diagnostics.</param>
+    /// <param name="adminUserId">The administrator associated with the log.</param>
+    /// <returns>The created log identifier, or <see langword="null"/> when logging fails.</returns>
     private async Task<int?> CreatePendingLogAsync(
         string eventKind,
         string httpMethod,
@@ -474,8 +509,14 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Completes a previously created webhook log entry. Logging failures are
+    /// recorded but do not replace the delivery result.
     /// </summary>
+    /// <param name="logId">The pending log identifier.</param>
+    /// <param name="success">Whether delivery completed successfully.</param>
+    /// <param name="result">The response or failure message.</param>
+    /// <param name="statusCode">The HTTP status code, when one was received.</param>
+    /// <param name="elapsedMilliseconds">The measured request duration.</param>
     private async Task CompleteLogAsync(
         int logId,
         bool success,
@@ -496,8 +537,16 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Builds an item-created operation and delegates it to
+    /// <see cref="NotifyOperationAsync(string,string,NeuBellWebHookOperation,int,string)"/>.
     /// </summary>
+    /// <param name="webHookUrl">The webhook URL template.</param>
+    /// <param name="httpMethod">The HTTP method used for delivery.</param>
+    /// <param name="item">The created item to include, when available.</param>
+    /// <param name="providerName">The provider identifier and display name.</param>
+    /// <param name="adminUserId">The administrator attributed to the delivery log.</param>
+    /// <param name="bodyTemplate">Optional custom request-body template.</param>
+    /// <returns>The queued/sent outcome and result message.</returns>
     public Task<(bool queued, string message)> NotifyItemCreatedAsync(
         string webHookUrl,
         string httpMethod,
@@ -524,9 +573,15 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Renders and sends an operation notification, records its outcome, and
+    /// limits concurrent outbound requests through the dispatcher gate.
     /// </summary>
+    /// <param name="webHookUrl">The URL template to validate and render.</param>
+    /// <param name="httpMethod">The requested HTTP method.</param>
+    /// <param name="operation">The operation metadata and affected items.</param>
+    /// <param name="adminUserId">The administrator attributed to the delivery log.</param>
+    /// <param name="bodyTemplate">Optional custom body template; the default payload is used when empty.</param>
+    /// <returns>Whether the operation was accepted for delivery and a result message.</returns>
     public Task<(bool queued, string message)> NotifyOperationAsync(
         string webHookUrl,
         string httpMethod,
@@ -610,8 +665,11 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Serializes an item-created operation using the webhook JSON contract,
+    /// including the first affected item as the compact item payload.
     /// </summary>
+    /// <param name="operation">The operation whose fields are serialized.</param>
+    /// <returns>The JSON payload string.</returns>
     private static string BuildItemCreatedPayload(NeuBellWebHookOperation operation)
     {
         var item = operation.Added.FirstOrDefault() ?? operation.Removed.FirstOrDefault();
@@ -642,6 +700,12 @@ public sealed class NeuBellWebHookDispatcher
         }, JsonOptions);
     }
 
+    /// <summary>
+    /// Serializes an operation notification containing operation status and the
+    /// complete added/removed item collections.
+    /// </summary>
+    /// <param name="operation">The operation whose fields are serialized.</param>
+    /// <returns>The JSON payload string.</returns>
     private static string BuildOperationPayload(NeuBellWebHookOperation operation)
     {
         return JsonSerializer.Serialize(new
@@ -664,9 +728,14 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Selects the request body for a normalized method, using the default JSON
+    /// payload unless a custom template is provided.
     /// </summary>
+    /// <param name="method">The normalized HTTP method.</param>
+    /// <param name="bodyTemplate">An optional rendered-body template.</param>
+    /// <param name="tokens">Replacement tokens available to the template.</param>
+    /// <param name="defaultPayload">The fallback JSON payload.</param>
+    /// <returns>The body and media type, or two null values for GET requests.</returns>
     private static (string body, string contentType) BuildRequestBody(
         string method,
         string bodyTemplate,
@@ -685,8 +754,11 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Limits a URL stored in webhook logs while retaining its beginning and
+    /// ensuring the logged value cannot grow without bound.
     /// </summary>
+    /// <param name="url">The URL to limit.</param>
+    /// <returns>The original URL or a 1,000-character representation.</returns>
     private static string TruncateLogUrl(string url)
     {
         if (string.IsNullOrEmpty(url) || url.Length <= 1000)
@@ -697,8 +769,11 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Creates the token set used to render a webhook for a monitored provider change.
     /// </summary>
+    /// <param name="change">The detected provider change.</param>
+    /// <param name="defaultPayload">The default serialized payload.</param>
+    /// <returns>A case-insensitive token dictionary for URL/body rendering.</returns>
     private Dictionary<string, string> BuildChangeTokens(
         NeuBellWebHookChange change,
         string defaultPayload)
@@ -722,8 +797,12 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Creates the case-insensitive rendering tokens for an operation, including
+    /// aggregate counts and fields from the first affected item.
     /// </summary>
+    /// <param name="operation">The operation represented by the tokens.</param>
+    /// <param name="defaultPayload">The default serialized payload.</param>
+    /// <returns>A token dictionary suitable for URL and body templates.</returns>
     private Dictionary<string, string> BuildOperationTokens(
         NeuBellWebHookOperation operation,
         string defaultPayload)
@@ -761,6 +840,12 @@ public sealed class NeuBellWebHookDispatcher
         return tokens;
     }
 
+    /// <summary>
+    /// Classifies an operation from its added and removed item collections.
+    /// </summary>
+    /// <param name="added">Items present in the new observation but not the baseline.</param>
+    /// <param name="removed">Items present in the baseline but not the new observation.</param>
+    /// <returns><c>added</c>, <c>removed</c>, <c>changed</c>, or <c>none</c>.</returns>
     private static string GetOperation(
         IReadOnlyList<NeuBellItem> added,
         IReadOnlyList<NeuBellItem> removed)
@@ -782,6 +867,13 @@ public sealed class NeuBellWebHookDispatcher
         return "none";
     }
 
+    /// <summary>
+    /// Converts the operation classification into the localized status text used
+    /// by webhook payloads and templates.
+    /// </summary>
+    /// <param name="added">Items added since the baseline.</param>
+    /// <param name="removed">Items removed since the baseline.</param>
+    /// <returns>The localized operation status.</returns>
     private static string GetOperationStatus(
         IReadOnlyList<NeuBellItem> added,
         IReadOnlyList<NeuBellItem> removed)
@@ -795,6 +887,11 @@ public sealed class NeuBellWebHookDispatcher
         };
     }
 
+    /// <summary>
+    /// Chooses a concise title for an operation log from its first item or action name.
+    /// </summary>
+    /// <param name="operation">The operation being logged.</param>
+    /// <returns>The preferred non-empty log title.</returns>
     private static string GetOperationLogTitle(NeuBellWebHookOperation operation)
     {
         return operation.Added.FirstOrDefault()?.Title
@@ -803,16 +900,32 @@ public sealed class NeuBellWebHookDispatcher
             ?? string.Empty;
     }
 
+    /// <summary>
+    /// Gets the operation classification for a monitored change.
+    /// </summary>
+    /// <param name="change">The monitored provider change.</param>
+    /// <returns>The classification returned by <see cref="GetOperation"/>.</returns>
     private static string GetChangeOperation(NeuBellWebHookChange change)
     {
         return GetOperation(change.Added, change.Removed);
     }
 
+    /// <summary>
+    /// Gets the payload status text for a monitored change.
+    /// </summary>
+    /// <param name="change">The monitored provider change.</param>
+    /// <returns>The status returned by <see cref="GetOperationStatus"/>.</returns>
     private static string GetChangeOperationStatus(NeuBellWebHookChange change)
     {
         return GetOperationStatus(change.Added, change.Removed);
     }
 
+    /// <summary>
+    /// Adds item-specific fields to a webhook token dictionary, including an
+    /// absolute detail link when the configured base URL permits it.
+    /// </summary>
+    /// <param name="tokens">The token dictionary to extend.</param>
+    /// <param name="item">The item whose fields should be added, or <see langword="null"/>.</param>
     private void AddItemTokens(
         Dictionary<string, string> tokens,
         NeuBellItem item)
@@ -831,8 +944,11 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Converts a root-relative item link to an absolute link when a dispatcher
+    /// base URL is configured; external and already-absolute values are preserved.
     /// </summary>
+    /// <param name="detailUrl">The item detail URL.</param>
+    /// <returns>The URL suitable for webhook consumers.</returns>
     private string ToAbsoluteLink(string detailUrl)
     {
         var url = detailUrl ?? string.Empty;
@@ -844,8 +960,12 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Serializes a monitored provider change into the stable webhook payload
+    /// contract, optionally replacing the change operation with a test operation.
     /// </summary>
+    /// <param name="change">The provider change to serialize.</param>
+    /// <param name="test">Whether to emit a test payload with empty item collections.</param>
+    /// <returns>The JSON payload string.</returns>
     public static string BuildPayload(NeuBellWebHookChange change, bool test)
     {
         var operation = test
@@ -874,8 +994,12 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Creates an HMAC-SHA256 signature for a payload using the current Unix
+    /// timestamp and returns the timestamp/signature header value.
     /// </summary>
+    /// <param name="secret">The shared UTF-8 signing secret.</param>
+    /// <param name="payload">The exact payload bytes represented as text.</param>
+    /// <returns>A signature value in <c>t=&lt;timestamp&gt;,v1=&lt;hex&gt;</c> format.</returns>
     public static string SignPayload(string secret, string payload)
     {
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
@@ -897,6 +1021,12 @@ public sealed class NeuBellWebHookDispatcher
             get { lock (_syncRoot) { return _items ?? new Dictionary<string, NeuBellItem>(StringComparer.OrdinalIgnoreCase); } }
         }
 
+        /// <summary>
+        /// Compares a current item index with the stored baseline and returns
+        /// items that were added or removed by identifier.
+        /// </summary>
+        /// <param name="current">The current case-insensitive item index.</param>
+        /// <returns>The added and removed item lists.</returns>
         public (List<NeuBellItem> added, List<NeuBellItem> removed) Diff(
             Dictionary<string, NeuBellItem> current)
         {
@@ -913,6 +1043,11 @@ public sealed class NeuBellWebHookDispatcher
             }
         }
 
+        /// <summary>
+        /// Replaces the provider baseline with a defensive case-insensitive copy
+        /// and marks the observation as initialized.
+        /// </summary>
+        /// <param name="items">The item index to store as the next baseline.</param>
         public void SetBaseline(Dictionary<string, NeuBellItem> items)
         {
             lock (_syncRoot)

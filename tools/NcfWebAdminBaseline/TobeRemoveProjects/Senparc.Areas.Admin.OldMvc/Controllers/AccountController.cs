@@ -21,12 +21,23 @@ namespace Senparc.Areas.Admin.Controllers
         private readonly AccountService _accountService;
         private readonly SenparcEntities _senparcEntities;
 
+        /// <summary>
+        /// Initializes the legacy administrator account controller.
+        /// </summary>
+        /// <param name="accountService">The account persistence service.</param>
+        /// <param name="senparcEntities">The database context used by legacy views.</param>
         public AccountController(AccountService accountService, SenparcEntities senparcEntities)
         {
             _accountService = accountService;
             _senparcEntities = senparcEntities;
         }
 
+        /// <summary>
+        /// Lists administrator-visible accounts with optional keyword filtering and paging.
+        /// </summary>
+        /// <param name="kw">Optional name, nickname, user-name, or phone filter.</param>
+        /// <param name="pageIndex">The one-based page number.</param>
+        /// <returns>The account list view.</returns>
         public ActionResult Index(string kw = null, int pageIndex = 1)
         {
             var seh = new SenparcExpressionHelper<Account>();
@@ -42,6 +53,11 @@ namespace Senparc.Areas.Admin.Controllers
             };
             return View(vd);
         }
+        /// <summary>
+        /// Loads the account edit view for an existing account or a new account.
+        /// </summary>
+        /// <param name="id">The account identifier; zero creates a new account.</param>
+        /// <returns>The edit view or a legacy error view when the account is missing.</returns>
         public ActionResult Edit(int id = 0)
         {
             bool isEdit = id > 0;
@@ -65,6 +81,12 @@ namespace Senparc.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <summary>
+        /// Validates and persists legacy account profile fields, returning to the list
+        /// after success or redisplaying validation failures.
+        /// </summary>
+        /// <param name="model">The posted account edit model.</param>
+        /// <returns>The edit view, error view, or list redirect.</returns>
         public async Task<IActionResult> Edit(Account_EditVD model)
         {
             bool isEdit = model.Id > 0;
@@ -117,6 +139,11 @@ namespace Senparc.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <summary>
+        /// Deletes the selected account records and redirects to the account list.
+        /// </summary>
+        /// <param name="ids">The account identifiers selected for deletion.</param>
+        /// <returns>A redirect to the account list.</returns>
         public ActionResult Delete(List<int> ids)
         {
             try

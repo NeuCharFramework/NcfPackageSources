@@ -19,12 +19,16 @@ using Microsoft.AspNetCore.Builder;
 
 namespace Senparc.Web.Infrastructure.Security
 {
+    /// <summary>
+    /// Provides registration helpers for the Cloudflare protection middleware.
+    /// </summary>
     public static class CloudflareProtectMiddlewareExtensions
     {
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Adds <see cref="CloudflareProtectMiddleware"/> to the application pipeline.
         /// </summary>
+        /// <param name="app">The application builder receiving the middleware.</param>
+        /// <returns>The same application builder for fluent pipeline configuration.</returns>
         public static IApplicationBuilder UseCloudflareProtect(this IApplicationBuilder app)
         {
             return app.UseMiddleware<CloudflareProtectMiddleware>();

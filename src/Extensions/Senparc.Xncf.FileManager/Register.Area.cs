@@ -46,6 +46,12 @@ namespace Senparc.Xncf.FileManager
                          new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/Index"), FileManagerResource.Get("Area.FileManager.Files", "File resource management"),"fa fa-file")
         };
 
+        /// <summary>
+        /// Configures Razor Page authorization hooks for the FileManager area.
+        /// </summary>
+        /// <param name="builder">The MVC builder receiving the area configuration.</param>
+        /// <param name="env">The hosting environment used by MVC configuration.</param>
+        /// <returns>The configured MVC builder.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>

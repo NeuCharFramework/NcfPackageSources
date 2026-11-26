@@ -22,7 +22,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Marker interface identifying an aggregate-root entity in the domain model.
     /// </summary>
     public interface IAggregateRoot
     {

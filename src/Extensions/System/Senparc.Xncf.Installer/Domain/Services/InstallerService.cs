@@ -45,15 +45,18 @@ namespace Senparc.Xncf.Installer.Domain.Services
         private readonly XncfModuleServiceExtension _xncfModuleServiceExtension;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the tenant context created during installation, when multi-tenancy is enabled.
         /// </summary>
         public RequestTenantInfo CreatedRequestTenantInfo { get; set; }
         public TenantRule TenantRule { get; set; }
         public bool MultiTenantEnable { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Initializes system modules and supporting database state required by installation.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="systemName">The configured system name.</param>
+        /// <param name="serviceProvider">The scoped provider used to resolve installation services.</param>
+        /// <param name="needModelList">The module names selected for installation.</param>
+        /// <param name="adminUserInfoId">The administrator account identifier.</param>
         private async Task InitSystemAsync(string systemName, IServiceProvider serviceProvider, List<string> needModelList,int adminUserInfoId)
         {
             Senparc.Xncf.Tenant.Register tenantRegister = new Senparc.Xncf.Tenant.Register();
@@ -187,6 +190,15 @@ namespace Senparc.Xncf.Installer.Domain.Services
             //Legacy comment translated to English.
         }
 
+        /// <summary>
+        /// Runs one module database-initialization delegate and converts an unsuccessful
+        /// result into an installation exception after recording its diagnostic message.
+        /// </summary>
+        /// <param name="initDatabaseFunc">The module database-initialization operation.</param>
+        /// <returns>A task that completes when initialization succeeds.</returns>
+        /// <exception cref="NcfDatabaseException">
+        /// Thrown when the delegate reports an unsuccessful initialization result.
+        /// </exception>
         private async Task InitDatabaseAsync(Func<Task<(bool, string)>> initDatabaseFunc)
         {
             //initialize the database
@@ -202,12 +214,15 @@ namespace Senparc.Xncf.Installer.Domain.Services
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Installs one module, optionally creates its persisted module record/menu,
+        /// and marks the module open when installation succeeds.
         /// </summary>
-        /// <param name="register"></param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="register">The module registration to install.</param>
+        /// <param name="serviceProvider">The application service provider.</param>
+        /// <param name="installNow">Whether to create/open the persisted module record immediately.</param>
+        /// <param name="addMenu">Whether the module menu should be added.</param>
+        /// <returns>The persisted module record, or <see langword="null"/> when installation is deferred.</returns>
+        /// <exception cref="Exception">Propagates module installation failures after logging them.</exception>
         private async Task<XncfModule> InstallAndOpenModuleAsync(IXncfRegister register, IServiceProvider serviceProvider, bool installNow = true, bool addMenu = true)
         {
             try
@@ -225,7 +240,6 @@ namespace Senparc.Xncf.Installer.Domain.Services
 
             XncfModule xncfModule = null;
 
-            //Legacy comment translated to English.
             if (installNow)
             {
                 var _xncfModuleService = _xncfModuleServiceExtension; //serviceProvider.GetService<XncfModuleServiceExtension>();
@@ -247,8 +261,6 @@ namespace Senparc.Xncf.Installer.Domain.Services
 
                 }
 
-                //Legacy comment translated to English.
-                //xncfModule = await _xncfModuleService.GetObjectAsync(z => z.Uid == register.Uid);
                 xncfModule.UpdateState(Ncf.Core.Enums.XncfModules_State.开放);
             }
 
@@ -262,10 +274,10 @@ namespace Senparc.Xncf.Installer.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Checks the minimum values required to start the installer.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="installRequestDto">The submitted installation request.</param>
+        /// <returns><see langword="true"/> when database, system-name, and administrator fields are present.</returns>
         private bool VerifyInstallRequest(InstallRequestDto installRequestDto)
         {
             if (installRequestDto.DbConnectionString.IsNullOrEmpty())
@@ -293,6 +305,10 @@ namespace Senparc.Xncf.Installer.Domain.Services
             this._xncfModuleServiceExtension = xncfModuleServiceExtension;
         }
 
+        /// <summary>
+        /// Loads the default installation options from persisted or configured defaults.
+        /// </summary>
+        /// <returns>The default database, system, administrator, and module selections.</returns>
         public GetDefaultInstallOptionsResponseDto GetDefaultInstallOptions()
         {
             var result = new GetDefaultInstallOptionsResponseDto();
@@ -307,9 +323,11 @@ namespace Senparc.Xncf.Installer.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Executes the complete installation workflow for the submitted request.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="installRequestDto">The database, system, administrator, and module selections.</param>
+        /// <param name="serviceProvider">The provider used to resolve scoped installation services.</param>
+        /// <returns>The installation status and diagnostic message.</returns>
         public async Task<InstallResponseDto> InstallAsync(InstallRequestDto installRequestDto, IServiceProvider serviceProvider)
         {
             using (var cultureScope = InstallCultureHelper.Apply(installRequestDto?.PreferredCulture))

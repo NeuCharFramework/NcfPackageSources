@@ -41,6 +41,12 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
             _colorService = colorService;
         }
 
+        /// <summary>
+        /// Evaluates the arithmetic operation selected by the function request and returns
+        /// the calculated value through the standard application-service response wrapper.
+        /// </summary>
+        /// <param name="request">The two operands and supported operator.</param>
+        /// <returns>A response containing the calculation result or the validation failure.</returns>
         [FunctionRender(typeof(KnowledgeBaseResource), "Function.Sample.Name", "Function.Sample.Description", typeof(Register))]
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
         {

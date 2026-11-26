@@ -34,8 +34,18 @@ namespace System.Web.Mvc
         //public Action<T> EditTemplate { get; set; }
 
 
+        /// <summary>
+        /// Initializes an empty grid item-template model.
+        /// </summary>
         public GridViewItemTemplateModel() { }
 
+        /// <summary>
+        /// Initializes a complete grid item-template model.
+        /// </summary>
+        /// <param name="header">The column header text.</param>
+        /// <param name="itemTemplate">The per-item renderer.</param>
+        /// <param name="footer">The optional footer renderer.</param>
+        /// <param name="htmlAttributes">The HTML attributes for the column.</param>
         public GridViewItemTemplateModel(string header, Func<T, int, object> itemTemplate, Func<IEnumerable<T>, string> footer, object htmlAttributes)
         {
             this.Header = header;
@@ -44,10 +54,21 @@ namespace System.Web.Mvc
             this.HtmlAttributes = htmlAttributes.ToAttributeList();
         }
 
+        /// <summary>
+        /// Initializes a grid item-template model without a footer renderer.
+        /// </summary>
+        /// <param name="header">The column header text.</param>
+        /// <param name="itemTemplate">The per-item renderer.</param>
+        /// <param name="htmlAttributes">The HTML attributes for the column.</param>
         public GridViewItemTemplateModel(string header, Func<T, int, object> itemTemplate, object htmlAttributes = null)
             : this(header, itemTemplate, null, htmlAttributes)
         { }
 
+        /// <summary>
+        /// Initializes a grid item-template model without a header.
+        /// </summary>
+        /// <param name="itemTemplate">The per-item renderer.</param>
+        /// <param name="htmlAttributes">The HTML attributes for the column.</param>
         public GridViewItemTemplateModel(Func<T, int, object> itemTemplate, object htmlAttributes = null)
             : this(null, itemTemplate, htmlAttributes)
         { }
@@ -62,16 +83,25 @@ namespace System.Web.Mvc
     public static class GridViewExtension
     {
         /// <summary>
-        /// GridView
+        /// Renders a data-bound HTML table from caller-supplied column templates.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="helper"></param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <typeparam name="T">The row type in <paramref name="dataSource"/>.</typeparam>
+        /// <param name="helper">The MVC HTML helper associated with the current view.</param>
+        /// <param name="dataSource">The rows to render; a <see langword="null"/> value is treated as empty.</param>
+        /// <param name="htmlAttributes">An object whose public properties become table attributes.</param>
+        /// <param name="emptyTemplete">The markup rendered when there are no rows.</param>
+        /// <param name="htmlCodeFormat">
+        /// When <see langword="true"/>, inserts line breaks between generated tags.
+        /// </param>
+        /// <param name="itemTempletes">
+        /// Column definitions that provide headers, row renderers, optional footers,
+        /// and cell attributes.
+        /// </param>
+        /// <returns>An <see cref="HtmlString"/> containing the rendered table or empty-state markup.</returns>
+        /// <exception cref="NullReferenceException">
+        /// Thrown when a column template, row renderer, or property placeholder refers
+        /// to a missing value.
+        /// </exception>
         public static HtmlString GridView<T>(this HtmlHelper helper, IEnumerable<T> dataSource,
             object htmlAttributes, string emptyTemplete, bool htmlCodeFormat, params GridViewItemTemplateModel<T>[] itemTempletes) where T : class
         {
@@ -203,13 +233,14 @@ namespace System.Web.Mvc
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Renders a simple HTML table whose columns are the value-type properties of
+        /// <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="helper"></param>
-        /// <param name="dataSource"></param>
-        /// <param name="htmlAttributes"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The row type in <paramref name="dataSource"/>.</typeparam>
+        /// <param name="helper">The MVC HTML helper associated with the current view.</param>
+        /// <param name="dataSource">The rows to render.</param>
+        /// <param name="htmlAttributes">An object whose public properties become table attributes.</param>
+        /// <returns>The generated table markup as a string.</returns>
         public static string GridView<T>(this HtmlHelper helper, IEnumerable<T> dataSource, object htmlAttributes)
         {
             List<Expression<Func<T, int, string>>> itemTempletes = new List<Expression<Func<T, int, string>>>();

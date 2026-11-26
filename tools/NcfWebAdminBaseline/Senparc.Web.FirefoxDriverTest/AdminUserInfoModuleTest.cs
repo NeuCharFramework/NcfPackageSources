@@ -59,9 +59,11 @@ namespace Senparc.Web.FirefoxDriverTest
         }
 
         /// <summary>
-        /// settingsrole
+        /// Opens the role-assignment dialog for an administrator row, selects a random
+        /// non-empty subset of roles, saves it, and verifies the same roles are selected
+        /// when the dialog is reopened.
         /// </summary>
-        /// <param name="tr"></param>
+        /// <param name="tr">The administrator table row whose roles are being configured.</param>
         private void _setAdminRoel(IWebElement tr)
         {
             tr.FindElement(By.CssSelector("td:nth-child(5) div.cell button:nth-child(2)")).Click();//settingsrole

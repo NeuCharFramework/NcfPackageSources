@@ -29,6 +29,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Models
         public string Tactic { get; set; }
         public int Aim { get; set; }
 
+        /// <summary>Initializes a parsed prompt-item version.</summary>
+        /// <param name="rangeName">The range name.</param>
+        /// <param name="tactic">The tactic segment.</param>
+        /// <param name="aim">The aiming number.</param>
         public PromptItemVersion(string rangeName, string tactic, int aim)
         {
             RangeName = rangeName;

@@ -30,17 +30,21 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         private readonly IServiceProvider _serviceProvider = serviceProvider;
         private readonly AdminUserInfoService _adminUserInfoService = adminUserInfoService;
 
+        /// <summary>
+        /// Handles the initial administrator editor page request.
+        /// </summary>
+        /// <param name="id">The administrator identifier represented by the page.</param>
+        /// <returns>The Razor Page result for the editor.</returns>
         public IActionResult OnGet(int id)
         {
             return Page();
         }
 
         /// <summary>
-        /// Handler=Detail
-        /// »ñÈ¡ÏêÇé
+        /// Loads one administrator edit DTO for the client-side editor.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The administrator identifier to retrieve.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing the DTO or an empty DTO.</returns>
         [CustomerResource("admin-edit")]
         public IActionResult OnGetDetail(int id)
         {
@@ -49,11 +53,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// Handler=Save
-        /// ±£´æ
+        /// Validates and persists the JSON-bound administrator DTO.
+        /// Duplicate user names and invalid model state return a failed result.
         /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
+        /// <param name="dto">The administrator values submitted by the editor.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing <see langword="true"/> after persistence.</returns>
         [CustomerResource("admin-add", "admin-edit")]
         public async Task<IActionResult> OnPostSave([FromBody] CreateOrUpdate_AdminUserInfoDto dto)
         {
@@ -78,21 +82,26 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             return Ok(true);
         }
 
+        /// <summary>
+        /// Validates and persists the form-bound administrator DTO, selecting
+        /// create or update behavior from the supplied page identifier.
+        /// </summary>
+        /// <returns>The editor page on validation failure or the administrator list after saving.</returns>
         public async Task<IActionResult> OnPost()
         {
             IsEdit = Id > 0;
-            this.Validator(AdminUserInfo.UserName, "ÓÃ»§Ãû", "UserName", false)
-                .IsFalse(z => this._adminUserInfoService.CheckUserNameExisted(Id, z), "ÓÃ»§ÃûÒÑ´æÔÚ£¡", true);
+            this.Validator(AdminUserInfo.UserName, "ç”¨æˆ·å", "UserName", false)
+                .IsFalse(z => this._adminUserInfoService.CheckUserNameExisted(Id, z), "ç”¨æˆ·åå·²å­˜åœ¨ï¼", true);
             if (!IsEdit)
             {
 
-                this.Validator(AdminUserInfo.Password, "ÃÜÂë", "Password", false).MinLength(6);
+                this.Validator(AdminUserInfo.Password, "å¯†ç ", "Password", false).MinLength(6);
             }
             else
             {
                 if (!AdminUserInfo.Password.IsNullOrEmpty())
                 {
-                    this.Validator(AdminUserInfo.Password, "ÃÜÂë", "Password", false).MinLength(6);
+                    this.Validator(AdminUserInfo.Password, "å¯†ç ", "Password", false).MinLength(6);
                 }
             }
 
@@ -111,7 +120,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 await _adminUserInfoService.CreateAdminUserInfoAsync(AdminUserInfo);
             }
 
-            base.SetMessager(MessageType.success, $"{(IsEdit ? "ĞŞ¸Ä" : "ĞÂÔö")}³É¹¦£¡");
+            base.SetMessager(MessageType.success, $"{(IsEdit ? "ä¿®æ”¹" : "æ–°å¢")}æˆåŠŸï¼");
             return RedirectToPage("./Index");
         }
     }

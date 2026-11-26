@@ -762,13 +762,6 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="container"></param>
-        /// <param name="checkCodeKind"></param>
-        /// <param name="stopWhileFail"></param>
-        /// <returns></returns>
-        /// <summary>
         /// Validates a check-code value using the configured check-code kind.
         /// </summary>
         /// <typeparam name="T">The validated value type.</typeparam>

@@ -23,14 +23,31 @@ using Microsoft.Extensions.DependencyModel;
 
 namespace Senparc.Ncf.Core.Models
 {
+    /// <summary>
+    /// Defines a provider that discovers entity types derived directly from a requested base type.
+    /// </summary>
     public interface IEntityTypeProvider
     {
+        /// <summary>
+        /// Returns discovered types whose direct base type matches the requested type.
+        /// </summary>
+        /// <param name="type">The base type whose direct subclasses should be returned.</param>
+        /// <returns>The matching entity types.</returns>
+        /// <remarks>
+        /// Implementations may cache the result. The returned sequence should be treated
+        /// as read-only by callers.
+        /// </remarks>
         IEnumerable<Type> GetEntityTypes(Type type);
     }
 
+    /// <summary>
+    /// Discovers concrete types from runtime dependency assemblies and caches the result
+    /// for subsequent lookups.
+    /// </summary>
     public class DefaultEntityTypeProvider : IEntityTypeProvider
     {
         private static IList<Type> _entityTypeCache;
+        /// <inheritdoc />
         public IEnumerable<Type> GetEntityTypes(Type type)
         {
             if (_entityTypeCache != null)
@@ -45,6 +62,16 @@ namespace Senparc.Ncf.Core.Models
             return _entityTypeCache;
         }
 
+        /// <summary>
+        /// Loads runtime-library assemblies available from the dependency context.
+        /// </summary>
+        /// <returns>The loaded dependency assemblies.</returns>
+        /// <exception cref="FileLoadException">
+        /// Propagated when a dependency assembly cannot be loaded by its assembly name.
+        /// </exception>
+        /// <exception cref="BadImageFormatException">
+        /// Propagated when a runtime dependency is not a valid managed assembly.
+        /// </exception>
         private static IEnumerable<Assembly> GetReferencingAssemblies()
         {
             var dependencies = DependencyContext.Default.RuntimeLibraries;

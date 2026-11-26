@@ -21,14 +21,18 @@ using System;
 namespace Template_OrgName.Xncf.Template_XncfName.Application.Events
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Requests a template-module EventBus round trip and carries the UTC send timestamp.
     /// </summary>
+    /// <param name="SentAtUtc">The UTC timestamp at which the request was created.</param>
     public sealed record InternalEventBusRoundTripRequest(DateTime SentAtUtc)
         : IntegrationRequest<InternalEventBusRoundTripResponse>;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Reports the request send time and the UTC timestamp at which the template handler processed it.
     /// </summary>
+    /// <param name="RequestId">The correlated request identifier.</param>
+    /// <param name="SentAtUtc">The original UTC send timestamp.</param>
+    /// <param name="HandledAtUtc">The UTC handler-completion timestamp.</param>
     public sealed record InternalEventBusRoundTripResponse(
         Guid RequestId,
         DateTime SentAtUtc,

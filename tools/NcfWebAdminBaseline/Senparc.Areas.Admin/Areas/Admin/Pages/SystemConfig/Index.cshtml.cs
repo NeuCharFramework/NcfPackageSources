@@ -44,12 +44,22 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         private readonly SystemConfigService _systemConfigService = systemConfigService;
         private readonly IStringLocalizer<AdminResource> _localizer = localizer;
 
+        /// <summary>
+        /// Renders the system-configuration page.
+        /// </summary>
+        /// <returns>The Razor Page result.</returns>
         public async Task<IActionResult> OnGetAsync()
         {
             await Task.CompletedTask;
             return Page();
         }
 
+        /// <summary>
+        /// Returns a paged list of persisted system-configuration records.
+        /// </summary>
+        /// <param name="pageIndex">The requested one-based page index.</param>
+        /// <param name="pageSize">The requested page size.</param>
+        /// <returns>The paged configuration response.</returns>
         //[Ncf.AreaBase.Admin.Filters.CustomerResource("admin-get-systemconfig")]
         public async Task<IActionResult> OnGetListAsync(int pageIndex, int pageSize)
         {
@@ -57,6 +67,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             return Ok(new { TotalCount = systemConfig.TotalCount, PageIndex = systemConfig.PageIndex, List = systemConfig.AsEnumerable() });
         }
 
+        /// <summary>
+        /// Validates and persists the editable system name and sanitized footer
+        /// content while retaining protected payment configuration fields.
+        /// </summary>
+        /// <param name="fullSystemConfig">The submitted editable configuration values.</param>
+        /// <returns>The saved public values or a localized validation response.</returns>
         public async Task<IActionResult> OnPostEditAsync([FromBody] Senparc.Ncf.Core.Models.FullSystemConfig fullSystemConfig)
         {
             if (fullSystemConfig == null)

@@ -47,6 +47,12 @@ public sealed class DatabaseUpgradeCoordinator
         _stateStore = stateStore;
     }
 
+    /// <summary>
+    /// Inspects installation state, core schema readiness, and pending migrations
+    /// for critical and installed XNCF database modules.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel inspection.</param>
+    /// <returns>The published runtime database state.</returns>
     public async Task<DatabaseRuntimeState> InspectAsync(CancellationToken cancellationToken = default)
     {
         var installFinished = SiteConfig.CheckInstallFinishedFileExisted();
@@ -120,6 +126,12 @@ public sealed class DatabaseUpgradeCoordinator
         }
     }
 
+    /// <summary>
+    /// Executes the inspected pending migrations under a process/file/cache lock,
+    /// updates module versions, and re-inspects until ready or a safety limit is reached.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel the upgrade.</param>
+    /// <returns>The upgrade outcome, final state, and operation details.</returns>
     public async Task<DatabaseUpgradeResult> UpgradeAsync(CancellationToken cancellationToken = default)
     {
         var before = await InspectAsync(cancellationToken).ConfigureAwait(false);
@@ -203,12 +215,23 @@ public sealed class DatabaseUpgradeCoordinator
         }
     }
 
+    /// <summary>
+    /// Publishes a state to the process-wide runtime state store and returns it.
+    /// </summary>
+    /// <param name="state">The state to publish.</param>
+    /// <returns>The same published state.</returns>
     private DatabaseRuntimeState SetState(DatabaseRuntimeState state)
     {
         _stateStore.Set(state);
         return state;
     }
 
+    /// <summary>
+    /// Loads non-deleted installed module UIDs from the core database.
+    /// </summary>
+    /// <param name="serviceProvider">The scoped service provider.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>Case-insensitive installed module UIDs.</returns>
     private static async Task<HashSet<string>> LoadInstalledModuleUidsAsync(
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
@@ -223,6 +246,11 @@ public sealed class DatabaseUpgradeCoordinator
         return uids.ToHashSet(StringComparer.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Performs a minimal core schema query to verify that required system tables are readable.
+    /// </summary>
+    /// <param name="serviceProvider">The scoped service provider.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
     private static async Task ValidateCoreSchemaAsync(
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
@@ -234,6 +262,13 @@ public sealed class DatabaseUpgradeCoordinator
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Inspects each target database context and returns modules with pending migrations.
+    /// </summary>
+    /// <param name="serviceProvider">The scoped service provider.</param>
+    /// <param name="targets">The registered database targets to inspect.</param>
+    /// <param name="cancellationToken">Token used to cancel migration queries.</param>
+    /// <returns>Pending migration descriptors.</returns>
     private static async Task<List<DatabaseModuleMigration>> InspectPendingMigrationsAsync(
         IServiceProvider serviceProvider,
         IEnumerable<DatabaseModuleTarget> targets,
@@ -263,6 +298,10 @@ public sealed class DatabaseUpgradeCoordinator
         return pendingModules;
     }
 
+    /// <summary>
+    /// Selects the foundational database modules that must be checked before optional modules.
+    /// </summary>
+    /// <returns>Critical database targets in dependency order.</returns>
     private static IEnumerable<DatabaseModuleTarget> SelectCriticalDatabaseModules()
     {
         return XncfRegisterManager.RegisterList
@@ -271,6 +310,11 @@ public sealed class DatabaseUpgradeCoordinator
             .OrderBy(target => GetModulePriority(target.Register.Name));
     }
 
+    /// <summary>
+    /// Selects non-critical database modules that are installed in the core database.
+    /// </summary>
+    /// <param name="installedUids">The installed module UID set.</param>
+    /// <returns>Installed optional database targets in deterministic order.</returns>
     private static IEnumerable<DatabaseModuleTarget> SelectInstalledDatabaseModules(
         IReadOnlySet<string> installedUids)
     {
@@ -282,11 +326,21 @@ public sealed class DatabaseUpgradeCoordinator
             .ThenBy(target => target.Register.Name, StringComparer.Ordinal);
     }
 
+    /// <summary>
+    /// Determines whether a module is part of the foundational upgrade chain.
+    /// </summary>
+    /// <param name="moduleName">The module name.</param>
+    /// <returns><see langword="true"/> for module-manager, system-manager, or workspace.</returns>
     private static bool IsCriticalModule(string moduleName) =>
         string.Equals(moduleName, XncfModuleManagerName, StringComparison.Ordinal)
         || string.Equals(moduleName, SystemManagerName, StringComparison.Ordinal)
         || string.Equals(moduleName, WorkspaceName, StringComparison.Ordinal);
 
+    /// <summary>
+    /// Orders pending migrations by dependency priority and ordinal module name.
+    /// </summary>
+    /// <param name="modules">The pending migration descriptors.</param>
+    /// <returns>The ordered migration sequence.</returns>
     private static IEnumerable<DatabaseModuleMigration> OrderModules(
         IEnumerable<DatabaseModuleMigration> modules)
     {
@@ -295,6 +349,11 @@ public sealed class DatabaseUpgradeCoordinator
             .ThenBy(module => module.Name, StringComparer.Ordinal);
     }
 
+    /// <summary>
+    /// Returns the upgrade priority for a module name.
+    /// </summary>
+    /// <param name="moduleName">The module name.</param>
+    /// <returns>A lower value for earlier upgrade execution.</returns>
     private static int GetModulePriority(string moduleName) => moduleName switch
     {
         XncfModuleManagerName => 0,
@@ -302,6 +361,13 @@ public sealed class DatabaseUpgradeCoordinator
         _ => 10
     };
 
+    /// <summary>
+    /// Resolves the registered XNCF database context and rejects missing registrations.
+    /// </summary>
+    /// <param name="serviceProvider">The scoped service provider.</param>
+    /// <param name="databaseRegister">The XNCF database registration.</param>
+    /// <returns>The resolved Entity Framework database context.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the context cannot be resolved.</exception>
     private static DbContext ResolveDbContext(IServiceProvider serviceProvider, IXncfDatabase databaseRegister)
     {
         var dbContextType = databaseRegister.TryGetXncfDatabaseDbContextType;
@@ -309,6 +375,12 @@ public sealed class DatabaseUpgradeCoordinator
             ?? throw new InvalidOperationException($"无法创建数据库上下文：{dbContextType.FullName}");
     }
 
+    /// <summary>
+    /// Updates the persisted module version and display metadata after migration succeeds.
+    /// </summary>
+    /// <param name="serviceProvider">The scoped service provider.</param>
+    /// <param name="register">The module registration containing current metadata.</param>
+    /// <param name="cancellationToken">Token used to cancel persistence.</param>
     private static async Task UpdateStoredModuleVersionAsync(
         IServiceProvider serviceProvider,
         IXncfRegister register,
@@ -327,6 +399,12 @@ public sealed class DatabaseUpgradeCoordinator
         await dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Acquires an exclusive database-identity lock file, retrying for up to 30 seconds.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel lock acquisition.</param>
+    /// <returns>The held exclusive lock stream.</returns>
+    /// <exception cref="IOException">Thrown when the lock remains unavailable past the deadline.</exception>
     private async Task<FileStream> AcquireFileLockAsync(CancellationToken cancellationToken)
     {
         //Legacy comment translated to English.
@@ -361,11 +439,25 @@ public sealed record DatabaseUpgradeResult(
     DatabaseRuntimeState State,
     IReadOnlyList<string> Details)
 {
+    /// <summary>
+    /// Creates a successful database upgrade result.
+    /// </summary>
+    /// <param name="message">The user-facing result message.</param>
+    /// <param name="state">The final runtime state.</param>
+    /// <param name="details">The operation detail messages.</param>
+    /// <returns>A successful result.</returns>
     public static DatabaseUpgradeResult Success(
         string message,
         DatabaseRuntimeState state,
         IReadOnlyList<string> details) => new(true, message, state, details);
 
+    /// <summary>
+    /// Creates a failed database upgrade result.
+    /// </summary>
+    /// <param name="message">The user-facing failure message.</param>
+    /// <param name="state">The latest runtime state.</param>
+    /// <param name="details">The operation detail messages collected before failure.</param>
+    /// <returns>A failed result.</returns>
     public static DatabaseUpgradeResult Failure(
         string message,
         DatabaseRuntimeState state,

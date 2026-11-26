@@ -34,6 +34,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Mapping
     [XncfAutoConfigurationMapping]
     public class PromptPromptItemConfigurationMapping : ConfigurationMappingWithIdBase<PromptItem, int>
     {
+        /// <inheritdoc />
         public override void Configure(EntityTypeBuilder<PromptItem> builder)
         {
             if (Senparc.Ncf.Core.Models.DatabaseConfigurationFactory.Instance.Current is SqliteDatabaseConfiguration)

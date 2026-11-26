@@ -18,6 +18,10 @@ namespace Senparc.Xncf.AgentsManager;
 
 public partial class Register : IChatTool
 {
+    /// <summary>
+    /// Returns the AdminChat command definition for running an existing Agent group.
+    /// </summary>
+    /// <returns>The registered Agent group chat-tool definitions.</returns>
     public IReadOnlyCollection<ChatToolDefinition> GetChatTools()
     {
         return new[]
@@ -91,6 +95,10 @@ The user asked to run an existing AgentsManager ChatGroup. Do not create, edit, 
         };
     }
 
+    /// <summary>
+    /// Registers the parameter-options provider used by the Agent group chat command.
+    /// </summary>
+    /// <param name="services">The application service collection.</param>
     private static void AddChatToolServices(IServiceCollection services)
     {
         services.AddScoped<ChatGroupChatToolParameterOptionsProvider>();

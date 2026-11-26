@@ -12,6 +12,12 @@ public class Setup : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     private readonly IEnumerable<ISandboxRuntime> _runtimes;
     private readonly ISandboxImageResolver _imageResolver;
 
+    /// <summary>
+    /// Initializes the Sandbox environment setup page.
+    /// </summary>
+    /// <param name="xncfModuleService">The lazy XNCF module service.</param>
+    /// <param name="runtimes">The registered Sandbox runtimes.</param>
+    /// <param name="imageResolver">The configured image resolver.</param>
     public Setup(
         Lazy<XncfModuleService> xncfModuleService,
         IEnumerable<ISandboxRuntime> runtimes,
@@ -32,6 +38,10 @@ public class Setup : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
 
     public string? RegistryPrefix { get; private set; }
 
+    /// <summary>
+    /// Loads documentation/image configuration and probes Docker availability.
+    /// </summary>
+    /// <returns>A task that completes after environment probing.</returns>
     public async Task OnGetAsync()
     {
         DocsUrl = SandboxDocsLinks.GetEnvironmentSetupUrl(CultureInfo.CurrentUICulture.Name);
@@ -40,6 +50,10 @@ public class Setup : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
         await ProbeDockerAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Probes Docker availability and returns localized setup state.
+    /// </summary>
+    /// <returns>An HTTP 200 JSON result containing probe state.</returns>
     public async Task<IActionResult> OnGetProbeAsync()
     {
         await ProbeDockerAsync().ConfigureAwait(false);
@@ -54,6 +68,10 @@ public class Setup : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
         });
     }
 
+    /// <summary>
+    /// Probes the registered Docker runtime and stores a user-facing status message.
+    /// </summary>
+    /// <returns>A task that completes after probing.</returns>
     private async Task ProbeDockerAsync()
     {
         var docker = _runtimes.FirstOrDefault(z => z.Kind == SandboxRuntimeKind.Docker);

@@ -23,21 +23,21 @@ namespace Senparc.Xncf.Dapr;
 public static class DaprClientServiceCollectionExtensions
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Registers the default Dapr client and JSON serializer.
     /// </summary>
-    /// <param name="services"></param>
-    ///Legacy comment translated to English.
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="configOptions">Optional Dapr client configuration callback.</param>
     public static void AddDaprClient(this IServiceCollection services, Action<DaprClientOptions>? configOptions = null)
     {
         AddDaprClient<Serializer>(services, configOptions);
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Registers the Dapr client with a caller-selected serializer and default API/retry settings.
     /// </summary>
-    ///Legacy comment translated to English.
-    /// <param name="services"></param>
-    ///Legacy comment translated to English.
+    /// <typeparam name="TSerializer">The scoped serializer implementation.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="configOptions">Optional Dapr client configuration callback.</param>
     public static void AddDaprClient<TSerializer>(this IServiceCollection services, Action<DaprClientOptions>? configOptions = null) 
         where TSerializer : class, ISerializer
     {

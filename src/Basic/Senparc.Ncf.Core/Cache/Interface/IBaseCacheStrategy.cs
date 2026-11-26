@@ -38,12 +38,12 @@ namespace Senparc.Ncf.Core.Cache
     //}
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Extends the shared cache strategy with the cache-set identifier used by NCF.
     /// </summary>
     public interface INcfCacheStrategy : IBaseObjectCacheStrategy
     { 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the logical cache-set key.
         /// </summary>
         string CacheSetKey { get; set; }
     }

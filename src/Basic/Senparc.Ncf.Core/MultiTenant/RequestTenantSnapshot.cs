@@ -38,6 +38,13 @@ namespace Senparc.Ncf.Core.MultiTenant
         /// </summary>
         public bool MatchSuccess { get; }
 
+        /// <summary>
+        /// Initializes an immutable tenant snapshot.
+        /// </summary>
+        /// <param name="id">The tenant identifier.</param>
+        /// <param name="name">The tenant display name.</param>
+        /// <param name="tenantKey">The tenant key.</param>
+        /// <param name="matchSuccess">Whether tenant matching succeeded.</param>
         private RequestTenantSnapshot(int id, string name, string tenantKey, bool matchSuccess)
         {
             Id = id;

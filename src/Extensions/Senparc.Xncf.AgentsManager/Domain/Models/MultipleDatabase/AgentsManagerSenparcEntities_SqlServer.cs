@@ -15,6 +15,10 @@ namespace Senparc.Xncf.AgentsManager.Models
     [MultipleMigrationDbContext(MultipleDatabaseType.SqlServer, typeof(Register))]
     public class AgentsManagerSenparcEntities_SqlServer : AgentsManagerSenparcEntities
     {
+        /// <summary>
+        /// Initializes the SQL Server-specific AgentsManager DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for SQL Server.</param>
         public AgentsManagerSenparcEntities_SqlServer(DbContextOptions<AgentsManagerSenparcEntities_SqlServer> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -34,6 +38,9 @@ namespace Senparc.Xncf.AgentsManager.Models
             app.UseNcfDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SqlServerDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the SQL Server design-time DbContext factory using the configured root directory.
+        /// </summary>
         public SenparcDbContextFactory_SqlServer() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)
         {
 

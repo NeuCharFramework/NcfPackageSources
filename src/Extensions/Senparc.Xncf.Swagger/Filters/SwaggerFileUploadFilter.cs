@@ -29,6 +29,12 @@ namespace Senparc.Xncf.Swagger.Filters
     {
         private static readonly string[] FormFilePropertyNames = typeof(IFormFile).GetTypeInfo().DeclaredProperties.Select(x => x.Name).ToArray();
 
+        /// <summary>
+        /// Rewrites multipart file parameters into binary string schemas so Swagger UI
+        /// presents an upload control instead of the reflected <see cref="IFormFile"/> properties.
+        /// </summary>
+        /// <param name="operation">The OpenAPI operation being generated.</param>
+        /// <param name="context">The API description and operation-filter context.</param>
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             if (!context.ApiDescription.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase) &&

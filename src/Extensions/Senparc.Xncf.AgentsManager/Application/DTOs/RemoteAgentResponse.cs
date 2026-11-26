@@ -41,7 +41,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Carries the remote-agent identifiers selected for connection testing.
     /// </summary>
     public class RemoteAgent_TestConnectionsRequest
     {
@@ -49,8 +49,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Describes one remote-agent connection test result.
     /// </summary>
     public class RemoteAgent_ConnectionTestResult
     {

@@ -32,16 +32,19 @@ namespace Senparc.Xncf.MCP.Abstractions.Events
 {
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Requests the current MCP endpoint catalog through EventBus.
     /// </summary>
-    ///Legacy comment translated to English.
+    /// <param name="OnlyEnabled">Whether disabled endpoints should be excluded.</param>
     public sealed record QueryMcpEndpointsRequest(bool OnlyEnabled = true)
         : IntegrationRequest<QueryMcpEndpointsResponse>;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Returns the MCP endpoint catalog for a query request.
     /// </summary>
+    /// <param name="RequestId">The request correlation identifier.</param>
+    /// <param name="Success">Whether endpoint lookup succeeded.</param>
+    /// <param name="Message">An optional failure or diagnostic message.</param>
+    /// <param name="Endpoints">The endpoint information returned by the query.</param>
     public sealed record QueryMcpEndpointsResponse(
         Guid RequestId,
         bool Success,
@@ -50,9 +53,10 @@ namespace Senparc.Xncf.MCP.Abstractions.Events
         : IntegrationResponse(RequestId);
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Announces that configured MCP endpoint data changed.
     /// </summary>
+    /// <param name="UpdateReason">The reason for the update.</param>
+    /// <param name="EndpointCount">The number of configured endpoints after the update.</param>
     public sealed record McpEndpointsUpdatedEvent(
         string UpdateReason,
         int EndpointCount)

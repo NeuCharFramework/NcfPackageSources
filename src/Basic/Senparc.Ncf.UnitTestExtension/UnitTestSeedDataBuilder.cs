@@ -26,25 +26,28 @@ using Senparc.Ncf.UnitTestExtension.Entities;
 namespace Senparc.Ncf.UnitTestExtension
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the two-phase contract used to create and finalize test seed data.
     /// </summary>
     public abstract class UnitTestSeedDataBuilder
     {
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates the data set that should be available to a test service provider.
         /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <returns></returns>
+        /// <param name="serviceProvider">The initialized test service provider.</param>
+        /// <returns>
+        /// A task containing the grouped seed data. The returned
+        /// <see cref="DataList.UUID"/> is used by the test host to deduplicate execution.
+        /// </returns>
         public abstract Task<DataList> ExecuteAsync(IServiceProvider serviceProvider);
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Runs after the generated seed data has been added to the shared test data set.
         /// </summary>
-        /// <param name="serviceProvider"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="serviceProvider">The initialized test service provider.</param>
+        /// <param name="dataList">The data set produced by <see cref="ExecuteAsync(IServiceProvider)"/>.</param>
+        /// <returns>A task that completes after post-seeding initialization is finished.</returns>
         public abstract Task OnExecutedAsync(IServiceProvider serviceProvider, DataList dataList);
     }
 }

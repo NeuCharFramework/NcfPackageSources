@@ -31,8 +31,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 {
     /// <summary>
-    /// Prompt optimize Plugin
-    ///Legacy comment translated to English.
+    /// Exposes PromptRange analysis, optimization, shoot-test, and grading
+    /// functions to the Agent tool-calling layer.
     /// </summary>
     public class PromptOptimizationPlugin
     {
@@ -42,6 +42,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         private readonly PromptRangeService _promptRangeService;
         private readonly PromptResultService _promptResultService;
 
+        /// <summary>Initializes the prompt-optimization plugin.</summary>
+        /// <param name="bridge">The request-correlation and result bridge.</param>
+        /// <param name="logger">The plugin logger.</param>
         public PromptOptimizationPlugin(PromptOptimizationAgentBridge bridge, ILogger<PromptOptimizationPlugin> logger)
         {
             _bridge = bridge;
@@ -52,6 +55,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             _promptResultService = serviceProvider.GetRequiredService<PromptResultService>();
         }
 
+        /// <summary>
+        /// Converts escaped JSON string sequences into their literal text form.
+        /// </summary>
+        /// <param name="value">The escaped string value.</param>
+        /// <returns>The unescaped text, or the original null/empty value.</returns>
         private static string UnescapeJsonString(string value)
         {
             if (string.IsNullOrEmpty(value))
@@ -66,8 +74,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// get Prompt information
+        /// Gets detailed information about a PromptRange prompt version.
         /// </summary>
+        /// <param name="promptCode">The full prompt version code.</param>
+        /// <returns>A formatted prompt-information report or an error message.</returns>
         [KernelFunction, Description("Get detailed information about a specific prompt")]
         public async Task<string> GetPromptInfo(
             [Description("The prompt code (e.g., 2025.12.28.3-T3.1-A2)")] string promptCode
@@ -103,8 +113,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Analyzes historical evaluation scores grouped by model.
         /// </summary>
+        /// <param name="rangeName">The PromptRange name to analyze.</param>
+        /// <returns>A formatted model-performance analysis.</returns>
         [KernelFunction, Description("Analyze historical scores of all models in the current range")]
         public async Task<string> AnalyzeModelScores(
             [Description("The range name (e.g., 2025.12.28.3)")] string rangeName
@@ -150,8 +162,18 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates exactly one optimized PromptRange version for the current request.
         /// </summary>
+        /// <param name="optimizationRequestId">Optional request correlation identifier.</param>
+        /// <param name="basePromptCode">The base prompt version to optimize.</param>
+        /// <param name="optimizedContent">The generated prompt content.</param>
+        /// <param name="modelId">The recommended model identifier.</param>
+        /// <param name="temperature">The recommended generation temperature.</param>
+        /// <param name="topP">The recommended top-p value.</param>
+        /// <param name="maxTokens">The recommended token limit.</param>
+        /// <param name="frequencyPenalty">The recommended frequency penalty.</param>
+        /// <param name="presencePenalty">The recommended presence penalty.</param>
+        /// <param name="improvementSummary">Optional summary shown to the user.</param>
         [KernelFunction, Description("Create exactly ONE new version per optimization task. Call at most once — duplicate calls are rejected without creating rows. First parameter may be empty.")]
         public async Task<string> CreateOptimizedPrompt(
             [Description("Optional: REQUEST_ID from task; leave empty if unsure — server uses active correlation id")] string optimizationRequestId,
@@ -264,8 +286,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Executes a PromptRange shoot test for a prompt version.
         /// </summary>
+        /// <param name="promptCode">The prompt version to test.</param>
+        /// <returns>A formatted shoot-test result or an error message.</returns>
         [KernelFunction, Description("Execute a shoot test on the prompt")]
         public async Task<string> ExecuteShootTest(
             [Description("The prompt code to test")] string promptCode
@@ -298,8 +322,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Scores the latest shoot result for a prompt using the configured AI grader.
         /// </summary>
+        /// <param name="promptCode">The prompt version whose latest result is graded.</param>
+        /// <returns>A formatted grading result or an error message.</returns>
         [KernelFunction, Description("Execute AI scoring on the shoot result")]
         public async Task<string> ExecuteAIGrade(
             [Description("The prompt code to grade")] string promptCode
