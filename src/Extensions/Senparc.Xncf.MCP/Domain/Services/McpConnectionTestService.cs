@@ -111,7 +111,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
         public async Task<McpConnectionTestResult> TestAsync(
             string name,
             string endpointUrl,
-            string? bearerToken = null,
+            string? authConfig = null,
             int timeoutSeconds = 15,
             string? endpointType = null,
             CancellationToken cancellationToken = default)
@@ -146,9 +146,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
                     Endpoint = uri,
                     TransportMode = mode.Value,
                     ConnectionTimeout = TimeSpan.FromSeconds(timeoutSeconds),
-                    AdditionalHeaders = string.IsNullOrWhiteSpace(bearerToken)
-                        ? null
-                        : new Dictionary<string, string> { ["Authorization"] = $"Bearer {bearerToken}" }
+                    AdditionalHeaders = BuildAdditionalHeaders(authConfig)
                 };
 
                 await using var transport = new HttpClientTransport(options);
@@ -175,6 +173,186 @@ namespace Senparc.Xncf.MCP.Domain.Services
                 return Fail(500, $"连接失败：{ex.Message}");
             }
         }
+
+        public async Task<(bool Success, string Output, string? Error)> CallToolAsync(
+                string name,
+                string endpointUrl,
+                string? authConfig,
+                string toolName,
+                IReadOnlyDictionary<string, string?> arguments,
+                string? inputSchemaJson = null,
+                string? endpointType = null,
+                int timeoutSeconds = 60,
+                CancellationToken cancellationToken = default)
+            {
+                timeoutSeconds = Math.Max(3, Math.Min(300, timeoutSeconds));
+                using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                timeout.CancelAfter(TimeSpan.FromSeconds(timeoutSeconds));
+
+                if (!Uri.TryCreate(endpointUrl, UriKind.Absolute, out var uri)
+                    || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+                {
+                    return (false, string.Empty, $"MCP endpoint must use HTTP or HTTPS: {endpointUrl}");
+                }
+
+                var mode = ResolveTransportMode(endpointType);
+                if (mode == null)
+                {
+                    return (false, string.Empty, $"Unsupported MCP transport: {endpointType}");
+                }
+
+                var options = new HttpClientTransportOptions
+                {
+                    Name = string.IsNullOrWhiteSpace(name) ? "NCF-Connector" : name,
+                    Endpoint = uri,
+                    TransportMode = mode.Value,
+                    ConnectionTimeout = TimeSpan.FromSeconds(timeoutSeconds),
+                    AdditionalHeaders = BuildAdditionalHeaders(authConfig)
+                };
+
+                try
+                {
+                    await using var transport = new HttpClientTransport(options);
+                    await using var client = await McpClient.CreateAsync(transport, cancellationToken: timeout.Token);
+                    var normalized = arguments
+                        .Where(pair => !string.IsNullOrWhiteSpace(pair.Key))
+                        .ToDictionary(
+                            pair => pair.Key,
+                            pair => ConvertArgumentValue(inputSchemaJson, pair.Key, pair.Value),
+                            StringComparer.OrdinalIgnoreCase);
+                    var response = await client.CallToolAsync(toolName, normalized, cancellationToken: timeout.Token);
+                    var output = JsonSerializer.Serialize(response);
+                    return (response.IsError != true, output, response.IsError == true ? output : null);
+                }
+                catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+                {
+                    return (false, string.Empty, $"MCP tool call timed out after {timeoutSeconds} seconds.");
+                }
+                catch (Exception exception) when (exception is not OperationCanceledException)
+                {
+                    return (false, string.Empty, $"MCP tool call failed: {exception.Message}");
+                }
+            }
+
+        private static HttpTransportMode? ResolveTransportMode(string? endpointType)
+                => endpointType?.Trim().ToLowerInvariant() switch
+                {
+                    null or "" => HttpTransportMode.AutoDetect,
+                    "sse" => HttpTransportMode.Sse,
+                    "http" => HttpTransportMode.StreamableHttp,
+                    _ => null
+                };
+
+        private static object? ConvertArgumentValue(string? schemaJson, string parameterName, string? value)
+        {
+            if (value == null)
+            {
+                return string.Empty;
+            }
+            if (string.IsNullOrWhiteSpace(schemaJson))
+            {
+                return value;
+            }
+
+            try
+            {
+                using var document = JsonDocument.Parse(schemaJson);
+                if (!document.RootElement.TryGetProperty("properties", out var properties)
+                    || !properties.TryGetProperty(parameterName, out var property)
+                    || !property.TryGetProperty("type", out var typeElement))
+                {
+                    return value;
+                }
+
+                var type = typeElement.GetString();
+                if (type is "integer" or "number" or "boolean" or "array" or "object")
+                {
+                    return JsonSerializer.Deserialize<JsonElement>(value);
+                }
+            }
+            catch (JsonException)
+            {
+                return value;
+            }
+
+            return value;
+        }
+
+        private static Dictionary<string, string>? BuildAdditionalHeaders(string? authConfig)
+            {
+                if (string.IsNullOrWhiteSpace(authConfig))
+                {
+                    return null;
+                }
+
+                try
+                {
+                    using var document = JsonDocument.Parse(authConfig);
+                    var root = document.RootElement;
+                    if (root.ValueKind != JsonValueKind.Object)
+                    {
+                        return BearerHeaders(authConfig);
+                    }
+
+                    if (TryRead(root, "token", out var token)
+                        || TryRead(root, "accessToken", out token)
+                        || TryRead(root, "bearerToken", out token)
+                        || TryRead(root, "apiKey", out token))
+                    {
+                        return BearerHeaders(token);
+                    }
+
+                    var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                    if (TryRead(root, "headerName", out var headerName)
+                        && TryRead(root, "value", out var headerValue))
+                    {
+                        headers[headerName] = headerValue;
+                    }
+                    if (root.TryGetProperty("headers", out var headerElement)
+                        && headerElement.ValueKind == JsonValueKind.Object)
+                    {
+                        foreach (var header in headerElement.EnumerateObject())
+                        {
+                            if (header.Value.ValueKind == JsonValueKind.String
+                                && !string.IsNullOrWhiteSpace(header.Name)
+                                && !string.IsNullOrWhiteSpace(header.Value.GetString()))
+                            {
+                                headers[header.Name] = header.Value.GetString()!;
+                            }
+                        }
+                    }
+                    if (TryRead(root, "username", out var username)
+                        && TryRead(root, "password", out var password))
+                    {
+                        headers["Authorization"] = "Basic "
+                            + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"{username}:{password}"));
+                    }
+                    return headers.Count == 0 ? null : headers;
+                }
+                catch (JsonException)
+                {
+                    return BearerHeaders(authConfig);
+                }
+            }
+
+        private static bool TryRead(JsonElement root, string name, out string? value)
+            {
+                if (root.TryGetProperty(name, out var element)
+                    && element.ValueKind == JsonValueKind.String
+                    && !string.IsNullOrWhiteSpace(element.GetString()))
+                {
+                    value = element.GetString();
+                    return true;
+                }
+
+                value = null;
+                return false;
+            }
+
+        private static Dictionary<string, string>? BearerHeaders(string? token)
+                => string.IsNullOrWhiteSpace(token)
+                    ? null
+                    : new Dictionary<string, string> { ["Authorization"] = $"Bearer {token}" };
 
         /// <summary>
         /// Maps an MCP client tool to the module's serializable tool-information contract.

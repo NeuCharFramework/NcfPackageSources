@@ -18,9 +18,11 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.AreaBase.Admin.Filters;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.Connectors.Domain.Services;
+using Senparc.Xncf.MCP.Abstractions;
 
 namespace Senparc.Xncf.Connectors.Areas.Admin.Pages.Connectors;
 
@@ -36,16 +38,21 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
     };
 
     private readonly ConnectorGateway _gateway;
+    private readonly IMcpEndpointGateway? _mcpGateway;
 
     /// <summary>
     /// Initializes the connector administration page.
     /// </summary>
     /// <param name="xncfModuleService">The lazy XNCF module service used by the base page.</param>
     /// <param name="gateway">The connector gateway used for catalog and instance operations.</param>
-    public Index(Lazy<XncfModuleService> xncfModuleService, ConnectorGateway gateway)
+    public Index(
+        Lazy<XncfModuleService> xncfModuleService,
+        ConnectorGateway gateway,
+        IServiceProvider serviceProvider)
         : base(xncfModuleService)
     {
         _gateway = gateway;
+        _mcpGateway = serviceProvider.GetService<IMcpEndpointGateway>();
     }
 
     public string InitialStateJson { get; private set; } = "{}";
@@ -111,6 +118,98 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
     }
 
     /// <summary>
+    /// Creates a secure MCP endpoint, discovers its tools, and exposes the tools as a Connector.
+    /// </summary>
+    public async Task<IActionResult> OnPostQuickMcpAsync([FromBody] ConnectorQuickMcpInput input)
+    {
+        if (input == null
+            || string.IsNullOrWhiteSpace(input.TemplateKey)
+            || string.IsNullOrWhiteSpace(input.McpName)
+            || string.IsNullOrWhiteSpace(input.Endpoint))
+        {
+            return new JsonResult(new
+            {
+                success = false,
+                message = ConnectorsResource.Get(
+                    "Frontend.Connectors.McpFieldsRequired",
+                    "Enter the MCP connection name and endpoint.")
+            });
+        }
+
+        if (_mcpGateway == null)
+        {
+            return new JsonResult(new
+            {
+                success = false,
+                message = ConnectorsResource.Get(
+                    "Error.McpModuleNotInstalled",
+                    "Enable the MCP module before creating an MCP-backed connector.")
+            });
+        }
+
+        var template = ConnectorTemplateCatalog.All.FirstOrDefault(item =>
+            string.Equals(item.Key, input.TemplateKey, StringComparison.OrdinalIgnoreCase));
+        if (template == null)
+        {
+            return new JsonResult(new
+            {
+                success = false,
+                message = ConnectorsResource.Get("Error.TemplateNotFound", "The connector template was not found.")
+            });
+        }
+
+        var endpointResult = await _mcpGateway.SaveEndpointAsync(new McpEndpointSaveRequest
+        {
+            Name = input.McpName.Trim(),
+            Endpoint = input.Endpoint.Trim(),
+            EndpointType = string.IsNullOrWhiteSpace(input.EndpointType)
+                ? template.EndpointType
+                : input.EndpointType.Trim(),
+            Description = input.Description,
+            Enabled = true,
+            AuthConfig = string.IsNullOrWhiteSpace(input.Token)
+                ? null
+                : JsonSerializer.Serialize(new { token = input.Token.Trim() })
+        }, HttpContext.RequestAborted).ConfigureAwait(false);
+        if (!endpointResult.Success)
+        {
+            return new JsonResult(new { success = false, message = endpointResult.Message });
+        }
+
+        var test = await _mcpGateway.TestEndpointAsync(
+            endpointResult.EndpointId,
+            HttpContext.RequestAborted).ConfigureAwait(false);
+        if (!test.Success)
+        {
+            return new JsonResult(new
+            {
+                success = false,
+                message = ConnectorsResource.Format(
+                    "Error.McpCreatedButTestFailed",
+                    "The MCP connection was saved, but tool discovery failed: {0}",
+                    test.Message)
+            });
+        }
+
+        var connectorResult = await _gateway.SaveAsync(new ConnectorSaveInput
+        {
+            Name = string.IsNullOrWhiteSpace(input.ConnectorName) ? input.McpName.Trim() : input.ConnectorName.Trim(),
+            ConnectorKey = "mcp.endpoint." + endpointResult.EndpointId,
+            Description = input.Description,
+            Enabled = true,
+            ActionKeys = test.Tools.Select(tool => tool.Name).ToList()
+        }, HttpContext.RequestAborted).ConfigureAwait(false);
+
+        return new JsonResult(new
+        {
+            success = connectorResult.Success,
+            message = connectorResult.Message,
+            instanceId = connectorResult.InstanceId,
+            endpointId = endpointResult.EndpointId
+        });
+    }
+
+    /// <summary>
     /// Serializes the connector catalog and configured instances for the initial page state.
     /// </summary>
     /// <param name="cancellationToken">The token used to cancel catalog or instance loading.</param>
@@ -119,11 +218,28 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
     {
         var catalog = await _gateway.ListCatalogAsync(cancellationToken).ConfigureAwait(false);
         var instances = await _gateway.ListInstancesAsync(cancellationToken).ConfigureAwait(false);
-        return JsonSerializer.Serialize(new { catalog, instances }, JsonOptions);
+        return JsonSerializer.Serialize(new
+        {
+            catalog,
+            instances,
+            templates = _mcpGateway == null ? Array.Empty<ConnectorTemplate>() : ConnectorTemplateCatalog.All,
+            mcpAvailable = _mcpGateway != null
+        }, JsonOptions);
     }
 }
 
 public sealed class ConnectorIdInput
 {
     public string InstanceId { get; set; } = string.Empty;
+}
+
+public sealed class ConnectorQuickMcpInput
+{
+    public string TemplateKey { get; set; } = string.Empty;
+    public string McpName { get; set; } = string.Empty;
+    public string ConnectorName { get; set; } = string.Empty;
+    public string Endpoint { get; set; } = string.Empty;
+    public string EndpointType { get; set; } = string.Empty;
+    public string? Token { get; set; }
+    public string? Description { get; set; }
 }

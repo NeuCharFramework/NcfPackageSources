@@ -245,4 +245,5 @@
   <data name="Frontend.Mcp.DeleteFailed" xml:space="preserve"><value>Delete failed</value></data>
   <data name="Frontend.Mcp.InputSchema" xml:space="preserve"><value>Input Schema</value></data>
   <data name="Frontend.Mcp.NoJSONSchemaInformation" xml:space="preserve"><value>(no JSON Schema information)</value></data>
+  <data name="Frontend.Mcp.SavedLeaveBlankToKeepTheExistingCredential" xml:space="preserve"><value>Saved; leave blank to keep the existing credential</value></data>
 </root>

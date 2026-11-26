@@ -61,6 +61,7 @@ using Microsoft.Extensions.AI;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using ModelContextProtocol.Protocol;
+using Senparc.Xncf.MCP.Abstractions;
 
 namespace Senparc.Xncf.MCP
 {
@@ -135,9 +136,12 @@ namespace Senparc.Xncf.MCP
     public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddHttpContextAccessor();
+                services.AddDataProtection();
             services.AddScoped<MCPEndpointAppService>();
             services.AddScoped<MCPEndpointService>();
             services.AddScoped<McpConnectionTestService>();
+                services.AddScoped<McpEndpointSecretProtector>();
+                services.AddScoped<IMcpEndpointGateway, McpEndpointGateway>();
             services.AddScoped<PublishedMcpServerService>(provider => new PublishedMcpServerService(
                 XncfRegisterManager.McpServerInfoCollection, provider.GetRequiredService<EndpointDataSource>()));
 

@@ -243,8 +243,6 @@ namespace Senparc.Areas.Admin.Domain.Services
             var session = await _serviceProvider.GetRequiredService<AdminChatSessionService>()
                 .GetObjectAsync(item => item.Id == sessionId);
             var storage = _serviceProvider.GetService<IWorkspaceStorage>();
-            if (session == null || storage == null || string.IsNullOrWhiteSpace(session.WorkspaceId))
-                return Array.Empty<AdminChatAttachment>();
             var changes = new Dictionary<string, string>(StringComparer.Ordinal);
             var actions = new List<AdminChatAttachment>();
             foreach (var trajectoryEvent in harness.TrajectoryEvents)
@@ -297,6 +295,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                 .Select(group => group.First())
                 .Take(20)
                 .ToList();
+            if (session == null || storage == null || string.IsNullOrWhiteSpace(session.WorkspaceId))
+                return result;
             foreach (var (path, changeType) in changes.Take(80))
             {
                 try

@@ -112,9 +112,10 @@ namespace Senparc.Xncf.MCP.Domain.Services
         public async Task<McpConnectionTestResult> TestEndpointCoreAsync(MCPEndpoint endpoint, CancellationToken cancellationToken = default)
         {
             var tester = ServiceProvider.GetRequiredService<McpConnectionTestService>();
-            string? bearerToken = ExtractBearerToken(endpoint.AuthConfig);
+            var secrets = ServiceProvider.GetRequiredService<McpEndpointSecretProtector>();
+            string? authConfig = secrets.Unprotect(endpoint.AuthConfig);
 
-            var result = await tester.TestAsync(endpoint.Name, endpoint.Endpoint, bearerToken,
+            var result = await tester.TestAsync(endpoint.Name, endpoint.Endpoint, authConfig,
                 endpointType: endpoint.EndpointType, cancellationToken: cancellationToken);
 
             endpoint.LastTestedTime = DateTime.Now;

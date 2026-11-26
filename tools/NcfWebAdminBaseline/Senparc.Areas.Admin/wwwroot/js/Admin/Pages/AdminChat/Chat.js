@@ -4303,6 +4303,10 @@ var chatApp = new Vue({
           payload.trajectoryEvents = read('liveTrajectoryEvents').slice();
           payload.pendingApprovals = read('livePendingApprovals').slice();
           messages.push(payload);
+          const action = this.messageActionAttachments(payload)[0];
+          if (action && Number(sessionId) === Number(this.currentSessionId)) {
+            this.openAgentTaskPreview(action);
+          }
         }
         this.finishActiveTask('已完成', sessionId);
         return;

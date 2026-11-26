@@ -42,6 +42,7 @@
 using System;
 using System.Security.Claims;
 using System.Text.Json;
+using Senparc.Ncf.XncfBase.ChatTools;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -206,7 +207,10 @@ public sealed class AdminChatStreamController : ControllerBase
             AllowSynchronousContinuations = false
         });
 
-        var generationTask = request.Mode != AdminChatMode.Simple
+        var requiresHarness = request.Mode != AdminChatMode.Simple
+            || ChatToolRegistry.Match(content).Count > 0
+            || !string.IsNullOrWhiteSpace(session.WorkspaceId);
+        var generationTask = requiresHarness
             ? GenerateHarnessResponseAsync(
                 request.SessionId,
                 userId,

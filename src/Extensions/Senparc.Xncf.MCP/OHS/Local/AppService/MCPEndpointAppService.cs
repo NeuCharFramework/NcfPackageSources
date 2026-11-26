@@ -172,7 +172,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
                 if (endpoint.Endpoint != request.Endpoint
                     || endpoint.EndpointType != request.EndpointType
-                    || endpoint.AuthConfig != request.AuthConfig
+                    || (!string.IsNullOrWhiteSpace(request.AuthConfig) && endpoint.AuthConfig != request.AuthConfig)
                     || endpoint.ExtraConfig != request.ExtraConfig)
                 {
                     endpoint.LastTestedTime = null;
@@ -188,7 +188,10 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 endpoint.ProtocolVersion = request.ProtocolVersion;
                 endpoint.Description = request.Description;
                 endpoint.Enabled = request.Enabled;
-                endpoint.AuthConfig = request.AuthConfig;
+                var protector = GetRequiredService<McpEndpointSecretProtector>();
+                endpoint.AuthConfig = string.IsNullOrWhiteSpace(request.AuthConfig)
+                    ? endpoint.AuthConfig
+                    : protector.Protect(request.AuthConfig);
                 endpoint.ExtraConfig = request.ExtraConfig;
 
                 await _mcpEndpointService.SaveObjectAsync(endpoint);
@@ -291,10 +294,20 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
                 Validator.ValidateObject(request, new ValidationContext(request), validateAllProperties: true);
                 var tester = base.GetRequiredService<McpConnectionTestService>();
+                var authConfig = request.AuthConfig;
+                if (string.IsNullOrWhiteSpace(authConfig) && request.EndpointId > 0)
+                {
+                    var existing = await _mcpEndpointService.GetObjectAsync(item => item.Id == request.EndpointId);
+                    if (existing != null)
+                    {
+                        authConfig = GetRequiredService<McpEndpointSecretProtector>().Unprotect(existing.AuthConfig);
+                    }
+                }
+
                 var result = await tester.TestAsync(
                     string.IsNullOrWhiteSpace(request.Name) ? "MCP-Test" : request.Name,
                     request.Endpoint.Trim(),
-                    MCPEndpointService.ExtractBearerToken(request.AuthConfig),
+                    authConfig,
                     endpointType: request.EndpointType,
                     cancellationToken: CancellationToken);
 
@@ -322,7 +335,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         public DateTime? LastTestedTime { get; set; }
         public bool? LastTestResult { get; set; }
         public int? LastToolCount { get; set; }
-        public string? AuthConfig { get; set; }
+        public bool AuthConfigured { get; set; }
         public string? ExtraConfig { get; set; }
 
         public static MCPEndpointDto FromEntity(MCPEndpoint entity)
@@ -339,7 +352,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 LastTestedTime = entity.LastTestedTime,
                 LastTestResult = entity.LastTestResult,
                 LastToolCount = entity.LastToolCount,
-                AuthConfig = entity.AuthConfig,
+                AuthConfigured = !string.IsNullOrWhiteSpace(entity.AuthConfig),
                 ExtraConfig = entity.ExtraConfig
             };
         }
@@ -411,6 +424,8 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     /// </summary>
     public class MCPEndpointTestConnectionRequest
     {
+        public int EndpointId { get; set; }
+
         [MaxLength(100)]
         [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.Name")]
         public string Name { get; set; }

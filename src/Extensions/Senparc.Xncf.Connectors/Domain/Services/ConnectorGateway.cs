@@ -16,10 +16,12 @@
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Senparc.Xncf.Connectors;
 using Senparc.Xncf.Connectors.Abstractions;
 using Senparc.Xncf.Connectors.Domain.Models.DatabaseModel;
+using Senparc.Xncf.MCP.Abstractions;
 
 namespace Senparc.Xncf.Connectors.Domain.Services;
 
@@ -33,6 +35,8 @@ public sealed class ConnectorGateway : IConnectorGateway
     private readonly IReadOnlyDictionary<string, IConnectorProvider> _providers;
     private readonly ConnectorSecretProtector _secrets;
     private readonly ILogger<ConnectorGateway> _logger;
+    private readonly IMcpEndpointGateway? _mcpGateway;
+    private const string McpKeyPrefix = "mcp.endpoint.";
 
     /// <summary>
     /// Initializes the connector gateway.
@@ -45,25 +49,33 @@ public sealed class ConnectorGateway : IConnectorGateway
         ConnectorsSenparcEntities db,
         IEnumerable<IConnectorProvider> providers,
         ConnectorSecretProtector secrets,
-        ILogger<ConnectorGateway> logger)
+        ILogger<ConnectorGateway> logger,
+        IServiceProvider serviceProvider)
     {
         _db = db;
         _secrets = secrets;
         _logger = logger;
+        _mcpGateway = serviceProvider.GetService<IMcpEndpointGateway>();
         _providers = providers
             .GroupBy(item => item.Describe().Key, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.Last(), StringComparer.OrdinalIgnoreCase);
     }
 
     /// <inheritdoc />
-    public Task<IReadOnlyList<ConnectorDescriptor>> ListCatalogAsync(CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<ConnectorDescriptor>> ListCatalogAsync(CancellationToken cancellationToken)
     {
-        IReadOnlyList<ConnectorDescriptor> catalog = _providers.Values
-            .Select(item => item.Describe())
+        var catalogItems = _providers.Values.Select(item => item.Describe()).ToList();
+        if (_mcpGateway != null)
+        {
+            var endpoints = await _mcpGateway.ListEndpointsAsync(onlyEnabled: true, cancellationToken)
+                .ConfigureAwait(false);
+            catalogItems.AddRange(endpoints.Select(ToMcpDescriptor));
+        }
+        IReadOnlyList<ConnectorDescriptor> catalog = catalogItems
             .OrderBy(item => item.Name, StringComparer.CurrentCulture)
             .ToArray();
         _logger.LogInformation("[Connector] catalog count={Count}", catalog.Count);
-        return Task.FromResult(catalog);
+        return catalog;
     }
 
     /// <inheritdoc />
@@ -80,11 +92,16 @@ public sealed class ConnectorGateway : IConnectorGateway
             .OrderBy(item => item.Name)
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
-        return instances
-            .Select(ToConfigured)
-            .Where(item => item != null)
-            .Cast<ConfiguredConnector>()
-            .ToArray();
+        var result = new List<ConfiguredConnector>();
+        foreach (var instance in instances)
+        {
+            var configured = await ToConfiguredAsync(instance, cancellationToken).ConfigureAwait(false);
+            if (configured != null)
+            {
+                result.Add(configured);
+            }
+        }
+        return result;
     }
 
     /// <inheritdoc />
@@ -100,7 +117,12 @@ public sealed class ConnectorGateway : IConnectorGateway
             .OrderByDescending(item => item.AddTime)
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
-        return instances.Select(ToView).ToArray();
+        var result = new List<ConnectorInstanceView>();
+        foreach (var instance in instances)
+        {
+            result.Add(await ToViewAsync(instance, cancellationToken).ConfigureAwait(false));
+        }
+        return result;
     }
 
     /// <inheritdoc />
@@ -119,12 +141,17 @@ public sealed class ConnectorGateway : IConnectorGateway
             return (false, ConnectorsResource.Get("Error.NameRequired", "Please enter a connector name."), null);
         }
 
-        if (string.IsNullOrWhiteSpace(input.ConnectorKey) || !_providers.TryGetValue(input.ConnectorKey.Trim(), out var provider))
+        if (string.IsNullOrWhiteSpace(input.ConnectorKey))
         {
             return (false, ConnectorsResource.Get("Error.TypeNotFound", "No connector type was found. Confirm that the corresponding module is installed."), null);
         }
 
-        var descriptor = provider.Describe();
+        _providers.TryGetValue(input.ConnectorKey.Trim(), out var provider);
+        var descriptor = await FindDescriptorAsync(input.ConnectorKey.Trim(), cancellationToken).ConfigureAwait(false);
+        if (descriptor == null)
+        {
+            return (false, ConnectorsResource.Get("Error.TypeNotFound", "No connector type was found. Confirm that the corresponding module is installed."), null);
+        }
         var existing = string.IsNullOrWhiteSpace(input.InstanceId)
             ? null
             : await _db.ConnectorInstances.FirstOrDefaultAsync(
@@ -257,9 +284,23 @@ public sealed class ConnectorGateway : IConnectorGateway
         var entity = await _db.ConnectorInstances
             .FirstOrDefaultAsync(item => item.PublicId == instanceId, cancellationToken)
             .ConfigureAwait(false);
-        if (entity == null || !_providers.TryGetValue(entity.ConnectorKey, out var provider))
+        if (entity == null)
         {
             return new ConnectorTestResult(false, ConnectorsResource.Get("Error.TypeNotInstalled", "The connector does not exist or its type is not installed."));
+        }
+
+        if (TryParseMcpEndpointId(entity.ConnectorKey, out var endpointId) && _mcpGateway != null)
+        {
+            var test = await _mcpGateway.TestEndpointAsync(endpointId, cancellationToken).ConfigureAwait(false);
+            var mcpResult = new ConnectorTestResult(test.Success, test.Message);
+            entity.RecordTest(mcpResult.Success, mcpResult.Message);
+            await _db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            return mcpResult;
+        }
+
+        if (!_providers.TryGetValue(entity.ConnectorKey, out var provider))
+        {
+            return new ConnectorTestResult(false, ConnectorsResource.Get("Error.TypeNotInstalled", "The connector type is not installed."));
         }
 
         ConnectorTestResult result;
@@ -303,12 +344,15 @@ public sealed class ConnectorGateway : IConnectorGateway
             return ConnectorInvocationResult.Fail(ConnectorsResource.Get("Error.Disabled", "The connector does not exist or is disabled."));
         }
 
-        if (!_providers.TryGetValue(entity.ConnectorKey, out var provider))
+        var providerAvailable = _providers.TryGetValue(entity.ConnectorKey, out var provider);
+        var descriptor = providerAvailable
+            ? provider!.Describe()
+            : await FindDescriptorAsync(entity.ConnectorKey, cancellationToken).ConfigureAwait(false);
+        if (descriptor == null)
         {
             return ConnectorInvocationResult.Fail(ConnectorsResource.Get("Error.TypeNotInstalled", "The connector type is not installed."));
         }
 
-        var descriptor = provider.Describe();
         var action = descriptor.Actions.FirstOrDefault(item =>
             string.Equals(item.Key, actionKey, StringComparison.OrdinalIgnoreCase));
         if (action == null)
@@ -331,18 +375,48 @@ public sealed class ConnectorGateway : IConnectorGateway
                 normalized[pair.Key] = pair.Value.Trim();
             }
         }
+        var missingParameter = action.Parameters.FirstOrDefault(parameter =>
+            parameter.Required
+            && (!normalized.TryGetValue(parameter.Key, out var value) || string.IsNullOrWhiteSpace(value)));
+        if (missingParameter != null)
+        {
+            return ConnectorInvocationResult.Fail(ConnectorsResource.Format(
+                "Error.ParameterRequired",
+                "The action requires {0}.",
+                missingParameter.Label));
+        }
 
         Console.WriteLine($"[Connector] invoke instance={entity.PublicId} action={action.Key} args={normalized.Count}");
         try
         {
-            var result = await provider.InvokeAsync(new ConnectorInvocationContext
+            ConnectorInvocationResult result;
+            if (TryParseMcpEndpointId(entity.ConnectorKey, out var endpointId) && _mcpGateway != null)
             {
-                InstanceId = entity.PublicId,
-                InstanceName = entity.Name,
-                ActionKey = action.Key,
-                Configuration = Unprotect(entity),
-                Arguments = normalized
-            }, cancellationToken).ConfigureAwait(false);
+                var mcpResult = await _mcpGateway.CallToolAsync(
+                    endpointId,
+                    action.Key,
+                    normalized.ToDictionary(pair => pair.Key, pair => (string?)pair.Value, StringComparer.OrdinalIgnoreCase),
+                    cancellationToken).ConfigureAwait(false);
+                result = mcpResult.Success
+                    ? ConnectorInvocationResult.Ok(mcpResult.Output)
+                    : ConnectorInvocationResult.Fail(mcpResult.Error ?? "MCP tool invocation failed.");
+            }
+            else
+            {
+                if (!providerAvailable || provider == null)
+                {
+                    return ConnectorInvocationResult.Fail(ConnectorsResource.Get("Error.TypeNotInstalled", "The connector type is not installed."));
+                }
+
+                result = await provider.InvokeAsync(new ConnectorInvocationContext
+                {
+                    InstanceId = entity.PublicId,
+                    InstanceName = entity.Name,
+                    ActionKey = action.Key,
+                    Configuration = Unprotect(entity),
+                    Arguments = normalized
+                }, cancellationToken).ConfigureAwait(false);
+            }
             _logger.LogInformation(
                 "[Connector] invoke finished instance={InstanceId} action={ActionKey} success={Success}",
                 entity.PublicId,
@@ -364,6 +438,21 @@ public sealed class ConnectorGateway : IConnectorGateway
     /// <returns>The descriptor, or <see langword="null"/> when no provider is registered.</returns>
     public ConnectorDescriptor? FindDescriptor(string connectorKey)
         => _providers.TryGetValue(connectorKey ?? string.Empty, out var provider) ? provider.Describe() : null;
+
+    public async Task<ConnectorDescriptor?> FindDescriptorAsync(
+        string connectorKey,
+        CancellationToken cancellationToken)
+    {
+        var registered = FindDescriptor(connectorKey);
+        if (registered != null || _mcpGateway == null
+            || !TryParseMcpEndpointId(connectorKey, out var endpointId))
+        {
+            return registered;
+        }
+
+        var endpoint = await _mcpGateway.GetEndpointAsync(endpointId, cancellationToken).ConfigureAwait(false);
+        return endpoint == null || !endpoint.Enabled ? null : ToMcpDescriptor(endpoint);
+    }
 
     /// <summary>
     /// Unprotects only secret fields required by the configured provider.
@@ -394,14 +483,16 @@ public sealed class ConnectorGateway : IConnectorGateway
     /// </summary>
     /// <param name="entity">The persisted connector entity.</param>
     /// <returns>The configured connector, or <see langword="null"/> when its provider is unavailable.</returns>
-    private ConfiguredConnector? ToConfigured(ConnectorInstance entity)
+    private async Task<ConfiguredConnector?> ToConfiguredAsync(
+        ConnectorInstance entity,
+        CancellationToken cancellationToken)
     {
-        if (!_providers.TryGetValue(entity.ConnectorKey, out var provider))
+        var descriptor = await FindDescriptorAsync(entity.ConnectorKey, cancellationToken).ConfigureAwait(false);
+        if (descriptor == null)
         {
             return null;
         }
 
-        var descriptor = provider.Describe();
         var enabled = ConnectorConfigurationCodec.ReadList(entity.EnabledActionsJson);
         var actions = descriptor.Actions
             .Where(action => enabled.Count == 0
@@ -423,9 +514,11 @@ public sealed class ConnectorGateway : IConnectorGateway
     /// </summary>
     /// <param name="entity">The persisted connector entity.</param>
     /// <returns>The redacted connector instance view.</returns>
-    private ConnectorInstanceView ToView(ConnectorInstance entity)
+    private async Task<ConnectorInstanceView> ToViewAsync(
+        ConnectorInstance entity,
+        CancellationToken cancellationToken)
     {
-        var descriptor = FindDescriptor(entity.ConnectorKey);
+        var descriptor = await FindDescriptorAsync(entity.ConnectorKey, cancellationToken).ConfigureAwait(false);
         var values = ConnectorConfigurationCodec.Read(entity.ConfigJson);
         var publicValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         var secretFields = new List<string>();
@@ -463,6 +556,38 @@ public sealed class ConnectorGateway : IConnectorGateway
             LastTestMessage = entity.LastTestMessage ?? string.Empty,
             LastTestedAt = entity.LastTestedAt
         };
+    }
+
+    private static ConnectorDescriptor ToMcpDescriptor(McpEndpointDescriptor endpoint) => new()
+    {
+        Key = McpKeyPrefix + endpoint.Id,
+        Name = endpoint.Name,
+        Description = endpoint.Description
+            ?? "MCP endpoint with centrally managed authentication and discovered tools.",
+        Icon = "fa fa-cubes",
+        Fields = [],
+        Actions = endpoint.Tools.Select(tool => new ConnectorActionDescriptor
+        {
+            Key = tool.Name,
+            Name = tool.Title ?? tool.Name,
+            Description = tool.Description ?? string.Empty,
+            Parameters = tool.Parameters.Select(parameter => new ConnectorParameterDescriptor
+            {
+                Key = parameter.Name,
+                Label = parameter.Name,
+                Description = parameter.Description ?? string.Empty,
+                Required = parameter.Required
+            }).ToArray()
+        }).ToArray()
+    };
+
+    private static bool TryParseMcpEndpointId(string connectorKey, out int endpointId)
+    {
+        endpointId = 0;
+        return connectorKey != null
+            && connectorKey.StartsWith(McpKeyPrefix, StringComparison.OrdinalIgnoreCase)
+            && int.TryParse(connectorKey[McpKeyPrefix.Length..], out endpointId)
+            && endpointId > 0;
     }
 }
 

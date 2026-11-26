@@ -75,4 +75,33 @@
   <data name="Error.InvocationFailed" xml:space="preserve"><value>Connector invocation failed. Try again later or check account permissions.</value></data>
   <data name="Message.Saved" xml:space="preserve"><value>Connector saved.</value></data>
   <data name="Message.Deleted" xml:space="preserve"><value>Connector deleted.</value></data>
+  <data name="Frontend.Connectors.AddMcpConnector" xml:space="preserve"><value>Add MCP connector</value></data>
+  <data name="Frontend.Connectors.ConnectorTemplates" xml:space="preserve"><value>Built-in connector templates</value></data>
+  <data name="Frontend.Connectors.TemplateDescription" xml:space="preserve"><value>Start from common MCP templates. Connections, authentication, and tool discovery are managed centrally by the MCP module.</value></data>
+  <data name="Frontend.Connectors.McpManagedCentrally" xml:space="preserve"><value>Managed by MCP module</value></data>
+  <data name="Frontend.Connectors.CreateFromTemplate" xml:space="preserve"><value>Create from template</value></data>
+  <data name="Frontend.Connectors.CreateMcpConnector" xml:space="preserve"><value>Create MCP connector</value></data>
+  <data name="Frontend.Connectors.McpConnectionName" xml:space="preserve"><value>MCP connection name</value></data>
+  <data name="Frontend.Connectors.McpConnectionPlaceholder" xml:space="preserve"><value>For example: GitHub MCP</value></data>
+  <data name="Frontend.Connectors.ConnectorDisplayName" xml:space="preserve"><value>Connector display name</value></data>
+  <data name="Frontend.Connectors.McpEndpoint" xml:space="preserve"><value>MCP endpoint</value></data>
+  <data name="Frontend.Connectors.Transport" xml:space="preserve"><value>Transport</value></data>
+  <data name="Frontend.Connectors.SecretStoredByMcpModule" xml:space="preserve"><value>The MCP module encrypts and stores this secret</value></data>
+  <data name="Frontend.Connectors.QuickCreateBehavior" xml:space="preserve"><value>The system first saves and tests the MCP connection, then discovers tools and creates the connector automatically.</value></data>
+  <data name="Frontend.Connectors.TestAndCreate" xml:space="preserve"><value>Test and create</value></data>
+  <data name="Frontend.Connectors.McpFieldsRequired" xml:space="preserve"><value>Enter the MCP connection name and endpoint.</value></data>
+  <data name="Frontend.Connectors.CreateFailed" xml:space="preserve"><value>Creation failed. Check the connection settings.</value></data>
+  <data name="Frontend.Connectors.McpConnectorCreated" xml:space="preserve"><value>The MCP connector was created.</value></data>
+  <data name="Template.GitHub.Description" xml:space="preserve"><value>Use GitHub MCP tools through a centrally managed endpoint and protected token.</value></data>
+  <data name="Template.GitHub.Auth" xml:space="preserve"><value>GitHub access token</value></data>
+  <data name="Template.CustomHttp.Description" xml:space="preserve"><value>Connect any MCP server that supports streamable HTTP.</value></data>
+  <data name="Template.CustomHttp.Auth" xml:space="preserve"><value>Bearer token (optional)</value></data>
+  <data name="Template.CustomSse.Description" xml:space="preserve"><value>Connect an MCP server over Server-Sent Events.</value></data>
+  <data name="Template.CustomSse.Auth" xml:space="preserve"><value>Bearer token (optional)</value></data>
+  <data name="Template.Ncf.Description" xml:space="preserve"><value>Create a connector for an MCP server published by this NCF installation.</value></data>
+  <data name="Template.Ncf.Auth" xml:space="preserve"><value>Access token (optional)</value></data>
+  <data name="Error.McpModuleNotInstalled" xml:space="preserve"><value>Enable the MCP module before creating an MCP-backed connector.</value></data>
+  <data name="Error.TemplateNotFound" xml:space="preserve"><value>The connector template was not found.</value></data>
+  <data name="Error.McpCreatedButTestFailed" xml:space="preserve"><value>The MCP connection was saved, but tool discovery failed: {0}</value></data>
+  <data name="Error.ParameterRequired" xml:space="preserve"><value>The action requires "{0}".</value></data>
 </root>

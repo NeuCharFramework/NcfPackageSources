@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
 
     <PackageReleaseNotes>      [2026-11-12] v0.0.1 add Senparc.Xncf.Connectors.Tests regression testscover
       1. cover module behavior and boundary cases added or adjusted in the current window.
       2. keep the test project compatible with the corresponding module versions and reference chain.
 
+      [2026-11-26] v0.0.2 add MCP connector template and credential protection regression tests.
     </PackageReleaseNotes>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -19,5 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Xncf.Connectors.Abstractions\Senparc.Xncf.Connectors.Abstractions.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.Connectors\Senparc.Xncf.Connectors.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
   </ItemGroup>
 </Project>

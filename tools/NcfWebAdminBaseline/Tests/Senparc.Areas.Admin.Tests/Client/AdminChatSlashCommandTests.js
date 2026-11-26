@@ -169,4 +169,25 @@ assert.ok(
     app.agentTaskUrl(previewAction, true).includes('?embedded=1&ncfTab=1#tab=third&taskId=42'),
     'Live preview must embed the real Agents Manager task page so stream and HIL UI remain available.');
 
+app.currentSessionId = 7;
+app.chatCommandMenuOpen = false;
+app.agentTaskPreviewVisible = false;
+app.agentTaskPreviewAction = null;
+const liveMessages = [];
+app.sessionRuns[7] = {
+    messages: liveMessages,
+    liveTrajectoryId: 0,
+    liveTrajectoryEvents: [],
+    livePendingApprovals: []
+};
+app.finishActiveTask = () => {};
+app.handleLiveStreamEvent('assistant-message', {
+    id: 123,
+    roleType: 1,
+    content: '任务已创建。',
+    attachments: [previewAction]
+}, 'temp-1', 7);
+assert.strictEqual(app.agentTaskPreviewVisible, true,
+    'A completed chat tool response containing an Agent task must automatically open live preview.');
+
 console.log('AdminChat slash command tests passed.');

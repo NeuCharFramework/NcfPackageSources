@@ -286,6 +286,10 @@ namespace Template_OrgName.Xncf.Template_XncfName
         }
 
         /// <summary>Increases each component by ten, capped at 255.</summary>
+        /// <summary>
+        /// Increases each color channel by ten while clamping the result to the
+        /// valid byte-channel upper bound.
+        /// </summary>
         public void Brighten()
         {
             Red = Math.Min(255, Red + 10);
