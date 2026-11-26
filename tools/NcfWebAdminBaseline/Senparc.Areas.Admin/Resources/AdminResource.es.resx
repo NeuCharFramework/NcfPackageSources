@@ -1640,4 +1640,9 @@
   <data name="AdminChat.Action.PreviewAgentTask" xml:space="preserve"><value>Vista previa en vivo: {0} #{1}</value></data>
   <data name="AdminChat.Action.AgentTaskPreviewTitle" xml:space="preserve"><value>Vista previa de tarea de agente: {0} #{1}</value></data>
   <data name="AdminChat.Action.OpenInTab" xml:space="preserve"><value>Abrir por separado</value></data>
+  <data name="AdminChat.Action.AgentTask" xml:space="preserve"><value>Tarea de agente</value></data>
+  <data name="AdminChat.Action.WorkflowRun" xml:space="preserve"><value>Ejecución de Workflow</value></data>
+  <data name="AdminChat.Action.PreviewAsyncTask" xml:space="preserve"><value>Vista previa de {0}: {1} #{2}</value></data>
+  <data name="AdminChat.Action.OpenAsyncTask" xml:space="preserve"><value>Abrir {0}: {1}</value></data>
+  <data name="AdminChat.Action.AsyncTaskPreviewTitle" xml:space="preserve"><value>Vista en vivo de {0}: {1} #{2}</value></data>
 </root>

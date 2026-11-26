@@ -71,4 +71,33 @@
   <data name="Error.InvocationFailed" xml:space="preserve"><value>Falló la invocación del conector. Inténtalo más tarde o comprueba los permisos de la cuenta.</value></data>
   <data name="Message.Saved" xml:space="preserve"><value>Conector guardado.</value></data>
   <data name="Message.Deleted" xml:space="preserve"><value>Conector eliminado.</value></data>
+  <data name="Frontend.Connectors.AddMcpConnector" xml:space="preserve"><value>Agregar conector MCP</value></data>
+  <data name="Frontend.Connectors.ConnectorTemplates" xml:space="preserve"><value>Plantillas de conectores integradas</value></data>
+  <data name="Frontend.Connectors.TemplateDescription" xml:space="preserve"><value>Empiece con plantillas MCP comunes. El módulo MCP administra de forma centralizada las conexiones, la autenticación y el descubrimiento de herramientas.</value></data>
+  <data name="Frontend.Connectors.McpManagedCentrally" xml:space="preserve"><value>Administrado por el módulo MCP</value></data>
+  <data name="Frontend.Connectors.CreateFromTemplate" xml:space="preserve"><value>Crear desde plantilla</value></data>
+  <data name="Frontend.Connectors.CreateMcpConnector" xml:space="preserve"><value>Crear conector MCP</value></data>
+  <data name="Frontend.Connectors.McpConnectionName" xml:space="preserve"><value>Nombre de conexión MCP</value></data>
+  <data name="Frontend.Connectors.McpConnectionPlaceholder" xml:space="preserve"><value>Por ejemplo: GitHub MCP</value></data>
+  <data name="Frontend.Connectors.ConnectorDisplayName" xml:space="preserve"><value>Nombre visible del conector</value></data>
+  <data name="Frontend.Connectors.McpEndpoint" xml:space="preserve"><value>Endpoint MCP</value></data>
+  <data name="Frontend.Connectors.Transport" xml:space="preserve"><value>Transporte</value></data>
+  <data name="Frontend.Connectors.SecretStoredByMcpModule" xml:space="preserve"><value>El módulo MCP cifra y almacena este secreto</value></data>
+  <data name="Frontend.Connectors.QuickCreateBehavior" xml:space="preserve"><value>El sistema guarda y prueba primero la conexión MCP, luego descubre las herramientas y crea automáticamente el conector.</value></data>
+  <data name="Frontend.Connectors.TestAndCreate" xml:space="preserve"><value>Probar y crear</value></data>
+  <data name="Frontend.Connectors.McpFieldsRequired" xml:space="preserve"><value>Introduzca el nombre y el endpoint de la conexión MCP.</value></data>
+  <data name="Frontend.Connectors.CreateFailed" xml:space="preserve"><value>Error al crear. Compruebe la configuración de conexión.</value></data>
+  <data name="Frontend.Connectors.McpConnectorCreated" xml:space="preserve"><value>Se creó el conector MCP.</value></data>
+  <data name="Template.GitHub.Description" xml:space="preserve"><value>Use las herramientas MCP de GitHub mediante un endpoint administrado de forma centralizada y un token protegido.</value></data>
+  <data name="Template.GitHub.Auth" xml:space="preserve"><value>Token de acceso de GitHub</value></data>
+  <data name="Template.CustomHttp.Description" xml:space="preserve"><value>Conecte cualquier servidor MCP compatible con Streamable HTTP.</value></data>
+  <data name="Template.CustomHttp.Auth" xml:space="preserve"><value>Token Bearer (opcional)</value></data>
+  <data name="Template.CustomSse.Description" xml:space="preserve"><value>Conecte un servidor MCP mediante Server-Sent Events.</value></data>
+  <data name="Template.CustomSse.Auth" xml:space="preserve"><value>Token Bearer (opcional)</value></data>
+  <data name="Template.Ncf.Description" xml:space="preserve"><value>Cree un conector para un servidor MCP publicado por esta instalación de NCF.</value></data>
+  <data name="Template.Ncf.Auth" xml:space="preserve"><value>Token de acceso (opcional)</value></data>
+  <data name="Error.McpModuleNotInstalled" xml:space="preserve"><value>Habilite el módulo MCP antes de crear un conector basado en MCP.</value></data>
+  <data name="Error.TemplateNotFound" xml:space="preserve"><value>No se encontró la plantilla del conector.</value></data>
+  <data name="Error.McpCreatedButTestFailed" xml:space="preserve"><value>Se guardó la conexión MCP, pero falló el descubrimiento de herramientas: {0}</value></data>
+  <data name="Error.ParameterRequired" xml:space="preserve"><value>La acción requiere "{0}".</value></data>
 </root>

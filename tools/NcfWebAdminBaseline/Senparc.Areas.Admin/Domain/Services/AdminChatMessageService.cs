@@ -291,7 +291,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 }
             }
             var result = actions
-                .GroupBy(action => action.ActionTargetId)
+                .GroupBy(action => $"{action.ActionType}:{action.ActionTarget}")
                 .Select(group => group.First())
                 .Take(20)
                 .ToList();
@@ -393,22 +393,48 @@ namespace Senparc.Areas.Admin.Domain.Services
                     break;
                 case JsonValueKind.Object:
                     if (element.TryGetProperty("task", out var task)
-                        && task.ValueKind == JsonValueKind.Object
-                        && TryGetInt32(task, "ChatTaskId", out var taskId)
-                        && taskId > 0)
+                        && task.ValueKind == JsonValueKind.Object)
                     {
-                        var groupName = TryGetString(task, "ChatGroupName");
-                        actions.Add(new AdminChatAttachment
+                        var actionType = TryGetString(element, "type");
+                        if (string.Equals(actionType, "agents-task", StringComparison.OrdinalIgnoreCase)
+                            && TryGetInt32(task, "ChatTaskId", out var taskId)
+                            && taskId > 0)
                         {
-                            Name = string.IsNullOrWhiteSpace(groupName)
-                                ? $"ChatTask #{taskId}"
-                                : groupName,
-                            ActionType = "agents-task",
-                            ActionTargetId = taskId,
-                            PreviewKind = "action",
-                            Notice = "Open the Agent task session",
-                            CreatedAt = DateTimeOffset.UtcNow
-                        });
+                            var groupName = TryGetString(task, "ChatGroupName");
+                            actions.Add(new AdminChatAttachment
+                            {
+                                Name = string.IsNullOrWhiteSpace(groupName)
+                                    ? $"ChatTask #{taskId}"
+                                    : groupName,
+                                ActionType = "agents-task",
+                                ActionTargetId = taskId,
+                                ActionTarget = taskId.ToString(),
+                                PreviewKind = "action",
+                                Notice = "Open the Agent task session",
+                                CreatedAt = DateTimeOffset.UtcNow
+                            });
+                        }
+                        else if (string.Equals(actionType, "workflow-run", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var runId = TryGetString(task, "RunId");
+                            var workflowId = TryGetInt32(task, "WorkflowId", out var ownerId) ? ownerId : 0;
+                            if (!string.IsNullOrWhiteSpace(runId))
+                            {
+                                var workflowName = TryGetString(task, "WorkflowName");
+                                actions.Add(new AdminChatAttachment
+                                {
+                                    Name = string.IsNullOrWhiteSpace(workflowName)
+                                        ? $"Workflow #{workflowId}"
+                                        : workflowName,
+                                    ActionType = "workflow-run",
+                                    ActionOwnerId = workflowId,
+                                    ActionTarget = runId,
+                                    PreviewKind = "action",
+                                    Notice = "Open the Workflow run session",
+                                    CreatedAt = DateTimeOffset.UtcNow
+                                });
+                            }
+                        }
                     }
                     foreach (var property in element.EnumerateObject())
                     {

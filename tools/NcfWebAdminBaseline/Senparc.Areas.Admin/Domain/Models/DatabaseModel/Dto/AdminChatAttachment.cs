@@ -51,6 +51,8 @@ public sealed class AdminChatAttachment
     public string ChangeType { get; set; } = "";
     public string ActionType { get; set; } = "";
     public int ActionTargetId { get; set; }
+    public string ActionTarget { get; set; } = "";
+    public int ActionOwnerId { get; set; }
     public string PreviewKind { get; set; } = "";
     public DateTimeOffset CreatedAt { get; set; }
     public string LocalStatus { get; set; } = "";

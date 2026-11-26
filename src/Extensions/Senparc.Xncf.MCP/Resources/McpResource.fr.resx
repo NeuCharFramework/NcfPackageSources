@@ -245,4 +245,5 @@
   <data name="Frontend.Mcp.DeleteFailed" xml:space="preserve"><value>Échec de la suppression</value></data>
   <data name="Frontend.Mcp.InputSchema" xml:space="preserve"><value>Schéma d'entrée</value></data>
   <data name="Frontend.Mcp.NoJSONSchemaInformation" xml:space="preserve"><value>(aucune information de schéma JSON)</value></data>
+  <data name="Frontend.Mcp.SavedLeaveBlankToKeepTheExistingCredential" xml:space="preserve"><value>Enregistré ; laissez vide pour conserver les identifiants actuels</value></data>
 </root>

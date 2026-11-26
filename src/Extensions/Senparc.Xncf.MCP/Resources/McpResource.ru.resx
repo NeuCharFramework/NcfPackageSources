@@ -245,4 +245,5 @@
   <data name="Frontend.Mcp.DeleteFailed" xml:space="preserve"><value>Ошибка удаления</value></data>
   <data name="Frontend.Mcp.InputSchema" xml:space="preserve"><value>Входная схема</value></data>
   <data name="Frontend.Mcp.NoJSONSchemaInformation" xml:space="preserve"><value>(информация о JSON-схеме отсутствует)</value></data>
+  <data name="Frontend.Mcp.SavedLeaveBlankToKeepTheExistingCredential" xml:space="preserve"><value>Сохранено; оставьте поле пустым, чтобы сохранить текущие учётные данные</value></data>
 </root>

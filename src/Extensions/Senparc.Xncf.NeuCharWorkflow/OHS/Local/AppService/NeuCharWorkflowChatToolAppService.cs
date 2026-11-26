@@ -108,10 +108,21 @@ public sealed class NeuCharWorkflowChatToolAppService(
                 .ConfigureAwait(false);
             logger.Append(JsonSerializer.Serialize(new
             {
-                workflow.Id,
-                WorkflowName = workflow.Name,
-                RunId = runId,
-                Status = "started"
+                kind = "admin-chat-action",
+                actions = new[]
+                {
+                    new
+                    {
+                        type = "workflow-run",
+                        task = new
+                        {
+                            WorkflowId = workflow.Id,
+                            WorkflowName = workflow.Name,
+                            RunId = runId.ToString("N"),
+                            Status = "started"
+                        }
+                    }
+                }
             }));
             return logger.GetLogs();
         });

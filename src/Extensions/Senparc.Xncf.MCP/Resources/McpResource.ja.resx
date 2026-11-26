@@ -245,4 +245,5 @@
   <data name="Frontend.Mcp.DeleteFailed" xml:space="preserve"><value>削除に失敗しました</value></data>
   <data name="Frontend.Mcp.InputSchema" xml:space="preserve"><value>入力スキーマ</value></data>
   <data name="Frontend.Mcp.NoJSONSchemaInformation" xml:space="preserve"><value>（JSON スキーマ情報なし）</value></data>
+  <data name="Frontend.Mcp.SavedLeaveBlankToKeepTheExistingCredential" xml:space="preserve"><value>保存済み。現在の資格情報を維持するには空欄のままにしてください</value></data>
 </root>

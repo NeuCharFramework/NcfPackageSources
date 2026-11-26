@@ -88,7 +88,7 @@ The user asked to start an existing NeuChar Workflow owned by the current admini
 1. Parse an explicit --id value or use SearchWorkflows to find a semantic match by name and description.
 2. If more than one candidate is plausible, show the candidates and ask which one to use.
 3. Pass the user's remaining text as workflow input and call StartWorkflow exactly once.
-4. Report the workflow name and run ID; the workflow runs asynchronously, so do not claim it completed.
+4. StartWorkflow returns admin-chat action metadata. The user will see a live preview with Workflow status and native HIL interaction. Report it as running and do not claim completion.
 5. Do not create, edit, delete, or import a workflow in this command.
 """
             },

@@ -86,10 +86,10 @@ public partial class Register : IChatTool
 
 [Agent Group Command]
 The user asked to run an existing AgentsManager ChatGroup. Do not create, edit, or delete a group.
-1. Search enabled groups with FindChatGroups using task keywords, group name, or the explicit --group value.
-2. Reuse an exact ID when supplied. For a semantic match, choose only when one group clearly matches; otherwise show the closest options and ask the user to choose.
-3. Start the selected existing group with RunChatGroup and the user's task as Command.
-4. Report the selected group and the resulting task status; do not claim completion because the run is asynchronous.
+1. If --group contains an ID, do not use FindChatGroups to rediscover it. Pass that exact numeric ID as ChatGroups=[id] to RunChatGroup.
+2. Use FindChatGroups only when the user supplied a name or task description without an explicit ID. Choose only when one group clearly matches; otherwise show the closest options and ask.
+3. Pass the remaining user text as Command. Even a short phrase such as "执行任务" is a valid command and must not be rejected as missing.
+4. RunChatGroup returns after a real ChatTask is created. Treat the ChatTask as running asynchronously and show its preview/action metadata; do not describe it as completed.
 """
             }
         };

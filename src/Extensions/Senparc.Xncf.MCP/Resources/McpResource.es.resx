@@ -245,4 +245,5 @@
   <data name="Frontend.Mcp.DeleteFailed" xml:space="preserve"><value>Error al eliminar</value></data>
   <data name="Frontend.Mcp.InputSchema" xml:space="preserve"><value>Esquema de entrada</value></data>
   <data name="Frontend.Mcp.NoJSONSchemaInformation" xml:space="preserve"><value>(sin información de esquema JSON)</value></data>
+  <data name="Frontend.Mcp.SavedLeaveBlankToKeepTheExistingCredential" xml:space="preserve"><value>Guardado; deje el campo en blanco para mantener la credencial actual</value></data>
 </root>

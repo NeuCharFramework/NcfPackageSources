@@ -32,6 +32,23 @@ public class AgentStudioTests : AgentsManagerTestBase
         _serviceProvider.GetRequiredService<HumanInTheLoopRequestStore>());
 
     [TestMethod]
+    public async Task FindChatGroups_NumericQuery_ResolvesExactEnabledGroupId()
+    {
+        await WithFixture(async fixture =>
+        {
+            var response = await AppService.FindChatGroups(new ChatGroup_FindByNameRequest
+            {
+                Query = fixture.Group.Id.ToString(),
+                TopN = 5
+            });
+
+            Assert.IsTrue(response.Success == true, response.ErrorMessage);
+            StringAssert.Contains(response.Data, $"ID: {fixture.Group.Id}");
+            StringAssert.Contains(response.Data, fixture.Group.Name);
+        });
+    }
+
+    [TestMethod]
     public async Task Studio_AddParticipant_IsIdempotentAndPreservesConfiguration()
     {
         await WithFixture(async fixture =>

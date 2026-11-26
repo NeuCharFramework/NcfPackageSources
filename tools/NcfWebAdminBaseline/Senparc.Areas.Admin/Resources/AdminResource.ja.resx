@@ -1640,4 +1640,9 @@
   <data name="AdminChat.Action.PreviewAgentTask" xml:space="preserve"><value>ライブプレビュー：{0} #{1}</value></data>
   <data name="AdminChat.Action.AgentTaskPreviewTitle" xml:space="preserve"><value>Agent タスク実行プレビュー：{0} #{1}</value></data>
   <data name="AdminChat.Action.OpenInTab" xml:space="preserve"><value>別ページで開く</value></data>
+  <data name="AdminChat.Action.AgentTask" xml:space="preserve"><value>Agent タスク</value></data>
+  <data name="AdminChat.Action.WorkflowRun" xml:space="preserve"><value>Workflow 実行</value></data>
+  <data name="AdminChat.Action.PreviewAsyncTask" xml:space="preserve"><value>{0}をプレビュー：{1} #{2}</value></data>
+  <data name="AdminChat.Action.OpenAsyncTask" xml:space="preserve"><value>{0}を別ページで開く：{1}</value></data>
+  <data name="AdminChat.Action.AsyncTaskPreviewTitle" xml:space="preserve"><value>{0}ライブプレビュー：{1} #{2}</value></data>
 </root>

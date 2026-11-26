@@ -11,12 +11,14 @@ const scriptPath = path.resolve(
 let options;
 let openedAdminPage = '';
 const sandbox = {
+    URLSearchParams,
     Vue: function (value) { options = value; },
     window: {
         ChatLauncherMixin: {},
         INITIAL_DATA: {},
         innerWidth: 1440,
         innerHeight: 500,
+        URLSearchParams,
         parent: {
             ncfOpenAdminPage(url) {
                 openedAdminPage = url;
@@ -168,6 +170,16 @@ assert.strictEqual(app.agentTaskPreviewAction, previewAction);
 assert.ok(
     app.agentTaskUrl(previewAction, true).includes('?embedded=1&ncfTab=1#tab=third&taskId=42'),
     'Live preview must embed the real Agents Manager task page so stream and HIL UI remain available.');
+const workflowAction = {
+    actionType: 'workflow-run',
+    actionOwnerId: 1027,
+    actionTarget: '00112233445566778899aabbccddeeff',
+    name: 'Release Workflow'
+};
+assert.ok(
+    app.agentTaskUrl(workflowAction, true).includes(
+        '/Admin/NeuCharWorkflow/Index?workflowId=1027&runId=00112233445566778899aabbccddeeff&embedded=1&ncfTab=1'),
+    'Workflow runs must open the live Workflow execution page with native HIL UI.');
 
 app.currentSessionId = 7;
 app.chatCommandMenuOpen = false;

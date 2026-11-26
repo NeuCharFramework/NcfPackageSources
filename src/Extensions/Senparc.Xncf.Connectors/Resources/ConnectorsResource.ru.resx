@@ -71,4 +71,33 @@
   <data name="Error.InvocationFailed" xml:space="preserve"><value>Не удалось вызвать коннектор. Повторите попытку позже или проверьте права учётной записи.</value></data>
   <data name="Message.Saved" xml:space="preserve"><value>Коннектор сохранён.</value></data>
   <data name="Message.Deleted" xml:space="preserve"><value>Коннектор удалён.</value></data>
+  <data name="Frontend.Connectors.AddMcpConnector" xml:space="preserve"><value>Добавить коннектор MCP</value></data>
+  <data name="Frontend.Connectors.ConnectorTemplates" xml:space="preserve"><value>Встроенные шаблоны коннекторов</value></data>
+  <data name="Frontend.Connectors.TemplateDescription" xml:space="preserve"><value>Начните с популярных шаблонов MCP. Модуль MCP централизованно управляет подключениями, аутентификацией и обнаружением инструментов.</value></data>
+  <data name="Frontend.Connectors.McpManagedCentrally" xml:space="preserve"><value>Управляется модулем MCP</value></data>
+  <data name="Frontend.Connectors.CreateFromTemplate" xml:space="preserve"><value>Создать по шаблону</value></data>
+  <data name="Frontend.Connectors.CreateMcpConnector" xml:space="preserve"><value>Создать коннектор MCP</value></data>
+  <data name="Frontend.Connectors.McpConnectionName" xml:space="preserve"><value>Имя подключения MCP</value></data>
+  <data name="Frontend.Connectors.McpConnectionPlaceholder" xml:space="preserve"><value>Например: GitHub MCP</value></data>
+  <data name="Frontend.Connectors.ConnectorDisplayName" xml:space="preserve"><value>Отображаемое имя коннектора</value></data>
+  <data name="Frontend.Connectors.McpEndpoint" xml:space="preserve"><value>Конечная точка MCP</value></data>
+  <data name="Frontend.Connectors.Transport" xml:space="preserve"><value>Транспорт</value></data>
+  <data name="Frontend.Connectors.SecretStoredByMcpModule" xml:space="preserve"><value>Модуль MCP зашифрует и сохранит этот секрет</value></data>
+  <data name="Frontend.Connectors.QuickCreateBehavior" xml:space="preserve"><value>Система сначала сохранит и проверит подключение MCP, затем обнаружит инструменты и автоматически создаст коннектор.</value></data>
+  <data name="Frontend.Connectors.TestAndCreate" xml:space="preserve"><value>Проверить и создать</value></data>
+  <data name="Frontend.Connectors.McpFieldsRequired" xml:space="preserve"><value>Введите имя подключения MCP и конечную точку.</value></data>
+  <data name="Frontend.Connectors.CreateFailed" xml:space="preserve"><value>Не удалось создать. Проверьте параметры подключения.</value></data>
+  <data name="Frontend.Connectors.McpConnectorCreated" xml:space="preserve"><value>Коннектор MCP создан.</value></data>
+  <data name="Template.GitHub.Description" xml:space="preserve"><value>Используйте инструменты GitHub MCP через централизованно управляемую конечную точку и защищённый токен.</value></data>
+  <data name="Template.GitHub.Auth" xml:space="preserve"><value>Токен доступа GitHub</value></data>
+  <data name="Template.CustomHttp.Description" xml:space="preserve"><value>Подключите любой сервер MCP с поддержкой Streamable HTTP.</value></data>
+  <data name="Template.CustomHttp.Auth" xml:space="preserve"><value>Токен Bearer (необязательно)</value></data>
+  <data name="Template.CustomSse.Description" xml:space="preserve"><value>Подключите сервер MCP через Server-Sent Events.</value></data>
+  <data name="Template.CustomSse.Auth" xml:space="preserve"><value>Токен Bearer (необязательно)</value></data>
+  <data name="Template.Ncf.Description" xml:space="preserve"><value>Создайте коннектор для сервера MCP, опубликованного этой установкой NCF.</value></data>
+  <data name="Template.Ncf.Auth" xml:space="preserve"><value>Токен доступа (необязательно)</value></data>
+  <data name="Error.McpModuleNotInstalled" xml:space="preserve"><value>Включите модуль MCP перед созданием коннектора на основе MCP.</value></data>
+  <data name="Error.TemplateNotFound" xml:space="preserve"><value>Шаблон коннектора не найден.</value></data>
+  <data name="Error.McpCreatedButTestFailed" xml:space="preserve"><value>Подключение MCP сохранено, но обнаружение инструментов завершилось ошибкой: {0}</value></data>
+  <data name="Error.ParameterRequired" xml:space="preserve"><value>Для этого действия требуется «{0}».</value></data>
 </root>

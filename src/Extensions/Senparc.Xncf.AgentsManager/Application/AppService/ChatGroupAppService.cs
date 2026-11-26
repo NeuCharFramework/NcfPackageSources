@@ -162,6 +162,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 }
 
                 var topN = request.TopN <= 0 ? 5 : Math.Min(request.TopN, 10);
+                if (int.TryParse(query, out var requestedGroupId) && requestedGroupId > 0)
+                {
+                    var exactGroup = await _chatGroupService.GetObjectAsync(
+                        group => group.Id == requestedGroupId && group.Enable);
+                    return exactGroup == null
+                        ? $"没有找到启用状态的 ChatGroup，ID：{requestedGroupId}。"
+                        : FormatChatGroup(exactGroup, Array.Empty<ChatGroupMember>(), new Dictionary<int, string>());
+                }
                 var groups = await _chatGroupService.GetObjectListAsync(
                     0,
                     topN,
@@ -194,30 +202,35 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     : await _agentsTemplateService.GetFullListAsync(agent => agentIds.Contains(agent.Id));
                 var agentNames = agents.ToDictionary(agent => agent.Id, agent => agent.Name);
 
-                return string.Join(
-                    "\n",
-                    groupList.Select(group =>
-                    {
-                        var groupMembers = memberLinksByGroup[group.Id];
-                        var members = groupMembers
-                            .Select(member => agentNames.TryGetValue(member.AgentTemplateId, out var name)
-                                ? name
-                                : $"AgentTemplate #{member.AgentTemplateId}")
-                            .Distinct(StringComparer.OrdinalIgnoreCase)
-                            .ToList();
-                        var description = string.IsNullOrWhiteSpace(group.Description)
-                            ? "(无说明)"
-                            : group.Description.Length <= 200
-                                ? group.Description
-                                : group.Description.Substring(0, 200) + "…";
-                        var memberSummary = string.Join("、", members.Take(12));
-                        if (members.Count > 12)
-                        {
-                            memberSummary += " 等更多成员";
-                        }
-                        return $"ID: {group.Id}; 名称: {group.Name}; 说明: {description}; 成员: {memberSummary}";
-                    }));
+                return string.Join("\n", groupList.Select(group => FormatChatGroup(
+                    group,
+                    memberLinksByGroup[group.Id],
+                    agentNames)));
             });
+        }
+
+        private static string FormatChatGroup(
+            ChatGroup group,
+            IReadOnlyCollection<ChatGroupMember> groupMembers,
+            IReadOnlyDictionary<int, string> agentNames)
+        {
+            var members = groupMembers
+                .Select(member => agentNames.TryGetValue(member.AgentTemplateId, out var name)
+                    ? name
+                    : $"AgentTemplate #{member.AgentTemplateId}")
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            var description = string.IsNullOrWhiteSpace(group.Description)
+                ? "(无说明)"
+                : group.Description.Length <= 200
+                    ? group.Description
+                    : group.Description.Substring(0, 200) + "…";
+            var memberSummary = string.Join("、", members.Take(12));
+            if (members.Count > 12)
+            {
+                memberSummary += " 等更多成员";
+            }
+            return $"ID: {group.Id}; 名称: {group.Name}; 说明: {description}; 成员: {memberSummary}";
         }
 
         /// <summary>

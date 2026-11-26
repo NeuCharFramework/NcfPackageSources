@@ -2276,24 +2276,48 @@ var chatApp = new Vue({
     },
 
     openMessageAttachmentAction(attachment) {
-      if (!attachment || attachment.actionType !== 'agents-task' || !attachment.actionTargetId) return;
+      if (!attachment || !this.isMessageAsyncAction(attachment)) return;
       const url = this.agentTaskUrl(attachment, false);
-      const title = `${attachment.name || 'Agent Task'} #${attachment.actionTargetId}`;
+      const target = attachment.actionTarget || attachment.actionTargetId;
+      const title = `${attachment.name || this.messageActionTypeLabel(attachment)} #${target}`;
       const opener = window.parent && window.parent !== window ? window.parent : window;
       if (typeof opener.ncfOpenAdminPage === 'function' && opener.ncfOpenAdminPage(url, title)) return;
-      window.open(url, `ncf-agent-task-${attachment.actionTargetId}`, 'noopener');
+      window.open(url, `ncf-${attachment.actionType}-${target}`, 'noopener');
     },
 
     agentTaskUrl(attachment, embedded) {
-      if (!attachment || !attachment.actionTargetId) return '';
+      if (!this.isMessageAsyncAction(attachment)) return '';
+      if (attachment.actionType === 'workflow-run') {
+        const query = new URLSearchParams();
+        if (attachment.actionOwnerId) query.set('workflowId', String(attachment.actionOwnerId));
+        if (attachment.actionTarget) query.set('runId', attachment.actionTarget);
+        if (embedded) {
+          query.set('embedded', '1');
+          query.set('ncfTab', '1');
+        }
+        return `/Admin/NeuCharWorkflow/Index?${query.toString()}`;
+      }
+      const target = attachment.actionTarget || attachment.actionTargetId;
       const query = embedded ? '?embedded=1&ncfTab=1' : '';
-      return `/Admin/AgentsManager/Index${query}#tab=third&taskId=${encodeURIComponent(attachment.actionTargetId)}`;
+      return `/Admin/AgentsManager/Index${query}#tab=third&taskId=${encodeURIComponent(target)}`;
     },
 
     openAgentTaskPreview(attachment) {
-      if (!attachment || attachment.actionType !== 'agents-task' || !attachment.actionTargetId) return;
+      if (!this.isMessageAsyncAction(attachment)) return;
       this.agentTaskPreviewAction = attachment;
       this.agentTaskPreviewVisible = true;
+    },
+
+    isMessageAsyncAction(attachment) {
+      return !!attachment
+        && (attachment.actionType === 'agents-task' || attachment.actionType === 'workflow-run')
+        && !!(attachment.actionTarget || attachment.actionTargetId);
+    },
+
+    messageActionTypeLabel(attachment) {
+      return ncfT(attachment && attachment.actionType === 'workflow-run'
+        ? 'AdminChat.Action.WorkflowRun'
+        : 'AdminChat.Action.AgentTask');
     },
 
     async openWorkspaceArtifact(attachment) {
