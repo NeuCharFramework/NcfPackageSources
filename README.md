@@ -189,7 +189,6 @@ The package name follows the project namespace. Basic libraries start with `Senp
 | `Senparc.Ncf.Repository` | Repository-layer support |
 | `Senparc.Ncf.Service` | Service-layer support |
 | `Senparc.Ncf.Log` | Logging integration |
-| `Senparc.Ncf.Mvc.UI` | MVC UI components |
 | `Senparc.Ncf.Utility` | Shared utilities |
 | `Senparc.Ncf.SMS` | SMS support |
 | `Senparc.Ncf.UnitTestExtension` | Unit-test helpers |
@@ -205,7 +204,7 @@ Major extension packages include:
 - Integration: `Senparc.Xncf.Connectors`, `Senparc.Xncf.MCP`, `Senparc.Xncf.Dapr`, `Senparc.Xncf.FileManager`, and `Senparc.Xncf.DesktopBridge`
 - Orchestration and runtime: `Senparc.Xncf.NeuCharWorkflow`, `Senparc.Xncf.Sandbox`, `Senparc.Xncf.Workspace`, and `Senparc.Xncf.WorkspaceAgent`
 - Data and administration: `Senparc.Xncf.DynamicData`, `Senparc.Xncf.DatabaseToolkit`, `Senparc.Xncf.FirmwareUpdate`, `Senparc.Xncf.WeixinManager`, and `Senparc.Xncf.SenMapic`
-- Developer tooling: `Senparc.Xncf.XncfBuilder`, `Senparc.Xncf.XncfBuilder.Template`, `Senparc.Xncf.ChangeNamespace`, `Senparc.Xncf.Terminal`, and `Senparc.Xncf.Swagger`
+- Developer tooling: `Senparc.Xncf.XncfBuilder`, `Senparc.Xncf.XncfBuilder.Template`, `Senparc.Xncf.Terminal`, and `Senparc.Xncf.Swagger`
 
 System packages include `Senparc.Xncf.Installer`, `Senparc.Xncf.Installer.Interface`, `Senparc.Xncf.AreasBase`, `Senparc.Xncf.Menu`, `Senparc.Xncf.SystemCore`, `Senparc.Xncf.SystemManager`, `Senparc.Xncf.SystemPermission`, `Senparc.Xncf.Tenant`, `Senparc.Xncf.Tenant.Interface`, and `Senparc.Xncf.XncfModuleManager`.
 

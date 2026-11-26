@@ -121,22 +121,44 @@ jobs:
 
   - powershell: |
       $ErrorActionPreference = 'Stop'
+      $solution = Join-Path "$(Build.SourcesDirectory)" 'src/NcfPackageSources.sln'
+      $solutionDirectory = Split-Path $solution -Parent
       $requiredProjects = @(
         'src/Basic/Senparc.Ncf.Shared.Abstractions/Senparc.Ncf.Shared.Abstractions.csproj',
         'src/Extensions/Senparc.Xncf.FileManager.Abstractions/Senparc.Xncf.FileManager.Abstractions.csproj',
         'src/Extensions/Senparc.Xncf.MCP.Abstractions/Senparc.Xncf.MCP.Abstractions.csproj',
         'src/Extensions/Senparc.Xncf.Workspace.Abstractions/Senparc.Xncf.Workspace.Abstractions.csproj',
-        'src/Extensions/Senparc.Xncf.Connectors.Abstractions/Senparc.Xncf.Connectors.Abstractions.csproj'
+        'src/Extensions/Senparc.Xncf.Connectors.Abstractions/Senparc.Xncf.Connectors.Abstractions.csproj',
+        'src/Extensions/System/Senparc.Xncf.Installer.Interface/[5930]Senparc.Xncf.Installer.Interface.csproj',
+        'src/Extensions/System/Senparc.Xncf.Installer/[5930]Senparc.Xncf.Installer.csproj'
       )
-      foreach ($relativePath in $requiredProjects) {
-        $project = Join-Path "$(Build.SourcesDirectory)" $relativePath
-        $output = & dotnet msbuild $project "-p:Configuration=$(buildConfiguration)" '-getProperty:GeneratePackageOnBuild,PackageId,PackageVersion,PackageOutputPath,MSBuildProjectDirectory'
+
+      $listedProjects = & dotnet sln $solution list
+      if ($LASTEXITCODE -ne 0) {
+        throw "Failed to list projects from $solution (exit code $LASTEXITCODE)."
+      }
+      $solutionProjects = $listedProjects |
+        Where-Object { $_ -match '\.csproj$' } |
+        ForEach-Object { [System.IO.Path]::GetFullPath((Join-Path $solutionDirectory $_.Trim())) }
+      $requiredProjectPaths = $requiredProjects |
+        ForEach-Object { [System.IO.Path]::GetFullPath((Join-Path "$(Build.SourcesDirectory)" $_)) }
+      $projects = @($requiredProjectPaths + $solutionProjects) | Sort-Object -Unique
+
+      $validatedPackageCount = 0
+      foreach ($project in $projects) {
+        $output = & dotnet msbuild $project "-p:Configuration=$(buildConfiguration)" '-getProperty:IsPackable,GeneratePackageOnBuild,PackageId,PackageVersion,PackageOutputPath,MSBuildProjectDirectory'
         if ($LASTEXITCODE -ne 0) {
           throw "Failed to evaluate package properties for $project (exit code $LASTEXITCODE)."
         }
         $properties = (($output -join "`n") | ConvertFrom-Json).Properties
         if ($properties.GeneratePackageOnBuild -ne 'true') {
-          throw "Release packaging is disabled for $project. Set GeneratePackageOnBuild to true."
+          if ($requiredProjectPaths -contains $project) {
+            throw "Release packaging is disabled for required project $project. Set GeneratePackageOnBuild to true."
+          }
+          continue
+        }
+        if ($properties.IsPackable -ne 'true') {
+          throw "Release package generation is configured but IsPackable is false for $project."
         }
         $packageDirectory = [System.IO.Path]::Combine($properties.MSBuildProjectDirectory, $properties.PackageOutputPath)
         $packagePath = Join-Path $packageDirectory ("{0}.{1}.nupkg" -f $properties.PackageId, $properties.PackageVersion)
@@ -144,8 +166,10 @@ jobs:
           throw "Required package was not generated: $packagePath. No packages will be pushed."
         }
         Write-Host "Validated required package: $packagePath"
+        $validatedPackageCount++
       }
-    displayName: 'Validate required abstraction packages before push'
+      Write-Host "Validated $validatedPackageCount generated NuGet package(s) from the solution."
+    displayName: 'Validate required packages before push'
     condition: succeeded()
 
   # 自动发现并推送 Senparc.Ncf.* / Senparc.Xncf.* 的 .nupkg（仅 .nupkg；符号包 .snupkg 未包含，可按需扩展）

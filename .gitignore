@@ -60,7 +60,6 @@ obj/
 /src/.vs
 /src/Basic/.vs/ScfPackageSources.Basic/DesignTimeBuild
 **/*/SenparcTraceLog
-/src/Extensions/Senparc.Xncf.ChangeNamespace.Tests/App_Data/src/NcfSrc/NCF
 /src/test/ClassLibrary1/templates/mytemplate1
 /src/test/ClassLibrary1/ClassLibrary1.csproj
 /src/NcfPackageSources.sln-backup-*.sln

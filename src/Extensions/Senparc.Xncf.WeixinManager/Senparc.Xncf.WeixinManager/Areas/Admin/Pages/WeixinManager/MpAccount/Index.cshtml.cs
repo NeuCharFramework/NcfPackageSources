@@ -24,7 +24,6 @@ using Senparc.Xncf.WeixinManager.Domain.Models.VD.Admin.WeixinManager;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
 {

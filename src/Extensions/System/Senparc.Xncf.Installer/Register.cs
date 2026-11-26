@@ -53,7 +53,7 @@ namespace Senparc.Xncf.Installer
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_INSTALLER_UID;
 
-        public override string Version => "0.6.0";//the version number is required
+        public override string Version => "0.6.0.1";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 

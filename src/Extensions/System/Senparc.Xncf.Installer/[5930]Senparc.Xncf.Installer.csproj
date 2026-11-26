@@ -2,9 +2,12 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<Version>0.6.0.1</Version>
+		<PackageId>Senparc.Xncf.Installer</PackageId>
 		<AssemblyName>Senparc.Xncf.Installer</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer</RootNamespace>
+		<IsPackable>true</IsPackable>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
 		<Description>NCF system installer module for first-time initialization</Description>
 		<Copyright>NeuCharFramework</Copyright>
@@ -17,9 +20,10 @@
 		    2. Modernized install UI.
 		    3. Aligned the project with updated referenced module contracts and package versions.
 		    4. Preserved installer integration while keeping the dependency chain consistent.
-        [2026-11-24] v0.6.0 Dependency compatibility update for affected Senparc modules.
+        [2026-11-26] v0.6.0.1 Dependency compatibility and NuGet packaging update for affected Senparc modules.
         1. Aligned dependent package metadata with the current Senparc module versions.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        3. Enabled NuGet package generation for the Web SDK module.</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
@@ -42,8 +46,8 @@
 		<ProjectReference Include="..\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.Installer.Interface\[5930]Senparc.Xncf.Installer.Interface.csproj" />
-		<ProjectReference Include="..\..\..\..\tools\NcfWebAdminBaseline\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
-		<ProjectReference Include="..\..\..\..\tools\NcfWebAdminBaseline\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
+		<ProjectReference Include="..\..\..\..\tools\NcfWebAdminBaseline\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\..\..\..\tools\NcfWebAdminBaseline\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\..\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />
 	</ItemGroup>
 	<ItemGroup>

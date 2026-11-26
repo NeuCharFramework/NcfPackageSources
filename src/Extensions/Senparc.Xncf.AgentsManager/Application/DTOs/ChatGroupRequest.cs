@@ -54,7 +54,6 @@ using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
-using System.Web.Mvc;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using System.Text.Json.Serialization;
 
