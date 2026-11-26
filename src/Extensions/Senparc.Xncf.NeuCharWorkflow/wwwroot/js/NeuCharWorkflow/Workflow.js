@@ -642,6 +642,8 @@ new Vue({
         await this.openTaskRoute();
     },
     mounted() {
+        const previewMode = new URLSearchParams(window.location.search || '').get('preview') === '1';
+        document.body.classList.toggle('workflow-chat-preview', previewMode);
         window.addEventListener('mousemove', this.onPointerMove);
         window.addEventListener('mouseup', this.onPointerUp);
         window.addEventListener('keydown', this.onSaveShortcut);
@@ -661,6 +663,7 @@ new Vue({
         });
     },
     beforeDestroy() {
+        document.body.classList.remove('workflow-chat-preview');
         window.removeEventListener('mousemove', this.onPointerMove);
         window.removeEventListener('mouseup', this.onPointerUp);
         window.removeEventListener('keydown', this.onSaveShortcut);

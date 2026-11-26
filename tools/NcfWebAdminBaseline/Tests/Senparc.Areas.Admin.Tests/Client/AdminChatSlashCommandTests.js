@@ -168,7 +168,7 @@ app.openAgentTaskPreview(previewAction);
 assert.strictEqual(app.agentTaskPreviewVisible, true);
 assert.strictEqual(app.agentTaskPreviewAction, previewAction);
 assert.ok(
-    app.agentTaskUrl(previewAction, true).includes('?embedded=1&ncfTab=1#tab=third&taskId=42'),
+    app.agentTaskUrl(previewAction, true).includes('?embedded=1&ncfTab=1&preview=1#tab=third&taskId=42'),
     'Live preview must embed the real Agents Manager task page so stream and HIL UI remain available.');
 const workflowAction = {
     actionType: 'workflow-run',
@@ -178,8 +178,15 @@ const workflowAction = {
 };
 assert.ok(
     app.agentTaskUrl(workflowAction, true).includes(
-        '/Admin/NeuCharWorkflow/Index?workflowId=1027&runId=00112233445566778899aabbccddeeff&embedded=1&ncfTab=1'),
+        '/Admin/NeuCharWorkflow/Index?workflowId=1027&runId=00112233445566778899aabbccddeeff&embedded=1&ncfTab=1&preview=1'),
     'Workflow runs must open the live Workflow execution page with native HIL UI.');
+
+const agentsEntry = fs.readFileSync(path.resolve(
+    __dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.AgentsManager/wwwroot/js/AgentsManager/index.js'),
+'utf8');
+assert.ok(agentsEntry.includes("agents-manager-chat-preview"),
+    'Agents task preview must tag the embedded page so unrelated navigation can be hidden.');
 
 app.currentSessionId = 7;
 app.chatCommandMenuOpen = false;
@@ -192,6 +199,24 @@ app.sessionRuns[7] = {
     liveTrajectoryEvents: [],
     livePendingApprovals: []
 };
+app.handleLiveStreamEvent('async-action', {
+    action: {
+        actionType: 'agents-task',
+        target: '42',
+        ownerId: 0,
+        name: 'Support Group'
+    },
+    actionState: {
+        status: 'running',
+        message: 'Task is running',
+        isTerminal: false
+    }
+}, 'temp-1', 7);
+assert.strictEqual(app.agentTaskPreviewVisible, true,
+    'An async action must open preview before the assistant turn finishes.');
+assert.strictEqual(app.sessionRuns[7].liveStatusText, '后台任务运行中…',
+    'The chat stream must remain visibly active while the external task runs.');
+
 app.finishActiveTask = () => {};
 app.handleLiveStreamEvent('assistant-message', {
     id: 123,

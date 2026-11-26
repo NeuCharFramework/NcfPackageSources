@@ -190,5 +190,6 @@ Help the user edit an existing NeuChar Workflow. Only this command's explicit to
     private static void AddChatToolServices(IServiceCollection services)
     {
         services.AddScoped<WorkflowChatToolParameterOptionsProvider>();
+        services.AddScoped<IChatToolAsyncActionMonitor, WorkflowRunChatToolAsyncActionMonitor>();
     }
 }

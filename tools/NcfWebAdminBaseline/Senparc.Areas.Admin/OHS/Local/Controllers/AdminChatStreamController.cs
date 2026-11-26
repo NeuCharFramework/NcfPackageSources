@@ -415,6 +415,16 @@ public sealed class AdminChatStreamController : ControllerBase
             case "trajectory-event":
                 return await EmitAsync(run, "trajectory-event", liveEvent, clientConnected,
                     state => state.StatusText = "正在处理任务…");
+            case "async-action":
+                return await EmitAsync(run, "async-action", liveEvent, clientConnected,
+                    state => state.StatusText = liveEvent.ActionState?.Status switch
+                    {
+                        "waiting-human" => "等待人工交互…",
+                        "completed" => "后台任务已完成，正在继续…",
+                        "failed" => "后台任务失败，正在整理结果…",
+                        "cancelled" => "后台任务已取消，正在整理结果…",
+                        _ => "后台任务执行中…"
+                    });
             case "trajectory-complete":
                 return await EmitAsync(run, "trajectory-complete", liveEvent, clientConnected, state =>
                     state.StatusText = liveEvent.PendingApprovals?.Count > 0 ? "等待你的确认…" : "任务已完成，正在保存…");

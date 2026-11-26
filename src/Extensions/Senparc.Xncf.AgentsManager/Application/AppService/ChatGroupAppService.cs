@@ -541,6 +541,74 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         /// <param name="request">The selected groups, command, model, and human-approval options.</param>
         /// <returns>A task containing operation logs and started-task metadata.</returns>
         [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.StartChatGroup.Name", "Function.Agents.StartChatGroup.Description", typeof(Register))]
+        public Task<StringAppResponse> StartChatToolTask(ChatGroup_ChatToolRunRequest request)
+        {
+            return this.GetStringResponseAsync(async (response, logger) =>
+            {
+                if (request == null || request.ChatGroupId <= 0)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "ChatGroupId must be greater than 0.";
+                    return null;
+                }
+                if (string.IsNullOrWhiteSpace(request.Command))
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "Command is required.";
+                    return null;
+                }
+
+                var group = await _chatGroupService.GetObjectAsync(item =>
+                    item.Id == request.ChatGroupId && item.Enable);
+                if (group == null)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = $"Enabled ChatGroup was not found: {request.ChatGroupId}.";
+                    return null;
+                }
+
+                var started = await _chatGroupService.StartChatGroupInThreadAsync(new ChatGroupRunCommand
+                {
+                    Name = $"AdminChat-{request.ChatGroupId}-{DateTime.Now:yyyyMMddHHmmss}",
+                    ChatGroupId = request.ChatGroupId,
+                    AiModelId = 0,
+                    PromptCommand = request.Command.Trim(),
+                    Description = "Started by AdminChat slash command",
+                    Personality = true,
+                    RequireHumanApproval = false,
+                    HumanInTheLoopLevel = HumanInTheLoopLevel.Automatic,
+                    PluginToolPermission = ToolPermissionMode.Inherit,
+                    McpToolPermission = ToolPermissionMode.Inherit,
+                    IncludeHumanParticipant = false,
+                    HumanRecipientUserId = GetCurrentAdminUserId(),
+                    HookPlatform = HookPlatform.None,
+                    HookParameter = string.Empty,
+                    ChatMaxRound = ChatGroupService.DefaultChatMaxRound
+                });
+
+                logger.Append(JsonSerializer.Serialize(new
+                {
+                    kind = "admin-chat-action",
+                    actions = new[]
+                    {
+                        new
+                        {
+                            type = "agents-task",
+                            task = new
+                            {
+                                started.ChatTaskId,
+                                started.ChatGroupId,
+                                started.ChatGroupName,
+                                Status = started.Status.ToString()
+                            }
+                        }
+                    }
+                }));
+                return logger.GetLogs();
+            });
+        }
+
+        [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.StartChatGroup.Name", "Function.Agents.StartChatGroup.Description", typeof(Register))]
         public async Task<StringAppResponse> RunChatGroup(ChatGroup_RunChatGroupRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

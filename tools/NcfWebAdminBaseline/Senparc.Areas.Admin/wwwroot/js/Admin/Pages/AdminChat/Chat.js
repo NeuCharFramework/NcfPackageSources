@@ -2294,11 +2294,12 @@ var chatApp = new Vue({
         if (embedded) {
           query.set('embedded', '1');
           query.set('ncfTab', '1');
+          query.set('preview', '1');
         }
         return `/Admin/NeuCharWorkflow/Index?${query.toString()}`;
       }
       const target = attachment.actionTarget || attachment.actionTargetId;
-      const query = embedded ? '?embedded=1&ncfTab=1' : '';
+      const query = embedded ? '?embedded=1&ncfTab=1&preview=1' : '';
       return `/Admin/AgentsManager/Index${query}#tab=third&taskId=${encodeURIComponent(target)}`;
     },
 
@@ -4312,6 +4313,35 @@ var chatApp = new Vue({
           }[eventType] || '正在处理任务…');
         }
         write('livePendingApprovals', payload && payload.pendingApprovals ? payload.pendingApprovals : []);
+        return;
+      }
+
+      if (eventName === 'async-action') {
+        const action = payload && payload.action;
+        const state = payload && payload.actionState;
+        if (action) {
+          const attachment = {
+            actionType: action.actionType,
+            actionTarget: action.target,
+            actionTargetId: action.actionType === 'agents-task' ? Number(action.target) || 0 : 0,
+            actionOwnerId: action.ownerId || 0,
+            name: action.name || this.messageActionTypeLabel({ actionType: action.actionType })
+          };
+          if (sessionId === this.currentSessionId && !state?.isTerminal) {
+            this.openAgentTaskPreview(attachment);
+          }
+          this.updateActiveTask({
+            preview: state && state.message
+              ? state.message
+              : this.messageActionTypeLabel(attachment),
+            status: state && state.status === 'waiting-human'
+              ? '等待人工交互'
+              : state && state.isTerminal ? '任务已结束' : '后台运行中'
+          }, sessionId);
+        }
+        write('liveStatusText', state && state.status === 'waiting-human'
+          ? '后台任务正在等待人工交互…'
+          : state && state.isTerminal ? '后台任务已结束，AI 正在整理结果…' : '后台任务运行中…');
         return;
       }
 

@@ -1408,6 +1408,23 @@ namespace Senparc.Areas.Admin.Domain.Services
                         phaseKey = string.Empty;
                         phaseEventType = string.Empty;
 
+                        if (content is MafFunctionResultContent functionResult)
+                        {
+                            timeoutCts.CancelAfter(Timeout.InfiniteTimeSpan);
+                            try
+                            {
+                                await WaitForChatToolAsyncActionsAsync(
+                                    trajectory,
+                                    functionResult,
+                                    cancellationToken,
+                                    onLiveEvent).ConfigureAwait(false);
+                            }
+                            finally
+                            {
+                                timeoutCts.CancelAfter(timeout);
+                            }
+                        }
+
                         var eventInfo = await AppendTrajectoryContentAsync(
                             trajectory,
                             content,
@@ -1693,6 +1710,78 @@ namespace Senparc.Areas.Admin.Domain.Services
                 null,
                 payload);
             return AdminChatTrajectoryEventDto.CreateFromEntity(item);
+        }
+
+        private async Task WaitForChatToolAsyncActionsAsync(
+            AdminChatTrajectory trajectory,
+            MafFunctionResultContent functionResult,
+            CancellationToken cancellationToken,
+            Action<AdminChatLiveEvent> onLiveEvent)
+        {
+            var actions = ChatToolRegistry.ExtractAsyncActions(functionResult.Result);
+            if (actions.Count == 0)
+            {
+                return;
+            }
+
+            var monitors = _serviceProvider.GetServices<IChatToolAsyncActionMonitor>().ToArray();
+            var completions = new List<object>();
+            foreach (var action in actions)
+            {
+                var monitor = monitors.FirstOrDefault(item => item.Supports(action));
+                if (monitor == null)
+                {
+                    continue;
+                }
+
+                ChatToolAsyncActionState previous = null;
+                while (true)
+                {
+                    var state = await monitor.GetStateAsync(action, cancellationToken).ConfigureAwait(false);
+                    if (previous == null
+                        || !string.Equals(previous.Status, state.Status, StringComparison.Ordinal)
+                        || previous.PendingHumanCount != state.PendingHumanCount)
+                    {
+                        onLiveEvent?.Invoke(new AdminChatLiveEvent
+                        {
+                            TrajectoryId = trajectory.Id,
+                            Kind = "async-action",
+                            Text = state.Message,
+                            Action = action,
+                            ActionState = state,
+                            PendingApprovals = Array.Empty<AdminChatApprovalRequestDto>()
+                        });
+                    }
+                    previous = state;
+                    if (state.IsTerminal)
+                    {
+                        completions.Add(new
+                        {
+                            action.ActionType,
+                            action.Target,
+                            action.OwnerId,
+                            action.Name,
+                            state.Status,
+                            state.Message,
+                            state.Result,
+                            state.PendingHumanCount,
+                            Completed = true
+                        });
+                        break;
+                    }
+
+                    await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken).ConfigureAwait(false);
+                }
+            }
+
+            if (completions.Count > 0)
+            {
+                functionResult.Result = JsonSerializer.Serialize(new
+                {
+                    StartedResult = functionResult.Result,
+                    CompletedActions = completions
+                });
+            }
         }
 
         /// <summary>

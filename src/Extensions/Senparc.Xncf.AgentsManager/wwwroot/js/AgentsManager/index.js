@@ -27,6 +27,8 @@ var app = new Vue({
     this.getKnowledgeBaseOptions();
   },
   mounted() {
+    this.chatTaskPreviewMode = new URLSearchParams(window.location.search || '').get('preview') === '1';
+    document.body.classList.toggle('agents-manager-chat-preview', this.chatTaskPreviewMode);
     this.tabsActiveName = "first";
     this.agentForm.systemMessageType = "2";
     this.getPluginTypes();
@@ -55,6 +57,7 @@ var app = new Vue({
 
   },
   beforeDestroy() {
+    document.body.classList.remove('agents-manager-chat-preview');
     this.clearHistoryTimer()
     this.stopAgentGraphPolling()
     this.destroyAgentGraph3d()

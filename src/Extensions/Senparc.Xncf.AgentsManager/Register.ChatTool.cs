@@ -79,17 +79,18 @@ public partial class Register : IChatTool
                     new ChatToolFunctionDefinition
                     {
                         DeclaringType = typeof(ChatGroupAppService),
-                        MethodName = nameof(ChatGroupAppService.RunChatGroup)
+                        MethodName = nameof(ChatGroupAppService.StartChatToolTask)
                     }
                 },
                 Instructions = """
 
 [Agent Group Command]
 The user asked to run an existing AgentsManager ChatGroup. Do not create, edit, or delete a group.
-1. If --group contains an ID, do not use FindChatGroups to rediscover it. Pass that exact numeric ID as ChatGroups=[id] to RunChatGroup.
+1. If --group contains an ID, do not use FindChatGroups to rediscover it. Pass that exact numeric ID as ChatGroupId to StartChatToolTask.
 2. Use FindChatGroups only when the user supplied a name or task description without an explicit ID. Choose only when one group clearly matches; otherwise show the closest options and ask.
 3. Pass the remaining user text as Command. Even a short phrase such as "执行任务" is a valid command and must not be rejected as missing.
-4. RunChatGroup returns after a real ChatTask is created. Treat the ChatTask as running asynchronously and show its preview/action metadata; do not describe it as completed.
+4. StartChatToolTask returns after a real ChatTask is created. Treat the ChatTask as running asynchronously and show its preview/action metadata; do not describe it as completed.
+5. If the function response has Success=false, quote its ErrorMessage exactly. Never replace a concrete startup error with a generic failure statement.
 """
             }
         };
@@ -102,5 +103,6 @@ The user asked to run an existing AgentsManager ChatGroup. Do not create, edit, 
     private static void AddChatToolServices(IServiceCollection services)
     {
         services.AddScoped<ChatGroupChatToolParameterOptionsProvider>();
+        services.AddScoped<IChatToolAsyncActionMonitor, AgentTaskChatToolAsyncActionMonitor>();
     }
 }

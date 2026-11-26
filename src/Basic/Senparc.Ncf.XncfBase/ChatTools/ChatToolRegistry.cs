@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Senparc.Ncf.XncfBase.ChatTools
 {
@@ -185,6 +186,42 @@ namespace Senparc.Ncf.XncfBase.ChatTools
             };
         }
 
+        public static IReadOnlyList<ChatToolAsyncAction> ExtractAsyncActions(object result)
+        {
+            if (result == null)
+            {
+                return Array.Empty<ChatToolAsyncAction>();
+            }
+
+            var actions = new List<ChatToolAsyncAction>();
+            try
+            {
+                var json = result is string text
+                    ? text
+                    : JsonSerializer.Serialize(result);
+                using var document = JsonDocument.Parse(json);
+                ExtractAsyncActions(document.RootElement, actions);
+                if (actions.Count == 0 && document.RootElement.ValueKind == JsonValueKind.String)
+                {
+                    var nested = document.RootElement.GetString();
+                    if (!string.IsNullOrWhiteSpace(nested))
+                    {
+                        using var nestedDocument = JsonDocument.Parse(nested);
+                        ExtractAsyncActions(nestedDocument.RootElement, actions);
+                    }
+                }
+            }
+            catch (JsonException)
+            {
+                return Array.Empty<ChatToolAsyncAction>();
+            }
+
+            return actions
+                .GroupBy(action => $"{action.ActionType}:{action.Target}", StringComparer.Ordinal)
+                .Select(group => group.First())
+                .ToArray();
+        }
+
         /// <summary>
         /// Validates command, label, function, parameter, and options-provider metadata.
         /// </summary>
@@ -231,6 +268,92 @@ namespace Senparc.Ncf.XncfBase.ChatTools
         private static bool Contains(string value, string query)
         {
             return value?.Contains(query, StringComparison.OrdinalIgnoreCase) == true;
+        }
+
+        private static void ExtractAsyncActions(
+            JsonElement element,
+            List<ChatToolAsyncAction> actions)
+        {
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.Array:
+                    foreach (var item in element.EnumerateArray())
+                    {
+                        ExtractAsyncActions(item, actions);
+                    }
+                    break;
+                case JsonValueKind.String:
+                    var text = element.GetString();
+                    if (string.IsNullOrWhiteSpace(text)
+                        || !text.Contains("admin-chat-action", StringComparison.OrdinalIgnoreCase))
+                    {
+                        break;
+                    }
+                    try
+                    {
+                        using var embedded = JsonDocument.Parse(text);
+                        ExtractAsyncActions(embedded.RootElement, actions);
+                    }
+                    catch (JsonException)
+                    {
+                    }
+                    break;
+                case JsonValueKind.Object:
+                    var actionType = GetString(element, "type");
+                    if (!string.IsNullOrWhiteSpace(actionType)
+                        && element.TryGetProperty("task", out var task))
+                    {
+                        var target = actionType.Equals("agents-task", StringComparison.OrdinalIgnoreCase)
+                            ? GetInt32(task, "ChatTaskId").ToString()
+                            : GetString(task, "RunId");
+                        var ownerId = actionType.Equals("workflow-run", StringComparison.OrdinalIgnoreCase)
+                            ? GetInt32(task, "WorkflowId")
+                            : 0;
+                        var name = actionType.Equals("agents-task", StringComparison.OrdinalIgnoreCase)
+                            ? GetString(task, "ChatGroupName")
+                            : GetString(task, "WorkflowName");
+                        if (!string.IsNullOrWhiteSpace(target) && target != "0")
+                        {
+                            actions.Add(new ChatToolAsyncAction(actionType, target, ownerId, name));
+                        }
+                    }
+                    foreach (var property in element.EnumerateObject())
+                    {
+                        if (!property.Name.Equals("task", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ExtractAsyncActions(property.Value, actions);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private static string GetString(JsonElement element, string name)
+        {
+            foreach (var property in element.EnumerateObject())
+            {
+                if (!property.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+                return property.Value.ValueKind == JsonValueKind.String
+                    ? property.Value.GetString()
+                    : property.Value.ToString();
+            }
+            return null;
+        }
+
+        private static int GetInt32(JsonElement element, string name)
+        {
+            foreach (var property in element.EnumerateObject())
+            {
+                if (property.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
+                    && property.Value.TryGetInt32(out var value))
+                {
+                    return value;
+                }
+            }
+            return 0;
         }
     }
 }

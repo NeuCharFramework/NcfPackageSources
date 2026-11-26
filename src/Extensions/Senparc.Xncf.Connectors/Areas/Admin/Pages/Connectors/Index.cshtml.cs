@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.AreaBase.Admin.Filters;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.Connectors.Abstractions;
 using Senparc.Xncf.Connectors.Domain.Services;
 using Senparc.Xncf.MCP.Abstractions;
 
@@ -92,7 +93,18 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
     public async Task<IActionResult> OnPostSaveAsync([FromBody] ConnectorSaveInput input)
     {
         var result = await _gateway.SaveAsync(input, HttpContext.RequestAborted).ConfigureAwait(false);
-        return new JsonResult(new { success = result.Success, message = result.Message, instanceId = result.InstanceId });
+        var state = result.Success
+            ? await BuildStateAsync(HttpContext.RequestAborted).ConfigureAwait(false)
+            : null;
+        return new JsonResult(new { success = result.Success, message = result.Message, instanceId = result.InstanceId, state });
+    }
+
+    /// <summary>
+    /// Returns the latest connector catalog and configured instance list for in-page refreshes.
+    /// </summary>
+    public async Task<IActionResult> OnGetStateAsync()
+    {
+        return new JsonResult(await BuildStateAsync(HttpContext.RequestAborted).ConfigureAwait(false));
     }
 
     /// <summary>
@@ -103,7 +115,10 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
     public async Task<IActionResult> OnPostDeleteAsync([FromBody] ConnectorIdInput input)
     {
         var result = await _gateway.DeleteAsync(input?.InstanceId ?? string.Empty, HttpContext.RequestAborted).ConfigureAwait(false);
-        return new JsonResult(new { success = result.Success, message = result.Message });
+        var state = result.Success
+            ? await BuildStateAsync(HttpContext.RequestAborted).ConfigureAwait(false)
+            : null;
+        return new JsonResult(new { success = result.Success, message = result.Message, state });
     }
 
     /// <summary>
@@ -215,17 +230,28 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
     /// <param name="cancellationToken">The token used to cancel catalog or instance loading.</param>
     /// <returns>A JSON string safe for embedding in the page model.</returns>
     private async Task<string> BuildStateJsonAsync(CancellationToken cancellationToken)
+        => JsonSerializer.Serialize(await BuildStateAsync(cancellationToken).ConfigureAwait(false), JsonOptions);
+
+    private async Task<ConnectorAdminState> BuildStateAsync(CancellationToken cancellationToken)
     {
         var catalog = await _gateway.ListCatalogAsync(cancellationToken).ConfigureAwait(false);
         var instances = await _gateway.ListInstancesAsync(cancellationToken).ConfigureAwait(false);
-        return JsonSerializer.Serialize(new
+        return new ConnectorAdminState
         {
-            catalog,
-            instances,
-            templates = _mcpGateway == null ? Array.Empty<ConnectorTemplate>() : ConnectorTemplateCatalog.All,
-            mcpAvailable = _mcpGateway != null
-        }, JsonOptions);
+            Catalog = catalog,
+            Instances = instances,
+            Templates = _mcpGateway == null ? Array.Empty<ConnectorTemplate>() : ConnectorTemplateCatalog.All,
+            McpAvailable = _mcpGateway != null
+        };
     }
+}
+
+public sealed class ConnectorAdminState
+{
+    public IReadOnlyList<ConnectorDescriptor> Catalog { get; init; } = [];
+    public IReadOnlyList<ConnectorInstanceView> Instances { get; init; } = [];
+    public IReadOnlyList<ConnectorTemplate> Templates { get; init; } = [];
+    public bool McpAvailable { get; init; }
 }
 
 public sealed class ConnectorIdInput

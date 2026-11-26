@@ -59,6 +59,17 @@ using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.AgentsManager.Application.Dtos
 {
+    /// <summary>Minimal, stable request used by the AdminChat Agent-group command.</summary>
+    public class ChatGroup_ChatToolRunRequest : FunctionAppRequestBase
+    {
+        [Required]
+        public int ChatGroupId { get; set; }
+
+        [Required]
+        [MaxLength(500)]
+        public string Command { get; set; }
+    }
+
     /// <summary>Requests a bounded search for enabled Agent groups.</summary>
     public class ChatGroup_FindByNameRequest : FunctionAppRequestBase
     {

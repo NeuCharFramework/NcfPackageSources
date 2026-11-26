@@ -33,6 +33,15 @@ namespace Senparc.Ncf.XncfBase.ChatTools
             CancellationToken cancellationToken = default);
     }
 
+    public interface IChatToolAsyncActionMonitor
+    {
+        bool Supports(ChatToolAsyncAction action);
+
+        Task<ChatToolAsyncActionState> GetStateAsync(
+            ChatToolAsyncAction action,
+            CancellationToken cancellationToken = default);
+    }
+
     public sealed class ChatToolDefinition
     {
         public string Command { get; init; }
@@ -92,4 +101,19 @@ namespace Senparc.Ncf.XncfBase.ChatTools
         public IReadOnlyCollection<ChatToolParameterOption> Options { get; init; }
             = Array.Empty<ChatToolParameterOption>();
     }
+
+    public sealed record ChatToolAsyncAction(
+        string ActionType,
+        string Target,
+        int OwnerId,
+        string Name);
+
+    public sealed record ChatToolAsyncActionState(
+        string ActionType,
+        string Target,
+        string Status,
+        bool IsTerminal,
+        string Message,
+        string Result,
+        int PendingHumanCount = 0);
 }

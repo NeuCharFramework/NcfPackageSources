@@ -37,6 +37,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AIKernel.Domain.Models.Usage;
+using Senparc.Ncf.XncfBase.ChatTools;
 
 namespace Senparc.Areas.Admin.Domain.Services
 {
@@ -370,6 +371,8 @@ namespace Senparc.Areas.Admin.Domain.Services
         public string Text { get; set; }
         public AITokenUsageSnapshot Usage { get; set; }
         public AdminChatTrajectoryEventDto TrajectoryEvent { get; set; }
+        public ChatToolAsyncAction Action { get; set; }
+        public ChatToolAsyncActionState ActionState { get; set; }
         public IReadOnlyList<AdminChatApprovalRequestDto> PendingApprovals { get; set; } = Array.Empty<AdminChatApprovalRequestDto>();
     }
 
