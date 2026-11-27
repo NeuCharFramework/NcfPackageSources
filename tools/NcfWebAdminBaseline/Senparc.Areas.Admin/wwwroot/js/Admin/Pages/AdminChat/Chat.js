@@ -4837,15 +4837,86 @@ var chatApp = new Vue({
       return this.currentSessionId === sessionId;
     },
 
+    inheritCurrentSessionSettings() {
+      if (!(Number(this.currentSessionId) > 0)) return;
+
+      this.launcherAiModelId = this.normalizeAiModelId(this.currentSessionAiModelId);
+      this.launcherChatMode = this.chatMode;
+      this.launcherMemoryMode = Number(this.memoryMode) === 2
+        ? 2
+        : Number(this.memoryMode) === 1 ? 1 : 0;
+      this.launcherUseMemory = this.launcherMemoryMode > 0;
+
+      const sessionModules = Array.isArray(this.currentSessionModules)
+        ? this.currentSessionModules : [];
+      const moduleUids = sessionModules
+        .map(module => module && (module.xncfModuleUid || module.uid))
+        .filter(uid => typeof uid === 'string' && uid.length > 0);
+      this.selectedModuleUids = moduleUids.slice();
+      this.selectedModules = moduleUids.map(uid => {
+        const available = (this.availableModules || []).find(item => item.uid === uid);
+        if (available) return available;
+
+        const source = sessionModules.find(module => (module.xncfModuleUid || module.uid) === uid) || {};
+        return {
+          uid,
+          name: source.menuName || source.displayName || source.moduleName || uid,
+          icon: source.icon || 'fa fa-cube',
+          description: source.moduleDescription || source.description || '',
+          version: source.moduleVersion || source.version || '',
+          menus: source.menus || [],
+          functions: source.functions || []
+        };
+      });
+
+      const sessionWorkflows = Array.isArray(this.currentSessionWorkflows)
+        ? this.currentSessionWorkflows : [];
+      const workflowIds = sessionWorkflows
+        .map(workflow => Number.parseInt(workflow && (workflow.workflowId || workflow.id), 10))
+        .filter(id => Number.isInteger(id) && id > 0);
+      this.selectedWorkflowIds = workflowIds.slice();
+      this.selectedWorkflows = workflowIds.map(id => {
+        const available = (this.availableWorkflows || []).find(item => Number(item.id) === id);
+        if (available) return available;
+
+        const source = sessionWorkflows.find(workflow =>
+          Number(workflow.workflowId || workflow.id) === id) || {};
+        return {
+          id,
+          name: source.workflowName || source.name || `Workflow #${id}`,
+          description: source.workflowDescription || source.description || '',
+          parameters: source.parameters || []
+        };
+      });
+
+      this.selectedWorkspaceId = this.currentSessionWorkspaceId || '';
+      this.workspaceWriteEnabled = !!this.selectedWorkspaceId
+        && !!this.currentSessionWorkspaceWriteEnabled;
+      this.workspaceCliEnabled = !!this.selectedWorkspaceId
+        && !!this.currentSessionWorkspaceCliEnabled;
+
+      // These controls are shared by the active session and the launcher. Keep
+      // the assignment explicit so future session-scoped controls are not lost.
+      this.chatMaxOutputTokens = Number(this.chatMaxOutputTokens) || 2000;
+      this.harnessMaxIterations = Number(this.harnessMaxIterations) || 32;
+      this.harnessCapabilities = {
+        todo: !!this.harnessCapabilities.todo,
+        compaction: !!this.harnessCapabilities.compaction,
+        fileMemory: !!this.harnessCapabilities.fileMemory,
+        skills: !!this.harnessCapabilities.skills,
+        webSearch: !!this.harnessCapabilities.webSearch
+      };
+    },
+
     async createNewSession() {
       if (this.workspaceUploading) { this.$message.warning('请等待附件上传完成后再新建会话。'); return; }
       if (!(await this.confirmDiscardWorkspaceEdit())) return;
+      this.inheritCurrentSessionSettings();
       this.rememberSessionDraft();
       this.resetWorkspacePreview();
       this.closeWorkspaceMention();
       await this.deletePendingAttachments();
       this.clearPendingAttachments();
-      this.launcherAiModelId = this.currentSessionAiModelId || this.launcherAiModelId || 0;
       this.currentSessionId = 0;
       this.hideForeignRunView();
       this.syncAdminChatLocation();

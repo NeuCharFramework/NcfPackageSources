@@ -340,6 +340,69 @@ async function concurrentSessions() {
     assert.ok(!app.sessionRuns[1] && !app.sessionRuns[2]);
 }
 
+async function newConversationInheritsSessionSettings() {
+    const app = createApp();
+    app.currentSessionId = 12;
+    app.currentSessionAiModelId = 7;
+    app.chatMode = 'execute';
+    app.memoryMode = 1;
+    app.currentSessionModules = [
+        { xncfModuleUid: 'module-a', moduleName: 'Module A' },
+        { xncfModuleUid: 'module-b', moduleName: 'Module B' }
+    ];
+    app.currentSessionWorkflows = [
+        { workflowId: 23, workflowName: 'Workflow A' },
+        { workflowId: 24, workflowName: 'Workflow B' }
+    ];
+    app.currentSessionWorkspaceId = 'workspace-1';
+    app.currentSessionWorkspaceWriteEnabled = true;
+    app.currentSessionWorkspaceCliEnabled = true;
+    app.chatMaxOutputTokens = 4096;
+    app.harnessMaxIterations = 48;
+    app.harnessCapabilities = {
+        todo: false,
+        compaction: true,
+        fileMemory: true,
+        skills: true,
+        webSearch: false
+    };
+    app.availableModules = [
+        { uid: 'module-a', name: 'Loaded A' }
+    ];
+    app.availableWorkflows = [
+        { id: 23, name: 'Loaded Workflow A' }
+    ];
+    app.confirmDiscardWorkspaceEdit = async () => true;
+    app.closeWorkspaceMention = () => {};
+    app.hideForeignRunView = () => {};
+    app.syncAdminChatLocation = () => {};
+    app.clearRecentTasks = () => {};
+
+    await app.createNewSession();
+
+    assert.strictEqual(app.currentSessionId, 0);
+    assert.strictEqual(app.launcherAiModelId, 7);
+    assert.strictEqual(app.launcherChatMode, 'execute');
+    assert.strictEqual(app.launcherMemoryMode, 1);
+    assert.strictEqual(app.launcherUseMemory, true);
+    assert.deepStrictEqual(app.selectedModuleUids, ['module-a', 'module-b']);
+    assert.deepStrictEqual(app.selectedModules.map(item => item.uid), ['module-a', 'module-b']);
+    assert.deepStrictEqual(app.selectedWorkflowIds, [23, 24]);
+    assert.deepStrictEqual(app.selectedWorkflows.map(item => item.id), [23, 24]);
+    assert.strictEqual(app.selectedWorkspaceId, 'workspace-1');
+    assert.strictEqual(app.workspaceWriteEnabled, true);
+    assert.strictEqual(app.workspaceCliEnabled, true);
+    assert.strictEqual(app.chatMaxOutputTokens, 4096);
+    assert.strictEqual(app.harnessMaxIterations, 48);
+    assert.strictEqual(JSON.stringify(app.harnessCapabilities), JSON.stringify({
+        todo: false,
+        compaction: true,
+        fileMemory: true,
+        skills: true,
+        webSearch: false
+    }));
+}
+
 async function createdSessionKeepsPromptReference() {
     const app = createApp();
     app.memoryReady = true;
@@ -392,6 +455,7 @@ async function run() {
     await lateHarnessResults();
     await streamRouting();
     await concurrentSessions();
+    await newConversationInheritsSessionSettings();
     await createdSessionKeepsPromptReference();
     sessionAddress();
     const page = fs.readFileSync(path.join(admin, 'Areas/Admin/Pages/AdminChat/Chat.cshtml'), 'utf8');
