@@ -40,6 +40,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -90,7 +93,7 @@ namespace Senparc.Xncf.AIKernel
 
         public override string Uid => "796D12D8-580B-40F3-A6E8-A5D9D2EABB69";//Legacy comment translated to English.
 
-        public override string Version => "5.0.5";//the version number is required
+        public override string Version => "0.17.4.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 

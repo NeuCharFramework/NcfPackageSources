@@ -1522,6 +1522,13 @@ var AgentsAppMethodsTask = {
       }
       this.$delete(this.humanApprovalRequests, requestId)
     },
+    handleHumanReplyKeydown(event) {
+      // Keep Enter available for multiline HIL responses, matching AdminChat.
+      if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault()
+        this.submitHumanReply()
+      }
+    },
     async submitHumanReply() {
       const requestId = String(this.humanReplyRequest?.humanRequestId || this.humanReplyRequest?.requestId || '')
       const input = String(this.humanReplyText || '').trim()

@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: AuthorizationPage.cshtml.cs
+    File description: Senparc.Areas.Admin.Areas.Admin.Pages related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -261,6 +261,7 @@ public sealed class WorkspaceCatalogTests
         public Task CreateDirectoryAsync(string workspaceId, string relativePath, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteEntryAsync(string workspaceId, WorkspaceDeleteEntryRequest request, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task MoveEntryAsync(string workspaceId, WorkspaceMoveEntryRequest request, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task CopyEntryAsync(string workspaceId, WorkspaceCopyEntryRequest request, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<WorkspaceSearchResult>> SearchAsync(string workspaceId, WorkspaceSearchRequest request, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<WorkspacePatchResult> ApplyPatchAsync(string workspaceId, WorkspacePatchRequest request, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<WorkspaceCommandResult> ExecuteCommandAsync(string workspaceId, WorkspaceCommandRequest request, CancellationToken cancellationToken = default) => throw new NotSupportedException();

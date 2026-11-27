@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.13-preview13 Updated SMS integration support and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.13.2-preview14 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;

@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: AgentTaskChatToolAsyncActionMonitor.cs
+    File description: Senparc.Xncf.AgentsManager.Application.ChatTools related implementation
+
+    Created by: Senparc - 20261127
+
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.1.6.1-preview7</Version>
+    <Version>0.1.6.2-preview8</Version>
     <AssemblyName>Senparc.Xncf.XncfBuilder.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -28,6 +28,9 @@
         [2026-11-19] v0.1.6-preview7 Localized XNCF Builder tools and template surfaces
         1. Updated affected project files while preserving existing public integration behavior.
         2. Standardized related English source comments and package metadata for the current release.
+    
+        [2026-11-27] v0.1.6.2-preview8 Improve source documentation, headers, and module metadata consistency.
+        1. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

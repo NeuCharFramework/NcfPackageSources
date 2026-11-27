@@ -37,6 +37,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Net.Http;
@@ -73,7 +76,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Uid => "BDF12490-AA0B-41B4-ADB3-63155ED95A93";
 
-    public override string Version => "0.4.0";
+    public override string Version => "0.4.4.2";
 
     public override string MenuName => RegisterText.MenuName;
 

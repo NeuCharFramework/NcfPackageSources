@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: Setup.cshtml.cs
+    File description: Senparc.Xncf.Sandbox.Areas.Sandbox.Pages related implementation
+
+    Created by: Senparc - 20260808
+
+    Modified by: Senparc - 20261127
+    Change description: v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.Sandbox.Abstractions;

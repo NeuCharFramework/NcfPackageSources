@@ -5,6 +5,9 @@
     File name: BaseNcfUnitTest.MockRepository.cs
     File description: Historical mock-repository experiments retained for source compatibility.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.3.29.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Ncf.UnitTestExtension

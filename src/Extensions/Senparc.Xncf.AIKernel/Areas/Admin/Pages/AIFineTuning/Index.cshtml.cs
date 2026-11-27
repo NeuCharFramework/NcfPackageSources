@@ -32,6 +32,11 @@
     Change description: v0.16.4 Updated module behavior and related support.
 
 
+
+
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;

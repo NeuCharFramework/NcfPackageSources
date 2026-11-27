@@ -199,6 +199,11 @@ public sealed class WorkspaceGatewayControllerTests
             WorkspaceMoveEntryRequest request,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task CopyEntryAsync(
+            string workspaceId,
+            WorkspaceCopyEntryRequest request,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task<IReadOnlyList<WorkspaceSearchResult>> SearchAsync(
             string workspaceId,
             WorkspaceSearchRequest request,

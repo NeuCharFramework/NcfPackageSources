@@ -567,6 +567,30 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
     }
 
     /// <inheritdoc />
+    public async Task CopyEntryAsync(
+        string workspaceId,
+        WorkspaceCopyEntryRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var workspaceRoot = GetWorkspaceRoot(workspaceId);
+        EnsureWorkspaceExists(workspaceRoot);
+        await _agentPool
+            .InvokeAsync<WorkspaceCopyEntryRequest, WorkspaceAgentEmptyResult>(
+                workspaceId,
+                workspaceRoot,
+                WorkspaceAgentOperations.Copy,
+                request,
+                cancellationToken)
+            .ConfigureAwait(false);
+        _changeHub.Publish(workspaceId, request.TargetRelativePath, "created");
+        _logger.LogInformation(
+            "Workspace entry copied through Agent: {WorkspaceId}, Source={Source}, Target={Target}",
+            workspaceId,
+            request.SourceRelativePath,
+            request.TargetRelativePath);
+    }
+
+    /// <inheritdoc />
     public async Task<IReadOnlyList<WorkspaceSearchResult>> SearchAsync(
         string workspaceId,
         WorkspaceSearchRequest request,

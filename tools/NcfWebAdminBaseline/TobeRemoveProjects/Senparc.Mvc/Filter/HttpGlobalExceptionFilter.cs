@@ -1,4 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: HttpGlobalExceptionFilter.cs
+    File description: Senparc.Mvc.Filter related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261127
+    Change description: v0.0.2 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;

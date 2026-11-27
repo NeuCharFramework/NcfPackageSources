@@ -28,6 +28,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -58,7 +61,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Uid => ModuleUid;
 
-    public override string Version => "0.4.8";
+    public override string Version => "0.4.12.2";
 
     public override string MenuName => RegisterText.MenuName;
 

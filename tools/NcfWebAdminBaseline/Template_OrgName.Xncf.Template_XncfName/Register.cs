@@ -64,7 +64,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override string Uid => "Template_Guid";//Legacy comment translated to English.
 
-        public override string Version => "Template_Version";//the version number is required
+        public override string Version => "1.1.16";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 

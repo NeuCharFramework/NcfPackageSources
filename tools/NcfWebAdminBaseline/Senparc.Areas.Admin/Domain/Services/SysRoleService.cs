@@ -1,4 +1,18 @@
-﻿using Senparc.Ncf.Core.Models.DataBaseModel;
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: SysRoleService.cs
+    File description: Senparc.Areas.Admin.Domain.Services related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Repository;
 using System;
 using System.Text;

@@ -5,6 +5,9 @@
     File name: InstallCultureHelper.cs
     File description: Apply UI culture during NCF first-time installation.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.6.0.1 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;

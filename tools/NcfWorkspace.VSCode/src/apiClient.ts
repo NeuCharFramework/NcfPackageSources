@@ -183,6 +183,22 @@ export class NcfApiClient {
     );
   }
 
+  public async copy(
+    workspaceId: string,
+    sourceRelativePath: string,
+    targetRelativePath: string,
+    overwrite: boolean,
+    expectedETag: string,
+  ): Promise<void> {
+    await this.raw(
+      this.workspacePath(workspaceId, "copy"),
+      this.jsonPost(
+        { sourceRelativePath, targetRelativePath, overwrite, expectedETag },
+        "full",
+      ),
+    );
+  }
+
   public openEvents(workspaceId: string, signal: AbortSignal): Promise<Response> {
     return this.raw(
       `${this.workspacePath(workspaceId, "events")}?replayBuffered=false`,

@@ -157,6 +157,11 @@ assert.deepStrictEqual(
 assert.strictEqual(app.workspaceArtifactsExpanded(changedMessage), false);
 app.toggleWorkspaceArtifacts(changedMessage);
 assert.strictEqual(app.workspaceArtifactsExpanded(changedMessage), true);
+assert.deepStrictEqual(
+    JSON.parse(JSON.stringify(app.workspaceArtifactStats({
+        attachments: [{ relativePath: 'src/legacy.cs', changeType: 'added', isWorkspaceArtifact: true }]
+    }))),
+    { total: 1, created: 1, changed: 0, deleted: 0 });
 app.openMessageAttachmentAction({
     actionType: 'agents-task',
     actionTargetId: 42,

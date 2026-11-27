@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: Extensions.cs
+    File description: Microsoft.Extensions.Hosting related implementation
+
+    Created by: Senparc - 20241119
+
+    Modified by: Senparc - 20261127
+    Change description: v0.1.1 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;

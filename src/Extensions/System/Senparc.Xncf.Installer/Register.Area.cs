@@ -1,4 +1,18 @@
-﻿using Microsoft.AspNetCore.Hosting;
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: Register.Area.cs
+    File description: Senparc.Xncf.Installer related implementation
+
+    Created by: Senparc - 20200819
+
+    Modified by: Senparc - 20261127
+    Change description: v0.6.0.1 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Areas;

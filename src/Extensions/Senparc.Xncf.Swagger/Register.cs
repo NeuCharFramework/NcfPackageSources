@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.12 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -73,7 +76,7 @@ namespace Senparc.Xncf.Swagger
 
         public override string Uid => "712d56f6-989e-4b5f-b769-86a870543e8d";//Legacy comment translated to English.
 
-        public override string Version => "0.7.1";//the version number is required
+        public override string Version => "0.20.12.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 

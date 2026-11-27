@@ -2235,12 +2235,20 @@ var chatApp = new Vue({
 
     messageRegularAttachments(message) {
       return ((message && message.attachments) || [])
-        .filter(attachment => !attachment.actionType && !attachment.isWorkspaceArtifact);
+        .filter(attachment => !attachment.actionType && !this.isWorkspaceArtifact(attachment));
     },
 
     messageWorkspaceArtifacts(message) {
       return ((message && message.attachments) || [])
-        .filter(attachment => attachment.isWorkspaceArtifact);
+        .filter(attachment => this.isWorkspaceArtifact(attachment));
+    },
+
+    isWorkspaceArtifact(attachment) {
+      return !!attachment
+        && !attachment.actionType
+        && !!attachment.relativePath
+        && (attachment.isWorkspaceArtifact === true
+          || !!attachment.changeType);
     },
 
     workspaceArtifactsExpanded(message) {
@@ -2257,7 +2265,7 @@ var chatApp = new Vue({
     workspaceArtifactStats(message) {
       const artifacts = this.messageWorkspaceArtifacts(message);
       return artifacts.reduce((stats, artifact) => {
-        const type = String(artifact.changeType || 'changed').toLowerCase();
+        const type = this.workspaceArtifactChangeType(artifact.changeType);
         if (type === 'created') stats.created += 1;
         else if (type === 'deleted') stats.deleted += 1;
         else stats.changed += 1;
@@ -2266,10 +2274,17 @@ var chatApp = new Vue({
       }, { total: 0, created: 0, changed: 0, deleted: 0 });
     },
 
+    workspaceArtifactChangeType(changeType) {
+      const type = String(changeType || 'changed').toLowerCase();
+      if (type === 'added' || type === 'created') return 'created';
+      if (type === 'deleted' || type === 'removed') return 'deleted';
+      return 'changed';
+    },
+
     workspaceArtifactChangeLabel(changeType) {
-      const key = String(changeType || '').toLowerCase() === 'created'
+      const key = this.workspaceArtifactChangeType(changeType) === 'created'
         ? 'AdminChat.WorkspaceArtifact.Created'
-        : String(changeType || '').toLowerCase() === 'deleted'
+        : this.workspaceArtifactChangeType(changeType) === 'deleted'
           ? 'AdminChat.WorkspaceArtifact.Deleted'
           : 'AdminChat.WorkspaceArtifact.Changed';
       return ncfT(key);
@@ -2323,7 +2338,7 @@ var chatApp = new Vue({
 
     async openWorkspaceArtifact(attachment) {
       if (!attachment || !attachment.relativePath) return;
-      if (attachment.changeType === 'deleted') return;
+      if (this.workspaceArtifactChangeType(attachment.changeType) === 'deleted') return;
       this.workspacePreviewOpen = true;
       await this.$nextTick();
       const path = this.normalizeWorkspacePath(attachment.relativePath);

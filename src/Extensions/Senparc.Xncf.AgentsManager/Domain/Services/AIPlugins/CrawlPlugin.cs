@@ -31,6 +31,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.19.4 Integrated localization, tooling, and runtime improvements across the module.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

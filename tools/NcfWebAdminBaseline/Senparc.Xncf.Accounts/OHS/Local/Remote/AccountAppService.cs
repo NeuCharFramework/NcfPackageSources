@@ -1,4 +1,18 @@
-﻿using Senparc.CO2NET;
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: AccountAppService.cs
+    File description: Senparc.Xncf.Accounts.OHS.Local.Remote related implementation
+
+    Created by: Senparc - 20241121
+
+    Modified by: Senparc - 20261127
+    Change description: v0.3.14.2 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
+using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
 using System;
 using System.Text;

@@ -31,6 +31,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.20.17 Improved PromptRange localization consistency and prompt tooling behavior.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -73,7 +76,7 @@ namespace Senparc.Xncf.PromptRange
 
         public override string Uid => "C6175B8E-9F79-4053-9523-F8E4AC0C3E18"; //Legacy comment translated to English.
 
-        public override string Version => "0.15.4"; //the version number is required
+        public override string Version => "0.20.17.2"; //the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 

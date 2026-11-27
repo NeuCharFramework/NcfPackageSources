@@ -1,4 +1,18 @@
-﻿using System;
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: Program.cs
+    File description: GenerateDbMigration related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261127
+    Change description: v0.1.1 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
+using System;
 
 namespace GenerateDbMigration
 {

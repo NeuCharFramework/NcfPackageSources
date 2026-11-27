@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.1.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.1.1.4 Extend MCP connector management and localization coverage.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

@@ -12,6 +12,9 @@
     Modified by: Senparc - 20261125
     Change description: Added decoupled command parameters and option providers.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.29.1.2 Extend shared chat-tool contracts for admin task initiation.
+
 ----------------------------------------------------------------*/
 
 using System;

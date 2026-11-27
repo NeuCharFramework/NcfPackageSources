@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.19.4 Added chat-tool parameter option integration.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using System;

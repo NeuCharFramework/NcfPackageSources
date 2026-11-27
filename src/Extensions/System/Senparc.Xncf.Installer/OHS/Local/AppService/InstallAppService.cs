@@ -1,4 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: InstallAppService.cs
+    File description: Senparc.Xncf.Installer.OHS.Local.AppService related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261127
+    Change description: v0.6.0.1 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Http;
 using Senparc.Areas.Admin.Domain.Models.Dto;
 using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;

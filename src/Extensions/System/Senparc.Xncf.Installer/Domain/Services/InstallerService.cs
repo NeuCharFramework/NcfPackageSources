@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.5.12 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.6.0.1 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

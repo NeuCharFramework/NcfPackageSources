@@ -2697,7 +2697,8 @@
         {{ humanReplyRequest ? (humanReplyRequest.text || humanReplyRequest.prompt || ncfST('Frontend.AgentsManager.EnterTheHumanReply')) : '' }}
     </div>
     <el-input v-model="humanReplyText" type="textarea" :rows="7" maxlength="10000" show-word-limit
-        :placeholder="ncfST('Frontend.AgentsManager.EnterTextTheTaskContinuesAfterSubmission')"></el-input>
+        :placeholder="ncfST('Frontend.AgentsManager.EnterTextTheTaskContinuesAfterSubmission')"
+        @@keydown.native="handleHumanReplyKeydown"></el-input>
     <div slot="footer" class="dialog-footer">
         <el-button @@click="closeHumanReplyDialog" :disabled="humanReplySubmitting">{{ ncfST('Frontend.AgentsManager.HandleLater') }}</el-button>
         <el-button type="primary" @@click="submitHumanReply" :loading="humanReplySubmitting">{{ ncfST('Frontend.AgentsManager.SubmitHumanResponse') }}</el-button>

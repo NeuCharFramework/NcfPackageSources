@@ -46,6 +46,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.19.4 Improved Agent group command parameter selection and conversation loading.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis.CSharp;

@@ -20,6 +20,11 @@
 
     Created by: Senparc - 20261122
 
+
+
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;

@@ -8,6 +8,9 @@
     Created by: Senparc - 20261126
     Change description: v0.1.3 expose MCP discovery, secure configuration, and tool invocation
 
+    Modified by: Senparc - 20261127
+    Change description: v0.1.2.2 Expand MCP endpoint gateway, credentials, and tool invocation support.
+
 ----------------------------------------------------------------*/
 
 using System;

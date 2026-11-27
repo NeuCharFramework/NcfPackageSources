@@ -40,6 +40,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.4.8 Registered and localized workflow chat-tool services.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -80,7 +83,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Uid => "5F972F29-A2A5-4A87-B5B8-2FE758AA457B";
 
-    public override string Version => "0.1.0-preview1";
+    public override string Version => "0.5.0.0";
 
     public override string MenuName => RegisterText.MenuName;
 

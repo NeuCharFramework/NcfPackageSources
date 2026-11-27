@@ -37,6 +37,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.12.29 Improved AdminChat conversation loading and command parameter feedback.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 using Microsoft.EntityFrameworkCore;
 using Senparc.Areas.Admin.ACL;
@@ -261,30 +264,19 @@ namespace Senparc.Areas.Admin.Domain.Services
                         SenparcTrace.SendCustomLog("AdminChat.ActionArtifact",
                             $"Ignored invalid action payload: {error.Message}");
                     }
-                    continue;
                 }
-                if (!string.Equals(trajectoryEvent.EventType, "workspace.change", StringComparison.OrdinalIgnoreCase))
+                if (!string.Equals(trajectoryEvent.EventType, "tool.result", StringComparison.OrdinalIgnoreCase)
+                    && !string.Equals(trajectoryEvent.EventType, "workspace.change", StringComparison.OrdinalIgnoreCase))
                     continue;
+
                 try
                 {
-                    using var document = JsonDocument.Parse(trajectoryEvent.PayloadJson);
-                    var change = document.RootElement.GetProperty("change");
-                    var changeType = change.GetProperty("changeType").GetString();
-                    var path = change.GetProperty("path").GetString();
-                    if (string.IsNullOrWhiteSpace(path))
-                        continue;
-                    changes[path] = string.IsNullOrWhiteSpace(changeType) ? "changed" : changeType;
-                    if (change.TryGetProperty("previousRelativePath", out var previousPathElement))
+                    if (TryReadWorkspaceChange(trajectoryEvent.PayloadJson, out var change))
                     {
-                        var previousPath = previousPathElement.GetString();
-                        if (!string.IsNullOrWhiteSpace(previousPath)
-                            && !string.Equals(previousPath, path, StringComparison.Ordinal))
-                        {
-                            changes[previousPath] = "deleted";
-                        }
+                        AddWorkspaceChange(changes, change);
                     }
                 }
-                catch (Exception error) when (error is JsonException or InvalidOperationException)
+                catch (JsonException error)
                 {
                     SenparcTrace.SendCustomLog("AdminChat.WorkspaceArtifact",
                         $"Ignored invalid trajectory payload: {error.Message}");
@@ -343,6 +335,103 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
             return result;
         }
+
+        private sealed record WorkspaceArtifactChange(
+            string Path,
+            string ChangeType,
+            string PreviousRelativePath);
+
+        private static void AddWorkspaceChange(
+            IDictionary<string, string> changes,
+            WorkspaceArtifactChange change)
+        {
+            if (change == null || string.IsNullOrWhiteSpace(change.Path))
+                return;
+
+            changes[change.Path] = NormalizeWorkspaceChangeType(change.ChangeType);
+            if (!string.IsNullOrWhiteSpace(change.PreviousRelativePath)
+                && !string.Equals(change.PreviousRelativePath, change.Path, StringComparison.Ordinal))
+            {
+                changes[change.PreviousRelativePath] = "deleted";
+            }
+        }
+
+        private static string NormalizeWorkspaceChangeType(string changeType) =>
+            changeType?.Trim().ToLowerInvariant() switch
+            {
+                "added" or "created" => "created",
+                "deleted" or "removed" => "deleted",
+                "modified" or "updated" or "changed" => "changed",
+                _ => "changed"
+            };
+
+        private static bool TryReadWorkspaceChange(
+            string payloadJson,
+            out WorkspaceArtifactChange change)
+        {
+            change = null;
+            using var document = JsonDocument.Parse(payloadJson);
+            return TryReadWorkspaceChange(document.RootElement, out change);
+        }
+
+        private static bool TryReadWorkspaceChange(
+            JsonElement element,
+            out WorkspaceArtifactChange change)
+        {
+            change = null;
+            if (element.ValueKind == JsonValueKind.String)
+            {
+                var nestedJson = element.GetString();
+                if (string.IsNullOrWhiteSpace(nestedJson))
+                    return false;
+
+                using var nested = JsonDocument.Parse(nestedJson);
+                return TryReadWorkspaceChange(nested.RootElement, out change);
+            }
+
+            if (element.ValueKind != JsonValueKind.Object)
+                return false;
+
+            if (TryGetPropertyIgnoreCase(element, "change", out var changeElement)
+                && changeElement.ValueKind == JsonValueKind.Object)
+            {
+                var path = GetStringProperty(changeElement, "path");
+                if (string.IsNullOrWhiteSpace(path))
+                    return false;
+
+                change = new WorkspaceArtifactChange(
+                    path,
+                    GetStringProperty(changeElement, "changeType"),
+                    GetStringProperty(changeElement, "previousRelativePath"));
+                return true;
+            }
+
+            return TryGetPropertyIgnoreCase(element, "result", out var resultElement)
+                && TryReadWorkspaceChange(resultElement, out change);
+        }
+
+        private static bool TryGetPropertyIgnoreCase(
+            JsonElement element,
+            string name,
+            out JsonElement value)
+        {
+            foreach (var property in element.EnumerateObject())
+            {
+                if (string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    value = property.Value;
+                    return true;
+                }
+            }
+
+            value = default;
+            return false;
+        }
+
+        private static string GetStringProperty(JsonElement element, string name) =>
+            TryGetPropertyIgnoreCase(element, name, out var value)
+                ? value.ValueKind == JsonValueKind.String ? value.GetString() : value.ToString()
+                : null;
 
         /// <summary>
         /// Recursively extracts agent-task action descriptors from arbitrary JSON payloads.

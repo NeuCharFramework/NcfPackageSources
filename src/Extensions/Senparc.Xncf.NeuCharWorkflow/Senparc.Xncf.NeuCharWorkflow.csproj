@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.8.1</Version>
+    <Version>0.5.0.0</Version>
     <PackageReleaseNotes>[2026-08-13] v0.1.0-preview1 enhanceworkfloworchestration. replay. Webhook parallelexecutioncapabilities
         1. Updated module behavior and related support.
         2. Updated module behavior and related support.
@@ -67,7 +67,12 @@
         4. Preserved existing public APIs and runtime integration while incorporating the related improvements.
         [2026-11-25] v0.4.8 Registered and localized workflow chat-tool services.
         1. Added workflow chat-tool registration and localized command resources for workflow interactions.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+        1. Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring.
+        2. add MCP connector features and improve admin chat functionality.
+        3. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
+    </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
     <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

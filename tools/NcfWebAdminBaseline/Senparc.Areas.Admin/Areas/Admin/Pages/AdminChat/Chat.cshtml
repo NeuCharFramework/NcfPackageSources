@@ -558,11 +558,11 @@
                             <div v-if="workspaceArtifactsExpanded(message)" class="chat-message-attachments is-expanded">
                                 <button v-for="attachment in messageWorkspaceArtifacts(message)" :key="attachment.relativePath"
                                     type="button" class="is-workspace-artifact"
-                                    :class="'change-' + (attachment.changeType || 'changed')"
-                                    :disabled="attachment.changeType === 'deleted'"
+                                    :class="'change-' + workspaceArtifactChangeType(attachment.changeType)"
+                                    :disabled="workspaceArtifactChangeType(attachment.changeType) === 'deleted'"
                                     :title="attachment.relativePath"
                                     @@click="openWorkspaceArtifact(attachment)">
-                                    <i :class="attachment.changeType === 'created' ? 'el-icon-plus' : attachment.changeType === 'deleted' ? 'el-icon-minus' : workspaceFileIcon(attachment.relativePath)"></i>
+                                    <i :class="workspaceArtifactChangeType(attachment.changeType) === 'created' ? 'el-icon-plus' : workspaceArtifactChangeType(attachment.changeType) === 'deleted' ? 'el-icon-minus' : workspaceFileIcon(attachment.relativePath)"></i>
                                     <span>{{ attachment.relativePath }}</span>
                                     <small>{{ workspaceArtifactChangeLabel(attachment.changeType) }}</small>
                                 </button>

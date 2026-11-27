@@ -46,7 +46,7 @@ public class Register : XncfRegisterBase, IXncfRegister
 
     public override string Name => "Senparc.Xncf.Dapr";
     public override string Uid => "E2D87F61-BCA9-4F3E-9E5C-2A14B3F0C6D7";//Legacy comment translated to English.
-    public override string Version => "0.0.1";//the version number is required
+    public override string Version => "0.11.14.2";//the version number is required
 
     public override string MenuName => RegisterText.MenuName;
     public override string Icon => "fa fa-car";

@@ -52,7 +52,7 @@ namespace Senparc.Xncf.DatabaseToolkit
         public override string Name => "Senparc.Xncf.DatabaseToolkit";
 
         public override string Uid => "3019CCBE-0739-43D5-9DED-027A0B26745E";//Legacy comment translated to English.
-        public override string Version => "0.7.1";//the version number is required
+        public override string Version => "0.27.13.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
         public override string Icon => "fa fa-database";

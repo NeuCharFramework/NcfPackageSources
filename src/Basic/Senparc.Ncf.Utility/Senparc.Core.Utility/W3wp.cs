@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.21.3-preview5 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.21.3.2-preview6 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 //using System.Management;

@@ -135,6 +135,13 @@ public sealed record WorkspaceMoveEntryRequest(
     bool Overwrite = false,
     string ExpectedETag = "");
 
+/// <summary>Specifies a workspace entry copy and its overwrite/ETag rules.</summary>
+public sealed record WorkspaceCopyEntryRequest(
+    string SourceRelativePath,
+    string TargetRelativePath,
+    bool Overwrite = false,
+    string ExpectedETag = "");
+
 /// <summary>Contains owner metadata used to create a workspace.</summary>
 public sealed record WorkspaceCreateRequest(
     int OwnerId,
@@ -304,6 +311,15 @@ public interface IWorkspaceClient : IAsyncDisposable
     /// <param name="cancellationToken">Token used to cancel the operation.</param>
     Task MoveEntryAsync(
         WorkspaceMoveEntryRequest request,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Copies a workspace entry to a new workspace-relative path.
+    /// </summary>
+    /// <param name="request">The copy source, target, overwrite, and concurrency options.</param>
+    /// <param name="cancellationToken">Token used to cancel the copy.</param>
+    Task CopyEntryAsync(
+        WorkspaceCopyEntryRequest request,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -538,6 +554,17 @@ public interface IWorkspaceStorage
     Task MoveEntryAsync(
         string workspaceId,
         WorkspaceMoveEntryRequest request,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Copies a workspace entry according to the supplied overwrite and entity-tag rules.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="request">The source, target, overwrite, and concurrency options.</param>
+    /// <param name="cancellationToken">Token used to cancel the copy.</param>
+    Task CopyEntryAsync(
+        string workspaceId,
+        WorkspaceCopyEntryRequest request,
         CancellationToken cancellationToken = default);
 
     /// <summary>

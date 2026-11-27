@@ -1,4 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: SystemConfigController.cs
+    File description: Senparc.Areas.Admin.Controllers related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261127
+    Change description: v0.0.2 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Models.VD;
 using Senparc.Mvc.Filter;
 

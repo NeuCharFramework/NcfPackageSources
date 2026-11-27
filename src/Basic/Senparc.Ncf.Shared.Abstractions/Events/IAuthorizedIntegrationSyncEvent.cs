@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.1-preview2 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.1.2-preview3 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Ncf.Shared.Abstractions.Events

@@ -8,6 +8,9 @@
     Created by: Senparc - 20261126
     Change description: v0.5.15 protect MCP credentials with ASP.NET Core Data Protection
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.14.2 Expand MCP endpoint gateway, credentials, and tool invocation support.
+
 ----------------------------------------------------------------*/
 
 using System;

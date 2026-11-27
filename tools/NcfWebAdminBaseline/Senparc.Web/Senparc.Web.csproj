@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
-		<Version>0.39.9</Version>
+		<Version>0.39.10</Version>
 		<PackageReleaseNotes>[2026-07-01] v0.21.5 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
 		    [2026-07-02] v0.21.5 Updated module behavior and related support.
 		    1. Updated module behavior and related support.
@@ -118,7 +118,10 @@
 		    2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
         [2026-11-24] v0.39.9 Dependency compatibility update for affected Senparc modules.
         1. Aligned dependent package metadata with the current Senparc module versions.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v0.39.10 Improve source documentation, headers, and module metadata consistency.
+        1. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
+    </PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>
 		<UserSecretsId>d2144151-af7a-4d50-896d-4a306e594f7b</UserSecretsId>

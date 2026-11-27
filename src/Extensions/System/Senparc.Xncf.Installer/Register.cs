@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.5.14 unify XNCF Register display metadata and localization resource keys
 
+    Modified by: Senparc - 20261127
+    Change description: v0.6.0.1 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;

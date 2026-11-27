@@ -1,4 +1,18 @@
-﻿using System.Collections.Generic;
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: ActionControllerExtensions.cs
+    File description: Senparc.Mvc related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261127
+    Change description: v0.0.2 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Mvc.CustomActionResults;
 using Senparc.Ncf.Core.Utility;

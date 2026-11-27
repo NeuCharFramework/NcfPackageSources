@@ -5,6 +5,9 @@
     File name: BuildXncfAppService.AI.cs
     File description: Historical AI builder experiments retained for source compatibility.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.XncfBuilder.OHS.Local

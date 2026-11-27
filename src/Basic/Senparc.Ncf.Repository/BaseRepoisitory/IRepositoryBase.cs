@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.13-preview12 Updated repository infrastructure and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.13.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

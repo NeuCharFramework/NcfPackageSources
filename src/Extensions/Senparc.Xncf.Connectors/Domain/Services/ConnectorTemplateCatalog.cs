@@ -8,6 +8,9 @@
     Created by: Senparc - 20261126
     Change description: v0.2.0 provide ready-to-configure MCP connector templates
 
+    Modified by: Senparc - 20261127
+    Change description: v0.1.1.4 Extend MCP connector management and localization coverage.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Connectors.Domain.Services;

@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.0.3 Improved bilingual sync tool messages, language selection, and ignore handling.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.0.4 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 using Microsoft.Extensions.Logging;
 

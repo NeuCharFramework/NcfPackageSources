@@ -1,4 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: AdminUserInfoConfigurationMapping.cs
+    File description: Senparc.Areas.Admin.Models related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Senparc.Areas.Admin.Domain.Models;
 using Senparc.Ncf.Core.Models.DataBaseModel;

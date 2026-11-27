@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -60,7 +63,7 @@ namespace Senparc.Xncf.DynamicData
 
         public override string Uid => "9448D9BA-5DF5-4AF1-8419-1BAB85BE589E";//Legacy comment translated to English.
 
-        public override string Version => "0.1.0";//the version number is required
+        public override string Version => "0.7.12.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 

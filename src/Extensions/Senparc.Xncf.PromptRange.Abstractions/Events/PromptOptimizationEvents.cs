@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.3.3-preview8 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.3.3.2-preview9 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;

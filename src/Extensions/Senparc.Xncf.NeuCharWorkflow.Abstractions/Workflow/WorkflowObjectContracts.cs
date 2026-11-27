@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.3.2 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.3.2.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Generic;

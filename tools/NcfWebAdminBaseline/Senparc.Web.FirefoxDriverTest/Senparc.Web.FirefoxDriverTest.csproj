@@ -2,13 +2,16 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.0.1</Version>
+		<Version>0.0.2</Version>
 		<IsPackable>false</IsPackable>
 		<Configurations>Debug;Release;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
 		<PackageReleaseNotes>[2026-11-19] v0.0.1 Localized administration, chat, and workflow surfaces
 		    1. Updated affected project files while preserving existing public integration behavior.
 		    2. Standardized related English source comments and package metadata for the current release.
-		</PackageReleaseNotes>
+		
+		    [2026-11-27] v0.0.2 Improve source documentation, headers, and module metadata consistency.
+		    1. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
+    </PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>

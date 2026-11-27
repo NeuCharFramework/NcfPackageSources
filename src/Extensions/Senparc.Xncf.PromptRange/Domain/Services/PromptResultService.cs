@@ -43,6 +43,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.20.17 Improved PromptRange localization consistency and prompt tooling behavior.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;

@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.1.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.1.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -49,7 +52,7 @@ namespace Senparc.Xncf.Application
 
         public override string Name => "Senparc.Xncf.Application";
         public override string Uid => "699DFE0D-C1C0-4315-87DF-0DE1502B87A9";//Legacy comment translated to English.
-        public override string Version => "0.0.5";//the version number is required
+        public override string Version => "0.1.14.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
         public override string Icon => "fa fa-pencil";

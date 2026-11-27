@@ -30,7 +30,7 @@
         1. Updated functional behavior and package metadata for the current module changes.
         2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
         [2026-11-26] v0.1.1.2 add dynamic MCP connectors, quick-create templates, and secure centralized authentication.
-        [2026-11-27] v0.1.1.3 close the editor and refresh connector state immediately after save.
+        [2026-11-27] v0.1.1.4 close the editor and refresh connector state immediately after save.
         [2026-11-27] v0.1.1.4 refine responsive connector card, help icon, and action button layout.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

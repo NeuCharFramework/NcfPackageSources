@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.8.4 Registered and localized KnowledgeBase chat-tool services.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -62,7 +65,7 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public override string Uid => "CEAFC442-EE03-42EA-AD54-E607AD0C03A9";//Legacy comment translated to English.
 
-        public override string Version => "0.1.10";//the version number is required
+        public override string Version => "0.8.4.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 

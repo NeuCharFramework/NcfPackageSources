@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Net;

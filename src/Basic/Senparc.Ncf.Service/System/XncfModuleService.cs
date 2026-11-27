@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.23.13-preview12 Updated service infrastructure and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.23.13.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Cache;

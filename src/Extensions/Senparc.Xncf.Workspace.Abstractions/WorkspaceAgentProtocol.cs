@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.3.1 Localized workspace management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.3.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json;
@@ -33,6 +36,7 @@ public static class WorkspaceAgentOperations
     public const string CreateDirectory = "mkdir";
     public const string Delete = "delete";
     public const string Move = "move";
+    public const string Copy = "copy";
     public const string Search = "search";
     public const string Patch = "patch";
     public const string ExecuteCommand = "execute-command";

@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.23.12 Improved administration page and authorization support
 
+    Modified by: Senparc - 20261127
+    Change description: v0.23.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;

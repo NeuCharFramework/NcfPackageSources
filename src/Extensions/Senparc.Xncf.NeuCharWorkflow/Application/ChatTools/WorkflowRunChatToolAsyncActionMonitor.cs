@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: WorkflowRunChatToolAsyncActionMonitor.cs
+    File description: Senparc.Xncf.NeuCharWorkflow.Application.ChatTools related implementation
+
+    Created by: Senparc - 20261127
+
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Linq;
 using System.Threading;

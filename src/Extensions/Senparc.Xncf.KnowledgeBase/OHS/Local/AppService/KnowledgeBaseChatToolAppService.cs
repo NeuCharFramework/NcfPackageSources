@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.8.4 Added chat-tool parameter option integration.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;

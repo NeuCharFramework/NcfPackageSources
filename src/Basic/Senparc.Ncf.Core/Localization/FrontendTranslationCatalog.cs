@@ -12,6 +12,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.31.1-preview12 Improved frontend localization catalog filtering and fallback behavior.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;

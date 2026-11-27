@@ -1,4 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: DatabaseSample.cshtml.cs
+    File description: Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages related implementation
+
+    Created by: Senparc - 20200820
+
+    Modified by: Senparc - 20261127
+    Change description: v1.1.16 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Services;

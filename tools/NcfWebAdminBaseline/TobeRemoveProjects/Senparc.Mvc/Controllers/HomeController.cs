@@ -1,4 +1,18 @@
-﻿using Senparc.Mvc.Filter;
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: HomeController.cs
+    File description: Senparc.Mvc.Controllers related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261127
+    Change description: v0.0.2 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
+using Senparc.Mvc.Filter;
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Mvc.Models.VD;
 

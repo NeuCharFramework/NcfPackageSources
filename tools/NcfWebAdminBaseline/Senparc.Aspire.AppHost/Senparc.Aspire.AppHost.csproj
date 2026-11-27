@@ -4,7 +4,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.22</Version>
+    <Version>0.0.23</Version>
     <PackageReleaseNotes>[2026-07-01] v0.0.1 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
         [2026-07-02] v0.0.1 Updated module behavior and related support.
         1. Updated module behavior and related support.
@@ -67,7 +67,10 @@
         2. Standardized related English source comments and package metadata for the current release.
         [2026-11-24] v0.0.22 Dependency compatibility update for affected Senparc modules.
         1. Aligned dependent package metadata with the current Senparc module versions.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v0.0.23 Dependency update for referenced Senparc module version alignment.
+        1. Bumped package version for downstream compatibility with updated module references.
+    </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsAspireHost>true</IsAspireHost>

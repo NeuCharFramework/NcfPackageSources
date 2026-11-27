@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.2.9 Localized workspace management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.2.9.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

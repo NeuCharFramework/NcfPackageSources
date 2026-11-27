@@ -432,6 +432,102 @@ public sealed class WorkspaceFileSystemEngine
     }
 
     /// <summary>
+    /// Copies a file or directory after source/target path, symlink, ETag, overwrite,
+    /// and workspace quota checks.
+    /// </summary>
+    /// <param name="request">The source, target, overwrite, and expected ETag options.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    public async Task CopyEntryAsync(
+        WorkspaceCopyEntryRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var source = ResolvePath(request.SourceRelativePath);
+        var target = ResolvePath(request.TargetRelativePath);
+        EnsureNoSymlink(source);
+        EnsureNoSymlink(target);
+        EnsureNoSymlink(Path.GetDirectoryName(target)
+                        ?? throw new InvalidOperationException("Target has no parent directory."));
+
+        var sourceIsFile = File.Exists(source);
+        var sourceIsDirectory = Directory.Exists(source);
+        if (!sourceIsFile && !sourceIsDirectory)
+        {
+            throw new FileNotFoundException("Workspace source entry does not exist.", request.SourceRelativePath);
+        }
+
+        if (PathsEqual(source, target))
+        {
+            throw new IOException("Workspace source and target paths must differ.");
+        }
+
+        if (sourceIsDirectory && IsDescendantPath(target, source))
+        {
+            throw new IOException("Workspace directory cannot be copied into itself.");
+        }
+
+        await EnsureExpectedETagAsync(source, request.ExpectedETag, cancellationToken).ConfigureAwait(false);
+
+        var targetExists = File.Exists(target) || Directory.Exists(target);
+        if (targetExists && !request.Overwrite)
+        {
+            throw new IOException("Workspace target entry already exists.");
+        }
+
+        var sourceBytes = GetEntryBytes(source, cancellationToken);
+        var targetBytes = targetExists ? GetEntryBytes(target, cancellationToken) : 0;
+        if (GetWorkspaceBytes() - targetBytes + sourceBytes > _options.MaxWorkspaceBytes)
+        {
+            throw new InvalidOperationException("Workspace quota exceeded.");
+        }
+
+        var parent = Path.GetDirectoryName(target)
+            ?? throw new InvalidOperationException("Target has no parent directory.");
+        Directory.CreateDirectory(parent);
+        var temporaryPath = Path.Combine(
+            parent,
+            $".{Path.GetFileName(target)}.{Guid.NewGuid():N}.ncf-copy-tmp");
+        try
+        {
+            if (sourceIsFile)
+            {
+                File.Copy(source, temporaryPath, overwrite: false);
+            }
+            else
+            {
+                CopyDirectory(source, temporaryPath, cancellationToken);
+            }
+
+            if (targetExists)
+            {
+                DeleteExistingPath(target);
+            }
+
+            if (sourceIsFile)
+            {
+                File.Move(temporaryPath, target);
+            }
+            else
+            {
+                Directory.Move(temporaryPath, target);
+            }
+        }
+        finally
+        {
+            if (File.Exists(temporaryPath))
+            {
+                File.Delete(temporaryPath);
+            }
+            else if (Directory.Exists(temporaryPath))
+            {
+                Directory.Delete(temporaryPath, recursive: true);
+            }
+        }
+    }
+
+    /// <summary>
     /// Searches file names, relative paths, and bounded text content with optional glob/regex matching.
     /// </summary>
     /// <param name="request">The search terms, limits, case mode, and path/content filters.</param>
@@ -1227,6 +1323,97 @@ public sealed class WorkspaceFileSystemEngine
                 throw new InvalidOperationException("Workspace paths cannot traverse symbolic links.");
             }
         }
+    }
+
+    /// <summary>Copies a directory tree while rejecting reparse points and checking cancellation.</summary>
+    private static void CopyDirectory(
+        string source,
+        string target,
+        CancellationToken cancellationToken)
+    {
+        Directory.CreateDirectory(target);
+        foreach (var path in Directory.EnumerateFileSystemEntries(source))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var attributes = File.GetAttributes(path);
+            if (attributes.HasFlag(FileAttributes.ReparsePoint))
+            {
+                throw new InvalidOperationException("Workspace paths cannot copy symbolic links.");
+            }
+
+            var destination = Path.Combine(target, Path.GetFileName(path));
+            if (attributes.HasFlag(FileAttributes.Directory))
+            {
+                CopyDirectory(path, destination, cancellationToken);
+            }
+            else
+            {
+                File.Copy(path, destination, overwrite: false);
+            }
+        }
+    }
+
+    /// <summary>Deletes an existing file or directory before an overwrite.</summary>
+    private static void DeleteExistingPath(string path)
+    {
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+        else if (Directory.Exists(path))
+        {
+            Directory.Delete(path, recursive: true);
+        }
+    }
+
+    /// <summary>Calculates file bytes below one entry without following reparse points.</summary>
+    private static long GetEntryBytes(string path, CancellationToken cancellationToken)
+    {
+        if (File.Exists(path))
+        {
+            return new FileInfo(path).Length;
+        }
+
+        var total = 0L;
+        var pending = new Stack<string>();
+        pending.Push(path);
+        while (pending.Count > 0)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var directory = pending.Pop();
+            foreach (var child in Directory.EnumerateFileSystemEntries(directory))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var attributes = File.GetAttributes(child);
+                if (attributes.HasFlag(FileAttributes.ReparsePoint))
+                {
+                    throw new InvalidOperationException("Workspace paths cannot copy symbolic links.");
+                }
+
+                if (attributes.HasFlag(FileAttributes.Directory))
+                {
+                    pending.Push(child);
+                }
+                else
+                {
+                    total = checked(total + new FileInfo(child).Length);
+                }
+            }
+        }
+
+        return total;
+    }
+
+    /// <summary>Compares two normalized paths using the host file-system comparison rules.</summary>
+    private bool PathsEqual(string left, string right) =>
+        string.Equals(left, right, _pathComparison);
+
+    /// <summary>Determines whether a path is strictly below a directory path.</summary>
+    private bool IsDescendantPath(string path, string directory)
+    {
+        var prefix = directory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                    + Path.DirectorySeparatorChar;
+        return path.StartsWith(prefix, _pathComparison);
     }
 
     /// <summary>
